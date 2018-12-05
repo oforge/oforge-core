@@ -1,0 +1,1 @@
+console.log('this is testblub.js from test plugin');

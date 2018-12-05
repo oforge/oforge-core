@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}Backend{% endblock %}</title>
+    {% block head_styles %}
+        <style>
+            *, *:before, *:after {
+                box-sizing: border-box;
+                font-family: sans-serif;
+            }
+        </style>
+    {% endblock %}
+</head>
+<body>
+<h1>Hey there!</h1>
+{% block headline %}
+    <h2>This is Themes/TemplateTest/Frontendasd/Layout.twig, the master template</h2>
+{% endblock %}
+
+{% block body %}
+{% endblock %}
+
+{% block footer_scripts %}
+    <script>
+        console.log("%cHello World! This is a default JavaScript from the footer block.", "color: #dd0000");
+    </script>
+{% endblock %}
+</body>
+</html>

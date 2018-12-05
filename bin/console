@@ -1,0 +1,18 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Matthaeus.Schmedding
+ * Date: 19.11.2018
+ * Time: 21:15
+ */
+
+
+define('ROOT_PATH', __DIR__ . "./../");
+
+require_once __DIR__.'/../vendor/autoload.php';
+
+$smith = BlackSmith::getInstance();
+$smith->forge(false);
+
+$application = new Oforge\Engine\Modules\Console\Application();
+$application->run($argv);

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="Tests" tests="4" assertions="4" errors="0" failures="2" skipped="0" time="0.005000">
+    <testsuite name="Tests\ConfigService\ConfigTest" file="C:\Dateien\2_Arbeit\3_Subversion\O\oforge\oforge-portal\Tests\ConfigService\ConfigTest.php" tests="2" assertions="2" errors="0" failures="1" skipped="0" time="0.005000">
+      <testcase name="testFirst" class="Tests\ConfigService\ConfigTest" classname="Tests.ConfigService.ConfigTest" file="C:\Dateien\2_Arbeit\3_Subversion\O\oforge\oforge-portal\Tests\ConfigService\ConfigTest.php" line="10" assertions="1" time="0.005000">
+        <failure type="PHPUnit\Framework\ExpectationFailedException">Tests\ConfigService\ConfigTest::testFirst
+Failed asserting that two strings are identical.
+--- Expected
++++ Actual
+@@ @@
+-'test'
++'test2'
+
+C:\Dateien\2_Arbeit\3_Subversion\O\oforge\oforge-portal\Tests\ConfigService\ConfigTest.php:12
+</failure>
+      </testcase>
+      <testcase name="testSecond" class="Tests\ConfigService\ConfigTest" classname="Tests.ConfigService.ConfigTest" file="C:\Dateien\2_Arbeit\3_Subversion\O\oforge\oforge-portal\Tests\ConfigService\ConfigTest.php" line="15" assertions="1" time="0.000000"/>
+    </testsuite>
+    <testsuite name="Tests\Logger\LoggerTest" file="C:\Dateien\2_Arbeit\3_Subversion\O\oforge\oforge-portal\Tests\Logger\LoggerTest.php" tests="2" assertions="2" errors="0" failures="1" skipped="0" time="0.000000">
+      <testcase name="testFirst" class="Tests\Logger\LoggerTest" classname="Tests.Logger.LoggerTest" file="C:\Dateien\2_Arbeit\3_Subversion\O\oforge\oforge-portal\Tests\Logger\LoggerTest.php" line="10" assertions="1" time="0.000000">
+        <failure type="PHPUnit\Framework\ExpectationFailedException">Tests\Logger\LoggerTest::testFirst
+Failed asserting that two strings are identical.
+--- Expected
++++ Actual
+@@ @@
+-'test'
++'test2'
+
+C:\Dateien\2_Arbeit\3_Subversion\O\oforge\oforge-portal\Tests\Logger\LoggerTest.php:12
+</failure>
+      </testcase>
+      <testcase name="testSecond" class="Tests\Logger\LoggerTest" classname="Tests.Logger.LoggerTest" file="C:\Dateien\2_Arbeit\3_Subversion\O\oforge\oforge-portal\Tests\Logger\LoggerTest.php" line="15" assertions="1" time="0.000000"/>
+    </testsuite>
+  </testsuite>
+</testsuites>
