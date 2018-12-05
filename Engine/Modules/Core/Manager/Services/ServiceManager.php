@@ -59,4 +59,8 @@ class ServiceManager {
 
         $this->services[$name] = new $className;
     }
+    
+    public function listNames() {
+        return array_keys($this->services);
+    }
 }

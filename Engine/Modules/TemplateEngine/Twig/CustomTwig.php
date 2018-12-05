@@ -10,7 +10,7 @@ namespace Oforge\Engine\Modules\TemplateEngine\Twig;
 
 use Psr\Http\Message\ResponseInterface;
 
-class OforgeTwig
+class CustomTwig
 {
     /**
      * Twig loader

@@ -12,17 +12,18 @@ use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\Core\Models\Plugin\Plugin;
 
 use Oforge\Engine\Modules\TemplateEngine\Models\Template\Template;
-use Oforge\Engine\Modules\TemplateEngine\Twig\OforgeTwig;
+use Oforge\Engine\Modules\TemplateEngine\Twig\CustomTwig;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Twig_Extension_Debug;
 use Twig_Loader_Filesystem;
+use TwigOforgeDebugExtension;
 
 class TemplateRenderService
 {
     /**
-     * @var $view OforgeTwig
+     * @var $view CustomTwig
      */
     private $view;
 
@@ -76,8 +77,7 @@ class TemplateRenderService
 
         $activeTemplate = $this->getActiveTemplate();
         $themePath = DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . $activeTemplate;
-
-
+        
         $data["template.path"] = $templatePath;
 
         if ($this->hasTemplate($templatePath)) {
@@ -136,16 +136,17 @@ class TemplateRenderService
     {
         return $this->View()->hasTemplate($template);
     }
-
+    
     /**
      * If no Twig Engine is loaded, create one
      *
-     * @return OforgeTwig
+     * @return CustomTwig
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws \Twig_Error_Loader
      */
-    private function View()
+    public function View()
     {
         $activeTemplate = $this->getActiveTemplate();
         $templatePath = DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . $activeTemplate;
@@ -182,7 +183,7 @@ class TemplateRenderService
             array_push($paths["parent"], ROOT_PATH . "/Themes/Base");
             array_push($paths[Twig_Loader_Filesystem::MAIN_NAMESPACE], ROOT_PATH . "/Themes/Base");
 
-            $this->view = new OforgeTwig($paths, [
+            $this->view = new CustomTwig($paths, [
                 'cache' => ROOT_PATH . Statics::THEME_CACHE_DIR,
                 'auto_reload' => $debug
             ]);
@@ -190,6 +191,8 @@ class TemplateRenderService
             if ($debug) {
                 $this->view->getEnvironment()->enableDebug();
                 $this->view->getEnvironment()->addExtension(new Twig_Extension_Debug());
+                $this->view->getEnvironment()->addExtension(new TwigOforgeDebugExtension());
+                
             }
         }
         return $this->view;
