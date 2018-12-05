@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Test;
 
@@ -12,15 +12,15 @@ class Bootstrap extends AbstractBootstrap {
             "/" => ["controller" => \Test\Controller\Frontend\HomeController::class, "name" => "home2"],
             "/home" => \Test\Controller\Frontend\HomeController::class
         ];
-    
+        
         $this->middleware = [
             "home2" => ["class" => \Test\Middleware\HomeMiddleware::class, "position" => 0]
         ];
-         
+        
         $this->models = [
-             Test::class
+            Test::class
         ];
-
+        
         $this->dependencies = [
             \Test2\Bootstrap::class
         ];
