@@ -36,7 +36,7 @@ class Application
         switch ($command[1]) {
             case "service":
                 $service = Oforge()->Services()->get($command[2]);
-                // print_r(call_user_func_array(array($service, $command[3]), $params));
+                print_r(call_user_func_array(array($service, $command[3]), $params));
                 break;
         }
     }

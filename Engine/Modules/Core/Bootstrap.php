@@ -13,6 +13,7 @@ use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\Core\Services\EndpointService;
 use Oforge\Engine\Modules\Core\Services\KeyValueStoreService;
 use Oforge\Engine\Modules\Core\Services\MiddlewareService;
+use Oforge\Engine\Modules\Core\Services\PingService;
 use Oforge\Engine\Modules\Core\Services\PluginAccessService;
 use Oforge\Engine\Modules\Core\Services\PluginStateService;
 
@@ -36,7 +37,8 @@ class Bootstrap extends AbstractBootstrap
             "endpoints" => EndpointService::class,
             "config" => ConfigService::class,
             "middleware" => MiddlewareService::class,
-            "store.keyvalue" => KeyValueStoreService::class
+            "store.keyvalue" => KeyValueStoreService::class,
+            "ping" => PingService::class
         ];
 
         $this->order = 0;
