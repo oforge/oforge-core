@@ -3,6 +3,7 @@
 /config.php
 /config.dev.php
 /config.prod.php
+/test.config.php
 node_modules
 var
 vendor
