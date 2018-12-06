@@ -10,7 +10,6 @@ namespace Oforge\Engine\Modules\TemplateEngine\Services;
 
 use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\Core\Models\Plugin\Plugin;
-
 use Oforge\Engine\Modules\TemplateEngine\Models\Template\Template;
 use Oforge\Engine\Modules\TemplateEngine\Twig\CustomTwig;
 use Psr\Http\Message\ResponseInterface;
@@ -18,7 +17,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Twig_Extension_Debug;
 use Twig_Loader_Filesystem;
-use TwigOforgeDebugExtension;
+use Oforge\Engine\Modules\TemplateEngine\Twig\TwigOforgeDebugExtension;
 
 class TemplateRenderService
 {
@@ -26,7 +25,7 @@ class TemplateRenderService
      * @var $view CustomTwig
      */
     private $view;
-
+    
     /**
      * This render function can be called either from a module controller or a template controller.
      * It checks, whether a template path based on the controllers namespace and the function name exists
@@ -36,15 +35,17 @@ class TemplateRenderService
      * @param Request $request
      * @param Response $response
      * @param $data
+     *
      * @return ResponseInterface|Response
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     public function render(Request $request, Response $response, $data)
     {
-        $activeTemplate = $this->getActiveTemplate();
         $namespace = explode("\\", Oforge()->View()->get('controller_method'));
 
         $templatePath = null;
@@ -73,10 +74,6 @@ class TemplateRenderService
         $fileName = explode("Action", explode(":", $namespace[sizeof($namespace) - 1])[1])[0];
 
         $templatePath .= DIRECTORY_SEPARATOR . $region . DIRECTORY_SEPARATOR . $moduleName . DIRECTORY_SEPARATOR . $controllerName . DIRECTORY_SEPARATOR . ucwords($fileName) . ".twig";
-
-
-        $activeTemplate = $this->getActiveTemplate();
-        $themePath = DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . $activeTemplate;
         
         $data["template.path"] = $templatePath;
 
@@ -102,7 +99,7 @@ class TemplateRenderService
             ->withHeader('Content-Type', 'application/json')
             ->withJson($data);
     }
-
+    
     /**
      * Send the response through the Twig Engine
      *
@@ -110,11 +107,14 @@ class TemplateRenderService
      * @param Response $response
      * @param string $template
      * @param $data
+     *
      * @return ResponseInterface
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     private function renderTemplate(Request $request, Response $response, string $template, $data)
     {
@@ -192,7 +192,6 @@ class TemplateRenderService
                 $this->view->getEnvironment()->enableDebug();
                 $this->view->getEnvironment()->addExtension(new Twig_Extension_Debug());
                 $this->view->getEnvironment()->addExtension(new TwigOforgeDebugExtension());
-                
             }
         }
         return $this->view;

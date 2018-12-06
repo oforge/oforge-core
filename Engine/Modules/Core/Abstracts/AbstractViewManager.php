@@ -51,6 +51,13 @@ abstract class AbstractViewManager {
      * @return array
      */
     public abstract function fetch();
+    
+    /**
+     * Get a specific key value from the viewData
+     *
+     * @param $key
+     *
+     * @return mixed
+     */
+    public abstract function get(string $key);
 }
-
-
