@@ -1,6 +1,8 @@
 .git
 .idea
 /config.php
+/config.dev.php
+/config.prod.php
 node_modules
 var
 vendor
