@@ -4,7 +4,6 @@ namespace Oforge\Engine\Modules\Auth;
 use Oforge\Engine\Modules\Auth\Controller\Backend\LoginController;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
-use Oforge\Engine\Modules\Auth\Services\BackendAuthService;
 #use Oforge\Engine\Modules\Auth\Services\BackendLoginService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 

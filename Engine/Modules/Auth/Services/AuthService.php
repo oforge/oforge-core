@@ -49,4 +49,37 @@ class AuthService {
         }
         return false;
     }
+    
+    /**
+     * Check if the token is valid (can be decoded)
+     *
+     * @param string $jwt
+     *
+     * @return bool
+     */
+    public function isValid(string $jwt) {
+        /**
+         * TODO: add more information into the Token for better validation, e.g. created-timestamp
+         */
+        $decode = $this->decode($jwt);
+        return isset($decode);
+    }
+    
+    /**
+     * decode the token
+     *
+     * @param string $jwt
+     *
+     * @return object|null
+     */
+    public function decode(string $jwt) {
+        $key = Oforge()->Settings()->get("jwt_salt");
+        try {
+            $decoded = JWT::decode( $jwt, $key, [ 'HS512' ] );
+            return $decoded;
+        } catch (\Exception $e) {
+            Oforge()->Logger()->get("system")->addWarning($e->getMessage(), ["exception" => $e]);
+        }
+        return null;
+    }
 }
