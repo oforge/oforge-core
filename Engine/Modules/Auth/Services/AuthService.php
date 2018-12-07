@@ -11,48 +11,38 @@ namespace Oforge\Engine\Modules\Auth\Services;
 use Firebase\JWT\JWT;
 
 /**
- * Class BaseAuthService
+ * Class AuthService
  * @package Oforge\Engine\Modules\Auth\Services
  */
-class BaseAuthService {
-    /**
-     * @param string $clientPassword
-     * @param string $serverPassword
-     *
-     * @return bool
-     */
-    public function comparePasswords(string $clientPassword, string $serverPassword) : bool {
-        return password_verify($clientPassword, $serverPassword);
-    }
-    
+class AuthService {
     /**
      * Create a JSON Web Token
      *
-     * @param int $userId
+     * @param array $user
      *
      * @return string
      */
-    public function createJWT(int $userId) : string {
+    public function createJWT(array $user) : string {
         $key = Oforge()->Settings()->get("jwt_salt");
-        $jwt = JWT::encode(['user_id' => $userId], $key, 'HS512');
+        $jwt = JWT::encode($user, $key, 'HS512');
         return $jwt;
     }
     
     /**
      * Check, if the current Token is valid and belongs to the requested userId
      *
-     * @param int $userId
+     * @param array $user
      * @param string $jwt
      *
      * @return bool
      */
-    public function hasValidToken(int $userId, string $jwt) : bool {
+    public function hasValidToken(array $user, string $jwt) : bool {
         $key = Oforge()->Settings()->get("jwt_salt");
         try {
             $decoded = JWT::decode($jwt, $key, ['HS512']);
             $arr = (array)$decoded;
-            if (array_key_exists('user_id', $arr)) {
-                return $arr['user_id'] == $userId;
+            if (array_key_exists('user', $arr)) {
+                return $arr == $user;
             }
         } catch (\Exception $e) {
             Oforge()->Logger()->get("system")->addWarning($e->getMessage(), ["exception" => $e]);
