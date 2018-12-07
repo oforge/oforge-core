@@ -6,7 +6,12 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 
 class HomeController extends AbstractController {
-
+    /**
+     * @param Request $request
+     * @param Response $response
+     *
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     */
     public function indexAction(Request $request, Response $response) {
         $data = ['greeting' => 'Hello from the TestPlugin'];
         Oforge()->View()->assign($data);
