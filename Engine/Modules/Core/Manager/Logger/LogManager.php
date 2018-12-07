@@ -21,7 +21,7 @@ class LogManager {
         }
     }
 
-    public function get(string $name = null) : Logger {
+    public function get(?string $name = null) : Logger {
         if(isset($name) && array_key_exists($name, $this->logger)) return $this->logger[$name];
         return $this->logger[$this->firstLogger];
     }
