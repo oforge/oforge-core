@@ -7,14 +7,7 @@ use Oforge\Engine\Tests\TestCase;
 
 final class LoggerTest extends TestCase
 {
-    public function testFirst(): void
-    {
-        $this->assertSame("test", "test2");
+    public function testToBeDefined() {
+        $this->markTestIncomplete("Test has to be defined.");
     }
-
-    public function testSecond(): void
-    {
-        $this->assertSame("test", "test");
-    }
-
 }
