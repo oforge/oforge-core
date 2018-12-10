@@ -16,23 +16,57 @@ use Oforge\Engine\Tests\TestCase;
 final class AuthServiceTest extends TestCase
 {
     /**
-     * @var $key string
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws \Exception
      */
-    protected $key;
-    
-    /**
-     * @var $authService AuthService
-     */
-    protected $authService;
-    
-    protected function setUp() {
-        $this->key = Oforge()->Settings()->get("jwt_salt");
-        $this->authService = Oforge()->Services()->get("auth");
-    }
-    
     public function testCanCreateJsonWebToken(): void
     {
-        $data = $this->authService->createJWT(["test"]);
+        /**
+         * @var $authService AuthService
+         */
+        $authService = Oforge()->Services()->get('auth');
+        $data = $authService->createJWT(["test"]);
         $this->assertInternalType('string', $data);
+    }
+    
+    /**
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws \Exception
+     */
+    public function testCanDecodeJsonWebToken(): void {
+        /**
+         * @var $authService AuthService
+         */
+        $authService = Oforge()->Services()->get('auth');
+        $data = $authService->createJWT(["test"]);
+        $JWTData = $authService->decode($data);
+        $this->assertSame(["test"], $JWTData);
+    }
+    
+    /**
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws \Exception
+     */
+    public function testCanCheckIfTokenIsValid() {
+        /**
+         * @var $authService AuthService
+         */
+        $authService = Oforge()->Services()->get('auth');
+        $data = $authService->createJWT(["test"]);
+        $isValid = $authService->isValid($data);
+        $this->assertTrue($isValid);
+    }
+    
+    /**
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws \Exception
+     */
+    public function testCanCheckIfTokenIsInvalid() {
+        /**
+         * @var $authService AuthService
+         */
+        $authService = Oforge()->Services()->get('auth');
+        $isInvalid = $authService->isValid("invalidToken");
+        $this->assertFalse($isInvalid);
     }
 }
