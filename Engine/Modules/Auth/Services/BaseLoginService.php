@@ -13,6 +13,13 @@ use Doctrine\ORM\EntityRepository;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Auth\Models\User\User;
 
+/**
+ * This Base class has the default methods for logging users in and validating passwords.
+ * It can be extended by specific LoginServices e.g. for the backend or the portal
+ *
+ * Class BaseLoginService
+ * @package Oforge\Engine\Modules\Auth\Services
+ */
 class BaseLoginService {
     /**
      * @var $em EntityManager
@@ -58,6 +65,7 @@ class BaseLoginService {
     }
     
     /**
+     * Check, if two services are identical
      * @param string $clientPassword
      * @param string $serverPassword
      *
