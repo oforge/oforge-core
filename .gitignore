@@ -4,6 +4,7 @@
 /config.dev.php
 /config.prod.php
 /test.config.php
+/test.junit.xml
 node_modules
 var
 vendor

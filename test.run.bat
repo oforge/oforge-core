@@ -1,1 +1,1 @@
-.\vendor\bin\phpunit --configuration test.phpunit.xml --log-junit test.junit.xml Tests
+.\vendor\bin\phpunit --configuration test.phpunit.xml --log-junit test.junit.xml --testdox --colors=always Tests
