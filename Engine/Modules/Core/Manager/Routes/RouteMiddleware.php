@@ -26,8 +26,11 @@ class RouteMiddleware
     {
         Oforge()->View()->assign(
             [
-                "language" => $this->route->getLanguageId(),
-                "controller_method" => $this->route->getController()
+                "meta" => [
+                    "language" => $this->route->getLanguageId(),
+                    "controller_method" => $this->route->getController(),
+                    "asset_scope" => $this->route->getAssetScope()
+                ]
             ]
         );
 

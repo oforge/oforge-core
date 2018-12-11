@@ -65,7 +65,7 @@ class TemplateManager extends AbstractTemplateManager {
         /**
          * @var $templateRenderService TemplateRenderService
          */
-        $templateRenderService = Oforge()->Services()->get("template.renderer");
+        $templateRenderService = Oforge()->Services()->get("template.render");
         return $templateRenderService->render($request, $response, $data);
     }
 }

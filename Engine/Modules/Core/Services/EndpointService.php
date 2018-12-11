@@ -1,6 +1,7 @@
 <?php
 namespace Oforge\Engine\Modules\Core\Services;
 
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
 use Oforge\Engine\Modules\Core\Helper\StringHelper;
 use Oforge\Engine\Modules\Core\Models\Routes\Route;
 
@@ -42,40 +43,19 @@ class EndpointService
         foreach($endpoints as $path => $config ) {
             $isRoot = $path == "/" || "";
 
-            if(is_array($config)) {
-                if(array_key_exists("controller", $config)) {
-
-                    $methods = get_class_methods($config["controller"]);
-                    foreach($methods as $method) {
-                        if(StringHelper::endsWith($method, "Action")) {
-                            if($method == "indexAction") {
-                                $key = array_key_exists("name", $config) ? $config["name"] : str_replace("/", "_", $path);
-
-                                array_push($methodCollection, ["path" => $path, "controller" => $config["controller"] . ':' . $method, "name" =>  $key]);
-                            } else {
-                                $custom_path = $path . ($isRoot ? "" : "/"). substr($method, 0, -6);
-                                $key = array_key_exists("name", $config) ? ($config["name"] . "_"  . substr($method, 0, -6)) : ($path . ($isRoot ? "" : "/"). substr($method, 0, -6));
-
-                                array_push($methodCollection, ["path" => $custom_path, "controller" => $config["controller"] . ':' . $method, "name" =>  $key]);
-                            }
-                        }
-                    }
-                }
-            } else {
-                $methods = get_class_methods($config);
-
+            if($this->isValid($config)) {
+                $methods = get_class_methods($config["controller"]);
                 foreach($methods as $method) {
-                    if(StringHelper::endsWith($method, "Action")) {
-                        if($method == "indexAction") {
-                            $key = str_replace("/", "_", $path);
+                    $scope = array_key_exists("asset_scope", $config) ? $config["asset_scope"] : "frontend";
+                    if($method == "indexAction") {
+                        $key = array_key_exists("name", $config) ? $config["name"] : str_replace("/", "_", $path);
 
-                            array_push($methodCollection, ["path" => $path, "controller" => $config . ':' . $method, "name" =>  $key]);
-                        } else {
-                            $custom_path = $path . ($isRoot ? "" : "/"). substr($method, 0, -6);
-                            $key = str_replace("/", "_", $custom_path);
+                        array_push($methodCollection, ["path" => $path, "controller" => $config["controller"] . ':' . $method, "name" =>  $key, "asset_scope" => $scope]);
+                    } else {
+                        $custom_path = $path . ($isRoot ? "" : "/"). substr($method, 0, -6);
+                        $key = array_key_exists("name", $config) ? ($config["name"] . "_"  . substr($method, 0, -6)) : ($path . ($isRoot ? "" : "/"). substr($method, 0, -6));
 
-                            array_push($methodCollection, ["path" => $custom_path, "controller" => $config . ':' . $method, "name" =>  $key]);
-                        }
+                        array_push($methodCollection, ["path" => $custom_path, "controller" => $config["controller"] . ':' . $method, "name" =>  $key, "asset_scope" => $scope]);
                     }
                 }
             }
@@ -95,4 +75,18 @@ class EndpointService
 
         $em->flush();
     }
+
+    private function isValid($options)
+    {
+        /**
+         * Check if required keys are within the options
+         */
+        $keys = ["controller", "name"];
+        foreach ($keys as $key) {
+            if(!array_key_exists($key, $options)) throw new ConfigOptionKeyNotExists($key);
+        }
+
+        return true;
+    }
+
 }

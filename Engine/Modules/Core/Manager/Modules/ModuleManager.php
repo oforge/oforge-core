@@ -5,6 +5,7 @@ namespace Oforge\Engine\Modules\Core\Manager\Modules;
 use Noodlehaus\Exception;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Bootstrap;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists;
 use Oforge\Engine\Modules\Core\Exceptions\CouldNotInstallModuleException;
 use Oforge\Engine\Modules\Core\Helper\Helper;
 use Oforge\Engine\Modules\Core\Helper\Statics;
@@ -118,7 +119,7 @@ class ModuleManager
             throw new CouldNotInstallModuleException(get_class($bucket[0]), $bucket[0]->getDependencies());
         }
     }
-    
+
     /**
      * Initialize the core module
      *
@@ -131,10 +132,12 @@ class ModuleManager
     private function initCoreModule($className)
     {
         if (is_subclass_of($className, AbstractBootstrap::class)) {
+
             /**
              * @var $instance AbstractBootstrap
              */
             $instance = new $className();
+
 
             Oforge()->DB()->initSchema($instance->getModels());
 
@@ -150,19 +153,29 @@ class ModuleManager
             $entry = $this->moduleRepository->findOneBy(["name" => $className]);
 
             if (isset($entry) && !$entry->getInstalled()) {
-                $instance->install();
+                try {
+                    $instance->install();
+                } catch(ConfigElementAlreadyExists $e) {
+
+                }
                 $this->em->persist($entry->setInstalled(true));
             } else if (!isset($entry)) {
                 $this->register($className);
-                $instance->install();
+                try {
+                    $instance->install();
+                } catch(ConfigElementAlreadyExists $e) {
+
+                }
                 $entry = $this->moduleRepository->findOneBy(["name" => $className]);
                 $this->em->persist($entry->setInstalled(true));
             }
 
+            $instance->activate();
+
             $this->em->flush();
         }
     }
-    
+
     /**
      * Register a module.
      * This means: if a module isn't found in the db table, insert it
@@ -171,7 +184,8 @@ class ModuleManager
      *
      * @throws \Doctrine\ORM\ORMException
      */
-    protected function register($className)
+    protected
+    function register($className)
     {
         if (is_subclass_of($className, AbstractBootstrap::class)) {
             /**
@@ -197,13 +211,15 @@ class ModuleManager
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
-    protected function initModule($className)
+    protected
+    function initModule($className)
     {
         if (is_subclass_of($className, AbstractBootstrap::class)) {
             /**
              * @var $instance AbstractBootstrap
              */
             $instance = new $className();
+
             Oforge()->DB()->initSchema($instance->getModels());
 
             $services = $instance->getServices();
@@ -221,11 +237,19 @@ class ModuleManager
             $entry = $this->moduleRepository->findOneBy(["name" => $className]);
 
             if (isset($entry) && !$entry->getInstalled()) {
-                $instance->install();
+                try {
+                    $instance->install();
+                } catch(ConfigElementAlreadyExists $e) {
+
+                }
                 $this->em->persist($entry->setInstalled(true));
             }
+
+
+            $instance->activate();
 
             $this->em->flush();
         }
     }
+
 }

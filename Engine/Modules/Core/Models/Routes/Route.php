@@ -49,6 +49,12 @@ class Route extends AbstractModel
     private $active = false;
 
     /**
+     * @var string
+     * @ORM\Column(name="asset_scope", type="string", nullable=true, options={"default":"frontend"})
+     */
+    private $asset_scope = "frontend";
+
+    /**
      * Get id
      *
      * @return int
@@ -166,5 +172,21 @@ class Route extends AbstractModel
     public function getActivate()
     {
         return $this->active;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAssetScope()
+    {
+        return $this->asset_scope;
+    }
+
+    /**
+     * @param string $asset_scope
+     */
+    public function setAssetScope($asset_scope)
+    {
+        $this->asset_scope = $asset_scope;
     }
 }

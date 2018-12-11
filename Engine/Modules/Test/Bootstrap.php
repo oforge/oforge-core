@@ -7,8 +7,6 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 class Bootstrap extends AbstractBootstrap {
     public function __construct() {
         $this->endpoints = [
-            "/test" => ["controller" => Controller\Frontend\HomeController::class, "name" => "homeTest"],
-            "/backend" => ["controller" => Controller\Backend\Dashboard\Special\TestController::class, "name" => "homeTest"]
         ];
     }
 	
