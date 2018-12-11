@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Tests\Auth\Services;
 
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Auth\Models\User\User;
@@ -19,36 +20,46 @@ use Oforge\Engine\Tests\TestCase;
 final class BackendLoginServiceTest extends TestCase
 {
     /**
-     *
+     * @var $em EntityManager
      */
-    public function getConnection() {
-    }
+    private $em;
     
     /**
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
-     * @throws \Exception
+     *
+     * @throws \Doctrine\ORM\ORMException
      */
-    public function testUserCanLogin(): void
-    {
-        $em = Oforge()->DB()->getManager();
-        Oforge()->DB()->getSchemaTool()->dropSchema([$em->getClassMetadata(BackendUser::class)]);
+    public function getConnection() {
+        $this->em = Oforge()->DB()->getManager();
+        Oforge()->DB()->getSchemaTool()->dropSchema([$this->em->getClassMetadata(BackendUser::class)]);
         Oforge()->DB()->initSchema([BackendUser::class]);
         $testData = [
             "email" => "testuser@oforge.com",
             "password" => password_hash("geheim", PASSWORD_BCRYPT),
             "role" => 1];
         $user = BackendUser::create(BackendUser::class, $testData);
-        $em->persist($user);
-        $em->flush($user);
-        
+        $this->em->persist($user);
+        $this->em->flush($user);
+    }
+    
+    /**
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws \Exception
+     */
+    public function testUserCanLogin() : void
+    {
+        $this->getConnection();
         /**
          * @var $backendLoginService BackendLoginService
          */
         $backendLoginService = Oforge()->Services()->get('backend.login');
-        
-        $result = $backendLoginService->login("false@oforge.com", "");
-        $result2 = $backendLoginService->login("testuser@oforge.com", "geheim");
-        //$this->assertInternalType("string", $result);
-        $this->assertInternalType("string", $result2);
+        $result = $backendLoginService->login("testuser@oforge.com", "geheim");
+        $this->assertInternalType("string", $result);
+    }
+    
+    public function testDeniesLoginWithWrongCredentials() : void {
+        $this->getConnection();
+        $backendLoginService = Oforge()->Services()->get('backend.login');
+        $result = $backendLoginService->login("testuser@oforge.com", "");
+        $this->assertInternalType("null", $result);
     }
 }
