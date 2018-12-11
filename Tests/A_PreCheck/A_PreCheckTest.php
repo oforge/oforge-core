@@ -24,7 +24,7 @@ final class A_PreCheckTest extends TestCase
      */
     public function testCheckIfFailedTestWorks(): void
     {
-        $this->assertSame("test", "test2");
+        $this->assertSame("test", "test1");
     }
     
     /**
