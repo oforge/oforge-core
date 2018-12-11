@@ -1,7 +1,9 @@
 <?php
+
 namespace Oforge\Engine\Modules\Core\Helper;
 
-class Statics {
+class Statics
+{
     public const ENGINE_DIR = "Engine";
     public const PLUGIN_DIR = "Plugins";
     public const VIEW_DIR = "Views";
@@ -16,4 +18,5 @@ class Statics {
     public const ASSETS_SCSS = "scss";
     public const ASSETS_IMPORT_JS = "imports.cfg";
     public const ASSETS_JS = "js";
+    public const DB_CACHE_FILE = Statics::DB_CACHE_DIR . DIRECTORY_SEPARATOR . "db.cache";
 }
