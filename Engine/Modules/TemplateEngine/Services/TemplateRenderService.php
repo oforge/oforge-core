@@ -46,7 +46,7 @@ class TemplateRenderService
      */
     public function render(Request $request, Response $response, $data)
     {
-        $namespace = explode("\\", Oforge()->View()->get('controller_method'));
+        $namespace = explode("\\", Oforge()->View()->get('meta')['controller_method']);
 
         $templatePath = null;
         $moduleName = null;
@@ -56,7 +56,7 @@ class TemplateRenderService
         $folderDepth = null;
 
         if ($namespace[0] === "Oforge") {
-            $moduleName = $namespace[3];
+            $moduleName = null ; //$namespace[3];
             $region = $namespace[5];
             $folderDepth = sizeof($namespace) - 7;
         } else {
@@ -73,7 +73,7 @@ class TemplateRenderService
         $controllerName .= explode("Controller", explode(":", $namespace[sizeof($namespace) - 1])[0])[0];
         $fileName = explode("Action", explode(":", $namespace[sizeof($namespace) - 1])[1])[0];
 
-        $templatePath .= DIRECTORY_SEPARATOR . $region . DIRECTORY_SEPARATOR . $moduleName . DIRECTORY_SEPARATOR . $controllerName . DIRECTORY_SEPARATOR . ucwords($fileName) . ".twig";
+        $templatePath .= DIRECTORY_SEPARATOR . $region . DIRECTORY_SEPARATOR . (isset($moduleName) ? ($moduleName . DIRECTORY_SEPARATOR ) : "" ) . $controllerName . DIRECTORY_SEPARATOR . ucwords($fileName) . ".twig";
         
         $data["template.path"] = $templatePath;
 

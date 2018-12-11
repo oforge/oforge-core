@@ -14,6 +14,14 @@ class ConfigService
     /**
      * Insert a Config Entry into the database
      *
+     * "name" => "",
+     * "label" => "",
+     * "type" => "boolean" | "string" | "number" | "integer" | "select",
+     * "required" => true | false,
+     * "options" => ["", ...],
+     * "default" => ""
+     *
+     *
      * @param array $options
      *
      * @throws ConfigElementAlreadyExists
@@ -40,7 +48,7 @@ class ConfigService
             }
         }
     }
-    
+
     /**
      * Update a set of config entries
      *
@@ -67,7 +75,7 @@ class ConfigService
             $this->add($options);
         }
     }
-    
+
     /**
      * Update a config entry
      *
@@ -78,7 +86,7 @@ class ConfigService
     {
         // TODO: update config
     }
-    
+
     /**
      * Check if the options are valid
      *
@@ -97,7 +105,7 @@ class ConfigService
         foreach ($keys as $key) {
             if (!array_key_exists($key, $options)) throw new ConfigOptionKeyNotExists($key);
         }
-        
+
         /**
          * Check if the element is already within the system
          */
@@ -105,7 +113,7 @@ class ConfigService
 
         $element = $repo->findOneBy(["name" => strtolower($options["name"])]);
         if (isset($element)) throw new ConfigElementAlreadyExists(strtolower($options["name"]));
-        
+
         /**
          * Check if required keys are within the options
          */
@@ -129,7 +137,7 @@ class ConfigService
         }
         return true;
     }
-    
+
     /**
      * Remove Options
      */
@@ -137,7 +145,7 @@ class ConfigService
     {
         // TODO: implement remove function
     }
-    
+
     /**
      * Get a specific configuration value
      *
@@ -163,7 +171,7 @@ class ConfigService
 
         throw new ConfigElementNotFoundException($key, $scope);
     }
-    
+
     /**
      * Set a specific configuration
      *

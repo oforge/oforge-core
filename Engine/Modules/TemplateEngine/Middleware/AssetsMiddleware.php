@@ -21,11 +21,13 @@ class AssetsMiddleware
      */
     public function prepend($request, $response)
     {
+        $meta = Oforge()->View()->get("meta");
+
         $data = [
             "assets" =>
                 [
-                    "js" => Oforge()->Services()->get("assets.js")->getUrl(),
-                    "css" => Oforge()->Services()->get("assets.css")->getUrl()
+                    "js" => Oforge()->Services()->get("assets.js")->getUrl($meta["asset_scope"]),
+                    "css" => Oforge()->Services()->get("assets.css")->getUrl($meta["asset_scope"])
                 ]
         ];
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace Oforge\Engine\Modules\Core\Abstracts;
 
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -7,7 +8,8 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\Tools\Setup;
 
-class AbstractModel {
+class AbstractModel
+{
 
     /*
      * @param array $array
@@ -21,7 +23,12 @@ class AbstractModel {
             if (count($fillable) && !in_array($key, $fillable)) {
                 continue;
             }
-            $method = 'set' . ucfirst($key);
+            $keys = explode("_", $key);
+            $method = "set";
+            foreach ($keys as $keyPart) {
+                $method .= ucfirst($keyPart);
+            }
+
             if (method_exists($this, $method)) {
                 $this->$method($value);
             }
