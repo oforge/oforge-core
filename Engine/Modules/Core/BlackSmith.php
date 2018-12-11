@@ -233,12 +233,16 @@ class BlackSmith
         $this->router->init();
 
 
-        if($this->templateManager) $this->templateManager->init();
+        if($this->templateManager) {
+            $this->templateManager->init();
+        }
         
         /*
          * Let the Blacksmith forge all the things \°/
          */
-        if ($start) $this->app->run();
+        if ($start) {
+            $this->app->run();
+        }
     }
 
     /**

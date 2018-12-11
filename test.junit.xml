@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="Tests" tests="5" assertions="5" errors="0" failures="2" skipped="0" time="0.010804">
-    <testsuite name="Tests\Auth\Services\AuthServiceTest" file="C:\Users\Alexander Wegner\Projekte\oforge\oforge-core\Tests\Auth\Services\AuthServiceTest.php" tests="1" assertions="1" errors="0" failures="0" skipped="0" time="0.007507">
-      <testcase name="testCanCreateJsonWebToken" class="Tests\Auth\Services\AuthServiceTest" classname="Tests.Auth.Services.AuthServiceTest" file="C:\Users\Alexander Wegner\Projekte\oforge\oforge-core\Tests\Auth\Services\AuthServiceTest.php" line="33" assertions="1" time="0.007507"/>
-    </testsuite>
-    <testsuite name="Tests\ConfigService\ConfigTest" file="C:\Users\Alexander Wegner\Projekte\oforge\oforge-core\Tests\ConfigService\ConfigTest.php" tests="2" assertions="2" errors="0" failures="1" skipped="0" time="0.002665">
-      <testcase name="testFirst" class="Tests\ConfigService\ConfigTest" classname="Tests.ConfigService.ConfigTest" file="C:\Users\Alexander Wegner\Projekte\oforge\oforge-core\Tests\ConfigService\ConfigTest.php" line="10" assertions="1" time="0.002469">
-        <failure type="PHPUnit\Framework\ExpectationFailedException">Tests\ConfigService\ConfigTest::testFirst
+  <testsuite name="Tests" tests="9" assertions="7" errors="0" failures="1" skipped="2" time="0.818370">
+    <testsuite name="Tests\A_PreCheck\A_PreCheckTest" file="C:\Users\Alexander Wegner\Projekte\oforge\oforge-core\Tests\A_PreCheck\A_PreCheckTest.php" tests="2" assertions="2" errors="0" failures="1" skipped="0" time="0.008274">
+      <testcase name="testCheckIfFailedTestWorks" class="Tests\A_PreCheck\A_PreCheckTest" classname="Tests.A_PreCheck.A_PreCheckTest" file="C:\Users\Alexander Wegner\Projekte\oforge\oforge-core\Tests\A_PreCheck\A_PreCheckTest.php" line="25" assertions="1" time="0.008076">
+        <failure type="PHPUnit\Framework\ExpectationFailedException">Tests\A_PreCheck\A_PreCheckTest::testCheckIfFailedTestWorks
 Failed asserting that two strings are identical.
 --- Expected
 +++ Actual
@@ -14,25 +11,29 @@ Failed asserting that two strings are identical.
 -'test'
 +'test2'
 
-C:\Users\Alexander Wegner\Projekte\oforge\oforge-core\Tests\ConfigService\ConfigTest.php:12
+C:\Users\Alexander Wegner\Projekte\oforge\oforge-core\Tests\A_PreCheck\A_PreCheckTest.php:27
 </failure>
       </testcase>
-      <testcase name="testSecond" class="Tests\ConfigService\ConfigTest" classname="Tests.ConfigService.ConfigTest" file="C:\Users\Alexander Wegner\Projekte\oforge\oforge-core\Tests\ConfigService\ConfigTest.php" line="15" assertions="1" time="0.000196"/>
+      <testcase name="testCheckIfPassedTestWorks" class="Tests\A_PreCheck\A_PreCheckTest" classname="Tests.A_PreCheck.A_PreCheckTest" file="C:\Users\Alexander Wegner\Projekte\oforge\oforge-core\Tests\A_PreCheck\A_PreCheckTest.php" line="33" assertions="1" time="0.000198"/>
     </testsuite>
-    <testsuite name="Tests\Logger\LoggerTest" file="C:\Users\Alexander Wegner\Projekte\oforge\oforge-core\Tests\Logger\LoggerTest.php" tests="2" assertions="2" errors="0" failures="1" skipped="0" time="0.000632">
-      <testcase name="testFirst" class="Tests\Logger\LoggerTest" classname="Tests.Logger.LoggerTest" file="C:\Users\Alexander Wegner\Projekte\oforge\oforge-core\Tests\Logger\LoggerTest.php" line="10" assertions="1" time="0.000465">
-        <failure type="PHPUnit\Framework\ExpectationFailedException">Tests\Logger\LoggerTest::testFirst
-Failed asserting that two strings are identical.
---- Expected
-+++ Actual
-@@ @@
--'test'
-+'test2'
-
-C:\Users\Alexander Wegner\Projekte\oforge\oforge-core\Tests\Logger\LoggerTest.php:12
-</failure>
+    <testsuite name="Tests\Auth\Services\AuthServiceTest" file="C:\Users\Alexander Wegner\Projekte\oforge\oforge-core\Tests\Auth\Services\AuthServiceTest.php" tests="4" assertions="4" errors="0" failures="0" skipped="0" time="0.010366">
+      <testcase name="testCanCreateJsonWebToken" class="Tests\Auth\Services\AuthServiceTest" classname="Tests.Auth.Services.AuthServiceTest" file="C:\Users\Alexander Wegner\Projekte\oforge\oforge-core\Tests\Auth\Services\AuthServiceTest.php" line="22" assertions="1" time="0.005132"/>
+      <testcase name="testCanDecodeJsonWebToken" class="Tests\Auth\Services\AuthServiceTest" classname="Tests.Auth.Services.AuthServiceTest" file="C:\Users\Alexander Wegner\Projekte\oforge\oforge-core\Tests\Auth\Services\AuthServiceTest.php" line="36" assertions="1" time="0.000390"/>
+      <testcase name="testCanCheckIfTokenIsValid" class="Tests\Auth\Services\AuthServiceTest" classname="Tests.Auth.Services.AuthServiceTest" file="C:\Users\Alexander Wegner\Projekte\oforge\oforge-core\Tests\Auth\Services\AuthServiceTest.php" line="50" assertions="1" time="0.000763"/>
+      <testcase name="testCanCheckIfTokenIsInvalid" class="Tests\Auth\Services\AuthServiceTest" classname="Tests.Auth.Services.AuthServiceTest" file="C:\Users\Alexander Wegner\Projekte\oforge\oforge-core\Tests\Auth\Services\AuthServiceTest.php" line="64" assertions="1" time="0.004081"/>
+    </testsuite>
+    <testsuite name="Tests\Auth\Services\BackendLoginServiceTest" file="C:\Users\Alexander Wegner\Projekte\oforge\oforge-core\Tests\Auth\Services\BackendLoginServiceTest.php" tests="1" assertions="1" errors="0" failures="0" skipped="0" time="0.798276">
+      <testcase name="testUserCanLogin" class="Tests\Auth\Services\BackendLoginServiceTest" classname="Tests.Auth.Services.BackendLoginServiceTest" file="C:\Users\Alexander Wegner\Projekte\oforge\oforge-core\Tests\Auth\Services\BackendLoginServiceTest.php" line="31" assertions="1" time="0.798276"/>
+    </testsuite>
+    <testsuite name="Tests\ConfigService\ConfigTest" file="C:\Users\Alexander Wegner\Projekte\oforge\oforge-core\Tests\ConfigService\ConfigTest.php" tests="1" assertions="0" errors="0" failures="0" skipped="1" time="0.001087">
+      <testcase name="testToBeDefined" class="Tests\ConfigService\ConfigTest" classname="Tests.ConfigService.ConfigTest" file="C:\Users\Alexander Wegner\Projekte\oforge\oforge-core\Tests\ConfigService\ConfigTest.php" line="10" assertions="0" time="0.001087">
+        <skipped/>
       </testcase>
-      <testcase name="testSecond" class="Tests\Logger\LoggerTest" classname="Tests.Logger.LoggerTest" file="C:\Users\Alexander Wegner\Projekte\oforge\oforge-core\Tests\Logger\LoggerTest.php" line="15" assertions="1" time="0.000167"/>
+    </testsuite>
+    <testsuite name="Tests\Logger\LoggerTest" file="C:\Users\Alexander Wegner\Projekte\oforge\oforge-core\Tests\Logger\LoggerTest.php" tests="1" assertions="0" errors="0" failures="0" skipped="1" time="0.000367">
+      <testcase name="testToBeDefined" class="Tests\Logger\LoggerTest" classname="Tests.Logger.LoggerTest" file="C:\Users\Alexander Wegner\Projekte\oforge\oforge-core\Tests\Logger\LoggerTest.php" line="10" assertions="0" time="0.000367">
+        <skipped/>
+      </testcase>
     </testsuite>
   </testsuite>
 </testsuites>
