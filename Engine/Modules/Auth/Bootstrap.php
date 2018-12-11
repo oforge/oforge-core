@@ -1,7 +1,6 @@
 <?php
 namespace Oforge\Engine\Modules\Auth;
 
-use Oforge\Engine\Modules\Auth\Controller\Backend\LoginController;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Auth\Services\BackendLoginService;
@@ -16,9 +15,6 @@ class Bootstrap extends AbstractBootstrap {
      * Bootstrap constructor.
      */
     public function __construct() {
-        $this->endpoints = [
-            "/backend/login" => ["controller" => LoginController::class, "name" => "backend_login"]
-        ];
         
         $this->services = [
             "auth" => AuthService::class,#
