@@ -61,7 +61,8 @@ class Bootstrap extends AbstractBootstrap
          */
         $templateRender = Oforge()->Services()->get("template.render");
 
-        $templateRender->View()->getEnvironment()->addExtension(TwigConfigAccess);
+        // TODO: MS Fix this
+        // $templateRender->View()->getEnvironment()->addExtension(TwigConfigAccess);
 
     }
 }

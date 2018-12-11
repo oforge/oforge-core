@@ -13,7 +13,7 @@ use Twig_Extension;
 use Twig_Function;
 use Twig_TemplateWrapper;
 
-class AccessConfigExtension extends Twig_Extension
+class AccessConfigExtension extends Twig_Extension implements \Twig_ExtensionInterface
 {
     public function getFunctions()
     {

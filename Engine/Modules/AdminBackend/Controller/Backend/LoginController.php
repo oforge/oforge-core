@@ -2,6 +2,7 @@
 
 namespace Oforge\Engine\Modules\AdminBackend\Controller\Backend;
 
+use Oforge\Engine\Modules\Auth\Services\BackendLoginService;
 use \Oforge\Engine\Modules\Core\Abstracts\AbstractController;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -12,17 +13,11 @@ class LoginController extends AbstractController
      * @param Request $request
      * @param Response $response
      *
-     * @return Response
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
-    public function indexAction(Request $request, Response $response)
-    {
-        //  /backend/login
-
-    }
+    public function indexAction(Request $request, Response $response) {}
 
     /**
-     * Login Port Action
+     * Login Action
      *
      * @param Request $request
      * @param Response $response
@@ -32,21 +27,32 @@ class LoginController extends AbstractController
      */
     public function processAction(Request $request, Response $response)
     {
+        $response = $response->withStatus(404);
+        return $response;
+        
+        
+        
         /**
          * @var $backendLoginService BackendLoginService
          */
-        //backend/login/process
-
         $backendLoginService = Oforge()->Services()->get('backend.login');
 
-        print_r($request->getParsedBody());
-        die();
-
-        $jwt = $backendLoginService->login("aw@7pkonzepte.de", "geheim");
+        $body = $request->getParsedBody();
+        $jwt = null;
+        
+        if (array_key_exists("email", $body) &&
+            array_key_exists("password", $body)) {
+            $jwt = $backendLoginService->login($body["email"], $body["password"]);
+        }
+        $uri = $request->getUri();
         if (isset($jwt)) {
             $cookie = "authorization=" . $jwt;
             $response = $response->withAddedHeader("Set-Cookie", $cookie);
-            Oforge()->View()->assign(["greeting" => "Login"]);
+            $uri = $uri->withPath('/backend/dashboard');
+            $response = $response->withRedirect((string)$uri);
+        } else {
+            $uri = $uri->withPath('/backend/login');
+            return $response->withRedirect((string)$uri);
         }
         return $response;
     }
