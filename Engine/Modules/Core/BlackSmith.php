@@ -217,6 +217,7 @@ class BlackSmith
         /*
         * Init and load modules
         */
+
         $modules = ModuleManager::getInstance();
         $modules->init();
 
