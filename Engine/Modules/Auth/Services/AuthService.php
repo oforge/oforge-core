@@ -72,7 +72,9 @@ class AuthService {
      *
      * @return object|null
      */
-    public function decode(string $jwt) {
+    public function decode(?string $jwt) {
+        if(!isset($jwt)) return null;
+
         $key = Oforge()->Settings()->get("jwt_salt");
         try {
             $decoded = JWT::decode( $jwt, $key, [ 'HS512' ] );

@@ -8,15 +8,18 @@
 
 namespace Oforge\Engine\Modules\TemplateEngine\Middleware;
 
+use Slim\Http\Request;
+use Slim\Http\Response;
+
 class AssetsMiddleware
 {
     /**
      * Middleware call before the controller call
      *
-     * @param  \Psr\Http\Message\ServerRequestInterface $request PSR7 request
-     * @param  \Psr\Http\Message\ResponseInterface $response PSR7 response
+     * @param Request $request
+     * @param Response $response
      *
-     * @return void
+     * @return ?Response
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
     public function prepend($request, $response)
@@ -32,7 +35,5 @@ class AssetsMiddleware
         ];
 
         Oforge()->View()->assign($data);
-
-        return $response;
     }
 }

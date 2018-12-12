@@ -1,12 +1,16 @@
 <?php
 namespace Oforge\Engine\Modules\AdminBackend\Controller\Backend;
 
-use \Oforge\Engine\Modules\Core\Abstracts\AbstractController;
+use Oforge\Engine\Modules\AdminBackend\Abstracts\SecureBackendController;
+use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class DashboardController extends AbstractController {
+class DashboardController extends SecureBackendController {
+
+
     public function indexAction(Request $request, Response $response) {
+
         $data = ['page_header' => 'Hello from the TestPlugin', 'page_header_description' => "Mega awesome optional additional description"];
         Oforge()->View()->assign($data);
     }
@@ -21,8 +25,16 @@ class DashboardController extends AbstractController {
 
     }
 
-
     public function ioniconsAction(Request $request, Response $response) {
 
+    }
+
+    public function testAction(Request $request, Response $response) {
+
+    }
+
+    public function initPermissions() {
+        $this->ensurePermissions("testAction", BackendUser::class, BackendUser::ROLE_MODERATOR);
+        $this->ensurePermissions("indexAction", BackendUser::class, BackendUser::ROLE_MODERATOR);
     }
 }

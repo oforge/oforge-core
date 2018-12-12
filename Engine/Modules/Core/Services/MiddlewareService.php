@@ -44,7 +44,7 @@ class MiddlewareService
                      */
                     $repo = Oforge()->DB()->getManager()->getRepository(Middleware::class);
 
-                    $element = $repo->findOneBy(["name" => strtolower($key)]);
+                    $element = $repo->findOneBy(["class" => $option["class"]]);
                     if(!isset($element)) {
                         $element = Middleware::create(Middleware::class, ["name" => $key,  "class" => $option["class"], "position" => $option["position"]]);
                         $element->setPlugin($middleware);
@@ -75,7 +75,7 @@ class MiddlewareService
             foreach ($options as $key => $option) {
                 if ($this->isValid($option)) {
 
-                    $element = $repo->findOneBy(["name" => strtolower($key)]);
+                    $element = $repo->findOneBy(["class" => $option["class"]]);
                     if(!isset($element)) {
                         $element = Middleware::create(Middleware::class, ["name" => $key,  "class" => $option["class"], "active" => 1, "position" => $option["position"]]);
                         Oforge()->DB()->getManager()->persist($element);
@@ -83,6 +83,7 @@ class MiddlewareService
                 }
             }
         }
+
         Oforge()->DB()->getManager()->flush();
     }
     
