@@ -1,4 +1,5 @@
 <?php
+
 namespace Oforge\Engine\Modules\TemplateEngine;
 
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
@@ -13,12 +14,13 @@ use Oforge\Engine\Modules\TemplateEngine\Services\TemplateAssetService;
 use Oforge\Engine\Modules\TemplateEngine\Services\TemplateManagementService;
 use Oforge\Engine\Modules\TemplateEngine\Services\TemplateRenderService;
 
-class Bootstrap extends AbstractBootstrap {
-
+class Bootstrap extends AbstractBootstrap
+{
     /**
      * Bootstrap constructor.
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->services = [
             "template.render" => TemplateRenderService::class,
             "template.management" => TemplateManagementService::class,
@@ -27,7 +29,7 @@ class Bootstrap extends AbstractBootstrap {
             "assets.css" => CssAssetService::class,
             "assets.static" => StaticAssetService::class,
         ];
-        
+
         $this->models = [
             Template::class
         ];
@@ -41,5 +43,10 @@ class Bootstrap extends AbstractBootstrap {
 
         Oforge()->setTemplateManager(TemplateManager::getInstance());
         Oforge()->setViewManager(ViewManager::getInstance());
+    }
+
+    public function activate()
+    {
+        Oforge()->Templates()->init();
     }
 }

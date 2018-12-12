@@ -39,7 +39,7 @@ class TemplateManager extends AbstractTemplateManager {
          */
         $templateManagementService = Oforge()->Services()->get("template.management");
         $templateFiles = Helper::getTemplateFiles(ROOT_PATH . DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR);
-        
+
         foreach($templateFiles as $templateName => $dir ) {
             $templateManagementService->register($templateName);
         }
