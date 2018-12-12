@@ -37,12 +37,13 @@ class BackendSecureMiddleware
 
         if (isset($permissions)) {
 
-            $authCookie = $request->getCookieParam("authorization");
+            $auth = $_SESSION['auth'];
+            
             /**
              * @var $authService AuthService
              */
             $authService = Oforge()->Services()->get("auth");
-            $user = $authService->decode($authCookie);
+            $user = $authService->decode($auth);
 
 
             if (isset($user) &&
