@@ -2,78 +2,118 @@
 
 namespace Oforge\Engine\Modules\Mailer\Services;
 
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
+use Oforge\Engine\Modules\Core\Services\ConfigService;
+use PHPMailer\PHPMailer\PHPMailer;
+
 class MailService
 {
-    public function send(array $options) {
 
-        if($this->isValid($options)) {
+    /**
+     * @param array $options
+     * @throws ConfigOptionKeyNotExists
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws \PHPMailer\PHPMailer\Exception
+     */
+    public function send(array $options)
+    {
+        if ($this->isValid($options)) {
 
-            $mail = new PHPMailer(true);                              // Passing `true` enables exceptions
             try {
-                //Server settings
-                $mail->SMTPDebug = 2;                                 // Enable verbose debug output
-                $mail->isSMTP();                                      // Set mailer to use SMTP
-                $mail->Host = 'smtp1.example.com;smtp2.example.com';  // Specify main and backup SMTP servers
-                $mail->SMTPAuth = true;                               // Enable SMTP authentication
-                $mail->Username = 'user@example.com';                 // SMTP username
-                $mail->Password = 'secret';                           // SMTP password
-                $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
-                $mail->Port = 587;                                    // TCP port to connect to
+                /**
+                 * @var $configService ConfigService
+                 */
+                $configService = Oforge()->Services()->get("config");
+                $mail = new PHPMailer(true);
 
-                //Recipients
-                $mail->setFrom('from@example.com', 'Mailer');
-                $mail->addAddress('joe@example.net', 'Joe User');     // Add a recipient
-                $mail->addAddress('ellen@example.com');               // Name is optional
-                $mail->addReplyTo('info@example.com', 'Information');
-                $mail->addCC('cc@example.com');
-                $mail->addBCC('bcc@example.com');
+                /**
+                 * Set Server Settings
+                 */
+                $mail->isSMTP();
+                $mail->setFrom($configService->get("mailer.from"));
+                $mail->Host = $configService->get("mailer.host");
+                $mail->Username = $configService->get("mailer.username");
+                $mail->Port = $configService->get("mailer.port");
+                $mail->SMTPAuth = $configService->get("mailer.smtp.auth");
+                $mail->Password = $configService->get("mailer.smtp.password");
+                $mail->SMTPSecure = $configService->get("mailer.smtp.secure");
 
-                //Attachments
-                $mail->addAttachment('/var/tmp/file.tar.gz');         // Add attachments
-                $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
+                /**
+                 * Add Recipients ({to,cc,bcc}Addresses)
+                 */
+                foreach ($options["to"] as $key => $value) {
+                    $mail->addAddress($key, $value);
+                }
+                foreach ($options["cc"] as $key => $value) {
+                    $mail->addCC($key, $value);
+                }
+                foreach ($options["bcc"] as $key => $value) {
+                    $mail->addBCC($key, $value);
+                }
+                foreach ($options["replyTo"] as $key => $value) {
+                    $mail->addReplyTo($key, $value);
+                }
 
-                //Content
-                $mail->isHTML(true);                                  // Set email format to HTML
-                $mail->Subject = 'Here is the subject';
-                $mail->Body    = 'This is the HTML message body <b>in bold!</b>';
-                $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+                /**
+                 * Add Attachments:
+                 */
+                foreach ($options["attachment"] as $key => $value) {
+                    $mail->addAttachment($key, $value);
+                }
+
+                /**
+                 * Add Content
+                 */
+                $mail->isHTML($options["html"]);
+                $mail->Subject = $options["subject"];
+                $mail->Body = $options["body"];
 
                 $mail->send();
-                echo 'Message has been sent';
+
+
+                Oforge()->Logger()->get("mailer")->info("Message has been sent", $options);
             } catch (Exception $e) {
-                echo 'Message could not be sent. Mailer Error: ', $mail->ErrorInfo;
+                Oforge()->Logger()->get("mailer")->error("Message has been sent", $mail->ErrorInfo);
             }
         }
     }
-    private function isValid(array $options) {
+
+    private function isValid(array $options): bool
+    {
+
         /**
-         * Check if required keys are within the options
+         * Check if required keys are within the options-array
          */
         $keys = ["to", "subject", "body"];
         foreach ($keys as $key) {
-            if(!array_key_exists($key, $options)) throw new ConfigOptionKeyNotExists($key);
-        }
-
-        /**
-         * Check valid email
-         */
-        $emailKeys = ["to", "cc", "bcc", "replyTo"];
-        foreach ($emailKeys as $key) {
-            if(array_key_exists($key, $options)) {
-                if(is_array($options[$key])) {
-
-                } else {
-                    throw new \InvalidArgumentException("Expected array for $key but get " . gettype($options[$key]));
-                }
+            if (!array_key_exists($key, $options)) {
+                throw new ConfigOptionKeyNotExists($key);
             }
         }
 
+        /**
+         * Validate Mail Addresses
+         */
+        $emailKeys = ["to", "cc", "bcc", "replyTo"];
+        foreach ($emailKeys as $key) {
+            if (array_key_exists($key, $options)) {
+                if (is_array($options[$key])) {
+                    foreach ($options[$key] as $email => $name) {
+                        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                            throw new \InvalidArgumentException("$email is not a valid email.");
+                        }
+                    }
+                } else {
+                    // Argument is not an Array
+                    throw new \InvalidArgumentException("Expected array for $key but get " . gettype($options[$key]));
+                }
+            } else {
+                //Array Key does not exist
+                throw new \InvalidArgumentException("Mandatory key $key doesn't exist");
+            }
+        }
 
-        /*if (filter_var($email_a, FILTER_VALIDATE_EMAIL)) {
-            echo "Email address '$email_a' is considered valid.\n";
-        }*/
+        return true;
     }
-
-
-
 }
