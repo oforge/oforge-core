@@ -184,7 +184,8 @@ class TemplateRenderService
 
             $this->view = new CustomTwig($paths, [
                 'cache' => ROOT_PATH . Statics::THEME_CACHE_DIR,
-                'auto_reload' => $debug
+                'auto_reload' => $debug,
+                'debug' => $debug,
             ]);
 
             if ($debug) {

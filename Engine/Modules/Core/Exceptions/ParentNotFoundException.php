@@ -8,14 +8,14 @@
 
 namespace Oforge\Engine\Modules\Core\Exceptions;
 
-class ConfigElementNotFoundException extends \Exception
+class ParentNotFoundException extends \Exception
 {
     /**
      * ConfigElementNotFoundException constructor.
      * @param $name
      */
-    public function __construct(string $name, string $scope)
+    public function __construct(string $name)
     {
-        parent::__construct("Config key $name not found for scope $scope");
+        parent::__construct("Parent element with name $name not found");
     }
 }

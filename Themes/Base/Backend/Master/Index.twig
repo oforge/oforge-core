@@ -25,10 +25,7 @@
                     {{ page_header }}
                     {% if page_header_description  %}<small>{{ page_header_description }}</small>{% endif %}
                 </h1>
-                <ol class="breadcrumb">
-                    <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-                    <li class="active">Here</li>
-                </ol>
+                {% include 'Backend/Master/BreadCrumbs.twig' %}
             </section>
 
             <!-- Main content -->

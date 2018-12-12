@@ -6,8 +6,9 @@ use Oforge\Engine\Modules\AdminBackend\Controller\Backend\DashboardController;
 use Oforge\Engine\Modules\AdminBackend\Controller\Backend\IndexController;
 use Oforge\Engine\Modules\AdminBackend\Controller\Backend\LoginController;
 use Oforge\Engine\Modules\AdminBackend\Middleware\BackendSecureMiddleware;
+use Oforge\Engine\Modules\AdminBackend\Models\SidebarNavigation;
 use Oforge\Engine\Modules\AdminBackend\Services\Permissions;
-use Oforge\Engine\Modules\AdminBackend\Services\SidebarNavigation;
+use Oforge\Engine\Modules\AdminBackend\Services\SidebarNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 
@@ -20,7 +21,7 @@ class Bootstrap extends AbstractBootstrap
     public function __construct()
     {
         $this->services = [
-            "backend.sidebar.navigation" => SidebarNavigation::class,
+            "backend.sidebar.navigation" => SidebarNavigationService::class,
             "permissions" => Permissions::class
         ];
 
@@ -32,6 +33,10 @@ class Bootstrap extends AbstractBootstrap
 
         $this->middleware = [
             "*" => ["class" => BackendSecureMiddleware::class, "position" => 0]
+        ];
+
+        $this->models = [
+            SidebarNavigation::class
         ];
     }
 
@@ -60,5 +65,40 @@ class Bootstrap extends AbstractBootstrap
             "required" => true,
             "default" => "OF"
         ]);
+
+
+        /**
+         * @var $sidebarNavigation SidebarNavigationService
+         */
+        $sidebarNavigation = Oforge()->Services()->get("backend.sidebar.navigation");
+
+        $sidebarNavigation->put([
+            "name" => "admin",
+            "order" => 99
+        ]);
+
+        $sidebarNavigation->put([
+            "name" => "help",
+            "order" => 99,
+            "parent" => "admin",
+            "icon" => "ion-help"
+        ]);
+
+        $sidebarNavigation->put([
+            "name" => "ionicons",
+            "order" => 2,
+            "parent" => "help",
+            "icon" => "ion-nuclear",
+            "path" => "backend_dashboard_ionicons"
+        ]);
+
+        $sidebarNavigation->put([
+            "name" => "fontAwesome",
+            "order" => 1,
+            "parent" => "help",
+            "icon" => "fa-fort-awesome",
+            "path" => "backend_dashboard_fontAwesome"
+        ]);
+
     }
 }

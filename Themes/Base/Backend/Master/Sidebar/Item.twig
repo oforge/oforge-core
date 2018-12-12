@@ -1,0 +1,19 @@
+<li class="{% if item.children %}treeview{% endif %}{% if item.name in breadcrumbsmap|keys %} active{% endif %}">
+    <a href="{% if item.path %}{{ url(item.path) }}{% else %}#{% endif %}">
+        {% if item.icon %}<i class="{{ item.icon }}"></i>{% endif %}
+        <span>{{ item.name }}</span>
+        {% if item.children %}
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        {% endif %}
+    </a>
+
+    {% if item.children %}
+        <ul class="treeview-menu">
+            {% for subitem in item.children %}
+                {% include 'Backend/Master/Sidebar/Item.twig' with {'item': subitem} %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+</li>

@@ -29,12 +29,58 @@ class DashboardController extends SecureBackendController {
 
     }
 
-    public function testAction(Request $request, Response $response) {
+    public function helpAction(Request $request, Response $response) {
 
     }
 
+
+    public function testAction(Request $request, Response $response) {
+
+        /**
+         * @var $sidebarNavigation SidebarNavigationService
+         */
+        $sidebarNavigation = Oforge()->Services()->get("backend.sidebar.navigation");
+
+
+        $sidebarNavigation->put([
+            "name" => "admin",
+            "order" => 99
+        ]);
+
+        $sidebarNavigation->put([
+            "name" => "help",
+            "order" => 99,
+            "parent" => "admin",
+            "icon" => "ion-help"
+        ]);
+
+        $sidebarNavigation->put([
+            "name" => "help",
+            "order" => 99,
+            "parent" => "admin",
+            "icon" => "ion-help"
+        ]);
+
+        $sidebarNavigation->put([
+            "name" => "ionicons",
+            "order" => 2,
+            "parent" => "help",
+            "icon" => "ion-nuclear",
+            "path" => "backend_dashboard_ionicons"
+        ]);
+
+        $sidebarNavigation->put([
+            "name" => "fontAwesome",
+            "order" => 1,
+            "parent" => "help",
+            "icon" => "fa-fort-awesome",
+            "path" => "backend_dashboard_fontAwesome"
+        ]);
+    }
+
+
     public function initPermissions() {
-        $this->ensurePermissions("testAction", BackendUser::class, BackendUser::ROLE_MODERATOR);
         $this->ensurePermissions("indexAction", BackendUser::class, BackendUser::ROLE_MODERATOR);
+//        $this->ensurePermissions("indexAction", BackendUser::class, BackendUser::ROLE_MODERATOR);
     }
 }

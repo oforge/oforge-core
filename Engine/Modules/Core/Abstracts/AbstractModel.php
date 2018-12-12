@@ -36,6 +36,26 @@ class AbstractModel
         return $this;
     }
 
+
+    /*
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        $methods = get_class_methods($this);
+        $result = [];
+        foreach ($methods as $method) {
+            if(substr( $method, 0, 3 ) === "get") {
+                $param = lcfirst(substr($method, 3));
+                $result[$param] = $this->$method();
+            }
+        }
+
+        return $result;
+    }
+
+
     /*
      * @param array $array
      * @param array $fillable optional property whitelist for mass-assignment

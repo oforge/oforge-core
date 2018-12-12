@@ -1,25 +1,14 @@
-
 <!-- Left side column. contains the logo and sidebar -->
 <aside class="main-sidebar">
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu" data-widget="tree">
-            <li class="header">HEADER</li>
-            <!-- Optionally, you can add icons to the links -->
-            <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>
-            <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
-            <li class="treeview">
-                <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span>
-                    <span class="pull-right-container">
-                <i class="fa fa-angle-left pull-right"></i>
-              </span>
-                </a>
-                <ul class="treeview-menu">
-                    <li><a href="{{ url("backend_dashboard_fontAwesome") }}">Link in level 2</a></li>
-                    <li><a href="{{ url("backend_dashboard_ionicons") }}">Link in level 2</a></li>
-                </ul>
-            </li>
+            {% set navigation = backend_sidebar_navigation()  %}
+
+            {% for item in navigation %}
+                {% include 'Backend/Master/Sidebar/Root.twig' with item %}
+            {% endfor %}
         </ul>
         <!-- /.sidebar-menu -->
     </section>

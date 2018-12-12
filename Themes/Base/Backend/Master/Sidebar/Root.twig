@@ -1,0 +1,6 @@
+<li class="header">{{ item.name }}</li>
+{% set breadcrumbsmap = backend_breadcrumbs_map(meta.route.name) %}
+
+{% for subitem in item.children %}
+    {% include 'Backend/Master/Sidebar/Item.twig' with {'item': subitem} %}
+{% endfor %}
