@@ -95,7 +95,6 @@ class TemplateRenderService
     private function renderJson(Request $request, Response $response, $data)
     {
         return $response
-            ->withStatus(200)
             ->withHeader('Content-Type', 'application/json')
             ->withJson($data);
     }

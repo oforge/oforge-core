@@ -5,20 +5,23 @@ use \Oforge\Engine\Modules\Core\Abstracts\AbstractController;
 use Oforge\Engine\Modules\Core\Services\EndpointService;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Slim\Router;
 
 class IndexController extends AbstractController {
     public function indexAction(Request $request, Response $response) {
         $auth = $request->getCookieParam("authorization");
     
-        // $uri = $request->getUri()->withPath($this->router->pathFor('home')); return $response->withRedirect((string)$uri);
-       
-        $uri = $request->getUri();
-        
+        /**
+         * @var $router Router
+         */
+        $router = Oforge()->App()->getContainer()->get("router");
+
         if (isset($auth)) {
-            $uri = $uri->withPath('/backend/dashboard');
+            $uri = $router->pathFor("backend_dashboard");
         } else {
-            $uri = $uri->withPath('/backend/login');
+            $uri = $router->pathFor("backend_login");
         }
-        return $response->withRedirect((string)$uri, 302);
+
+        return $response->withRedirect($uri, 302);
     }
 }

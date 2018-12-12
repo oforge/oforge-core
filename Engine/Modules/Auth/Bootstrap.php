@@ -17,7 +17,7 @@ class Bootstrap extends AbstractBootstrap {
     public function __construct() {
         
         $this->services = [
-            "auth" => AuthService::class,#
+            "auth" => AuthService::class,
             "backend.login" => BackendLoginService::class
         ];
         

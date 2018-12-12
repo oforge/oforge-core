@@ -27,11 +27,6 @@ class LoginController extends AbstractController
      */
     public function processAction(Request $request, Response $response)
     {
-        $response = $response->withStatus(404);
-        return $response;
-        
-        
-        
         /**
          * @var $backendLoginService BackendLoginService
          */
@@ -44,16 +39,21 @@ class LoginController extends AbstractController
             array_key_exists("password", $body)) {
             $jwt = $backendLoginService->login($body["email"], $body["password"]);
         }
-        $uri = $request->getUri();
+
+        /**
+         * @var $router Router
+         */
+        $router = Oforge()->App()->getContainer()->get("router");
+
         if (isset($jwt)) {
             $cookie = "authorization=" . $jwt;
             $response = $response->withAddedHeader("Set-Cookie", $cookie);
-            $uri = $uri->withPath('/backend/dashboard');
-            $response = $response->withRedirect((string)$uri);
+
+            $uri = $router->pathFor("backend_dashboard");
         } else {
-            $uri = $uri->withPath('/backend/login');
-            return $response->withRedirect((string)$uri);
+            $uri = $router->pathFor("backend_login");
         }
-        return $response;
+
+        return $response->withRedirect($uri, 302);
     }
 }

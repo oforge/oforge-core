@@ -23,7 +23,7 @@ class Bootstrap extends AbstractBootstrap
         ];
 
         $this->endpoints = [
-            "/backend" => ["controller" => IndexController::class, "name" => "backend", "asset_scope" => "Backend"],
+            "/backend[/]" => ["controller" => IndexController::class, "name" => "backend", "asset_scope" => "Backend"],
             "/backend/login" => ["controller" => LoginController::class, "name" => "backend_login", "asset_scope" => "Backend"],
             "/backend/dashboard" => ["controller" => DashboardController::class, "name" => "backend_dashboard", "asset_scope" => "Backend"]
         ];
