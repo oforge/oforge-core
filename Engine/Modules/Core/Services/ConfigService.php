@@ -32,6 +32,7 @@ class ConfigService
     public function add(Array $options)
     {
         if ($this->isValid($options)) {
+
             $element = AbstractModel::create(Element::class, $options);
             $em = Oforge()->DB()->getManager();
 
