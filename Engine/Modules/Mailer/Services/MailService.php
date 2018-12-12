@@ -8,8 +8,10 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 class MailService
 {
+
     /**
      * @param array $options
+     * @throws ConfigOptionKeyNotExists
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      * @throws \PHPMailer\PHPMailer\Exception
@@ -66,8 +68,9 @@ class MailService
                 $mail->isHTML($options["html"]);
                 $mail->Subject = $options["subject"];
                 $mail->Body = $options["body"];
+
                 $mail->send();
-                //print_r($mail);
+
 
                 Oforge()->Logger()->get("mailer")->info("Message has been sent", $options);
             } catch (Exception $e) {
@@ -90,7 +93,7 @@ class MailService
         }
 
         /**
-         * Check mail addresses TODO: Prevent Exception for empty array
+         * Validate Mail Addresses
          */
         $emailKeys = ["to", "cc", "bcc", "replyTo"];
         foreach ($emailKeys as $key) {
