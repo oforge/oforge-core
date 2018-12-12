@@ -54,14 +54,14 @@ class ForgeDataBase
         }
     }
 
-    public function initSchema(array $schemata)
+    public function initSchema(array $schemata, $forceReinit = false)
     {
         if (isset($schemata)) {
             if (sizeof($this->loadedSchemata) == 0) $this->loadLoadedSchemata();
 
             $changed = false;
             foreach ($schemata as $schema) {
-                if(!array_key_exists($schema, $this->loadedSchemata)) {
+                if(!array_key_exists($schema, $this->loadedSchemata) || $forceReinit) {
                     $this->addMetaData($schema);
                     $changed = true;
                 }
