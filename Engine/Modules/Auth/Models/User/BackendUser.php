@@ -18,6 +18,10 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
  */
 class BackendUser extends AbstractModel
 {
+
+    const ROLE_SYSTEM = 0;
+    const ROLE_ADMINISTRATOR = 1;
+    const ROLE_MODERATOR = 2;
     /**
      * @var int
      * @ORM\Column(name="id", type="integer", nullable=false)

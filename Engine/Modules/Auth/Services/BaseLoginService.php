@@ -56,7 +56,8 @@ class BaseLoginService {
                 $userObj = [
                     'user_id' => $user->getId(),
                     'user_email' => $user->getEmail(),
-                    'user_type' => get_class($user)
+                    'user_type' => get_class($user),
+                    'user_role' => 1 //TODO temp => Admin
                 ];
                 return $authService->createJWT($userObj);
             }

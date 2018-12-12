@@ -37,7 +37,7 @@ class MiddlewarePluginManager {
     public function __invoke( $request, $response, $next ) {
         foreach ( $this->activeMiddlewares as $middleware ) {
             $className = $middleware->getClass();
-            
+
             if ( method_exists( $className, "prepend" ) ) {
                 $newresponse = (new $className())->prepend( $request, $response );
                 if(isset($newresponse)) $response = $newresponse;
