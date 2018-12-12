@@ -197,30 +197,22 @@ class BlackSmith
          */
         $this->logger = new LogManager($this->settings->get("logger"));
 
-        $this->logger->get()->info("first " . microtime(true));
         /**
          * Connect to database
          */
         $this->db = ForgeDataBase::getInstance();
         $this->db->init($this->settings->get("db"));
 
-
-        $this->logger->get()->info("db " . microtime(true));
-
         /**
          * Start service manager
          */
         $this->services = ServiceManager::getInstance();
 
-
-        $this->logger->get()->info("service " . microtime(true));
         /*
         * Start slim application
         */
         $this->app = App::getInstance();
         $this->container = $this->App()->getContainer();
-
-        $this->logger->get()->info("slim " . microtime(true));
 
         /*
         * Init and load modules
@@ -228,16 +220,11 @@ class BlackSmith
         $modules = ModuleManager::getInstance();
         $modules->init();
 
-        $this->logger->get()->info("modules " . microtime(true));
-
         /*
         * Init and load plugins
         */
         $this->pluginManager = PluginManager::getInstance();
         $this->pluginManager->init();
-
-
-        $this->logger->get()->info("plugin " . microtime(true));
 
         /*
          * Init route manager
@@ -245,19 +232,10 @@ class BlackSmith
         $this->router = RouteManager::getInstance();
         $this->router->init();
 
-        $this->logger->get()->info("routes " . microtime(true));
-
-        if($this->templateManager) $this->templateManager->init();
-
-
-        $this->logger->get()->info("template " . microtime(true));
         /*
          * Let the Blacksmith forge all the things \°/
          */
         if ($start) $this->app->run();
-
-
-        $this->logger->get()->info("slim start " . microtime(true));
     }
 
     /**

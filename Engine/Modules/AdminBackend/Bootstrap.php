@@ -19,7 +19,7 @@ class Bootstrap extends AbstractBootstrap
     public function __construct()
     {
         $this->services = [
-          "backend.sidebar.navigation" => SidebarNavigation::class
+            "backend.sidebar.navigation" => SidebarNavigation::class
         ];
 
         $this->endpoints = [
@@ -54,14 +54,5 @@ class Bootstrap extends AbstractBootstrap
             "required" => true,
             "default" => "OF"
         ]);
-
-
-        /**
-         * @var $templateRender TemplateRenderService
-         */
-        $templateRender = Oforge()->Services()->get("template.render");
-
-        $templateRender->View()->getEnvironment()->addExtension(TwigConfigAccess);
-
     }
 }
