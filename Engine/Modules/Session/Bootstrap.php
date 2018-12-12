@@ -11,7 +11,6 @@ namespace Oforge\Engine\Modules\Session;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Session\Middleware\SessionMiddleware;
 use Oforge\Engine\Modules\Session\Services\SessionManagementService;
-use Yaf\Session;
 
 /**
  * Class Bootstrap
@@ -27,7 +26,8 @@ class Bootstrap extends AbstractBootstrap {
             "session.management" => SessionManagementService::class
         ];
         $this->middleware = [
-            "*" => ["class" => SessionMiddleware::class, "position" => 0]
+            "*" => ["class" => SessionMiddleware::class, "position" => 2]
         ];
+        $this->order = 2;
     }
 }

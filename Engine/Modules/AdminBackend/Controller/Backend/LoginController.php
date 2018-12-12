@@ -4,6 +4,7 @@ namespace Oforge\Engine\Modules\AdminBackend\Controller\Backend;
 
 use Oforge\Engine\Modules\Auth\Services\BackendLoginService;
 use \Oforge\Engine\Modules\Core\Abstracts\AbstractController;
+use Oforge\Engine\Modules\Session\Services\SessionManagementService;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
@@ -16,7 +17,10 @@ class LoginController extends AbstractController
      *
      * @throws \Exception
      */
-    public function indexAction(Request $request, Response $response) {}
+    public function indexAction(Request $request, Response $response) {
+        // for creating a user if no user exists in dev environment:
+        // $2y$10$fnI/7By7ojrwUv51JRi.K.yskzFSy0N4iiE6VheIJUh6ln1EsYWSi <<<<< geheim
+    }
 
     /**
      * Login Action
@@ -79,6 +83,12 @@ class LoginController extends AbstractController
         if (!isset($jwt)) {
             return $response->withRedirect($uri, 302);
         }
+
+        /**
+         * @var $sessionManagement SessionManagementService
+         */
+        $sessionManagement = Oforge()->Services()->get('session.management');
+        $sessionManagement->regenerateSession();
     
         $_SESSION['auth'] = $jwt;
         

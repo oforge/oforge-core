@@ -32,12 +32,14 @@ class Bootstrap extends AbstractBootstrap
         ];
 
         $this->middleware = [
-            "*" => ["class" => BackendSecureMiddleware::class, "position" => 0]
+            "*" => ["class" => BackendSecureMiddleware::class, "position" => 1]
         ];
 
         $this->models = [
             SidebarNavigation::class
         ];
+
+        $this->order = 2;
     }
 
     /**
