@@ -1,6 +1,110 @@
-<form action="/backend/login/process" method="post">
-    <input type="email" name="email" placeholder="email*">
-    <input type="password" name="password" placeholder="password*">
-    <input type="hidden" name="token" value="{{ token() }}">
-    <input type="submit" value="Tu es">
-</form>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Backend Login</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: sans-serif;
+        }
+        html, body {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            background-image: linear-gradient(35deg, #ecf0f5 40%, #ccc);
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+        h1 {
+            font-family: sans-serif;
+            letter-spacing: -1px;
+            font-size: 2rem;
+            background: linear-gradient(195deg, #3c8dbc, #337ab7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: hue 5s infinite;
+            text-align: center;
+        }
+        .form {
+            display: flex;
+            flex-direction: column;
+        }
+        .form__control {
+            display: block;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            height: 2rem;
+            width: 10rem;
+            background: transparent;
+            color: #337ab7;
+            border: 2px solid #cc3333;
+            border-image: linear-gradient(195deg, #3c8dbc, #337ab7) 1 1;
+            padding: .25rem;
+            outline: none;
+        }
+        .form__control::placeholder {
+            color: #666;
+        }
+        .form__control ~ .form__control {
+            margin-top: 1rem;
+        }
+        .form__control.form__control--submit {
+            color: #fefefe;
+            background-image: linear-gradient(195deg, #3c8dbc, #337ab7);
+            cursor: pointer;
+        }
+        @keyframes hue {
+            0% {
+                filter: hue-rotate(0deg);
+            }
+            50% {
+                filter: hue-rotate(10deg);
+            }
+            100% {
+                filter: hue-rotate(0deg);
+            }
+        }
+        @-webkit-keyframes autofill {
+            to {
+                color: #337ab7;
+                background: transparent;
+            }
+        }
+
+        input:-webkit-autofill {
+            -webkit-animation-name: autofill;
+            -webkit-animation-fill-mode: both;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="form__title">
+        Oforge Backend Login
+    </h1>
+    <form action="/backend/login/process" method="post" class="form">
+        <input type="email" name="email" placeholder="email*" class="form__control">
+        <input type="password" name="password" placeholder="password*" class="form__control">
+        <input type="hidden" name="token" value="{{ token() }}">
+        <input type="submit" value="Tu es" class="form__control form__control--submit">
+    </form>
+</div>
+</body>
+</html>

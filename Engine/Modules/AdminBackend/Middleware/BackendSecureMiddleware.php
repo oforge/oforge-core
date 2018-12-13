@@ -34,10 +34,12 @@ class BackendSecureMiddleware
         $permissionService = Oforge()->Services()->get("permissions");
 
         $permissions = $permissionService->get($controllerMethod);
+        $auth = null;
+        if (isset($_SESSION['auth'])) {
+            $auth = $_SESSION['auth'];
+        }
 
         if (isset($permissions)) {
-
-            $auth = $_SESSION['auth'];
             
             /**
              * @var $authService AuthService

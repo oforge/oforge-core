@@ -5,6 +5,7 @@ namespace Oforge\Engine\Modules\AdminBackend;
 use Oforge\Engine\Modules\AdminBackend\Controller\Backend\DashboardController;
 use Oforge\Engine\Modules\AdminBackend\Controller\Backend\IndexController;
 use Oforge\Engine\Modules\AdminBackend\Controller\Backend\LoginController;
+use Oforge\Engine\Modules\AdminBackend\Controller\Backend\LogoutController;
 use Oforge\Engine\Modules\AdminBackend\Middleware\BackendSecureMiddleware;
 use Oforge\Engine\Modules\AdminBackend\Models\SidebarNavigation;
 use Oforge\Engine\Modules\AdminBackend\Services\Permissions;
@@ -28,6 +29,7 @@ class Bootstrap extends AbstractBootstrap
         $this->endpoints = [
             "/backend[/]" => ["controller" => IndexController::class, "name" => "backend", "asset_scope" => "Backend"],
             "/backend/login" => ["controller" => LoginController::class, "name" => "backend_login", "asset_scope" => "Backend"],
+            "/backend/logout" => ["controller" => LogoutController::class, "name" => "backend_logout", "asset_scope" => "Backend"],
             "/backend/dashboard" => ["controller" => DashboardController::class, "name" => "backend_dashboard", "asset_scope" => "Backend"]
         ];
 

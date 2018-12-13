@@ -24,6 +24,6 @@ class SessionMiddleware {
          * @var $sessionManager SessionManagementService
          */
         $sessionManager = Oforge()->Services()->get("session.management");
-        $sessionManager->sessionStart(180);
+        $sessionManager->sessionStart();
     }
 }

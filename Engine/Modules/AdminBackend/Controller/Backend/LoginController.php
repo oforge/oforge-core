@@ -88,7 +88,7 @@ class LoginController extends AbstractController
          * @var $sessionManagement SessionManagementService
          */
         $sessionManagement = Oforge()->Services()->get('session.management');
-        $sessionManagement->regenerateSession();
+        // $sessionManagement->regenerateSession();
     
         $_SESSION['auth'] = $jwt;
         
