@@ -9,17 +9,14 @@ use Slim\Router;
 
 class IndexController extends AbstractController {
     public function indexAction(Request $request, Response $response) {
-        $auth = $request->getCookieParam("authorization");
-    
         /**
          * @var $router Router
          */
         $router = Oforge()->App()->getContainer()->get("router");
+        $uri = $router->pathFor("backend_login");
 
-        if (isset($auth)) {
+        if (isset($_SESSION['auth'])) {
             $uri = $router->pathFor("backend_dashboard");
-        } else {
-            $uri = $router->pathFor("backend_login");
         }
 
         return $response->withRedirect($uri, 302);

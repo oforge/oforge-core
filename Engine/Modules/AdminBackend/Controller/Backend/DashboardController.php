@@ -2,8 +2,8 @@
 namespace Oforge\Engine\Modules\AdminBackend\Controller\Backend;
 
 use Oforge\Engine\Modules\AdminBackend\Abstracts\SecureBackendController;
+use Oforge\Engine\Modules\AdminBackend\Services\SidebarNavigationService;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
-use Oforge\Engine\Modules\Session\Services\SessionManagementService;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -17,7 +17,13 @@ class DashboardController extends SecureBackendController {
         $data = ['page_header' => 'Hello from the TestPlugin', 'page_header_description' => "Mega awesome optional additional description"];
         Oforge()->View()->assign($data);
     }
-
+    
+    /**
+     * @param Request $request
+     * @param Response $response
+     *
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     */
     public function buildAction(Request $request, Response $response) {
         Oforge()->Services()->get("assets.template")->build(Oforge()->View()->get("meta")["asset_scope"]);
     }
@@ -33,15 +39,19 @@ class DashboardController extends SecureBackendController {
     public function helpAction(Request $request, Response $response) {
 
     }
-
-
+    
+    /**
+     * @param Request $request
+     * @param Response $response
+     *
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     */
     public function testAction(Request $request, Response $response) {
 
         /**
          * @var $sidebarNavigation SidebarNavigationService
          */
         $sidebarNavigation = Oforge()->Services()->get("backend.sidebar.navigation");
-
 
         $sidebarNavigation->put([
             "name" => "admin",
@@ -74,7 +84,7 @@ class DashboardController extends SecureBackendController {
             "name" => "fontAwesome",
             "order" => 1,
             "parent" => "help",
-            "icon" => "fa-fort-awesome",
+            "icon" => "fa fa-fort-awesome",
             "path" => "backend_dashboard_fontAwesome"
         ]);
     }

@@ -55,4 +55,12 @@ class SessionManagementService {
         session_id($sessionId);
         session_start();
     }
+    
+    public function sessionDestroy() {
+        $_SESSION = [];
+        if (isset($_COOKIE[session_name()])) {
+            setcookie(session_name(), null,-1, "/");
+        }
+        session_destroy();
+    }
 }
