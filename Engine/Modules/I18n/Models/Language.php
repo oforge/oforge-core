@@ -37,4 +37,44 @@ class Language extends AbstractModel
      * @ORM\Column(name="name", type="string", nullable=false)
      */
     private $name;
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIso(): string
+    {
+        return $this->iso;
+    }
+
+    /**
+     * @param string $iso
+     */
+    public function setIso(string $iso)
+    {
+        $this->iso = $iso;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name)
+    {
+        $this->name = $name;
+    }
 }

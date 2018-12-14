@@ -5,22 +5,23 @@ namespace Oforge\Engine\Modules\I18n;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\I18n\Models\Language;
-use Oforge\Engine\Modules\I18n\Models\Snippets;
+use Oforge\Engine\Modules\I18n\Models\Snippet;
 use Oforge\Engine\Modules\I18n\Services\InternationalizationService;
+use Oforge\Engine\Modules\I18n\Services\LanguageIdentificationService;
 
 class Bootstrap extends AbstractBootstrap
 {
     public function __construct()
     {
         $this->services = [
-            "i18n" => InternationalizationService::class
+            "i18n" => InternationalizationService::class,
+            "language.identifier" => LanguageIdentificationService::class
         ];
 
         $this->models = [
             Language::class,
-            Snippets::class
+            Snippet::class
         ];
-
     }
 
     /**
