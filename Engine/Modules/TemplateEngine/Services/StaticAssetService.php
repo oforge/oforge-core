@@ -8,11 +8,11 @@
 
 namespace Oforge\Engine\Modules\TemplateEngine\Services;
 
-use MatthiasMullie\Minify\JS;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 
 class StaticAssetService extends BaseAssetService
 {
+
     /**
      * @param string $scope
      *

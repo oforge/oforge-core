@@ -33,12 +33,6 @@ class DashboardController extends SecureBackendController {
 
     }
 
-    public function timAction(Request $request, Response $response) {
-
-    }
-
-
-
 
     public function testAction(Request $request, Response $response) {
 

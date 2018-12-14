@@ -37,5 +37,6 @@ return [
             'user' => '', // your database user name here
             'password' => '' // your database user password here
         ]
-    ]
+    ],
+    "jwt_salt" => "my awesome salt" // Change this salt for security
 ];
