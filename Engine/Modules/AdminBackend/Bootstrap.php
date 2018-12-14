@@ -66,7 +66,6 @@ class Bootstrap extends AbstractBootstrap
             "default" => "OF"
         ]);
 
-
         /**
          * @var $sidebarNavigation SidebarNavigationService
          */
