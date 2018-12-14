@@ -1,4 +1,4 @@
-<li class="header">{{ item.name }}</li>
+<li class="header">{{ i18n(item.name) }}</li>
 
 {% for subitem in item.children %}
     {% include 'Backend/Master/Components/Sidebar/Item.twig' with {'item': subitem} %}
