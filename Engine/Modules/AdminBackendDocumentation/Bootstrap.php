@@ -65,11 +65,11 @@ class Bootstrap extends AbstractBootstrap
         ]);
 
         $sidebarNavigation->put([
-            "name" => "backend_documentation_ui_silders",
+            "name" => "backend_documentation_ui_sliders",
             "order" => 4,
             "parent" => "backend_ui_elements",
             "icon" => "fa fa-circle-o",
-            "path" => "backend_documentation_ui_silders"
+            "path" => "backend_documentation_ui_sliders"
         ]);
 
         $sidebarNavigation->put([
