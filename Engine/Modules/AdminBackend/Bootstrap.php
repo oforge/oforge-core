@@ -55,7 +55,7 @@ class Bootstrap extends AbstractBootstrap
         $configService = Oforge()->Services()->get("config");
 
         $configService->add([
-            "name" => "backend_project_name",
+            "name" => "backend.project.name",
             "label" => "Projektname",
             "type" => "string",
             "required" => true,
@@ -63,7 +63,7 @@ class Bootstrap extends AbstractBootstrap
         ]);
 
         $configService->add([
-            "name" => "backend_project_short",
+            "name" => "backend.project.short",
             "label" => "Projektkürzel",
             "type" => "string",
             "required" => true,
