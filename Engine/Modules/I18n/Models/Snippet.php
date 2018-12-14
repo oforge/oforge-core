@@ -13,10 +13,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 
 /**
- * @ORM\Table(name="oforge_i18n_language")
+ * @ORM\Table(name="oforge_i18n_snippet")
  * @ORM\Entity
  */
-class Language extends AbstractModel
+class Snippet extends AbstractModel
 {
     /**
      * @var int
@@ -28,15 +28,21 @@ class Language extends AbstractModel
     
     /**
      * @var string
-     * @ORM\Column(name="iso", type="string", nullable=false, unique=true)
+     * @ORM\Column(name="scope", type="string", nullable=false)
      */
-    private $iso;
+    private $scope;
     
     /**
      * @var string
      * @ORM\Column(name="name", type="string", nullable=false)
      */
     private $name;
+
+    /**
+     * @var string
+     * @ORM\Column(name="value", type="string", nullable=false)
+     */
+    private $value;
 
     /**
      * @return int
@@ -49,17 +55,17 @@ class Language extends AbstractModel
     /**
      * @return string
      */
-    public function getIso(): string
+    public function getScope(): string
     {
-        return $this->iso;
+        return $this->scope;
     }
 
     /**
-     * @param string $iso
+     * @param string $scope
      */
-    public function setIso(string $iso)
+    public function setScope(string $scope)
     {
-        $this->iso = $iso;
+        $this->scope = $scope;
     }
 
     /**
@@ -76,5 +82,21 @@ class Language extends AbstractModel
     public function setName(string $name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getValue(): string
+    {
+        return $this->value;
+    }
+
+    /**
+     * @param string $value
+     */
+    public function setValue(string $value)
+    {
+        $this->value = $value;
     }
 }

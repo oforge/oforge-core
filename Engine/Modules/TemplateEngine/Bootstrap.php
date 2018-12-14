@@ -48,5 +48,14 @@ class Bootstrap extends AbstractBootstrap
     public function activate()
     {
         Oforge()->Templates()->init();
+
+        $scopes = ["Frontend", "Backend"];
+
+        foreach ($scopes as $scope) {
+            if (!Oforge()->Services()->get("assets.css")->isBuild($scope)) {
+                Oforge()->Services()->get("assets.template")->build($scope);
+            }
+        }
     }
+
 }
