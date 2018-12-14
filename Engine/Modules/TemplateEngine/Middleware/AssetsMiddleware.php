@@ -36,4 +36,5 @@ class AssetsMiddleware
 
         Oforge()->View()->assign($data);
     }
+
 }

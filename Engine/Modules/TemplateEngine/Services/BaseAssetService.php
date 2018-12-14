@@ -139,4 +139,13 @@ class BaseAssetService
             }
         }
     }
+
+    /**
+     * @param string $scope
+     * @return bool
+     */
+    public function isBuild(string $scope = TemplateAssetService::DEFAULT_SCOPE) {
+        $value = $this->store->get($this->getAccessKey($scope));
+        return isset($value);
+    }
 }

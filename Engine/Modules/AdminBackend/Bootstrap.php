@@ -99,7 +99,7 @@ class Bootstrap extends AbstractBootstrap
             "name" => "fontAwesome",
             "order" => 1,
             "parent" => "help",
-            "icon" => "fa-fort-awesome",
+            "icon" => "fa fa-fort-awesome",
             "path" => "backend_dashboard_fontAwesome"
         ]);
 
