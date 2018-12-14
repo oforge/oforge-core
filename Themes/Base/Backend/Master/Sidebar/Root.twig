@@ -1,4 +1,4 @@
-<li class="header">{{ item.name }}</li>
+<li class="header">{{ i18n(item.name) }}</li>
 {% set breadcrumbsmap = backend_breadcrumbs_map(meta.route.name) %}
 
 {% for subitem in item.children %}
