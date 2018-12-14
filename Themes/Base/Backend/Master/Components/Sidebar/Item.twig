@@ -12,7 +12,7 @@
     {% if item.children %}
         <ul class="treeview-menu">
             {% for subitem in item.children %}
-                {% include 'Backend/Master/Sidebar/Item.twig' with {'item': subitem} %}
+                {% include 'Backend/Master/Components/Sidebar/Item.twig' with {'item': subitem} %}
             {% endfor %}
         </ul>
     {% endif %}

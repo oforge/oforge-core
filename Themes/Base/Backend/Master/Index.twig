@@ -2,59 +2,53 @@
 <html lang="en">
 <head>
     {% block head %}
-        {% include 'Backend/Master/Head/Main.twig' %}
+        {% include 'Backend/Master/Components/Head/Main.twig' %}
     {% endblock %}
 </head>
 <body class="hold-transition skin-oforge sidebar-mini">
 <div class="wrapper">
+
+    {% set breadcrumbsmap = backend_breadcrumbs_map(meta.route.name) %}
+
     {% block pageheader %}
-        {% include 'Backend/Master/PageHeader.twig' %}
+        {% include 'Backend/Master/Components/PageHeader/Index.twig' %}
     {% endblock %}
 
-
     {% block sidebar %}
-        {% include 'Backend/Master/Sidebar.twig' %}
+        {% include 'Backend/Master/Components/Sidebar/SidebarMain.twig' %}
     {% endblock %}
 
     {% block content %}
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
-            <section class="content-header">
-                <h1>
-                    {% set current = backend_breadcrumbs(meta.route.name)|last %}
+            <!-- Content Wrapper. Contains page content -->
+            <div class="content-wrapper">
 
-                    {% if page_header  %}{{ page_header }}{% else %}{{ current.name }}{% endif %}
-                    {% if page_header_description  %}<small>{{ page_header_description }}</small>{% endif %}
-                </h1>
-                {% include 'Backend/Master/BreadCrumbs.twig' %}
-            </section>
-
-            <!-- Main content -->
-            <section class="content container-fluid">
-                {% block pagecontent %}
-                <!--------------------------
-                  | Your Page Content Here |
-                  -------------------------->
-
+                {% block content_header %}
+                    {% include 'Backend/Master/Components/Content/Header.twig' %}
                 {% endblock %}
-            </section>
-            <!-- /.content -->
-        </div>
 
+                <!-- Main content -->
+                <section class="content container-fluid">
+                    {% block pagecontent %}
+                        <!--------------------------
+                          | Your Page Content Here |
+                          -------------------------->
+                    {% endblock %}
+                </section>
+                <!-- /.content -->
+            </div>
     {% endblock %}
 
     {% block footer %}
-        {% include 'Backend/Master/Footer.twig' %}
+        {% include 'Backend/Master/Components/Footer/Index.twig' %}
     {% endblock %}
-
 
     {% block sidebarcontrol %}
-        {% include 'Backend/Master/SidebarControl.twig' %}
+        {% include 'Backend/Master/Components/Sidebar/SidebarControl.twig' %}
     {% endblock %}
 </div>
+
 {% block scripts %}
-    {% include 'Backend/Master/Footer/Scripts.twig' %}
+    {% include 'Backend/Master/Components/Footer/Scripts.twig' %}
 {% endblock %}
 
 </body>
