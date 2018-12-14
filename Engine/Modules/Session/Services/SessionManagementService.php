@@ -39,6 +39,7 @@ class SessionManagementService {
         // Set the cookie settings and start the session
         session_set_cookie_params($lifetimeSeconds, $path, $domain, $secure, true);
         session_start();
+        $_SESSION['created_time'] = time();
     }
     
     /**
