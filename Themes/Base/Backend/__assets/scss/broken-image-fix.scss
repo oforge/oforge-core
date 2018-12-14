@@ -1,0 +1,24 @@
+img.broken[alt] {
+  font-size: 0;
+}
+
+img.broken {
+  position: relative;
+
+  &:after {
+    content: "\f1c5";
+    font-size: 16px;
+    font-family: FontAwesome, sans-serif;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #367ea9;
+  }
+}

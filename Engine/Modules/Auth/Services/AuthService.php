@@ -40,7 +40,7 @@ class AuthService {
         $key = Oforge()->Settings()->get("jwt_salt");
         try {
             $decoded = JWT::decode($jwt, $key, ['HS512']);
-            $arr = (array)$decoded;
+            $arr = $decoded;
             if (array_key_exists('user', $arr)) {
                 return $arr == $user;
             }
@@ -70,7 +70,7 @@ class AuthService {
      *
      * @param string $jwt
      *
-     * @return object|null
+     * @return array|null
      */
     public function decode(?string $jwt) {
         if(!isset($jwt)) return null;
@@ -78,7 +78,7 @@ class AuthService {
         $key = Oforge()->Settings()->get("jwt_salt");
         try {
             $decoded = JWT::decode( $jwt, $key, [ 'HS512' ] );
-            return $decoded;
+            return (array)$decoded;
         } catch (\Exception $e) {
             Oforge()->Logger()->get("system")->addWarning($e->getMessage(), ["exception" => $e]);
         }
