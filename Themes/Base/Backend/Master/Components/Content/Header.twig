@@ -1,0 +1,12 @@
+{% block content_header_part %}
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            {% set current = backend_breadcrumbs(meta.route.name)|last %}
+
+            {% if page_header  %}{{ page_header }}{% else %}{{ current.name }}{% endif %}
+            {% if page_header_description  %}<small>{{ page_header_description }}</small>{% endif %}
+        </h1>
+        {% include 'Backend/Master/Components/Content/BreadCrumbs.twig' %}
+    </section>
+{% endblock %}

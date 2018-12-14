@@ -7,7 +7,7 @@
             {% set navigation = backend_sidebar_navigation()  %}
 
             {% for item in navigation %}
-                {% include 'Backend/Master/Sidebar/Root.twig' with item %}
+                {% include 'Backend/Master/Components/Sidebar/Root.twig' with item %}
             {% endfor %}
         </ul>
         <!-- /.sidebar-menu -->
