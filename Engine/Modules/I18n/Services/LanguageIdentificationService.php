@@ -51,7 +51,7 @@ class LanguageIdentificationService
         /**
          * @var $all Language[]
          */
-        $all = $this->repo->findAll();
+        $all = $this->repo->findBy(["active" => true]);
 
         if (sizeof($all) > 0) {
             return $all[0]->getIso();
