@@ -62,9 +62,9 @@ class AbstractModel
      *
      * @return ModelEntity
      */
-    public static function create(string $className, array $array = [], array $fillable = [])
+    public static function create(array $array = [], array $fillable = [])
     {
-        $object = new $className;
+        $object = new static;
         $object->fromArray($array, $fillable);
         return $object;
     }
