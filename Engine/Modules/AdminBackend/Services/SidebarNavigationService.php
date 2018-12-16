@@ -19,7 +19,7 @@ class SidebarNavigationService
         $element = $this->repo->findOneBy(["name" => strtolower($options["name"])]);
         if (!isset($element)) {
             if ($this->isValid($options)) {
-                $entity = SidebarNavigation::create(SidebarNavigation::class, $options);
+                $entity = SidebarNavigation::create($options);
                 $this->em->persist($entity);
                 $this->em->flush();
             }
