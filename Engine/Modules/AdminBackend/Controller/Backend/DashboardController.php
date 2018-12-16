@@ -2,6 +2,7 @@
 namespace Oforge\Engine\Modules\AdminBackend\Controller\Backend;
 
 use Oforge\Engine\Modules\AdminBackend\Abstracts\SecureBackendController;
+use Oforge\Engine\Modules\AdminBackend\Services\SidebarNavigationService;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Slim\Http\Request;
 use Slim\Http\Response;
