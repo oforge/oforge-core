@@ -1,15 +1,15 @@
 {% set breadcrumbs = backend_breadcrumbs(meta.route.name) %}
 {% if breadcrumbs %}
     <ol class="breadcrumb">
-        <li><a href="{{ url("backend_dashboard") }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+        <li><a href="{{ url("backend_dashboard") }}"><i class="fa fa-dashboard"></i>{{  i18n('dashboard') }}</a></li>
         {% for item in breadcrumbs %}
             <li class="{% if item.path == meta.route.path %}active{% endif %}">
                 {% if item.path %}
                     <a href="{{ url(item.path) }}">
-                        {{ item.name }}
+                        {{ i18n(item.name) }}
                     </a>
                 {% else %}
-                    {{ item.name }}
+                    {{ i18n(item.name) }}
                 {% endif %}
             </li>
         {% endfor %}
