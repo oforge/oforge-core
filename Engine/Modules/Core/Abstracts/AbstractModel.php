@@ -25,6 +25,7 @@ class AbstractModel
             }
             $keys = explode("_", $key);
             $method = "set";
+
             foreach ($keys as $keyPart) {
                 $method .= ucfirst($keyPart);
             }
@@ -48,6 +49,9 @@ class AbstractModel
         foreach ($methods as $method) {
             if(substr( $method, 0, 3 ) === "get") {
                 $param = lcfirst(substr($method, 3));
+                $result[$param] = $this->$method();
+            } else if(substr( $method, 0, 2 ) === "is") {
+                $param = lcfirst(substr($method, 2));
                 $result[$param] = $this->$method();
             }
         }
