@@ -15,6 +15,7 @@ class EndpointService
      *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ConfigOptionKeyNotExists
      */
     public function register(Array $endpoints)
     {
@@ -28,7 +29,7 @@ class EndpointService
     {
         // TODO: implement unregister function
     }
-
+    
     /**
      * Save the Route endpoints
      *
@@ -36,6 +37,7 @@ class EndpointService
      *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ConfigOptionKeyNotExists
      */
     protected function saveEndpoints($endpoints)
     {
