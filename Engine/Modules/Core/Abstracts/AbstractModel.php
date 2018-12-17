@@ -25,6 +25,7 @@ class AbstractModel
             }
             $keys = explode("_", $key);
             $method = "set";
+
             foreach ($keys as $keyPart) {
                 $method .= ucfirst($keyPart);
             }

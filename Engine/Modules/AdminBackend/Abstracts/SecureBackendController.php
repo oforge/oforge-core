@@ -11,7 +11,7 @@ class SecureBackendController extends AbstractController
         Oforge()->Services()->get("permissions")->put(get_called_class() . ":" . $method, $userType, $role);
     }
 
-    protected function initPermissions()
+    public function initPermissions()
     {
 
     }

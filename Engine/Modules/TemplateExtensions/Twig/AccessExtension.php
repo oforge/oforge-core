@@ -47,7 +47,7 @@ class AccessExtension extends Twig_Extension implements \Twig_ExtensionInterface
     public function get_internationalization($context, ...$vars)
     {
         $result = "";
-        if (sizeof($vars) == 1) {
+        if (sizeof($vars) == 1 && isset($vars[0])) {
             /**
              * @var $service InternationalizationService
              */
