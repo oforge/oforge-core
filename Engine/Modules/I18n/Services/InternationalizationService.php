@@ -33,7 +33,9 @@ class InternationalizationService
          * @var $element Snippet
          */
         $element = $this->repo->findOneBy(["scope" => $language, "name" => $key]);
-        if(isset($element)) return $element->getValue();
+        if (isset($element)) {
+            return $element->getValue();
+        }
 
         $element = Snippet::create(Snippet::class, ["scope" => $language, "name" => $key, "value" => $key]);
 

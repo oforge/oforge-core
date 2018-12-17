@@ -6,7 +6,7 @@
  * Time: 15:08
  */
 
-namespace Oforge\Engine\Modules\AdminBackendDocumentation\Controller\Backend;
+namespace Oforge\Engine\Modules\CRUD\Controller\Backend;
 
 
 use Oforge\Engine\Modules\AdminBackend\Abstracts\SecureBackendController;
@@ -136,7 +136,6 @@ class CrudController extends SecureBackendController
         $this->ensurePermissions("updateAction", BackendUser::class, BackendUser::ROLE_MODERATOR);
         $this->ensurePermissions("deleteAction", BackendUser::class, BackendUser::ROLE_MODERATOR);
     }
-
 }
 
 
