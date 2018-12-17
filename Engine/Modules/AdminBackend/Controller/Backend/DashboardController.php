@@ -39,7 +39,7 @@ class DashboardController extends SecureBackendController {
         /**
          * @var $sidebarNavigation SidebarNavigationService
          */
-        $sidebarNavigation = Oforge()->Services()->get("backend.sidebar.navigation");
+        $sidebarNavigation = Oforge()->Services()->get("backend.navigation");
 
 
         $sidebarNavigation->put([
