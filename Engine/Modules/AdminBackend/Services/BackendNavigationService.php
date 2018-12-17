@@ -2,12 +2,12 @@
 
 namespace Oforge\Engine\Modules\AdminBackend\Services;
 
-use Oforge\Engine\Modules\AdminBackend\Models\SidebarNavigation;
+use Oforge\Engine\Modules\AdminBackend\Models\BackendNavigation;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
 use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
 
-class SidebarNavigationService
+class BackendNavigationService
 {
 	/**
 	 * @var \Doctrine\ORM\EntityManager $entityManager
@@ -21,7 +21,7 @@ class SidebarNavigationService
 	public function __construct()
     {
         $this->entityManager = Oforge()->DB()->getManager();
-        $this->repository    = $this->entityManager->getRepository(SidebarNavigation::class);
+        $this->repository    = $this->entityManager->getRepository(BackendNavigation::class);
     }
 
 	/**
@@ -38,7 +38,8 @@ class SidebarNavigationService
         $element = $this->repository->findOneBy([ "name" => strtolower($options["name"])]);
         if (!isset($element)) {
             if ($this->isValid($options)) {
-                $entity = SidebarNavigation::create(SidebarNavigation::class, $options);
+
+                $entity = BackendNavigation::create(BackendNavigation::class, $options);
                 $this->entityManager->persist($entity);
                 $this->entityManager->flush();
             }
@@ -51,7 +52,7 @@ class SidebarNavigationService
     public function get()
     {
         //find all plugins order by "order"
-	    /** @var SidebarNavigation[] $entries */
+	    /** @var BackendNavigation[] $entries */
 	    $entries = $this->repository->findBy(array( "parent" => 0), array( 'order' => 'ASC'));
         $result  = $this->fill($entries);
 
@@ -105,7 +106,7 @@ class SidebarNavigationService
     }
 
 	/**
-	 * @param SidebarNavigation[] $entries
+	 * @param BackendNavigation[] $entries
 	 *
 	 * @return array
 	 */
@@ -115,7 +116,7 @@ class SidebarNavigationService
 
         foreach ($entries as $entry) {
             $data = $entry->toArray();
-	        /** @var SidebarNavigation[] $entries */
+	        /** @var BackendNavigation[] $entries */
             $entries = $this->repository->findBy(array( "parent" => $data["name"]), array( 'order' => 'ASC'));
             $children = $this->fill($entries);
             if (sizeof($children) > 0) {
@@ -135,7 +136,7 @@ class SidebarNavigationService
 	public function breadcrumbs($activePath)
     {
         $breadcrumbs = [];
-	    /** @var null|SidebarNavigation $entry */
+	    /** @var null|BackendNavigation $entry */
 	    $entry = $this->repository->findOneBy(array( "path" => $activePath), array( 'order' => 'ASC'));
 
         if (isset($entry)) {
@@ -150,12 +151,12 @@ class SidebarNavigationService
     }
 
 	/**
-	 * @param SidebarNavigation $entry
+	 * @param BackendNavigation $entry
 	 * @param array $breadcrumbs
 	 */
 	private function findParents($entry, &$breadcrumbs)
     {
-	    /** @var null|SidebarNavigation $entry */
+	    /** @var null|BackendNavigation $entry */
         $entry = $this->repository->findOneBy(array( "name" => $entry->getParent()), array( 'order' => 'ASC'));
         if (isset($entry)) {
             array_push($breadcrumbs, $entry->toArray());
