@@ -87,6 +87,5 @@ class Bootstrap extends AbstractBootstrap
             "icon" => "fa fa-circle-o",
             "path" => "backend_documentation_ui_modals"
         ]);
-
     }
 }
