@@ -31,7 +31,7 @@ class ModuleManager
         }
         return self::$instance;
     }
-
+    
     /**
      * Initialize all modules
      *
@@ -39,6 +39,7 @@ class ModuleManager
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceAlreadyDefinedException
      */
     public function init()
     {
@@ -119,7 +120,7 @@ class ModuleManager
             throw new CouldNotInstallModuleException(get_class($bucket[0]), $bucket[0]->getDependencies());
         }
     }
-
+    
     /**
      * Initialize the core module
      *
@@ -127,6 +128,7 @@ class ModuleManager
      *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceAlreadyDefinedException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
     private function initCoreModule($className)
@@ -184,8 +186,7 @@ class ModuleManager
      *
      * @throws \Doctrine\ORM\ORMException
      */
-    protected
-    function register($className)
+    protected function register($className)
     {
         if (is_subclass_of($className, AbstractBootstrap::class)) {
             /**
@@ -197,22 +198,23 @@ class ModuleManager
             if (isset($moduleEntry) && sizeof($moduleEntry) > 0) {
                 //found -> nothing to do;
             } else { // if not put the data into the database
-                $newEntry = Module::create(Module::class, ["name" => get_class($instance), "order" => $instance->getOrder(), "active" => 1, "installed" => 0]);
+                $newEntry = Module::create(["name" => get_class($instance), "order" => $instance->getOrder(), "active" => 1, "installed" => 0]);
                 $this->em->persist($newEntry);
             }
         }
     }
-
+    
     /**
      * Initialize a module
      *
      * @param $className
+     *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceAlreadyDefinedException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
-    protected
-    function initModule($className)
+    protected function initModule($className)
     {
         if (is_subclass_of($className, AbstractBootstrap::class)) {
             /**
@@ -245,11 +247,9 @@ class ModuleManager
                 $this->em->persist($entry->setInstalled(true));
             }
 
-
             $instance->activate();
 
             $this->em->flush();
         }
     }
-
 }

@@ -27,16 +27,34 @@ class GenericCrudService
         $this->em = Oforge()->DB()->getManager();
     }
 
-    public function list($class)
+    public function list($class, $params = [])
     {
         $repo = $this->getRepo($class);
-        $items = $repo->findAll();
+        $items = [];
+        //$repo->findAll();
+
+        if(sizeof($params) > 0 ) {
+            //TODO
+        } else {
+            $items = $repo->findAll();
+        }
 
         $result = [];
         foreach ($items as $item) {
             array_push($result, $item->toArray());
         }
 
+        return $result;
+    }
+    
+    /**
+     * @param int $id
+     *
+     * @return object|null
+     */
+    public function getById($class, int $id) {
+        $repo = $this->getRepo($class);
+        $result = $repo->findOneBy(["id" => $id]);
         return $result;
     }
 
@@ -81,7 +99,6 @@ class GenericCrudService
         $this->em->remove($element);
         $this->em->flush();
     }
-
 
     /**
      * @param $class
