@@ -33,7 +33,7 @@ class ConfigService
     {
         if ($this->isValid($options)) {
 
-            $element = AbstractModel::create(Element::class, $options);
+            $element = Element::create($options);
             $em = Oforge()->DB()->getManager();
 
             $em->persist($element);
@@ -41,7 +41,7 @@ class ConfigService
 
             if (isset($options["default"])) {
                 $element->setValues([
-                    AbstractModel::create(Value::class, ["value" => $options["default"], "element" => $element])
+	                Value::create(["value" => $options["default"], "element" => $element])
                 ]);
 
                 $em->persist($element);
@@ -136,6 +136,7 @@ class ConfigService
         foreach ($keys as $key) {
             if (isset($options[$key]) && !is_string($options[$key])) throw new \InvalidArgumentException("$key value should be of type string.");
         }
+
         return true;
     }
 

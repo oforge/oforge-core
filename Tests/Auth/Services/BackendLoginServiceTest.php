@@ -39,7 +39,7 @@ final class BackendLoginServiceTest extends TestCase
             "email" => "testuser@oforge.com",
             "password" => password_hash("geheim", PASSWORD_BCRYPT),
             "role" => 1];
-        $user = BackendUser::create(BackendUser::class, $testData);
+        $user = BackendUser::create($testData);
         $this->em->persist($user);
         $this->em->flush($user);
     }

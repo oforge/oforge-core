@@ -47,12 +47,12 @@ class AbstractModel
         $methods = get_class_methods($this);
         $result = [];
         foreach ($methods as $method) {
-            if(substr( $method, 0, 3 ) === "get") {
+            if(substr( $method, 0, 3 ) === 'get') {
                 $param = lcfirst(substr($method, 3));
                 $result[$param] = $this->$method();
-            } else if(substr( $method, 0, 2 ) === "is") {
-                $param = lcfirst(substr($method, 2));
-                $result[$param] = $this->$method();
+            } elseif ( substr( $method, 0, 2 ) === 'is' ) {
+	            $param = lcfirst(substr($method, 2));
+	            $result[$param] = $this->$method();
             }
         }
 
@@ -66,9 +66,9 @@ class AbstractModel
      *
      * @return ModelEntity
      */
-    public static function create(string $className, array $array = [], array $fillable = [])
+    public static function create(array $array = [], array $fillable = [])
     {
-        $object = new $className;
+        $object = new static;
         $object->fromArray($array, $fillable);
         return $object;
     }
