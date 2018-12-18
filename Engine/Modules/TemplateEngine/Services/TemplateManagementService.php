@@ -83,7 +83,7 @@ class TemplateManagementService {
                 $parent = $parentTemplate->getId();
             }
             
-            $template = Template::create(Template::class, array("name" => $name, "active" => 0, "installed" => 0, "parentId" => $parent));
+            $template = Template::create(array("name" => $name, "active" => 0, "installed" => 0, "parentId" => $parent));
             
             $this->em->persist($template);
             $this->em->flush();

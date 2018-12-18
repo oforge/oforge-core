@@ -198,7 +198,7 @@ class ModuleManager
             if (isset($moduleEntry) && sizeof($moduleEntry) > 0) {
                 //found -> nothing to do;
             } else { // if not put the data into the database
-                $newEntry = Module::create(Module::class, ["name" => get_class($instance), "order" => $instance->getOrder(), "active" => 1, "installed" => 0]);
+                $newEntry = Module::create(["name" => get_class($instance), "order" => $instance->getOrder(), "active" => 1, "installed" => 0]);
                 $this->em->persist($newEntry);
             }
         }
