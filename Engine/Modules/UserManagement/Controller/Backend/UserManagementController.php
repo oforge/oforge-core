@@ -45,7 +45,7 @@ class UserManagementController extends SecureBackendController {
     public function createAction(Request $request, Response $response) {
         if ($request->isPost()) {
             $this->backendUsersCrudService->create($request->getParsedBody());
-            return $response->withRedirect($this->router->pathFor("backend_user"), 302);
+            return $response->withRedirect($this->router->pathFor("backend_users"), 302);
         }
     }
     
@@ -58,9 +58,19 @@ class UserManagementController extends SecureBackendController {
      */
     public function updateAction(Request $request, Response $response) {
         if ($request->isPost()) {
-            $this->backendUsersCrudService->update($request->getParsedBody());
-            return $response->withRedirect($this->router->pathFor("backend_user"), 302);
+            $body = $request->getParsedBody();
+            
+            if(key_exists("password", $body) && $body["password"] == "") {
+               unset($body["password"]);
+            }
+            
+            $this->backendUsersCrudService->update($body);
+            
+            return $response->withRedirect($this->router->pathFor("backend_users"), 302);
         }
+        $idToUpdate = $request->getParam("id");
+        $user = $this->backendUsersCrudService->getById($idToUpdate);
+        Oforge()->View()->assign( [ "user" => $user ] );
     }
     
     public function deleteAction(Request $request, Response $response) {
@@ -69,10 +79,12 @@ class UserManagementController extends SecureBackendController {
             if (isset($body["id"])) {
                 $this->backendUsersCrudService->delete($body["id"]);
             }
-            return $response->withRedirect($this->router->pathFor("backend_user"), 302);
+            return $response->withRedirect($this->router->pathFor("backend_users"), 302);
         }
+        
         $idToDelete = $request->getParam("id");
-        Oforge()->View()->assign(["userId" => $idToDelete]);
+        $user = $this->backendUsersCrudService->getById($idToDelete);
+        Oforge()->View()->assign( [ "user" => $user ] );
     }
     
     public function initPermissions() {
