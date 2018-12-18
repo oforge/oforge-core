@@ -37,7 +37,7 @@ class InternationalizationService
             return $element->getValue();
         }
 
-        $element = Snippet::create(Snippet::class, ["scope" => $language, "name" => $key, "value" => $key]);
+        $element = Snippet::create(["scope" => $language, "name" => $key, "value" => $key]);
 
         $this->em->persist($element);
         $this->em->flush();

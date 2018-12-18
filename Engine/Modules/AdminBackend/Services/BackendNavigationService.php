@@ -39,7 +39,7 @@ class BackendNavigationService
         if (!isset($element)) {
             if ($this->isValid($options)) {
 
-                $entity = BackendNavigation::create(BackendNavigation::class, $options);
+                $entity = BackendNavigation::create($options);
                 $this->entityManager->persist($entity);
                 $this->entityManager->flush();
             }
