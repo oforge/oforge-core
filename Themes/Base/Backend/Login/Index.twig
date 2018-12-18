@@ -5,32 +5,32 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>AdminLTE 2 | Log in</title>
+    <title>Oforge Login</title>
     {% include 'Backend/Master/Components/Head/CSS.twig' %}
 </head>
 <body class="hold-transition login-page">
 <div class="login-box">
     <div class="login-logo">
-        <a href="{{ url('backend_login') }}"><b>Oforge</b> Admin</a>
+        <a href="{{ url('backend_login') }}"><b>{{ config("backend_project_name") }}</b> {{ i18n('admin_label') }}</a>
     </div>
     <!-- /.login-logo -->
     <div class="login-box-body">
-        <p class="login-box-msg">Login</p>
+        <p class="login-box-msg">{{ i18n('login') }}</p>
 
         <form action="{{ url('backend_login_process') }}" method="post">
             <div class="form-group has-feedback">
-                <input type="email" name="email" class="form-control" placeholder="Email">
-                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                <input type="email" name="email" class="form-control" placeholder="{{ i18n('email_placeholder') }}">
+                <span class="fa fa-envelope form-control-feedback"></span>
             </div>
             <div class="form-group has-feedback">
-                <input type="password" name="password" class="form-control" placeholder="Password">
-                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                <input type="password" name="password" class="form-control" placeholder="{{ i18n('password_placeholder') }}">
+                <span class="fa fa-lock form-control-feedback"></span>
                 <input type="hidden" name="token" value="{{ token() }}">
             </div>
             <div class="row">
                 <!-- /.col -->
                 <div class="col-xs-12">
-                    <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+                    <button type="submit" class="btn btn-primary btn-block btn-flat">{{ i18n('signin') }}</button>
                 </div>
                 <!-- /.col -->
             </div>

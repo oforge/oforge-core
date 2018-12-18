@@ -45,6 +45,11 @@ class BaseLoginService {
          * @var $authService AuthService
          */
         $authService = Oforge()->Services()->get("auth");
+    
+        /**
+         * @var $passwordService PasswordService
+         */
+        $passwordService = Oforge()->Services()->get("password");
         
         /**
          * @var $user BackendUser|User
@@ -52,27 +57,20 @@ class BaseLoginService {
         $user = $this->repo->findOneBy(["email" => $email]);
         
         if (isset($user)) {
-            if ($this->comparePasswords($password, $user->getPassword())) {
+            if ($passwordService->validate($password, $user->getPassword())) {
                 $userObj = [
                     'user_id' => $user->getId(),
                     'user_email' => $user->getEmail(),
-                    'user_type' => get_class($user),
-                    'user_role' => 1 //TODO temp => Admin
+                    'user_type' => get_class($user)
                 ];
+                
+                if (get_class($user) == BackendUser::class) {
+                    $userObj = array_merge($userObj, ['user_role' => $user->getRole()]);
+                }
+                
                 return $authService->createJWT($userObj);
             }
         }
         return null;
-    }
-    
-    /**
-     * Check, if two services are identical
-     * @param string $clientPassword
-     * @param string $serverPassword
-     *
-     * @return bool
-     */
-    public function comparePasswords(string $clientPassword, string $serverPassword) : bool {
-        return password_verify($clientPassword, $serverPassword);
     }
 }

@@ -10,10 +10,15 @@ namespace Oforge\Engine\Modules\I18n\Models;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\UniqueConstraint;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 
 /**
- * @ORM\Table(name="oforge_i18n_snippet")
+ * @ORM\Table(name="oforge_i18n_snippet",
+ *     uniqueConstraints={
+ *        @UniqueConstraint(name="scope_name_unique",
+ *            columns={"scope", "name"})
+ *    }))
  * @ORM\Entity
  */
 class Snippet extends AbstractModel
@@ -71,7 +76,7 @@ class Snippet extends AbstractModel
     /**
      * @return string
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }

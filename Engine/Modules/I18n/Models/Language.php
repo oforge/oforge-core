@@ -31,12 +31,18 @@ class Language extends AbstractModel
      * @ORM\Column(name="iso", type="string", nullable=false, unique=true)
      */
     private $iso;
-    
+
     /**
      * @var string
      * @ORM\Column(name="name", type="string", nullable=false)
      */
     private $name;
+
+    /**
+     * @var bool
+     * @ORM\Column(name="active", type="boolean", nullable=false)
+     */
+    private $active;
 
     /**
      * @return int
@@ -49,7 +55,7 @@ class Language extends AbstractModel
     /**
      * @return string
      */
-    public function getIso(): string
+    public function getIso(): ?string
     {
         return $this->iso;
     }
@@ -65,7 +71,7 @@ class Language extends AbstractModel
     /**
      * @return string
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -76,5 +82,21 @@ class Language extends AbstractModel
     public function setName(string $name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive(): bool
+    {
+        return $this->active;
+    }
+
+    /**
+     * @param bool $active
+     */
+    public function setActive(bool $active)
+    {
+        $this->active = $active;
     }
 }

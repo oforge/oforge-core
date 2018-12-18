@@ -16,7 +16,11 @@
 
 .login-page,
 .register-page {
-  background: $gray;
+ /* background: $gray;
+  Nur für dich Alex ;)
+  */
+  background: transparent url('https://placeponi.es/1680/948') center center no-repeat;
+  background-size: cover;
 }
 
 .login-box,
