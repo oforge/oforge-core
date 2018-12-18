@@ -4,15 +4,12 @@ namespace Oforge\Engine\Modules\Mailer;
 
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
+use Oforge\Engine\Modules\Mailer\Services\MailService;
 
 class Bootstrap extends AbstractBootstrap {
     public function __construct() {
         $this->services = [
-            "mail" => \Oforge\Engine\Modules\Mailer\Services\MailService::class
-        ];
-
-        $this->endpoints = [
-            "/" => ["controller" => \Test\Controller\Frontend\MailController::class, "name" => "mail"]
+            "mail" => MailService::class
         ];
     }
 
@@ -24,9 +21,6 @@ class Bootstrap extends AbstractBootstrap {
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
-
-
-
     public function install() {
 
         /**
@@ -35,63 +29,63 @@ class Bootstrap extends AbstractBootstrap {
         $configService = Oforge()->Services()->get("config");
 
         $configService->update([
-            "name" => "mailer.host",
+            "name" => "mailer_host",
             "label" => "E-Mail Server",
             "type" => "string",
             "required" => true,
             "default" => ""
         ]);
         $configService->update([
-            "name" => "mailer.username",
+            "name" => "mailer_username",
             "label" => "E-Mail Username",
             "type" => "string",
             "required" => true,
             "default" => ""
         ]);
         $configService->update([
-            "name" => "mailer.port",
+            "name" => "mailer_port",
             "label" => "E-Mail Server Port",
             "type" => "integer",
             "required" => true,
             "default" => 587
         ]);
         $configService->update([
-            "name" => "mailer.exceptions",
+            "name" => "mailer_exceptions",
             "label" => "E-Mail Exceptions",
             "type" => "boolean",
             "required" => true,
             "default" => true
         ]);
         $configService->update([
-            "name" => "mailer.smtp.password",
+            "name" => "mailer_smtp_password",
             "label" => "SMTP Password",
             "type" => "string",
             "required" => true,
             "default" => ""
         ]);
         $configService->update([
-            "name" => "mailer.smtp.debug",
+            "name" => "mailer_smtp_debug",
             "label" => "STMP Debug",
             "type" => "integer",
             "required" => true,
             "default" => 2
         ]);
         $configService->update([
-            "name" => "mailer.smtp.auth",
+            "name" => "mailer_smtp_auth",
             "label" => "SMTP Auth",
             "type" => "boolean",
             "required" => true,
             "default" => true
         ]);
         $configService->update([
-            "name" => "mailer.smtp.secure",
+            "name" => "mailer_smtp_secure",
             "label" => "Enable TLS encryption",
             "type" => "string",
             "required" => true,
             "default" => ""
         ]);
         $configService->update([
-            "name" => "mailer.from",
+            "name" => "mailer_from",
             "label" => "Mailer From",
             "type" => "string",
             "required" => true,
