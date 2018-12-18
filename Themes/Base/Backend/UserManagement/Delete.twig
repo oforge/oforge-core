@@ -1,4 +1,27 @@
-{% extends "Backend/Master/Index.twig" %}
-{% block pagecontent %}
-<p>Really want to delete user with id {{ userId }}?</p>
-{% endblock %}
+<div class="modal fade modal--delete" id="delete_modal" tabindex="-1" role="dialog" aria-labelledby="delete">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="delete" data-element="title"></h4>
+            </div>
+            <div class="modal-body">
+                <form id="form_delete" action="" method="post">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <p><span data-element="label"></span></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <p class="well well-sm"><span data-element="name"></span></p>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">{{ i18n("yes") }}</button>
+                    <button class="btn btn-default" data-dismiss="modal">{{ i18n("no") }}</button>
+                    <input type="hidden" id="id" name="id" data-element="query-id" value="">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

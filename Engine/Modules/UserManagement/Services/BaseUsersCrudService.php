@@ -48,10 +48,6 @@ class BaseUsersCrudService {
     public function create($userData) {
         $password = null;
         
-        if (!$this->isValid($userData)) {
-            Oforge()->Logger()->get()->addWarning("Invalid user data.");
-            return false;
-        }
         
         $userData["password"] = $this->passwordService->hash($userData["password"]);
         $this->crudService->create($this->userModel, $userData);
@@ -65,13 +61,10 @@ class BaseUsersCrudService {
      * @throws \Oforge\Engine\Modules\Core\Exceptions\NotFoundException
      */
     public function update($userData) {
-        if (!$this->isValid($userData)) {
-            Oforge()->Logger()->get()->addWarning("Invalid user data.");
-            return false;
-        }
+       
         
         if (key_exists("password", $userData)) {
-            unset($userData["password"]);
+            $userData["password"] = $this->passwordService->hash($userData["password"]);
         }
         $this->crudService->update($this->userModel, $userData);
         
@@ -93,21 +86,7 @@ class BaseUsersCrudService {
      * @return bool
      */
     public function isValid($userData) {
-        if (sizeof($userData) < 1) {
-            return false;
-        }
-        
-        if (!key_exists("email", $userData) ||
-            !key_exists("password", $userData)) {
-            return false;
-        }
-        
-        if ($this->userModel == BackendUser::class &&
-            !key_exists("role", $userData)) {
-            return false;
-        }
-        
-        return true;
+        // TODO: validation
     }
     
     /**
@@ -117,5 +96,26 @@ class BaseUsersCrudService {
      */
     public function list(array $params) {
         return $this->crudService->list($this->userModel, $params);
+    }
+    
+    /**
+     * @param int $id
+     *
+     * @return array
+     */
+    public function getById(int $id) {
+        $user = [];
+        /**
+         * @var $result User|BackendUser
+         */
+        $result =  $this->crudService->getById($this->userModel, $id);
+        $user["id"] = $result->getId();
+        $user["email"] = $result->getEmail();
+        
+        if ($this->userModel == BackendUser::class) {
+            $user["role"] = $result->getRole();
+        }
+        
+        return $user;
     }
 }
