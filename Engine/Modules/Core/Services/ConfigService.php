@@ -136,6 +136,7 @@ class ConfigService
         foreach ($keys as $key) {
             if (isset($options[$key]) && !is_string($options[$key])) throw new \InvalidArgumentException("$key value should be of type string.");
         }
+
         return true;
     }
 
