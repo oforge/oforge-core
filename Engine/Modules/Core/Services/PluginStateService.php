@@ -82,7 +82,7 @@ class PluginStateService
             $instance = Helper::getBootstrapInstance($pluginName);
             if (isset($instance)) {
                 $pluginMiddlewares = $instance->getMiddleware();
-                $plugin = Plugin::create(Plugin::class, array("name" => $pluginName, "active" => 0, "installed" => 0, "order" => $instance->getOrder()));
+                $plugin = Plugin::create(array("name" => $pluginName, "active" => 0, "installed" => 0, "order" => $instance->getOrder()));
                 $this->em->persist($plugin);
                 $this->em->flush();
                 if(isset($pluginMiddlewares) && is_array($pluginMiddlewares) && sizeof($pluginMiddlewares) > 0) {
