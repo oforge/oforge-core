@@ -40,7 +40,6 @@ class UserManagementController extends SecureBackendController {
      * @param Response $response
      *
      * @return Response
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists
      */
     public function createAction(Request $request, Response $response) {
         if ($request->isPost()) {

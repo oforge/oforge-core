@@ -41,7 +41,7 @@
                            value="{{ user.role }}">
                     </div>
                     <button type="submit" class="btn btn-primary">{{ i18n("update") }}</button>
-                    <button class="btn btn-default" onclick="javascript:location.href='{{ url("backend_users") }}'">{{ i18n("cancel") }}</button>
+                    <a href="javascript:location.href='{{ url("backend_users") }}'" class="btn btn-default">{{ i18n("cancel") }}</a>
                     <input type="hidden" id="id" name="id" value="{{ user.id }}">
                 </form>
             </div>

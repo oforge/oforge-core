@@ -57,23 +57,33 @@ class GenericCrudService
         $result = $repo->findOneBy(["id" => $id]);
         return $result;
     }
-
+    
+    /**
+     * @param $class
+     * @param array $options
+     *
+     * @throws ConfigElementAlreadyExists
+     * @throws \Doctrine\ORM\ORMException
+     */
     public function create($class, array $options)
     {
         $repo = $this->getRepo($class);
 
-        $element = $repo->findOneBy(["id" => $options["id"]]);
-        if (isset($element)) {
-            throw new ConfigElementAlreadyExists("Element with id " . $options["id"] . " already exists!");
+        if (isset($options["id"])) {
+            $element = $repo->findOneBy( [ "id" => $options["id"] ] );
+            if ( isset( $element ) ) {
+                throw new ConfigElementAlreadyExists( "Element with id " . $options["id"] . " already exists!" );
+            }
         }
 
         /**
          * @var $instance AbstractModel
          */
         $instance = new $class();
-        $instance->fromArray($options);
+        $instance = $instance->fromArray($options);
 
         $this->em->persist($instance);
+        $this->em->flush();
     }
 
     public function update($class, array $options)
