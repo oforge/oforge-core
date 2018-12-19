@@ -9,6 +9,7 @@
 namespace Oforge\Engine\Modules\UserManagement\Controller\Backend;
 
 use Oforge\Engine\Modules\Auth\Services\AuthService;
+use Oforge\Engine\Modules\Session\Services\SessionManagementService;
 use Oforge\Engine\Modules\UserManagement\Services\BackendUsersCrudService;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -32,6 +33,10 @@ class ProfileController {
     }
     
     /**
+     * Update one's own user profile.
+     * If the password hasn't been changed (post value is empty) the password part gets removed, so it won't be updated.
+     * The new user data has to be updated also in the session. A user cannot change his/her own role
+     *
      * @param Request $request
      * @param Response $response
      *
@@ -46,11 +51,31 @@ class ProfileController {
              */
             $backendUserService = Oforge()->Services()->get("backend.users.crud");
             $user = $request->getParsedBody();
-            if(key_exists("password", $user) && $user["password"] == "") {
+
+            if (key_exists("password", $user) && $user["password"] == "") {
                 unset($user["password"]);
             }
+
+            /**
+             * @var $authService AuthService
+             */
+            $authService = Oforge()->Services()->get("auth");
+            $oldUser = $authService->decode($_SESSION["auth"]);
+
+            $user["type"] = $oldUser["type"];
+            $user["role"] = $oldUser["role"];
+
             $backendUserService->update($user);
+
+            /**
+             * @var $sessionManagement SessionManagementService
+             */
+            $sessionManagement = Oforge()->Services()->get('session.management');
+            $sessionManagement->regenerateSession();
+
+            $_SESSION["auth"] = $authService->createJWT($user);
         }
+
         /**
          * @var $router Router
          */
