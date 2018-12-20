@@ -8,7 +8,7 @@ class Permissions
 
     public function put($method, $userType, $role = 0)
     {
-        $this->methods[$method] = ["method" => $method, "user_type" => $userType, "user_role" => $role];
+        $this->methods[$method] = ["method" => $method, "type" => $userType, "role" => $role];
     }
 
     public function get($method): ?array

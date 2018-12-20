@@ -48,21 +48,29 @@ class LoginController extends AbstractController
          */
         $router = Oforge()->App()->getContainer()->get("router");
         $uri = $router->pathFor("backend_login");
+    
+        /**
+         * disallow direct processAction call. Only post action is allowed
+         */
+        if (!$request->isPost()) {
+            return $response->withRedirect($uri, 302);
+        }
+        
         $body = $request->getParsedBody();
         $jwt = null;
-    
+        
         /**
          * no token was sent
          */
-        if (empty($_POST['token'])) {
+        if (!isset($body['token']) || empty($body['token'])) {
             Oforge()->Logger()->get()->addWarning("Someone tried to do a backend login with a form without csrf token! Redirecting to backend login.");
             return $response->withRedirect($uri, 302);
         }
-    
+        
         /**
          * invalid token was sent
          */
-        if (!hash_equals($_SESSION['token'], $_POST['token'])) {
+        if (!hash_equals($_SESSION['token'], $body['token'])) {
             Oforge()->Logger()->get()->addWarning("Someone tried a backend login without a valid form csrf token! Redirecting back to login.");
             return $response->withRedirect($uri, 302);
         }
@@ -88,12 +96,12 @@ class LoginController extends AbstractController
          * @var $sessionManagement SessionManagementService
          */
         $sessionManagement = Oforge()->Services()->get('session.management');
-        // $sessionManagement->regenerateSession();
+        $sessionManagement->regenerateSession();
     
         $_SESSION['auth'] = $jwt;
         
         $uri = $router->pathFor("backend_dashboard");
         
-        return $response->withRedirect($uri, 302);
+       return $response->withRedirect($uri, 302);
     }
 }

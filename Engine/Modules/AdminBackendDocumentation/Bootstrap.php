@@ -2,7 +2,7 @@
 
 namespace Oforge\Engine\Modules\AdminBackendDocumentation;
 
-use Oforge\Engine\Modules\AdminBackend\Services\SidebarNavigationService;
+use Oforge\Engine\Modules\AdminBackend\Services\BackendNavigationService;
 use Oforge\Engine\Modules\AdminBackendDocumentation\Controller\Backend\DocumentationUIController;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 
@@ -24,9 +24,9 @@ class Bootstrap extends AbstractBootstrap
     public function install()
     {
         /**
-         * @var $sidebarNavigation SidebarNavigationService
+         * @var $sidebarNavigation BackendNavigationService
          */
-        $sidebarNavigation = Oforge()->Services()->get("backend.sidebar.navigation");
+        $sidebarNavigation = Oforge()->Services()->get("backend.navigation");
 
         $sidebarNavigation->put([
             "name" => "backend_documentation",
@@ -65,11 +65,11 @@ class Bootstrap extends AbstractBootstrap
         ]);
 
         $sidebarNavigation->put([
-            "name" => "backend_documentation_ui_silders",
+            "name" => "backend_documentation_ui_sliders",
             "order" => 4,
             "parent" => "backend_ui_elements",
             "icon" => "fa fa-circle-o",
-            "path" => "backend_documentation_ui_silders"
+            "path" => "backend_documentation_ui_sliders"
         ]);
 
         $sidebarNavigation->put([
@@ -87,6 +87,5 @@ class Bootstrap extends AbstractBootstrap
             "icon" => "fa fa-circle-o",
             "path" => "backend_documentation_ui_modals"
         ]);
-
     }
 }

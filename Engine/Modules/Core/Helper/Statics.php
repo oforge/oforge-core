@@ -20,4 +20,5 @@ class Statics
     public const ASSETS_IMPORT_JS = "imports.cfg";
     public const ASSETS_JS = "js";
     public const DB_CACHE_FILE = Statics::DB_CACHE_DIR . DIRECTORY_SEPARATOR . "db.cache";
+    public const IMPORTS_DIR = DIRECTORY_SEPARATOR . Statics::VAR_DIR . DIRECTORY_SEPARATOR . "imports";
 }

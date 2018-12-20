@@ -82,4 +82,6 @@ abstract class AbstractBootstrap
     public function uninstall() {}
     public function activate() {}
     public function deactivate() {}
+    
+    public function load() {}
 }
