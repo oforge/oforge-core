@@ -7,9 +7,9 @@ use Oforge\Engine\Modules\AdminBackend\Controller\Backend\IndexController;
 use Oforge\Engine\Modules\AdminBackend\Controller\Backend\LoginController;
 use Oforge\Engine\Modules\AdminBackend\Controller\Backend\LogoutController;
 use Oforge\Engine\Modules\AdminBackend\Middleware\BackendSecureMiddleware;
-use Oforge\Engine\Modules\AdminBackend\Models\SidebarNavigation;
+use Oforge\Engine\Modules\AdminBackend\Models\BackendNavigation;
 use Oforge\Engine\Modules\AdminBackend\Services\Permissions;
-use Oforge\Engine\Modules\AdminBackend\Services\SidebarNavigationService;
+use Oforge\Engine\Modules\AdminBackend\Services\BackendNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 
@@ -22,7 +22,7 @@ class Bootstrap extends AbstractBootstrap
     public function __construct()
     {
         $this->services = [
-            "backend.sidebar.navigation" => SidebarNavigationService::class,
+            "backend.navigation" => BackendNavigationService::class,
             "permissions" => Permissions::class
         ];
 
@@ -38,7 +38,7 @@ class Bootstrap extends AbstractBootstrap
         ];
 
         $this->models = [
-            SidebarNavigation::class
+            BackendNavigation::class
         ];
 
         $this->order = 2;
@@ -55,7 +55,7 @@ class Bootstrap extends AbstractBootstrap
         $configService = Oforge()->Services()->get("config");
 
         $configService->add([
-            "name" => "backend.project.name",
+            "name" => "backend_project_name",
             "label" => "Projektname",
             "type" => "string",
             "required" => true,
@@ -63,7 +63,7 @@ class Bootstrap extends AbstractBootstrap
         ]);
 
         $configService->add([
-            "name" => "backend.project.short",
+            "name" => "backend_project_short",
             "label" => "Projektkürzel",
             "type" => "string",
             "required" => true,
@@ -71,9 +71,9 @@ class Bootstrap extends AbstractBootstrap
         ]);
 
         /**
-         * @var $sidebarNavigation SidebarNavigationService
+         * @var $sidebarNavigation BackendNavigationService
          */
-        $sidebarNavigation = Oforge()->Services()->get("backend.sidebar.navigation");
+        $sidebarNavigation = Oforge()->Services()->get("backend.navigation");
 
         $sidebarNavigation->put([
             "name" => "admin",

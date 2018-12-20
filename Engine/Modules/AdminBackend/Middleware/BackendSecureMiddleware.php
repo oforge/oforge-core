@@ -49,8 +49,8 @@ class BackendSecureMiddleware
 
 
             if (isset($user) &&
-                isset($user["user_role"]) && $user["user_role"] <= $permissions["user_role"] &&
-                isset($user["user_type"]) && $user["user_type"] == $permissions["user_type"]
+                isset($user["role"]) && $user["role"] <= $permissions["role"] &&
+                isset($user["type"]) && $user["type"] == $permissions["type"]
 
             ) {
                 //nothing to do. proceed
