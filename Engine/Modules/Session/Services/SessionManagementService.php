@@ -26,12 +26,11 @@ class SessionManagementService {
     {
         $sessionStatus = session_status();
         if ($sessionStatus != PHP_SESSION_ACTIVE) {
-            session_name( "oforge" );
+             session_name( "oforge_session" );
             if ( ! empty( $_SESSION['deleted_time'] ) &&
                  $_SESSION['deleted_time'] < time() - 180 ) {
                 session_destroy();
             }
-    
             // Set the domain to default to the current domain.
             $domain = isset( $domain ) ? $domain : $_SERVER['SERVER_NAME'];
     
@@ -65,9 +64,7 @@ class SessionManagementService {
      */
     public function sessionDestroy() {
         $_SESSION = [];
-        if (isset($_COOKIE[session_name()])) {
-            setcookie(session_name(), null,-1, "/");
-        }
         session_destroy();
+        session_id(session_create_id());
     }
 }

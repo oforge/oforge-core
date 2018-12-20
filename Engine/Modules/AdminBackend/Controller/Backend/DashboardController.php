@@ -2,45 +2,69 @@
 namespace Oforge\Engine\Modules\AdminBackend\Controller\Backend;
 
 use Oforge\Engine\Modules\AdminBackend\Abstracts\SecureBackendController;
+
 use Oforge\Engine\Modules\AdminBackend\Services\SidebarNavigationService;
+use Oforge\Engine\Modules\AdminBackend\Models\BackendNavigation;
+use Oforge\Engine\Modules\AdminBackend\Services\BackendNavigationService;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
+use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
 class DashboardController extends SecureBackendController {
-
-
+    
+    /**
+     * @param Request $request
+     * @param Response $response
+     *
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     */
     public function indexAction(Request $request, Response $response) {
-
         $data = ['page_header' => 'Hello from the TestPlugin', 'page_header_description' => "Mega awesome optional additional description"];
+        /**
+         * @var $authService AuthService
+         */
+        $authService = Oforge()->Services()->get("auth");
+        $user = $authService->decode($_SESSION["auth"]);
+        $data["user"] = $user;
         Oforge()->View()->assign($data);
     }
-
-
+    
+    /**
+     * @param Request $request
+     * @param Response $response
+     *
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     */
     public function buildAction(Request $request, Response $response) {
         Oforge()->Services()->get("assets.template")->build(Oforge()->View()->get("meta")["asset_scope"]);
     }
 
-
     public function fontAwesomeAction(Request $request, Response $response) {
-
     }
 
     public function ioniconsAction(Request $request, Response $response) {
-
     }
 
     public function helpAction(Request $request, Response $response) {
-
     }
-
-
+    
+    /**
+     * @param Request $request
+     * @param Response $response
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     */
     public function testAction(Request $request, Response $response) {
-
         /**
-         * @var $sidebarNavigation SidebarNavigationService
+         * @var $sidebarNavigation BackendNavigationService
          */
-        $sidebarNavigation = Oforge()->Services()->get("backend.sidebar.navigation");
+        $sidebarNavigation = Oforge()->Services()->get("backend.navigation");
 
 
         $sidebarNavigation->put([

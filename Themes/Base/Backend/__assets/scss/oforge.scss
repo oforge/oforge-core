@@ -55,3 +55,9 @@
 .skin-blue.layout-top-nav .main-header > .logo {
   @include logo-variant($light-blue);
 }
+.fa.fa--big {
+  font-size: 2rem;
+}
+.fa.fa--bigger {
+  font-size: 4rem;
+}

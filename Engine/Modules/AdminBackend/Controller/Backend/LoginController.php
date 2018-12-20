@@ -95,13 +95,13 @@ class LoginController extends AbstractController
         /**
          * @var $sessionManagement SessionManagementService
          */
-        //$sessionManagement = Oforge()->Services()->get('session.management');
-        //$sessionManagement->regenerateSession();
-        
+        $sessionManagement = Oforge()->Services()->get('session.management');
+        $sessionManagement->regenerateSession();
+    
         $_SESSION['auth'] = $jwt;
         
         $uri = $router->pathFor("backend_dashboard");
         
-        return $response->withRedirect($uri, 302);
+       return $response->withRedirect($uri, 302);
     }
 }

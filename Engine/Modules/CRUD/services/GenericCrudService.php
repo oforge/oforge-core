@@ -27,10 +27,17 @@ class GenericCrudService
         $this->em = Oforge()->DB()->getManager();
     }
 
-    public function list($class)
+    public function list($class, $params = [])
     {
         $repo = $this->getRepo($class);
-        $items = $repo->findAll();
+        $items = [];
+        //$repo->findAll();
+
+        if(sizeof($params) > 0 ) {
+            //TODO
+        } else {
+            $items = $repo->findAll();
+        }
 
         $result = [];
         foreach ($items as $item) {
@@ -39,23 +46,44 @@ class GenericCrudService
 
         return $result;
     }
-
+    
+    /**
+     * @param int $id
+     *
+     * @return object|null
+     */
+    public function getById($class, int $id) {
+        $repo = $this->getRepo($class);
+        $result = $repo->findOneBy(["id" => $id]);
+        return $result;
+    }
+    
+    /**
+     * @param $class
+     * @param array $options
+     *
+     * @throws ConfigElementAlreadyExists
+     * @throws \Doctrine\ORM\ORMException
+     */
     public function create($class, array $options)
     {
         $repo = $this->getRepo($class);
 
-        $element = $repo->findOneBy(["id" => $options["id"]]);
-        if (isset($element)) {
-            throw new ConfigElementAlreadyExists("Element with id " . $options["id"] . " already exists!");
+        if (isset($options["id"])) {
+            $element = $repo->findOneBy( [ "id" => $options["id"] ] );
+            if ( isset( $element ) ) {
+                throw new ConfigElementAlreadyExists( "Element with id " . $options["id"] . " already exists!" );
+            }
         }
 
         /**
          * @var $instance AbstractModel
          */
         $instance = new $class();
-        $instance->fromArray($options);
+        $instance = $instance->fromArray($options);
 
         $this->em->persist($instance);
+        $this->em->flush();
     }
 
     public function update($class, array $options)
@@ -81,7 +109,6 @@ class GenericCrudService
         $this->em->remove($element);
         $this->em->flush();
     }
-
 
     /**
      * @param $class
