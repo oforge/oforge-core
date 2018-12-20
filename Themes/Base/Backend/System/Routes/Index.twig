@@ -2,36 +2,36 @@
 
 {% block pagecontent %}
     <section class="content">
-        <div class="row">
-            <div class="col-md-6" style="width:100%;">
-                <div class="box">
-                    <!-- /.box-header -->
-                    <div class="box-body">
-                        <table class="table table-bordered">
-                            <tbody><tr>
-                                <th>ID</th>
-                                <th>NAME</th>
-                                <th>CONTROLLER</th>
-                                <th>PATH</th>
-                                <th>LANGUAGE ID</th>
-                                <th>ACTIVE</th>
-                                <th>ASSET SCOPE</th>
-                            </tr>
-                            {% for route in routes %}
-                                <tr>
-                                    <td>{{ route.id }}</td>
-                                    <td>{{ route.name }}</td>
-                                    <td>{{ route.controller }}</td>
-                                    <td>{{ route.path }}</td>
-                                    <td>{{ route.languageId }}</td>
-                                    <td>{{ route.activate }}</td>
-                                    <td>{{ route.assetScope }}</td>
-                                 </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+        <div class="box">
+            <!-- /.box-header -->
+            <div class="box-body">
+                <table id="routes" class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>NAME</th>
+                        <th style="width: 32%">CONTROLLER</th>
+                        <th>PATH</th>
+                        <th>LANGUAGE ID</th>
+                        <th>ACTIVE</th>
+                        <th>ASSET SCOPE</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for route in routes %}
+                        <tr>
+                            <td>{{ route.id }}</td>
+                            <td>{{ route.name }}</td>
+                            <td>{{ route.controller }}</td>
+                            <td>{{ route.path }}</td>
+                            <td>{{ route.languageId }}</td>
+                            <td>{{ route.activate }}</td>
+                            <td>{{ route.assetScope }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </section>
