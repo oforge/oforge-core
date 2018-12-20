@@ -26,14 +26,14 @@ class BackendExtension extends Twig_Extension implements \Twig_ExtensionInterfac
 
     public function get_sidebar_navigation()
     {
-        $configService = Oforge()->Services()->get("backend.sidebar.navigation");
+        $configService = Oforge()->Services()->get("backend.navigation");
 
         return $configService->get();
     }
 
     public function get_breadcrumbs(...$vars)
     {
-        $configService = Oforge()->Services()->get("backend.sidebar.navigation");
+        $configService = Oforge()->Services()->get("backend.navigation");
 
         if (isset($vars) && sizeof($vars) == 1) {
             return $configService->breadcrumbs($vars[0]);
@@ -44,7 +44,7 @@ class BackendExtension extends Twig_Extension implements \Twig_ExtensionInterfac
 
     public function get_breadcrumbs_map(...$vars)
     {
-        $configService = Oforge()->Services()->get("backend.sidebar.navigation");
+        $configService = Oforge()->Services()->get("backend.navigation");
 
         if (isset($vars) && sizeof($vars) == 1) {
             $result = $configService->breadcrumbs($vars[0]);

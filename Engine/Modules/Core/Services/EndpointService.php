@@ -15,6 +15,7 @@ class EndpointService
      *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ConfigOptionKeyNotExists
      */
     public function register(Array $endpoints)
     {
@@ -28,7 +29,7 @@ class EndpointService
     {
         // TODO: implement unregister function
     }
-
+    
     /**
      * Save the Route endpoints
      *
@@ -36,6 +37,7 @@ class EndpointService
      *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ConfigOptionKeyNotExists
      */
     protected function saveEndpoints($endpoints)
     {
@@ -49,8 +51,9 @@ class EndpointService
 
             if ($this->isValid($config)) {
                 $methods = get_class_methods($config["controller"]);
+
                 foreach ($methods as $method) {
-                    if (strpos($method, "Action") == strlen($method) - 6) {
+                    if (strpos($method, "Action") === strlen($method) - 6) {
 
                         $scope = array_key_exists("asset_scope", $config) ? $config["asset_scope"] : "frontend";
                         if ($method == "indexAction") {

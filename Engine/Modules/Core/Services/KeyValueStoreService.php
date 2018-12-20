@@ -55,7 +55,7 @@ class KeyValueStoreService
         if (isset($element)) {
             $element->setValue($value);
         } else {
-            $element = KeyValue::create(KeyValue::class, ["name" => $name, "value" => $value]);
+            $element = KeyValue::create(["name" => $name, "value" => $value]);
         }
 
         $this->em->persist($element);

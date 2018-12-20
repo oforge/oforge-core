@@ -5,10 +5,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 /**
- * @ORM\Table(name="oforge_backend_sidebar_navigation")
+ * @ORM\Table(name="oforge_backend_navigation")
  * @ORM\Entity
  */
-class SidebarNavigation extends AbstractModel
+class BackendNavigation extends AbstractModel
 {
     /**
      * @var int
@@ -53,6 +53,12 @@ class SidebarNavigation extends AbstractModel
      * @ORM\Column(name="title", type="string", nullable=true)
      */
     private $title = null;
+
+    /**
+     * @var bool
+     * @ORM\Column(name="visible", type="boolean", options={"default":true})
+     */
+    private $visible = true;
 
     /**
      * @return int
@@ -156,6 +162,22 @@ class SidebarNavigation extends AbstractModel
     public function setParent(string $parent)
     {
         $this->parent = $parent;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isVisible(): bool
+    {
+        return $this->visible;
+    }
+
+    /**
+     * @param bool $visible
+     */
+    public function setVisible(bool $visible)
+    {
+        $this->visible = $visible;
     }
 
 }
