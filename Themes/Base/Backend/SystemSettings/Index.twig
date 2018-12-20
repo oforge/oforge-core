@@ -1,0 +1,59 @@
+{% extends "Backend/Master/Index.twig" %}
+
+{% block pagecontent %}
+
+    {{ o_dump() }}
+    <div class="row">
+
+        {% for configKey,configElements in config %}
+
+            <div class="col-md-12">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ configKey }}</h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                        class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        {% for element in configElements %}
+
+                            {% set sElement = element %}
+
+                            {% if sElement.type == "boolean" %}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox"> {{ sElement.label }}
+                                    </label>
+                                </div>
+
+                            {% elseif sElement.type == "string" %}
+                                <div class="form-group">
+                                    <label for="{{ sElement.name }}">{{ sElement.label }}</label>
+                                    <input type="{{ sElement.type }}" class="form-control" id="{{ sElement.name }}" placeholder="{{ sElement.values[0].value }}">
+                                </div>
+
+                            {% elseif sElement.type == "integer" %}
+                                <div class="form-group">
+                                    <label for="{{ sElement.name }}">{{ sElement.label }}</label>
+                                    <input type="{{ sElement.type }}" class="form-control" id="{{ sElement.name }}" placeholder="{{ sElement.values[0].value }}">
+                                </div>
+
+                            {% else %}
+                                <p>ERROR: Because Steffen is an idiot</p>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+        {% endfor %}
+    </div>
+
+
+
+{% endblock %}
+
