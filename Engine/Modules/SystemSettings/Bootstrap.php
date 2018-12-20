@@ -2,10 +2,10 @@
 
 namespace Oforge\Engine\Modules\SystemSettings;
 
-use Oforge\Engine\Modules\AdminBackend\Services\SidebarNavigationService;
+use Oforge\Engine\Modules\AdminBackend\Services\BackendNavigationService;
 use Oforge\Engine\Modules\SystemSettings\Controller\Backend\SystemSettingsController;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
-use Oforge\Engine\Modules\SystemSettings\Serivces\SystemSettingsService;
+use Oforge\Engine\Modules\SystemSettings\Services\SystemSettingsService;
 
 class Bootstrap extends AbstractBootstrap
 {
@@ -14,13 +14,6 @@ class Bootstrap extends AbstractBootstrap
      */
     public function __construct()
     {
-
-        /*
-        $this->services = [
-            "system.settings.service" => SystemSettingsService::class
-        ];
-*/
-
         $this->endpoints = [
             "/backend/settings" => ["controller" => SystemSettingsController::class, "name" => "backend_settings", "asset_scope" => "Backend"]
         ];
@@ -32,11 +25,11 @@ class Bootstrap extends AbstractBootstrap
     public function install()
     {
         /**
-         * @var $sidebarNavigation SidebarNavigationService
+         * @var $backendNavigation BackendNavigationService
          */
-        $sidebarNavigation = Oforge()->Services()->get("backend.sidebar.navigation");
+        $backendNavigation = Oforge()->Services()->get("backend.navigation");
 
-        $sidebarNavigation->put([
+        $backendNavigation->put([
             "name" => "backend_settings",
             "order" => 100,
             "parent" => "admin",
