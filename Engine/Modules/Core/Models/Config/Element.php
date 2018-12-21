@@ -71,6 +71,12 @@ class Element extends AbstractModel
     private $values;
 
     /**
+     * @var string
+     * @ORM\Column(name="group_name", type="string", nullable=false)
+     */
+    private $group;
+
+    /**
      * Get id
      *
      * @return int
@@ -270,5 +276,21 @@ class Element extends AbstractModel
     public function getValues()
     {
         return $this->values;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGroup()
+    {
+        return $this->group;
+    }
+
+    /**
+     * @param string $group
+     */
+    public function setGroup($group)
+    {
+        $this->group = $group;
     }
 }

@@ -33,63 +33,72 @@ class Bootstrap extends AbstractBootstrap {
             "label" => "E-Mail Server",
             "type" => "string",
             "required" => true,
-            "default" => ""
+            "default" => "",
+            "group" => "mailer"
         ]);
         $configService->update([
             "name" => "mailer_username",
             "label" => "E-Mail Username",
             "type" => "string",
             "required" => true,
-            "default" => ""
+            "default" => "",
+            "group" => "mailer"
         ]);
         $configService->update([
             "name" => "mailer_port",
             "label" => "E-Mail Server Port",
             "type" => "integer",
             "required" => true,
-            "default" => 587
+            "default" => 587,
+            "group" => "mailer"
         ]);
         $configService->update([
             "name" => "mailer_exceptions",
             "label" => "E-Mail Exceptions",
             "type" => "boolean",
             "required" => true,
-            "default" => true
+            "default" => true,
+            "group" => "mailer"
         ]);
         $configService->update([
             "name" => "mailer_smtp_password",
             "label" => "SMTP Password",
             "type" => "string",
             "required" => true,
-            "default" => ""
+            "default" => "",
+            "group" => "mailer"
         ]);
         $configService->update([
             "name" => "mailer_smtp_debug",
             "label" => "STMP Debug",
             "type" => "integer",
             "required" => true,
-            "default" => 2
+            "default" => 2,
+            "group" => "mailer"
         ]);
         $configService->update([
             "name" => "mailer_smtp_auth",
             "label" => "SMTP Auth",
             "type" => "boolean",
             "required" => true,
-            "default" => true
+            "default" => true,
+            "group" => "mailer"
         ]);
         $configService->update([
             "name" => "mailer_smtp_secure",
             "label" => "Enable TLS encryption",
             "type" => "string",
             "required" => true,
-            "default" => ""
+            "default" => "",
+            "group" => "mailer"
         ]);
         $configService->update([
             "name" => "mailer_from",
             "label" => "Mailer From",
             "type" => "string",
             "required" => true,
-            "default" => ""
+            "default" => "",
+            "group" => "mailer"
         ]);
 
         // TODO: Implement install() method.

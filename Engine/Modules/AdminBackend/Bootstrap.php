@@ -59,7 +59,8 @@ class Bootstrap extends AbstractBootstrap
             "label" => "Projektname",
             "type" => "string",
             "required" => true,
-            "default" => "Oforge"
+            "default" => "Oforge",
+            "group" => "backend"
         ]);
 
         $configService->add([
@@ -67,7 +68,8 @@ class Bootstrap extends AbstractBootstrap
             "label" => "Projektkürzel",
             "type" => "string",
             "required" => true,
-            "default" => "OF"
+            "default" => "OF",
+            "group" => "backend"
         ]);
 
         /**
