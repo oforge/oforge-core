@@ -153,7 +153,7 @@ class TemplateRenderService
         if (!$this->view) {
 
             $configService = Oforge()->Services()->get("config");
-            $debug = $configService->get("debug");
+            $debug = $configService->get("system_debug");
 
             /**
              * @var $plugins Plugin[]

@@ -1,5 +1,7 @@
 <li class="header">{{ i18n(item.name) }}</li>
 
+{{ o_dump(item) }}
 {% for subitem in item.children %}
+
     {% include 'Backend/Master/Components/Sidebar/Item.twig' with {'item': subitem} %}
 {% endfor %}

@@ -53,6 +53,6 @@ class Bootstrap extends AbstractBootstrap
          * @var $configService ConfigService
          */
         $configService = Oforge()->Services()->get("config");
-        $configService->update(["name" => "debug", "label" => "Debug aktivieren", "type" => "boolean", "default" => true]);
+        $configService->update(["name" => "system_debug", "label" => "Debug aktivieren", "type" => "boolean", "default" => true, "group" => "system"]);
     }
 }
