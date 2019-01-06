@@ -2,101 +2,154 @@
 
 namespace Oforge\Engine\Modules\Core\Services;
 
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
-use Oforge\Engine\Modules\Core\Helper\StringHelper;
-use Oforge\Engine\Modules\Core\Models\Routes\Route;
+use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
+use Oforge\Engine\Modules\Core\Models\Endpoints\Endpoint;
 
-class EndpointService
-{
-    /**
-     * Store Route endpoints in a database table
-     *
-     * @param array $endpoints
-     *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws ConfigOptionKeyNotExists
-     */
-    public function register(Array $endpoints)
-    {
-        $this->saveEndpoints($endpoints);
-    }
+class EndpointService {
+	const SLIM_ROUTE_METHODS = [ 'any', 'get', 'post', 'put', 'patch', 'delete', 'options' ];
+	/**
+	 * @var EntityManager $entityManager
+	 */
+	private $entityManager;
+	/**
+	 * @var EntityRepository $repository
+	 */
+	private $repository;
 
-    /**
-     * Remove Route endpoints
-     */
-    public function unregister()
-    {
-        // TODO: implement unregister function
-    }
-    
-    /**
-     * Save the Route endpoints
-     *
-     * @param $endpoints
-     *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws ConfigOptionKeyNotExists
-     */
-    protected function saveEndpoints($endpoints)
-    {
-        $em = Oforge()->DB()->getManager();
-        $repo = $em->getRepository(Route::class);
+	public function __construct() {
+		$this->entityManager = Oforge()->DB()->getManager();
+		$this->repository    = $this->entityManager->getRepository( Endpoint::class );
+	}
 
-        $methodCollection = [];
 
-        foreach ($endpoints as $path => $config) {
-            $isRoot = $path == "/" || "";
+	/**
+	 * Store endpoints in a database table
+	 *
+	 * @param array $endpoints
+	 *
+	 * @throws \Doctrine\ORM\ORMException
+	 * @throws \Doctrine\ORM\OptimisticLockException
+	 * @throws ConfigOptionKeyNotExists
+	 */
+	public function register( array $endpoints ) {
+		$endpointConfigs = $this->prepareEndpointConfigs( $endpoints );
 
-            if ($this->isValid($config)) {
-                $methods = get_class_methods($config["controller"]);
+		foreach ( $endpointConfigs as $endpointConfig ) {
+			/**
+			 * @var Endpoint $endpoint
+			 */
+			$endpoint = $this->repository->findOneBy( [ 'name' => $endpointConfig['name'] ] );
+			if ( !isset( $endpoint ) ) {
+				$endpoint = Endpoint::create( $endpointConfig );
+				$endpoint->setActive( true );
+				$this->entityManager->persist( $endpoint );
+			}
+		}
+		$this->entityManager->flush();
+		$this->repository->clear();
+	}
 
-                foreach ($methods as $method) {
-                    if (strpos($method, "Action") === strlen($method) - 6) {
+	/**
+	 * Remove endpoints
+	 *
+	 * @param array $endpoints
+	 *
+	 * @throws ConfigOptionKeyNotExists
+	 * @throws \Doctrine\ORM\ORMException
+	 */
+	public function unregister( array $endpoints ) {//TODO ungetestet
+		$endpointConfigs = $this->prepareEndpointConfigs( $endpoints );
 
-                        $scope = array_key_exists("asset_scope", $config) ? $config["asset_scope"] : "frontend";
-                        if ($method == "indexAction") {
-                            $key = array_key_exists("name", $config) ? $config["name"] : str_replace("/", "_", $path);
+		foreach ( $endpointConfigs as $endpointConfig ) {
+			/**
+			 * @var Endpoint $endpoint
+			 */
+			$endpoints = $this->repository->findBy( [ 'controller' => $endpointConfig['controller'] ] );
+			if ( count( $endpoints ) > 0 ) {
+				foreach ( $endpoints as $endpoint ) {
+					$this->entityManager->remove( $endpoint );
+				}
+				$this->entityManager->flush();
+			}
+			$this->repository->clear();
+		}
+	}
 
-                            array_push($methodCollection, ["path" => $path, "controller" => $config["controller"] . ':' . $method, "name" => $key, "asset_scope" => $scope]);
-                        } else {
-                            $custom_path = $path . ($isRoot ? "" : "/") . substr($method, 0, -6);
-                            $key = array_key_exists("name", $config) ? ($config["name"] . "_" . substr($method, 0, -6)) : ($path . ($isRoot ? "" : "/") . substr($method, 0, -6));
+	/**
+	 * @param array $options
+	 *
+	 * @return bool
+	 * @throws ConfigOptionKeyNotExists
+	 */
+	private function isValid( array $options ) {
+		/**
+		 * Check if required keys are within the options
+		 */
+		$keys = [ 'controller', 'name' ];
+		foreach ( $keys as $key ) {
+			if ( !array_key_exists( $key, $options ) ) {
+				throw new ConfigOptionKeyNotExists( $key );
+			}
+		}
 
-                            array_push($methodCollection, ["path" => $custom_path, "controller" => $config["controller"] . ':' . $method, "name" => $key, "asset_scope" => $scope]);
-                        }
-                    }
-                }
-            }
-        }
+		return true;
+	}
 
-        foreach ($methodCollection as $method) {
-            $r = $repo->findBy(array('name' => $method["name"]));
+	/**
+	 * @param array $endpoints
+	 *
+	 * @return array
+	 * @throws ConfigOptionKeyNotExists
+	 */
+	protected function prepareEndpointConfigs( array $endpoints ) : array {
+		$endpointConfigs = [];
 
-            if (sizeof($r) == 0) {
-                $route = new Route();
-                $route->fromArray($method);
-                $route->setLanguageId("de");
-                $route->setActivate(true);
-                $em->persist($route);
-            }
-        }
+		foreach ( $endpoints as $path => $config ) {
+			$isRoot = ( $path === '/' || '' );
 
-        $em->flush();
-    }
+			if ( $this->isValid( $config ) ) {
+				$controller = $config['controller'];
+				$scope      = ArrayHelper::get( $config, 'asset_scope', 'frontend' );
+				$methods    = ArrayHelper::get( $config, 'methods', [] );
 
-    private function isValid($options)
-    {
-        /**
-         * Check if required keys are within the options
-         */
-        $keys = ["controller", "name"];
-        foreach ($keys as $key) {
-            if (!array_key_exists($key, $options)) throw new ConfigOptionKeyNotExists($key);
-        }
+				$classMethods = get_class_methods( $config['controller'] );
+				foreach ( $classMethods as $classMethod ) {
+					if ( substr( $classMethod, -6 ) !== 'Action' ) {
+						continue;
+					}
+					if ( $classMethod === 'indexAction' || isset( $methods[ $classMethod ] ) ) {
+						$name       = ArrayHelper::get( $config, 'name', str_replace( '/', '_', $path ) );
+						$actionPath = $path;
+					} else {
+						$action = substr( $classMethod, 0, -6 );
+						if ( isset( $config['name'] ) ) {
+							$name = $config['name'] . '_' . $action;
+						} else {
+							$name = $path . ( $isRoot ? '' : '/' ) . $action;
+						}
+						$actionPath = $path . ( $isRoot ? '' : '/' ) . $action;
+					}
+					$httpMethod = ArrayHelper::get( $methods, $classMethod, 'any' );
+					if ( !in_array( $httpMethod, self::SLIM_ROUTE_METHODS ) ) {
+						$httpMethod = 'any';
+					}
 
-        return true;
-    }
+					$controllerMethod  = $controller . ':' . $classMethod;
+					$endpointConfigs[] = [
+						'name'        => $name,
+						'path'        => $actionPath,
+						'controller'  => $controllerMethod,
+						'asset_scope' => $scope,
+						'http_method' => $httpMethod,
+					];
+				}
+			}
+		}
+
+		return $endpointConfigs;
+	}
 
 }
