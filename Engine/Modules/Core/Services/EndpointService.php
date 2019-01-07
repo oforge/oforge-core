@@ -116,6 +116,9 @@ class EndpointService {
 				$methods    = ArrayHelper::get( $config, 'methods', [] );
 
 				$classMethods = get_class_methods( $config['controller'] );
+				if ( !empty( $methods ) ) {
+					$classMethods = array_intersect( array_keys( $methods ), $classMethods );
+				}
 				foreach ( $classMethods as $classMethod ) {
 					if ( substr( $classMethod, -6 ) !== 'Action' ) {
 						continue;
