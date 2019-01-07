@@ -53,7 +53,13 @@ class Route extends AbstractModel
      * @ORM\Column(name="asset_scope", type="string", nullable=true, options={"default":"frontend"})
      */
     private $asset_scope = "frontend";
-
+    
+    /**
+     * @var int
+     * @ORM\Column(name="orderby", type="integer", nullable=true)
+     */
+    private $order;
+    
     /**
      * Get id
      *
@@ -188,5 +194,19 @@ class Route extends AbstractModel
     public function setAssetScope($asset_scope)
     {
         $this->asset_scope = $asset_scope;
+    }
+    
+    /**
+     * @return int
+     */
+    public function getOrder(): int {
+        return $this->order;
+    }
+    
+    /**
+     * @param int $order
+     */
+    public function setOrder( int $order ): void {
+        $this->order = $order;
     }
 }

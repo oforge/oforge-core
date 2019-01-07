@@ -56,15 +56,16 @@ class EndpointService
                     if (strpos($method, "Action") === strlen($method) - 6) {
 
                         $scope = array_key_exists("asset_scope", $config) ? $config["asset_scope"] : "frontend";
+                        $order = array_key_exists("order", $config) ? $config["order"] : 1337;
                         if ($method == "indexAction") {
                             $key = array_key_exists("name", $config) ? $config["name"] : str_replace("/", "_", $path);
 
-                            array_push($methodCollection, ["path" => $path, "controller" => $config["controller"] . ':' . $method, "name" => $key, "asset_scope" => $scope]);
+                            array_push($methodCollection, ["path" => $path, "controller" => $config["controller"] . ':' . $method, "name" => $key, "asset_scope" => $scope, "order" => $order]);
                         } else {
                             $custom_path = $path . ($isRoot ? "" : "/") . substr($method, 0, -6);
                             $key = array_key_exists("name", $config) ? ($config["name"] . "_" . substr($method, 0, -6)) : ($path . ($isRoot ? "" : "/") . substr($method, 0, -6));
 
-                            array_push($methodCollection, ["path" => $custom_path, "controller" => $config["controller"] . ':' . $method, "name" => $key, "asset_scope" => $scope]);
+                            array_push($methodCollection, ["path" => $custom_path, "controller" => $config["controller"] . ':' . $method, "name" => $key, "asset_scope" => $scope, "order" => $order]);
                         }
                     }
                 }
@@ -77,7 +78,7 @@ class EndpointService
             if (sizeof($r) == 0) {
                 $route = new Route();
                 $route->fromArray($method);
-                $route->setLanguageId("de");
+                $route->setLanguageId("de"); // TODO make default language out of config
                 $route->setActivate(true);
                 $em->persist($route);
             }

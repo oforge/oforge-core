@@ -26,7 +26,7 @@ class RouteManager {
         $em   = Oforge()->DB()->getManager();
         $repo = $em->getRepository( Route::class );
         
-        $activeRoutes = $repo->findBy( array( 'active' => 1 ) );
+        $activeRoutes = $repo->findBy(array("active" => 1), array('order' => 'ASC'));
         $container    = Oforge()->App()->getContainer();
         
         foreach ( $activeRoutes as $route ) {
