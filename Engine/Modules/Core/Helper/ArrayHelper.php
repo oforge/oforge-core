@@ -3,6 +3,7 @@
 namespace Oforge\Engine\Modules\Core\Helper;
 
 class ArrayHelper {
+  
 	private function __construct() {
 	}
 
@@ -23,4 +24,5 @@ class ArrayHelper {
 
 		return array_replace( $tmp, array_intersect_key( $inputArray, $tmp ) );
 	}
+  
 }
