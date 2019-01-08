@@ -4,7 +4,7 @@
         <li><a href="{{ url("backend_dashboard") }}"><i class="fa fa-dashboard"></i>{{  i18n('dashboard') }}</a></li>
         {% for item in breadcrumbs %}
             <li class="{% if item.path == meta.route.path %}active{% endif %}">
-                {% if item.path and item.visible%}
+                {% if item.path and item.visible %}
                     <a href="{{ url(item.path) }}">
                         {{ i18n(item.name) }}
                     </a>
