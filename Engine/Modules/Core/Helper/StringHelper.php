@@ -7,12 +7,12 @@ class StringHelper
     /**
      * Check if a string starts with a given value
      *
-     * @param $haystack
-     * @param $needle
+     * @param string $haystack
+     * @param string $needle
      *
      * @return bool
      */
-    public static function startsWith($haystack, $needle)
+    public static function startsWith(string $haystack, string $needle)
     {
         $length = strlen($needle);
         return (substr($haystack, 0, $length) === $needle);
@@ -21,12 +21,12 @@ class StringHelper
     /**
      * Check if a string ends with a given value
      *
-     * @param $haystack
-     * @param $needle
+     * @param string $haystack
+     * @param string $needle
      *
      * @return bool
      */
-    public static function endsWith($haystack, $needle)
+    public static function endsWith(string $haystack, string $needle)
     {
         $length = strlen($needle);
         if ($length == 0) {
@@ -39,12 +39,12 @@ class StringHelper
     /**
      * Check if a given value is inside a String
      *
-     * @param $haystack
-     * @param $needle
+     * @param string $haystack
+     * @param string $needle
      *
      * @return bool
      */
-    public static function contains($haystack, $needle)
+    public static function contains(string $haystack, string $needle)
     {
         return (strpos($haystack, $needle) !== false);
     }
@@ -54,12 +54,12 @@ class StringHelper
      * If found, return that value.
      * Otherwise return the haystack
      *
-     * @param $haystack the part where you search inside
-     * @param $needle the separator
+     * @param string $haystack The part where you search inside
+     * @param string $needle The separator
      *
      * @return mixed
      */
-    public static function substringBefore($haystack, $needle)
+    public static function substringBefore(string $haystack, string $needle)
     {
         if (StringHelper::contains($haystack, $needle)) {
             return explode($needle, $haystack)[0];
