@@ -102,7 +102,7 @@ class ConfigService
         /**
          * Check if required keys are within the options
          */
-        $keys = ["name", "label", "type"];
+        $keys = ["name", "label", "type", "group"];
         foreach ($keys as $key) {
             if (!array_key_exists($key, $options)) throw new ConfigOptionKeyNotExists($key);
         }
@@ -132,7 +132,7 @@ class ConfigService
         /**
          * Check if correct type are set
          */
-        $keys = ["name", "label", "description"];
+        $keys = ["name", "label", "description", "group"];
         foreach ($keys as $key) {
             if (isset($options[$key]) && !is_string($options[$key])) throw new \InvalidArgumentException("$key value should be of type string.");
         }
@@ -205,5 +205,21 @@ class ConfigService
             }
         }
         throw new ConfigElementNotFoundException($key, $scope);
+    }
+
+
+    public function groups() {
+        $em = Oforge()->DB()->getManager();
+        $query = $em->createQueryBuilder()
+            ->select("e.group")
+            ->from(Element::class, "e")
+            ->distinct(true);
+        return $query->getQuery()->getArrayResult();
+    }
+
+    public function list($groupName) {
+        $em = Oforge()->DB()->getManager();
+        $elements = $em->getRepository(Element::class)->findBy(array('group' => $groupName));
+        return $elements;
     }
 }
