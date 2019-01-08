@@ -4,6 +4,7 @@ namespace Oforge\Engine\Modules\SystemSettings\Controller\Backend;
 
 use Oforge\Engine\Modules\AdminBackend\Abstracts\SecureBackendController;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -13,15 +14,25 @@ class SystemSettingsGroupController extends SecureBackendController
 {
     public function indexAction(Request $request, Response $response, $args)
     {
-        /**
-         * @var $configService ConfigService
-         */
-        $configService = Oforge()->Services()->get("config");
+        try {
+            /**
+             * @var ConfigService $configService
+             */
+            $configService = Oforge()->Services()->get("config");
+            if ($request->isPost()) {
+                $formData = $request->getParsedBody();
+                foreach ($formData as $key => $value) {
+                    $configService->set($key, $value);
+                }
+            }
 
-        $config = $configService->list($args['group']);
-
-        Oforge()->View()->assign(["page_header" => $args['group'], "config" => $config, "groupname" => $args['group']]);
+            $config = $configService->list($args['group']);
+            Oforge()->View()->assign(["page_header" => $args['group'], "config" => $config, "groupname" => $args['group']]);
+        } catch (ServiceNotFoundException $exception) {
+            $response->withRedirect();
+        }
     }
+
 
     public function initPermissions()
     {
