@@ -1,9 +1,10 @@
 {% if item.visible %}
-<li class="{% if item.children %}treeview{% endif %}{% if item.name in breadcrumbsmap|keys %} active{% endif %}">
+
+<li class="{% if backend_has_visible_children(item.children ) %}treeview{% endif %}{% if item.name in breadcrumbsmap|keys %} active{% endif %}">
     <a href="{% if item.path %}{{ url(item.path) }}{% else %}#{% endif %}">
         {% if item.icon %}<i class="{{ item.icon }}"></i>{% endif %}
         <span>{{ i18n(item.name) }}</span>
-        {% if item.children %}
+        {% if backend_has_visible_children(item.children) %}
             <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
             </span>
@@ -22,7 +23,7 @@
         #}
     </a>
 
-    {% if item.children %}
+    {% if backend_has_visible_children(item.children) %}
         <ul class="treeview-menu">
             {% for subitem in item.children %}
                 {% include 'Backend/Master/Components/Sidebar/Item.twig' with {'item': subitem} %}

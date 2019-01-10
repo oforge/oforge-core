@@ -9,6 +9,7 @@ namespace Oforge\Engine\Modules\UserManagement;
 
 use Oforge\Engine\Modules\AdminBackend\Services\BackendNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
+use Oforge\Engine\Modules\UserManagement\Controller\Backend\ProfileController;
 use Oforge\Engine\Modules\UserManagement\Controller\Backend\UserManagementController;
 use Oforge\Engine\Modules\UserManagement\Services\BackendUsersCrudService;
 
@@ -18,6 +19,11 @@ class Bootstrap extends AbstractBootstrap {
             "/backend/users" => [
                 "controller" => UserManagementController::class,
                 "name" => "backend_users",
+                "asset_scope" => "Backend"
+            ],
+            "/backend/profile" => [
+                "controller" => ProfileController::class,
+                "name" => "backend_profile",
                 "asset_scope" => "Backend"
             ]
         ];
