@@ -30,6 +30,10 @@ class GenericCrudService
     public function list($class, $params = [])
     {
         $repo = $this->getRepo($class);
+
+        /**
+         * @var $items AbstractModel[]
+         */
         $items = [];
         //$repo->findAll();
 
@@ -41,6 +45,7 @@ class GenericCrudService
 
         $result = [];
         foreach ($items as $item) {
+
             array_push($result, $item->toArray());
         }
 
