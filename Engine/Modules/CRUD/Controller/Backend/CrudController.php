@@ -62,7 +62,10 @@ class CrudController extends SecureBackendController
             } else {
                 $this->list($request, $response);
             }
+            $this->list($request, $response);
         }
+
+        $this->list($request, $response);
     }
 
     public function delete(Request $request, Response $response)

@@ -8,6 +8,18 @@
                 <i class="fa fa-angle-left pull-right"></i>
             </span>
         {% endif %}
+
+        {#
+        {% set notifications = notification(item.name) %}
+
+        {%  if sizeof(notifications) > 0 %}
+            <span class="pull-right-container">
+                {% for notification in notifications %}
+                    <small class="label pull-right {{ notification.type }}">{{ notification.value }}</small>
+                {% endfor %}
+            </span>
+        {%  endif %}
+        #}
     </a>
 
     {% if item.children %}
