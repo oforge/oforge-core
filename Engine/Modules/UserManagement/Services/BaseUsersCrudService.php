@@ -43,15 +43,25 @@ class BaseUsersCrudService {
      * @param $userData
      *
      * @return null
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists
      */
     public function create($userData) {
-        $password = null;
-        
-        
-        $userData["password"] = $this->passwordService->hash($userData["password"]);
-        $this->crudService->create($this->userModel, $userData);
-        return true;
+        if (isset($userData["password"]) && strlen($userData["password"]) > 5) {
+            $userData["password"] = $this->passwordService->hash($userData["password"]);
+            try {
+                $this->crudService->create( $this->userModel, $userData );
+            } catch (\Exception $e) {
+                $msg = $e->getPrevious();
+                if (isset($msg)) {
+                    $msg = $msg->getMessage();
+                } else {
+                    $msg = $e->getMessage();
+                }
+                Oforge()->Logger()->get()->addWarning("Error trying to create a new user. ", ["e" => $msg]);
+                return false;
+            }
+            return true;
+        }
+        return false;
     }
     
     /**
@@ -61,7 +71,6 @@ class BaseUsersCrudService {
      * @throws \Oforge\Engine\Modules\Core\Exceptions\NotFoundException
      */
     public function update($userData) {
-       
         
         if (key_exists("password", $userData)) {
             $userData["password"] = $this->passwordService->hash($userData["password"]);

@@ -58,14 +58,12 @@ class BaseLoginService {
         
         if (isset($user)) {
             if ($passwordService->validate($password, $user->getPassword())) {
-                $userObj = [
-                    'user_id' => $user->getId(),
-                    'user_email' => $user->getEmail(),
-                    'user_type' => get_class($user)
-                ];
+                $userObj = $user->toArray();
+                unset($userObj["password"]);
                 
+                $userObj["type"] = get_class($user);
                 if (get_class($user) == BackendUser::class) {
-                    $userObj = array_merge($userObj, ['user_role' => $user->getRole()]);
+                    $userObj["role"] = $user->getRole();
                 }
                 
                 return $authService->createJWT($userObj);
