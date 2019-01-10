@@ -5,6 +5,7 @@ namespace Oforge\Engine\Modules\I18n;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\I18n\Controller\Backend\LanguageController;
+use Oforge\Engine\Modules\I18n\Controller\Backend\SnippetsController;
 use Oforge\Engine\Modules\I18n\Models\Language;
 use Oforge\Engine\Modules\I18n\Models\Snippet;
 use Oforge\Engine\Modules\I18n\Services\InternationalizationService;
@@ -17,7 +18,7 @@ class Bootstrap extends AbstractBootstrap
     {
         $this->endpoints = [
             "/backend/i18n/languages" => ["controller" => LanguageController::class, "name" => "backend_i18n_languages", "asset_scope" => "Backend"],
-            "/backend/i18n/snippets" => ["controller" => LanguageController::class, "name" => "backend_i18n_snippets", "asset_scope" => "Backend"]
+            "/backend/i18n/snippets" => ["controller" => SnippetsController::class, "name" => "backend_i18n_snippets", "asset_scope" => "Backend"]
         ];
 
         $this->services = [

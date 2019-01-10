@@ -21,6 +21,7 @@ class BackendExtension extends Twig_Extension implements \Twig_ExtensionInterfac
             new Twig_Function('backend_sidebar_navigation', array($this, 'get_sidebar_navigation')),
             new Twig_Function('backend_breadcrumbs', array($this, 'get_breadcrumbs')),
             new Twig_Function('backend_breadcrumbs_map', array($this, 'get_breadcrumbs_map')),
+            new Twig_Function('backend_has_visible_children', array($this, 'get_visible_navigation_children')),
         );
     }
 
@@ -59,5 +60,22 @@ class BackendExtension extends Twig_Extension implements \Twig_ExtensionInterfac
         }
 
         return [];
+    }
+
+    public function get_visible_navigation_children(...$vars)
+    {
+        if (isset($vars) && sizeof($vars) == 1 && is_array($vars[0])) {
+            $contains = false;
+            foreach ($vars[0] as $item) {
+                if (isset($item["visible"]) && $item["visible"] == true) {
+                    $contains = true;
+                    break;
+                }
+            }
+
+            return $contains;
+        }
+
+        return false;
     }
 }
