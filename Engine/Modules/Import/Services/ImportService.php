@@ -65,8 +65,7 @@ class ImportService
                             $data[$header[$index]] = $value;
                         }
 
-
-                        $element = AbstractModel::create($model, $data);
+                        $element = $model::create($data);
                         Oforge()->DB()->getManager()->persist($element);
                         $count++;
                     }

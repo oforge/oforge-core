@@ -163,7 +163,7 @@ class ConfigService
         $repo = $em->getRepository(Element::class);
         $element = $repo->findBy(["name" => $key]);
 
-        if (!isset($element)) throw new ConfigElementNotFoundException($key, $scope);
+        if (!isset($element) || sizeof($element) == 0) throw new ConfigElementNotFoundException($key, $scope);
 
         foreach ($element[0]->getValues() as $value) {
             if ($value->getScope() == $scope) {
