@@ -27,6 +27,7 @@ class RouteMiddleware {
 				'language'          => $this->endpoint->getLanguageID(),
 				'controller_method' => $this->endpoint->getController(),
 				'asset_scope'       => $this->endpoint->getAssetScope(),
+				'order'             => $this->endpoint->getOrder()
 			],
 		] );
 
