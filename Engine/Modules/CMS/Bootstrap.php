@@ -9,6 +9,11 @@
 namespace Oforge\Engine\Modules\CMS;
 
 use Oforge\Engine\Modules\CMS\Controller\Frontend\PageController;
+use Oforge\Engine\Modules\CMS\Models\Layout\Layout;
+use Oforge\Engine\Modules\CMS\Models\Layout\Slot;
+use Oforge\Engine\Modules\CMS\Models\Page\Page;
+use Oforge\Engine\Modules\CMS\Models\Page\PageUrl;
+use Oforge\Engine\Modules\CMS\Models\Page\Site;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 
 class Bootstrap extends AbstractBootstrap {
@@ -20,6 +25,14 @@ class Bootstrap extends AbstractBootstrap {
                 "asset_scope" => "Frontend",
                 "order" => 99999
             ]
+        ];
+
+        $this->models = [
+            Layout::class,
+            Page::class,
+            PageUrl::class,
+            Site::class,
+            Slot::class
         ];
         
         // $this->dependencies = [];

@@ -6,9 +6,9 @@
  * Time: 10:34
  */
 
-namespace Oforge\Engine\Modules\CMS\Models\Site;
+namespace Oforge\Engine\Modules\CMS\Models\Page;
 
-use Oforge\Engine\Modules\CMS\Models\Page\Page;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="oforge_cms_site")
@@ -31,10 +31,11 @@ class Site extends Page
     private $domain;
     
     /**
-     * @var string
-     * @ORM\Column(name="default_lang", type="string", nullable=false)
+     * @var int
+     * @ORM\OneToOne(targetEntity="Oforge\Engine\Modules\I18n\Models\Language")
+     * @ORM\JoinColumn(name="default_language_id", referencedColumnName="id")
      */
-    private $defaultLang;
+    private $defaultLanguage;
     
     /**
      * @return int
@@ -59,16 +60,16 @@ class Site extends Page
     }
     
     /**
-     * @return string
+     * @return int
      */
-    public function getDefaultLang(): string {
-        return $this->defaultLang;
+    public function getDefaultLanguage(): int {
+        return $this->defaultLanguage;
     }
     
     /**
-     * @param string $defaultLang
+     * @param int $defaultLanguage
      */
-    public function setDefaultLang( string $defaultLang ): void {
-        $this->defaultLang = $defaultLang;
+    public function setDefaultLanguage(int $defaultLanguage): void {
+        $this->defaultLanguage = $defaultLanguage;
     }
 }
