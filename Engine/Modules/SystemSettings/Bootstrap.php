@@ -6,7 +6,6 @@ use Oforge\Engine\Modules\AdminBackend\Services\BackendNavigationService;
 use Oforge\Engine\Modules\SystemSettings\Controller\Backend\SystemSettingsController;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\SystemSettings\Controller\Backend\SystemSettingsGroupController;
-use Oforge\Engine\Modules\SystemSettings\Services\SystemSettingsService;
 
 class Bootstrap extends AbstractBootstrap
 {

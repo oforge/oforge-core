@@ -47,11 +47,6 @@ class Endpoint extends AbstractModel {
      * @ORM\Column(name="asset_scope", type="string", nullable=true, options={"default":"frontend"})
      */
     private $assetScope = 'frontend';
-    /**
-     * @var string
-     * @ORM\Column(name="language_id", type="string", nullable=false, options={"default":"de"})
-     */
-    private $languageID = 'de';
     
     /**
      * @var int
@@ -186,24 +181,6 @@ class Endpoint extends AbstractModel {
     }
     
     /**
-     * @return string
-     */
-    public function getLanguageID(): string {
-        return $this->languageID;
-    }
-    
-    /**
-     * @param string $languageID
-     *
-     * @return Endpoint
-     */
-    public function setLanguageID( string $languageID ): Endpoint {
-        $this->languageID = $languageID;
-        
-        return $this;
-    }
-    
-    /**
      * @return int
      */
     public function getOrder(): int {
@@ -216,5 +193,4 @@ class Endpoint extends AbstractModel {
     public function setOrder( int $order ): void {
         $this->order = $order;
     }
-    
 }
