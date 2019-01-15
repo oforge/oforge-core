@@ -8,6 +8,7 @@
 
 namespace Oforge\Engine\Modules\CMS\Models\Page;
 
+use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 
 /**
@@ -29,13 +30,14 @@ class Page extends AbstractModel
      * @ORM\Column(name="page_name", type="string", nullable=false, unique=true)
      */
     private $name;
-    
+
     /**
-     * @var string
-     * @ORM\Column(name="default_lang", type="string", nullable=false)
+     * @var int
+     * @ORM\OneToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Layout\Layout")
+     * @ORM\JoinColumn(name="layout_id", referencedColumnName="id")
      */
-    private $defaultLang;
-    
+    private $layout;
+
     /**
      * @return int
      */
@@ -43,21 +45,7 @@ class Page extends AbstractModel
     {
         return $this->id;
     }
-    
-    /**
-     * @return string
-     */
-    public function getDefaultLang(): string {
-        return $this->defaultLang;
-    }
-    
-    /**
-     * @param string $defaultLang
-     */
-    public function setDefaultLang( string $defaultLang ): void {
-        $this->defaultLang = $defaultLang;
-    }
-    
+
     /**
      * @return string
      */
@@ -70,5 +58,21 @@ class Page extends AbstractModel
      */
     public function setName( string $name ): void {
         $this->name = $name;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLayout(): int
+    {
+        return $this->layout;
+    }
+
+    /**
+     * @param int $layout
+     */
+    public function setLayout(int $layout): void
+    {
+        $this->layout = $layout;
     }
 }

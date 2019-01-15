@@ -8,6 +8,7 @@
 
 namespace Oforge\Engine\Modules\CMS\Models\Layout;
 
+use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 
 /**
