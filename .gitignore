@@ -1,5 +1,10 @@
 .git
 .idea
+!/.idea/codeStyles/
+!/.idea/encodings.xml
+!/.idea/externalDependencies.xml
+!/.idea/vcs.xml
+!.phpstorm
 /config.php
 /config.dev.php
 /config.prod.php
