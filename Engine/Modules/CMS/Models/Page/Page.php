@@ -32,11 +32,20 @@ class Page extends AbstractModel
     private $name;
 
     /**
-     * @var int
+     * @var string
      * @ORM\OneToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Layout\Layout")
-     * @ORM\JoinColumn(name="layout_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="layout", referencedColumnName="id")
+     * @ORM\Column(name="layout", type="object")
      */
     private $layout;
+    
+    /**
+     * @var int
+     * @ORM\ManyToOne(targetEntity="Site")
+     * @ORM\JoinColumn(name="site_id", referencedColumnName="id")
+     * @ORM\Column(name="site_id", type="integer")
+     */
+    private $site;
 
     /**
      * @return int
@@ -61,18 +70,32 @@ class Page extends AbstractModel
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getLayout(): int
+    public function getLayout(): string
     {
         return $this->layout;
     }
 
     /**
-     * @param int $layout
+     * @param string $layout
      */
-    public function setLayout(int $layout): void
+    public function setLayout(string $layout): void
     {
         $this->layout = $layout;
+    }
+    
+    /**
+     * @return int
+     */
+    public function getSite() : int {
+        return $this->site;
+    }
+    
+    /**
+     * @param int $site
+     */
+    public function setSite(int $site) : void {
+        $this->site = $site;
     }
 }

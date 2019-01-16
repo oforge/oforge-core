@@ -9,12 +9,13 @@
 namespace Oforge\Engine\Modules\CMS\Models\Page;
 
 use Doctrine\ORM\Mapping as ORM;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 
 /**
  * @ORM\Table(name="oforge_cms_site")
  * @ORM\Entity
  */
-class Site extends Page
+class Site extends AbstractModel
 {
     /**
      * @var int
@@ -34,6 +35,7 @@ class Site extends Page
      * @var int
      * @ORM\OneToOne(targetEntity="Oforge\Engine\Modules\I18n\Models\Language")
      * @ORM\JoinColumn(name="default_language_id", referencedColumnName="id")
+     * @ORM\Column(name="default_language_id", type="integer")
      */
     private $defaultLanguage;
     
