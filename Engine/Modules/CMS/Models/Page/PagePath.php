@@ -8,16 +8,14 @@
 
 namespace Oforge\Engine\Modules\CMS\Models\Page;
 
-
-
 use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 
 /**
- * @ORM\Table(name="oforge_cms_page_url")
+ * @ORM\Table(name="oforge_cms_page_path")
  * @ORM\Entity
  */
-class PageUrl extends AbstractModel
+class PagePath extends AbstractModel
 {
     /**
      * @var int
@@ -37,6 +35,7 @@ class PageUrl extends AbstractModel
      * @var int
      * @ORM\OneToOne(targetEntity="Oforge\Engine\Modules\I18n\Models\Language")
      * @ORM\JoinColumn(name="language_id", referencedColumnName="id")
+     * @ORM\Column(name="language_id", type="integer")
      */
     private $language;
 
@@ -88,4 +87,3 @@ class PageUrl extends AbstractModel
         $this->language = $language;
     }
 }
-
