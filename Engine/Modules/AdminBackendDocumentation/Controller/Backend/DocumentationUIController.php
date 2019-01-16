@@ -29,18 +29,23 @@ class DocumentationUIController extends SecureBackendController
     {
 
     }
+
+
     public function buttonsAction(Request $request, Response $response)
     {
 
     }
+
     public function modalsAction(Request $request, Response $response)
     {
 
     }
+
     public function slidersAction(Request $request, Response $response)
     {
 
     }
+
     public function timelineAction(Request $request, Response $response)
     {
 

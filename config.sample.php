@@ -35,7 +35,8 @@ return [
             'port' => 3306,
             'dbname' => '', // your database name here
             'user' => '', // your database user name here
-            'password' => '' // your database user password here
+            'password' => '', // your database user password here
+            'charset' => 'utf8' // we expect to use utf8 charset everywhere (webserver, mysql, php, etc)
         ]
     ],
     "jwt_salt" => "my awesome salt" // Change this salt for security

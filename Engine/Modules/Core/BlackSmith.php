@@ -1,259 +1,265 @@
 <?php
 
-use Oforge\Engine\Modules\Core\App;
-use Oforge\Engine\Modules\Core\ForgeSettings;
-
-use Oforge\Engine\Modules\Core\Manager\Modules\ModuleManager;
-use Oforge\Engine\Modules\Core\Manager\Routes\RouteManager;
-use Oforge\Engine\Modules\Core\Manager\Logger\LogManager;
-use Oforge\Engine\Modules\Core\Manager\Plugins\PluginManager;
-use Oforge\Engine\Modules\Core\Manager\Services\ServiceManager;
-use Oforge\Engine\Modules\Core\Models\ForgeDataBase;
-// TODO: find a better way to use a TemplateEngine Module
 use Oforge\Engine\Modules\Core\Abstracts\AbstractTemplateManager;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractViewManager;
+use Oforge\Engine\Modules\Core\App;
+use Oforge\Engine\Modules\Core\ForgeSettings;
+use Oforge\Engine\Modules\Core\Manager\Logger\LoggerManager;
+use Oforge\Engine\Modules\Core\Manager\Modules\ModuleManager;
+use Oforge\Engine\Modules\Core\Manager\Plugins\PluginManager;
+use Oforge\Engine\Modules\Core\Manager\Routes\RouteManager;
+use Oforge\Engine\Modules\Core\Manager\Services\ServiceManager;
+use Oforge\Engine\Modules\Core\Models\ForgeDataBase;
 
-class BlackSmith
-{
-    /**
-     * The main instance to start the whole application.
-     *
-     * @var BlackSmith
-     */
-    protected static $instance = null;
+// TODO: find a better way to use a TemplateEngine Module
 
-    /**
-     * App
-     *
-     * @var App
-     */
-    private $app = null;
+class BlackSmith {
+	/**
+	 * The main instance to start the whole application.
+	 *
+	 * @var BlackSmith
+	 */
+	protected static $instance = null;
+	/**
+	 * App
+	 *
+	 * @var App $app
+	 */
+	private $app = null;
+	/**
+	 * Container
+	 *
+	 * @var \Slim\Container $container
+	 */
+	private $container = null;
+	/**
+	 *  DataBase
+	 *
+	 * @var ForgeDataBase $db
+	 */
+	private $db = null;
+	/**
+	 *  RouteManager
+	 *
+	 * @var RouteManager $router
+	 */
+	private $router = null;
+	/**
+	 * LogManager
+	 *
+	 * @var LoggerManager $logger
+	 */
+	private $logger = null;
+	/**
+	 * ForgeSettings
+	 *
+	 * @var ForgeSettings $settings
+	 */
+	private $settings = null;
+	/**
+	 * Services
+	 *
+	 * @var ServiceManager $services
+	 */
+	private $services = null;
+	/**
+	 * PluginManager
+	 *
+	 * @var PluginManager $pluginManager
+	 */
+	private $pluginManager = null;
+	/**
+	 * TemplateManager
+	 *
+	 * @var AbstractTemplateManager $templateManager
+	 */
+	private $templateManager = null;
+	/**
+	 * ViewManager
+	 *
+	 * @var AbstractViewManager $viewManager
+	 */
+	private $viewManager = null;
 
-    /**
-     * Container
-     *
-     * @var \Slim\Container
-     */
-    private $container = null;
+	/**
+	 * Create a singleton instance of the inner core
+	 *
+	 * @return BlackSmith
+	 */
+	public static function getInstance() : BlackSmith {
+		if ( !isset( self::$instance ) ) {
+			self::$instance = new BlackSmith();
+		}
 
-    /**
-     *  DataBase
-     *
-     * @var ForgeDataBase
-     */
-    private $db = null;
+		return self::$instance;
+	}
 
-    /**
-     *  RouteManager
-     *
-     * @var RouteManager
-     */
-    private $router = null;
+	/**
+	 * BlackSmith constructor.
+	 */
+	protected function __construct() {
+		Oforge( $this );
+	}
 
-    /**
-     * LogManager
-     *
-     * @var LogManager
-     */
-    private $logger = null;
+	public function App() : App {
+		if ( !isset( $this->app ) ) {
+			throw new \RuntimeException( 'Oforge fire does not burn. Ask the blacksmith to start forging.' );
+		}
 
-    /**
-     * ForgeSettings
-     *
-     * @var ForgeSettings
-     */
-    private $settings = null;
+		return $this->app;
+	}
 
-    /**
-     * Services
-     *
-     * @var ServiceManager
-     */
-    private $services = null;
+	public function DB() : ForgeDataBase {
+		if ( !isset( $this->db ) ) {
+			throw new \RuntimeException( 'Oforge fire does not burn. Ask the blacksmith to start forging.' );
+		}
 
-    /**
-     * PluginManager
-     *
-     * @var PluginManager
-     */
-    private $pluginManager = null;
+		return $this->db;
+	}
 
-    /**
-     * TemplateManager
-     *
-     * @var AbstractTemplateManager
-     */
-    private $templateManager = null;
+	public function Router() : RouteManager {
+		if ( !isset( $this->router ) ) {
+			throw new \RuntimeException( 'Oforge fire does not burn. Ask the blacksmith to start forging.' );
+		}
 
-    /**
-     * ViewManager
-     *
-     * @var AbstractViewManager
-     */
-    private $viewManager = null;
-    
-    /**
-     * Create a singleton instance of the inner core
-     * @return BlackSmith
-     */
-    public static function getInstance(): BlackSmith
-    {
-        if (!isset(self::$instance)) {
-            self::$instance = new BlackSmith();
-        }
+		return $this->router;
+	}
 
-        return self::$instance;
-    }
-    
-    /**
-     * BlackSmith constructor.
-     */
-    protected function __construct()
-    {
-        Oforge($this);
-    }
-    
-    public function App(): App
-    {
-        if (!isset($this->app)) throw new \RuntimeException('Oforge fire does not burn. Ask the blacksmith to start forging.');
-        return $this->app;
-    }
+	public function Container() : \Slim\Container {
+		if ( !isset( $this->container ) ) {
+			throw new \RuntimeException( 'Oforge fire does not burn. Ask the blacksmith to start forging.' );
+		}
 
-    public function DB(): ForgeDataBase
-    {
-        if (!isset($this->db)) throw new \RuntimeException('Oforge fire does not burn. Ask the blacksmith to start forging.');
+		return $this->container;
+	}
 
-        return $this->db;
-    }
+	public function Logger() : LoggerManager {
+		if ( !isset( $this->logger ) ) {
+			throw new \RuntimeException( 'Oforge fire does not burn. Ask the blacksmith to start forging.' );
+		}
 
-    public function Router(): RouteManager
-    {
-        if (!isset($this->router)) throw new \RuntimeException('Oforge fire does not burn. Ask the blacksmith to start forging.');
-        return $this->router;
-    }
+		return $this->logger;
+	}
 
-    public function Container(): \Slim\Container
-    {
-        if (!isset($this->container)) throw new \RuntimeException('Oforge fire does not burn. Ask the blacksmith to start forging.');
-        return $this->container;
-    }
+	public function Settings() : ForgeSettings {
+		if ( !isset( $this->settings ) ) {
+			throw new \RuntimeException( 'Oforge fire does not burn. Ask the blacksmith to start forging.' );
+		}
 
-    public function Logger(): LogManager
-    {
-        if (!isset($this->logger)) throw new \RuntimeException('Oforge fire does not burn. Ask the blacksmith to start forging.');
-        return $this->logger;
-    }
+		return $this->settings;
+	}
 
-    public function Settings(): ForgeSettings
-    {
-        if (!isset($this->settings)) throw new \RuntimeException('Oforge fire does not burn. Ask the blacksmith to start forging.');
-        return $this->settings;
-    }
+	public function Services() : ServiceManager {
+		if ( !isset( $this->services ) ) {
+			throw new \RuntimeException( 'Oforge fire does not burn. Ask the blacksmith to start forging.' );
+		}
 
-    public function Services(): ServiceManager
-    {
-        if (!isset($this->services)) throw new \RuntimeException('Oforge fire does not burn. Ask the blacksmith to start forging.');
-        return $this->services;
-    }
+		return $this->services;
+	}
 
-    public function Plugins(): PluginManager
-    {
-        if (!isset($this->pluginManager)) throw new RuntimeException('Oforge fire does not burn. Ask the blacksmith to start forging.');
-        return $this->pluginManager;
-    }
+	public function Plugins() : PluginManager {
+		if ( !isset( $this->pluginManager ) ) {
+			throw new RuntimeException( 'Oforge fire does not burn. Ask the blacksmith to start forging.' );
+		}
 
-    public function Templates(): AbstractTemplateManager
-    {
-        if (!isset($this->templateManager)) throw new RuntimeException('Oforge fire does not burn. Ask the blacksmith to start forging.');
-        return $this->templateManager;
-    }
+		return $this->pluginManager;
+	}
 
-    public function View(): AbstractViewManager
-    {
-        if (!isset($this->viewManager)) throw new RuntimeException('Oforge fire does not burn. Ask the blacksmith to start forging.');
-        return $this->viewManager;
-    }
+	public function Templates() : AbstractTemplateManager {
+		if ( !isset( $this->templateManager ) ) {
+			throw new RuntimeException( 'Oforge fire does not burn. Ask the blacksmith to start forging.' );
+		}
+
+		return $this->templateManager;
+	}
+
+	public function View() : AbstractViewManager {
+		if ( !isset( $this->viewManager ) ) {
+			throw new RuntimeException( 'Oforge fire does not burn. Ask the blacksmith to start forging.' );
+		}
+
+		return $this->viewManager;
+	}
 
 
-    /**
-     * @param bool $start definies if slim should be started or not
-     * @param bool $test definies if test environment should be used
-     *
-     * @throws Exception
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
-     * @throws \Slim\Exception\MethodNotAllowedException
-     * @throws \Slim\Exception\NotFoundException
-     */
-    public function forge($start = true, $test = false)
-    {
-        /**
-        * Load settings from disk like mysql credentials, log paths, s.o.
-        */
-        $this->settings = ForgeSettings::getInstance($test);
-        $this->settings->load();
+	/**
+	 * @param bool $start defines if slim should be started or not
+	 * @param bool $test defines if test environment should be used
+	 *
+	 * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+	 * @throws \Slim\Exception\MethodNotAllowedException
+	 * @throws \Slim\Exception\NotFoundException
+	 * @throws Exception
+	 */
+	public function forge( $start = true, $test = false ) {
+		/**
+		 * Load settings from disk like mysql credentials, log paths, s.o.
+		 */
+		$this->settings = ForgeSettings::getInstance( $test );
+		$this->settings->load();
 
-        /**
-         * Init logger
-         */
-        $this->logger = new LogManager($this->settings->get("logger"));
+		/**
+		 * Init logger
+		 */
+		$this->logger = new LoggerManager( $this->settings->get( "logger" ) );
 
-        /**
-         * Connect to database
-         */
-        $this->db = ForgeDataBase::getInstance();
-        $this->db->init($this->settings->get("db"));
+		/**
+		 * Connect to database
+		 */
+		$this->db = ForgeDataBase::getInstance();
+		$this->db->init( $this->settings->get( "db" ) );
 
-        /**
-         * Start service manager
-         */
-        $this->services = ServiceManager::getInstance();
+		/**
+		 * Start service manager
+		 */
+		$this->services = ServiceManager::getInstance();
 
-        /*
-        * Start slim application
-        */
-        $this->app = App::getInstance();
-        $this->container = $this->App()->getContainer();
+		/*
+		* Start slim application
+		*/
+		$this->app = App::getInstance();
 
-        /*
-        * Init and load modules
-        */
+		$this->container = $this->App()->getContainer();
 
-        $modules = ModuleManager::getInstance();
-        $modules->init();
+		/*
+		* Init and load modules
+		*/
+		$modules = ModuleManager::getInstance();
+		$modules->init();
 
-        /*
-        * Init and load plugins
-        */
-        $this->pluginManager = PluginManager::getInstance();
-        $this->pluginManager->init();
+		/*
+		* Init and load plugins
+		*/
+		$this->pluginManager = PluginManager::getInstance();
+		$this->pluginManager->init();
 
-        /*
-         * Init route manager
-         */
-        $this->router = RouteManager::getInstance();
-        $this->router->init();
+		/*
+		 * Init route manager
+		 */
+		$this->router = RouteManager::getInstance();
+		$this->router->init();
 
-        /*
-         * Let the Blacksmith forge all the things \°/
-         */
-        if ($start) $this->app->run();
-    }
+		/*
+		 * Let the Blacksmith forge all the things \°/
+		 */
+		if ( $start ) {
+			$this->app->run();
+		}
+	}
 
-    /**
-     * @param AbstractViewManager $viewManager
-     */
-    public function setViewManager(AbstractViewManager $viewManager)
-    {
-        $this->viewManager = $viewManager;
-    }
+	/**
+	 * @param AbstractViewManager $viewManager
+	 */
+	public function setViewManager( AbstractViewManager $viewManager ) {
+		$this->viewManager = $viewManager;
+	}
 
-    /**
-     * @param AbstractTemplateManager $templateManager
-     */
-    public function setTemplateManager(AbstractTemplateManager $templateManager)
-    {
-        $this->templateManager = $templateManager;
-    }
+	/**
+	 * @param AbstractTemplateManager $templateManager
+	 */
+	public function setTemplateManager( AbstractTemplateManager $templateManager ) {
+		$this->templateManager = $templateManager;
+	}
 }
 
 /**
@@ -265,18 +271,17 @@ class BlackSmith
  *
  * @return BlackSmith
  */
-function Oforge(BlackSmith &$newInstance = null): BlackSmith
-{
-    static $instance;
+function Oforge( BlackSmith &$newInstance = null ) : BlackSmith {
+	static $instance;
 
-    if (isset($newInstance)) {
-        $oldInstance = $instance;
-        $instance = $newInstance;
+	if ( isset( $newInstance ) ) {
+		$oldInstance = $instance;
+		$instance    = $newInstance;
 
-        return $newInstance;
-    } elseif (!isset($instance)) {
-        throw new RuntimeException('Oforge fire does not burn. Ask the blacksmith to start forging.');
-    }
+		return $newInstance;
+	} elseif ( !isset( $instance ) ) {
+		throw new RuntimeException( 'Oforge fire does not burn. Ask the blacksmith to start forging.' );
+	}
 
-    return $instance;
+	return $instance;
 }

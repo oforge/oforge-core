@@ -9,12 +9,14 @@
 namespace Oforge\Engine\Modules\I18n\Controller\Backend;
 
 use Oforge\Engine\Modules\CRUD\Controller\Backend\CrudController;
-use Oforge\Engine\Modules\I18n\Models\Language;
+use Oforge\Engine\Modules\I18n\Models\Snippet;
+use Oforge\Engine\Modules\I18n\Services\InternationalizationService;
+use Oforge\Engine\Modules\I18n\Services\LanguageService;
 
-class LanguageController extends CrudController
+
+class SnippetsController extends CrudController
 {
-
-    protected $model = Language::class;
+    protected $model = Snippet::class;
 
     function __construct()
     {
