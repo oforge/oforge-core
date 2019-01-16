@@ -1,6 +1,7 @@
 .git
-.idea
+.idea/*
 !/.idea/codeStyles/
+!/.idea/dictionaries/
 !/.idea/encodings.xml
 !/.idea/externalDependencies.xml
 !/.idea/vcs.xml
