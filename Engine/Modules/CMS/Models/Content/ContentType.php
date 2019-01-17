@@ -49,15 +49,11 @@ class ContentType extends AbstractModel {
     private $classPath;
     
     /**
-     * @var ArrayCollection
+     * @var array
      * @ORM\OneToMany(targetEntity="ContentType", mappedBy="id")
      * @ORM\Column(name="child_types", type="array", nullable=true)
      */
     private $childTypes;
-    
-    public function __construct() {
-        $this->childTypes = new ArrayCollection();
-    }
     
     /**
      * @return int
@@ -116,16 +112,16 @@ class ContentType extends AbstractModel {
     }
     
     /**
-     * @return ArrayCollection
+     * @return array
      */
-    public function getChildTypes() : ArrayCollection {
+    public function getChildTypes() : ?array {
         return $this->childTypes;
     }
     
     /**
-     * @param ArrayCollection $childTypes
+     * @param array $childTypes
      */
-    public function setChildTypes(ArrayCollection $childTypes) : void {
+    public function setChildTypes(array $childTypes) : void {
         $this->childTypes = $childTypes;
     }
     
