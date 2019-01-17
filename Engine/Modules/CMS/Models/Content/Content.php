@@ -23,7 +23,7 @@ class Content extends AbstractModel {
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-    
+
     /**
      * @var string
      * @ORM\Column(name="content_name", type="string", nullable=false, unique=true)
@@ -31,8 +31,8 @@ class Content extends AbstractModel {
     private $name;
     
     /**
-     * @var string
-     * @ORM\Column(name="content_data", type="string", nullable=true)
+     * @var mixed
+     * @ORM\Column(name="content_data", type="object", nullable=true)
      */
     private $data;
     
@@ -45,10 +45,9 @@ class Content extends AbstractModel {
     private $parent;
     
     /**
-     * @var string
+     * @var ContentType
      * @ORM\ManyToOne(targetEntity="ContentType")
      * @ORM\JoinColumn(name="type", referencedColumnName="id")
-     * @ORM\Column(name="type", type="object")
      */
     private $type;
     
@@ -81,32 +80,36 @@ class Content extends AbstractModel {
     }
     
     /**
-     * @return string
+     * @return mixed
      */
-    public function getData() : string {
+    public function getData()  {
         return $this->data;
     }
     
     /**
-     * @param string $data
+     * @param mixed $data
      */
-    public function setData(string $data) : void {
+    public function setData($data) : void {
         $this->data = $data;
     }
     
     /**
-     * @return string
+     * @return ContentType
      */
-    public function getType() : string {
+    public function getType() : ContentType {
         return $this->type;
     }
     
     /**
-     * @param string $type
+     * @param ContentType $type
+     *
+     * @return Content
      */
-    public function setType(string $type) : void {
+    public function setType(ContentType $type) : Content {
         $this->type = $type;
+        return $this;
     }
+    
     
     /**
      * @return int

@@ -32,12 +32,19 @@ class Page extends AbstractModel
     private $name;
 
     /**
-     * @var string
+     * @var int
      * @ORM\OneToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Layout\Layout")
      * @ORM\JoinColumn(name="layout", referencedColumnName="id")
-     * @ORM\Column(name="layout", type="object")
+     * @ORM\Column(name="layout_id", type="integer")
      */
     private $layout;
+    
+    /**
+     * @var PagePath[]
+     * @ORM\OneToMany(targetEntity="PagePath", mappedBy="page", cascade={"all"})
+     * @ORM\JoinColumn(name="id", referencedColumnName="page_id")
+     */
+    private $paths;
     
     /**
      * @var int
@@ -70,17 +77,17 @@ class Page extends AbstractModel
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getLayout(): string
+    public function getLayout(): int
     {
         return $this->layout;
     }
 
     /**
-     * @param string $layout
+     * @param int $layout
      */
-    public function setLayout(string $layout): void
+    public function setLayout(int $layout): void
     {
         $this->layout = $layout;
     }
@@ -97,5 +104,19 @@ class Page extends AbstractModel
      */
     public function setSite(int $site) : void {
         $this->site = $site;
+    }
+    
+    /**
+     * @return PagePath[]
+     */
+    public function getPaths()  {
+        return $this->paths;
+    }
+    
+    /**
+     * @param PagePath[] $paths
+     */
+    public function setPaths(array $paths) : void {
+        $this->paths = $paths;
     }
 }

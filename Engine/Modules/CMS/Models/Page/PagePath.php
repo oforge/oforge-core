@@ -27,9 +27,9 @@ class PagePath extends AbstractModel
 
     /**
      * @var string
-     * @ORM\Column(name="url", type="string", nullable=false)
+     * @ORM\Column(name="path", type="string", nullable=false)
      */
-    private $url;
+    private $path;
 
     /**
      * @var int
@@ -38,7 +38,20 @@ class PagePath extends AbstractModel
      * @ORM\Column(name="language_id", type="integer")
      */
     private $language;
-
+    
+    /**
+     * @var Page
+     * @ORM\ManyToOne(targetEntity="Page")
+     * @ORM\JoinColumn(name="page_id", referencedColumnName="id")
+     */
+    private $page;
+    
+    /**
+     * @var PageContent[]
+     * @ORM\OneToMany(targetEntity="PageContent", mappedBy="pagePath", cascade={"all"})
+     * @ORM\JoinColumn(name="id", referencedColumnName="page_path_id")
+     */
+    private $pageContent;
     /**
      * @return int
      */
@@ -56,22 +69,6 @@ class PagePath extends AbstractModel
     }
 
     /**
-     * @return string
-     */
-    public function getUrl(): string
-    {
-        return $this->url;
-    }
-
-    /**
-     * @param string $url
-     */
-    public function setUrl(string $url): void
-    {
-        $this->url = $url;
-    }
-
-    /**
      * @return int
      */
     public function getLanguage(): int
@@ -85,5 +82,47 @@ class PagePath extends AbstractModel
     public function setLanguage(int $language): void
     {
         $this->language = $language;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getPath() : string {
+        return $this->path;
+    }
+    
+    /**
+     * @param string $path
+     */
+    public function setPath(string $path) : void {
+        $this->path = $path;
+    }
+    
+    /**
+     * @return Page
+     */
+    public function getPage() : Page {
+        return $this->page;
+    }
+    
+    /**
+     * @param Page $page
+     */
+    public function setPage(Page $page) : void {
+        $this->page = $page;
+    }
+    
+    /**
+     * @return PageContent[]
+     */
+    public function getPageContent()  {
+        return $this->pageContent;
+    }
+    
+    /**
+     * @param PageContent[] $pageContent
+     */
+    public function setPageContent(array $pageContent) : void {
+        $this->pageContent = $pageContent;
     }
 }
