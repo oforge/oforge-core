@@ -35,6 +35,7 @@ class JsAssetService extends BaseAssetService
     {
         parent::build();
         $dirs = $this->getAssetsDirectories();
+        $hasFilesToMinify = false;
         
         $fileName = "scripts." . bin2hex(openssl_random_pseudo_bytes(16));
 
@@ -51,13 +52,13 @@ class JsAssetService extends BaseAssetService
         foreach ($dirs as $dir) {
             $folder = $dir . DIRECTORY_SEPARATOR . $scope . DIRECTORY_SEPARATOR . Statics::ASSETS_DIR  . DIRECTORY_SEPARATOR . Statics::ASSETS_JS . DIRECTORY_SEPARATOR;
             if (file_exists($folder) && file_exists($folder . Statics::ASSETS_IMPORT_JS)) {
-
                 if ($file = fopen($folder . Statics::ASSETS_IMPORT_JS, "r")) {
                     while(!feof($file)) {
                         $line = trim(fgets($file));
 
                         if(strlen($line) > 0 && file_exists($folder . $line) ) {
                             file_put_contents($outputFull . ".js", file_get_contents($folder . $line), FILE_APPEND);
+                            $hasFilesToMinify = true;
                         }
                     }
                     fclose($file);
@@ -65,13 +66,15 @@ class JsAssetService extends BaseAssetService
             }
         }
 
-
-        $minifier = new JS($outputFull . ".js");
-        $minifier->minify($outputFull . ".min.js");
-
-        $this->store->set($this->getAccessKey($scope), $output . ".min.js");
-        $this->removeOldAssets($fullFolder, $fileName ,".js");
-
-        return $output . ".min.js";
+        if ($hasFilesToMinify) {
+            $minifier = new JS($outputFull . ".js");
+            $minifier->minify($outputFull . ".min.js");
+    
+            $this->store->set($this->getAccessKey($scope), $output . ".min.js");
+            $this->removeOldAssets($fullFolder, $fileName ,".js");
+    
+            return $output . ".min.js";
+        }
+        return "";
     }
 }
