@@ -32,10 +32,16 @@ class PageController extends AbstractController {
         $page = null;
         if ($pagePathService->hasPath($path)) {
             $page = $pagePathService->getPage($path);
-            $normalized = $pagePathService->normalize($path);
-            Oforge()->View()->assign(["page" => $normalized]);
-            return $response;
+            if(isset($path)) {
+                $normalized = $pagePathService->normalize($page);
+                Oforge()->View()->assign($normalized);
+                return $response;
+            }
         }
+
+        Oforge()->View()->assign(["template.path" => "\Frontend\Page\\404.twig"]);
+
+        return $response->withStatus(404);
         //add 404
         
         /* TODO:

@@ -35,7 +35,7 @@ class PageContent extends AbstractModel
     
     /**
      * @var PagePath
-     * @ORM\ManyToOne(targetEntity="PagePath")
+     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Page\PagePath")
      * @ORM\JoinColumn(name="page_path_id", referencedColumnName="id")
      */
     private $pagePath;
@@ -83,7 +83,7 @@ class PageContent extends AbstractModel
     /**
      * @return Content
      */
-    public function getContent() : Content {
+    public function getContent() : ?Content {
         return $this->content;
     }
     
@@ -100,7 +100,7 @@ class PageContent extends AbstractModel
     /**
      * @return int
      */
-    public function getId() : int {
+    public function getId() : ?int {
         return $this->id;
     }
     

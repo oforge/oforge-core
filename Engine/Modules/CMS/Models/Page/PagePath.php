@@ -10,6 +10,7 @@ namespace Oforge\Engine\Modules\CMS\Models\Page;
 
 use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
+use Oforge\Engine\Modules\I18n\Models\Language;
 
 /**
  * @ORM\Table(name="oforge_cms_page_path")
@@ -32,97 +33,103 @@ class PagePath extends AbstractModel
     private $path;
 
     /**
-     * @var int
-     * @ORM\OneToOne(targetEntity="Oforge\Engine\Modules\I18n\Models\Language")
+     * @var Language
+     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\I18n\Models\Language")
      * @ORM\JoinColumn(name="language_id", referencedColumnName="id")
-     * @ORM\Column(name="language_id", type="integer")
      */
     private $language;
-    
+
     /**
      * @var Page
-     * @ORM\ManyToOne(targetEntity="Page")
+     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Page\Page")
      * @ORM\JoinColumn(name="page_id", referencedColumnName="id")
      */
     private $page;
-    
+
     /**
      * @var PageContent[]
-     * @ORM\OneToMany(targetEntity="PageContent", mappedBy="pagePath", cascade={"all"})
+     * @ORM\OneToMany(targetEntity="Oforge\Engine\Modules\CMS\Models\Page\PageContent", mappedBy="pagePath", cascade={"all"})
      * @ORM\JoinColumn(name="id", referencedColumnName="page_path_id")
      */
     private $pageContent;
+
     /**
      * @return int
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
     /**
-     * @param int $id
+     * @return Language
      */
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @return int
-     */
-    public function getLanguage(): int
+    public function getLanguage(): Language
     {
         return $this->language;
     }
 
     /**
-     * @param int $language
+     * @param Language $language
+     * @return PagePath
      */
-    public function setLanguage(int $language): void
+    public function setLanguage(Language $language) : PagePath
     {
         $this->language = $language;
+        return $this;
     }
-    
+
     /**
      * @return string
      */
-    public function getPath() : string {
+    public function getPath(): string
+    {
         return $this->path;
     }
-    
+
     /**
      * @param string $path
+     * @return PagePath
      */
-    public function setPath(string $path) : void {
+    public function setPath(string $path): PagePath
+    {
         $this->path = $path;
+        return $this;
     }
-    
+
     /**
      * @return Page
      */
-    public function getPage() : Page {
+    public function getPage(): Page
+    {
         return $this->page;
     }
-    
+
     /**
      * @param Page $page
+     * @return PagePath
      */
-    public function setPage(Page $page) : void {
+    public function setPage(Page $page): PagePath
+    {
         $this->page = $page;
+        return $this;
     }
-    
+
     /**
      * @return PageContent[]
      */
-    public function getPageContent()  {
+    public function getPageContent()
+    {
         return $this->pageContent;
     }
-    
+
     /**
      * @param PageContent[] $pageContent
+     * @return PagePath
      */
-    public function setPageContent(array $pageContent) : void {
+    public function setPageContent(array $pageContent): PagePath
+    {
         $this->pageContent = $pageContent;
+        return $this;
     }
 }

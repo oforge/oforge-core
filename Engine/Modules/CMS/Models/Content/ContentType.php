@@ -50,7 +50,7 @@ class ContentType extends AbstractModel {
     
     /**
      * @var array
-     * @ORM\OneToMany(targetEntity="ContentType", mappedBy="id")
+     * @ORM\OneToMany(targetEntity="Oforge\Engine\Modules\CMS\Models\Content\ContentType", mappedBy="id")
      * @ORM\Column(name="child_types", type="array", nullable=true)
      */
     private $childTypes;
@@ -58,17 +58,10 @@ class ContentType extends AbstractModel {
     /**
      * @return int
      */
-    public function getId() : int {
+    public function getId() : ?int {
         return $this->id;
     }
-    
-    /**
-     * @param int $id
-     */
-    public function setId(int $id) : void {
-        $this->id = $id;
-    }
-    
+
     /**
      * @return string
      */
