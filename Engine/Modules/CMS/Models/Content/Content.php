@@ -38,7 +38,7 @@ class Content extends AbstractModel {
     
     /**
      * @var int
-     * @ORM\ManyToOne(targetEntity="Content")
+     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Content\Content")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
      * @ORM\Column(name="parent_id", type="integer")
      */
@@ -46,7 +46,7 @@ class Content extends AbstractModel {
     
     /**
      * @var ContentType
-     * @ORM\ManyToOne(targetEntity="ContentType")
+     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Content\ContentType")
      * @ORM\JoinColumn(name="type", referencedColumnName="id")
      */
     private $type;
@@ -54,7 +54,7 @@ class Content extends AbstractModel {
     /**
      * @return int
      */
-    public function getId() : int {
+    public function getId() : ?int {
         return $this->id;
     }
     

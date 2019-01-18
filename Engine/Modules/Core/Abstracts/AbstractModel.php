@@ -20,6 +20,7 @@ class AbstractModel
      */
     public function fromArray(array $array = [], array $fillable = [])
     {
+
         foreach ($array as $key => $value) {
             if (count($fillable) && !in_array($key, $fillable)) {
                 continue;
@@ -32,6 +33,24 @@ class AbstractModel
             }
 
             if (method_exists($this, $method)) {
+                $r  = new \ReflectionMethod(static::class, $method);
+                $params = $r->getParameters();
+
+                if(sizeof($params) == 1) {
+                    $classObject = $params[0]->getClass();
+                    if(isset($classObject)) {
+                        $className = $classObject->getName();
+                        if(isset($className)) {
+                            $value = Oforge()->DB()->getManager()->getRepository($className)->find($value);
+                        }
+                    } else {
+                        switch ("". $params[0]->getType() ) {
+                            case "int":
+                                $value = intval($value);
+                        }
+                    }
+                }
+
                 $this->$method($value);
             }
         }
