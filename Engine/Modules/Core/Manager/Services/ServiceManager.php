@@ -1,25 +1,41 @@
 <?php
+
 namespace Oforge\Engine\Modules\Core\Manager\Services;
 
 use Oforge\Engine\Modules\Core\Exceptions\ServiceAlreadyDefinedException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 
+/**
+ * Class ServiceManager
+ *
+ * @package Oforge\Engine\Modules\Core\Manager\Services
+ */
 class ServiceManager {
+    /**
+     * @var ServiceManager $instance
+     */
     protected static $instance = null;
-    protected function __construct() {}
-    protected function __clone() {}
+    /**
+     * @var array $services
+     */
+    protected $services = [];
 
+    protected function __construct() {
+    }
+
+    /**
+     * @return ServiceManager
+     */
     public static function getInstance() {
         if (null === self::$instance) {
             self::$instance = new ServiceManager();
         }
+
         return self::$instance;
     }
 
-    protected $services = [];
-    
     /**
-     * Find a specific Service by name
+     * Find a specific service by name.
      *
      * @param $name
      *
@@ -27,40 +43,52 @@ class ServiceManager {
      * @throws ServiceNotFoundException
      */
     public function get($name) {
-        if(key_exists($name, $this->services)) {
+        if (isset($this->services[$name])) {
             return $this->services[$name];
         }
+
         throw new ServiceNotFoundException($name);
     }
-    
+
     /**
-     * Register an array of Service names
+     * Get all (unsorted) service names.
+     *
+     * @return string[]
+     */
+    public function getServiceNames() {
+        return array_keys($this->services);
+    }
+
+    /**
+     * Register an array of services. Array of name-classname-pairs.
      *
      * @param array $services
      *
      * @throws ServiceAlreadyDefinedException
      */
-    public function register(Array $services) {
+    public function register(array $services) {
         foreach ($services as $name => $className) {
-          $this->registerService($name, $className);
+            $this->registerService($name, $className);
         }
     }
-    
+
     /**
      * Register a specific service by name
      *
-     * @param $name
-     * @param $className
+     * @param string $name
+     * @param string $className
      *
      * @throws ServiceAlreadyDefinedException
      */
-    protected function registerService($name, $className) {
-        if(key_exists($name, $this->services))  throw new ServiceAlreadyDefinedException($name);
+    protected function registerService(string $name, string $className) {
+        if (isset($this->services[$name])) {
+            throw new ServiceAlreadyDefinedException($name);
+        }
 
-        $this->services[$name] = new $className;
+        $this->services[$name] = new $className();
     }
-    
-    public function listNames() {
-        return array_keys($this->services);
+
+    protected function __clone() {
     }
+
 }
