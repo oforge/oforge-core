@@ -1,87 +1,119 @@
 <?php
+
 namespace Oforge\Engine\Modules\Core\Abstracts;
 
 /**
  * Class AbstractBootstrap
  * Specific Bootstrap classes are needed to either autoload Modules or Plugins
+ *
  * @package Oforge\Engine\Modules\Core\Abstracts
  */
-abstract class AbstractBootstrap
-{
+abstract class AbstractBootstrap {
     /**
-     * @var array
-     *
+     * @var string[] $commands
+     */
+    protected $commands = [];
+    /**
+     * @var string[] $cronjobs
+     */
+    protected $cronjobs = [];
+    /**
+     * @var array $dependencies
+     */
+    protected $dependencies = [];
+    /**
+     * @var array $endpoints
+     */
+    protected $endpoints = [];
+    /**
+     * @var array $middleware
+     */
+    protected $middleware = [];
+    /**
+     * @var string[] $models
      */
     protected $models = [];
-    protected $endpoints = [];
+    /**
+     * @var array $services
+     */
     protected $services = [];
-    protected $middleware = [];
-    protected $cronJobs = [];
-    protected $dependencies = [];
-
+    /**
+     * @var int $order
+     */
     protected $order = 1337;
 
-    /**
-     * @return array
-     */
-    public function getEndpoints(): array
-    {
-        return $this->endpoints;
+    public function install() {
     }
-    
-    /**
-     * @return array
-     */
-    public function getServices(): array
-    {
-        return $this->services;
+
+    public function update() {
     }
-    
-    /**
-     * @return array
-     */
-    public function getModels(): array
-    {
-        return $this->models;
+
+    public function uninstall() {
     }
-    
-    /**
-     * @return array
-     */
-    public function getMiddleware(): array
-    {
-        return $this->middleware;
+
+    public function activate() {
     }
-    
-    /**
-     * @return array
-     */
-    public function getCronJobs(): array
-    {
-        return $this->cronJobs;
+
+    public function deactivate() {
     }
-    
+
+    public function load() {
+    }
+
     /**
-     * @return int
+     * @return string[]
      */
-    public function getOrder(): int
-    {
-        return $this->order;
+    public function getCommands() {
+        return $this->commands;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getCronjobs() {
+        return $this->cronjobs;
     }
 
     /**
      * @return array
      */
-    public function getDependencies(): array
-    {
+    public function getDependencies() : array {
         return $this->dependencies;
     }
 
-    public function install() {}
-    public function update() {}
-    public function uninstall() {}
-    public function activate() {}
-    public function deactivate() {}
-    
-    public function load() {}
+    /**
+     * @return array
+     */
+    public function getEndpoints() : array {
+        return $this->endpoints;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMiddleware() : array {
+        return $this->middleware;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getModels() {
+        return $this->models;
+    }
+
+    /**
+     * @return array
+     */
+    public function getServices() : array {
+        return $this->services;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOrder() : int {
+        return $this->order;
+    }
+
 }
