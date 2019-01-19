@@ -118,7 +118,7 @@ class PagePath extends AbstractModel
     /**
      * @return PageContent[]
      */
-    public function getPageContent()
+    public function getPageContent(): array
     {
         return $this->pageContent;
     }
