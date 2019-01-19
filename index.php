@@ -4,7 +4,7 @@
  */
 define('ROOT_PATH', __DIR__);
 
-require_once __DIR__.'/vendor/autoload.php';
+require_once ROOT_PATH . '/vendor/autoload.php';
 
 $smith = BlackSmith::getInstance();
 $smith->forge();
