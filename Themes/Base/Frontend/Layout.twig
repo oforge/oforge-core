@@ -7,13 +7,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{% block title %}Default Title{% endblock %}</title>
     {% block head_styles %}
-        <style>
-            *, *:before, *:after {
-                box-sizing: border-box;
-                font-family: sans-serif;
-            }
-        </style>
-
 
         {% if assets.css %}
             <link rel="stylesheet" href="{{ assets.css }}"/>
@@ -25,10 +18,6 @@
     {% endblock %}
 </head>
 <body>
-<h1>Hey there! This is the Themes/Base/Frontend/Layout.twig Template</h1>
-{% block headline %}
-    <h2>This is the Base Layout Headline</h2>
-{% endblock %}
 
 {% block body %}
 {% endblock %}
