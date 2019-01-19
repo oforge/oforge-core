@@ -33,18 +33,18 @@ class AbstractModel
             }
 
             if (method_exists($this, $method)) {
-                $r  = new \ReflectionMethod(static::class, $method);
+                $r = new \ReflectionMethod(static::class, $method);
                 $params = $r->getParameters();
 
-                if(sizeof($params) == 1) {
+                if (sizeof($params) == 1) {
                     $classObject = $params[0]->getClass();
-                    if(isset($classObject)) {
+                    if (isset($classObject)) {
                         $className = $classObject->getName();
-                        if(isset($className)) {
+                        if (isset($className)) {
                             $value = Oforge()->DB()->getManager()->getRepository($className)->find($value);
                         }
                     } else {
-                        switch ("". $params[0]->getType() ) {
+                        switch ("" . $params[0]->getType()) {
                             case "int":
                                 $value = intval($value);
                         }
@@ -57,6 +57,35 @@ class AbstractModel
         return $this;
     }
 
+
+    public static function definition()
+    {
+        $methods = get_class_methods(static::class);
+        $data = [];
+        foreach ($methods as $method) {
+            $name = null;
+
+            if (substr($method, 0, 3) === 'get') {
+                $name = lcfirst(substr($method, 3));
+            } else if (substr($method, 0, 2) === 'is') {
+                $name = lcfirst(substr($method, 2));
+            }
+
+            if (isset($name)) {
+                $r = new \ReflectionMethod(static::class, $method);
+
+                $type = $r->getReturnType();
+
+                $methodDefinition = ["name" => $name];
+                if (isset($type)) {
+                    $methodDefinition["type"] = "" . $type;
+                }
+                array_push($data, $methodDefinition);
+            }
+        }
+
+        return $data;
+    }
 
     /*
      *

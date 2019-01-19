@@ -118,7 +118,7 @@ class CrudController extends SecureBackendController
     {
         $params = $request->getParams();
         $result = $this->crudService->list($this->model, $params);
-        Oforge()->View()->assign(["result" => $result]);
+        Oforge()->View()->assign(["result" => $result, "definition" => $this->crudService->definition($this->model)]);
     }
 
     public function detailAction(Request $request, Response $response)
