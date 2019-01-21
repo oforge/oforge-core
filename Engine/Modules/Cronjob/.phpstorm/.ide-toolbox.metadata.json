@@ -1,0 +1,92 @@
+{
+    "registrar": [
+        {
+            "signatures": [
+                {
+                    "class": "\\Oforge\\Engine\\Modules\\Cronjob\\Services\\CronjobService",
+                    "method": "addCronjob",
+                    "type": "array_key",
+                    "index": 0
+                }
+            ],
+            "provider": "oforge.service.cronjob.addCronjob",
+            "language": "php"
+        }
+    ],
+    "providers": [
+        {
+            "name": "oforge.service.cronjob.addCronjob",
+            "defaults": {
+                "icon": "com.jetbrains.php.PhpIcons.CONSTANT",
+                "type": "string"
+            },
+            "items": [
+                {
+                    "lookup_string": "type",
+                    "type_text": "string",
+                    "tail_text": " of [CommandCronjob::class | CustomCronjob::class]"
+                },
+                {
+                    "lookup_string": "name",
+                    "type_text": "string",
+                    "tail_text": " [required]"
+                },
+                {
+                    "lookup_string": "title",
+                    "type_text": "string",
+                    "tail_text": " [required]"
+                },
+                {
+                    "lookup_string": "executionInterval",
+                    "type_text": "int",
+                    "tail_text": " [required]"
+                },
+                {
+                    "lookup_string": "nextExecutionTime",
+                    "type_text": "\\DateTimeImmutable",
+                    "tail_text": " => null"
+                },
+                {
+                    "lookup_string": "order",
+                    "type_text": "int",
+                    "tail_text": " => Statics::DEFAULT_ORDER"
+                },
+                {
+                    "lookup_string": "active",
+                    "type_text": "bool",
+                    "tail_text": " => false"
+                },
+                {
+                    "lookup_string": "editable",
+                    "type_text": "bool",
+                    "tail_text": " => false"
+                },
+                {
+                    "lookup_string": "logfileLevel",
+                    "type_text": "int",
+                    "tail_text": " => Logger::DEBUG"
+                },
+                {
+                    "lookup_string": "description",
+                    "type_text": "string",
+                    "tail_text": " => ''"
+                },
+                {
+                    "lookup_string": "command",
+                    "type_text": "string",
+                    "tail_text": " [required for CommandCronjob]"
+                },
+                {
+                    "lookup_string": "commandArgs",
+                    "type_text": "string",
+                    "tail_text": " => ''"
+                },
+                {
+                    "lookup_string": "class",
+                    "type_text": "string",
+                    "tail_text": " [required for CustomCronjob]"
+                }
+            ]
+        }
+    ]
+}
