@@ -35,7 +35,7 @@ class GenericCrudService
          * @var $items AbstractModel[]
          */
         $items = [];
-        //$repo->findAll();
+        $items = $repo->findAll();
 
         if (sizeof($params) > 0) {
             //TODO
@@ -54,7 +54,7 @@ class GenericCrudService
 
     public function definition($class)
     {
-       return $class::definition();
+        return $class::definition();
     }
 
     /**
@@ -99,16 +99,38 @@ class GenericCrudService
 
     public function update($class, array $options)
     {
+        $objects = $this->structure($options);
+
         $repo = $this->getRepo($class);
 
-        $element = $repo->findOneBy(["id" => $options["id"]]);
-        if (!isset($element)) {
-            throw new NotFoundException("Element with id " . $options["id"] . " not found!");
+        foreach ($objects as $id => $el) {
+            $element = $repo->findOneBy(["id" => $id]);
+
+            if (!isset($element)) {
+                throw new NotFoundException("Element with id " . $id . " not found!");
+            }
+
+            $element->fromArray($el);
+            $this->em->persist($element);
         }
 
-        $element->fromArray($options);
-        $this->em->persist($element);
         $this->em->flush();
+    }
+
+    private function structure($options) {
+        $result = array();
+        foreach ($options as $key => $value) {
+            $ex = explode("_", $key);
+            if(sizeof($ex) == 2) {
+                if(!isset($result[$ex[0]])) {
+                    $result[$ex[0]] = [];
+                }
+
+                $result[$ex[0]][$ex[1]] = $value;
+            }
+        }
+
+        return $result;
     }
 
     public function delete($class, int $id)

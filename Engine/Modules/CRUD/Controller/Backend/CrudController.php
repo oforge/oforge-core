@@ -21,6 +21,21 @@ class CrudController extends SecureBackendController
     protected $model = null;
 
     /**
+     * define your own table header
+     *  e.g.
+     *     protected $header = [
+     *             ["name" => "id",  //key name
+     *              "header" => "backend_column_id",  //own i18n column header name
+     *              "type" => "text|int|object" //alternative type
+     *              "value" => "name" //if type == object this is the key of the object
+     *      ], ..
+     *   ];
+     *
+     */
+    protected $header = null;
+
+    protected $editLine = true;
+    /**
      * @var $crudService GenericCrudService
      */
     protected $crudService;
@@ -38,9 +53,11 @@ class CrudController extends SecureBackendController
 
     public function indexAction(Request $request, Response $response)
     {
-        if (isset($model)) {
+        if (isset($this->model)) {
+
             $params = $request->getParams();
             if (sizeof($params) > 0 && $request->isPost()) {
+
                 if (isset($params["type"])) {
                     switch (strtolower($params["type"])) {
                         case "create":
@@ -52,20 +69,14 @@ class CrudController extends SecureBackendController
                         case "delete":
                             $this->delete($request, $response);
                             break;
-                        case "list":
-                            $this->list($request, $response);
-                            break;
                     }
                 }
-
-                $this->list($request, $response);
-            } else {
-                $this->list($request, $response);
             }
-            $this->list($request, $response);
         }
 
         $this->list($request, $response);
+
+        Oforge()->View()->assign(["editInline" => $this->editLine]);
     }
 
     public function delete(Request $request, Response $response)
@@ -86,7 +97,7 @@ class CrudController extends SecureBackendController
 
     public function update(Request $request, Response $response)
     {
-        if (isset($model)) {
+        if (isset($this->model)) {
             $params = $request->getParams();
 
             $this->crudService->update($this->model, $params);
@@ -102,7 +113,7 @@ class CrudController extends SecureBackendController
 
     public function create(Request $request, Response $response)
     {
-        if (isset($model)) {
+        if (isset($this->model)) {
             $params = $request->getParams();
 
             $this->crudService->create($this->model, $params);
@@ -118,12 +129,12 @@ class CrudController extends SecureBackendController
     {
         $params = $request->getParams();
         $result = $this->crudService->list($this->model, $params);
-        Oforge()->View()->assign(["result" => $result, "definition" => $this->crudService->definition($this->model)]);
+        Oforge()->View()->assign(["result" => $result, "header" => $this->header ?: $this->crudService->definition($this->model)]);
     }
 
     public function detailAction(Request $request, Response $response)
     {
-        if (isset($model)) {
+        if (isset($this->model)) {
             $params = $request->getParams();
 
             $result = $this->crudService->list($this->model, $params);
