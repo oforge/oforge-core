@@ -21,61 +21,72 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
 class ImportService
 {
 
+    function __construct()
+    {
+        $this->metaData = Oforge()->DB()->getManager()->getMetadataFactory()->getAllMetadata();
+        $this->mapping = [];
+
+        foreach ($this->metaData as $data) {
+            $this->mapping[$data->getTableName()] = $data->getReflectionClass()->getName();
+        }
+    }
+
     public function process()
     {
-        $metaData = Oforge()->DB()->getManager()->getMetadataFactory()->getAllMetadata();
-        $mapping = [];
-
-        foreach ($metaData as $data) {
-            $mapping[$data->getTableName()] = $data->getReflectionClass()->getName();
-        }
-
-        foreach ($mapping as $name => $model) {
+        foreach ($this->mapping as $name => $model) {
             $fullPath = ROOT_PATH . Statics::IMPORTS_DIR . DIRECTORY_SEPARATOR;
             if (file_exists($fullPath . $name . ".csv")) {
-                $this->processFile($fullPath, $name, $model);
+                $this->processFile($fullPath, $name);
             }
         }
 
         echo "Done.";
     }
 
-    private function processFile($fullPath, $name, $model)
+
+    public function processFile($fullPath, $name, $echo = true)
     {
-        echo "Found file \"" . $name . ".csv\" for model \"" . $model . "\". \nStart processing. \n";
+        if (isset($this->mapping[$name]) && file_exists($fullPath . $name . ".csv")) {
+            $model = $this->mapping[$name];
 
-        $handle = fopen($fullPath . $name . ".csv", "r");
-        if ($handle) {
-            $first = true;
-            $header = [];
-            $count = 0;
-            while (($line = fgets($handle)) !== false) {
-                $split = explode(";", $line);;
-                if ($first) {
+            if ($echo) echo "Found file \"" . $name . ".csv\" for model \"" . $model . "\". \nStart processing. \n";
 
-                    foreach ($split as $item) {
-                        array_push($header, trim($item));
-                    }
+            $handle = fopen($fullPath . $name . ".csv", "r");
+            if ($handle) {
+                $first = true;
+                $header = [];
+                $count = 0;
 
-                    $first = false;
-                } else {
-                    if (sizeof($split) > 0 && sizeof($header) == sizeof($split)) {
-                        $data = [];
-                        foreach ($split as $index => $value) {
-                            $data[$header[$index]] = $value;
+                while (($line = fgets($handle)) !== false) {
+                    $split = explode(";", $line);;
+                    if ($first) {
+
+                        foreach ($split as $item) {
+                            array_push($header, trim($item));
                         }
 
-                        $element = $model::create($data);
-                        Oforge()->DB()->getManager()->persist($element);
-                        $count++;
+                        $first = false;
+                    } else {
+                        if (sizeof($split) > 0 && sizeof($header) == sizeof($split)) {
+                            $data = [];
+                            foreach ($split as $index => $value) {
+                                $data[$header[$index]] = $value;
+                            }
+
+                            $element = $model::create($data);
+
+                            Oforge()->DB()->getManager()->persist($element);
+                            $count++;
+                        }
                     }
                 }
-            }
 
-            Oforge()->DB()->getManager()->flush();
-            echo "Included " . $count . " elements. Finish processing!\n\nTo Renaming file to avoid further imports. New filename . _" . $name . ".csv\n\n";
-            fclose($handle);
-            rename($fullPath . $name . ".csv", $fullPath . "_" . $name . ".csv");
+                Oforge()->DB()->getManager()->flush();
+                if ($echo) echo "Included " . $count . " elements. Finish processing!\n\nTo Renaming file to avoid further imports. New filename . _" . $name . ".csv\n\n";
+                fclose($handle);
+                rename($fullPath . $name . ".csv", $fullPath . "_" . $name . ".csv");
+            }
         }
     }
 }
+
