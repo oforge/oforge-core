@@ -1,18 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Matthaeus.Schmedding
- * Date: 19.11.2018
- * Time: 21:15
- */
+define('ROOT_PATH', dirname(__DIR__));
 
-
-define('ROOT_PATH', __DIR__ . "./../");
-
-require_once __DIR__.'/../vendor/autoload.php';
+require_once ROOT_PATH . '/vendor/autoload.php';
 
 $smith = BlackSmith::getInstance();
 $smith->forge(false);
 
-$application = new Oforge\Engine\Modules\Console\Application();
-$application->run($argv);
+/**
+ * @var \Oforge\Engine\Modules\Console\Services\ConsoleService $consoleService
+ */
+$consoleService = Oforge()->Services()->get( 'console');
+$consoleService->runCommand( '', join( ' ', array_slice($argv, 1)));
