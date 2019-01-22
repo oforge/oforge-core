@@ -14,20 +14,10 @@ use Oforge\Engine\Modules\I18n\Models\Language;
 
 class LanguageController extends CrudController
 {
-
-    protected $model = PagePath::class;
+    protected $model = Language::class;
 
     function __construct()
     {
         parent::__construct();
     }
-
-    public function initPermissions()
-    {
-        /*
-        $this->ensurePermissions("indexAction", BackendUser::class, BackendUser::ROLE_MODERATOR);
-        */
-    }
-
-
 }

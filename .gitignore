@@ -1,9 +1,10 @@
 .git
-.idea
+.idea/*
 !/.idea/codeStyles/
+!/.idea/dictionaries/
+!/.idea/fileTemplates/
 !/.idea/encodings.xml
 !/.idea/externalDependencies.xml
-!/.idea/vcs.xml
 !.phpstorm
 /config.php
 /config.dev.php
