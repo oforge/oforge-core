@@ -89,4 +89,9 @@ class TemplateManagementService {
             $this->em->flush();
         }
     }
+
+    public function list() {
+        $templateList = $this->repo->findAll();
+        return $templateList;
+    }
 }
