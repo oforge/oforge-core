@@ -14,6 +14,8 @@ class TemplateAssetService
 
     /**
      * @param string $scope
+     *
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
     public function build($scope = self::DEFAULT_SCOPE)
     {
