@@ -39,12 +39,15 @@ class TemplateManager extends AbstractTemplateManager {
          */
         $templateManagementService = Oforge()->Services()->get("template.management");
         $templateFiles = Helper::getTemplateFiles(ROOT_PATH . DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR);
+        $templateManagementService->register("Base");
 
         foreach($templateFiles as $templateName => $dir ) {
-            $templateManagementService->register($templateName);
+            if ($templateName != "Base") {
+                $templateManagementService->register($templateName);
+            }
         }
     }
-
+    
     /**
      * This render function can be called either from a module controller or a template controller.
      * It checks, whether a template path based on the controllers namespace and the function name exists
@@ -60,6 +63,8 @@ class TemplateManager extends AbstractTemplateManager {
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     public function render(Request $request, Response $response, $data) {
         /**
