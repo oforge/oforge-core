@@ -4,18 +4,6 @@ namespace Oforge\Engine\Modules\TemplateEngine\Models;
 
 use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
-use SplEnum;
-
-class ScssVariableType
-{
-    const __default = self::NULL;
-    const NUMBER = "number";
-    const STRING = "string";
-    const BOOL   = "bool";
-    const NULL   = "null";
-    const LIST   = "list";
-    const MAP    = "map";
-}
 
 /**
  * @ORM\Table(name="oforge_template_engine_scss_variables")
@@ -53,9 +41,15 @@ class ScssVariable extends AbstractModel {
      * @ORM\Column(name="siteId", type="integer", nullable=true)
      */
     private $siteId = null;
+
+    /**
+     * @var string
+     * @ORM\Column(name="context", type="string", nullable=true)
+     */
+    private $context = null;
     
     /**
-     * @var ScssVariableType
+     * @var string
      * @ORM\Column(name="type", type="string", nullable=false)
      */
     private $type;
@@ -132,9 +126,36 @@ class ScssVariable extends AbstractModel {
     }
     
     /**
-     * @return ScssVariableType
+     * @return string
      */
-    public function getType() : ScssVariableType {
+    public function getType() : string {
         return $this->type;
     }
+
+    /**
+     * @param string $type
+     * @return ScssVariable
+     */
+    public function setType(string $type) : ScssVariable {
+        $this->type = $type;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContext() {
+        return $this->context;
+    }
+
+    /**
+     * @param mixed $context
+     * @return ScssVariable
+     */
+    public function setContext($context) : ScssVariable {
+        $this->context = $context;
+        return $this;
+    }
+
+
 }
