@@ -18,7 +18,7 @@ class LogCleanupCronjob extends CommandCronjob {
     public function __construct() {
         parent::__construct();
         $this->fromArray([
-            'name'              => 'oforge:cleanup:logs',
+            'id'                => 'oforge:cleanup:logs',
             'title'             => 'Cleanup log files',
             'executionInterval' => 7 * 24 * 60 * 60,
             'command'           => 'oforge:cleanup:logs',
