@@ -18,11 +18,11 @@ use Oforge\Engine\Modules\Core\Helper\Statics;
  */
 abstract class AbstractCronjob extends AbstractModel {
     /**
-     * @var string $name
+     * @var string $id
      * @ORM\Id
-     * @ORM\Column(name="name", type="string", nullable=false, unique=true)
+     * @ORM\Column(name="id", type="string", nullable=false, unique=true)
      */
-    private $name;
+    private $id;
     /**
      * @var bool $active
      * @ORM\Column(name="active", type="boolean", nullable=false, options={"default":false})
@@ -89,18 +89,18 @@ abstract class AbstractCronjob extends AbstractModel {
     /**
      * @return string
      */
-    public function getName() : string {
-        return $this->name;
+    public function getId() : string {
+        return $this->id;
     }
 
     /**
-     * @param string $name
+     * @param string $id
      *
      * @return AbstractCronjob
      */
-    protected function setName(string $name) : AbstractCronjob {
-        if (is_null($this->name)) {
-            $this->name = $name;
+    protected function setId(string $id) : AbstractCronjob {
+        if (is_null($this->id)) {
+            $this->id = $id;
         }
 
         return $this;
