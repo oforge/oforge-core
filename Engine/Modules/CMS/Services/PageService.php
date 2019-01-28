@@ -68,6 +68,7 @@ class PageService
         foreach ($pagePath->getPageContent() as $pageContent) {
             $content = $pageContent->getContent();
             if (isset($content)) {
+                //todo call load method from content_type
                 array_push($result["content"], ["type" => $content->getType()->getName(), "data" => $content->getData()]);
             }
         }
