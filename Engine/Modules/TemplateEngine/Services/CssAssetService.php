@@ -11,6 +11,7 @@ namespace Oforge\Engine\Modules\TemplateEngine\Services;
 use Leafo\ScssPhp\Compiler;
 use MatthiasMullie\Minify\CSS;
 use Oforge\Engine\Modules\Core\Helper\Statics;
+use Oforge\Engine\Modules\TemplateEngine\Models\ScssVariable;
 
 class CssAssetService extends BaseAssetService
 {
@@ -50,12 +51,26 @@ class CssAssetService extends BaseAssetService
             mkdir($fullFolder, 0750, true);
         }
 
+        // get scss variables and add to compiler
+        $scss = new Compiler();
+        $scssService = Oforge()->Services()->get('scss.variables');
+        $dbVariables = $scssService->get('frontend');
+        $scssVariables = array();
+
+        /**
+         * @var ScssVariable $var
+         */
+        foreach ($dbVariables as $var) {
+            $scssVariables[$var->getName()] = $var->getValue();
+        }
+
+        $scss->setVariables($scssVariables);
+
         //iterate over all plugins, current theme and base theme
         foreach ($dirs as $dir) {
             $folder = $dir . DIRECTORY_SEPARATOR . $scope . DIRECTORY_SEPARATOR . Statics::ASSETS_DIR  . DIRECTORY_SEPARATOR . Statics::ASSETS_SCSS . DIRECTORY_SEPARATOR;
             if (file_exists($folder) && file_exists($folder . Statics::ASSETS_ALL_SCSS)) {
-                $scss = new Compiler();
-                $scss->addImportPath($folder);
+                $scss->setImportPaths($folder);
                 $result .= $scss->compile('@import "' . Statics::ASSETS_ALL_SCSS . '";');
             }
         }

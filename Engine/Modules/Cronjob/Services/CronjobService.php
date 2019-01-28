@@ -66,7 +66,7 @@ class CronjobService {
         }
         //Check if the element is already within the system
         foreach ($cronjobs as $cronjob) {
-            $element = $this->repository->findOneBy(['name' => $cronjob->getName()]);
+            $element = $this->repository->findOneBy(['id' => $cronjob->getId()]);
             if (!isset($element)) {
                 try {
                     $this->entityManager->persist($cronjob);
@@ -81,6 +81,29 @@ class CronjobService {
         } catch (\Exception $exception) {
             Oforge()->Logger()->get()->error($exception->getMessage(), $exception->getTrace());
         }
+    }
+
+    /**
+     * Get cronjob by name.
+     *
+     * @param string $name
+     *
+     * @return AbstractCronjob
+     * @throws NotFoundException
+     */
+    public function getCronjob(string $name) : AbstractCronjob {
+        $name = trim($name);
+        if (empty($name)) {
+            throw new NotFoundException("Cronjob with name '$name' not found");
+        }
+        $cronjob = $this->repository->findOneBy([
+            'name' => $name,
+        ]);
+        if (is_null($cronjob)) {
+            throw new NotFoundException("Cronjob with name '$name' not found");
+        }
+
+        return $cronjob;
     }
 
     /**
@@ -117,29 +140,6 @@ class CronjobService {
         }
 
         return false;
-    }
-
-    /**
-     * Get cronjob by name.
-     *
-     * @param string $name
-     *
-     * @return AbstractCronjob
-     * @throws NotFoundException
-     */
-    public function getCronjob(string $name) : AbstractCronjob {
-        $name = trim($name);
-        if (empty($name)) {
-            throw new NotFoundException("Cronjob with name '$name' not found");
-        }
-        $cronjob = $this->repository->findOneBy([
-            'name' => $name,
-        ]);
-        if (is_null($cronjob)) {
-            throw new NotFoundException("Cronjob with name '$name' not found");
-        }
-
-        return $cronjob;
     }
 
     /**
@@ -291,7 +291,7 @@ class CronjobService {
             try {
                 /** @var ConsoleService $consoleService */
                 $consoleService = Oforge()->Services()->get('console');
-                $filePath       = $this->getLogFilePath($cronjob->getName());
+                $filePath       = $this->getLogFilePath($cronjob->getId());
                 $maxFiles       = $configService->get(CronjobStatics::SETTING_LOGFILE_DAYS);
                 $level          = $cronjob->getLogfileLevel();
                 $fileHandler    = new RotatingFileHandler($filePath, $maxFiles, $level);
@@ -313,10 +313,10 @@ class CronjobService {
                 $class  = $cronjob->getClass();
                 if (class_exists($class)) {
                     if (is_subclass_of($class, AbstractCronjobHandler::class)) {
-                        $cronjobLogger = Oforge()->Logger()->initLogger($cronjob->getName(), [
+                        $cronjobLogger = Oforge()->Logger()->initLogger(str_replace(':', '_', $cronjob->getId()), [
                             'max_files' => $configService->get(CronjobStatics::SETTING_LOGFILE_DAYS),
                             'level'     => $cronjob->getLogfileLevel(),
-                            'path'      => $this->getLogFilePath($cronjob->getName()),
+                            'path'      => $this->getLogFilePath($cronjob->getId()),
                         ]);
                         /**
                          * @var AbstractCronjobHandler $instance
@@ -350,12 +350,12 @@ class CronjobService {
     /**
      * Get full path for cronjob log file.
      *
-     * @param string $cronjobName
+     * @param string $cronjobID
      *
      * @return string
      */
-    protected function getLogFilePath(string $cronjobName) : string {
-        return CronjobStatics::CRONJOB_LOGS_DIR_ABS . DIRECTORY_SEPARATOR . str_replace(':', '_', $cronjobName) . LoggerManager::FILE_EXTENSION;
+    protected function getLogFilePath(string $cronjobID) : string {
+        return CronjobStatics::CRONJOB_LOGS_DIR_ABS . DIRECTORY_SEPARATOR . str_replace(':', '_', $cronjobID) . LoggerManager::FILE_EXTENSION;
     }
 
 }

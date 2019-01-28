@@ -6,9 +6,11 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\TemplateEngine\Manager\TemplateManager;
 use Oforge\Engine\Modules\TemplateEngine\Manager\ViewManager;
 use Oforge\Engine\Modules\TemplateEngine\Middleware\AssetsMiddleware;
+use Oforge\Engine\Modules\TemplateEngine\Models\ScssVariable;
 use Oforge\Engine\Modules\TemplateEngine\Models\Template\Template;
 use Oforge\Engine\Modules\TemplateEngine\Services\CssAssetService;
 use Oforge\Engine\Modules\TemplateEngine\Services\JsAssetService;
+use Oforge\Engine\Modules\TemplateEngine\Services\ScssVariableService;
 use Oforge\Engine\Modules\TemplateEngine\Services\StaticAssetService;
 use Oforge\Engine\Modules\TemplateEngine\Services\TemplateAssetService;
 use Oforge\Engine\Modules\TemplateEngine\Services\TemplateManagementService;
@@ -22,6 +24,7 @@ class Bootstrap extends AbstractBootstrap
     public function __construct()
     {
         $this->services = [
+            "scss.variables" => ScssVariableService::class,
             "template.render" => TemplateRenderService::class,
             "template.management" => TemplateManagementService::class,
             "assets.template" => TemplateAssetService::class,
@@ -31,7 +34,8 @@ class Bootstrap extends AbstractBootstrap
         ];
 
         $this->models = [
-            Template::class
+            Template::class,
+            ScssVariable::class,
         ];
 
         $this->middleware = [
@@ -39,8 +43,7 @@ class Bootstrap extends AbstractBootstrap
         ];
 
         $this->order = 1;
-
-
+        
         Oforge()->setTemplateManager(TemplateManager::getInstance());
         Oforge()->setViewManager(ViewManager::getInstance());
     }

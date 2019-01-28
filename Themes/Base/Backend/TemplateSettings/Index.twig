@@ -61,15 +61,21 @@
                             Close
                         </button>
                         <form method="post">
-                            <button type="submit"
-                                    name="selectedTheme"
-                                    value="{{ template.name }}"
-                                    class="btn btn-primary"
-                                    {% if template.active == 1 %}
-                                    disabled
-                                    {% endif %}>
-                                Select as active
-                            </button>
+                            {% if template.active == 1 %}
+                                <button type="submit"
+                                        name="rebuild"
+                                        value="{{ template.name }}"
+                                        class="btn btn-primary">
+                                    Rebuild
+                                </button>
+                            {% else %}
+                                <button type="submit"
+                                        name="selectedTheme"
+                                        value="{{ template.name }}"
+                                        class="btn btn-primary">
+                                    Select as active
+                                </button>
+                            {% endif %}
                         </form>
                     </div>
                 </div>
