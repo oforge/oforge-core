@@ -2,8 +2,6 @@
 namespace Themes\Base;
 
 use Oforge\Engine\Modules\TemplateEngine\Abstracts\AbstractTemplate;
-use Oforge\Engine\Modules\TemplateEngine\Models\ScssVariable;
-use Oforge\Engine\Modules\TemplateEngine\Services\ScssVariableService;
 
 class Template extends AbstractTemplate {
     private $vars = [
