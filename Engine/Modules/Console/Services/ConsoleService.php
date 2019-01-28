@@ -177,7 +177,9 @@ class ConsoleService {
         } catch (\Exception $exception) {
             Oforge()->Logger()->get()->error($exception->getMessage(), $exception->getTrace());
         }
-        $getOpt = new GetOpt();
+        $getOpt = new GetOpt(null, [
+            \GetOpt\GetOpt::SETTING_STRICT_OPTIONS => false,
+        ]);
         $getOpt->addOptions([
             Option::create(null, 'help', GetOpt::NO_ARGUMENT)#
                   ->setDescription('Display this help message'),

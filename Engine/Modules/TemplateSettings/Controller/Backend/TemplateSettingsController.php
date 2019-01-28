@@ -10,16 +10,27 @@ use Slim\Http\Response;
 
 class TemplateSettingsController extends SecureBackendController
 {
+    /**
+     * @param Request $request
+     * @param Response $response
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\TemplateNotFoundException
+     */
     public function indexAction(Request $request, Response $response)
     {
         /**
-         * @var $templateManagementService TemplateManagementService
+         * @var TemplateManagementService $templateManagementService
          */
         $templateManagementService = Oforge()->Services()->get('template.management');
 
         if($request->isPost()) {
             $formData = $request->getParsedBody();
-            $templateManagementService->activate($formData['selectedTheme']);
+            if(isset($formData['selectedTheme'])) {
+                $templateManagementService->activate($formData['selectedTheme']);
+            }
+            $templateManagementService->build();
         }
 
         $data = $templateManagementService->list();
@@ -31,5 +42,4 @@ class TemplateSettingsController extends SecureBackendController
     {
         $this->ensurePermissions("indexAction", BackendUser::class, BackendUser::ROLE_ADMINISTRATOR);
     }
-
 }
