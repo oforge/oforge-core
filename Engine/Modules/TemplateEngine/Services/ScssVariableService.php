@@ -3,6 +3,7 @@
 namespace Oforge\Engine\Modules\TemplateEngine\Services;
 
 use GetOpt\ArgumentException;
+use Oforge\Engine\Modules\TemplateEngine\Exceptions\InvalidScssVariableException;
 use Oforge\Engine\Modules\TemplateEngine\Models\ScssVariable;
 use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
 use Oforge\Engine\Modules\TemplateEngine\Models\ScssVariableType;
@@ -41,7 +42,7 @@ class ScssVariableService {
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function post($id, $value, $type, $siteId = "0") {
+    public function update($id, $value, $type, $siteId = "0") {
         if(!$this->isScssVariableType($type)) {
             throw new ArgumentException();
         }
@@ -74,7 +75,7 @@ class ScssVariableService {
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function put($name, $value, $scope, $type, $siteId = null, $context = null) {
+    public function add($name, $value, $type, $context, $scope = 'Frontend', $siteId = 0) {
         if(!$this->isScssVariableType($type)) {
             throw new \InvalidArgumentException('type must be ScssVariableType');
         }
@@ -107,5 +108,31 @@ class ScssVariableService {
         $scssTypes = array(ScssVariableType::BOOL, ScssVariableType::LIST, ScssVariableType::MAP,
                            ScssVariableType::NULL,ScssVariableType::NUMBER, ScssVariableType::STRING);
         return in_array($type, $scssTypes);
+    }
+
+    /**
+     * @param $templateVariables
+     *
+     * @return bool
+     * @throws InvalidScssVariableException
+     */
+    private function isValid($templateVariables) {
+        $options = [
+            'name',
+            'value',
+            'type',
+            'context',
+            'scope',
+            'siteId'
+        ];
+
+        foreach($templateVariables as $templateVariable) {
+            foreach ($options as $option) {
+                if (!isset($templateVariable[$option])) {
+                    throw new InvalidScssVariableException($option, $templateVariable);
+                }
+            }
+        }
+        return true;
     }
 }

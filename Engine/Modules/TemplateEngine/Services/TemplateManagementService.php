@@ -87,6 +87,8 @@ class TemplateManagementService {
             
             $this->em->persist($template);
             $this->em->flush();
+
+            $instance->registerTemplateVariables();
         }
     }
 
