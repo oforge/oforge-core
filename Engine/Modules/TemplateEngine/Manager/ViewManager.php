@@ -26,7 +26,7 @@ class ViewManager extends  AbstractViewManager {
      * @param array $data
      */
     public function assign($data) {
-        $this->viewData = array_merge($this->viewData, $data);
+        $this->viewData = $this->array_merge_recursive_ex($this->viewData, $data);
     }
     
     /**
@@ -38,7 +38,33 @@ class ViewManager extends  AbstractViewManager {
     public function fetch() {
         return $this->viewData;
     }
-    
+
+
+    /**
+     * @param array $array1
+     * @param array $array2
+     * @return array
+     */
+    function array_merge_recursive_ex(array & $array1, array & $array2)
+    {
+        $merged = $array1;
+
+        foreach ($array2 as $key => & $value)
+        {
+            if (is_array($value) && isset($merged[$key]) && is_array($merged[$key]))
+            {
+                $merged[$key] = $this->array_merge_recursive_ex($merged[$key], $value);
+            } else if (is_numeric($key))
+            {
+                if (!in_array($value, $merged))
+                    $merged[] = $value;
+            } else
+                $merged[$key] = $value;
+        }
+
+        return $merged;
+    }
+
     /**
      * Get a specific key value from the viewData
      *
@@ -46,7 +72,7 @@ class ViewManager extends  AbstractViewManager {
      *
      * @return int
      */
-    public function get($key) {
+    public function get(string $key) {
         return key_exists($key, $this->viewData) ? $this->viewData[$key] : null;
     }
 }

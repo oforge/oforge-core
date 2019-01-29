@@ -27,6 +27,7 @@ class Element extends AbstractModel
      * @ORM\Column(name="value", type="object", nullable=true)
      */
     private $value;
+    
     /**
      * @var string
      * @ORM\Column(name="description", type="string", nullable=true)

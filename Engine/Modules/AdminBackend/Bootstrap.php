@@ -72,6 +72,25 @@ class Bootstrap extends AbstractBootstrap
             "group" => "backend"
         ]);
 
+        $configService->add([
+            "name" => "backend_project_copyright",
+            "label" => "Copyright",
+            "type" => "string",
+            "required" => true,
+            "default" => "Oforge",
+            "group" => "backend"
+        ]);
+
+        $configService->add([
+            "name" => "backend_project_footer_text",
+            "label" => "Footer Text",
+            "type" => "string",
+            "required" => true,
+            "default" => "Oforge",
+            "group" => "backend"
+        ]);
+
+
         /**
          * @var $sidebarNavigation BackendNavigationService
          */
@@ -82,6 +101,7 @@ class Bootstrap extends AbstractBootstrap
             "order" => 99
         ]);
 
+        /*
         $sidebarNavigation->put([
             "name" => "help",
             "order" => 99,
@@ -104,6 +124,7 @@ class Bootstrap extends AbstractBootstrap
             "icon" => "fa fa-fort-awesome",
             "path" => "backend_dashboard_fontAwesome"
         ]);
+        */
 
     }
 }

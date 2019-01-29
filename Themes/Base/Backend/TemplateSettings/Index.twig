@@ -1,0 +1,86 @@
+{% extends "Backend/Master/Index.twig" %}
+
+{% block pagecontent %}
+
+    {{ o_dump() }}
+
+    {% for template in templates %}
+
+        <!-- tile -->
+        <div class="col-lg-3 col-xs-6">
+            <div class="small-box bg-aqua with-border">
+                <div class="inner">
+                    <h4>{{ template.name }}</h4>
+
+                    <p>Author: Oforge-Team</p>
+                </div>
+                {% if template.active == 1 %}
+                    <div class="icon">
+                        <i class="fa fa- fa-check-circle"></i>
+                    </div>
+                {% endif %}
+                <button type="button"
+                        class="btn btn-xs btn-primary btn-block btn-flat"
+                        data-toggle="modal"
+                        data-target="#modal-{{ template.id }}">
+                    select <i class="fa fa-arrow-circle-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- modal -->
+        <div class="modal fade" id="modal-{{ template.id }}" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        <h4 class="modal-title">{{ template.name }}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Author: Oforge-Team</p>
+                        <p>Version: v1.33.7</p>
+                        <p>
+                            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
+                            invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam
+                            et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est
+                            Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
+                            diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
+                            voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd
+                            gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button"
+                                class="btn btn-default pull-left"
+                                data-dismiss="modal">
+                            Close
+                        </button>
+                        <form method="post">
+                            {% if template.active == 1 %}
+                                <button type="submit"
+                                        name="rebuild"
+                                        value="{{ template.name }}"
+                                        class="btn btn-primary">
+                                    Rebuild
+                                </button>
+                            {% else %}
+                                <button type="submit"
+                                        name="selectedTheme"
+                                        value="{{ template.name }}"
+                                        class="btn btn-primary">
+                                    Select as active
+                                </button>
+                            {% endif %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+{% endblock %}
