@@ -47,12 +47,14 @@ class BackendSecureMiddleware
             $authService = Oforge()->Services()->get("auth");
             $user = $authService->decode($auth);
 
-
-            if (isset($user) &&
+            if (!is_null($user) &&
                 isset($user["role"]) && $user["role"] <= $permissions["role"] &&
                 isset($user["type"]) && $user["type"] == $permissions["type"]
 
             ) {
+                Oforge()->View()->assign([
+                    'user' => $user
+                ]);
                 //nothing to do. proceed
             } else {
                 /**
