@@ -18,6 +18,14 @@ class SnippetsController extends CrudController
 {
     protected $model = Snippet::class;
 
+    protected $header = [
+        ["name" => "id", "type" => "int"],
+        ["name" => "scope", "type" => "string", "readonly" => true],
+        ["name" => "name", "type" => "string", "readonly" => true],
+        ["name" => "value", "type" => "string"]
+    ];
+
+
     function __construct()
     {
         parent::__construct();

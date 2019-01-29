@@ -94,4 +94,23 @@ class TemplateManagementService {
         $templateList = $this->repo->findAll();
         return $templateList;
     }
+
+    /**
+     * Get the active theme, delete old cached assets, build new assets
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     */
+    public function build() {
+        /**
+         * @var Template $template
+         */
+        $template = $this->repo->findOneBy(["active" => 1]);
+        if ($template) {
+            /**
+             * @var TemplateAssetService $templateAssetService
+             */
+            $templateAssetService = Oforge()->Services()->get('assets.template');
+            $templateAssetService->clear();
+            $templateAssetService->build($templateAssetService::DEFAULT_SCOPE);
+        }
+    }
 }

@@ -18,7 +18,7 @@ class DashboardController extends SecureBackendController {
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
     public function indexAction(Request $request, Response $response) {
-        $data = ['page_header' => 'Hello from the TestPlugin', 'page_header_description' => "Mega awesome optional additional description"];
+        $data = ['page_header' => 'Willkommen auf dem Dashboard', 'page_header_description' => "Hier finden Sie alle relevanten Informationen übersichtlich dargestellt."];
         /**
          * @var $authService AuthService
          */
@@ -70,12 +70,6 @@ class DashboardController extends SecureBackendController {
             "order" => 99
         ]);
 
-        $sidebarNavigation->put([
-            "name" => "help",
-            "order" => 99,
-            "parent" => "admin",
-            "icon" => "ion-help"
-        ]);
 
         $sidebarNavigation->put([
             "name" => "help",
@@ -99,6 +93,7 @@ class DashboardController extends SecureBackendController {
             "icon" => "fa-fort-awesome",
             "path" => "backend_dashboard_fontAwesome"
         ]);
+
     }
 
 

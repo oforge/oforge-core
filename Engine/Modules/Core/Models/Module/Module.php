@@ -131,6 +131,4 @@ class Module extends AbstractModel
     {
         return $this->order;
     }
-
-
 }

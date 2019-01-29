@@ -35,7 +35,7 @@ class RouteManager {
 		/**
 		 * @var Endpoint[] $endpoints
 		 */
-		$endpoints = $repository->findBy( [ 'active' => 1 ] );
+		$endpoints = $repository->findBy(array("active" => 1), array('order' => 'ASC'));
 		$container = Oforge()->App()->getContainer();
 
 		foreach ( $endpoints as $endpoint ) {

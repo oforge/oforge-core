@@ -74,8 +74,13 @@ class TemplateRenderService
         $fileName = explode("Action", explode(":", $namespace[sizeof($namespace) - 1])[1])[0];
 
         $templatePath .= DIRECTORY_SEPARATOR . $region . DIRECTORY_SEPARATOR . (isset($moduleName) ? ($moduleName . DIRECTORY_SEPARATOR ) : "" ) . $controllerName . DIRECTORY_SEPARATOR . ucwords($fileName) . ".twig";
-        
-        $data["template.path"] = $templatePath;
+
+
+        if(isset($data["template.path"])) {
+            $templatePath = $data["template.path"];
+        } else {
+            $data["template.path"] = $templatePath;
+        }
 
         if ($this->hasTemplate($templatePath)) {
             return $this->renderTemplate($request, $response, $templatePath, $data);
