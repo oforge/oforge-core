@@ -1,38 +1,40 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Alexander Wegner
- * Date: 08.11.2018
- * Time: 11:20
- */
+
 namespace Oforge\Engine\Modules\TemplateEngine\Abstracts;
 
-use mysql_xdevapi\Exception;
-use Oforge\Engine\Modules\TemplateEngine\Exceptions\InvalidScssVariableException;
 use Oforge\Engine\Modules\TemplateEngine\Services\ScssVariableService;
 
 abstract class AbstractTemplate {
     public $parent;
-    private $context = self::class;
-    private $templateVariables = [];
+    protected $context;
+    protected $templateVariables = [];
 
-    public function registerTemplateVariables() {
-        /**
-         * @var ScssVariableService $scssVariables
-         */
-        $scssVariables = Oforge()->Services()->get('scss.variables');
-        if ($this->isValid($this->templateVariables)) {
-
-            foreach ($this->templateVariables as $templateVariable)
-
-            $scssVariables->add(
-                $templateVariable['name'],
-                $templateVariable["value"],
-                $templateVariable["type"],
-                $templateVariable["context"]
-                );
-        }
+    /**
+     * AbstractTemplate constructor
+     */
+    public function __construct() {
+        $this->context = static::class;
     }
 
+    /**
+     * @param array $variables
+     */
+    protected function addTemplateVariables(array $variables) {
+        $this->templateVariables = array_merge($variables, $this->templateVariables);
+    }
 
+    /**
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws \Oforge\Engine\Modules\TemplateEngine\Exceptions\InvalidScssVariableException
+     */
+    public function registerTemplateVariables() {
+        /** @var ScssVariableService $scssVariables */
+        $scssVariables = Oforge()->Services()->get('scss.variables');
+        foreach ($this->templateVariables as $templateVariable) {
+            $templateVariable['context'] = $this->context;
+            $scssVariables->add($templateVariable);
+        }
+    }
 }

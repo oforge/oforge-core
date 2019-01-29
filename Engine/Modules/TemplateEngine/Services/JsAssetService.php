@@ -25,15 +25,17 @@ class JsAssetService extends BaseAssetService
     
     /**
      * @param string $scope
+     * @param string $context
      *
      * @return string
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
-    public function build(string $scope = TemplateAssetService::DEFAULT_SCOPE): string
+    public function build(string $context, string $scope = TemplateAssetService::DEFAULT_SCOPE): string
     {
-        parent::build();
+        parent::build($context);
+
         $dirs = $this->getAssetsDirectories();
         $hasFilesToMinify = false;
         
