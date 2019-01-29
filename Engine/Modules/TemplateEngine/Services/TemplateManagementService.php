@@ -31,7 +31,7 @@ class TemplateManagementService {
     public function activate($name) {
         /** @var $templateToActivate Template */
         $templateToActivate = $this->repo->findOneBy(["name" => $name]);
-        $activeTemplate = $this->repo->findOneBy(["active" => 1]);
+        $activeTemplate = $this->getActiveTemplate();
 
         if (!isset($templateToActivate)) {
             throw new TemplateNotFoundException($name);
@@ -60,7 +60,7 @@ class TemplateManagementService {
      * @throws \Oforge\Engine\Modules\TemplateEngine\Exceptions\InvalidScssVariableException
      */
     public function register($name) {
-        $template = $this->repo->findOneBy(["name" => $name]);
+        $template = $this->getActiveTemplate();
         
         if (!isset($template)) {
             $className = Statics::TEMPLATE_DIR . "\\" . $name . "\\Template";
@@ -108,7 +108,7 @@ class TemplateManagementService {
      */
     public function build() {
         /** @var Template $template */
-        $template = $this->repo->findOneBy(["active" => 1]);
+        $template = $this->getActiveTemplate();
         if ($template) {
             /** @var TemplateAssetService $templateAssetService */
             $templateAssetService = Oforge()->Services()->get('assets.template');
@@ -124,5 +124,12 @@ class TemplateManagementService {
 
             $templateAssetService->build($template->getName(), $templateAssetService::DEFAULT_SCOPE);
         }
+    }
+
+    /**
+     * @return Template
+     */
+    public function getActiveTemplate() {
+        return $this->repo->findOneBy(["active" => 1]);
     }
 }

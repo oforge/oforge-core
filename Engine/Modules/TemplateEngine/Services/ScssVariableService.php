@@ -44,21 +44,15 @@ class ScssVariableService {
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function update($id, $value, $type, $siteId = "0") {
+    public function update($id, $value) {
 
-        $options = [
-            'id'     => $id,
-            'value'  => $value,
-            'type'   => $type,
-            'siteId' => $siteId,
-        ];
-
-        $element = $this->repo->findOneBy(["id" => $options["id"]]);
+        /** @var ScssVariable $element */
+        $element = $this->repo->findOneBy(['id' => $id]);
         if (!isset($element)) {
-            throw new NotFoundException("Element with id " . $options["id"] . " not found!");
+            throw new NotFoundException("Element with id " . $id . " not found!");
         }
 
-        $element->fromArray($options);
+        $element->setValue($value);
         $this->em->persist($element);
         $this->em->flush();
     }
