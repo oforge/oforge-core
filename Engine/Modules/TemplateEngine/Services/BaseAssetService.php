@@ -35,10 +35,11 @@ class BaseAssetService
      * Create assets like JavaScript or CSS Files
      *
      * @param string $scope
+     * @param string $context
      *
      * @return string
      */
-    public function build(string $scope = TemplateAssetService::DEFAULT_SCOPE): string
+    public function build(string $context, string $scope = TemplateAssetService::DEFAULT_SCOPE): string
     {
         // check if the /var/public folder exists. if not, create it.
         if (!file_exists(ROOT_PATH . Statics::ASSET_CACHE_DIR)) {
