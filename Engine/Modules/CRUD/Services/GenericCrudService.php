@@ -126,21 +126,24 @@ class GenericCrudService {
      * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function update(string $class, array $options) {
-        if (!isset($options['id'])) {
-            throw new ConfigOptionKeyNotExists('id');
-        }
         $repository = $this->getRepository($class);
-        $id         = $options['id'];
-        // $objects = $this->structure($options);
-        // foreach ($objects as $id => $el) {
-        $entity = $repository->findOneBy(["id" => $id]);
-
-        if (!isset($entity)) {
-            throw new NotFoundException("Entity with id $id not found!");
+        if (isset($options['id'])) {
+            $id     = $options['id'];
+            $entity = $repository->findOneBy(['id' => $id]);
+            if (!isset($entity)) {
+                throw new NotFoundException("Entity with id '$id' not found!");
+            }
+            $entity->fromArray($options);
+        } else {
+            $objects = $this->structure($options);
+            foreach ($objects as $id => $objectData) {
+                $entity = $repository->findOneBy(['id' => $id]);
+                if (!isset($entity)) {
+                    throw new NotFoundException("Entity with id '$id' not found!");
+                }
+                $entity->fromArray($objectData);
+            }
         }
-
-        $entity->fromArray($options);
-        // }
         $this->entityManager->flush();
         $repository->clear();
     }
@@ -175,7 +178,7 @@ class GenericCrudService {
     }
 
     /**
-     * TODO @MS ?????????????
+     * TODO @MS
      *
      * @param $options
      *
