@@ -52,11 +52,16 @@ class Bootstrap extends AbstractBootstrap
     {
         Oforge()->Templates()->init();
 
+        /** @var TemplateManagementService $templateManagmentService */
+        $templateManagementService = Oforge()->Services()->get("template.management");
+
+        $template = $templateManagementService->getActiveTemplate();
+
         $scopes = ["Frontend", "Backend"];
 
         foreach ($scopes as $scope) {
             if (!Oforge()->Services()->get("assets.css")->isBuild($scope)) {
-                Oforge()->Services()->get("assets.template")->build($scope);
+                Oforge()->Services()->get("assets.template")->build($template->getName() ,$scope);
             }
         }
     }
