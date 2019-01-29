@@ -8,121 +8,185 @@
 
 namespace Oforge\Engine\Modules\CRUD\Services;
 
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
 use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
-
 
 /**
  * Class GenericCrudService
+ *
  * @package Oforge\Engine\Modules\CRUD\Services;
  */
-class GenericCrudService
-{
+class GenericCrudService {
+    /** @var EntityManager $entityManager */
+    private $entityManager;
+
     /**
      * GenericCrudService constructor.
      */
-    public function __construct()
-    {
-        $this->em = Oforge()->DB()->getManager();
+    public function __construct() {
+        $this->entityManager = Oforge()->DB()->getManager();
     }
 
-    public function list($class, $params = [])
-    {
-        $repo = $this->getRepo($class);
-
-        /**
-         * @var $items AbstractModel[]
-         */
-        $items = [];
-        $items = $repo->findAll();
-
-        if (sizeof($params) > 0) {
+    /**
+     * TODO @MS
+     *
+     * @param string $class
+     * @param array $params
+     *
+     * @return array
+     */
+    public function list(string $class, array $params = []) : array {
+        $repository = $this->getRepository($class);
+        /** @var AbstractModel[] $items */
+        if (empty($params)) {
             //TODO
+            $items = $repository->findAll();
         } else {
-            $items = $repo->findAll();
+            $items = $repository->findAll();
         }
-
         $result = [];
         foreach ($items as $item) {
-            array_push($result, $item->toArray());
+            $result[] = $item->toArray();
         }
 
         return $result;
     }
 
+    /**
+     * TODO @MS
+     *
+     * @param string $class
+     *
+     * @return array
+     */
+    public function definition(string $class) : array {
+        if (is_subclass_of($class, AbstractModel::class)) {
+            return $class::definition();
+        }
 
-    public function definition($class)
-    {
-        return $class::definition();
+        return [];
     }
 
     /**
+     * TODO @MS
+     *
+     * @param string $class
      * @param int $id
      *
      * @return object|null
      */
-    public function getById($class, int $id)
-    {
-        $repo = $this->getRepo($class);
+    public function getById(string $class, int $id) {
+        $repo   = $this->getRepository($class);
         $result = $repo->findOneBy(["id" => $id]);
+
         return $result;
     }
 
     /**
-     * @param $class
+     * Create entity if not exist yet.
+     *
+     * @param string $class
      * @param array $options
      *
      * @throws ConfigElementAlreadyExists
      * @throws \Doctrine\ORM\ORMException
      */
-    public function create($class, array $options)
-    {
-        $repo = $this->getRepo($class);
+    public function create(string $class, array $options) {
+        $repository = $this->getRepository($class);
 
-        if (isset($options["id"])) {
-            $element = $repo->findOneBy(["id" => $options["id"]]);
-            if (isset($element)) {
-                throw new ConfigElementAlreadyExists("Element with id " . $options["id"] . " already exists!");
+        if (isset($options['id'])) {
+            $id     = $options['id'];
+            $entity = $repository->findOneBy(['id' => $id]);
+            if (isset($entity)) {
+                throw new ConfigElementAlreadyExists("Entity with id '$id' already exists!");
             }
         }
-
-        /**
-         * @var $instance AbstractModel
-         */
+        /** @var AbstractModel $instance */
         $instance = new $class();
         $instance = $instance->fromArray($options);
 
-        $this->em->persist($instance);
-        $this->em->flush();
+        $this->entityManager->persist($instance);
+        $this->entityManager->flush($instance);
+        $repository->clear();
     }
 
-    public function update($class, array $options)
-    {
-        $objects = $this->structure($options);
+    /**
+     * Update entity.
+     *
+     * @param string $class
+     * @param array $options
+     *
+     * @throws NotFoundException
+     * @throws ConfigOptionKeyNotExists
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function update(string $class, array $options) {
+        if (!isset($options['id'])) {
+            throw new ConfigOptionKeyNotExists('id');
+        }
+        $repository = $this->getRepository($class);
+        $id         = $options['id'];
+        // $objects = $this->structure($options);
+        // foreach ($objects as $id => $el) {
+        $entity = $repository->findOneBy(["id" => $id]);
 
-        $repo = $this->getRepo($class);
-
-        foreach ($objects as $id => $el) {
-            $element = $repo->findOneBy(["id" => $id]);
-
-            if (!isset($element)) {
-                throw new NotFoundException("Element with id " . $id . " not found!");
-            }
-
-            $element->fromArray($el);
-            $this->em->persist($element);
+        if (!isset($entity)) {
+            throw new NotFoundException("Entity with id $id not found!");
         }
 
-        $this->em->flush();
+        $entity->fromArray($options);
+        // }
+        $this->entityManager->flush();
+        $repository->clear();
     }
 
-    private function structure($options) {
-        $result = array();
+    /**
+     * Delete entity by id.
+     *
+     * @param string $class
+     * @param int $id
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function delete(string $class, int $id) {
+        $repository = $this->getRepository($class);
+        $entity     = $repository->findOneBy(['id' => $id]);
+
+        $this->entityManager->remove($entity);
+        $this->entityManager->flush();
+        $repository->clear();
+    }
+
+    /**
+     * Returns repository for given class.
+     *
+     * @param string $class
+     *
+     * @return EntityRepository
+     */
+    protected function getRepository(string $class) : EntityRepository {
+        return $this->entityManager->getRepository($class);
+    }
+
+    /**
+     * TODO @MS ?????????????
+     *
+     * @param $options
+     *
+     * @return array
+     */
+    protected function structure($options) {
+        $result = [];
         foreach ($options as $key => $value) {
             $ex = explode("_", $key);
-            if(sizeof($ex) == 2) {
-                if(!isset($result[$ex[0]])) {
+            if (sizeof($ex) == 2) {
+                if (!isset($result[$ex[0]])) {
                     $result[$ex[0]] = [];
                 }
 
@@ -133,22 +197,4 @@ class GenericCrudService
         return $result;
     }
 
-    public function delete($class, int $id)
-    {
-        $repo = $this->getRepo($class);
-
-        $element = $repo->findOneBy(["id" => $id]);
-
-        $this->em->remove($element);
-        $this->em->flush();
-    }
-
-    /**
-     * @param $class
-     * @return \Doctrine\Common\Persistence\ObjectRepository|\Doctrine\ORM\EntityRepository
-     */
-    private function getRepo($class)
-    {
-        return $this->em->getRepository($class);
-    }
 }
