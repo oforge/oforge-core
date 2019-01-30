@@ -23,31 +23,34 @@ class TemplateManager extends AbstractTemplateManager {
         if (!isset(self::$instance)) {
             self::$instance = new TemplateManager();
         }
+
         return self::$instance;
     }
-    
+
     /**
      * Initialize and configure the TemplateManager.
      *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws \Oforge\Engine\Modules\TemplateEngine\Exceptions\InvalidScssVariableException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\TemplateNotFoundException
      */
     public function init() {
         /**
          * @var $templateManagementService TemplateManagementService
          */
         $templateManagementService = Oforge()->Services()->get("template.management");
-        $templateFiles = Helper::getTemplateFiles(ROOT_PATH . DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR);
+        $templateFiles             = Helper::getTemplateFiles(ROOT_PATH . DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR);
         $templateManagementService->register("Base");
 
-        foreach($templateFiles as $templateName => $dir ) {
+        foreach ($templateFiles as $templateName => $dir) {
             if ($templateName != "Base") {
                 $templateManagementService->register($templateName);
             }
         }
     }
-    
+
     /**
      * This render function can be called either from a module controller or a template controller.
      * It checks, whether a template path based on the controllers namespace and the function name exists
@@ -62,6 +65,7 @@ class TemplateManager extends AbstractTemplateManager {
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\TemplateNotFoundException
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
@@ -71,6 +75,7 @@ class TemplateManager extends AbstractTemplateManager {
          * @var $templateRenderService TemplateRenderService
          */
         $templateRenderService = Oforge()->Services()->get("template.render");
+
         return $templateRenderService->render($request, $response, $data);
     }
 }

@@ -1,11 +1,7 @@
 {% extends "Backend/Master/Index.twig" %}
 
 {% block pagecontent %}
-
-    {{ o_dump() }}
-
     {% for template in templates %}
-
         <!-- tile -->
         <div class="col-lg-3 col-xs-6">
             <div class="small-box bg-aqua with-border">
@@ -41,46 +37,50 @@
                         </button>
                         <h4 class="modal-title">{{ template.name }}</h4>
                     </div>
-                    <div class="modal-body">
-                        <p>Author: Oforge-Team</p>
-                        <p>Version: v1.33.7</p>
-                        <p>
-                            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
-                            invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam
-                            et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est
-                            Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-                            diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
-                            voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd
-                            gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                        </p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button"
-                                class="btn btn-default pull-left"
-                                data-dismiss="modal">
-                            Close
-                        </button>
-                        <form method="post">
-                            {% if template.active == 1 %}
-                                <button type="submit"
-                                        name="rebuild"
-                                        value="{{ template.name }}"
-                                        class="btn btn-primary">
-                                    Rebuild
-                                </button>
-                            {% else %}
-                                <button type="submit"
-                                        name="selectedTheme"
-                                        value="{{ template.name }}"
-                                        class="btn btn-primary">
-                                    Select as active
-                                </button>
-                            {% endif %}
-                        </form>
-                    </div>
+                    <form method="post">
+                        <div class="modal-body">
+                            <p>Author: Oforge-Team</p>
+                            <p>Version: v1.33.7</p>
+                            <div>
+                                {% for variable in scssVariables %}
+                                    {% if 'Themes\\' ~ template.name ~ '\\Template' == variable.context %}
+                                    <label>${{ variable.name }}</label>
+                                    <div class="input-group my-colorpicker2 colorpicker-element">
+                                        <input name="{{ variable.id }}|{{ variable.name }}" type="text" class="form-control" value="{{ variable.value }}" />
+
+                                        <div class="input-group-addon">
+                                            <i></i>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button"
+                                    class="btn btn-default pull-left"
+                                    data-dismiss="modal">
+                                Close
+                            </button>
+                                {% if template.active == 1 %}
+                                    <button type="submit"
+                                            name="rebuild"
+                                            value="{{ template.name }}"
+                                            class="btn btn-primary">
+                                        Rebuild
+                                    </button>
+                                {% else %}
+                                    <button type="submit"
+                                            name="selectedTheme"
+                                            value="{{ template.name }}"
+                                            class="btn btn-primary">
+                                        Select as active
+                                    </button>
+                                {% endif %}
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     {% endfor %}
-
 {% endblock %}
