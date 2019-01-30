@@ -31,7 +31,6 @@ class TemplateSettingsController extends SecureBackendController
 
         if($request->isPost()) {
             $formData = $request->getParsedBody();
-            print_r($formData);
             if(isset($formData['selectedTheme'])) {
                 $templateManagementService->activate($formData['selectedTheme']);
             }
