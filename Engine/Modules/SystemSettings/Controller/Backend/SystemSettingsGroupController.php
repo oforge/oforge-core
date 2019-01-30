@@ -9,15 +9,19 @@ use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-
-class SystemSettingsGroupController extends SecureBackendController
-{
-    public function indexAction(Request $request, Response $response, $args)
-    {
+class SystemSettingsGroupController extends SecureBackendController {
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param $args
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException
+     */
+    public function indexAction(Request $request, Response $response, $args) {
         try {
-            /**
-             * @var ConfigService $configService
-             */
+            /** @var ConfigService $configService */
             $configService = Oforge()->Services()->get("config");
             if ($request->isPost()) {
                 $formData = $request->getParsedBody();
@@ -25,7 +29,6 @@ class SystemSettingsGroupController extends SecureBackendController
                     $configService->set($key, $value);
                 }
             }
-
             $config = $configService->list($args['group']);
             Oforge()->View()->assign(["page_header" => $args['group'], "config" => $config, "groupname" => $args['group']]);
         } catch (ServiceNotFoundException $exception) {
@@ -33,9 +36,7 @@ class SystemSettingsGroupController extends SecureBackendController
         }
     }
 
-
-    public function initPermissions()
-    {
+    public function initPermissions() {
         $this->ensurePermissions("indexAction", BackendUser::class, BackendUser::ROLE_ADMINISTRATOR);
     }
 }
