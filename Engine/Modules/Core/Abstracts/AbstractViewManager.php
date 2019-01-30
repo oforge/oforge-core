@@ -33,9 +33,6 @@
  **********************************************************/
 namespace Oforge\Engine\Modules\Core\Abstracts;
 
-use Slim\Http\Request;
-use Slim\Http\Response;
-
 abstract class AbstractViewManager {
     /**
      * Assign Data from a Controller to a Template
@@ -55,7 +52,7 @@ abstract class AbstractViewManager {
     /**
      * Get a specific key value from the viewData
      *
-     * @param $key
+     * @param string $key
      *
      * @return mixed
      */
