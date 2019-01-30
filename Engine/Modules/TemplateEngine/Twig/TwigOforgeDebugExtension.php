@@ -13,27 +13,23 @@ use Twig_Extension;
 use Twig_Function;
 use Twig_TemplateWrapper;
 
-class TwigOforgeDebugExtension extends Twig_Extension
-{
-    public function getFunctions()
-    {
-        return array(
-            new Twig_Function('o_dump', array($this, 'oforge_var_dump'),
-                array(
-                    'is_safe' => array('html'),
-                    'needs_context' => true,
-                    'needs_environment' => true
-                )),
-        );
+class TwigOforgeDebugExtension extends Twig_Extension {
+    public function getFunctions() {
+        return [
+            new Twig_Function('o_dump', [$this, 'oforge_var_dump'], [
+                    'is_safe'           => ['html'],
+                    'needs_context'     => true,
+                    'needs_environment' => true,
+                ]),
+        ];
     }
 
-    public function oforge_var_dump(Twig_Environment $env, $context, ...$vars)
-    {
+    public function oforge_var_dump(Twig_Environment $env, $context, ...$vars) {
         if (!$env->isDebug()) {
             return;
         }
         if (!$vars) {
-            $vars = array();
+            $vars = [];
             foreach ($context as $key => $value) {
                 if (!$value instanceof Twig_TemplateWrapper) {
                     $vars[$key] = $value;
