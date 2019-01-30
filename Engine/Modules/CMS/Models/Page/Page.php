@@ -55,6 +55,12 @@ class Page extends AbstractModel
     private $site;
 
     /**
+     * @var int
+     * @ORM\Column(name="parent_id", type="integer", nullable=true)
+     */
+    private $parent;
+
+    /**
      * @return int
      */
     public function getId(): ?int
@@ -104,6 +110,20 @@ class Page extends AbstractModel
      */
     public function setSite(int $site) : void {
         $this->site = $site;
+    }
+    
+    /**
+     * @return int
+     */
+    public function getParent() : ?int {
+        return $this->parent;
+    }
+    
+    /**
+     * @param int $parent
+     */
+    public function setParent(int $parent) : void {
+        $this->parent = $parent;
     }
     
     /**

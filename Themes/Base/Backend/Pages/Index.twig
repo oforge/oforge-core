@@ -7,4 +7,15 @@
         <li>CMS Seiten auflisten/bearbeiten/löschen</li>
     </ul>
 
+    <div>
+        PagesTreeViewService - Pages:
+    </div>
+
+    <div id="page_controller_jstree"></div>
+    <script>
+    	{% if js %}
+			page_controller_tree = {{ js|json_encode(constant('JSON_PRETTY_PRINT'))|raw }};
+		{% endif %}
+    </script>
+
 {% endblock %}
