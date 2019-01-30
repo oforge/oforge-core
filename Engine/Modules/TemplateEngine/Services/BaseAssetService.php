@@ -87,14 +87,15 @@ class BaseAssetService
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\TemplateNotFoundException
      */
     protected function getAssetsDirectories()
     {
         /**
-         * @var $templateRenderer TemplateRenderService
+         * @var TemplateManagementService $templateManagementService
          */
-        $templateRenderer = Oforge()->Services()->get("template.render");
-        $activeTemplate = $templateRenderer->getActiveTemplate();
+        $templateManagementService = Oforge()->Services()->get("template.management");
+        $activeTemplate = $templateManagementService->getActiveTemplate();
 
         $paths = [ROOT_PATH . DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . "Base"];
 
@@ -116,7 +117,7 @@ class BaseAssetService
             }
         }
 
-        $templatePath = ROOT_PATH . DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . $activeTemplate;
+        $templatePath = ROOT_PATH . DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . $activeTemplate->getName();
 
         if (!in_array( $templatePath, $paths)) array_push($paths, $templatePath);
 
