@@ -10,6 +10,6 @@ namespace Oforge\Engine\Modules\TemplateEngine\Exceptions;
 
 class InvalidScssVariableException extends \Exception {
     public function __construct($missingOption, $invalidVariables = null) {
-        parent::__construct("Invalid variable. Missing option $missingOption. " .implode(", ", $invalidVariables) );
+        parent::__construct("Invalid variable. Missing option $missingOption. " . implode(", ", $invalidVariables));
     }
 }

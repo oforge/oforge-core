@@ -16,21 +16,19 @@ use Oforge\Engine\Modules\TemplateEngine\Services\TemplateAssetService;
 use Oforge\Engine\Modules\TemplateEngine\Services\TemplateManagementService;
 use Oforge\Engine\Modules\TemplateEngine\Services\TemplateRenderService;
 
-class Bootstrap extends AbstractBootstrap
-{
+class Bootstrap extends AbstractBootstrap {
     /**
      * Bootstrap constructor.
      */
-    public function __construct()
-    {
+    public function __construct() {
         $this->services = [
-            "scss.variables" => ScssVariableService::class,
-            "template.render" => TemplateRenderService::class,
+            "scss.variables"      => ScssVariableService::class,
+            "template.render"     => TemplateRenderService::class,
             "template.management" => TemplateManagementService::class,
-            "assets.template" => TemplateAssetService::class,
-            "assets.js" => JsAssetService::class,
-            "assets.css" => CssAssetService::class,
-            "assets.static" => StaticAssetService::class,
+            "assets.template"     => TemplateAssetService::class,
+            "assets.js"           => JsAssetService::class,
+            "assets.css"          => CssAssetService::class,
+            "assets.static"       => StaticAssetService::class,
         ];
 
         $this->models = [
@@ -39,11 +37,11 @@ class Bootstrap extends AbstractBootstrap
         ];
 
         $this->middleware = [
-            "*" => ["class" => AssetsMiddleware::class, "position" => 0]
+            "*" => ["class" => AssetsMiddleware::class, "position" => 0],
         ];
 
         $this->order = 1;
-        
+
         Oforge()->setTemplateManager(TemplateManager::getInstance());
         Oforge()->setViewManager(ViewManager::getInstance());
     }
@@ -54,8 +52,7 @@ class Bootstrap extends AbstractBootstrap
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\TemplateNotFoundException
      */
-    public function activate()
-    {
+    public function activate() {
         Oforge()->Templates()->init();
 
         /** @var TemplateManagementService $templateManagementService */
@@ -67,7 +64,7 @@ class Bootstrap extends AbstractBootstrap
 
         foreach ($scopes as $scope) {
             if (!Oforge()->Services()->get("assets.css")->isBuild($scope)) {
-                Oforge()->Services()->get("assets.template")->build($templateName ,$scope);
+                Oforge()->Services()->get("assets.template")->build($templateName, $scope);
             }
         }
     }
