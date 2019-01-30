@@ -4,10 +4,10 @@ namespace Oforge\Engine\Modules\TemplateEngine\Manager;
 
 use Oforge\Engine\Modules\Core\Abstracts\AbstractViewManager;
 
-class ViewManager extends  AbstractViewManager {
+class ViewManager extends AbstractViewManager {
     protected static $instance;
     private $viewData = [];
-    
+
     /**
      * Create a singleton instance of the ViewManager
      *
@@ -17,9 +17,10 @@ class ViewManager extends  AbstractViewManager {
         if (!isset(self::$instance)) {
             self::$instance = new ViewManager();
         }
+
         return self::$instance;
     }
-    
+
     /**
      * Assign Data from a Controller to a Template
      *
@@ -28,7 +29,7 @@ class ViewManager extends  AbstractViewManager {
     public function assign($data) {
         $this->viewData = $this->array_merge_recursive_ex($this->viewData, $data);
     }
-    
+
     /**
      * Fetch View Data. This function should be called from the route middleware
      * so that it can transport the data to the TemplateEngine
@@ -39,27 +40,25 @@ class ViewManager extends  AbstractViewManager {
         return $this->viewData;
     }
 
-
     /**
      * @param array $array1
      * @param array $array2
+     *
      * @return array
      */
-    function array_merge_recursive_ex(array & $array1, array & $array2)
-    {
+    function array_merge_recursive_ex(array & $array1, array & $array2) {
         $merged = $array1;
 
-        foreach ($array2 as $key => & $value)
-        {
-            if (is_array($value) && isset($merged[$key]) && is_array($merged[$key]))
-            {
+        foreach ($array2 as $key => & $value) {
+            if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
                 $merged[$key] = $this->array_merge_recursive_ex($merged[$key], $value);
-            } else if (is_numeric($key))
-            {
-                if (!in_array($value, $merged))
+            } elseif (is_numeric($key)) {
+                if (!in_array($value, $merged)) {
                     $merged[] = $value;
-            } else
+                }
+            } else {
                 $merged[$key] = $value;
+            }
         }
 
         return $merged;
@@ -68,7 +67,7 @@ class ViewManager extends  AbstractViewManager {
     /**
      * Get a specific key value from the viewData
      *
-     * @param $key
+     * @param string $key
      *
      * @return int
      */
