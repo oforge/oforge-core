@@ -15,22 +15,23 @@ use Oforge\Engine\Modules\TemplateEngine\Models\Template\Template;
 
 class TemplateManagementService {
     
-    private $em;
-    private $repo;
+    private $entityManager;
+    private $repository;
     
     public function __construct() {
-        $this->em = Oforge()->DB()->getManager();
-        $this->repo = $this->em->getRepository(Template::class);
+        $this->entityManager = Oforge()->DB()->getManager();
+        $this->repository = $this->entityManager->getRepository(Template::class);
     }
 
     /**
      * @param $name
+     *
      * @throws TemplateNotFoundException
      * @throws \Doctrine\ORM\ORMException
      */
     public function activate($name) {
         /** @var $templateToActivate Template */
-        $templateToActivate = $this->repo->findOneBy(["name" => $name]);
+        $templateToActivate = $this->repository->findOneBy(["name" => $name]);
         $activeTemplate = $this->getActiveTemplate();
 
         if (!isset($templateToActivate)) {
@@ -46,9 +47,9 @@ class TemplateManagementService {
 
         $templateToActivate->setActive(true);
 
-        $this->em->persist($templateToActivate);
-        $this->em->persist($activeTemplate);
-        $this->em->flush();
+        $this->entityManager->persist($templateToActivate);
+        $this->entityManager->persist($activeTemplate);
+        $this->entityManager->flush();
     }
 
     /**
@@ -58,11 +59,12 @@ class TemplateManagementService {
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      * @throws \Oforge\Engine\Modules\TemplateEngine\Exceptions\InvalidScssVariableException
+     * @throws TemplateNotFoundException
      */
     public function register($name) {
-        $template = $this->getActiveTemplate();
+        $template = $this->repository->findOneBy(["name" => $name]);
         
-        if (!isset($template)) {
+        if (!$template) {
             $className = Statics::TEMPLATE_DIR . "\\" . $name . "\\Template";
             $parent = null;
             
@@ -78,14 +80,14 @@ class TemplateManagementService {
                 /**
                  * @var $parentTemplate Template
                  */
-                $parentTemplate = $this->repo->findOneBy(["name" => $parent]);
+                $parentTemplate = $this->repository->findOneBy(["name" => $parent]);
                 $parent = $parentTemplate->getId();
             }
             
             $template = Template::create(array("name" => $name, "active" => 0, "installed" => 0, "parentId" => $parent));
             
-            $this->em->persist($template);
-            $this->em->flush();
+            $this->entityManager->persist($template);
+            $this->entityManager->flush();
 
             $instance->registerTemplateVariables();
         }
@@ -95,16 +97,18 @@ class TemplateManagementService {
      * @return array|object[]
      */
     public function list() {
-        $templateList = $this->repo->findAll();
+        $templateList = $this->repository->findAll();
         return $templateList;
     }
 
     /**
      * Get the active theme, delete old cached assets, build new assets
+     *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
-     * @throws \Oforge\Engine\Modules\TemplateEngine\Exceptions\InvalidScssVariableException
+     * @throws \Oforge\Engine\Modules\TemplateEngine\Exceptions\InvalidScssVariableException*@throws TemplateNotFoundException
+     * @throws TemplateNotFoundException
      */
     public function build() {
         /** @var Template $template */
@@ -125,11 +129,29 @@ class TemplateManagementService {
             $templateAssetService->build($template->getName(), $templateAssetService::DEFAULT_SCOPE);
         }
     }
-
+ 
     /**
      * @return Template
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws TemplateNotFoundException
      */
-    public function getActiveTemplate() {
-        return $this->repo->findOneBy(["active" => 1]);
+    public function getActiveTemplate()
+    {
+        /**
+         * @var $template Template
+         */
+        $template = $this->repository->findOneBy(["active" => 1]);
+        if ($template === null) {
+            $template = $this->repository->findOneBy(["name" => "Base"]);
+
+            if ($template === null) {
+                throw new TemplateNotFoundException("Base");
+            }
+
+            $template->setActive(1);
+            $this->entityManager->flush();
+        }
+        return $template;
     }
 }

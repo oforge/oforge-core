@@ -25,13 +25,15 @@ class TemplateManager extends AbstractTemplateManager {
         }
         return self::$instance;
     }
-    
+
     /**
      * Initialize and configure the TemplateManager.
      *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws \Oforge\Engine\Modules\TemplateEngine\Exceptions\InvalidScssVariableException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\TemplateNotFoundException
      */
     public function init() {
         /**

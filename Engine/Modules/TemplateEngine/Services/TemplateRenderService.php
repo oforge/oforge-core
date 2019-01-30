@@ -8,6 +8,7 @@
 
 namespace Oforge\Engine\Modules\TemplateEngine\Services;
 
+use Oforge\Engine\Modules\Core\Exceptions\TemplateNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\Core\Models\Plugin\Plugin;
 use Oforge\Engine\Modules\TemplateEngine\Models\Template\Template;
@@ -25,7 +26,7 @@ class TemplateRenderService
      * @var $view CustomTwig
      */
     private $view;
-    
+
     /**
      * This render function can be called either from a module controller or a template controller.
      * It checks, whether a template path based on the controllers namespace and the function name exists
@@ -43,6 +44,7 @@ class TemplateRenderService
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
+     * @throws TemplateNotFoundException
      */
     public function render(Request $request, Response $response, $data)
     {
@@ -103,7 +105,7 @@ class TemplateRenderService
             ->withHeader('Content-Type', 'application/json')
             ->withJson($data);
     }
-    
+
     /**
      * Send the response through the Twig Engine
      *
@@ -119,12 +121,13 @@ class TemplateRenderService
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
+     * @throws TemplateNotFoundException
      */
     private function renderTemplate(Request $request, Response $response, string $template, $data)
     {
         return $this->View()->render($response, $template, $data);
     }
-    
+
     /**
      * Check if the template exists
      *
@@ -135,12 +138,13 @@ class TemplateRenderService
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      * @throws \Twig_Error_Loader
+     * @throws TemplateNotFoundException
      */
     private function hasTemplate($template): bool
     {
         return $this->View()->hasTemplate($template);
     }
-    
+
     /**
      * If no Twig Engine is loaded, create one
      *
@@ -149,11 +153,14 @@ class TemplateRenderService
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      * @throws \Twig_Error_Loader
+     * @throws TemplateNotFoundException
      */
     public function View()
     {
-        $activeTemplate = $this->getActiveTemplate();
-        $templatePath = DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . $activeTemplate;
+        /** @var TemplateManagementService $templateManagementService */
+        $templateManagementService = Oforge()->Services()->get('template.management');
+        $activeTemplate = $templateManagementService->getActiveTemplate();
+        $templatePath = DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . $activeTemplate->getName();
 
         if (!$this->view) {
 
@@ -200,30 +207,5 @@ class TemplateRenderService
             }
         }
         return $this->view;
-    }
-
-    /**
-     * @return string
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function getActiveTemplate()
-    {
-        $em = Oforge()->DB()->getManager();
-        $repo = $em->getRepository(Template::class);
-        /**
-         * @var $template Template
-         */
-        $template = $repo->findOneBy(["active" => 1]);
-        if ($template === null) {
-            /**
-             * @var $defaultTemplate Template
-             */
-            $defaultTemplate = $repo->findOneBy(["name" => "Base"]);
-            $defaultTemplate->setActive(1);
-            $em->flush();
-            return "Base";
-        }
-        return $template->getName();
     }
 }
