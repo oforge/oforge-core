@@ -8,27 +8,25 @@
 
 namespace Oforge\Engine\Modules\TemplateEngine\Services;
 
-class TemplateAssetService
-{
+class TemplateAssetService {
     public const DEFAULT_SCOPE = "Frontend";
 
     /**
      * @param string $scope
+     * @param string $context
      *
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
-    public function build($scope = self::DEFAULT_SCOPE)
-    {
-        Oforge()->Services()->get("assets.css")->build($scope);
-        Oforge()->Services()->get("assets.js")->build($scope);
-        Oforge()->Services()->get("assets.static")->build($scope);
+    public function build($context, $scope = self::DEFAULT_SCOPE) {
+        Oforge()->Services()->get("assets.css")->build($context, $scope);
+        Oforge()->Services()->get("assets.js")->build($context, $scope);
+        Oforge()->Services()->get("assets.static")->build($context, $scope);
     }
-    
+
     /**
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
-    public function clear()
-    {
+    public function clear() {
         Oforge()->Services()->get("assets.css")->clear();
         Oforge()->Services()->get("assets.js")->clear();
     }
