@@ -9,8 +9,7 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
  * @ORM\Table(name="oforge_template_engine_template")
  * @ORM\Entity
  */
-class Template extends AbstractModel
-{
+class Template extends AbstractModel {
     /**
      * @var int
      * @ORM\Column(name="id", type="integer", nullable=false)
@@ -36,7 +35,7 @@ class Template extends AbstractModel
      * @ORM\Column(name="installed", type="boolean")
      */
     private $installed = false;
-    
+
     /**
      * @var int
      * @ORM\Column(name="parent_id", type="integer", nullable=true)
@@ -48,8 +47,7 @@ class Template extends AbstractModel
      *
      * @return int
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -60,9 +58,9 @@ class Template extends AbstractModel
      *
      * @return Template
      */
-    public function setName($name)
-    {
+    public function setName($name) {
         $this->name = $name;
+
         return $this;
     }
 
@@ -71,8 +69,7 @@ class Template extends AbstractModel
      *
      * @return string
      */
-    public function getName()
-    {
+    public function getName() {
         return $this->name;
     }
 
@@ -81,17 +78,16 @@ class Template extends AbstractModel
      *
      * @return Template
      */
-    public function setActive($active)
-    {
+    public function setActive($active) {
         $this->active = $active;
+
         return $this;
     }
 
     /**
      * @return bool
      */
-    public function getActive()
-    {
+    public function getActive() {
         return $this->active;
     }
 
@@ -100,27 +96,26 @@ class Template extends AbstractModel
      *
      * @return Template
      */
-    public function setInstalled($installed)
-    {
+    public function setInstalled($installed) {
         $this->installed = $installed;
+
         return $this;
     }
 
     /**
      * @return bool
      */
-    public function getInstalled()
-    {
+    public function getInstalled() {
         return $this->installed;
     }
-    
+
     /**
      * @return int
      */
     public function getParentId() {
         return $this->parentId;
     }
-    
+
     /**
      * @param int $parentId
      */

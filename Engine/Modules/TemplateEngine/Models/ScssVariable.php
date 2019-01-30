@@ -17,25 +17,25 @@ class ScssVariable extends AbstractModel {
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-    
+
     /**
      * @var string
      * @ORM\Column(name="name", type="string", nullable=false)
      */
     private $name;
-    
+
     /**
      * @var string
      * @ORM\Column(name="value", type="string", nullable=false)
      */
     private $value;
-    
+
     /**
      * @var string
      * @ORM\Column(name="scope", type="string", nullable=false)
      */
     private $scope;
-    
+
     /**
      * @var int
      * @ORM\Column(name="siteId", type="integer", nullable=true)
@@ -47,84 +47,92 @@ class ScssVariable extends AbstractModel {
      * @ORM\Column(name="context", type="string", nullable=true)
      */
     private $context = null;
-    
+
     /**
      * @var string
      * @ORM\Column(name="type", type="string", nullable=false)
      */
     private $type;
-    
+
     /**
      * @return int
      */
     public function getId() : int {
         return $this->id;
     }
-    
+
     /**
      * @return string
      */
     public function getName() : string {
         return $this->name;
     }
-    
+
     /**
      * @param string $name
+     *
      * @return ScssVariable
      */
     public function setName(string $name) {
         $this->name = $name;
+
         return $this;
     }
-    
+
     /**
      * @return string
      */
     public function getValue() : string {
         return $this->value;
     }
-    
+
     /**
      * @param string $value
+     *
      * @return ScssVariable
      */
     public function setValue(string $value) {
         $this->value = $value;
+
         return $this;
     }
-    
+
     /**
      * @return int $siteId
      */
     public function getSiteId() : int {
         return $this->siteId;
     }
-    
+
     /**
      * @param int $siteId
+     *
      * @return ScssVariable
      */
     public function setSiteId(int $siteId) {
         $this->siteId = $siteId;
+
         return $this;
     }
-    
+
     /**
      * @return string
      */
     public function getScope() : string {
         return $this->scope;
     }
-    
+
     /**
      * @param string $scope
+     *
      * @return ScssVariable
      */
     public function setScope(string $scope) {
         $this->scope = $scope;
+
         return $this;
     }
-    
+
     /**
      * @return string
      */
@@ -134,10 +142,12 @@ class ScssVariable extends AbstractModel {
 
     /**
      * @param string $type
+     *
      * @return ScssVariable
      */
     public function setType(string $type) : ScssVariable {
         $this->type = $type;
+
         return $this;
     }
 
@@ -150,12 +160,13 @@ class ScssVariable extends AbstractModel {
 
     /**
      * @param mixed $context
+     *
      * @return ScssVariable
      */
     public function setContext($context) : ScssVariable {
         $this->context = $context;
+
         return $this;
     }
-
 
 }
