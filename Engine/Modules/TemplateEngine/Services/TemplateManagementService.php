@@ -14,13 +14,13 @@ use Oforge\Engine\Modules\TemplateEngine\Abstracts\AbstractTemplate;
 use Oforge\Engine\Modules\TemplateEngine\Models\Template\Template;
 
 class TemplateManagementService {
-    
+
     private $entityManager;
     private $repository;
-    
+
     public function __construct() {
         $this->entityManager = Oforge()->DB()->getManager();
-        $this->repository = $this->entityManager->getRepository(Template::class);
+        $this->repository    = $this->entityManager->getRepository(Template::class);
     }
 
     /**
@@ -32,16 +32,14 @@ class TemplateManagementService {
     public function activate($name) {
         /** @var $templateToActivate Template */
         $templateToActivate = $this->repository->findOneBy(["name" => $name]);
-        $activeTemplate = $this->getActiveTemplate();
+        $activeTemplate     = $this->getActiveTemplate();
 
         if (!isset($templateToActivate)) {
             throw new TemplateNotFoundException($name);
         }
 
         if (isset($activeTemplate)) {
-            /**
-             * @var $activeTemplate Template
-             */
+            /** @var $activeTemplate Template */
             $activeTemplate->setActive(false);
         }
 
@@ -59,33 +57,32 @@ class TemplateManagementService {
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      * @throws \Oforge\Engine\Modules\TemplateEngine\Exceptions\InvalidScssVariableException
-     * @throws TemplateNotFoundException
      */
     public function register($name) {
         $template = $this->repository->findOneBy(["name" => $name]);
-        
+
         if (!$template) {
             $className = Statics::TEMPLATE_DIR . "\\" . $name . "\\Template";
-            $parent = null;
-            
+            $parent    = null;
+
             if (is_subclass_of($className, AbstractTemplate::class)) {
                 /**
                  * @var $instance AbstractTemplate
                  */
                 $instance = new $className();
-                $parent = $instance->parent;
+                $parent   = $instance->parent;
             }
-            
+
             if ($parent !== null) {
                 /**
                  * @var $parentTemplate Template
                  */
                 $parentTemplate = $this->repository->findOneBy(["name" => $parent]);
-                $parent = $parentTemplate->getId();
+                $parent         = $parentTemplate->getId();
             }
-            
-            $template = Template::create(array("name" => $name, "active" => 0, "installed" => 0, "parentId" => $parent));
-            
+
+            $template = Template::create(["name" => $name, "active" => 0, "installed" => 0, "parentId" => $parent]);
+
             $this->entityManager->persist($template);
             $this->entityManager->flush();
 
@@ -98,6 +95,7 @@ class TemplateManagementService {
      */
     public function list() {
         $templateList = $this->repository->findAll();
+
         return $templateList;
     }
 
@@ -107,7 +105,8 @@ class TemplateManagementService {
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
-     * @throws \Oforge\Engine\Modules\TemplateEngine\Exceptions\InvalidScssVariableException*@throws TemplateNotFoundException
+     * @throws \Oforge\Engine\Modules\TemplateEngine\Exceptions\InvalidScssVariableException
+     * @throws TemplateNotFoundException
      * @throws TemplateNotFoundException
      */
     public function build() {
@@ -129,15 +128,14 @@ class TemplateManagementService {
             $templateAssetService->build($template->getName(), $templateAssetService::DEFAULT_SCOPE);
         }
     }
- 
+
     /**
      * @return Template
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws TemplateNotFoundException
      */
-    public function getActiveTemplate()
-    {
+    public function getActiveTemplate() {
         /**
          * @var $template Template
          */
@@ -152,6 +150,7 @@ class TemplateManagementService {
             $template->setActive(1);
             $this->entityManager->flush();
         }
+
         return $template;
     }
 }

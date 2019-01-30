@@ -26,7 +26,7 @@ class ScssVariableService {
      *
      * @return array|object[]
      */
-    public function get($context, $scope='Frontend') {
+    public function get($context, $scope = 'Frontend') {
         return $this->repo->findBy(['scope' => $scope, 'context' => $context]);
     }
 
@@ -37,15 +37,12 @@ class ScssVariableService {
     /**
      * @param $id
      * @param $value
-     * @param $type
-     * @param string $siteId
      *
      * @throws NotFoundException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function update($id, $value) {
-
         /** @var ScssVariable $element */
         $element = $this->repo->findOneBy(['id' => $id]);
         if (!isset($element)) {
@@ -65,7 +62,6 @@ class ScssVariableService {
      * @throws InvalidScssVariableException
      */
     public function add($templateVariable) {
-
         if (!isset($templateVariable['scope'])) {
             $templateVariable['scope'] = 'Frontend';
         }
@@ -79,7 +75,7 @@ class ScssVariableService {
         $element = $this->repo->findOneBy([
             'name'    => $templateVariable['name'],
             'context' => $templateVariable['context'],
-            'scope' => $templateVariable['scope'],
+            'scope'   => $templateVariable['scope'],
             'siteId'  => $templateVariable['siteId'],
         ]);
 
@@ -93,12 +89,6 @@ class ScssVariableService {
     }
 
     /**
-     * private function isScssVariableType($type) : bool {
-     * $scssTypes = array(ScssVariableType::BOOL, ScssVariableType::LIST, ScssVariableType::MAP,
-     * ScssVariableType::NULL,ScssVariableType::NUMBER, ScssVariableType::STRING);
-     * return in_array($type, $scssTypes);
-     * }
-     * /**
      *
      * @param $templateVariable
      *
@@ -125,6 +115,7 @@ class ScssVariableService {
                 throw new InvalidScssVariableException('scope', $templateVariable);
             }
         }
+
         return true;
     }
 }
