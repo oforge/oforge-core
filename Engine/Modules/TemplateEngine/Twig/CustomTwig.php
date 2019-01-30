@@ -10,8 +10,7 @@ namespace Oforge\Engine\Modules\TemplateEngine\Twig;
 
 use Psr\Http\Message\ResponseInterface;
 
-class CustomTwig
-{
+class CustomTwig {
     /**
      * Twig loader
      *
@@ -32,7 +31,7 @@ class CustomTwig
      * @var array
      */
     protected $defaultVariables = [];
-    
+
     /**
      * Create new Twig view
      *
@@ -41,12 +40,11 @@ class CustomTwig
      *
      * @throws \Twig_Error_Loader
      */
-    public function __construct($path, $settings = [])
-    {
-        $this->loader = $this->createLoader(is_string($path) ? [$path] : $path);
+    public function __construct($path, $settings = []) {
+        $this->loader      = $this->createLoader(is_string($path) ? [$path] : $path);
         $this->environment = new TwigEnvironment($this->loader, $settings);
     }
-    
+
     /**
      * Create a loader with the given path
      *
@@ -55,8 +53,7 @@ class CustomTwig
      * @return TwigFileSystemLoader
      * @throws \Twig_Error_Loader
      */
-    private function createLoader(array $paths)
-    {
+    private function createLoader(array $paths) {
         $loader = new TwigFileSystemLoader();
 
         foreach ($paths as $namespace => $path) {
@@ -75,8 +72,7 @@ class CustomTwig
      *
      * @param \Twig_ExtensionInterface $extension A single extension instance or an array of instances
      */
-    public function addExtension(\Twig_ExtensionInterface $extension)
-    {
+    public function addExtension(\Twig_ExtensionInterface $extension) {
         $this->environment->addExtension($extension);
     }
 
@@ -91,13 +87,12 @@ class CustomTwig
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      */
-    public function fetch($template, $data = [])
-    {
+    public function fetch($template, $data = []) {
         $data = array_merge($this->defaultVariables, $data);
 
         return $this->environment->render($template, $data);
     }
-    
+
     /**
      * Fetch rendered block
      *
@@ -110,12 +105,12 @@ class CustomTwig
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      */
-    public function fetchBlock($template, $block, $data = [])
-    {
+    public function fetchBlock($template, $block, $data = []) {
         $data = array_merge($this->defaultVariables, $data);
+
         return $this->environment->loadTemplate($template)->renderBlock($block, $data);
     }
-    
+
     /**
      * Fetch rendered string
      *
@@ -127,9 +122,9 @@ class CustomTwig
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Syntax
      */
-    public function fetchFromString($string = "", $data = [])
-    {
+    public function fetchFromString($string = "", $data = []) {
         $data = array_merge($this->defaultVariables, $data);
+
         return $this->environment->createTemplate($string)->render($data);
     }
 
@@ -145,9 +140,9 @@ class CustomTwig
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      */
-    public function render(ResponseInterface $response, $template, $data = [])
-    {
+    public function render(ResponseInterface $response, $template, $data = []) {
         $response->getBody()->write($this->fetch($template, $data));
+
         return $response;
     }
 
@@ -160,8 +155,7 @@ class CustomTwig
      *
      * @return TwigFileSystemLoader
      */
-    public function getLoader()
-    {
+    public function getLoader() {
         return $this->loader;
     }
 
@@ -170,19 +164,17 @@ class CustomTwig
      *
      * @return \Twig_Environment
      */
-    public function getEnvironment()
-    {
+    public function getEnvironment() {
         return $this->environment;
     }
-    
+
     /**
      * @param $template
      *
      * @return bool
      * @throws \Twig_Error_Loader
      */
-    public function hasTemplate($template)
-    {
+    public function hasTemplate($template) {
         return $this->getLoader()->findTemplate($template, false) != false;
     }
 }
