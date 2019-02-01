@@ -51,7 +51,7 @@ class Bootstrap extends AbstractBootstrap {
          * @var $backendNavigation BackendNavigationService
          */
         $backendNavigation = Oforge()->Services()->get("backend.navigation");
-    
+        
         $backendNavigation->put([
             "name" => "admin",
             "order" => 100

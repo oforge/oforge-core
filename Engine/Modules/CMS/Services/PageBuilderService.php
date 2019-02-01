@@ -4,7 +4,7 @@ namespace Oforge\Engine\Modules\CMS\Services;
 
 use Oforge\Engine\Modules\CMS\Models\Page\Page;
 
-class PagesTreeViewService
+class PageBuilderService
 {
     private $entityManager;
     private $repository;
@@ -16,22 +16,13 @@ class PagesTreeViewService
     }
     
     /**
-     * Gets all pages from database and stores the
-     * page object entity array in instance variable $pages
-     */
-    public function getPagesFromDB()
-    {
-        return $this->repository->findAll();
-    }
-    
-    /**
-     * Returns available page entities
+     * Returns all available page entities
      * 
      * @return Page[]|NULL
      */
     public function getPageEntities()
     {
-        $pageEntityArray = $this->getPagesFromDB();
+        $pageEntityArray = $this->repository->findAll();
         
         if (isset($pageEntityArray))
         {
@@ -46,11 +37,16 @@ class PagesTreeViewService
     /**
      * Returns all found pages as an associative array
      * 
-     * @return array Array filled with available pages
+     * @return array|NULL Array filled with available pages
      */
     public function getPageArray()
     {
         $pageEntities = $this->getPageEntities();
+        
+        if (!$pageEntities)
+        {
+            return NULL;    
+        }
         
         $pages = [];
         foreach($pageEntities as $pageEntity)
@@ -59,6 +55,16 @@ class PagesTreeViewService
             $page["id"] = $pageEntity->getId();
             $page["name"] = $pageEntity->getName();
             $page["parent"] = $pageEntity->getParent();
+            
+            $pathEntities = $pageEntity->getPaths();
+            
+            $pathArray = [];
+            foreach($pathEntities as $pathEntity)
+            {
+                $pathArray[] = $pathEntity->getPath();
+            }
+            
+            $page["path"] = $pathArray;
             
             $pages[] = $page;
         }
@@ -69,11 +75,16 @@ class PagesTreeViewService
     /**
      * Generate a jsTree configuration file with page data included
      * 
-     * @return array jsTree configuration file as PHP array
+     * @return array|NULL jsTree configuration file as PHP array
      */
     public function generateJsTreeConfigJSON()
     {
         $pages = $this->getPageArray();
+        
+        if (!$pages)
+        {
+            return NULL;
+        }
         
         $jsTreePageArray = [];
         foreach ($pages as $page)
@@ -90,7 +101,7 @@ class PagesTreeViewService
                 "animation" => 0,
                 "check_callback" => TRUE,
                 "force_text" => TRUE,
-                "themes" => ["stripes" => TRUE],
+                "themes" => ["stripes" => FALSE],
                 "data" => $jsTreePageArray
             ]
         ];

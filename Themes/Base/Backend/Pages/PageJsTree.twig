@@ -1,0 +1,6 @@
+	    <div id="cms_page_controller_jstree" class="col-xs-2 layout-boxed">Tree</div>
+    	<script>
+    	    {% if js %}
+    	    	cms_page_controller_jstree_config = {{ js|json_encode(constant('JSON_PRETTY_PRINT'))|raw }};
+   	    	{% endif %}
+	    </script>
