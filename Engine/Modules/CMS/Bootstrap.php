@@ -22,7 +22,7 @@ use Oforge\Engine\Modules\CMS\Models\Page\PagePath;
 use Oforge\Engine\Modules\CMS\Models\Page\Site;
 use Oforge\Engine\Modules\CMS\Services\DummyPageGenerator;
 use Oforge\Engine\Modules\CMS\Services\PageService;
-use Oforge\Engine\Modules\CMS\Services\PagesTreeViewService;
+use Oforge\Engine\Modules\CMS\Services\PageBuilderService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 
 
@@ -68,7 +68,7 @@ class Bootstrap extends AbstractBootstrap {
         ];
 
         $this->services = [
-            "pages.tree.view" => PagesTreeViewService::class,
+            "pages.tree.view" => PageBuilderService::class,
             "page.path" => PageService::class,
             'dummy.page.generator' => DummyPageGenerator::class
         ];

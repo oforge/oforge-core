@@ -1,21 +1,17 @@
 {% extends "Backend/Master/Index.twig" %}
 
 {% block pagecontent %}
-    TBD
-
-    <ul>
-        <li>CMS Seiten auflisten/bearbeiten/löschen</li>
-    </ul>
-
-    <div>
-        PagesTreeViewService - Pages:
-    </div>
-
-    <div id="page_controller_jstree"></div>
-    <script>
-    	{% if js %}
-			page_controller_tree = {{ js|json_encode(constant('JSON_PRETTY_PRINT'))|raw }};
-		{% endif %}
-    </script>
+ 
+    {% include 'Backend/Pages/PageJsTreeForm.twig' %}
+ 
+ 	<div class="cms-container-pages row">
+ 		{% include 'Backend/Pages/PageJsTree.twig' %}
+		<div id="cms_content" class="col-xs-8 layout-boxed">
+			Content
+		</div>
+		<div id="cms_content_types" class="col--xs-2 layout-boxed">
+			Types
+		</div>
+	</div>
 
 {% endblock %}
