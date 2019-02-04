@@ -13,9 +13,20 @@ use Oforge\Engine\Modules\CMS\Models\Content\Content;
 abstract class AbstractContentType {
     protected $entityManager;
     protected $repository;
+    
+    protected $configuration = [];
+    
     public function __construct() {
         $this->entityManager = Oforge()->DB()->getManager();
         $this->repository = $this->entityManager->getRepository(Content::class);
+    }
+    
+    abstract public function init();
+    
+    public function setConfigurationValue($key, $value) {
+        if (array_key_exists($key, $configuration)) {
+            $$configuration[$key] = $value;
+        }
     }
     
     public function save(array $params) {

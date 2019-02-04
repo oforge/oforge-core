@@ -25,7 +25,7 @@ class PagesController extends AbstractController {
      */
     public function indexAction(Request $request, Response $response) {
         $pageBuilderService = OForge()->Services()->get("pages.tree.view");
-        $data = ["js" => $pageBuilderService->generateJsTreeConfigJSON()];
+        $data = ["js" => ["cms_page_controller_jstree_config" => $pageBuilderService->generateJsTreeConfigJSON()]];
         Oforge()->View()->assign($data);
     }
 
@@ -38,7 +38,7 @@ class PagesController extends AbstractController {
      */
     public function pageselectAction(Request $request, Response $response) {
         $pageBuilderService = OForge()->Services()->get("pages.tree.view");
-        $data = ["js" => $pageBuilderService->generateJsTreeConfigJSON(), "pages" => $pageBuilderService->getPageArray(), "post" => $_POST];
+        $data = ["js" => ["cms_page_controller_jstree_config" => $pageBuilderService->generateJsTreeConfigJSON()], "pages" => $pageBuilderService->getPageArray(), "post" => $_POST];
         Oforge()->View()->assign($data);
     }
     

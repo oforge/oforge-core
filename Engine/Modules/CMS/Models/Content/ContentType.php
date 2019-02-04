@@ -27,6 +27,12 @@ class ContentType extends AbstractModel {
     private $id;
     
     /**
+     * @var ContentTypeGroup
+     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Content\ContentTypeGroup")
+     * @ORM\JoinColumn(name="group_id", referencedColumnName="id")
+     */
+    private $group;
+    /**
      * @var string
      * @ORM\Column(name="content_type_name", type="string", nullable=false, unique=true)
      */
@@ -61,7 +67,25 @@ class ContentType extends AbstractModel {
     public function getId() : ?int {
         return $this->id;
     }
-
+    
+    /**
+     * @return ContentTypeGroup
+     */
+    public function getContentTypeGroup(): ContentTypeGroup
+    {
+        return $this->group;
+    }
+    
+    /**
+     * @param ContentTypeGroup $group
+     * @return ContentType
+     */
+    public function setPage(ContentTypeGroup $group): ContentType
+    {
+        $this->group = $group;
+        return $this;
+    }
+    
     /**
      * @return string
      */

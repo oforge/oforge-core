@@ -14,6 +14,7 @@ use Oforge\Engine\Modules\CMS\Controller\Backend\TypesController;
 use Oforge\Engine\Modules\CMS\Controller\Frontend\PageController;
 use Oforge\Engine\Modules\CMS\Models\Content\Content;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
+use Oforge\Engine\Modules\CMS\Models\Content\ContentTypeGroup;
 use Oforge\Engine\Modules\CMS\Models\Layout\Layout;
 use Oforge\Engine\Modules\CMS\Models\Layout\Slot;
 use Oforge\Engine\Modules\CMS\Models\Page\Page;
@@ -58,6 +59,7 @@ class Bootstrap extends AbstractBootstrap {
             PagePath::class,
             Site::class,
             Slot::class,
+            ContentTypeGroup::class,
             ContentType::class,
             Content::class,
             PageContent::class
