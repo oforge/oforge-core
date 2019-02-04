@@ -3,7 +3,7 @@
 namespace Oforge\Engine\Modules\AdminBackendPlugins;
 
 use Oforge\Engine\Modules\AdminBackend\Controller\Backend\LoginController;
-use Oforge\Engine\Modules\AdminBackendPlugin\Controller\Backend\PluginController;
+use Oforge\Engine\Modules\AdminBackendPlugins\Controller\Backend\PluginController;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 
 
