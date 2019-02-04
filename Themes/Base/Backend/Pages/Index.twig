@@ -4,14 +4,26 @@
  
     {% include 'Backend/Pages/PageJsTreeForm.twig' %}
  
- 	<div class="cms-container-pages row">
- 		{% include 'Backend/Pages/PageJsTree.twig' %}
-		<div id="cms_content" class="col-xs-8 layout-boxed">
-			Content
-		</div>
-		<div id="cms_content_types" class="col--xs-2 layout-boxed">
-			Types
-		</div>
-	</div>
+ 	<div class="container-fluid">
+     	<div class="row">
+     		{% include 'Backend/Pages/PageJsTree.twig' %}
+    		<div id="cms_content" class="col-xs-6">
+    			<div class="box box-solid box-default">
+        			<div class="box-header">
+    					<h4 class="box-title">Content</h4>
+        			</div>
+        	    	<div class="box-body" id="cms_page_controller_content">Display content builder here</div>
+        		</div>
+    		</div>
+    		<div id="cms_content_types" class="col-xs-3">
+    			<div class="box box-solid box-default">
+        			<div class="box-header">
+    					<h4 class="box-title">Types</h4>
+        			</div>
+        	    	<div class="box-body" id="cms_page_controller_types">Display content types here</div>
+        		</div>
+    		</div>
+    	</div>
+ 	</div>
 
 {% endblock %}
