@@ -1,5 +1,5 @@
 <?php
-namespace Oforge\Engine\Modules\AdminBackendPlugin\Controller\Backend;
+namespace Oforge\Engine\Modules\AdminBackendPlugins\Controller\Backend;
 
 use Oforge\Engine\Modules\AdminBackend\Abstracts\SecureBackendController;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;

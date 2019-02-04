@@ -116,6 +116,14 @@ class EndpointService {
                 $methods    = ArrayHelper::get( $config, 'methods', [] );
                 
                 $classMethods = get_class_methods( $config['controller'] );
+
+                if ($classMethods === null) {
+                    // TODO: Check, if this logger usage is safe!
+                    Oforge()->Logger()->get()->addWarning("Maybe some namespace, class or method was defined wrong.");
+                    Oforge()->Logger()->get()->addWarning(json_encode($config));
+                    $classMethods = [];
+                }
+
                 if ( ! empty( $methods ) ) {
                     $classMethods = array_intersect( array_keys( $methods ), $classMethods );
                 }
