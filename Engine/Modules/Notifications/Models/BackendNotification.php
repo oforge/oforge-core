@@ -152,10 +152,12 @@ class BackendNotification extends AbstractModel {
     }
 
     /**
+     * @param bool $seen
+     *
      * @return BackendNotification
      */
-    public function setAsSeen() : BackendNotification {
-        $this->seen = true;
+    public function setSeen(bool $seen) : BackendNotification {
+        $this->seen = $seen;
 
         return $this;
     }
