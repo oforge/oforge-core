@@ -44,10 +44,10 @@ class LoggerManager {
         foreach ($settings as $setting) {
             if (isset($setting['name'])) {
                 $name = $setting['name'];
-                if (!isset($this->defaultLoggerName)) {
+                if (empty($this->defaultLoggerName)) {
                     $this->defaultLoggerName = $name;
                 }
-                $this->initLogger($setting['name'], $setting);
+                $this->initLogger($name, $setting);
             }
         }
     }
@@ -81,10 +81,10 @@ class LoggerManager {
      * @return Logger
      */
     public function get(?string $name = null) : Logger {
-        if (!isset($this->logger[$name])) {
+        if (empty($name) || !isset($this->logger[$name])) {
             $name = $this->defaultLoggerName;
         }
-
+        // TODO: Implement exception if no logger was found
         return $this->logger[$name];
     }
 
