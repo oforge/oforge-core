@@ -10,10 +10,9 @@ class BackendNotificationService extends AbstractNotificationService {
     private $entityManager;
     private $repository;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->entityManager = Oforge()->DB()->getManager();
-        $this->repository = $this->entityManager->getRepository(BackendNotification::class);
+        $this->repository    = $this->entityManager->getRepository(BackendNotification::class);
     }
 
     /**
@@ -49,7 +48,7 @@ class BackendNotificationService extends AbstractNotificationService {
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function addNotification($userId, $type, $message, $link) {
+    public function addNotification($userId, $type, $message, $link = null) {
         $notification = new BackendNotification();
 
         $notification->setUserId($userId);
@@ -82,7 +81,7 @@ class BackendNotificationService extends AbstractNotificationService {
      * @return array|object[]
      */
     public function getRoleNotifications($role) {
-        return $this->repository->findBy(['group' => $role]);
+        return $this->repository->findBy(['role' => $role]);
     }
 
     /**
@@ -97,7 +96,7 @@ class BackendNotificationService extends AbstractNotificationService {
     public function addRoleNotification($role, $type, $message, $link) {
         $notification = new BackendNotification();
 
-        $notification->setGroup($role);
+        $notification->setRole($role);
         $notification->setType($type);
         $notification->setMessage($message);
         $notification->setLink($link);
