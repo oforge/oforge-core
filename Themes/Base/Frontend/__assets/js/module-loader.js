@@ -4,6 +4,49 @@
  * Other modules will be loaded when the selector matches. Otherwise it will be ignored
  */
 var Oforge = (function() {
+    var validProperties = [
+        {name: 'name', type: 'string'},
+        {name: 'selector', type: 'string'},
+        {name: 'init', type: 'function'}
+    ];
+
+    var isValid = function (moduleData) {
+        return validProperties.every(function (property) {
+           return (
+               moduleData.hasOwnProperty.call(moduleData, property.name) &&
+               typeof moduleData[property.name] === property.type
+           );
+        });
+    };
+
+    /**
+     * Check if the module has already been registered
+     * @param moduleName
+     * @returns {boolean}
+     */
+    var moduleExists = function(moduleName) {
+        return Oforge.registeredModules.some(function (element) {
+            if (element.hasOwnProperty.call(element, 'name')) {
+                return element.name === moduleName;
+            }
+        });
+    };
+
+    /**
+     * remove a module from the registered module list
+     * @param moduleData
+     */
+    var removeModule = function (moduleData) {
+        var moduleIndex = Oforge.registeredModules.findIndex(function (element, index) {
+            if (
+                element.hasOwnProperty.call(element, 'name') &&
+                element.name === moduleData.name
+            ) {
+                return index;
+            }
+        });
+        Oforge.registeredModules.splice(moduleIndex, 1);
+    };
 
     return {
         /**
@@ -13,34 +56,49 @@ var Oforge = (function() {
 
         /**
          * Register a new module
-         * @param selector The module name is an element selector. Our recommendation is to use data-attributes like data-module="modulename"
-         * @param moduleData An object literal that has to consist of two properties: name (the name of the module for internal use),
-         *                   init() (function to initialize the module)
+         * @param moduleData An object literal that has to consist of the following properties:
+         *                   - name (the name of the module for internal use),
+         *                   - selector (a css selector for ui)
+         *                   - init() (function to initialize the module)
          */
-        register: function (selector, moduleData) {
+        register: function (moduleData) {
             var self = this;
-            var moduleElements = document.querySelectorAll(selector);
+            var moduleElements;
+            var moduleName;
 
-            if ( self.registeredModules.some(function (element) {
-                if (element.hasOwnProperty.call(element, 'name')) {
-                    return element.name === selector;
-                }
-            })) {
-                console.log(selector +  " already registered");
+            if (!isValid(moduleData)) {
+                console.warn("Module is not valid. ",
+                    "Module: ",
+                    moduleData,
+                    "Module must consist of the following properties: ",
+                    validProperties);
                 return;
             }
 
-            if (moduleElements.length < 1) {
-                return null;
+            moduleName = moduleData.name;
+
+            if (moduleExists(moduleName)) {
+                console.warn("Module " + moduleName + " is already registered. ", moduleData);
+                return;
             }
 
-            if (
-                moduleData.hasOwnProperty('name') &&
-                moduleData.hasOwnProperty('init') &&
-                typeof moduleData.init === 'function'
-            ) {
-                self.registeredModules.push(moduleData);
+            moduleElements = document.querySelectorAll(moduleData.selector);
+
+            // the module's selector is not found in the current page context, so we don't need the module here
+            if (moduleElements.length < 1) {
+                return;
             }
+
+            self.registeredModules.push(moduleData);
+        },
+        overwrite: function (moduleData) {
+            var self = this;
+            removeModule(moduleData);
+            self.register(moduleData);
+        },
+        unregister: function (moduleData) {
+            // TODO: maybe we have to remove the module's eventlisteners
+            removeModule(moduleData);
         }
     };
 })();
@@ -49,7 +107,6 @@ var Oforge = (function() {
  * After all Dom content is loaded, initialize all registered modules.
  */
 document.addEventListener('DOMContentLoaded', function (event) {
-
     if (typeof Oforge !== 'undefined') {
         Oforge.registeredModules.forEach(function (elem, index) {
             elem.init();
