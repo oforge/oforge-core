@@ -20,11 +20,24 @@ class BackendNotificationService extends AbstractNotificationService {
      * Returns array of user
      *
      * @param $userId
+     * @param string $selector
      *
      * @return array|object[]
      */
-    public function getNotifications($userId) {
-        return $this->repository->findBy(['userId' => $userId]);
+    public function getNotifications($userId, $selector = AbstractNotificationService::ALL) {
+        switch ($selector) {
+            case AbstractNotificationService::ALL:
+                return $this->repository->findBy(['userId' => $userId]);
+                break;
+            case AbstractNotificationService::SEEN;
+                return $this->repository->findBy(['userId' => $userId, 'seen' => 1]);
+                break;
+            case AbstractNotificationService::UNSEEN:
+                return $this->repository->findBy(['userId' => $userId, 'seen' => 0]);
+                break;
+            default:
+                return null;
+        }
     }
 
     /**
@@ -57,7 +70,7 @@ class BackendNotificationService extends AbstractNotificationService {
     public function markAsSeen($id) {
         $notification = $this->repository->find($id);
 
-        $notification->setAsSeen();
+        $notification->setSeen(true);
 
         $this->entityManager->persist($notification);
         $this->entityManager->flush();
