@@ -13,10 +13,15 @@ class Bootstrap extends AbstractBootstrap {
      */
     public function __construct() {
         $this->endpoints = [
-            "/backend/settings[/]"      => ["controller" => SystemSettingsController::class, "name" => "backend_settings", "asset_scope" => "Backend"],
-            "/backend/settings/{group}" => ["controller"  => SystemSettingsGroupController::class,
-                                            "name"        => "backend_settings_group",
-                                            "asset_scope" => "Backend",
+            "/backend/settings[/]"      => [
+                "controller"  => SystemSettingsController::class,
+                "name"        => "backend_settings",
+                "asset_scope" => "Backend",
+            ],
+            "/backend/settings/{group}" => [
+                "controller"  => SystemSettingsGroupController::class,
+                "name"        => "backend_settings_group",
+                "asset_scope" => "Backend",
             ],
         ];
     }
