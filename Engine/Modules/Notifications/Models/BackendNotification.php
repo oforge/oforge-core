@@ -9,6 +9,7 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 /**
  * @ORM\Table(name="oforge_backend_notifications")
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  */
 class BackendNotification extends AbstractModel {
     /**
@@ -51,16 +52,27 @@ class BackendNotification extends AbstractModel {
     private $seen = false;
 
     /**
-     * @var string
-     * @ORM\Column(name="timestamp", type="datetime", nullable=false);
+     * @var \DateTime
+     * @ORM\Column(name="timestamp", type="datetime", nullable=true);
      */
     private $timestamp;
 
     /**
      * @var int
-     * @ORM\Column(name="group", type="integer", nullable=true)
+     * @ORM\Column(name="role", type="integer", nullable=true)
      */
-    private $group = null;
+    private $role = null;
+
+    /**
+     * Triggered on insert
+     *
+     * @ORM\PrePersist
+     * @throws \Exception
+     */
+    public function onPrePersist() {
+        echo "blub";
+        $this->timestamp = new \DateTime("now");
+    }
 
     /**
      * @return int
@@ -107,8 +119,8 @@ class BackendNotification extends AbstractModel {
     /**
      * @return int
      */
-    public function getGroup() : int {
-        return $this->group;
+    public function getRole() : int {
+        return $this->role;
     }
 
     /**
@@ -163,12 +175,12 @@ class BackendNotification extends AbstractModel {
     }
 
     /**
-     * @param int $group
+     * @param int $role
      *
      * @return BackendNotification
      */
-    public function setGroup(int $group) : BackendNotification {
-        $this->group = $group;
+    public function setRole(int $role) : BackendNotification {
+        $this->role = $role;
 
         return $this;
     }
