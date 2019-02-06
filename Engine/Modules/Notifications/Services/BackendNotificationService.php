@@ -16,6 +16,15 @@ class BackendNotificationService extends AbstractNotificationService {
     }
 
     /**
+     * @param $id
+     *
+     * @return object|null
+     */
+    public function getNotificationById($id) {
+        return $this->repository->find($id);
+    }
+
+    /**
      * Returns array of user
      *
      * @param $userId
