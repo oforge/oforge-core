@@ -10,12 +10,14 @@ namespace Oforge\Engine\Modules\CMS\Models\Content;
 
 use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
+use Oforge\Engine\Modules\CMS\Models\Page\Page;
 
 /**
  * @ORM\Table(name="oforge_cms_content")
  * @ORM\Entity
  */
-class Content extends AbstractModel {
+class Content extends AbstractModel
+{
     /**
      * @var int
      * @ORM\Column(name="id", type="integer", nullable=false)
@@ -23,105 +25,145 @@ class Content extends AbstractModel {
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-
+    
+    /**
+     * @var ContentType
+     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Page\Page")
+     * @ORM\JoinColumn(name="page_id", referencedColumnName="id")
+     */
+    private $page;
+    
+    /**
+     * @var ContentType
+     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Content\ContentType")
+     * @ORM\JoinColumn(name="content_type_id", referencedColumnName="id")
+     */
+    private $type;
+    
+    /**
+     * @var int
+     * @ORM\Column(name="parent_id", type="integer", nullable=true)
+     */
+    private $parent;
+    
+    /**
+     * @var int
+     * @ORM\Column(name="sort_order", type="integer", nullable=true)
+     */
+    private $sort_order;
+    
     /**
      * @var string
-     * @ORM\Column(name="content_name", type="string", nullable=false, unique=true)
+     * @ORM\Column(name="content_name", type="string", nullable=false)
      */
     private $name;
     
     /**
      * @var mixed
-     * @ORM\Column(name="content_data", type="object", nullable=true)
+     * @ORM\Column(name="content_configuration", type="object", nullable=true)
      */
-    private $data;
-    
-    /**
-     * @var int
-     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Content\Content")
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
-     * @ORM\Column(name="parent_id", type="integer")
-     */
-    private $parent;
-    
-    /**
-     * @var ContentType
-     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Content\ContentType")
-     * @ORM\JoinColumn(name="type", referencedColumnName="id")
-     */
-    private $type;
+    private $configuration;
     
     /**
      * @return int
      */
-    public function getId() : ?int {
+    public function getId(): ?int {
         return $this->id;
     }
     
     /**
-     * @param int $id
+     * @return Page
      */
-    public function setId(int $id) : void {
-        $this->id = $id;
+    public function getPage(): ?Page
+    {
+        return $this->page;
     }
     
     /**
-     * @return string
+     * @param Page $page
      */
-    public function getName() : string {
-        return $this->name;
-    }
-    
-    /**
-     * @param string $name
-     */
-    public function setName(string $name) : void {
-        $this->name = $name;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getData()  {
-        return $this->data;
-    }
-    
-    /**
-     * @param mixed $data
-     */
-    public function setData($data) : void {
-        $this->data = $data;
+    public function setPage(?Page $page)
+    {
+        $this->page = $page;
     }
     
     /**
      * @return ContentType
      */
-    public function getType() : ContentType {
+    public function getType(): ?ContentType
+    {
         return $this->type;
     }
     
     /**
      * @param ContentType $type
-     *
-     * @return Content
      */
-    public function setType(ContentType $type) : Content {
+    public function setType(?ContentType $type)
+    {
         $this->type = $type;
-        return $this;
     }
-    
     
     /**
      * @return int
      */
-    public function getParent() : int {
+    public function getParent(): int
+    {
         return $this->parent;
     }
     
     /**
      * @param int $parent
      */
-    public function setParent(int $parent) : void {
+    public function setParent(int $parent)
+    {
         $this->parent = $parent;
+    }
+    
+    /**
+     * @return int
+     */
+    public function getSortOrder(): int
+    {
+        return $this->sort_order;
+    }
+    
+    /**
+     * @param int $order
+     */
+    public function setSortOrder(int $sort_order)
+    {
+        $this->sort_order = $sort_order;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+    
+    /**
+     * @param string $name
+     */
+    public function setName(string $name)
+    {
+        $this->name = $name;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getConfiguration()
+    {
+        return $this->configuration;
+    }
+    
+    /**
+     * @param mixed $data
+     */
+    public function setConfiguration($configuration)
+    {
+        $this->configuration = $configuration;
     }
 }
