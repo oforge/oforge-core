@@ -10,6 +10,7 @@ namespace Oforge\Engine\Modules\CMS\Models\Page;
 
 use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
+use Oforge\Engine\Modules\CMS\Models\Content\ContentLocalization;
 use Oforge\Engine\Modules\I18n\Models\Language;
 
 /**
@@ -25,34 +26,34 @@ class PagePath extends AbstractModel
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-
-    /**
-     * @var string
-     * @ORM\Column(name="path", type="string", nullable=false)
-     */
-    private $path;
-
-    /**
-     * @var Language
-     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\I18n\Models\Language")
-     * @ORM\JoinColumn(name="language_id", referencedColumnName="id")
-     */
-    private $language;
-
+    
     /**
      * @var Page
      * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Page\Page")
      * @ORM\JoinColumn(name="page_id", referencedColumnName="id")
      */
     private $page;
-
+    
     /**
-     * @var PageContent[]
-     * @ORM\OneToMany(targetEntity="Oforge\Engine\Modules\CMS\Models\Page\PageContent", mappedBy="pagePath", cascade={"all"})
+     * @var Language
+     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\I18n\Models\Language")
+     * @ORM\JoinColumn(name="language_id", referencedColumnName="id")
+     */
+    private $language;
+    
+    /**
+     * @var string
+     * @ORM\Column(name="path", type="string", nullable=false)
+     */
+    private $path;
+    
+    /**
+     * @var ContentLocalization[]
+     * @ORM\OneToMany(targetEntity="Oforge\Engine\Modules\CMS\Models\Content\ContentLocalization", mappedBy="page_path", cascade={"all"})
      * @ORM\JoinColumn(name="id", referencedColumnName="page_path_id")
      */
-    private $pageContent;
-
+    private $content_localization;
+    
     /**
      * @return int
      */
@@ -60,23 +61,37 @@ class PagePath extends AbstractModel
     {
         return $this->id;
     }
-
+    
+    /**
+     * @return Page
+     */
+    public function getPage(): ?Page
+    {
+        return $this->page;
+    }
+    
+    /**
+     * @param Page $page
+     */
+    public function setPage(?Page $page)
+    {
+        $this->page = $page;
+    }
+    
     /**
      * @return Language
      */
-    public function getLanguage(): Language
+    public function getLanguage(): ?Language
     {
         return $this->language;
     }
 
     /**
      * @param Language $language
-     * @return PagePath
      */
-    public function setLanguage(Language $language) : PagePath
+    public function setLanguage(?Language $language)
     {
         $this->language = $language;
-        return $this;
     }
 
     /**
@@ -91,45 +106,24 @@ class PagePath extends AbstractModel
      * @param string $path
      * @return PagePath
      */
-    public function setPath(string $path): PagePath
+    public function setPath(string $path)
     {
         $this->path = $path;
-        return $this;
     }
 
     /**
-     * @return Page
+     * @return ContentLocalization[]
      */
-    public function getPage(): Page
+    public function getContentLocalization()
     {
-        return $this->page;
+        return $this->content_localization;
     }
 
     /**
-     * @param Page $page
-     * @return PagePath
+     * @param ContentLocalization[] $contentLocalization
      */
-    public function setPage(Page $page): PagePath
+    public function setContentLocalization(array $content_localization)
     {
-        $this->page = $page;
-        return $this;
-    }
-
-    /**
-     * @return PageContent[]
-     */
-    public function getPageContent()
-    {
-        return $this->pageContent;
-    }
-
-    /**
-     * @param PageContent[] $pageContent
-     * @return PagePath
-     */
-    public function setPageContent(array $pageContent): PagePath
-    {
-        $this->pageContent = $pageContent;
-        return $this;
+        $this->content_localization = $content_localization;
     }
 }

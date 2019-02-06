@@ -25,6 +25,7 @@ use Oforge\Engine\Modules\CMS\Services\DummyPageGenerator;
 use Oforge\Engine\Modules\CMS\Services\PageService;
 use Oforge\Engine\Modules\CMS\Services\PageBuilderService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
+use Oforge\Engine\Modules\CMS\Models\Content\ContentLocalization;
 
 
 class Bootstrap extends AbstractBootstrap {
@@ -54,15 +55,15 @@ class Bootstrap extends AbstractBootstrap {
         ];
 
         $this->models = [
-            Layout::class,
-            Page::class,
-            PagePath::class,
             Site::class,
+            Layout::class,
             Slot::class,
             ContentTypeGroup::class,
             ContentType::class,
             Content::class,
-            PageContent::class
+            ContentLocalization::class,
+            Page::class,
+            PagePath::class
         ];
         
         $this->dependencies = [
@@ -85,7 +86,6 @@ class Bootstrap extends AbstractBootstrap {
     {
         $service = Oforge()->Services()->get("dummy.page.generator");
         $service->create();
-
 
         $sidebarNavigation = Oforge()->Services()->get("backend.navigation");
 

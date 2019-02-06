@@ -15,7 +15,8 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
  * @ORM\Table(name="oforge_cms_slot")
  * @ORM\Entity
  */
-class Slot extends AbstractModel {
+class Slot extends AbstractModel
+{
     /**
      * @var int
      * @ORM\Column(name="id", type="integer", nullable=false)
@@ -33,22 +34,24 @@ class Slot extends AbstractModel {
     /**
      * @return int
      */
-    public function getId(): ?int {
+    public function getId(): ?int
+    {
         return $this->id;
     }
-    
 
     /**
      * @return string
      */
-    public function getName(): string {
+    public function getName(): string
+    {
         return $this->name;
     }
     
     /**
      * @param string $name
      */
-    public function setName( string $name ): void {
+    public function setName(string $name)
+    {
         $this->name = $name;
     }
 }

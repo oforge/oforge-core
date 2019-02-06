@@ -10,40 +10,97 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
  * @ORM\Table(name="oforge_cms_content_type_group")
  * @ORM\Entity
  */
-class ContentTypeGroup extends AbstractModel {
+class ContentTypeGroup extends AbstractModel
+{
     /**
      * @var int
      * @ORM\ManyToOne(targetEntity="ContentType", inversedBy="child_types")
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="NONE")
      */
     private $id;
     
     /**
      * @var string
-     * @ORM\Column(name="content_type_name", type="string", nullable=false, unique=true)
+     * @ORM\Column(name="content_type_group_name", type="string", nullable=false, unique=true)
      */
     private $name;
     
     /**
+     * @var string
+     * @ORM\Column(name="description", type="string", nullable=false, unique=true)
+     */
+    private $description;
+    
+    /**
+     * @var ContentType[]
+     * @ORM\OneToMany(targetEntity="Oforge\Engine\Modules\CMS\Models\Content\ContentType", mappedBy="group", cascade={"all"})
+     * @ORM\JoinColumn(name="id", referencedColumnName="content_type_group_id")
+     */
+    private $types;
+    
+    /**
      * @return int
      */
-    public function getId() : ?int {
+    public function getId(): ?int
+    {
         return $this->id;
     }
-
+    
+    /**
+     * @param int $id
+     */
+    public function setId(int $id)
+    {
+        $this->id = $id;
+    }
+    
     /**
      * @return string
      */
-    public function getName() : string {
+    public function getName(): string
+    {
         return $this->name;
     }
     
     /**
      * @param string $name
      */
-    public function setName(string $name) : void {
+    public function setName(string $name)
+    {
         $this->name = $name;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+    
+    /**
+     * @param string $description
+     */
+    public function setDescription(string $description)
+    {
+        $this->description = $description;
+    }
+    
+    /**
+     * @return ContentType[]
+     */
+    public function getContentTypes()
+    {
+        return $this->types;
+    }
+    
+    /**
+     * @param ContentType[] $types
+     */
+    public function ContentType(array $types)
+    {
+        $this->types = $types;
     }
 }
