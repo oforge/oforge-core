@@ -6,7 +6,7 @@
  * Time: 10:34
  */
 
-namespace Oforge\Engine\Modules\CMS\Models\Page;
+namespace Oforge\Engine\Modules\CMS\Models\Site;
 
 use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
