@@ -35,7 +35,7 @@ class Page extends AbstractModel
     
     /**
      * @var int
-     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Page\Site")
+     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Site\Site")
      * @ORM\JoinColumn(name="site_id", referencedColumnName="id")
      * @ORM\Column(name="site_id", type="integer")
      */
