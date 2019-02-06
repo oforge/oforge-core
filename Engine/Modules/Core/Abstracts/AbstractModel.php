@@ -35,6 +35,7 @@ class AbstractModel {
      * @param array $fillable
      *
      * @return $this
+     * @throws \ReflectionException
      */
     public function fromArray(array $array = [], array $fillable = []) {
         foreach ($array as $key => $value) {
