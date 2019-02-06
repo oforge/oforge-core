@@ -114,7 +114,7 @@ class EndpointService {
                 $scope      = ArrayHelper::get( $config, 'asset_scope', 'frontend' );
                 $order      = ArrayHelper::get( $config, 'order', 1337 );
                 $methods    = ArrayHelper::get( $config, 'methods', [] );
-                
+
                 $classMethods = get_class_methods( $config['controller'] );
 
                 if ($classMethods === null) {
@@ -158,10 +158,13 @@ class EndpointService {
                         'order'       => $order
                     ];
                 }
+                if (empty($endpointConfigs)) {
+                    Oforge()->Logger()->get()->addWarning('An endpoint was defined but the corresponding controller has no method that ends with ...Action',
+                        json_encode($config));
+                }
             }
         }
         
         return $endpointConfigs;
     }
-    
 }
