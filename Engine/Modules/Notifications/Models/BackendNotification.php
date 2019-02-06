@@ -70,7 +70,6 @@ class BackendNotification extends AbstractModel {
      * @throws \Exception
      */
     public function onPrePersist() {
-        echo "blub";
         $this->timestamp = new \DateTime("now");
     }
 
