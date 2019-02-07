@@ -1,4 +1,5 @@
 .git
+.settings
 .idea/*
 !/.idea/codeStyles/
 !/.idea/dictionaries/
