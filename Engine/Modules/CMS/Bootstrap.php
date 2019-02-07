@@ -13,17 +13,18 @@ use Oforge\Engine\Modules\CMS\Controller\Backend\PagesController;
 use Oforge\Engine\Modules\CMS\Controller\Backend\TypesController;
 use Oforge\Engine\Modules\CMS\Controller\Frontend\PageController;
 use Oforge\Engine\Modules\CMS\Models\Content\Content;
+use Oforge\Engine\Modules\CMS\Models\Content\ContentLocalization;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
+use Oforge\Engine\Modules\CMS\Models\Content\ContentTypeGroup;
 use Oforge\Engine\Modules\CMS\Models\Layout\Layout;
 use Oforge\Engine\Modules\CMS\Models\Layout\Slot;
 use Oforge\Engine\Modules\CMS\Models\Page\Page;
-use Oforge\Engine\Modules\CMS\Models\Page\PageContent;
 use Oforge\Engine\Modules\CMS\Models\Page\PagePath;
-use Oforge\Engine\Modules\CMS\Models\Page\Site;
+use Oforge\Engine\Modules\CMS\Models\Site\Site;
 use Oforge\Engine\Modules\CMS\Services\DummyPageGenerator;
 use Oforge\Engine\Modules\CMS\Services\PageService;
+use Oforge\Engine\Modules\CMS\Services\PageBuilderService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
-
 
 class Bootstrap extends AbstractBootstrap {
     public function __construct() {
@@ -52,14 +53,15 @@ class Bootstrap extends AbstractBootstrap {
         ];
 
         $this->models = [
-            Layout::class,
-            Page::class,
-            PagePath::class,
             Site::class,
+            Layout::class,
             Slot::class,
+            ContentTypeGroup::class,
             ContentType::class,
             Content::class,
-            PageContent::class
+            ContentLocalization::class,
+            Page::class,
+            PagePath::class
         ];
         
         $this->dependencies = [
@@ -67,6 +69,7 @@ class Bootstrap extends AbstractBootstrap {
         ];
 
         $this->services = [
+            "pages.tree.view" => PageBuilderService::class,
             "page.path" => PageService::class,
             'dummy.page.generator' => DummyPageGenerator::class
         ];
@@ -81,7 +84,6 @@ class Bootstrap extends AbstractBootstrap {
     {
         $service = Oforge()->Services()->get("dummy.page.generator");
         $service->create();
-
 
         $sidebarNavigation = Oforge()->Services()->get("backend.navigation");
 

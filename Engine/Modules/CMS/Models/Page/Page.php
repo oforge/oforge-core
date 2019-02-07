@@ -24,12 +24,6 @@ class Page extends AbstractModel
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-    
-    /**
-     * @var string
-     * @ORM\Column(name="page_name", type="string", nullable=false, unique=true)
-     */
-    private $name;
 
     /**
      * @var int
@@ -40,6 +34,26 @@ class Page extends AbstractModel
     private $layout;
     
     /**
+     * @var int
+     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Site\Site")
+     * @ORM\JoinColumn(name="site_id", referencedColumnName="id")
+     * @ORM\Column(name="site_id", type="integer")
+     */
+    private $site;
+
+    /**
+     * @var int
+     * @ORM\Column(name="parent_id", type="integer", nullable=true)
+     */
+    private $parent;
+    
+    /**
+     * @var string
+     * @ORM\Column(name="page_name", type="string", nullable=false, unique=true)
+     */
+    private $name;
+    
+    /**
      * @var PagePath[]
      * @ORM\OneToMany(targetEntity="Oforge\Engine\Modules\CMS\Models\Page\PagePath", mappedBy="page", cascade={"all"})
      * @ORM\JoinColumn(name="id", referencedColumnName="page_id")
@@ -47,33 +61,11 @@ class Page extends AbstractModel
     private $paths;
     
     /**
-     * @var int
-     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Page\Site")
-     * @ORM\JoinColumn(name="site_id", referencedColumnName="id")
-     * @ORM\Column(name="site_id", type="integer")
-     */
-    private $site;
-
-    /**
      * @return int
      */
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName(): string {
-        return $this->name;
-    }
-    
-    /**
-     * @param string $name
-     */
-    public function setName( string $name ): void {
-        $this->name = $name;
     }
 
     /**
@@ -87,7 +79,7 @@ class Page extends AbstractModel
     /**
      * @param int $layout
      */
-    public function setLayout(int $layout): void
+    public function setLayout(int $layout)
     {
         $this->layout = $layout;
     }
@@ -95,28 +87,64 @@ class Page extends AbstractModel
     /**
      * @return int
      */
-    public function getSite() : int {
+    public function getSite(): int
+    {
         return $this->site;
     }
     
     /**
      * @param int $site
      */
-    public function setSite(int $site) : void {
+    public function setSite(int $site)
+    {
         $this->site = $site;
+    }
+    
+    /**
+     * @return int
+     */
+    public function getParent(): int
+    {
+        return $this->parent;
+    }
+    
+    /**
+     * @param int $parent
+     */
+    public function setParent(int $parent)
+    {
+        $this->parent = $parent;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+    
+    /**
+     * @param string $name
+     */
+    public function setName(string $name)
+    {
+        $this->name = $name;
     }
     
     /**
      * @return PagePath[]
      */
-    public function getPaths()  {
+    public function getPaths()
+    {
         return $this->paths;
     }
     
     /**
      * @param PagePath[] $paths
      */
-    public function setPaths(array $paths) : void {
+    public function setPaths(array $paths)
+    {
         $this->paths = $paths;
     }
 }

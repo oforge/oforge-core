@@ -41,7 +41,8 @@ class Layout extends AbstractModel
      */
     private $slots;
     
-    public function __construct() {
+    public function __construct()
+    {
         $this->slots = new ArrayCollection();
     }
     
@@ -56,14 +57,16 @@ class Layout extends AbstractModel
     /**
      * @return string
      */
-    public function getName(): string {
+    public function getName(): string
+    {
         return $this->name;
     }
     
     /**
      * @param string $name
      */
-    public function setName( string $name ): void {
+    public function setName(string $name)
+    {
         $this->name = $name;
     }
 }
