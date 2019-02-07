@@ -64,6 +64,7 @@ class LoginController extends AbstractController
          */
         if (!isset($body['token']) || empty($body['token'])) {
             Oforge()->Logger()->get()->addWarning("Someone tried to do a backend login with a form without csrf token! Redirecting to backend login.");
+            
             return $response->withRedirect($uri, 302);
         }
         

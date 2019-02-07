@@ -10,7 +10,7 @@ namespace Oforge\Engine\Modules\CMS\ContentTypes;
 
 use Oforge\Engine\Modules\CMS\Abstracts\AbstractContentType;
 
-class Image extends AbstractContentType {
+class Row extends AbstractContentType {
     function init() {
         $configuration = [
             "width" => "100px",

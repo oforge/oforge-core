@@ -3,7 +3,7 @@
 {% block pagecontent %}
  
     {% include 'Backend/Pages/PageJsTreeForm.twig' %}
- 
+    
  	<div class="container-fluid">
      	<div class="row">
      		{% include 'Backend/Pages/PageJsTree.twig' %}
@@ -12,7 +12,17 @@
         			<div class="box-header">
     					<h4 class="box-title">Content</h4>
         			</div>
-        	    	<div class="box-body" id="cms_page_controller_content">Select a page for editing!</div>
+        	    	<div class="box-body" id="cms_page_controller_content">
+            			<div>
+            				<p>Url: <input type="text" value="{{ pages[post["cms_page_jstree_selected_page"]-1].path.0 }}"></p>
+            			</div>
+            			<div>
+            				<p><input type="checkbox" id="cms_page_active" name="cms_page_active">&nbsp;Aktiv</p>
+            			</div>
+            			<div>
+            				<p><a href="">Globals</a></p>
+            			</div>
+        	    	</div>
         		</div>
     		</div>
     		<div id="cms_content_types" class="col-xs-3">
@@ -25,5 +35,5 @@
     		</div>
     	</div>
  	</div>
-
+ 	
 {% endblock %}
