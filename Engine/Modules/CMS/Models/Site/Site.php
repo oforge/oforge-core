@@ -6,7 +6,7 @@
  * Time: 10:34
  */
 
-namespace Oforge\Engine\Modules\CMS\Models\Page;
+namespace Oforge\Engine\Modules\CMS\Models\Site;
 
 use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
@@ -27,6 +27,12 @@ class Site extends AbstractModel
     
     /**
      * @var string
+     * @ORM\Column(name="site_name", type="string", nullable=false, unique=true)
+     */
+    private $name;
+    
+    /**
+     * @var string
      * @ORM\Column(name="domain", type="string", nullable=false, unique=true)
      */
     private $domain;
@@ -37,7 +43,7 @@ class Site extends AbstractModel
      * @ORM\JoinColumn(name="default_language_id", referencedColumnName="id")
      * @ORM\Column(name="default_language_id", type="integer")
      */
-    private $defaultLanguage;
+    private $default_language;
     
     /**
      * @return int
@@ -50,28 +56,48 @@ class Site extends AbstractModel
     /**
      * @return string
      */
-    public function getDomain(): string {
+    public function getName(): string
+    {
+        return $this->name;
+    }
+    
+    /**
+     * @param string $name
+     */
+    public function setName(string $name)
+    {
+        $this->name = $name;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getDomain(): string
+    {
         return $this->domain;
     }
     
     /**
      * @param string $domain
      */
-    public function setDomain( string $domain ): void {
+    public function setDomain(string $domain)
+    {
         $this->domain = $domain;
     }
     
     /**
      * @return int
      */
-    public function getDefaultLanguage(): int {
-        return $this->defaultLanguage;
+    public function getDefaultLanguage(): int
+    {
+        return $this->default_language;
     }
     
     /**
      * @param int $defaultLanguage
      */
-    public function setDefaultLanguage(int $defaultLanguage): void {
-        $this->defaultLanguage = $defaultLanguage;
+    public function setDefaultLanguage(int $default_language)
+    {
+        $this->default_language = $default_language;
     }
 }
