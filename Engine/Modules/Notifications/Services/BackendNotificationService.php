@@ -57,13 +57,15 @@ class BackendNotificationService extends AbstractNotificationService {
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function addNotification($userId, $type, $message, $link = null) {
+    public function addNotification($userId, $type, $message, $link = "") {
         $notification = new BackendNotification();
 
         $notification->setUserId($userId);
         $notification->setType($type);
         $notification->setMessage($message);
-        $notification->setLink($link);
+        if(!strcmp($link,"")) {
+            $notification->setLink($link);
+        }
 
         $this->entityManager->persist($notification);
         $this->entityManager->flush();
