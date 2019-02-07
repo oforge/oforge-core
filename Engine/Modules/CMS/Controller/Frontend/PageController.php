@@ -39,16 +39,8 @@ class PageController extends AbstractController {
             }
         }
 
-        Oforge()->View()->assign(["template.path" => "\Frontend\Page\\404.twig"]);
+        Oforge()->View()->assign(["template.path" => "/Frontend/Page/404.twig"]);
 
         return $response->withStatus(404);
-        //add 404
-        
-        /* TODO:
-           
-           - add pageservice and models ([page] id, name, url, {language}) ([contentblock] id, name, type, content), ([pagecontent] id, pageid, contentid)
-           - add page crud
-           - add content crud
-        */
     }
 }

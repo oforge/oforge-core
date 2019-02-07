@@ -75,10 +75,14 @@ class TemplateRenderService {
         $templatePath .= DIRECTORY_SEPARATOR . $region . DIRECTORY_SEPARATOR . (isset($moduleName) ? ($moduleName . DIRECTORY_SEPARATOR) : "") . $controllerName
                          . DIRECTORY_SEPARATOR . ucwords($fileName) . ".twig";
 
-        if (isset($data["template.path"])) {
+        if (isset($data["template"]["path"])) {
             $templatePath = $data["template.path"];
         } else {
             $data["template.path"] = $templatePath;
+        }
+        
+        if (!isset($data["template_layout"])) {
+            $data["template_layout"] = "Default";
         }
 
         if ($this->hasTemplate($templatePath)) {

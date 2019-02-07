@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}Default Title{% endblock %}</title>
+    {% block head_styles %}
+        {% if assets.css %}
+            <link rel="stylesheet" href="{{ assets.css }}"/>
+        {% endif %}
+    {% endblock %}
+</head>
+<body>
+
+{% block body %}
+{% endblock %}
+
+{% block footer_scripts %}
+    <script>
+        console.log("%cHello World! This is a default JavaScript from the footer block.", "color: #dd0000");
+    </script>
+    {% include 'Frontend/Components/Scripts.twig' %}
+{% endblock %}
+
+{{ o_dump() }}
+</body>
+</html>
