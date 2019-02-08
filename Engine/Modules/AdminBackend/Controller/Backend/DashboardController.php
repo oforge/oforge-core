@@ -2,7 +2,6 @@
 namespace Oforge\Engine\Modules\AdminBackend\Controller\Backend;
 
 use Oforge\Engine\Modules\AdminBackend\Abstracts\SecureBackendController;
-use Oforge\Engine\Modules\AdminBackend\Models\BackendNavigation;
 use Oforge\Engine\Modules\AdminBackend\Services\BackendNavigationService;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
@@ -25,6 +24,7 @@ class DashboardController extends SecureBackendController {
         $authService = Oforge()->Services()->get("auth");
         $user = $authService->decode($_SESSION["auth"]);
         $data["user"] = $user;
+        
         Oforge()->View()->assign($data);
     }
     

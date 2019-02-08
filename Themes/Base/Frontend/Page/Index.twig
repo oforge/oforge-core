@@ -1,51 +1,13 @@
-{% extends "Frontend/Layout.twig" %}
+{% extends 'Frontend/Layout.twig' %}
 
-{% block body %}
-    <div class="wrap">
-        <header class="header">
-            <div class="header-top content">
-                <div class="logo">
-                    <a href="/" class="logo__link">
-                        <span class="logo__image"></span>
-                    </a>
-                </div>
-                <nav class="top-nav">
-                    <ul class="top-nav-list">
-                        <li class="top-nav-list__item">
-                            <a href="#" class="btn btn--secondary">Jetzt inserieren!</a>
-                        </li>
-                        <li class="top-nav-list__item">
-                            <a href="#" class="icon icon--user">Login</a>
-                        </li>
-                        <li class="top-nav-list__item">
-                            <a href="#" class="icon icon--mail">Nachrichten</a>
-                        </li>
-                        <li class="top-nav-list__item">
-                            <a href="#" class="icon icon--heart">Merkliste</a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-            <nav class="main-nav">
-                <ul class="main-nav-list content">
-                    <li class="main-nav-list__item"><a href="#" class="main-nav-list__link">Link</a></li>
-                    <li class="main-nav-list__item"><a href="#" class="main-nav-list__link">Linkerich</a></li>
-                    <li class="main-nav-list__item"><a href="#" class="main-nav-list__link">Anotherlink</a></li>
-                    <li class="main-nav-list__item"><a href="#" class="main-nav-list__link">Whatever</a></li>
-                    <li class="main-nav-list__item"><a href="#" class="main-nav-list__link">Foobar</a></li>
-                    <li class="main-nav-list__item"><a href="#" class="main-nav-list__link">Ein Link</a></li>
-                </ul>
-            </nav>
-        </header>
-        <div class="main-search">
-            <div class="main-search-inner content">
-                <div class="search">
-                    <div class="search__title"></div>
-                    <div class="search__tab"></div>
-                    <div class="search__form"></div>
-                </div>
-
-            </div>
-        </div>
+{% block content %}
+    <div class="container">
+        {% block content_types %}
+            {% if content %}
+                {% for contentItem in content %}
+                    {% include 'ContentTypes/' ~ contentItem.type ~ '/Index.twig' with {'data': contentItem.data} %}
+                {% endfor %}
+            {% endif %}
+        {% endblock content_types %}
     </div>
 {% endblock %}

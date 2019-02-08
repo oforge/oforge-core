@@ -160,7 +160,7 @@ class EndpointService {
                 }
                 if (empty($endpointConfigs)) {
                     Oforge()->Logger()->get()->addWarning('An endpoint was defined but the corresponding controller has no method that ends with ...Action',
-                        json_encode($config));
+                        $config);
                 }
             }
         }
