@@ -1,29 +1,19 @@
 {% extends "Backend/Master/Index.twig" %}
 
 {% block pagecontent %}
- 
-    {% include 'Backend/Pages/PageJsTreeForm.twig' %}
- 
- 	<div class="container-fluid">
-     	<div class="row">
-     		{% include 'Backend/Pages/PageJsTree.twig' %}
-    		<div id="cms_content" class="col-xs-6">
-    			<div class="box box-solid box-default">
-        			<div class="box-header">
-    					<h4 class="box-title">Content</h4>
-        			</div>
-        	    	<div class="box-body" id="cms_page_controller_content">Select a page for editing!</div>
-        		</div>
-    		</div>
-    		<div id="cms_content_types" class="col-xs-3">
-    			<div class="box box-solid box-default">
-        			<div class="box-header">
-    					<h4 class="box-title">Types</h4>
-        			</div>
-        	    	<div class="box-body" id="cms_page_controller_types">No content types available!</div>
-        		</div>
-    		</div>
-    	</div>
- 	</div>
 
-{% endblock %}
+{{ o_dump() }}
+ 
+    {% block cms_page_builder %}
+        {% include 'Backend/Pages/PageJsTreeForm.twig' %}
+     
+     	<div class="container-fluid">
+         	<div class="row">
+         		{% include 'Backend/Pages/PageJsTree.twig' %}
+         		{% include 'Backend/Pages/PageContent.twig' %}
+         		{% include 'Backend/Pages/ContentTypeList.twig' %}
+        	</div>
+     	</div>
+    {% endblock cms_page_builder %}
+
+{% endblock pagecontent %}
