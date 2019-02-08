@@ -4,6 +4,7 @@ namespace Oforge\Engine\Modules\Notifications\Services;
 
 use Oforge\Engine\Modules\Notifications\Abstracts\AbstractNotificationService;
 use Oforge\Engine\Modules\Notifications\Models\BackendNotification;
+use phpDocumentor\Reflection\Types\Object_;
 
 class BackendNotificationService extends AbstractNotificationService {
 
@@ -63,7 +64,8 @@ class BackendNotificationService extends AbstractNotificationService {
         $notification->setUserId($userId);
         $notification->setType($type);
         $notification->setMessage($message);
-        if(!strcmp($link,"")) {
+        
+        if (is_string($link) && !empty($link)) {
             $notification->setLink($link);
         }
 
