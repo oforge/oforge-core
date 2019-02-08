@@ -8,7 +8,7 @@ if (typeof Oforge !== 'undefined') {
     // when the DOMContentLoaded event is triggered.
     Oforge.register({
         name: 'exampleModule',
-        selector: '.wrap',
+        selector: '.container',
         otherNotRequiredContent: 'some other content, that we can define and that is not required',
         init: function () {
             var self = this;

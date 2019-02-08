@@ -4,6 +4,7 @@ namespace Oforge\Engine\Modules\Notifications\Services;
 
 use Oforge\Engine\Modules\Notifications\Abstracts\AbstractNotificationService;
 use Oforge\Engine\Modules\Notifications\Models\BackendNotification;
+use phpDocumentor\Reflection\Types\Object_;
 
 class BackendNotificationService extends AbstractNotificationService {
 
@@ -13,6 +14,15 @@ class BackendNotificationService extends AbstractNotificationService {
     public function __construct() {
         $this->entityManager = Oforge()->DB()->getManager();
         $this->repository    = $this->entityManager->getRepository(BackendNotification::class);
+    }
+
+    /**
+     * @param $id
+     *
+     * @return object|null
+     */
+    public function getNotificationById($id) {
+        return $this->repository->find($id);
     }
 
     /**
@@ -48,13 +58,16 @@ class BackendNotificationService extends AbstractNotificationService {
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function addNotification($userId, $type, $message, $link = null) {
+    public function addNotification($userId, $type, $message, $link = "") {
         $notification = new BackendNotification();
 
         $notification->setUserId($userId);
         $notification->setType($type);
         $notification->setMessage($message);
-        $notification->setLink($link);
+        
+        if (is_string($link) && !empty($link)) {
+            $notification->setLink($link);
+        }
 
         $this->entityManager->persist($notification);
         $this->entityManager->flush();
