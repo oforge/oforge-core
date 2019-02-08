@@ -3,6 +3,7 @@
 namespace Oforge\Engine\Modules\TemplateExtensions\Twig;
 
 use Oforge\Engine\Modules\Auth\Services\AuthService;
+use Oforge\Engine\Modules\Notifications\Abstracts\AbstractNotificationService;
 use Oforge\Engine\Modules\Notifications\Services\BackendNotificationService;
 use Twig_Extension;
 use Twig_Function;
@@ -30,7 +31,7 @@ class BackendExtension extends Twig_Extension implements \Twig_ExtensionInterfac
             /** @var BackendNotificationService $notificationService */
             $notificationService = Oforge()->Services()->get("backend.notifications");
 
-            return $notificationService->getNotifications($user['id']);
+            return $notificationService->getNotifications($user['id'], AbstractNotificationService::UNSEEN);
         }
 
         return [];
