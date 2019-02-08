@@ -8,8 +8,8 @@
 
 namespace Oforge\Engine\Modules\CMS\Models\Content;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 
 /**
@@ -20,7 +20,6 @@ class ContentType extends AbstractModel
 {
     /**
      * @var int
-     * @ORM\ManyToOne(targetEntity="ContentType", inversedBy="child_types")
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -56,7 +55,7 @@ class ContentType extends AbstractModel
      * @var string
      * @ORM\Column(name="class_path", type="string", nullable=false)
      */
-    private $class_path;
+    private $classPath;
     
     /**
      * @return int
@@ -76,10 +75,13 @@ class ContentType extends AbstractModel
     
     /**
      * @param ContentTypeGroup $group
+     * 
+     * @return ContentType
      */
-    public function setGroup(?ContentTypeGroup $group)
+    public function setGroup(?ContentTypeGroup $group): ContentType
     {
         $this->group = $group;
+        return $this;
     }
     
     /**
@@ -92,10 +94,13 @@ class ContentType extends AbstractModel
     
     /**
      * @param string $name
+     * 
+     * @return ContentType
      */
-    public function setName(string $name)
+    public function setName(string $name): ContentType
     {
         $this->name = $name;
+        return $this;
     }
     
     /**
@@ -108,10 +113,13 @@ class ContentType extends AbstractModel
     
     /**
      * @param string $icon
+     * 
+     * @return ContentType
      */
-    public function setIcon(string $icon)
+    public function setIcon(string $icon): ContentType
     {
         $this->icon = $icon;
+        return $this;
     }
     
     /**
@@ -124,10 +132,13 @@ class ContentType extends AbstractModel
     
     /**
      * @param string $description
+     * 
+     * @return ContentType
      */
-    public function setDescription(string $description)
+    public function setDescription(string $description): ContentType
     {
         $this->description = $description;
+        return $this;
     }
     
     /**
@@ -135,14 +146,17 @@ class ContentType extends AbstractModel
      */
     public function getClassPath(): string
     {
-        return $this->class_path;
+        return $this->classPath;
     }
     
     /**
      * @param string $classPath
+     * 
+     * @return ContentType
      */
-    public function setClassPath(string $class_path)
+    public function setClassPath(string $classPath): ContentType
     {
-        $this->class_path = $class_path;
+        $this->classPath = $classPath;
+        return $this;
     }
 }

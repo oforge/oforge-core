@@ -78,10 +78,13 @@ class Page extends AbstractModel
 
     /**
      * @param int $layout
+     * 
+     * @return Page
      */
-    public function setLayout(int $layout)
+    public function setLayout(int $layout): Page
     {
         $this->layout = $layout;
+        return $this;
     }
     
     /**
@@ -94,10 +97,13 @@ class Page extends AbstractModel
     
     /**
      * @param int $site
+     * 
+     * @return Page
      */
-    public function setSite(int $site)
+    public function setSite(int $site): Page
     {
         $this->site = $site;
+        return $this;
     }
     
     /**
@@ -110,10 +116,13 @@ class Page extends AbstractModel
     
     /**
      * @param int $parent
+     * 
+     * @return Page
      */
-    public function setParent(int $parent)
+    public function setParent(int $parent): Page
     {
         $this->parent = $parent;
+        return $this;
     }
     
     /**
@@ -126,10 +135,13 @@ class Page extends AbstractModel
     
     /**
      * @param string $name
+     * 
+     * @return Page
      */
-    public function setName(string $name)
+    public function setName(string $name): Page
     {
         $this->name = $name;
+        return $this;
     }
     
     /**
@@ -142,9 +154,12 @@ class Page extends AbstractModel
     
     /**
      * @param PagePath[] $paths
+     * 
+     * @return Page
      */
-    public function setPaths(array $paths)
+    public function setPaths(array $paths): Page
     {
         $this->paths = $paths;
+        return $this;
     }
 }
