@@ -1,4 +1,5 @@
-	<form id="cms_page_jstree_form" action={{ url('backend_content_pages_pageselect') }} method="post">
+{% block cms_page_builder_form %}
+	<form id="cms_page_jstree_form" action={{ url('backend_content_pages') }} method="post">
  		<input id="cms_page_jstree_selected_page" name="cms_page_jstree_selected_page" type="hidden">
  	</form> 
- 
+{% endblock cms_page_builder_form %}

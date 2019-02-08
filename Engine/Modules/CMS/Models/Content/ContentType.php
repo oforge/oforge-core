@@ -106,7 +106,7 @@ class ContentType extends AbstractModel
     /**
      * @return string
      */
-    public function getIcon(): string
+    public function getIcon(): ?string
     {
         return $this->icon;
     }
@@ -116,7 +116,7 @@ class ContentType extends AbstractModel
      * 
      * @return ContentType
      */
-    public function setIcon(string $icon): ContentType
+    public function setIcon(?string $icon): ContentType
     {
         $this->icon = $icon;
         return $this;
