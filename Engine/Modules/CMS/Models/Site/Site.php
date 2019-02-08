@@ -63,10 +63,13 @@ class Site extends AbstractModel
     
     /**
      * @param string $name
+     * 
+     * @return Site
      */
-    public function setName(string $name)
+    public function setName(string $name): Site
     {
         $this->name = $name;
+        return $this;
     }
     
     /**
@@ -79,10 +82,13 @@ class Site extends AbstractModel
     
     /**
      * @param string $domain
+     * 
+     * @return Site
      */
-    public function setDomain(string $domain)
+    public function setDomain(string $domain): Site
     {
         $this->domain = $domain;
+        return $this;
     }
     
     /**
@@ -95,9 +101,12 @@ class Site extends AbstractModel
     
     /**
      * @param int $defaultLanguage
+     * 
+     * @return Site
      */
-    public function setDefaultLanguage(int $default_language)
+    public function setDefaultLanguage(int $default_language): Site
     {
         $this->default_language = $default_language;
+        return $this;
     }
 }

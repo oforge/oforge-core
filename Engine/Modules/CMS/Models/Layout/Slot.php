@@ -49,9 +49,12 @@ class Slot extends AbstractModel
     
     /**
      * @param string $name
+     * 
+     * @return Slot
      */
-    public function setName(string $name)
+    public function setName(string $name): Slot
     {
         $this->name = $name;
+        return $this;
     }
 }
