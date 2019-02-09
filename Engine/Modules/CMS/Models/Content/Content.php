@@ -10,7 +10,7 @@ namespace Oforge\Engine\Modules\CMS\Models\Content;
 
 use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
-use Oforge\Engine\Modules\CMS\Models\Page\Page;
+use Oforge\Engine\Modules\CMS\Models\Page\PageContent;
 
 /**
  * @ORM\Table(name="oforge_cms_content")
@@ -27,11 +27,11 @@ class Content extends AbstractModel
     private $id;
     
     /**
-     * @var ContentType
-     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Page\Page")
-     * @ORM\JoinColumn(name="page_id", referencedColumnName="id")
+     * @var PageContent
+     * @ORM\OneToMany(targetEntity="Oforge\Engine\Modules\CMS\Models\Page\PageContent", mappedBy="content")
+     * @ORM\JoinColumn(name="id", referencedColumnName="page_content_id")
      */
-    private $page;
+    private $pageContents;
     
     /**
      * @var ContentType
@@ -47,22 +47,26 @@ class Content extends AbstractModel
     private $parent;
     
     /**
-     * @var int
-     * @ORM\Column(name="sort_order", type="integer", nullable=true)
-     */
-    private $sort_order;
-    
-    /**
      * @var string
      * @ORM\Column(name="content_name", type="string", nullable=false)
      */
     private $name;
     
     /**
-     * @var mixed
-     * @ORM\Column(name="content_configuration", type="object", nullable=true)
+     * @var string
+     * @ORM\Column(name="css_class", type="string", nullable=false)
      */
-    private $configuration;
+    private $cssClass;
+    
+    /**
+     * @var mixed
+     * @ORM\Column(name="content_data", type="object", nullable=true)
+     */
+    private $data;
+    
+    public function __construct() {
+        $this->pageContents = new \Doctrine\Common\Collections\ArrayCollection();
+    }
     
     /**
      * @return int
@@ -72,19 +76,22 @@ class Content extends AbstractModel
     }
     
     /**
-     * @return Page
+     * @return PageContent[]
      */
-    public function getPage(): ?Page
+    public function getPageContents(): ?PageContent
     {
-        return $this->page;
+        return $this->pageContents;
     }
     
     /**
-     * @param Page $page
+     * @param PageContent[] $pageContents
+     *
+     * @return Content
      */
-    public function setPage(?Page $page)
+    public function setPageContents(?array $pageContents): Content
     {
-        $this->page = $page;
+        $this->pageContents = $pageContents;
+        return $this;
     }
     
     /**
@@ -96,11 +103,14 @@ class Content extends AbstractModel
     }
     
     /**
-     * @param ContentType $type
+     * @param ContentType $contentType
+     *
+     * @return Content
      */
-    public function setType(?ContentType $type)
+    public function setType(?ContentType $type): Content
     {
         $this->type = $type;
+        return $this;
     }
     
     /**
@@ -113,26 +123,13 @@ class Content extends AbstractModel
     
     /**
      * @param int $parent
+     * 
+     * @return Content
      */
-    public function setParent(int $parent)
+    public function setParent(int $parent): Content
     {
         $this->parent = $parent;
-    }
-    
-    /**
-     * @return int
-     */
-    public function getSortOrder(): int
-    {
-        return $this->sort_order;
-    }
-    
-    /**
-     * @param int $order
-     */
-    public function setSortOrder(int $sort_order)
-    {
-        $this->sort_order = $sort_order;
+        return $this;
     }
     
     /**
@@ -145,25 +142,50 @@ class Content extends AbstractModel
     
     /**
      * @param string $name
+     *
+     * @return Content
      */
-    public function setName(string $name)
+    public function setName(string $name): Content
     {
         $this->name = $name;
+        return $this;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getCssClass(): string
+    {
+        return $this->cssClass;
+    }
+    
+    /**
+     * @param string $cssClass
+     *
+     * @return Content
+     */
+    public function setCssClass(string $cssClass): Content
+    {
+        $this->cssClass = $cssClass;
+        return $this;
     }
     
     /**
      * @return mixed
      */
-    public function getConfiguration()
+    public function getData()
     {
-        return $this->configuration;
+        return $this->data;
     }
     
     /**
      * @param mixed $data
+     * 
+     * @return Content
      */
-    public function setConfiguration($configuration)
+    public function setData($data): Content
     {
-        $this->configuration = $configuration;
+        $this->data = $data;
+        return $this;
     }
 }

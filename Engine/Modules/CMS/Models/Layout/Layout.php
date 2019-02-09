@@ -8,8 +8,8 @@
 
 namespace Oforge\Engine\Modules\CMS\Models\Layout;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 
 /**
@@ -64,9 +64,12 @@ class Layout extends AbstractModel
     
     /**
      * @param string $name
+     * 
+     * @return Layout
      */
-    public function setName(string $name)
+    public function setName(string $name): Layout
     {
         $this->name = $name;
+        return $this;
     }
 }

@@ -10,7 +10,6 @@ namespace Oforge\Engine\Modules\CMS\Models\Page;
 
 use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
-use Oforge\Engine\Modules\CMS\Models\Content\ContentLocalization;
 use Oforge\Engine\Modules\I18n\Models\Language;
 
 /**
@@ -48,11 +47,11 @@ class PagePath extends AbstractModel
     private $path;
     
     /**
-     * @var ContentLocalization[]
-     * @ORM\OneToMany(targetEntity="Oforge\Engine\Modules\CMS\Models\Content\ContentLocalization", mappedBy="page_path", cascade={"all"})
+     * @var PageContent[]
+     * @ORM\OneToMany(targetEntity="Oforge\Engine\Modules\CMS\Models\Page\PageContent", mappedBy="pagePath", cascade={"all"})
      * @ORM\JoinColumn(name="id", referencedColumnName="page_path_id")
      */
-    private $content_localization;
+    private $pageContent;
     
     /**
      * @return int
@@ -72,10 +71,13 @@ class PagePath extends AbstractModel
     
     /**
      * @param Page $page
+     * 
+     * @return PagePath
      */
-    public function setPage(?Page $page)
+    public function setPage(?Page $page): PagePath
     {
         $this->page = $page;
+        return $this;
     }
     
     /**
@@ -88,10 +90,13 @@ class PagePath extends AbstractModel
 
     /**
      * @param Language $language
+     * 
+     * @return PagePath
      */
-    public function setLanguage(?Language $language)
+    public function setLanguage(?Language $language): PagePath
     {
         $this->language = $language;
+        return $this;
     }
 
     /**
@@ -104,26 +109,31 @@ class PagePath extends AbstractModel
 
     /**
      * @param string $path
+     * 
      * @return PagePath
      */
-    public function setPath(string $path)
+    public function setPath(string $path): PagePath
     {
         $this->path = $path;
+        return $this;
     }
 
     /**
-     * @return ContentLocalization[]
+     * @return PageContent[]
      */
-    public function getContentLocalization()
+    public function getPageContent()
     {
-        return $this->content_localization;
+        return $this->pageContent;
     }
 
     /**
-     * @param ContentLocalization[] $contentLocalization
+     * @param PageContent[] $pageContent
+     * 
+     * @return PagePath
      */
-    public function setContentLocalization(array $content_localization)
+    public function setPageContent(array $pageContent): PagePath
     {
-        $this->content_localization = $content_localization;
+        $this->pageContent = $pageContent;
+        return $this;
     }
 }

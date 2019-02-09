@@ -11,11 +11,8 @@ namespace Oforge\Engine\Modules\CMS\Services;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\Import\Services\ImportService;
 
-
 class DummyPageGenerator
 {
-
-
     public function create()
     {
         /**
@@ -26,11 +23,11 @@ class DummyPageGenerator
             "oforge_i18n_language",
             "oforge_cms_content_type_group",
             "oforge_cms_content_type",
+            "oforge_cms_content",
             "oforge_cms_site",
             "oforge_cms_page",
             "oforge_cms_page_path",
-            "oforge_cms_content",
-            "oforge_cms_content_localization"
+            "oforge_cms_page_content"
         ];
 
         $fullDir = ROOT_PATH . DIRECTORY_SEPARATOR . Statics::VAR_DIR . DIRECTORY_SEPARATOR . "dummy_data" . DIRECTORY_SEPARATOR;
