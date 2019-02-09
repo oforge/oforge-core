@@ -2,8 +2,8 @@
 
 namespace Oforge\Engine\Modules\CMS\Models\Content;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 
 /**
@@ -14,7 +14,6 @@ class ContentTypeGroup extends AbstractModel
 {
     /**
      * @var int
-     * @ORM\ManyToOne(targetEntity="ContentType", inversedBy="child_types")
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
@@ -50,10 +49,13 @@ class ContentTypeGroup extends AbstractModel
     
     /**
      * @param int $id
+     * 
+     * @return ContentTypeGroup
      */
-    public function setId(int $id)
+    public function setId(int $id): ContentTypeGroup
     {
         $this->id = $id;
+        return $this;
     }
     
     /**
@@ -66,10 +68,13 @@ class ContentTypeGroup extends AbstractModel
     
     /**
      * @param string $name
+     * 
+     * @return ContentTypeGroup
      */
-    public function setName(string $name)
+    public function setName(string $name): ContentTypeGroup
     {
         $this->name = $name;
+        return $this;
     }
     
     /**
@@ -82,10 +87,13 @@ class ContentTypeGroup extends AbstractModel
     
     /**
      * @param string $description
+     * 
+     * @return ContentTypeGroup
      */
-    public function setDescription(string $description)
+    public function setDescription(string $description): ContentTypeGroup
     {
         $this->description = $description;
+        return $this;
     }
     
     /**
@@ -98,9 +106,12 @@ class ContentTypeGroup extends AbstractModel
     
     /**
      * @param ContentType[] $types
+     * 
+     * @return ContentTypeGroup
      */
-    public function ContentType(array $types)
+    public function setContentTypes(array $types): ContentTypeGroup
     {
         $this->types = $types;
+        return $this;
     }
 }

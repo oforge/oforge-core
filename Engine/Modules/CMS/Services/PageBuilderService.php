@@ -64,7 +64,7 @@ class PageBuilderService
                 $pathArray[] = $pathEntity->getPath();
             }
             
-            $page["path"] = $pathArray;
+            $page["paths"] = $pathArray;
             
             $pages[] = $page;
         }
