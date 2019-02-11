@@ -22,14 +22,14 @@ use Oforge\Engine\Modules\Auth\Models\User\User;
  */
 class BaseLoginService {
     /**
-     * @var $em EntityManager
+     * @var $entityManager EntityManager
      */
-    protected $em;
+    protected $entityManager;
     
     /**
-     * @var $repo EntityRepository
+     * @var $repository EntityRepository
      */
-    protected $repo;
+    protected $repository;
     
     /**
      * Validate login credentials against entities in the database and if valid, respond with a JWT.
@@ -52,9 +52,9 @@ class BaseLoginService {
         $passwordService = Oforge()->Services()->get("password");
         
         /**
-         * @var $user BackendUser|User
+         * @var BackendUser|User $user
          */
-        $user = $this->repo->findOneBy(["email" => $email]);
+        $user = $this->repository->findOneBy(["email" => $email]);
         
         if (isset($user)) {
             if ($passwordService->validate($password, $user->getPassword())) {
