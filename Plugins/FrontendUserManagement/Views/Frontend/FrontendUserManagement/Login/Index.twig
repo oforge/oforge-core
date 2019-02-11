@@ -1,0 +1,33 @@
+{% extends "@parent/Frontend/Layout.twig" %}
+{% block content %}
+    <div class="login">
+        {{ msg }}
+
+        <form action="{{ url('frontend_login_process') }}" method="post">
+            <div class="form-controls">
+                <div class="form__control">
+                    <label for="frontend_login_email"
+                           class="form__label">{{ i18n('email') }}</label>
+                    <input id="frontend_login_email"
+                           name="frontend_login_email"
+                           type="email"
+                           class="form__input form__input">
+                </div>
+                <div class="form__control">
+                    <label for="frontend_login_password"
+                           class="form__label">{{ i18n('password') }}</label>
+                    <input id="frontend_login_password"
+                           name="frontend_login_password"
+                           type="password"
+                           class="form__input form__input">
+                </div>
+                <div class="form__control">
+                    <input type="hidden" name="token" value="{{ token() }}">
+                    <input type="submit"
+                           value="{{ i18n('signin') }}"
+                           class="form__input button button--primary">
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock content %}
