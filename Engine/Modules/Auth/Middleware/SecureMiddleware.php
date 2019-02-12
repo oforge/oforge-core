@@ -33,9 +33,12 @@ class SecureMiddleware {
         
         $permissions = $permissionService->get($controllerMethod);
         $auth = null;
+
         if (isset($_SESSION['auth'])) {
             $auth = $_SESSION['auth'];
         }
+        print_r($_SESSION);
+        $bla = $_SESSION;
         
         if (isset($permissions)) {
             
@@ -63,9 +66,9 @@ class SecureMiddleware {
                 $router = Oforge()->App()->getContainer()->get("router");
                 if (!empty($this->urlPathName)) {
                     $uri = $router->pathFor($this->urlPathName);
-                    return $response->withRedirect($uri, 302);
+                    return $response = $response->withRedirect($uri, 302);
                 }
-                return $response->withRedirect('/', 302);
+                return $response = $response->withRedirect('/', 302);
             }
         }
         return $response;

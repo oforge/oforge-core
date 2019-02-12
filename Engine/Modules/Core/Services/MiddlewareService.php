@@ -18,7 +18,7 @@ class MiddlewareService
         $entityManager = Oforge()->DB()->getManager();
         $repository = $entityManager->getRepository(Middleware::class);
 
-        $middlewares = $repository->findBy(["name" => [$name], "active" => 1], ['position' => 'DESC']);
+        $middlewares = $repository->findBy(["name" => [$name, '*'], 'active' => 1], ['position' => 'DESC']);
         /*
         $queryBuilder = $entityManager->createQueryBuilder();
         $result = $queryBuilder->select(array('m'))
