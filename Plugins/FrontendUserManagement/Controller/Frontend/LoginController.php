@@ -97,7 +97,7 @@ class LoginController extends AbstractController {
     
         $_SESSION['auth'] = $jwt;
     
-        $uri = $router->pathFor("frontend_login");
+        $uri = $router->pathFor("frontend_profile");
     
         return $response->withRedirect($uri, 302);
     }

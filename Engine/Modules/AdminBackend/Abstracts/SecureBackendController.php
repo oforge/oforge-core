@@ -2,17 +2,6 @@
 
 namespace Oforge\Engine\Modules\AdminBackend\Abstracts;
 
-use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
+use Oforge\Engine\Modules\Auth\Controller\SecureController;
 
-class SecureBackendController extends AbstractController
-{
-    protected function ensurePermissions($method, $userType, $role)
-    {
-        Oforge()->Services()->get("permissions")->put(get_called_class() . ":" . $method, $userType, $role);
-    }
-
-    public function initPermissions()
-    {
-
-    }
-}
+class SecureBackendController extends SecureController {}

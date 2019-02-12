@@ -8,7 +8,6 @@ use Oforge\Engine\Modules\AdminBackend\Controller\Backend\LoginController;
 use Oforge\Engine\Modules\AdminBackend\Controller\Backend\LogoutController;
 use Oforge\Engine\Modules\AdminBackend\Middleware\BackendSecureMiddleware;
 use Oforge\Engine\Modules\AdminBackend\Models\BackendNavigation;
-use Oforge\Engine\Modules\AdminBackend\Services\Permissions;
 use Oforge\Engine\Modules\AdminBackend\Services\BackendNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
@@ -22,8 +21,7 @@ class Bootstrap extends AbstractBootstrap
     public function __construct()
     {
         $this->services = [
-            "backend.navigation" => BackendNavigationService::class,
-            "permissions" => Permissions::class
+            "backend.navigation" => BackendNavigationService::class
         ];
 
         $this->endpoints = [

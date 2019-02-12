@@ -15,12 +15,41 @@ class MiddlewareService
      */
     public function getActive($name)
     {
-        $em = Oforge()->DB()->getManager();
-        $repo = $em->getRepository(Middleware::class);
+        $entityManager = Oforge()->DB()->getManager();
+        $repository = $entityManager->getRepository(Middleware::class);
 
-        $middlewares = $repo->findBy(["name" => [$name, "*", $name . "*"], "active" => 1], ['position' => 'DESC']);
+        $middlewares = $repository->findBy(["name" => [$name], "active" => 1], ['position' => 'DESC']);
+        /*
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $result = $queryBuilder->select(array('m'))
+            ->from(Middleware::class, 'm')
+            ->where($queryBuilder->expr()->orX(
+                $queryBuilder->expr()->eq('m.name', '?1'),
+                $queryBuilder->expr()->eq('m.name', '?2'),
+                $queryBuilder->expr()->like('m.name', '?3')
+            ))
+            ->andWhere($queryBuilder->expr()->eq('m.active', 1))
+            ->orderBy('m.position', 'DESC')->setParameters([1 => $name, 2 => '*', 3 => $name . '_%'])->getQuery();
+        $middlewares = $result->execute();
+        */
 
         return $middlewares;
+    }
+    
+    /**
+     * get all active middlewares
+     * @return array|null
+     */
+    public function getAllActiveNames() {
+        $entityManager = Oforge()->DB()->getManager();
+        $repository = $entityManager->getRepository(Middleware::class);
+        $middlewares = $repository->findBy(["active" => 1], ['position' => 'DESC']);
+        
+        $names = [];
+        foreach ($middlewares as $middleware) {
+            array_push($names, $middleware->getName());
+        }
+        return $names;
     }
     
     /**
@@ -42,9 +71,9 @@ class MiddlewareService
                     /**
                      * Check if the element is already within the system
                      */
-                    $repo = Oforge()->DB()->getManager()->getRepository(Middleware::class);
+                    $repository = Oforge()->DB()->getManager()->getRepository(Middleware::class);
 
-                    $element = $repo->findOneBy(["class" => $option["class"]]);
+                    $element = $repository->findOneBy(["class" => $option["class"]]);
                     if(!isset($element)) {
                         $element = Middleware::create(["name" => $key,  "class" => $option["class"], "position" => $option["position"]]);
                         $element->setPlugin($middleware);
@@ -70,12 +99,12 @@ class MiddlewareService
             /**
              * Check if the element is already within the system
              */
-            $repo = Oforge()->DB()->getManager()->getRepository(Middleware::class);
+            $repository = Oforge()->DB()->getManager()->getRepository(Middleware::class);
 
             foreach ($options as $key => $option) {
                 if ($this->isValid($option)) {
 
-                    $element = $repo->findOneBy(["class" => $option["class"]]);
+                    $element = $repository->findOneBy(["class" => $option["class"]]);
                     if(!isset($element)) {
                         $element = Middleware::create(["name" => $key,  "class" => $option["class"], "active" => 1, "position" => $option["position"]]);
                         Oforge()->DB()->getManager()->persist($element);
