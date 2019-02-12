@@ -17,8 +17,6 @@ class ContentTypeService
 
     private $entityManager;
     private $repository;
-    
-    private $contentTypes;
 
     public function __construct()
     {
@@ -31,7 +29,7 @@ class ContentTypeService
      *
      * @return ContentTypeGroup[]|NULL
      */
-    public function getContentTypeGroupEntities()
+    private function getContentTypeGroupEntities()
     {
         $contentTypeGroups = $this->repository->findAll();
         
@@ -68,7 +66,7 @@ class ContentTypeService
             
             $contentTypeEntities = $contentTypeGroupEntity->getContentTypes();
             
-            $contentTypeArray = [];
+            $contentTypes = [];
             foreach($contentTypeEntities as $contentTypeEntity)
             {
                 $contentType = [];
@@ -79,10 +77,10 @@ class ContentTypeService
                 $contentType["description"] = $contentTypeEntity->getDescription();
                 $contentType["class"] = $contentTypeEntity->getClassPath();
                 
-                $contentTypeArray[] = $contentType;
+                $contentTypes[] = $contentType;
             }
             
-            $contentTypeGroup["types"] = $contentTypeArray;
+            $contentTypeGroup["types"] = $contentTypes;
             
             $contentTypeGroups[] = $contentTypeGroup;
         }
