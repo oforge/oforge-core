@@ -38,5 +38,22 @@
     </div>
     <!-- /.login-box-body -->
 </div>
+{% block meta %}
+    {% if session %}
+        <style>
+            .meta {
+                background: #aca;
+                width: 100%;
+                min-height: 300px;
+                font-size: 1.2rem;
+            }
+        </style>
+        <div class="meta">
+            {% for key, val in session  %}
+                <p>{{ key }} : {{ val }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock meta %}
 </body>
 </html>
