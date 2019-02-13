@@ -243,4 +243,53 @@ class PageBuilderService
         
         return $page;
     }
+    
+    
+    /**
+     * Returns an array with prepared twig content data for page builder
+     * @param array page array
+     * @param int page path
+     *
+     * @return array|NULL Array filled with twig content data for page builder
+     */
+    public function getContentDataArray(array $pageArray, $pagePath)
+    {
+        $pageContents = $pageArray["paths"][$pagePath]["pageContent"];
+        
+        if (!$pageContents)
+        {
+            return NULL;
+        }
+        
+        $contents = [];
+        foreach($pageContents as $pageContent)
+        {
+            $data = [];
+            // TODO: set or choose correct language
+            switch($pageContent["content"]["type"]["name"])
+            {
+                case "row":
+                    $data["type"] = "ContentTypes/Row/PageBuilder.twig";
+                    // TODO: implement row data collection
+                    break;
+                case "richtext":
+                    $data["type"] = "ContentTypes/RichText/PageBuilder.twig";
+                    $data["css"] = $pageContent["content"]["cssClass"];
+                    $data["text"] = $pageContent["content"]["data"];
+                    break;
+                case "image":
+                    $data["type"] = "ContentTypes/Image/PageBuilder.twig";
+                    $data["css"] = $pageContent["content"]["cssClass"];
+                    $data["url"] = "/Tests/dummy_media/" . $pageContent["content"]["data"];
+                    $data["alt"] = $pageContent["content"]["name"];
+                    break;
+                default:
+                    continue 2;
+            }
+            
+            $contents[] = $data;
+        }
+        
+        return $contents;
+    }
 }

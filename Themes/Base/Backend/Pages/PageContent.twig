@@ -3,18 +3,40 @@
 	<div id="cms_content" class="col-xs-6">
 		<div class="box box-solid box-default">
 			<div class="box-header">
-				<h4 class="box-title">Content</h4>
+				<h4 class="box-title">{{ i18n('cms_page_builder_content_title') }}</h4>
 			</div>
 	    	<div class="box-body" id="cms_page_controller_content">
-    			<div>
-    				<p>Url: <input type="text" value="{{ pages[post["cms_page_jstree_selected_page"]-1].paths.0.path }}"></p>
+    			<div style="display:flex;justify-content:space-between;">
+    				<div>Url: <input type="text" value="{{ pages[post["cms_page_jstree_selected_page"]-1].paths.0.path }}"></div>
+    				<div>
+    					{{ i18n('cms_page_builder_content_language_selection') }}:&nbsp;
+                        <select id="cms_page_builder_language_selector">
+                        	<!-- TODO: generate options programmatically -->
+                            <option value="0" {% if post.cms_page_selected_language == 0 %}selected{% endif %}>Deutsch</option>
+                            <option value="1" {% if post.cms_page_selected_language == 1 %}selected{% endif %}>English</option>
+                        </select>     				
+    				</div>
     			</div>
     			<div>
-    				<p><input type="checkbox" id="cms_page_active" name="cms_page_active">&nbsp;Aktiv</p>
+    				<p><input type="checkbox" id="cms_page_active" name="cms_page_active">&nbsp;{{ i18n('cms_page_builder_content_page_active_checkbox_label') }}</p>
     			</div>
     			<div>
-    				<p><a href="">Globals</a></p>
+    				<p><a href="">{{ i18n('cms_page_builder_content_globals_link_label') }}</a></p>
     			</div>
+    			<div>
+    				<hr>
+    			</div>
+    			<div>
+    				{{ i18n('cms_page_builder_content_preview') }}
+    			</div>
+    			<div>
+    				<hr>
+    			</div>
+				<div class="page-builder-content">
+                    {% for data in contents %}
+    	                {% include data.type %}
+                    {% endfor %}
+				</div>
 	    	</div>
 		</div>
 	</div>
@@ -22,9 +44,9 @@
 	<div id="cms_content" class="col-xs-6">
 		<div class="box box-solid box-default">
 			<div class="box-header">
-				<h4 class="box-title">Content</h4>
+				<h4 class="box-title">{{ i18n('cms_page_builder_content_title') }}</h4>
 			</div>
-	    	<div class="box-body" id="cms_page_controller_content">Select a page for editing!</div>
+	    	<div class="box-body" id="cms_page_controller_content">{{ i18n('cms_page_builder_content_no_page_selected') }}</div>
 		</div>
 	</div>
 	{% endif %}

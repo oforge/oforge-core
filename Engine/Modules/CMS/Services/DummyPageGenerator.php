@@ -21,6 +21,7 @@ class DummyPageGenerator
         $importService = Oforge()->Services()->get("import");
         $files = [
             "oforge_i18n_language",
+            "oforge_i18n_snippet",
             "oforge_cms_content_type_group",
             "oforge_cms_content_type",
             "oforge_cms_content",
