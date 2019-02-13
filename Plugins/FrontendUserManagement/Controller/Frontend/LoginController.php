@@ -17,10 +17,6 @@ use Slim\Router;
 
 class LoginController extends AbstractController {
     public function indexAction(Request $request, Response $response) {
-        
-        $bla = print_r($_SESSION, true);
-
-        Oforge()->View()->assign(["msg" => $bla]);
     }
     
     /**
@@ -97,7 +93,7 @@ class LoginController extends AbstractController {
     
         $_SESSION['auth'] = $jwt;
     
-        $uri = $router->pathFor("frontend_login");
+        $uri = $router->pathFor("frontend_profile");
     
         return $response->withRedirect($uri, 302);
     }

@@ -10,7 +10,6 @@ use Oforge\Engine\Modules\AdminBackend\Controller\Backend\FavoritesController;
 use Oforge\Engine\Modules\AdminBackend\Middleware\BackendSecureMiddleware;
 use Oforge\Engine\Modules\AdminBackend\Models\BackendNavigation;
 use Oforge\Engine\Modules\AdminBackend\Models\BackendUserFavorites;
-use Oforge\Engine\Modules\AdminBackend\Services\Permissions;
 use Oforge\Engine\Modules\AdminBackend\Services\BackendNavigationService;
 use Oforge\Engine\Modules\AdminBackend\Services\UserFavoritesService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
@@ -26,9 +25,8 @@ class Bootstrap extends AbstractBootstrap
     {
         $this->services = [
             "backend.navigation" => BackendNavigationService::class,
-            "permissions" => Permissions::class,
             "backend.favorites" => UserFavoritesService::class
-        ];
+       ];
 
         $this->endpoints = [
             "/backend[/]" => ["controller" => IndexController::class, "name" => "backend", "asset_scope" => "Backend"],
@@ -39,7 +37,7 @@ class Bootstrap extends AbstractBootstrap
         ];
 
         $this->middleware = [
-            "*" => ["class" => BackendSecureMiddleware::class, "position" => 1]
+            "backend" => ["class" => BackendSecureMiddleware::class, "position" => 1]
         ];
 
         $this->models = [
@@ -47,7 +45,7 @@ class Bootstrap extends AbstractBootstrap
             BackendUserFavorites::class
         ];
 
-        $this->order = 2;
+        $this->order = 3;
     }
 
     /**

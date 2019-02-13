@@ -1,6 +1,6 @@
 <?php
 
-namespace Oforge\Engine\Modules\AdminBackend\Services;
+namespace Oforge\Engine\Modules\Auth\Services;
 
 class Permissions
 {
