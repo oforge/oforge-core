@@ -16,6 +16,8 @@ class BackendExtension extends Twig_Extension implements \Twig_ExtensionInterfac
             new Twig_Function('backend_breadcrumbs_map', [$this, 'get_breadcrumbs_map']),
             new Twig_Function('backend_has_visible_children', [$this, 'get_visible_navigation_children']),
             new Twig_Function('backend_notifications', [$this, 'get_backend_notifications']),
+            new Twig_Function('backend_favorites', [$this, 'get_favorites']),
+            new Twig_Function('isFavorite', [$this, 'is_favorite']),
         ];
     }
 
@@ -86,6 +88,58 @@ class BackendExtension extends Twig_Extension implements \Twig_ExtensionInterfac
 
         return [];
     }
+
+
+    /**
+     * @param mixed ...$vars
+     *
+     * @return array
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     */
+    public function is_favorite(...$vars) {
+        /** @var $authService AuthService */
+        $authService = Oforge()->Services()->get("auth");
+        $user        = $authService->decode($_SESSION["auth"]);
+        if (isset($user) && isset($user['id']) && sizeof($vars) == 1) {
+            /** @var UserFavoritesService $favoritesService */
+            $favoritesService = Oforge()->Services()->get("backend.favorites");
+
+            return $favoritesService->isFavorite($user['id'], $vars[0]);
+        }
+
+        return false;
+    }
+
+
+    /**
+     * @param mixed ...$vars
+     *
+     * @return array
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     */
+    public function get_favorites(...$vars) {
+        /** @var $authService AuthService */
+        $authService = Oforge()->Services()->get("auth");
+        $user        = $authService->decode($_SESSION["auth"]);
+        if (isset($user) && isset($user['id'])) {
+            /** @var UserFavoritesService $favoritesService */
+            $favoritesService = Oforge()->Services()->get("backend.favorites");
+
+            $instances = $favoritesService->getAll($user['id']);
+
+            $result = [];
+
+            foreach ($instances as $instance) {
+                array_push($result, $instance->toArray());
+            }
+
+            return $result;
+        }
+
+        return [];
+    }
+
+
 
     /**
      * @param mixed ...$vars
