@@ -9,21 +9,26 @@
 namespace Oforge\Engine\Modules\Session\Middleware;
 
 use Oforge\Engine\Modules\Session\Services\SessionManagementService;
-use Slim\Http\Request;
-use Slim\Http\Response;
 
 class SessionMiddleware {
     /**
-     * @param Request $request
-     * @param Response $response
+     * @param  \Psr\Http\Message\ServerRequestInterface $request PSR7 request
+     * @param  \Psr\Http\Message\ResponseInterface $response PSR7 response
+     * @param  callable $next Next middleware
      *
+     * @return mixed
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
-    public function prepend(Request $request, Response $response) {
+    public function __invoke( $request, $response, $next ) {
         /**
          * @var $sessionManager SessionManagementService
          */
         $sessionManager = Oforge()->Services()->get("session.management");
         $sessionManager->sessionStart();
+
+        /** for debugging purposes */
+        //Oforge()->View()->assign(["session" => $_SESSION]);
+
+        return $next($request, $response);
     }
 }

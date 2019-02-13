@@ -6,6 +6,7 @@ use Oforge\Engine\Modules\Core\Helper\StringHelper;
 use Oforge\Engine\Modules\Core\Models\Endpoints\Endpoint;
 use Oforge\Engine\Modules\Core\Models\Plugin\Middleware;
 use Oforge\Engine\Modules\Core\Services\MiddlewareService;
+use Oforge\Engine\Modules\Session\Middleware\SessionMiddleware;
 
 class RouteManager {
     const SLIM_HTTP_METHODS = [ 'any', 'get', 'post', 'put', 'patch', 'delete', 'options' ];
@@ -27,23 +28,22 @@ class RouteManager {
     public function init() {
         $entityManager = Oforge()->DB()->getManager();
         $repository    = $entityManager->getRepository( Endpoint::class );
-        
+
         /** @var MiddlewareService $middlewareService */
         $middlewareService = Oforge()->Services()->get( 'middleware' );
-        
+
         /** @var Endpoint[] $endpoints */
-        $endpoints = $repository->findBy( array( "active" => 1 ), array( 'order' => 'ASC' ) );
+        $endpoints = $repository->findBy( array("active" => 1 ), array( 'order' => 'ASC' ) );
 
-
-        $activeMiddlewareNames = $middlewareService->getAllActiveNames();
+        $activeMiddlewareNames = $middlewareService->getAllDistinctActiveNames();
 
         $container = Oforge()->App()->getContainer();
 
         foreach ( $endpoints as $endpoint ) {
+            
             if ( ! in_array( $endpoint->getHttpMethod(), self::SLIM_HTTP_METHODS ) ) {
                 continue;
             }
-
 
             $className = StringHelper::substringBefore( $endpoint->getController(), ':' );
             if ( ! $container->has( $className ) ) {
@@ -51,7 +51,6 @@ class RouteManager {
                     return new $className;
                 };
             }
-
 
             $httpMethod = $endpoint->getHttpMethod();
             /**
@@ -69,7 +68,6 @@ class RouteManager {
     
             $endpointName = $endpoint->getName();
 
-
             foreach($activeMiddlewareNames as $middlewareName) {
                 if ($middlewareName !== "*") {
                     $pattern = "/^" . $middlewareName . "/";
@@ -84,6 +82,7 @@ class RouteManager {
             
             $slimRoute->add( new RenderMiddleware() );
             $slimRoute->add( new RouteMiddleware( $endpoint ) );
+            $slimRoute->add( new SessionMiddleware());
         }
     }
 }

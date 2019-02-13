@@ -39,7 +39,7 @@ class Bootstrap extends AbstractBootstrap
             BackendNavigation::class
         ];
 
-        $this->order = 2;
+        $this->order = 3;
     }
 
     /**
