@@ -2,7 +2,6 @@
 namespace Oforge\Engine\Modules\AdminBackend\Controller\Backend;
 
 use \Oforge\Engine\Modules\Core\Abstracts\AbstractController;
-use Oforge\Engine\Modules\Core\Services\EndpointService;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
