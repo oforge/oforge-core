@@ -96,7 +96,9 @@ class DashboardController extends SecureBackendController {
 
     }
 
-
+    /**
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     */
     public function initPermissions() {
         $this->ensurePermissions("indexAction", BackendUser::class, BackendUser::ROLE_MODERATOR);
 //        $this->ensurePermissions("indexAction", BackendUser::class, BackendUser::ROLE_MODERATOR);

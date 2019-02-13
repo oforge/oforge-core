@@ -16,9 +16,6 @@ class Bootstrap extends AbstractBootstrap {
      * Bootstrap constructor.
      */
     public function __construct() {
-        $this->middleware = [
-            '*' => ['class' => SessionMiddleware::class, 'position' => 999999],
-        ];
         $this->services   = [
             'session.management' => SessionManagementService::class,
         ];
