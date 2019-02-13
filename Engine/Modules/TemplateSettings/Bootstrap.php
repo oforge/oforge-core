@@ -16,7 +16,7 @@ class Bootstrap extends AbstractBootstrap {
                 "controller" => TemplateSettingsController::class,
                 "name" => "backend_template_settings",
                 "asset_scope" => "Backend"
-            ],
+            ]
         ];
     }
 

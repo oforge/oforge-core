@@ -36,8 +36,10 @@ class Image extends AbstractContentType {
     }
     
     public function load(int $id) {
+
     }
     
     public function save(array $params) {
+
     }
 }
