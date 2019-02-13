@@ -9,10 +9,10 @@ use Slim\Http\Response;
 use Slim\Router;
 
 class SecureMiddleware {
-    
+
     /** @var string $urlPathName The named path for redirects */
     protected $urlPathName = '';
-    
+
     /**
      * Middleware call before the controller call
      *
@@ -25,21 +25,19 @@ class SecureMiddleware {
     public function prepend($request, $response) : ?Response
     {
         $controllerMethod = Oforge()->View()->get("meta")["controller_method"];
-        
+
         /**
          * @var $permissionService Permissions
          */
         $permissionService = Oforge()->Services()->get("permissions");
-        
+
         $permissions = $permissionService->get($controllerMethod);
         $auth = null;
 
         if (isset($_SESSION['auth'])) {
             $auth = $_SESSION['auth'];
         }
-        print_r($_SESSION);
-        $bla = $_SESSION;
-        
+
         if (isset($permissions)) {
             
             /**
@@ -47,19 +45,19 @@ class SecureMiddleware {
              */
             $authService = Oforge()->Services()->get("auth");
             $user = $authService->decode($auth);
-            
+
             if ($this->isUserValid($user, $permissions)) {
                 Oforge()->View()->assign([
                     'user' => $user
                 ]);
                 //nothing to do. proceed
             } else {
-                
+
                 /*
                 TODO: If there is a secured area, there should be either a message when redirecting
                       or a 401 status code.
                 */
-                
+
                 /**
                  * @var Router $router
                  */
@@ -73,7 +71,7 @@ class SecureMiddleware {
         }
         return $response;
     }
-    
+
     /**
      * @param $user
      * @param $permissions

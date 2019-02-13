@@ -17,10 +17,6 @@ use Slim\Router;
 
 class LoginController extends AbstractController {
     public function indexAction(Request $request, Response $response) {
-        
-        $bla = print_r($_SESSION, true);
-
-        Oforge()->View()->assign(["msg" => $bla]);
     }
     
     /**

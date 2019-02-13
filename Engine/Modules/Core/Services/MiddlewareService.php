@@ -16,22 +16,19 @@ class MiddlewareService
     public function getActive($name)
     {
         $entityManager = Oforge()->DB()->getManager();
-        $repository = $entityManager->getRepository(Middleware::class);
-
-        $middlewares = $repository->findBy(["name" => [$name, '*'], 'active' => 1], ['position' => 'DESC']);
-        /*
         $queryBuilder = $entityManager->createQueryBuilder();
         $result = $queryBuilder->select(array('m'))
             ->from(Middleware::class, 'm')
             ->where($queryBuilder->expr()->orX(
                 $queryBuilder->expr()->eq('m.name', '?1'),
-                $queryBuilder->expr()->eq('m.name', '?2'),
-                $queryBuilder->expr()->like('m.name', '?3')
+                $queryBuilder->expr()->eq('m.name', '?2')
             ))
             ->andWhere($queryBuilder->expr()->eq('m.active', 1))
-            ->orderBy('m.position', 'DESC')->setParameters([1 => $name, 2 => '*', 3 => $name . '_%'])->getQuery();
+            ->orderBy('m.position', 'DESC')
+            ->setParameters([1 => $name, 2 => '*'])
+            ->distinct()
+            ->getQuery();
         $middlewares = $result->execute();
-        */
 
         return $middlewares;
     }
@@ -40,15 +37,23 @@ class MiddlewareService
      * get all active middlewares
      * @return array|null
      */
-    public function getAllActiveNames() {
+    public function getAllDistinctActiveNames() {
         $entityManager = Oforge()->DB()->getManager();
-        $repository = $entityManager->getRepository(Middleware::class);
-        $middlewares = $repository->findBy(["active" => 1], ['position' => 'DESC']);
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $result = $queryBuilder->select(array('m.name'))
+           ->from(Middleware::class, 'm')
+           ->where($queryBuilder->expr()->eq('m.active', 1))
+           ->orderBy('m.position', 'DESC')
+           ->distinct()
+           ->getQuery();
+        $middlewares = $result->execute();
         
         $names = [];
+        
         foreach ($middlewares as $middleware) {
-            array_push($names, $middleware->getName());
+            array_push($names, $middleware['name']);
         }
+        
         return $names;
     }
     
