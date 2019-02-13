@@ -30,11 +30,20 @@ class PagesController extends AbstractController {
         $data = [
             "js" => ["cms_page_controller_jstree_config" => $pageTreeService->generateJsTreeConfigJSON()],
             "pages" => $pageTreeService->getPageArray(),
-            "content" => $pageBuilderService->getPageArray(2),
             "contentTypeGroups" => $contentTypeService->getContentTypeGroupArray(),
             "post" => $_POST
-            
         ];
+
+        if (isset($_POST["cms_page_jstree_selected_page"]))
+        {
+            if (!$_POST["cms_page_selected_language"])
+            {
+                $_POST["cms_page_selected_language"] = 0;
+            }
+            
+            $data["contents"] = $pageBuilderService->getContentDataArray($pageBuilderService->getPageArray($_POST["cms_page_jstree_selected_page"]), $_POST["cms_page_selected_language"]);
+            $data["pageBuilderData"] = $pageBuilderService->getPageArray($_POST["cms_page_jstree_selected_page"]); // TODO: just used as development info
+        }
         
         Oforge()->View()->assign($data);
     }
