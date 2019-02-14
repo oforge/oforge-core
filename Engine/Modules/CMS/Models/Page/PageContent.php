@@ -28,14 +28,14 @@ class PageContent extends AbstractModel
     
     /**
      * @var PagePath
-     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Page\PagePath", inversedBy="pageContent")
+     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Page\PagePath", inversedBy="pageContent", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="page_path_id", referencedColumnName="id")
      */
     private $pagePath;
     
     /**
      * @var Content
-     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Content\Content", inversedBy="content")
+     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Content\Content", inversedBy="content", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="content_id", referencedColumnName="id")
      */
     private $content;

@@ -3,109 +3,94 @@
 namespace Oforge\Engine\Modules\CMS\Services;
 
 use Oforge\Engine\Modules\CMS\Models\Page\Page;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 
-class PageBuilderService
-{
-    private $entityManager;
-    private $repository;
+class PageBuilderService extends AbstractDatabaseAccess {
 
-    public function __construct()
-    {
-        $this->entityManager = Oforge()->DB()->getManager();
-        $this->repository = $this->entityManager->getRepository(Page::class);
+    public function __construct() {
+        parent::__construct(["default" => Page::class]);
     }
-    
+
     /**
      * Returns all available page entities
-     * 
+     *
      * @return Page[]|NULL
      */
-    public function getPageEntities()
-    {
-        $pageEntityArray = $this->repository->findAll();
-        
-        if (isset($pageEntityArray))
-        {
+    public function getPageEntities() {
+        $pageEntityArray = $this->repository()->findAll();
+
+        if (isset($pageEntityArray)) {
             return $pageEntityArray;
-        }
-        else
-        {
-            return NULL;
+        } else {
+            return null;
         }
     }
-    
+
     /**
      * Returns all found pages as an associative array
-     * 
+     *
      * @return array|NULL Array filled with available pages
      */
-    public function getPageArray()
-    {
+    public function getPageArray() {
         $pageEntities = $this->getPageEntities();
-        
-        if (!$pageEntities)
-        {
-            return NULL;    
+
+        if (!$pageEntities) {
+            return null;
         }
-        
+
         $pages = [];
-        foreach($pageEntities as $pageEntity)
-        {
-            $page = [];
-            $page["id"] = $pageEntity->getId();
-            $page["name"] = $pageEntity->getName();
+        foreach ($pageEntities as $pageEntity) {
+            $page           = [];
+            $page["id"]     = $pageEntity->getId();
+            $page["name"]   = $pageEntity->getName();
             $page["parent"] = $pageEntity->getParent();
-            
+
             $pathEntities = $pageEntity->getPaths();
-            
+
             $pathArray = [];
-            foreach($pathEntities as $pathEntity)
-            {
+            foreach ($pathEntities as $pathEntity) {
                 $pathArray[] = $pathEntity->getPath();
             }
-            
+
             $page["paths"] = $pathArray;
-            
+
             $pages[] = $page;
         }
-        
+
         return $pages;
     }
-    
+
     /**
      * Generate a jsTree configuration file with page data included
-     * 
+     *
      * @return array|NULL jsTree configuration file as PHP array
      */
-    public function generateJsTreeConfigJSON()
-    {
+    public function generateJsTreeConfigJSON() {
         $pages = $this->getPageArray();
-        
-        if (!$pages)
-        {
-            return NULL;
+
+        if (!$pages) {
+            return null;
         }
-        
+
         $jsTreePageArray = [];
-        foreach ($pages as $page)
-        {
+        foreach ($pages as $page) {
             $jsTreePageArray[] = [
-                "id" => $page["id"],
+                "id"     => $page["id"],
                 "parent" => $page["parent"] ? $page["parent"] : "#",
-                "text" => $page["name"]
+                "text"   => $page["name"],
             ];
         }
-        
+
         $jsTreeJSON = [
             "core" => [
-                "animation" => 0,
-                "check_callback" => TRUE,
-                "force_text" => TRUE,
-                "themes" => ["stripes" => FALSE],
-                "data" => $jsTreePageArray
-            ]
+                "animation"      => 0,
+                "check_callback" => true,
+                "force_text"     => true,
+                "themes"         => ["stripes" => false],
+                "data"           => $jsTreePageArray,
+            ],
         ];
-        
+
         return $jsTreeJSON;
     }
 }

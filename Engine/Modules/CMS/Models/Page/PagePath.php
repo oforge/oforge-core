@@ -28,14 +28,14 @@ class PagePath extends AbstractModel
     
     /**
      * @var Page
-     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Page\Page")
+     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Page\Page", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="page_id", referencedColumnName="id")
      */
     private $page;
     
     /**
      * @var Language
-     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\I18n\Models\Language")
+     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\I18n\Models\Language", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="language_id", referencedColumnName="id")
      */
     private $language;
@@ -48,7 +48,7 @@ class PagePath extends AbstractModel
     
     /**
      * @var PageContent[]
-     * @ORM\OneToMany(targetEntity="Oforge\Engine\Modules\CMS\Models\Page\PageContent", mappedBy="pagePath", cascade={"all"})
+     * @ORM\OneToMany(targetEntity="Oforge\Engine\Modules\CMS\Models\Page\PageContent", mappedBy="pagePath", cascade={"all"}, fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="id", referencedColumnName="page_path_id")
      */
     private $pageContent;

@@ -2,34 +2,38 @@
 
 namespace Oforge\Engine\Modules\Core\Helper;
 
+use const Grpc\STATUS_ABORTED;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Exceptions\InvalidClassException;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 class Helper {
     protected static $omitFolders = [".", "..", "vendor", "var"];
-    
+
     /**
      * Get all directories recursive based on the defined path, except the folders to omit
+     *
      * @param string $path
      *
      * @return array
      */
     public static function getAllDirs(string $path) {
         $result = [];
-        $tmp = scandir($path);
+        $tmp    = scandir($path);
 
-        foreach($tmp as $dir) {
-            $v = $path . DIRECTORY_SEPARATOR   . $dir;
+        foreach ($tmp as $dir) {
+            $v = $path . DIRECTORY_SEPARATOR . $dir;
 
-            if(is_dir($v) && !in_array($dir, self::$omitFolders)) {
+            if (is_dir($v) && !in_array($dir, self::$omitFolders)) {
                 array_push($result, $v);
                 $result = array_merge($result, Helper::getAllDirs($v));
             }
         }
-        
+
         return $result;
     }
-    
+
     /**
      * get all Bootstrap.php files inside a defined path
      *
@@ -38,9 +42,20 @@ class Helper {
      * @return array
      */
     public static function getBootstrapFiles(string $path) {
-        return self::findFilesInPath($path, "bootstrap.php");
+        $result = [];
+
+        $cacheFile = ROOT_PATH . Statics::CACHE_DIR . DIRECTORY_SEPARATOR . basename($path) . ".cache";
+
+        if (file_exists($cacheFile) && Oforge()->Settings()->get("mode") != "development") {
+            $result = unserialize(file_get_contents($cacheFile));
+        } else {
+            $result = self::findFilesInPath($path, "bootstrap.php");
+            file_put_contents($cacheFile, serialize($result));
+        }
+
+        return $result;
     }
-    
+
     /**
      * get all template files inside a defined path
      *
@@ -49,9 +64,19 @@ class Helper {
      * @return array
      */
     public static function getTemplateFiles(string $path) {
-        return self::findFilesInPath($path, "template.php");
+
+        $cacheFile = ROOT_PATH . Statics::CACHE_DIR . DIRECTORY_SEPARATOR . basename($path) . ".cache";
+
+        if (file_exists($cacheFile) && Oforge()->Settings()->get("mode") != "development") {
+            $result = unserialize(file_get_contents($cacheFile));
+        } else {
+            $result = self::findFilesInPath($path, "template.php");
+            file_put_contents($cacheFile, serialize($result));
+        }
+
+        return $result;
     }
-    
+
     /**
      * search for filename inside a path
      *
@@ -62,22 +87,17 @@ class Helper {
      */
     private static function findFilesInPath($path, $fileName) {
         $result = [];
-        if(is_dir($path)) {
-            $tmp = scandir($path);
-        
-            foreach($tmp as $dir) {
-                $v = $path . DIRECTORY_SEPARATOR   . $dir;
-            
-                if(is_dir($v) && !in_array($dir, self::$omitFolders)) {
-                    $result = array_merge($result, Helper::findFilesInPath($v, $fileName));
-                } else if(strtolower($dir) == $fileName) {
-                    $result[basename($path)] = $v;
-                }
+
+        $path = realpath($path);
+        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path)) as $f) {
+            if (strtolower($f->getFileName()) == $fileName) {
+                $result[basename($f->getPath())] = $f->getPath() . DIRECTORY_SEPARATOR . $f->getFileName();
             }
         }
+
         return $result;
     }
-    
+
     /**
      * get the instance of a module/plugin based on the bootstrap file
      *
@@ -88,8 +108,8 @@ class Helper {
      */
     public static function getBootstrapInstance($pluginName) : AbstractBootstrap {
         $className = $pluginName . "\\Bootstrap";
-        
-        if ( is_subclass_of( $className, AbstractBootstrap::class ) ) {
+
+        if (is_subclass_of($className, AbstractBootstrap::class)) {
             return new $className();
         }
         throw new InvalidClassException($className, AbstractBootstrap::class);

@@ -10,83 +10,68 @@ namespace Oforge\Engine\Modules\CMS\Services;
 
 use Oforge\Engine\Modules\CMS\Models\Content\ContentTypeGroup;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 
-
-class ContentTypeService
-{
-
-    private $entityManager;
-    private $repository;
-    
-    private $contentTypes;
-
-    public function __construct()
-    {
-        $this->entityManager = Oforge()->DB()->getManager();
-        $this->repository = $this->entityManager->getRepository(ContentTypeGroup::class);
+class ContentTypeService extends AbstractDatabaseAccess {
+    public function __construct() {
+        parent::__construct([
+            "default" => ContentTypeGroup::class,
+        ]);
     }
-    
+
     /**
      * Returns all available content type group entities
      *
      * @return ContentTypeGroup[]|NULL
      */
-    public function getContentTypeGroupEntities()
-    {
-        $contentTypeGroups = $this->repository->findAll();
-        
-        if (isset($contentTypeGroups))
-        {
+    public function getContentTypeGroupEntities() {
+        $contentTypeGroups = $this->repository()->findAll();
+
+        if (isset($contentTypeGroups)) {
             return $contentTypeGroups;
-        }
-        else
-        {
-            return NULL;
+        } else {
+            return null;
         }
     }
-    
+
     /**
      * Returns all found content type groups as an associative array
      *
      * @return array|NULL Array filled with available content type groups
      */
-    public function getContentTypeGroupArray()
-    {
+    public function getContentTypeGroupArray() {
         $contentTypeGroupEntities = $this->getContentTypeGroupEntities();
-        
-        if (!$contentTypeGroupEntities)
-        {
-            return NULL;
+
+        if (!$contentTypeGroupEntities) {
+            return null;
         }
-        
+
         $contentTypeGroups = [];
-        foreach($contentTypeGroupEntities as $contentTypeGroupEntity)
-        {
-            $contentTypeGroup = [];
-            $contentTypeGroup["id"] = $contentTypeGroupEntity->getId();
+        foreach ($contentTypeGroupEntities as $contentTypeGroupEntity) {
+            $contentTypeGroup                = [];
+            $contentTypeGroup["id"]          = $contentTypeGroupEntity->getId();
             $contentTypeGroup["description"] = $contentTypeGroupEntity->getDescription();
-            
+
             $contentTypeEntities = $contentTypeGroupEntity->getContentTypes();
-            
+
             $contentTypeArray = [];
-            foreach($contentTypeEntities as $contentTypeEntity)
-            {
-                $contentType = [];
-                $contentType["id"] = $contentTypeEntity->getId();
-                $contentType["group"] = $contentTypeEntity->getGroup();
-                $contentType["name"] = $contentTypeEntity->getName();
-                $contentType["icon"] = $contentTypeEntity->getIcon();
+            foreach ($contentTypeEntities as $contentTypeEntity) {
+                $contentType                = [];
+                $contentType["id"]          = $contentTypeEntity->getId();
+                $contentType["group"]       = $contentTypeEntity->getGroup();
+                $contentType["name"]        = $contentTypeEntity->getName();
+                $contentType["icon"]        = $contentTypeEntity->getIcon();
                 $contentType["description"] = $contentTypeEntity->getDescription();
-                $contentType["class"] = $contentTypeEntity->getClassPath();
-                
+                $contentType["class"]       = $contentTypeEntity->getClassPath();
+
                 $contentTypeArray[] = $contentType;
             }
-            
+
             $contentTypeGroup["types"] = $contentTypeArray;
-            
+
             $contentTypeGroups[] = $contentTypeGroup;
         }
-        
+
         return $contentTypeGroups;
     }
 }

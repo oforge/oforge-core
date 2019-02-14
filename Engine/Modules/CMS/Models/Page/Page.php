@@ -35,7 +35,7 @@ class Page extends AbstractModel
     
     /**
      * @var int
-     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Site\Site")
+     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Site\Site", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="site_id", referencedColumnName="id")
      * @ORM\Column(name="site_id", type="integer")
      */
@@ -55,7 +55,7 @@ class Page extends AbstractModel
     
     /**
      * @var PagePath[]
-     * @ORM\OneToMany(targetEntity="Oforge\Engine\Modules\CMS\Models\Page\PagePath", mappedBy="page", cascade={"all"})
+     * @ORM\OneToMany(targetEntity="Oforge\Engine\Modules\CMS\Models\Page\PagePath", mappedBy="page", cascade={"all"}, fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="id", referencedColumnName="page_id")
      */
     private $paths;

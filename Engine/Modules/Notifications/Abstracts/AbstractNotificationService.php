@@ -2,10 +2,16 @@
 
 namespace Oforge\Engine\Modules\Notifications\Abstracts;
 
-abstract class AbstractNotificationService {
-    const ALL = "all";
+use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
+
+abstract class AbstractNotificationService extends AbstractDatabaseAccess {
+    const ALL    = "all";
     const UNSEEN = "unseen";
-    const SEEN = "seen";
+    const SEEN   = "seen";
+
+    public function __construct($models) {
+        parent::__construct($models);
+    }
 
     abstract function getNotifications($userId, $selector = AbstractNotificationService::ALL);
 

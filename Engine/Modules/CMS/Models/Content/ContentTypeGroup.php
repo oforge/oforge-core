@@ -34,7 +34,7 @@ class ContentTypeGroup extends AbstractModel
     
     /**
      * @var ContentType[]
-     * @ORM\OneToMany(targetEntity="Oforge\Engine\Modules\CMS\Models\Content\ContentType", mappedBy="group", cascade={"all"})
+     * @ORM\OneToMany(targetEntity="Oforge\Engine\Modules\CMS\Models\Content\ContentType", mappedBy="group", cascade={"all"}, fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="id", referencedColumnName="content_type_group_id")
      */
     private $types;

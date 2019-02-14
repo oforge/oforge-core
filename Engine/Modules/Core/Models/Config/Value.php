@@ -18,7 +18,7 @@ class Value extends AbstractModel
     private $id;
     /**
      * @var string
-     * @ORM\ManyToOne(targetEntity="Element", inversedBy="values")
+     * @ORM\ManyToOne(targetEntity="Element", inversedBy="values", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="element_id", referencedColumnName="id")
      */
     private $element;
