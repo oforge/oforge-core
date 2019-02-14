@@ -1,5 +1,6 @@
 {% extends "@parent/Frontend/Layout.twig" %}
 {% block content %}
+    {% block login %}
     <div class="login">
         {{ msg }}
 
@@ -30,4 +31,5 @@
             </div>
         </form>
     </div>
+    {% endblock login %}
 {% endblock content %}
