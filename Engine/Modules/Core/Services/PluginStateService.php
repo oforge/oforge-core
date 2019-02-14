@@ -5,28 +5,20 @@ use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\CouldNotActivatePluginException;
 use Oforge\Engine\Modules\Core\Exceptions\CouldNotDeactivatePluginException;
 use Oforge\Engine\Modules\Core\Exceptions\PluginNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\Helper;
 use Oforge\Engine\Modules\Core\Models\Plugin\Plugin;
 
-class PluginStateService
-{
-    /**
-     * @var $entityManager EntityManager
-     */
-    private $entityManager;
-    
-    /**
-     * @var $repository ObjectRepository|EntityRepository
-     */
-    private $repository;
-    
+class PluginStateService extends AbstractDatabaseAccess {
+
     public function __construct() {
-        $this->entityManager = Oforge()->DB()->getManager();
-        $this->repository = $this->entityManager->getRepository(Plugin::class);
+        parent::__construct(["default" => Plugin::class]);
     }
+
+
     
     /**
      * Initialize an active plugin
@@ -44,7 +36,7 @@ class PluginStateService
         /**
          * @var $plugin Plugin
          */
-        $plugin = $this->repository->findOneBy(["name" => $pluginName]);
+        $plugin = $this->repository()->findOneBy(["name" => $pluginName]);
         
         if (isset($plugin) && $plugin->getActive()) {
             $instance = Helper::getBootstrapInstance($pluginName);
@@ -78,14 +70,14 @@ class PluginStateService
         /**
          * @var $plugin Plugin
          */
-        $plugin = $this->repository->findOneBy(["name" => $pluginName]);
+        $plugin = $this->repository()->findOneBy(["name" => $pluginName]);
         if (!isset($plugin)) {
             $instance = Helper::getBootstrapInstance($pluginName);
             if (isset($instance)) {
                 $pluginMiddlewares = $instance->getMiddleware();
                 $plugin = Plugin::create(array("name" => $pluginName, "active" => 0, "installed" => 0, "order" => $instance->getOrder()));
-                $this->entityManager->persist($plugin);
-                $this->entityManager->flush();
+                $this->entityManager()->persist($plugin);
+                $this->entityManager()->flush();
                 if(isset($pluginMiddlewares) && is_array($pluginMiddlewares) && sizeof($pluginMiddlewares) > 0) {
                     
                     /**
@@ -95,8 +87,8 @@ class PluginStateService
                     $middlewares = $middlewaresService->register($pluginMiddlewares, $plugin);
                     $plugin->setMiddlewares($middlewares);
                 }
-                $this->entityManager->persist($plugin);
-                $this->entityManager->flush();
+                $this->entityManager()->persist($plugin);
+                $this->entityManager()->flush();
             }
         }
     }
@@ -118,7 +110,7 @@ class PluginStateService
         /**
          * @var $plugin Plugin
          */
-        $plugin = $this->repository->findOneBy(['name' => $pluginName]);
+        $plugin = $this->repository()->findOneBy(['name' => $pluginName]);
         if (!isset($plugin)) {
             throw new PluginNotFoundException($pluginName);
         }
@@ -132,8 +124,8 @@ class PluginStateService
             Oforge()->Services()->register($services);
             $instance->install();
             $plugin->setInstalled(true);
-            $this->entityManager->persist($plugin);
-            $this->entityManager->flush();
+            $this->entityManager()->persist($plugin);
+            $this->entityManager()->flush();
         }
     }
     
@@ -153,13 +145,13 @@ class PluginStateService
         /**
          * @var $plugin Plugin
          */
-        $plugin = $this->repository->findOneBy(['name' => $pluginName]);
+        $plugin = $this->repository()->findOneBy(['name' => $pluginName]);
         if (!isset($plugin)) {
             throw new PluginNotFoundException($pluginName);
         }
         $plugin->setInstalled(false);
-        $this->entityManager->persist($plugin);
-        $this->entityManager->flush();
+        $this->entityManager()->persist($plugin);
+        $this->entityManager()->flush();
     }
     
     /**
@@ -178,14 +170,14 @@ class PluginStateService
         /**
          * @var $plugin Plugin
          */
-        $plugin = $this->repository->findOneBy(['name' => $pluginName]);
+        $plugin = $this->repository()->findOneBy(['name' => $pluginName]);
         $instance = Helper::getBootstrapInstance($pluginName);
  
         if (sizeof($instance->getDependencies()) > 0) {
             foreach ($instance->getDependencies() as $dependency) {
                 if (is_subclass_of($dependency, AbstractBootstrap::class )) {
                     $dependencyName = (new \ReflectionClass($dependency))->getNamespaceName();
-                    $dependencyActiveAndInstalled = $this->repository->findOneBy(["name" => $dependencyName, "active" => 1, "installed" => 1]);
+                    $dependencyActiveAndInstalled = $this->repository()->findOneBy(["name" => $dependencyName, "active" => 1, "installed" => 1]);
                     
                     if (!isset($dependencyActiveAndInstalled)) {
                         throw new CouldNotActivatePluginException($pluginName, [$dependencyName]);
@@ -201,8 +193,8 @@ class PluginStateService
         }
 
         $plugin->setActive(true);
-        $this->entityManager->persist($plugin);
-        $this->entityManager->flush();
+        $this->entityManager()->persist($plugin);
+        $this->entityManager()->flush();
     }
     
     /**
@@ -220,12 +212,12 @@ class PluginStateService
         /**
          * @var $pluginToDeactivate Plugin
          */
-        $pluginToDeactivate = $this->repository->findOneBy(["name" => $pluginName]);
+        $pluginToDeactivate = $this->repository()->findOneBy(["name" => $pluginName]);
         
         /**
          * @var $plugins Plugin[]
          */
-        $plugins = $this->repository->findBy(["active" => 1]);
+        $plugins = $this->repository()->findBy(["active" => 1]);
         
         if (!isset($pluginToDeactivate)) {
             throw new PluginNotFoundException($pluginName);
@@ -252,8 +244,8 @@ class PluginStateService
         }
 
         $pluginToDeactivate->setActive(false);
-        $this->entityManager->persist($pluginToDeactivate);
-        $this->entityManager->flush();
+        $this->entityManager()->persist($pluginToDeactivate);
+        $this->entityManager()->flush();
     }
     
     /**

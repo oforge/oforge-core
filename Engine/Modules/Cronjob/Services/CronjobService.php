@@ -5,6 +5,7 @@ namespace Oforge\Engine\Modules\Cronjob\Services;
 use Doctrine\ORM\EntityRepository;
 use Monolog\Handler\RotatingFileHandler;
 use Oforge\Engine\Modules\Console\Services\ConsoleService;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
 use Oforge\Engine\Modules\Core\Exceptions\InvalidClassException;
 use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
@@ -22,19 +23,10 @@ use Oforge\Engine\Modules\Cronjob\Models\CustomCronjob;
  *
  * @package Oforge\Engine\Modules\Cronjob\Services
  */
-class CronjobService {
-    /**
-     * @var \Doctrine\ORM\EntityManager $entityManager
-     */
-    private $entityManager;
-    /**
-     * @var EntityRepository
-     */
-    private $repository;
+class CronjobService extends AbstractDatabaseAccess {
 
     public function __construct() {
-        $this->entityManager = Oforge()->DB()->getManager();
-        $this->repository    = $this->entityManager->getRepository(AbstractCronjob::class);
+        parent::__construct(["default" => AbstractCronjob::class]);
     }
 
     /**
@@ -66,18 +58,18 @@ class CronjobService {
         }
         //Check if the element is already within the system
         foreach ($cronjobs as $cronjob) {
-            $element = $this->repository->findOneBy(['id' => $cronjob->getId()]);
+            $element = $this->repository()->findOneBy(['id' => $cronjob->getId()]);
             if (!isset($element)) {
                 try {
-                    $this->entityManager->persist($cronjob);
+                    $this->entityManager()->persist($cronjob);
                 } catch (\Exception $exception) {
                     Oforge()->Logger()->get()->error($exception->getMessage(), $exception->getTrace());
                 }
             }
         }
         try {
-            $this->entityManager->flush();
-            $this->repository->clear();
+            $this->entityManager()->flush();
+            $this->repository()->clear();
         } catch (\Exception $exception) {
             Oforge()->Logger()->get()->error($exception->getMessage(), $exception->getTrace());
         }
@@ -96,7 +88,7 @@ class CronjobService {
         if (empty($name)) {
             throw new NotFoundException("Cronjob with name '$name' not found");
         }
-        $cronjob = $this->repository->findOneBy([
+        $cronjob = $this->repository()->findOneBy([
             'name' => $name,
         ]);
         if (is_null($cronjob)) {
@@ -117,7 +109,7 @@ class CronjobService {
      * @return AbstractCronjob[]
      */
     public function getCronjobs(array $criteria = [], ?array $orderBy = null, ?int $limit = null, ?int $offset = null) {
-        return $this->repository->findBy($criteria, $orderBy, $limit, $offset);
+        return $this->repository()->findBy($criteria, $orderBy, $limit, $offset);
     }
 
     /**
@@ -131,8 +123,8 @@ class CronjobService {
     public function run(string $name) {
         try {
             $cronjob = $this->getCronjob($name);
-            $this->entityManager->flush();
-            $this->repository->clear();
+            $this->entityManager()->flush();
+            $this->repository()->clear();
 
             return $this->runCronjob($cronjob);
         } catch (\Exception $exception) {
@@ -146,7 +138,7 @@ class CronjobService {
      * Run all cronjobs with next execution time before now.
      */
     public function runAll() {
-        $query = $this->repository->createQueryBuilder('c')#
+        $query = $this->repository()->createQueryBuilder('c')#
                                   ->where('c.active = 1')#
                                   ->andWhere('c.nextExecutionTime IS NOT NULL')#
                                   ->andWhere('c.nextExecutionTime < CURRENT_TIMESTAMP()')#
@@ -174,7 +166,7 @@ class CronjobService {
         } catch (\Exception $exception) {
             Oforge()->Logger()->get()->error($exception->getMessage(), $exception->getTrace());
         }
-        $this->repository->clear();
+        $this->repository()->clear();
     }
 
     /**

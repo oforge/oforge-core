@@ -2,28 +2,19 @@
 
 namespace Oforge\Engine\Modules\Core\Services;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Core\Models\Endpoints\Endpoint;
 
-class EndpointService {
-    const SLIM_ROUTE_METHODS = [ 'any', 'get', 'post', 'put', 'patch', 'delete', 'options' ];
-    /**
-     * @var EntityManager $entityManager
-     */
-    private $entityManager;
-    /**
-     * @var EntityRepository $repository
-     */
-    private $repository;
-    
+class EndpointService extends AbstractDatabaseAccess {
+
     public function __construct() {
-        $this->entityManager = Oforge()->DB()->getManager();
-        $this->repository    = $this->entityManager->getRepository( Endpoint::class );
+        parent::__construct(["default" => Endpoint::class]);
     }
-    
+
+    const SLIM_ROUTE_METHODS = ['any', 'get', 'post', 'put', 'patch', 'delete', 'options'];
+
     /**
      * Store endpoints in a database table
      *
@@ -33,24 +24,29 @@ class EndpointService {
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws ConfigOptionKeyNotExists
      */
-    public function register( array $endpoints ) {
-        $endpointConfigs = $this->prepareEndpointConfigs( $endpoints );
-        
-        foreach ( $endpointConfigs as $endpointConfig ) {
+    public function register(array $endpoints) {
+        $endpointConfigs = $this->prepareEndpointConfigs($endpoints);
+
+        $created = false;
+        foreach ($endpointConfigs as $endpointConfig) {
             /**
              * @var Endpoint $endpoint
              */
-            $endpoint = $this->repository->findOneBy( [ 'name' => $endpointConfig['name'] ] );
-            if ( ! isset( $endpoint ) ) {
-                $endpoint = Endpoint::create( $endpointConfig );
-                $endpoint->setActive( true );
-                $this->entityManager->persist( $endpoint );
+            $endpoint = $this->repository()->findOneBy(['name' => $endpointConfig['name']]);
+            if (!isset($endpoint)) {
+                $endpoint = Endpoint::create($endpointConfig);
+                $endpoint->setActive(true);
+                $this->entityManager()->persist($endpoint);
+                $created = true;
             }
         }
-        $this->entityManager->flush();
-        $this->repository->clear();
+
+        if ($created) {
+            $this->entityManager()->flush();
+            $this->repository()->clear();
+        }
     }
-    
+
     /**
      * Remove endpoints
      *
@@ -59,63 +55,63 @@ class EndpointService {
      * @throws ConfigOptionKeyNotExists
      * @throws \Doctrine\ORM\ORMException
      */
-    public function unregister( array $endpoints ) {//TODO ungetestet
-        $endpointConfigs = $this->prepareEndpointConfigs( $endpoints );
-        
-        foreach ( $endpointConfigs as $endpointConfig ) {
+    public function unregister(array $endpoints) {//TODO ungetestet
+        $endpointConfigs = $this->prepareEndpointConfigs($endpoints);
+
+        foreach ($endpointConfigs as $endpointConfig) {
             /**
              * @var Endpoint $endpoint
              */
-            $endpoints = $this->repository->findBy( [ 'controller' => $endpointConfig['controller'] ] );
-            if ( count( $endpoints ) > 0 ) {
-                foreach ( $endpoints as $endpoint ) {
-                    $this->entityManager->remove( $endpoint );
+            $endpoints = $this->repository()->findBy(['controller' => $endpointConfig['controller']]);
+            if (count($endpoints) > 0) {
+                foreach ($endpoints as $endpoint) {
+                    $this->entityManager()->remove($endpoint);
                 }
-                $this->entityManager->flush();
+                $this->entityManager()->flush();
             }
-            $this->repository->clear();
+            $this->repository()->clear();
         }
     }
-    
+
     /**
      * @param array $options
      *
      * @return bool
      * @throws ConfigOptionKeyNotExists
      */
-    private function isValid( array $options ) {
+    private function isValid(array $options) {
         /**
          * Check if required keys are within the options
          */
-        $keys = [ 'controller', 'name' ];
-        foreach ( $keys as $key ) {
-            if ( ! array_key_exists( $key, $options ) ) {
-                throw new ConfigOptionKeyNotExists( $key );
+        $keys = ['controller', 'name'];
+        foreach ($keys as $key) {
+            if (!array_key_exists($key, $options)) {
+                throw new ConfigOptionKeyNotExists($key);
             }
         }
-        
+
         return true;
     }
-    
+
     /**
      * @param array $endpoints
      *
      * @return array
      * @throws ConfigOptionKeyNotExists
      */
-    protected function prepareEndpointConfigs( array $endpoints ): array {
+    protected function prepareEndpointConfigs(array $endpoints) : array {
         $endpointConfigs = [];
-        
-        foreach ( $endpoints as $path => $config ) {
-            $isRoot = ( $path === '/' || '' );
-            
-            if ( $this->isValid( $config ) ) {
-                $controller = $config['controller'];
-                $scope      = ArrayHelper::get( $config, 'asset_scope', 'frontend' );
-                $order      = ArrayHelper::get( $config, 'order', 1337 );
-                $methods    = ArrayHelper::get( $config, 'methods', [] );
 
-                $classMethods = get_class_methods( $config['controller'] );
+        foreach ($endpoints as $path => $config) {
+            $isRoot = ($path === '/' || '');
+
+            if ($this->isValid($config)) {
+                $controller = $config['controller'];
+                $scope      = ArrayHelper::get($config, 'asset_scope', 'frontend');
+                $order      = ArrayHelper::get($config, 'order', 1337);
+                $methods    = ArrayHelper::get($config, 'methods', []);
+
+                $classMethods = get_class_methods($config['controller']);
 
                 if ($classMethods === null) {
                     // TODO: Check, if this logger usage is safe!
@@ -124,30 +120,30 @@ class EndpointService {
                     $classMethods = [];
                 }
 
-                if ( ! empty( $methods ) ) {
-                    $classMethods = array_intersect( array_keys( $methods ), $classMethods );
+                if (!empty($methods)) {
+                    $classMethods = array_intersect(array_keys($methods), $classMethods);
                 }
-                foreach ( $classMethods as $classMethod ) {
-                    if ( substr( $classMethod, - 6 ) !== 'Action' ) {
+                foreach ($classMethods as $classMethod) {
+                    if (substr($classMethod, -6) !== 'Action') {
                         continue;
                     }
-                    if ( $classMethod === 'indexAction' || isset( $methods[ $classMethod ] ) ) {
-                        $name       = ArrayHelper::get( $config, 'name', str_replace( '/', '_', $path ) );
+                    if ($classMethod === 'indexAction' || isset($methods[$classMethod])) {
+                        $name       = ArrayHelper::get($config, 'name', str_replace('/', '_', $path));
                         $actionPath = $path;
                     } else {
-                        $action = substr( $classMethod, 0, - 6 );
-                        if ( isset( $config['name'] ) ) {
+                        $action = substr($classMethod, 0, -6);
+                        if (isset($config['name'])) {
                             $name = $config['name'] . '_' . $action;
                         } else {
-                            $name = $path . ( $isRoot ? '' : '/' ) . $action;
+                            $name = $path . ($isRoot ? '' : '/') . $action;
                         }
-                        $actionPath = $path . ( $isRoot ? '' : '/' ) . $action;
+                        $actionPath = $path . ($isRoot ? '' : '/') . $action;
                     }
-                    $httpMethod = ArrayHelper::get( $methods, $classMethod, 'any' );
-                    if ( ! in_array( $httpMethod, self::SLIM_ROUTE_METHODS ) ) {
+                    $httpMethod = ArrayHelper::get($methods, $classMethod, 'any');
+                    if (!in_array($httpMethod, self::SLIM_ROUTE_METHODS)) {
                         $httpMethod = 'any';
                     }
-                    
+
                     $controllerMethod  = $controller . ':' . $classMethod;
                     $endpointConfigs[] = [
                         'name'        => $name,
@@ -155,16 +151,16 @@ class EndpointService {
                         'controller'  => $controllerMethod,
                         'asset_scope' => $scope,
                         'http_method' => $httpMethod,
-                        'order'       => $order
+                        'order'       => $order,
                     ];
                 }
                 if (empty($endpointConfigs)) {
-                    Oforge()->Logger()->get()->addWarning('An endpoint was defined but the corresponding controller has no method that ends with ...Action',
-                        $config);
+                    Oforge()->Logger()->get()
+                            ->addWarning('An endpoint was defined but the corresponding controller has no method that ends with ...Action', $config);
                 }
             }
         }
-        
+
         return $endpointConfigs;
     }
 }

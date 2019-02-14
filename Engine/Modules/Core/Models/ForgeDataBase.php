@@ -3,6 +3,7 @@
 namespace Oforge\Engine\Modules\Core\Models;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
@@ -24,6 +25,8 @@ class ForgeDataBase {
     private $validator = null;
     private $metaDataCollection = [];
     private $loadedSchemata = [];
+    private $settings;
+    private $config;
 
     protected function __construct() {
     }
@@ -40,13 +43,13 @@ class ForgeDataBase {
     }
 
     protected function addMetaData(string $text) {
-        $metaData = $this->manager->getClassMetadata($text);
+        $metaData = $this->getManager()->getClassMetadata($text);
 
         array_push($this->metaDataCollection, $metaData);
-        $inSync = $this->validator->schemaInSyncWithMetadata();
+        $inSync = $this->getValidator()->schemaInSyncWithMetadata();
 
         if (!$inSync) {
-            $this->tool->updateSchema($this->metaDataCollection, true);
+            $this->getSchemaTool()->updateSchema($this->metaDataCollection, true);
         }
     }
 
@@ -76,28 +79,41 @@ class ForgeDataBase {
      * @throws \Doctrine\ORM\ORMException
      */
     public function init(Array $settings) {
-        $config = Setup::createAnnotationMetadataConfiguration($settings['metadata_dirs'], $settings['dev_mode']);
+        $this->settings = $settings;
 
-        $config->setMetadataDriverImpl(new AnnotationDriver(new AnnotationReader(), $settings['metadata_dirs']));
+        $cache = new FilesystemCache($settings['cache_dir']);
 
-        $config->setMetadataCacheImpl(new FilesystemCache($settings['cache_dir']));
-
-        $this->manager = EntityManager::create($settings['connection'], $config);
-        DiscriminatorEntryListener::register($this->manager);
-
-        $this->validator = new SchemaValidator($this->manager);
-        $this->tool      = new SchemaTool($this->manager);
+        $this->config = Setup::createAnnotationMetadataConfiguration($settings['metadata_dirs'], $settings["dev_mode"], null, $cache);
+        $this->config->setMetadataDriverImpl(new AnnotationDriver(new CachedReader(new AnnotationReader(), $cache, $settings["dev_mode"]), $settings['metadata_dirs']));
     }
 
+    /**
+     * @return EntityManager
+     * @throws \Doctrine\ORM\ORMException
+     */
     public function getManager() : EntityManager {
+        if (!isset($this->manager)) {
+            $this->manager = EntityManager::create($this->settings['connection'], $this->config);
+
+            DiscriminatorEntryListener::register($this->manager);
+        }
+
         return $this->manager;
     }
 
     public function getValidator() : SchemaValidator {
+        if (!isset($this->validator)) {
+            $this->validator = new SchemaValidator($this->manager);
+        }
+
         return $this->validator;
     }
 
     public function getSchemaTool() : SchemaTool {
+        if (!isset($this->tool)) {
+            $this->tool = new SchemaTool($this->manager);
+        }
+
         return $this->tool;
     }
 

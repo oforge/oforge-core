@@ -45,7 +45,7 @@ class Middleware extends AbstractModel
 
     /**
      * @var string
-     * @ORM\ManyToOne(targetEntity="Plugin", inversedBy="middlewares")
+     * @ORM\ManyToOne(targetEntity="Plugin", inversedBy="middlewares", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="plugin_id", referencedColumnName="id")
      */
     private $plugin;

@@ -4,7 +4,7 @@ namespace Oforge\Engine\Modules\Notifications;
 
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Notifications\Models\BackendNotification;
-use Oforge\Engine\Modules\Notifications\Services\BackendNotificationController;
+use Oforge\Engine\Modules\Notifications\Controller\BackendNotificationController;
 use Oforge\Engine\Modules\Notifications\Services\BackendNotificationService;
 
 class Bootstrap extends AbstractBootstrap {

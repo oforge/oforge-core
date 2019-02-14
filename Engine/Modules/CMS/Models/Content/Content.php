@@ -28,14 +28,14 @@ class Content extends AbstractModel
     
     /**
      * @var PageContent
-     * @ORM\OneToMany(targetEntity="Oforge\Engine\Modules\CMS\Models\Page\PageContent", mappedBy="content")
+     * @ORM\OneToMany(targetEntity="Oforge\Engine\Modules\CMS\Models\Page\PageContent", mappedBy="content", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="id", referencedColumnName="page_content_id")
      */
     private $pageContents;
     
     /**
      * @var ContentType
-     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Content\ContentType")
+     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Content\ContentType", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="content_type_id", referencedColumnName="id")
      */
     private $type;

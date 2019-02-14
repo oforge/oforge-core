@@ -34,7 +34,7 @@ class Layout extends AbstractModel
     
     /**
      * @var ArrayCollection
-     * @ORM\ManyToMany(targetEntity="Slot")
+     * @ORM\ManyToMany(targetEntity="Slot", fetch="EXTRA_LAZY")
      * @ORM\JoinTable(name="oforge_cms_layout_slot",
      *     joinColumns={@ORM\JoinColumn(name="layout_id", referencedColumnName="id")},
      *     inverseJoinColumns={@ORM\JoinColumn(name="slot_id", referencedColumnName="id")})

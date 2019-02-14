@@ -8,19 +8,16 @@
 
 namespace Oforge\Engine\Modules\TemplateEngine\Services;
 
+use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\TemplateNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\TemplateEngine\Abstracts\AbstractTemplate;
 use Oforge\Engine\Modules\TemplateEngine\Models\Template\Template;
 
-class TemplateManagementService {
-
-    private $entityManager;
-    private $repository;
+class TemplateManagementService extends AbstractDatabaseAccess {
 
     public function __construct() {
-        $this->entityManager = Oforge()->DB()->getManager();
-        $this->repository    = $this->entityManager->getRepository(Template::class);
+        parent::__construct(["default" => Template::class]);
     }
 
     /**
@@ -31,7 +28,7 @@ class TemplateManagementService {
      */
     public function activate($name) {
         /** @var $templateToActivate Template */
-        $templateToActivate = $this->repository->findOneBy(["name" => $name]);
+        $templateToActivate = $this->repository()->findOneBy(["name" => $name]);
         $activeTemplate     = $this->getActiveTemplate();
 
         if (!isset($templateToActivate)) {
@@ -45,9 +42,9 @@ class TemplateManagementService {
 
         $templateToActivate->setActive(true);
 
-        $this->entityManager->persist($templateToActivate);
-        $this->entityManager->persist($activeTemplate);
-        $this->entityManager->flush();
+        $this->entityManager()->persist($templateToActivate);
+        $this->entityManager()->persist($activeTemplate);
+        $this->entityManager()->flush();
     }
 
     /**
@@ -59,11 +56,13 @@ class TemplateManagementService {
      * @throws \Oforge\Engine\Modules\TemplateEngine\Exceptions\InvalidScssVariableException
      */
     public function register($name) {
-        $template = $this->repository->findOneBy(["name" => $name]);
+        $template = $this->repository()->findOneBy(["name" => $name]);
 
         if (!$template) {
             $className = Statics::TEMPLATE_DIR . "\\" . $name . "\\Template";
             $parent    = null;
+
+            $instance = null;
 
             if (is_subclass_of($className, AbstractTemplate::class)) {
                 /**
@@ -77,16 +76,18 @@ class TemplateManagementService {
                 /**
                  * @var $parentTemplate Template
                  */
-                $parentTemplate = $this->repository->findOneBy(["name" => $parent]);
+                $parentTemplate = $this->repository()->findOneBy(["name" => $parent]);
                 $parent         = $parentTemplate->getId();
             }
 
             $template = Template::create(["name" => $name, "active" => 0, "installed" => 0, "parentId" => $parent]);
 
-            $this->entityManager->persist($template);
-            $this->entityManager->flush();
+            $this->entityManager()->persist($template);
+            $this->entityManager()->flush();
 
-            $instance->registerTemplateVariables();
+            if ($instance) {
+                $instance->registerTemplateVariables();
+            }
         }
     }
 
@@ -94,7 +95,7 @@ class TemplateManagementService {
      * @return array|object[]
      */
     public function list() {
-        $templateList = $this->repository->findAll();
+        $templateList = $this->repository()->findAll();
 
         return $templateList;
     }
@@ -139,16 +140,16 @@ class TemplateManagementService {
         /**
          * @var $template Template
          */
-        $template = $this->repository->findOneBy(["active" => 1]);
+        $template = $this->repository()->findOneBy(["active" => 1]);
         if ($template === null) {
-            $template = $this->repository->findOneBy(["name" => "Base"]);
+            $template = $this->repository()->findOneBy(["name" => "Base"]);
 
             if ($template === null) {
                 throw new TemplateNotFoundException("Base");
             }
 
             $template->setActive(1);
-            $this->entityManager->flush();
+            $this->entityManager()->flush();
         }
 
         return $template;

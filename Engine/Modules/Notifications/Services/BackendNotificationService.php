@@ -4,17 +4,13 @@ namespace Oforge\Engine\Modules\Notifications\Services;
 
 use Oforge\Engine\Modules\Notifications\Abstracts\AbstractNotificationService;
 use Oforge\Engine\Modules\Notifications\Models\BackendNotification;
-use phpDocumentor\Reflection\Types\Object_;
 
 class BackendNotificationService extends AbstractNotificationService {
 
-    private $entityManager;
-    private $repository;
-
     public function __construct() {
-        $this->entityManager = Oforge()->DB()->getManager();
-        $this->repository    = $this->entityManager->getRepository(BackendNotification::class);
+        parent::__construct(["default" => BackendNotification::class]);
     }
+
 
     /**
      * @param $id
@@ -22,7 +18,7 @@ class BackendNotificationService extends AbstractNotificationService {
      * @return object|null
      */
     public function getNotificationById($id) {
-        return $this->repository->find($id);
+        return $this->repository()->find($id);
     }
 
     /**
@@ -36,13 +32,13 @@ class BackendNotificationService extends AbstractNotificationService {
     public function getNotifications($userId, $selector = AbstractNotificationService::ALL) {
         switch ($selector) {
             case AbstractNotificationService::ALL:
-                return $this->repository->findBy(['userId' => $userId]);
+                return $this->repository()->findBy(['userId' => $userId]);
                 break;
             case AbstractNotificationService::SEEN;
-                return $this->repository->findBy(['userId' => $userId, 'seen' => 1]);
+                return $this->repository()->findBy(['userId' => $userId, 'seen' => 1]);
                 break;
             case AbstractNotificationService::UNSEEN:
-                return $this->repository->findBy(['userId' => $userId, 'seen' => 0]);
+                return $this->repository()->findBy(['userId' => $userId, 'seen' => 0]);
                 break;
             default:
                 return null;
@@ -69,8 +65,8 @@ class BackendNotificationService extends AbstractNotificationService {
             $notification->setLink($link);
         }
 
-        $this->entityManager->persist($notification);
-        $this->entityManager->flush();
+        $this->entityManager()->persist($notification);
+        $this->entityManager()->flush();
     }
 
     /**
@@ -80,12 +76,12 @@ class BackendNotificationService extends AbstractNotificationService {
      * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function markAsSeen($id) {
-        $notification = $this->repository->find($id);
+        $notification = $this->repository()->find($id);
 
         $notification->setSeen(true);
 
-        $this->entityManager->persist($notification);
-        $this->entityManager->flush();
+        $this->entityManager()->persist($notification);
+        $this->entityManager()->flush();
     }
 
     /**
@@ -94,7 +90,7 @@ class BackendNotificationService extends AbstractNotificationService {
      * @return array|object[]
      */
     public function getRoleNotifications($role) {
-        return $this->repository->findBy(['role' => $role]);
+        return $this->repository()->findBy(['role' => $role]);
     }
 
     /**
@@ -114,7 +110,7 @@ class BackendNotificationService extends AbstractNotificationService {
         $notification->setMessage($message);
         $notification->setLink($link);
 
-        $this->entityManager->persist($notification);
-        $this->entityManager->flush();
+        $this->entityManager()->persist($notification);
+        $this->entityManager()->flush();
     }
 }

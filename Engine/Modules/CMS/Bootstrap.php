@@ -83,7 +83,6 @@ class Bootstrap extends AbstractBootstrap {
 
     }
 
-
     public function activate()
     {
         $service = Oforge()->Services()->get("dummy.page.generator");

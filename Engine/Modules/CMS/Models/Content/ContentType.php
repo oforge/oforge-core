@@ -28,7 +28,7 @@ class ContentType extends AbstractModel
     
     /**
      * @var ContentTypeGroup
-     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Content\ContentTypeGroup")
+     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Content\ContentTypeGroup", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="content_type_group_id", referencedColumnName="id")
      */
     private $group;
