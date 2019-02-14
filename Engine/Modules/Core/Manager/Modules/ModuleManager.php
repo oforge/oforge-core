@@ -44,10 +44,10 @@ class ModuleManager
     public function init()
     {
         $files = Helper::getBootstrapFiles(ROOT_PATH . DIRECTORY_SEPARATOR . Statics::ENGINE_DIR);
-
+        
         // init core module
         $this->initCoreModule(Bootstrap::class);
-
+        
         // register all modules
         foreach ($files as $key => $dir) {
             $this->register("\\Oforge\\Engine\\Modules\\" . $key . "\\Bootstrap");
@@ -72,7 +72,7 @@ class ModuleManager
                 array_push($bucket, $instance);
             }
         }
-
+        
         // create array with all installed module bootstrap classes
         $installed = [Bootstrap::class => true];
 
@@ -115,7 +115,7 @@ class ModuleManager
                 break;
             }
         } while (sizeof($bucket) > 0);  // do it until everything is installed
-
+        
         if (sizeof($bucket) > 0) {
             throw new CouldNotInstallModuleException(get_class($bucket[0]), $bucket[0]->getDependencies());
         }

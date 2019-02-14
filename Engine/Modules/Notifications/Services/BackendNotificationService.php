@@ -4,7 +4,6 @@ namespace Oforge\Engine\Modules\Notifications\Services;
 
 use Oforge\Engine\Modules\Notifications\Abstracts\AbstractNotificationService;
 use Oforge\Engine\Modules\Notifications\Models\BackendNotification;
-use phpDocumentor\Reflection\Types\Object_;
 
 class BackendNotificationService extends AbstractNotificationService {
 
