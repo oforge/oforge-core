@@ -11,15 +11,13 @@ namespace Oforge\Engine\Modules\CMS\Services;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\Import\Services\ImportService;
 
-class DummyPageGenerator
-{
-    public function create()
-    {
+class DummyPageGenerator {
+    public function create() {
         /**
          * @var $importService ImportService
          */
-        $importService = Oforge()->Services()->get("import");
-        $files = [
+        $importService = Oforge()->Services()->get( "import" );
+        $files         = [
             "oforge_i18n_language",
             "oforge_i18n_snippet",
             "oforge_cms_content_type_group",
@@ -30,18 +28,20 @@ class DummyPageGenerator
             "oforge_cms_page_path",
             "oforge_cms_page_content"
         ];
-
+        
         $fullDir = ROOT_PATH . DIRECTORY_SEPARATOR . Statics::VAR_DIR . DIRECTORY_SEPARATOR . "dummy_data" . DIRECTORY_SEPARATOR;
-
-        foreach ($files as $file) {
-            try {
-                $importService->processFile($fullDir, $file, false);
-            } catch (\Exception $e) {
-                echo $e;
+        
+        foreach ( $files as $file ) {
+            if ( file_exists( $fullDir . $file ) ) {
+                try {
+                    $importService->processFile( $fullDir, $file, false );
+                } catch ( \Exception $e ) {
+                    echo $e;
+                }
             }
         }
-
+        
     }
-
-
+    
+    
 }

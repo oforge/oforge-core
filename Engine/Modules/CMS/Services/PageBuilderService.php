@@ -4,19 +4,11 @@ namespace Oforge\Engine\Modules\CMS\Services;
 
 use Doctrine\ORM\PersistentCollection;
 use Oforge\Engine\Modules\I18n\Models\Language;
-use Oforge\Engine\Modules\I18n\Models\Snippet;
-use Oforge\Engine\Modules\CMS\Models\Layout\Layout;
-use Oforge\Engine\Modules\CMS\Models\Layout\Slot;
-use Oforge\Engine\Modules\CMS\Models\Site\Site;
 use Oforge\Engine\Modules\CMS\Models\Page\Page;
-use Oforge\Engine\Modules\CMS\Models\Page\PagePath;
 use Oforge\Engine\Modules\CMS\Models\Page\PageContent;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentTypeGroup;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
 use Oforge\Engine\Modules\CMS\Models\Content\Content;
-use Oforge\Engine\Modules\CMS\ContentTypes\Row;
-use Oforge\Engine\Modules\CMS\ContentTypes\RichText;
-use Oforge\Engine\Modules\CMS\ContentTypes\Image;
 
 class PageBuilderService
 {
@@ -25,11 +17,11 @@ class PageBuilderService
 
     public function __construct()
     {
-        $this->entityManager = Oforge()->DB()->getManager();
-        $this->pageContentRepository = $this->entityManager->getRepository(PageContent::class);
-        $this->pageRepository = $this->entityManager->getRepository(Page::class);
+        $this->entityManager          = Oforge()->DB()->getManager();
+        $this->pageContentRepository  = $this->entityManager->getRepository(PageContent::class);
+        $this->pageRepository         = $this->entityManager->getRepository(Page::class);
     }
-    
+
     /**
      * Return page entity for given page id
      * @param int $pathId
@@ -50,7 +42,7 @@ class PageBuilderService
         }
     }
     
-        /**
+     /**
      * Return page entity for given page id
      * @param int $id
      * 
@@ -69,7 +61,7 @@ class PageBuilderService
             return NULL;
         }
     }
-    
+
     /**
      * Returns the content type group found as an associative array
      * @param ContentTypeGroup $contentTypeGroup
@@ -83,10 +75,10 @@ class PageBuilderService
             return NULL;
         }
         
-        $contentTypeGroup = [];
-        $contentTypeGroup["id"] = $contentTypeGroupEntity->getId();
-        $contentTypeGroup["name"] = $contentTypeGroupEntity->getName();
-        $contentTypeGroup["description"] = $contentTypeGroupEntity->getDescription();
+        $contentTypeGroup                 = [];
+        $contentTypeGroup["id"]           = $contentTypeGroupEntity->getId();
+        $contentTypeGroup["name"]         = $contentTypeGroupEntity->getName();
+        $contentTypeGroup["description"]  = $contentTypeGroupEntity->getDescription();
         
         return $contentTypeGroup;
     }
@@ -104,13 +96,13 @@ class PageBuilderService
             return NULL;
         }
         
-        $contentType = [];
-        $contentType["id"] = $contentTypeEntity->getId();
-        $contentType["group"] = $this->getContentTypeGroupArray($contentTypeEntity->getGroup());
-        $contentType["name"] = $contentTypeEntity->getName();
-        $contentType["icon"] = $contentTypeEntity->getIcon();
+        $contentType                = [];
+        $contentType["id"]          = $contentTypeEntity->getId();
+        $contentType["group"]       = $this->getContentTypeGroupArray($contentTypeEntity->getGroup());
+        $contentType["name"]        = $contentTypeEntity->getName();
+        $contentType["icon"]        = $contentTypeEntity->getIcon();
         $contentType["description"] = $contentTypeEntity->getDescription();
-        $contentType["classPath"] = $contentTypeEntity->getClassPath();
+        $contentType["classPath"]   = $contentTypeEntity->getClassPath();
         
         return $contentType;
     }
@@ -128,13 +120,13 @@ class PageBuilderService
             return NULL;
         }
         
-        $content = [];
-        $content["id"] = $contentEntity->getId();
-        $content["type"] = $this->getContentTypeArray($contentEntity->getType());
-        $content["parent"] = $contentEntity->getParent();
-        $content["name"] = $contentEntity->getName();
-        $content["cssClass"] = $contentEntity->getCssClass();
-        $content["data"] = $contentEntity->getData();
+        $content              = [];
+        $content["id"]        = $contentEntity->getId();
+        $content["type"]      = $this->getContentTypeArray($contentEntity->getType());
+        $content["parent"]    = $contentEntity->getParent();
+        $content["name"]      = $contentEntity->getName();
+        $content["cssClass"]  = $contentEntity->getCssClass();
+        $content["data"]      = $contentEntity->getData();
         
         return $content;
     }
@@ -157,10 +149,10 @@ class PageBuilderService
         $pageContents = [];
         foreach($pageContentEntities as $pageContentEntity)
         {
-            $pageContent = [];
-            $pageContent["id"] = $pageContentEntity->getId();
+            $pageContent            = [];
+            $pageContent["id"]      = $pageContentEntity->getId();
             $pageContent["content"] = $this->getContentArray($pageContentEntity->getContent());
-            $pageContent["order"] = $pageContentEntity->getOrder();
+            $pageContent["order"]   = $pageContentEntity->getOrder();
             
             $pageContents[] = $pageContent;
         }
@@ -181,10 +173,10 @@ class PageBuilderService
             return NULL;
         }
         
-        $language = [];
-        $language["id"] = $languageEntity->getId();
-        $language["iso"] = $languageEntity->getIso();
-        $language["name"] = $languageEntity->getName();
+        $language           = [];
+        $language["id"]     = $languageEntity->getId();
+        $language["iso"]    = $languageEntity->getIso();
+        $language["name"]   = $languageEntity->getName();
         $language["active"] = $languageEntity->isActive();
         
         return $language;
@@ -206,18 +198,18 @@ class PageBuilderService
         $paths = [];
         foreach($pathEntities as $pathEntity)
         {
-            $path = [];
-            $path["id"] = $pathEntity->getId();
-            $path["language"] = $this->getLanguageArray($pathEntity->getLanguage());
-            $path["path"] = $pathEntity->getPath();
-            $path["pageContent"] = $this->getPageContentArray($path["id"]);
+            $path                 = [];
+            $path["id"]           = $pathEntity->getId();
+            $path["language"]     = $this->getLanguageArray($pathEntity->getLanguage());
+            $path["path"]         = $pathEntity->getPath();
+            $path["pageContent"]  = $this->getPageContentArray($path["id"]);
             
             $paths[] = $path;
         }
         
         return $paths;
     }
-    
+
     /**
      * Returns the page found as an associative array
      * @param int $id
@@ -234,17 +226,16 @@ class PageBuilderService
         }
         
         $page = [];
-        $page["id"] = $pageEntity->getId();
+        $page["id"]     = $pageEntity->getId();
         $page["layout"] = $pageEntity->getLayout();
-        $page["site"] = $pageEntity->getSite();
-        $page["name"] = $pageEntity->getName();
+        $page["site"]   = $pageEntity->getSite();
+        $page["name"]   = $pageEntity->getName();
         $page["parent"] = $pageEntity->getParent();
-        $page["paths"] = $this->getPathArray($pageEntity->getPaths());
+        $page["paths"]  = $this->getPathArray($pageEntity->getPaths());
         
         return $page;
     }
-    
-    
+  
     /**
      * Returns an array with prepared twig content data for page builder
      * @param array page array
@@ -269,19 +260,19 @@ class PageBuilderService
             switch($pageContent["content"]["type"]["name"])
             {
                 case "row":
-                    $data["type"] = "ContentTypes/Row/PageBuilder.twig";
+                    $data["type"]   = "ContentTypes/Row/PageBuilder.twig";
                     // TODO: implement row data collection
                     break;
                 case "richtext":
-                    $data["type"] = "ContentTypes/RichText/PageBuilder.twig";
-                    $data["css"] = $pageContent["content"]["cssClass"];
-                    $data["text"] = $pageContent["content"]["data"];
+                    $data["type"]   = "ContentTypes/RichText/PageBuilder.twig";
+                    $data["css"]    = $pageContent["content"]["cssClass"];
+                    $data["text"]   = $pageContent["content"]["data"];
                     break;
                 case "image":
-                    $data["type"] = "ContentTypes/Image/PageBuilder.twig";
-                    $data["css"] = $pageContent["content"]["cssClass"];
-                    $data["url"] = "/Tests/dummy_media/" . $pageContent["content"]["data"];
-                    $data["alt"] = $pageContent["content"]["name"];
+                    $data["type"]   = "ContentTypes/Image/PageBuilder.twig";
+                    $data["css"]    = $pageContent["content"]["cssClass"];
+                    $data["url"]    = "/Tests/dummy_media/" . $pageContent["content"]["data"];
+                    $data["alt"]    = $pageContent["content"]["name"];
                     break;
                 default:
                     continue 2;

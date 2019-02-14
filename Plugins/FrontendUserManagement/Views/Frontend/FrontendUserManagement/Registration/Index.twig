@@ -1,0 +1,29 @@
+{% extends "@parent/Frontend/Layout.twig" %}
+
+{% block content %}
+    {% block registration %}
+    <div class="register">
+        <form action="{{ url('frontend_register_process') }}" method="post">
+            <div class="form-controls">
+                <div class="form__control">
+                    <label for="frontend_register_email"
+                           class="form__label">{{ i18n('email') }}</label>
+                    <input id="frontend_register_email"
+                           name="frontend_register_email"
+                           type="email"
+                           class="form__input form__input">
+                </div>
+                <div class="form__control">
+                    <p>{{ i18n('password_will_be_sent_via_email') }}</p>
+                </div>
+                <div class="form__control">
+                    <input type="hidden" name="token" value="{{ token() }}">
+                    <input type="submit"
+                           value="{{ i18n('register') }}"
+                           class="form__input button button--primary">
+                </div>
+            </div>
+        </form>
+    </div>
+    {% endblock registration %}
+{% endblock content %}

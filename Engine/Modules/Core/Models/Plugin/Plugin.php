@@ -45,7 +45,7 @@ class Plugin extends AbstractModel
 
     /**
      * @var Middleware[]
-     * @ORM\OneToMany(targetEntity="Middleware", mappedBy="plugin", cascade={"all"})
+     * @ORM\OneToMany(targetEntity="Middleware", mappedBy="plugin", cascade={"all"}, fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="id", referencedColumnName="plugin_id")
      */
     private $middlewares;

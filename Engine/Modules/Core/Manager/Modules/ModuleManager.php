@@ -2,6 +2,8 @@
 
 namespace Oforge\Engine\Modules\Core\Manager\Modules;
 
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use Noodlehaus\Exception;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Bootstrap;
@@ -10,28 +12,39 @@ use Oforge\Engine\Modules\Core\Exceptions\CouldNotInstallModuleException;
 use Oforge\Engine\Modules\Core\Helper\Helper;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\Core\Models\Module\Module;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
-class ModuleManager
-{
+class ModuleManager {
     protected static $instance = null;
-    protected $em = null;
-    protected $entryRepository = null;
-    protected $moduleRepository = null;
 
-    protected function __construct()
-    {
-        $this->em = Oforge()->DB()->getManager();
-        $this->moduleRepository = $this->em->getRepository(Module::class);
-    }
-
-    public static function getInstance()
-    {
+    public static function getInstance() {
         if (null === self::$instance) {
             self::$instance = new ModuleManager();
         }
+
         return self::$instance;
     }
-    
+
+    private $entityManger = null;
+    private $moduleRepository = null;
+
+    public function entityManger() : EntityManager {
+        if (!isset($this->entityManger)) {
+            $this->entityManger = Oforge()->DB()->getManager();
+        }
+
+        return $this->entityManger;
+    }
+
+    public function moduleRepository() : EntityRepository {
+        if (!isset($this->moduleRepository)) {
+            $this->moduleRepository = $this->entityManger()->getRepository(Module::class);
+        }
+
+        return $this->moduleRepository;
+    }
+
     /**
      * Initialize all modules
      *
@@ -41,9 +54,10 @@ class ModuleManager
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceAlreadyDefinedException
      */
-    public function init()
-    {
-        $files = Helper::getBootstrapFiles(ROOT_PATH . DIRECTORY_SEPARATOR . Statics::ENGINE_DIR);
+    public function init() {
+        $startTime = microtime(true) * 1000;
+
+        $files = Helper::getBootstrapFiles(ROOT_PATH . DIRECTORY_SEPARATOR . Statics::ENGINE_DIR . DIRECTORY_SEPARATOR);
 
         // init core module
         $this->initCoreModule(Bootstrap::class);
@@ -54,10 +68,10 @@ class ModuleManager
         }
 
         // save all db changes
-        $this->em->flush();
+        $this->entityManger()->flush();
 
         // find all modules order by "order"
-        $modules = $this->moduleRepository->findBy(array("active" => 1), array('order' => 'ASC'));
+        $modules = $this->moduleRepository()->findBy(["active" => 1], ['order' => 'ASC']);
 
         // create working bucket with all modules that should be started
         $bucket = [];
@@ -67,7 +81,7 @@ class ModuleManager
              * @var $module Module
              */
             $classname = $module->getName();
-            $instance = new $classname();
+            $instance  = new $classname();
             if (get_class($instance) != Bootstrap::class) {
                 array_push($bucket, $instance);
             }
@@ -85,6 +99,11 @@ class ModuleManager
                  * @var $instance AbstractBootstrap
                  */
                 $instance = $bucket[$i];
+
+
+                $startTime = microtime(true) * 1000 ;
+
+
                 if (sizeof($instance->getDependencies()) > 0) {
                     $found = true;
 
@@ -114,13 +133,14 @@ class ModuleManager
             if ($count++ > 10) {
                 break;
             }
+
         } while (sizeof($bucket) > 0);  // do it until everything is installed
 
         if (sizeof($bucket) > 0) {
             throw new CouldNotInstallModuleException(get_class($bucket[0]), $bucket[0]->getDependencies());
         }
     }
-    
+
     /**
      * Initialize the core module
      *
@@ -131,15 +151,14 @@ class ModuleManager
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceAlreadyDefinedException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
-    private function initCoreModule($className)
-    {
-        if (is_subclass_of($className, AbstractBootstrap::class)) {
+    private function initCoreModule($className) {
+        $startTime = microtime(true) * 1000;
 
+        if (is_subclass_of($className, AbstractBootstrap::class)) {
             /**
              * @var $instance AbstractBootstrap
              */
             $instance = new $className();
-
 
             Oforge()->DB()->initSchema($instance->getModels());
 
@@ -152,29 +171,32 @@ class ModuleManager
             /**
              * @var $entry Module
              */
-            $entry = $this->moduleRepository->findOneBy(["name" => $className]);
+            $entry = $this->moduleRepository()->findOneBy(["name" => $className]);
 
+            $needFlush = false;
             if (isset($entry) && !$entry->getInstalled()) {
                 try {
                     $instance->install();
-                } catch(ConfigElementAlreadyExists $e) {
-
+                } catch (ConfigElementAlreadyExists $e) {
                 }
-                $this->em->persist($entry->setInstalled(true));
-            } else if (!isset($entry)) {
+                $this->entityManger()->persist($entry->setInstalled(true));
+                $needFlush = true;
+            } elseif (!isset($entry)) {
                 $this->register($className);
                 try {
                     $instance->install();
-                } catch(ConfigElementAlreadyExists $e) {
-
+                } catch (ConfigElementAlreadyExists $e) {
                 }
-                $entry = $this->moduleRepository->findOneBy(["name" => $className]);
-                $this->em->persist($entry->setInstalled(true));
+                $entry = $this->moduleRepository()->findOneBy(["name" => $className]);
+                $this->entityManger()->persist($entry->setInstalled(true));
+                $needFlush = true;
             }
 
             $instance->activate();
 
-            $this->em->flush();
+            if ($needFlush) {
+                $this->entityManger()->flush();
+            }
         }
     }
 
@@ -186,24 +208,23 @@ class ModuleManager
      *
      * @throws \Doctrine\ORM\ORMException
      */
-    protected function register($className)
-    {
+    protected function register($className) {
         if (is_subclass_of($className, AbstractBootstrap::class)) {
             /**
              * @var $instance AbstractBootstrap
              */
             $instance = new $className();
 
-            $moduleEntry = $this->moduleRepository->findBy(["name" => get_class($instance)]);
+            $moduleEntry = $this->moduleRepository()->findBy(["name" => get_class($instance)]);
             if (isset($moduleEntry) && sizeof($moduleEntry) > 0) {
                 //found -> nothing to do;
             } else { // if not put the data into the database
                 $newEntry = Module::create(["name" => get_class($instance), "order" => $instance->getOrder(), "active" => 1, "installed" => 0]);
-                $this->em->persist($newEntry);
+                $this->entityManger()->persist($newEntry);
             }
         }
     }
-    
+
     /**
      * Initialize a module
      *
@@ -214,8 +235,7 @@ class ModuleManager
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceAlreadyDefinedException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
-    protected function initModule($className)
-    {
+    protected function initModule($className) {
         if (is_subclass_of($className, AbstractBootstrap::class)) {
             /**
              * @var $instance AbstractBootstrap
@@ -236,20 +256,19 @@ class ModuleManager
             /**
              * @var $entry Module
              */
-            $entry = $this->moduleRepository->findOneBy(["name" => $className]);
+            $entry = $this->moduleRepository()->findOneBy(["name" => $className]);
 
             if (isset($entry) && !$entry->getInstalled()) {
                 try {
                     $instance->install();
-                } catch(ConfigElementAlreadyExists $e) {
-
+                } catch (ConfigElementAlreadyExists $e) {
                 }
-                $this->em->persist($entry->setInstalled(true));
+                $this->entityManger()->persist($entry->setInstalled(true));
             }
 
             $instance->activate();
 
-            $this->em->flush();
+            $this->entityManger()->flush();
         }
     }
 }

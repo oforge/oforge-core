@@ -66,7 +66,7 @@ class Element extends AbstractModel
 
     /**
      * @var Value[]
-     * @ORM\OneToMany(targetEntity="Value", mappedBy="element", cascade={"all"})
+     * @ORM\OneToMany(targetEntity="Value", mappedBy="element", cascade={"all"}, fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="id", referencedColumnName="element_id")
      */
     private $values;
