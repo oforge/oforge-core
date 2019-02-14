@@ -2,6 +2,7 @@
 
 namespace Oforge\Engine\Modules\TemplateEngine\Services;
 
+use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\TemplateEngine\Exceptions\InvalidScssVariableException;
 use Oforge\Engine\Modules\TemplateEngine\Models\ScssVariable;
 use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
@@ -11,13 +12,10 @@ use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
  *
  * @package Oforge\Engine\Modules\TemplateEngine\Services
  */
-class ScssVariableService {
-    private $em;
-    private $repo;
+class ScssVariableService extends AbstractDatabaseAccess {
 
     public function __construct() {
-        $this->em   = Oforge()->DB()->getManager();
-        $this->repo = $this->em->getRepository(ScssVariable::class);
+        parent::__construct(["default" => ScssVariable::class]);
     }
 
     /**
@@ -27,11 +25,11 @@ class ScssVariableService {
      * @return array|object[]
      */
     public function get($context, $scope = 'Frontend') {
-        return $this->repo->findBy(['scope' => $scope, 'context' => $context]);
+        return $this->repository()->findBy(['scope' => $scope, 'context' => $context]);
     }
 
     public function getScope($scope) {
-        return $this->repo->findBy(['scope' => $scope]);
+        return $this->repository()->findBy(['scope' => $scope]);
     }
 
     /**
@@ -44,14 +42,14 @@ class ScssVariableService {
      */
     public function update($id, $value) {
         /** @var ScssVariable $element */
-        $element = $this->repo->findOneBy(['id' => $id]);
+        $element = $this->repository()->findOneBy(['id' => $id]);
         if (!isset($element)) {
             throw new NotFoundException("Element with id " . $id . " not found!");
         }
 
         $element->setValue($value);
-        $this->em->persist($element);
-        $this->em->flush();
+        $this->entityManager()->persist($element);
+        $this->entityManager()->flush();
     }
 
     /**
@@ -72,7 +70,7 @@ class ScssVariableService {
 
         $this->isValid($templateVariable);
 
-        $element = $this->repo->findOneBy([
+        $element = $this->repository()->findOneBy([
             'name'    => $templateVariable['name'],
             'context' => $templateVariable['context'],
             'scope'   => $templateVariable['scope'],
@@ -83,13 +81,12 @@ class ScssVariableService {
             $element = new ScssVariable();
 
             $element->fromArray($templateVariable);
-            $this->em->persist($element);
-            $this->em->flush();
+            $this->entityManager()->persist($element);
+            $this->entityManager()->flush();
         }
     }
 
     /**
-     *
      * @param $templateVariable
      *
      * @return bool

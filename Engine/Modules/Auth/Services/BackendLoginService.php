@@ -18,7 +18,6 @@ class BackendLoginService extends BaseLoginService {
      * BackendAuthService constructor.
      */
     public function __construct() {
-        $this->entityManager = Oforge()->DB()->getManager();
-        $this->repository = $this->entityManager->getRepository(BackendUser::class);
+        parent::__construct(["default" => BackendUser::class]);
     }
 }

@@ -80,7 +80,7 @@ class TemplateRenderService {
         } else {
             $data["template.path"] = $templatePath;
         }
-        
+
         if (!isset($data["template_layout"])) {
             $data["template_layout"] = "Default";
         }
@@ -153,14 +153,12 @@ class TemplateRenderService {
      * @throws TemplateNotFoundException
      */
     public function View() {
-        /** @var TemplateManagementService $templateManagementService */
-        $templateManagementService = Oforge()->Services()->get('template.management');
-        $activeTemplate            = $templateManagementService->getActiveTemplate();
-        $templatePath              = DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . $activeTemplate->getName();
-
         if (!$this->view) {
-            $configService = Oforge()->Services()->get("config");
-            $debug         = $configService->get("system_debug");
+            /** @var TemplateManagementService $templateManagementService */
+            $templateManagementService = Oforge()->Services()->get('template.management');
+            $activeTemplate            = $templateManagementService->getActiveTemplate();
+            $templatePath              = DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . $activeTemplate->getName();
+            $debug                     = Oforge()->Settings()->get("mode") == "development";
 
             /** @var $plugins Plugin[] */
             $plugins = Oforge()->Services()->get("plugin.access")->getActive();

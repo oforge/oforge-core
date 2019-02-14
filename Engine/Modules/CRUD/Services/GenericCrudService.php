@@ -10,6 +10,7 @@ namespace Oforge\Engine\Modules\CRUD\Services;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
@@ -20,15 +21,10 @@ use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
  *
  * @package Oforge\Engine\Modules\CRUD\Services;
  */
-class GenericCrudService {
-    /** @var EntityManager $entityManager */
-    private $entityManager;
+class GenericCrudService extends AbstractDatabaseAccess {
 
-    /**
-     * GenericCrudService constructor.
-     */
     public function __construct() {
-        $this->entityManager = Oforge()->DB()->getManager();
+        parent::__construct([]);
     }
 
     /**
@@ -109,8 +105,8 @@ class GenericCrudService {
         $instance = new $class();
         $instance = $instance->fromArray($options);
 
-        $this->entityManager->persist($instance);
-        $this->entityManager->flush($instance);
+        $this->entityManager()->persist($instance);
+        $this->entityManager()->flush($instance);
         $repository->clear();
     }
 
@@ -144,7 +140,7 @@ class GenericCrudService {
                 $entity->fromArray($objectData);
             }
         }
-        $this->entityManager->flush();
+        $this->entityManager()->flush();
         $repository->clear();
     }
 
@@ -161,20 +157,9 @@ class GenericCrudService {
         $repository = $this->getRepository($class);
         $entity     = $repository->findOneBy(['id' => $id]);
 
-        $this->entityManager->remove($entity);
-        $this->entityManager->flush();
+        $this->entityManager()->remove($entity);
+        $this->entityManager()->flush();
         $repository->clear();
-    }
-
-    /**
-     * Returns repository for given class.
-     *
-     * @param string $class
-     *
-     * @return EntityRepository
-     */
-    protected function getRepository(string $class) : EntityRepository {
-        return $this->entityManager->getRepository($class);
     }
 
     /**

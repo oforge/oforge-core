@@ -89,6 +89,7 @@ class ServiceManager {
     }
 
     protected function __clone() {
+
     }
 
 }

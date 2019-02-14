@@ -9,6 +9,7 @@
 namespace Oforge\Engine\Modules\I18n\Services;
 
 use Oforge\Engine\Modules\Auth\Services\AuthService;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\I18n\Models\Language;
 use Oforge\Engine\Modules\I18n\Models\Snippet;
 
@@ -17,16 +18,12 @@ use Oforge\Engine\Modules\I18n\Models\Snippet;
  * Class LanguageIdentificationService
  * @package Oforge\Engine\Modules\I18n\Services
  */
-class LanguageIdentificationService
-{
-    /**
-     * LanguageIdentificationService constructor.
-     */
-    public function __construct()
-    {
-        $this->em = Oforge()->DB()->getManager();
-        $this->repo = $this->em->getRepository(Language::class);
+class LanguageIdentificationService extends AbstractDatabaseAccess {
+
+    public function __construct() {
+        parent::__construct(["default" => Language::class]);
     }
+
 
     /**
      * @param $context
@@ -51,7 +48,7 @@ class LanguageIdentificationService
         /**
          * @var $all Language[]
          */
-        $all = $this->repo->findBy(["active" => true]);
+        $all = $this->repository()->findBy(["active" => true]);
 
         if (sizeof($all) > 0) {
             return $all[0]->getIso();
