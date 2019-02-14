@@ -9,7 +9,15 @@
 namespace FrontendUserManagement\Controller\Frontend;
 
 use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 class RegistrationController extends AbstractController {
-    public function indexAction() {}
+    public function indexAction(Request $request, Response $response) {
+        // show registration form and button for "forgot password"
+    }
+    
+    public function processAction(Request $request, Response $response) {
+    
+    }
 }

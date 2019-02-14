@@ -43,13 +43,13 @@ class ForgeDataBase {
     }
 
     protected function addMetaData(string $text) {
-        $metaData = $this->manager->getClassMetadata($text);
+        $metaData = $this->getManager()->getClassMetadata($text);
 
         array_push($this->metaDataCollection, $metaData);
-        $inSync = $this->validator->schemaInSyncWithMetadata();
+        $inSync = $this->getValidator()->schemaInSyncWithMetadata();
 
         if (!$inSync) {
-            $this->tool->updateSchema($this->metaDataCollection, true);
+            $this->getSchemaTool()->updateSchema($this->metaDataCollection, true);
         }
     }
 
