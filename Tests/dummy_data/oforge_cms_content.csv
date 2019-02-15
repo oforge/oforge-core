@@ -1,0 +1,10 @@
+type;parent;name;cssClass;data
+2;0;text_home_de;home-class;Startseite
+2;0;text_home_en;home-class;Home
+2;0;text_imprint_de;imprint-class;Impressum
+2;0;text_imprint_en;imprint-class;Imprint
+2;0;text_privacy_de;privacy-class;Datenschutz
+2;0;text_privacy_en;privacy-class;Privacy
+3;0;world_image_de;image-class;deutschland.png
+3;0;world_image_en;image-class;usa.png
+3;0;multilanguage_image;image-class;multilanguage.png

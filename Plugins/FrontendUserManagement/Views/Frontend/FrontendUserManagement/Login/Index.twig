@@ -2,8 +2,6 @@
 {% block content %}
     {% block login %}
     <div class="login">
-        {{ msg }}
-
         <form action="{{ url('frontend_login_process') }}" method="post">
             <div class="form-controls">
                 <div class="form__control">
@@ -30,6 +28,9 @@
                 </div>
             </div>
         </form>
+    </div>
+    <div class="content">
+        <a href="{{ url('frontend_registration') }}" class="button button--secondary">{{ i18n('or_register') }}</a>
     </div>
     {% endblock login %}
 {% endblock content %}

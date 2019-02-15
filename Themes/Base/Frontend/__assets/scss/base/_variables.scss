@@ -1,0 +1,55 @@
+/*
+ * Colors
+ */
+$color-primary: rgba(60, 60, 59, 1); // pGrau-1
+$color-primary-light: rgba(112, 112, 112, 1); // sGrau-1
+$color-primary-lighter: #e8e8e8;
+$color-primary-transparent-1: transparentize($color-primary, .3); // sGrau-2
+$color-primary-transparent-2: rgba(0, 0, 0, 0.54); // sGrau-3
+$header-top: rgba(230,230,230,.8);
+
+$color-secondary: #708e2b; // pGrün-1
+$color-secondary-light: #90a75c;
+$color-secondary-lighter: #bac6a0;
+
+$color-secondary-transparent-1: transparentize($color-secondary, .25); // sGrün-1
+$color-secondary-transparent-2: rgba(169, 185, 134, .75); // sGrün-2
+$color-light: rgba(255, 255, 255, 1);
+$color-secondary-transparent-3: transparentize($color-light, .3); //sWeiß-1
+$text-light: $color-light;
+$text-dark: $color-primary;
+
+
+/*
+ * Fonts
+ * The default font size is 62.5% or 10px for easier calculating px to rem
+ */
+$font-family: 'sans-serif';
+$font-size-1: 3rem;
+$font-size-2: 2.4rem;
+$font-size-3: 2rem;
+$font-size-4: 1.8rem;
+
+$font-biggest: $font-size-1 $font-family;
+$font-bigger: $font-size-2 $font-family;
+$font-big: $font-size-3 $font-family;
+$font-normal: $font-size-4 $font-family;
+
+/*
+ * Media Query sizes
+ */
+$screen-medium: 640px;
+$screen-large: 960px;
+$screen-max: 1920px;
+$content-max: 1280px;
+
+/*
+ * Other sizes and gaps
+ */
+$size-small: .4rem;
+$size-medium: .6rem;
+$size-large: 1.2rem;
+
+$radius-small: $size-small;
+$radius-medium: $size-medium;
+$radius-large: $size-large;

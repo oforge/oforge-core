@@ -1,0 +1,45 @@
+#burger {
+    display: none;
+}
+
+.burger-menu {
+    position: absolute;
+    background: $color-light;
+    right: $size-medium;
+    top: 3.4rem;
+    width: 3.2rem;
+    height: 3.2rem;
+    border: 2px solid $color-secondary;
+    margin-left: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: background .2s ease;
+    cursor: pointer;
+}
+
+.patty {
+    width: 2rem;
+    height: .2rem;
+    background: $color-secondary;
+    transition: background .2s ease;
+}
+
+.patty + .patty {
+    margin-top: .4rem;
+}
+
+#burger:checked + .burger-menu {
+    background: $color-secondary;
+    .patty {
+        background: $color-light;
+    }
+}
+
+
+@media screen and (min-width: $content-max) {
+    .burger-menu {
+        display: none;
+    }
+}

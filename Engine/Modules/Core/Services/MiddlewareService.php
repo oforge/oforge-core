@@ -12,6 +12,7 @@ class MiddlewareService
      * @param $name
      *
      * @return array|Middleware[]
+     * @throws \Doctrine\ORM\ORMException
      */
     public function getActive($name)
     {
@@ -20,22 +21,23 @@ class MiddlewareService
         $result = $queryBuilder->select(array('m'))
             ->from(Middleware::class, 'm')
             ->where($queryBuilder->expr()->orX(
-                $queryBuilder->expr()->eq('m.name', '?1'),
-                $queryBuilder->expr()->eq('m.name', '?2')
+                $queryBuilder->expr()->eq('m.name', '?1')
             ))
             ->andWhere($queryBuilder->expr()->eq('m.active', 1))
             ->orderBy('m.position', 'DESC')
-            ->setParameters([1 => $name, 2 => '*'])
+            ->setParameters([1 => $name])
             ->distinct()
             ->getQuery();
         $middlewares = $result->execute();
 
         return $middlewares;
     }
-    
+
     /**
      * get all active middlewares
+     *
      * @return array|null
+     * @throws \Doctrine\ORM\ORMException
      */
     public function getAllDistinctActiveNames() {
         $entityManager = Oforge()->DB()->getManager();
@@ -43,8 +45,10 @@ class MiddlewareService
         $result = $queryBuilder->select(array('m.name'))
            ->from(Middleware::class, 'm')
            ->where($queryBuilder->expr()->eq('m.active', 1))
+           ->andWhere($queryBuilder->expr()->neq('m.name', '?1'))
            ->orderBy('m.position', 'DESC')
-           ->distinct()
+           ->groupBy("m.name")
+           ->setParameters([1 => '*'])
            ->getQuery();
         $middlewares = $result->execute();
         
@@ -56,12 +60,13 @@ class MiddlewareService
         
         return $names;
     }
-    
+
     /**
      * @param $options
      * @param $middleware
      *
      * @return Middleware[]
+     * @throws \Doctrine\ORM\ORMException
      */
     public function register($options, $middleware)
     {

@@ -2,24 +2,37 @@
 
 {% block content %}
     {% block registration %}
-    <div class="register">
-        <form action="{{ url('frontend_register_process') }}" method="post">
+    <div class="registration">
+        <form action="{{ url('frontend_registration_process') }}" method="post">
             <div class="form-controls">
                 <div class="form__control">
-                    <label for="frontend_register_email"
+                    <label for="frontend_registration_email"
                            class="form__label">{{ i18n('email') }}</label>
-                    <input id="frontend_register_email"
-                           name="frontend_register_email"
+                    <input id="frontend_registration_email"
+                           name="frontend_registration_email"
                            type="email"
                            class="form__input form__input">
                 </div>
                 <div class="form__control">
-                    <p>{{ i18n('password_will_be_sent_via_email') }}</p>
+                    <label for="frontend_registration_password"
+                           class="form__label">{{ i18n('password') }}</label>
+                    <input id="frontend_registration_password_password"
+                           name="frontend_registration_password_password"
+                           type="password"
+                           class="form__input form__input">
+                </div>
+                <div class="form__control">
+                    <label for="frontend_registration_password_confirm"
+                           class="form__label">{{ i18n('password_confirm') }}</label>
+                    <input id="frontend_registration_password_confirm"
+                           name="frontend_registration_password_confirm"
+                           type="password"
+                           class="form__input form__input">
                 </div>
                 <div class="form__control">
                     <input type="hidden" name="token" value="{{ token() }}">
                     <input type="submit"
-                           value="{{ i18n('register') }}"
+                           value="{{ i18n('registration') }}"
                            class="form__input button button--primary">
                 </div>
             </div>
