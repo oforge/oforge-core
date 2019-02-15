@@ -3,6 +3,8 @@
 namespace Oforge\Engine\Modules\CMS\Services;
 
 use Doctrine\ORM\PersistentCollection;
+use Oforge\Engine\Modules\CMS\Models\Page\PagePath;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\I18n\Models\Language;
 use Oforge\Engine\Modules\CMS\Models\Page\Page;
 use Oforge\Engine\Modules\CMS\Models\Page\PageContent;
@@ -10,36 +12,28 @@ use Oforge\Engine\Modules\CMS\Models\Content\ContentTypeGroup;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
 use Oforge\Engine\Modules\CMS\Models\Content\Content;
 
-class PageBuilderService
+class PageBuilderService extends AbstractDatabaseAccess
 {
-    private $entityManager;
-    private $repository;
-
     public function __construct()
     {
-        $this->entityManager          = Oforge()->DB()->getManager();
-        $this->pageContentRepository  = $this->entityManager->getRepository(PageContent::class);
-        $this->pageRepository         = $this->entityManager->getRepository(Page::class);
+        parent::__construct(['pageContent' => PageContent::class, 'page' => Page::class]);
     }
 
     /**
      * Return page entity for given page id
      * @param int $pathId
      *
-     * @return Page|NULL
+     * @return PageContent[]|NULL
      */
     private function getPageContentEntities(int $pathId)
     {
-        $pageContentEntities = $this->pageContentRepository->findBy(["pagePath" => $pathId]);
+        /** @var PageContent[] $pageContentEntities */
+        $pageContentEntities = $this->repository('pageContent')->findBy(["pagePath" => $pathId]);
         
-        if (isset($pageContentEntities))
-        {
+        if (isset($pageContentEntities)) {
             return $pageContentEntities;
         }
-        else
-        {
-            return NULL;
-        }
+        return null;
     }
     
      /**
@@ -50,21 +44,19 @@ class PageBuilderService
      */
     private function getPageEntity(int $id)
     {
-        $pageEntity = $this->pageRepository->findOneBy(["id" => $id]);
+        /** @var Page $pageEntity */
+        $pageEntity = $this->repository('page')->findOneBy(["id" => $id]);
         
-        if (isset($pageEntity))
-        {
+        if (isset($pageEntity)) {
             return $pageEntity;
         }
-        else
-        {
-            return NULL;
-        }
+        return null;
     }
 
     /**
      * Returns the content type group found as an associative array
-     * @param ContentTypeGroup $contentTypeGroup
+     *
+     * @param ContentTypeGroup|null $contentTypeGroupEntity
      *
      * @return array|NULL Array filled with available content type group data
      */
@@ -184,7 +176,7 @@ class PageBuilderService
     
      /**
      * Returns all found page paths as an associative array
-     * @param PersistentCollection $pathEntities
+     * @param PersistentCollection|PagePath[]|null $pathEntities
      *
      * @return array|NULL Array filled with available paths
      */

@@ -1,25 +1,19 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Alexander Wegner
- * Date: 17.01.2019
- * Time: 10:52
- */
 
 namespace Oforge\Engine\Modules\CMS\Services;
 
 use Oforge\Engine\Modules\CMS\Models\Content\ContentTypeGroup;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 
-class ContentTypeService
+class ContentTypeService extends AbstractDatabaseAccess
 {
     private $entityManager;
     private $repository;
 
     public function __construct()
     {
-        $this->entityManager = Oforge()->DB()->getManager();
-        $this->repository = $this->entityManager->getRepository(ContentTypeGroup::class);
+        parent::__construct(ContentTypeGroup::class);
     }
 
     /**
@@ -29,7 +23,7 @@ class ContentTypeService
      */
     private function getContentTypeGroupEntities()
     {
-        $contentTypeGroups = $this->repository->findAll();
+        $contentTypeGroups = $this->repository()->findAll();
         
         if (isset($contentTypeGroups))
         {
