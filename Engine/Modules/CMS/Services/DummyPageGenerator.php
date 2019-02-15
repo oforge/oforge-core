@@ -32,7 +32,7 @@ class DummyPageGenerator {
         $fullDir = ROOT_PATH . DIRECTORY_SEPARATOR . Statics::VAR_DIR . DIRECTORY_SEPARATOR . "dummy_data" . DIRECTORY_SEPARATOR;
         
         foreach ( $files as $file ) {
-            if ( file_exists( $fullDir . $file ) ) {
+            if ( file_exists( $fullDir . $file . '.csv' ) ) {
                 try {
                     $importService->processFile( $fullDir, $file, false );
                 } catch ( \Exception $e ) {
