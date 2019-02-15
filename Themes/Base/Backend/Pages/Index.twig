@@ -2,18 +2,18 @@
 
 {% block pagecontent %}
 
-{{ o_dump() }}
- 
+    {{ o_dump() }}
+
     {% block cms_page_builder %}
         {% include 'Backend/Pages/PageJsTreeForm.twig' %}
-     
-     	<div class="container-fluid">
-         	<div class="row">
-         		{% include 'Backend/Pages/PageJsTree.twig' %}
-         		{% include 'Backend/Pages/PageContent.twig' %}
-         		{% include 'Backend/Pages/ContentTypeList.twig' %}
-        	</div>
-     	</div>
+
+        <div class="container-fluid">
+            <div class="row">
+                {% include 'Backend/Pages/PageJsTree.twig' %}
+                {% include 'Backend/Pages/PageContent.twig' %}
+                {% include 'Backend/Pages/ContentTypeList.twig' %}
+            </div>
+        </div>
     {% endblock cms_page_builder %}
 
 {% endblock pagecontent %}

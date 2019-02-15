@@ -1,8 +1,41 @@
 {% extends "Frontend/Master.twig" %}
 {% block body %}
-    {#
-    TODO: Implement Layout Slots before and after the content part. The content part should be the part for cms content types.
-    #}
-    {% block content %}
-    {% endblock content %}
+    <div class="wrap">
+        {% block header %}
+            <header class="header">
+
+                {% block burger_menu %}
+                    {% include 'Frontend/Components/BurgerMenu.twig' %}
+                {% endblock burger_menu %}
+
+                {% block header_top %}
+                    <div class="header-top flex flex--row flex--center">
+                        <div class="content flex flex--row flex--center flex--wrap flex--justify">
+
+                            {% block logo %}
+                                {% include 'Frontend/Components/Logo.twig' %}
+                            {% endblock logo %}
+
+                            {% block top_nav %}
+                                {% include 'Frontend/Components/TopNav.twig' %}
+                            {% endblock top_nav %}
+                        </div>
+                    </div>
+                {% endblock header_top %}
+
+                {% block main_nav %}
+                    {% include 'Frontend/Components/MainNav.twig' %}
+                {% endblock main_nav %}
+            </header>
+        {% endblock header %}
+
+        <div class="container content">
+            {% block content %}
+            {% endblock content %}
+        </div>
+
+    {% block footer %}
+        {% include 'Frontend/Components/Footer.twig' %}
+    {% endblock footer %}
+    </div>
 {% endblock body %}

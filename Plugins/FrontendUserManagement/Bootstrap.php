@@ -28,6 +28,7 @@ class Bootstrap extends AbstractBootstrap {
         $this->services = [
             'frontend.user.management.password.reset' => Services\PasswordResetService::class,
             'frontend.user.management.login' => Services\FrontendUserLoginService::class,
+            'frontend.user.management.registration' => Services\RegistrationService::class,
             'frontend.secure.middleware' => Services\FrontendSecureMiddlewareService::class
         ];
     }

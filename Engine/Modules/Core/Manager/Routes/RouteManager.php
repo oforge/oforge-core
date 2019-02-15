@@ -19,11 +19,12 @@ class RouteManager {
         
         return self::$instance;
     }
-    
+
     /**
      * Make all routes, that come from the database, work
      *
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws \Doctrine\ORM\ORMException
      */
     public function init() {
         $entityManager = Oforge()->DB()->getManager();
@@ -63,23 +64,24 @@ class RouteManager {
             /**
              * @var $activeMiddlewares Middleware[]
              */
+            $activeMiddlewares = [];
             //$activeMiddlewares = $middlewareService->getActive( $endpoint->getName() );
             //$slimRoute->add( new MiddlewarePluginManager( $activeMiddlewares ) );
     
             $endpointName = $endpoint->getName();
 
             foreach($activeMiddlewareNames as $middlewareName) {
-                if ($middlewareName !== "*") {
-                    $pattern = "/^" . $middlewareName . "/";
-    
-                    if ( preg_match( $pattern, $endpointName ) ) {
-                        $activeMiddlewares = $middlewareService->getActive( $middlewareName );
-                        $slimRoute->add( new MiddlewarePluginManager( $activeMiddlewares ) );
-                        break;
-                    }
+                $pattern = "/^" . $middlewareName . "/";
+
+                if ( preg_match( $pattern, $endpointName ) ) {
+                    $activeMiddlewares = $middlewareService->getActive( $middlewareName );
+                    $slimRoute->add( new MiddlewarePluginManager( $activeMiddlewares ) );
+                    break;
                 }
             }
-            
+
+            $activeMiddlewares = $middlewareService->getActive( '*' );
+            $slimRoute->add( new MiddlewarePluginManager( $activeMiddlewares ) );
             $slimRoute->add( new RenderMiddleware() );
             $slimRoute->add( new RouteMiddleware( $endpoint ) );
             $slimRoute->add( new SessionMiddleware());

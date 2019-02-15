@@ -27,7 +27,7 @@ class SessionMiddleware {
         $sessionManager->sessionStart();
 
         /** for debugging purposes */
-        Oforge()->View()->assign(["session" => $_SESSION]);
+        // Oforge()->View()->assign(["session" => $_SESSION]);
 
         return $next($request, $response);
     }

@@ -1,0 +1,43 @@
+* {
+    font-family: $font-family;
+}
+html {
+    background-repeat: repeat;
+}
+body {
+    font-size: $font-normal;
+    position: relative;
+}
+
+html body .content {
+    max-width: $content-max;
+    width: 100%;
+    margin: 0 auto;
+
+    &.content--relative {
+        position: relative;
+    }
+}
+
+h1,h2,h3,h4,h5,h6 {
+    color: $color-secondary;
+    font-weight: bold;
+}
+
+.wrap {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    max-width: $screen-max;
+    margin: auto;
+    overflow: hidden;
+
+    > * {
+        padding-left: $size-medium;
+        padding-right: $size-medium;
+    }
+}
+.container {
+    flex: 1 0 auto;
+    padding: $size-large 0;
+}
