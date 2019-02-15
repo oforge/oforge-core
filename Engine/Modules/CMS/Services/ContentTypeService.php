@@ -10,13 +10,16 @@ namespace Oforge\Engine\Modules\CMS\Services;
 
 use Oforge\Engine\Modules\CMS\Models\Content\ContentTypeGroup;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
-use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 
-class ContentTypeService extends AbstractDatabaseAccess {
-    public function __construct() {
-        parent::__construct([
-            "default" => ContentTypeGroup::class,
-        ]);
+class ContentTypeService
+{
+    private $entityManager;
+    private $repository;
+
+    public function __construct()
+    {
+        $this->entityManager = Oforge()->DB()->getManager();
+        $this->repository = $this->entityManager->getRepository(ContentTypeGroup::class);
     }
 
     /**
@@ -24,12 +27,16 @@ class ContentTypeService extends AbstractDatabaseAccess {
      *
      * @return ContentTypeGroup[]|NULL
      */
-    public function getContentTypeGroupEntities() {
-        $contentTypeGroups = $this->repository()->findAll();
-
-        if (isset($contentTypeGroups)) {
+    private function getContentTypeGroupEntities()
+    {
+        $contentTypeGroups = $this->repository->findAll();
+        
+        if (isset($contentTypeGroups))
+        {
             return $contentTypeGroups;
-        } else {
+        }
+        else
+        {
             return null;
         }
     }
@@ -39,10 +46,12 @@ class ContentTypeService extends AbstractDatabaseAccess {
      *
      * @return array|NULL Array filled with available content type groups
      */
-    public function getContentTypeGroupArray() {
+    public function getContentTypeGroupArray()
+    {
         $contentTypeGroupEntities = $this->getContentTypeGroupEntities();
 
-        if (!$contentTypeGroupEntities) {
+        if (!$contentTypeGroupEntities)
+        {
             return null;
         }
 
@@ -53,9 +62,10 @@ class ContentTypeService extends AbstractDatabaseAccess {
             $contentTypeGroup["description"] = $contentTypeGroupEntity->getDescription();
 
             $contentTypeEntities = $contentTypeGroupEntity->getContentTypes();
-
-            $contentTypeArray = [];
-            foreach ($contentTypeEntities as $contentTypeEntity) {
+          
+            $contentTypes = [];
+            foreach($contentTypeEntities as $contentTypeEntity)
+            {
                 $contentType                = [];
                 $contentType["id"]          = $contentTypeEntity->getId();
                 $contentType["group"]       = $contentTypeEntity->getGroup();
@@ -63,12 +73,12 @@ class ContentTypeService extends AbstractDatabaseAccess {
                 $contentType["icon"]        = $contentTypeEntity->getIcon();
                 $contentType["description"] = $contentTypeEntity->getDescription();
                 $contentType["class"]       = $contentTypeEntity->getClassPath();
-
-                $contentTypeArray[] = $contentType;
+                
+                $contentTypes[] = $contentType;
             }
-
-            $contentTypeGroup["types"] = $contentTypeArray;
-
+            
+            $contentTypeGroup["types"] = $contentTypes;
+          
             $contentTypeGroups[] = $contentTypeGroup;
         }
 

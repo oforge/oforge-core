@@ -1,43 +1,40 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Alexander Wegner
- * Date: 16.01.2019
- * Time: 12:13
- */
 
 namespace Oforge\Engine\Modules\CMS\ContentTypes;
 
 use Oforge\Engine\Modules\CMS\Abstracts\AbstractContentType;
+use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
 
-class Text extends AbstractContentType {
-    function init() {
-        $configuration = [
-            "width" => "100px",
-            "height" => "100px",
-            "margin-top" => "0",
-            "margin-left" => "0",
-            "margin-bottom" => "0",
-            "margin-right" => "0",
-            "padding-top" => "0",
-            "padding-left" => "0",
-            "padding-bottom" => "0",
-            "padding-right" => "0",
-            "border-style" => "1",
-            "border-size" => "solid",
-            "border-color" => "#000"
-        ];
+class RichText extends AbstractContentType
+{
+    /**
+     * Return whether or not content type is a container type like a row
+     *
+     * @return bool true|false
+     */
+    public function isContainer(): bool
+    {
+        return false;
     }
     
-    public function getContent() {
+    /**
+     * Return data of content type
+     *
+     * @return mixed
+     */
+    public function getData()
+    {
+        return Null;
     }
     
-    public function setContent($content) {
-    }
-    
-    public function load(int $id) {
-    }
-    
-    public function save(array $params) {
+    /**
+     * Set data of content type
+     * @param mixed $data
+     *
+     * @return ContentType $this
+     */
+    public function setData($data)
+    {
+        return $this;
     }
 }

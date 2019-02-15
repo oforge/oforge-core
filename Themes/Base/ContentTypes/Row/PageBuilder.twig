@@ -1,0 +1,7 @@
+<div class="row {{ data.css }}">
+    {% for col in data.cols %}
+		<div>
+            {{ data.data|raw }}
+		</div>
+    {% endfor %}
+</div>
