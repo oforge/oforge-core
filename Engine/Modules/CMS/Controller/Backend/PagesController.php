@@ -11,7 +11,7 @@ namespace Oforge\Engine\Modules\CMS\Controller\Backend;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
-use Oforge\Engine\Modules\CMS\Services\PageService;
+use Oforge\Engine\Modules\CMS\Services\PageTreeService;
 use Oforge\Engine\Modules\CMS\Services\PageBuilderService;
 
 class PagesController extends AbstractController {
@@ -23,16 +23,27 @@ class PagesController extends AbstractController {
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
     public function indexAction(Request $request, Response $response) {
-        $contentTypeService = OForge()->Services()->get("content.type");
-        $pageBuilderService = OForge()->Services()->get("pages.tree.view");
+        $contentTypeService = OForge()->Services()->get("content.type.service");
+        $pageTreeService = OForge()->Services()->get("page.tree.service");
+        $pageBuilderService = OForge()->Services()->get("page.builder.service");
         
         $data = [
-            "js" => ["cms_page_controller_jstree_config" => $pageBuilderService->generateJsTreeConfigJSON()],
-            "pages" => $pageBuilderService->getPageArray(),
+            "js" => ["cms_page_controller_jstree_config" => $pageTreeService->generateJsTreeConfigJSON()],
+            "pages" => $pageTreeService->getPageArray(),
             "contentTypeGroups" => $contentTypeService->getContentTypeGroupArray(),
             "post" => $_POST
-            
         ];
+
+        if (isset($_POST["cms_page_jstree_selected_page"]))
+        {
+            if (!$_POST["cms_page_selected_language"])
+            {
+                $_POST["cms_page_selected_language"] = 0;
+            }
+            
+            $data["contents"] = $pageBuilderService->getContentDataArray($pageBuilderService->getPageArray($_POST["cms_page_jstree_selected_page"]), $_POST["cms_page_selected_language"]);
+            $data["pageBuilderData"] = $pageBuilderService->getPageArray($_POST["cms_page_jstree_selected_page"]); // TODO: just used as development info
+        }
         
         Oforge()->View()->assign($data);
     }

@@ -1,65 +1,179 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Alexander Wegner
- * Date: 16.01.2019
- * Time: 11:45
- */
 
 namespace Oforge\Engine\Modules\CMS\Abstracts;
 
 use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
+use Oforge\Engine\Modules\CMS\Models\Content\Content;
 
-abstract class AbstractContentType {
+abstract class AbstractContentType
+{
     protected $entityManager;
-    protected $repository;
+    protected $contentTypeRepository;
+    protected $contentRepository;
     
-    private $configuration = [];
-    private $localizable = false;
+    private $contentTypeId = Null;
     private $content = Null;
     
-    public function __construct() {
+    private $id = Null;
+    private $parentId = Null;
+    private $name = Null;
+    private $cssClass = Null;
+    private $data = Null;
+    
+    public function __construct()
+    {
         $this->entityManager = Oforge()->DB()->getManager();
-        $this->repository = $this->entityManager->getRepository(ContentType::class);
+        
+        $this->contentTypeRepository = $this->entityManager->getRepository(ContentType::class);
+        $this->contentRepository = $this->entityManager->getRepository(Content::class);
+        
+        $contentTypeEntity = $this->contentTypeRepository->findOneBy(["classPath" => get_class($this)]);
+        $this->contentTypeId = $contentTypeEntity->getId();
     }
     
-    abstract public function init();
+    /**
+     * Return whether or not content type is a container type like a row
+     *
+     * @return bool true|false
+     */
+    abstract public function isContainer(): bool;
     
-    public  function getConfigurationKeys() {
-        if (is_array($this->configuration)) {
-            return array_keys($this->configuration);
-        } else {
-            return false;
+    /**
+     * Return data of content type
+     *
+     * @return mixed
+     */
+    abstract public function getData();
+    
+    /**
+     * Set data of content type
+     * @param mixed $data
+     *
+     * @return ContentType $this
+     */
+    abstract public function setData($data);
+    
+    /**
+     * Return parent id of content type
+     *
+     * @return int
+     */
+    public function getParentId()
+    {
+        return $this->parentId;
+    }
+    
+    /**
+     * Set parent id content type
+     * @param int $parentId
+     *
+     * @return ContentType $this
+     */
+    public function setParentId(int $parentId)
+    {
+        $this->parentId = $parentId;
+        
+        return $this;
+    }
+    
+    /**
+     * Return name of content type
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+    
+    /**
+     * Set name content type
+     * @param string $name
+     *
+     * @return ContentType $this
+     */
+    public function setName(string $name)
+    {
+        $this->name = $name;
+        
+        return $this;
+    }
+    
+    /**
+     * Return css class of content type
+     *
+     * @return string
+     */
+    public function getCssClass()
+    {
+        return $this->cssClass;
+    }
+    
+    /**
+     * Set css class content type
+     * @param string $cssClass
+     *
+     * @return ContentType $this
+     */
+    public function setCssClass(string $cssClass)
+    {
+        $this->cssClass = $cssClass;
+        
+        return $this;
+    }
+    
+    /**
+     * Persist data stored in $content of content type to database
+     *
+     * @return ContentType $this
+     */
+    public function save() {
+        if (!$this->id || !$this->content)
+        {
+            $this->content = new Content;
         }
-    }
-    
-    public function getConfigurationValue($key) {
-        if (is_array($this->configuration) && array_key_exists($key, $this->configuration)) {
-            return $this->configuration[$key];
-        } else {
-            return false;
+        else
+        {
+            $this->content->setId($this->id);
         }
-    }
-    
-    public function setConfigurationValue($key, $value) {
-        if (is_array($this->configuration) && array_key_exists($key, $$this->configuration)) {
-            $$this->configuration[$key] = $value;
+        
+        $this->content->setType($this->contentTypeId);
+        $this->content->setParent($this->parentId);
+        $this->content->setName($this->name);
+        $this->content->setCssClass($this->cssClass);
+        $this->content->setData($this->data);
+        
+        $this->entityManager->persist($this->content);
+        $this->entityManager->flush();
+        
+        if (!$this->id)
+        {
+            $this->id = $this->entityManager->getId();
+            $this->content->setId($this->id);
         }
+        
+        return $this;
     }
     
-    public function getLocalizable(): bool {
-        return $this->localizable;
+    /**
+     * Load data of content type from database to $content
+     *
+     * @return ContentType $this
+     */
+    public function load(int $id) {
+        if (!$id)
+        {
+            return $this;
+        }
+        
+        $content = $this->contentRepository->findOneBy(["id" => $id]);
+        
+        if ($content && $content->getId() > 0)
+        {
+            $this->content = $content;
+            $this->id = $this->content->getId();
+        }
+        
+        return $this;
     }
-    
-    public function setLocalizable(bool $localizable) {
-        $this->localizable = $localizable;
-    }
-    
-    abstract public function getContent();
-    
-    abstract public function setContent($content);
-    
-    abstract public function save(array $params);
-    
-    abstract public function load(int $id);
 }

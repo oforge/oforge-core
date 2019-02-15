@@ -68,6 +68,9 @@
 // jsTree classes
 @import "jstree/default/style";
 
+// CMS dummy content classes - REMOVE IN PRODUCTION ENVIRONMENT
+@import "cms/dummy-content";
+
 @import "adminlte";
 @import "oforge";
 @import "custom-style";
