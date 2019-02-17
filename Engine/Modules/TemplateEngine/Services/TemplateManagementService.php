@@ -142,10 +142,10 @@ class TemplateManagementService extends AbstractDatabaseAccess {
          */
         $template = $this->repository()->findOneBy(["active" => 1]);
         if ($template === null) {
-            $template = $this->repository()->findOneBy(["name" => "Base"]);
+            $template = $this->repository()->findOneBy(["name" => Statics::DEFAULT_THEME]);
 
             if ($template === null) {
-                throw new TemplateNotFoundException("Base");
+                throw new TemplateNotFoundException(Statics::DEFAULT_THEME);
             }
 
             $template->setActive(1);

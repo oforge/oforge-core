@@ -3,14 +3,14 @@
 namespace Oforge\Engine\Modules\Core\Helper;
 
 class Statics {
-    public const ENGINE_DIR         = "Engine";
-    public const PLUGIN_DIR         = "Plugins";
-    public const VIEW_DIR           = "Views";
-    public const TEMPLATE_DIR       = "Themes";
-    public const VAR_DIR            = "var";
-    public const ASSETS_DIR         = "__assets";
-    public const PUBLIC_DIR         = DIRECTORY_SEPARATOR . Statics::VAR_DIR . DIRECTORY_SEPARATOR . "public";
-    public const CACHE_DIR          = DIRECTORY_SEPARATOR . Statics::VAR_DIR . DIRECTORY_SEPARATOR . "cache";
+    public const ENGINE_DIR           = "Engine";
+    public const PLUGIN_DIR           = "Plugins";
+    public const VIEW_DIR             = "Views";
+    public const TEMPLATE_DIR         = "Themes";
+    public const VAR_DIR              = "var";
+    public const ASSETS_DIR           = "__assets";
+    public const PUBLIC_DIR           = DIRECTORY_SEPARATOR . Statics::VAR_DIR . DIRECTORY_SEPARATOR . "public";
+    public const CACHE_DIR            = DIRECTORY_SEPARATOR . Statics::VAR_DIR . DIRECTORY_SEPARATOR . "cache";
     public const THEME_CACHE_DIR      = Statics::PUBLIC_DIR . DIRECTORY_SEPARATOR . "theme";
     public const DB_CACHE_DIR         = Statics::CACHE_DIR . DIRECTORY_SEPARATOR . "db";
     public const ASSET_CACHE_DIR      = Statics::PUBLIC_DIR . DIRECTORY_SEPARATOR . Statics::ASSETS_DIR;
@@ -20,12 +20,13 @@ class Statics {
     public const ASSETS_JS            = "js";
     public const DB_CACHE_FILE        = Statics::DB_CACHE_DIR . DIRECTORY_SEPARATOR . "db.cache";
     public const IMPORTS_DIR          = DIRECTORY_SEPARATOR . Statics::VAR_DIR . DIRECTORY_SEPARATOR . "imports";
+    public const DEFAULT_THEME        = "Base";
     /**
      * Relative path of logs folder.
      */
     public const LOGS_DIR = DIRECTORY_SEPARATOR . Statics::VAR_DIR . DIRECTORY_SEPARATOR . 'logs';
     /**
-     * Default Ordner value for all order properties.
+     * Default order value for all order properties.
      */
     public const DEFAULT_ORDER = 1337;
 }
