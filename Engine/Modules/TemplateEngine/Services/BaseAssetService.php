@@ -92,7 +92,7 @@ class BaseAssetService {
         $templateManagementService = Oforge()->Services()->get("template.management");
         $activeTemplate            = $templateManagementService->getActiveTemplate();
 
-        $paths = [ROOT_PATH . DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . "Base"];
+        $paths = [ROOT_PATH . DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . Statics::DEFAULT_THEME];
 
         /** @var $pluginAccessService PluginAccessService */
         $pluginAccessService = Oforge()->Services()->get("plugin.access");

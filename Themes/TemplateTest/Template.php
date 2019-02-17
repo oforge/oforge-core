@@ -1,12 +1,13 @@
 <?php
 namespace Themes\TemplateTest;
 
+use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\TemplateEngine\Abstracts\AbstractTemplate;
 
 class Template extends AbstractTemplate {
     public function __construct() {
         parent::__construct();
-        $this->parent = "Base";
+        $this->parent = Statics::DEFAULT_THEME;
         $this->addTemplateVariables([
             [
                 'name' => 'primary',

@@ -44,10 +44,10 @@ class TemplateManager extends AbstractTemplateManager {
 
         $templateFiles = Helper::getTemplateFiles(ROOT_PATH . DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR);
 
-        $templateManagementService->register("Base");
+        $templateManagementService->register(Statics::DEFAULT_THEME);
 
         foreach ($templateFiles as $templateName => $dir) {
-            if ($templateName != "Base") {
+            if ($templateName != Statics::DEFAULT_THEME) {
                 $templateManagementService->register($templateName);
             }
         }
