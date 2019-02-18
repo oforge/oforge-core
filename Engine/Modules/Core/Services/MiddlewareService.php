@@ -26,7 +26,6 @@ class MiddlewareService
             ->andWhere($queryBuilder->expr()->eq('m.active', 1))
             ->orderBy('m.position', 'DESC')
             ->setParameters([1 => $name])
-            ->distinct()
             ->getQuery();
         $middlewares = $result->execute();
 
@@ -46,7 +45,6 @@ class MiddlewareService
            ->from(Middleware::class, 'm')
            ->where($queryBuilder->expr()->eq('m.active', 1))
            ->andWhere($queryBuilder->expr()->neq('m.name', '?1'))
-           ->orderBy('m.position', 'DESC')
            ->groupBy("m.name")
            ->setParameters([1 => '*'])
            ->getQuery();
