@@ -188,9 +188,9 @@ class TemplateRenderService {
             }
 
             array_push($paths["parent"],
-                ROOT_PATH . Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . Statics::DEFAULT_THEME);
+                ROOT_PATH . DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . Statics::DEFAULT_THEME);
             array_push($paths[Twig_Loader_Filesystem::MAIN_NAMESPACE],
-                ROOT_PATH . Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . Statics::DEFAULT_THEME);
+                ROOT_PATH . DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . Statics::DEFAULT_THEME);
 
             $this->view = new CustomTwig($paths, [
                 'cache'       => ROOT_PATH . Statics::THEME_CACHE_DIR,
