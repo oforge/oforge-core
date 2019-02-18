@@ -8,6 +8,7 @@
 
 namespace Oforge\Engine\Modules\TemplateEngine\Services;
 
+use Doctrine\ORM\Query\AST\Functions\DateSubFunction;
 use Oforge\Engine\Modules\Core\Exceptions\TemplateNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\Core\Models\Plugin\Plugin;
@@ -164,7 +165,10 @@ class TemplateRenderService {
             $plugins = Oforge()->Services()->get("plugin.access")->getActive();
             $paths   = [];
 
-            $paths[Twig_Loader_Filesystem::MAIN_NAMESPACE] = [ROOT_PATH . DIRECTORY_SEPARATOR . $templatePath];
+            $paths[Twig_Loader_Filesystem::MAIN_NAMESPACE] = [];
+            if ($activeTemplate->getName() !== Statics::DEFAULT_THEME) {
+                $paths[Twig_Loader_Filesystem::MAIN_NAMESPACE] = [ROOT_PATH . DIRECTORY_SEPARATOR . $templatePath];
+            }
             $paths["parent"]                               = [];
 
             foreach ($plugins as $plugin) {
@@ -183,8 +187,10 @@ class TemplateRenderService {
                 }
             }
 
-            array_push($paths["parent"], ROOT_PATH . "/Themes/Base");
-            array_push($paths[Twig_Loader_Filesystem::MAIN_NAMESPACE], ROOT_PATH . "/Themes/Base");
+            array_push($paths["parent"],
+                ROOT_PATH . Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . Statics::DEFAULT_THEME);
+            array_push($paths[Twig_Loader_Filesystem::MAIN_NAMESPACE],
+                ROOT_PATH . Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . Statics::DEFAULT_THEME);
 
             $this->view = new CustomTwig($paths, [
                 'cache'       => ROOT_PATH . Statics::THEME_CACHE_DIR,
