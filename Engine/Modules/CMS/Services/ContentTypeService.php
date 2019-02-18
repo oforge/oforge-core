@@ -13,7 +13,7 @@ class ContentTypeService extends AbstractDatabaseAccess
 
     public function __construct()
     {
-        parent::__construct(ContentTypeGroup::class);
+        parent::__construct(['default' => ContentTypeGroup::class]);
     }
 
     /**
@@ -52,8 +52,8 @@ class ContentTypeService extends AbstractDatabaseAccess
         $contentTypeGroups = [];
         foreach ($contentTypeGroupEntities as $contentTypeGroupEntity) {
             $contentTypeGroup                = [];
-            $contentTypeGroup["id"]          = $contentTypeGroupEntity->getId();
-            $contentTypeGroup["description"] = $contentTypeGroupEntity->getDescription();
+            $contentTypeGroup['id']          = $contentTypeGroupEntity->getId();
+            $contentTypeGroup['description'] = $contentTypeGroupEntity->getDescription();
 
             $contentTypeEntities = $contentTypeGroupEntity->getContentTypes();
           
@@ -61,17 +61,17 @@ class ContentTypeService extends AbstractDatabaseAccess
             foreach($contentTypeEntities as $contentTypeEntity)
             {
                 $contentType                = [];
-                $contentType["id"]          = $contentTypeEntity->getId();
-                $contentType["group"]       = $contentTypeEntity->getGroup();
-                $contentType["name"]        = $contentTypeEntity->getName();
-                $contentType["icon"]        = $contentTypeEntity->getIcon();
-                $contentType["description"] = $contentTypeEntity->getDescription();
-                $contentType["class"]       = $contentTypeEntity->getClassPath();
+                $contentType['id']          = $contentTypeEntity->getId();
+                $contentType['group']       = $contentTypeEntity->getGroup();
+                $contentType['name']        = $contentTypeEntity->getName();
+                $contentType['icon']        = $contentTypeEntity->getIcon();
+                $contentType['description'] = $contentTypeEntity->getDescription();
+                $contentType['class']       = $contentTypeEntity->getClassPath();
                 
                 $contentTypes[] = $contentType;
             }
             
-            $contentTypeGroup["types"] = $contentTypes;
+            $contentTypeGroup['types'] = $contentTypes;
           
             $contentTypeGroups[] = $contentTypeGroup;
         }
