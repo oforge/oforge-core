@@ -39,7 +39,7 @@ class PageController extends AbstractController {
             }
         }
 
-        Oforge()->View()->assign(["template.path" => "/Frontend/Page/404.twig"]);
+        Oforge()->View()->assign(["template_path" => "/Frontend/Page/404.twig"]);
 
         return $response->withStatus(404);
     }

@@ -110,9 +110,9 @@ class Template extends AbstractModel {
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getParentId() {
+    public function getParentId() : ?int {
         return $this->parentId;
     }
 
