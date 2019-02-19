@@ -1,7 +1,7 @@
-<div class="row {{ data.css }}">
-    {% for col in data.cols %}
+<div class="row {{ data.css }}" style="display:flex;justify-content:space-between;align-items:center;">
+    {% for column in data.columns %}
 		<div>
-            {{ data.data|raw }}
+            {% include column.type with {'data': column} only %}
 		</div>
     {% endfor %}
 </div>
