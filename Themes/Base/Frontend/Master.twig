@@ -5,24 +5,24 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{% block title %}Default Title{% endblock %}</title>
+    <title>{% block title %}Default Title{% endblock title %}</title>
     {% block head_styles %}
         {% if assets.css %}
             <link rel="stylesheet" href="{{ assets.css }}"/>
         {% endif %}
-    {% endblock %}
+    {% endblock head_styles %}
 </head>
 <body>
 
 {% block body %}
-{% endblock %}
+{% endblock body%}
 
 {% block footer_scripts %}
     <script>
         console.log("%cHello World! This is a default JavaScript from the footer block.", "color: #dd0000");
     </script>
     {% include 'Frontend/Components/Scripts.twig' %}
-{% endblock %}
+{% endblock footer_scripts%}
 
 {% block meta %}
     {% if session %}

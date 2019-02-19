@@ -26,11 +26,11 @@
                            value="{{ i18n('signin') }}"
                            class="form__input button button--primary">
                 </div>
+                <div class="form__control">
+                    <a href="{{ url('frontend_registration') }}" class="button button--secondary">{{ i18n('or_register') }}</a>
+                </div>
             </div>
         </form>
-    </div>
-    <div class="content">
-        <a href="{{ url('frontend_registration') }}" class="button button--secondary">{{ i18n('or_register') }}</a>
     </div>
     {% endblock login %}
 {% endblock content %}
