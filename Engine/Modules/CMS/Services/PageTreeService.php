@@ -3,16 +3,16 @@
 namespace Oforge\Engine\Modules\CMS\Services;
 
 use Oforge\Engine\Modules\CMS\Models\Page\Page;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 
-class PageTreeService
+class PageTreeService extends AbstractDatabaseAccess
 {
     private $entityManager;
     private $repository;
 
     public function __construct()
     {
-        $this->entityManager = Oforge()->DB()->getManager();
-        $this->repository = $this->entityManager->getRepository(Page::class);
+        parent::__construct(["default" => Page::class]);
     }
     
     /**
@@ -22,7 +22,7 @@ class PageTreeService
      */
     private function getPageEntities()
     {
-        $pageEntityArray = $this->repository->findAll();
+        $pageEntityArray = $this->repository()->findAll();
         
         if (isset($pageEntityArray))
         {

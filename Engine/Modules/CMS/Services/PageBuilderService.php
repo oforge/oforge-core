@@ -11,14 +11,32 @@ use Oforge\Engine\Modules\CMS\Models\Page\PageContent;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentTypeGroup;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
 use Oforge\Engine\Modules\CMS\Models\Content\Content;
+use Oforge\Engine\Modules\CMS\Models\ContentTypes\Row;
 
 class PageBuilderService extends AbstractDatabaseAccess
 {
     public function __construct()
     {
-        parent::__construct(['pageContent' => PageContent::class, 'page' => Page::class]);
+        parent::__construct(['rowContent' => Row::class, 'pageContent' => PageContent::class, 'page' => Page::class]);
     }
-
+    
+    /**
+     * Return row entities for given row id
+     * @param int $rowId
+     *
+     * @return Row[]|NULL
+     */
+    private function getRowEntities(int $rowId)
+    {
+        /** @var Row[] $rowEntities */
+        $rowEntities = $this->repository('rowContent')->findBy(["row" => $rowId], ["order" => "ASC"]);
+        
+        if (isset($rowEntities)) {
+            return $rowEntities;
+        }
+        return null;
+    }
+    
     /**
      * Return page entity for given page id
      * @param int $pathId
@@ -28,7 +46,7 @@ class PageBuilderService extends AbstractDatabaseAccess
     private function getPageContentEntities(int $pathId)
     {
         /** @var PageContent[] $pageContentEntities */
-        $pageContentEntities = $this->repository('pageContent')->findBy(["pagePath" => $pathId]);
+        $pageContentEntities = $this->repository('pageContent')->findBy(["pagePath" => $pathId], ["order" => "ASC"]);
         
         if (isset($pageContentEntities)) {
             return $pageContentEntities;
@@ -52,7 +70,37 @@ class PageBuilderService extends AbstractDatabaseAccess
         }
         return null;
     }
-
+    
+    /**
+     * Returns the contents for row columns found as an associative array
+     *
+     * @param int $rowId
+     *
+     * @return array|NULL Array filled with available contents to fill row columns
+     */
+    private function getRowColumnDataArray(int $rowId)
+    {
+        $rowEntities = $this->getRowEntities($rowId);
+        
+        if (!$rowEntities)
+        {
+            return NULL;
+        }
+        
+        $rowColumnContents = [];
+        foreach($rowEntities as $rowEntity)
+        {
+            $rowColumnContent            = [];
+            $rowColumnContent["id"]      = $rowEntity->getId();
+            $rowColumnContent["content"] = $this->getContentArray($rowEntity->getContent());
+            $rowColumnContent["order"]   = $rowEntity->getOrder();
+            
+            $rowColumnContents[] = $rowColumnContent;
+        }
+        
+        return $rowColumnContents;
+    }
+    
     /**
      * Returns the content type group found as an associative array
      *
@@ -230,15 +278,13 @@ class PageBuilderService extends AbstractDatabaseAccess
   
     /**
      * Returns an array with prepared twig content data for page builder
-     * @param array page array
+     * @param array page contents array
      * @param int page path
      *
      * @return array|NULL Array filled with twig content data for page builder
      */
-    public function getContentDataArray(array $pageArray, $pagePath)
+    public function getContentDataArray(array $pageContents, $pagePath)
     {
-        $pageContents = $pageArray["paths"][$pagePath]["pageContent"];
-        
         if (!$pageContents)
         {
             return NULL;
@@ -253,7 +299,8 @@ class PageBuilderService extends AbstractDatabaseAccess
             {
                 case "row":
                     $data["type"]   = "ContentTypes/Row/PageBuilder.twig";
-                    // TODO: implement row data collection
+                    $data["css"]    = $pageContent["content"]["cssClass"];
+                    $data["columns"]= $this->getContentDataArray($this->getRowColumnDataArray($pageContent["content"]["id"]), $pagePath);
                     break;
                 case "richtext":
                     $data["type"]   = "ContentTypes/RichText/PageBuilder.twig";
