@@ -1,0 +1,28 @@
+{# block layout_header #}
+{% block header %}
+    <header class="header">
+
+        {% block header_burger_menu %}
+            {% include 'Frontend/Components/Header/BurgerMenu.twig' %}
+        {% endblock header_burger_menu %}
+
+        {% block header_top %}
+            <div class="header-top flex flex--row flex--center">
+                <div class="content flex flex--row flex--center flex--wrap flex--justify">
+
+                    {% block header_logo %}
+                        {% include 'Frontend/Components/Header/Logo.twig' %}
+                    {% endblock header_logo %}
+
+                    {% block header_top_nav %}
+                        {% include 'Frontend/Components/Header/TopNav.twig' %}
+                    {% endblock header_top_nav %}
+                </div>
+            </div>
+        {% endblock header_top %}
+
+        {% block header_main_nav %}
+            {% include 'Frontend/Components/Header/MainNav.twig' %}
+        {% endblock header_main_nav %}
+    </header>
+{% endblock header %}
