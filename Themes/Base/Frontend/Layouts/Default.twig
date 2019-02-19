@@ -1,17 +1,17 @@
 {% extends 'Frontend/Master.twig' %}
 {% block body %}
     <div class='wrap'>
-        {% block layout_header %}
+        {% block layout__header %}
             {% include 'Frontend/Components/Header/Header.twig' %}
-        {% endblock layout_header %}
+        {% endblock layout__header %}
 
         <div class='container content'>
             {% block content %}
             {% endblock content %}
         </div>
 
-    {% block layout_footer %}
+    {% block layout__footer %}
         {% include 'Frontend/Components/Footer/Footer.twig' %}
-    {% endblock layout_footer %}
+    {% endblock layout__footer %}
     </div>
 {% endblock body %}

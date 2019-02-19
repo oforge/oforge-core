@@ -6,32 +6,36 @@
           content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{% block title %}Default Title{% endblock title %}</title>
-    {% block head_styles %}
+
+    {% block master__additional_meta %}
+    {% endblock master__additional_meta %}
+
+    {% block master__styles %}
         {% if assets.css %}
             <link rel="stylesheet" href="{{ assets.css }}"/>
         {% endif %}
-    {% endblock head_styles %}
+    {% endblock master__styles %}
 </head>
 <body>
 
 {% block body %}
-{% endblock body%}
+{% endblock body %}
 
-{% block footer_scripts %}
-    <script>
-        console.log("%cHello World! This is a default JavaScript from the footer block.", "color: #dd0000");
-    </script>
+{% block master__footer_scripts %}
     {% include 'Frontend/Components/Scripts.twig' %}
-{% endblock footer_scripts%}
+{% endblock master__footer_scripts %}
 
-{% block meta %}
+{% block master__meta %}
     {% if session %}
         <style>
             .meta {
-                background: #aca;
+                background: #d87a68;
+                color: #fff;
+                padding: 1rem;
                 width: 100%;
                 min-height: 300px;
                 font-size: 1.2rem;
+                line-height: 1.4;
             }
         </style>
         <div class="meta">
@@ -40,7 +44,7 @@
             {% endfor %}
         </div>
     {% endif %}
-{% endblock meta %}
+{% endblock master__meta %}
 
 </body>
 </html>
