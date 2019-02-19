@@ -23,6 +23,7 @@ class DummyPageGenerator {
             "oforge_cms_content_type_group",
             "oforge_cms_content_type",
             "oforge_cms_content",
+            "oforge_cms_content_type_row",
             "oforge_cms_site",
             "oforge_cms_page",
             "oforge_cms_page_path",

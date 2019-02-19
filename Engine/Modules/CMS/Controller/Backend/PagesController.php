@@ -24,25 +24,26 @@ class PagesController extends AbstractController {
      */
     public function indexAction(Request $request, Response $response) {
         $contentTypeService = OForge()->Services()->get("content.type.service");
-        $pageTreeService = OForge()->Services()->get("page.tree.service");
+        $pageTreeService    = OForge()->Services()->get("page.tree.service");
         $pageBuilderService = OForge()->Services()->get("page.builder.service");
         
+        $selectedPage       = $_POST["cms_page_jstree_selected_page"] ? $_POST["cms_page_jstree_selected_page"] : 0;
+        $selectedLanguage   = $_POST["cms_page_selected_language"] ? $_POST["cms_page_selected_language"] : 0;
+        
         $data = [
-            "js" => ["cms_page_controller_jstree_config" => $pageTreeService->generateJsTreeConfigJSON()],
-            "pages" => $pageTreeService->getPageArray(),
+            "js"                => ["cms_page_controller_jstree_config" => $pageTreeService->generateJsTreeConfigJSON()],
+            "pages"             => $pageTreeService->getPageArray(),
             "contentTypeGroups" => $contentTypeService->getContentTypeGroupArray(),
-            "post" => $_POST
+            "post"              => $_POST
         ];
 
-        if (isset($_POST["cms_page_jstree_selected_page"]))
+        if ($selectedPage)
         {
-            if (!$_POST["cms_page_selected_language"])
-            {
-                $_POST["cms_page_selected_language"] = 0;
-            }
+            $pageArray      = $pageBuilderService->getPageArray($selectedPage);
+            $pageContents   = $pageArray["paths"][$selectedLanguage]["pageContent"];
             
-            $data["contents"] = $pageBuilderService->getContentDataArray($pageBuilderService->getPageArray($_POST["cms_page_jstree_selected_page"]), $_POST["cms_page_selected_language"]);
-            $data["pageBuilderData"] = $pageBuilderService->getPageArray($_POST["cms_page_jstree_selected_page"]); // TODO: just used as development info
+            $data["contents"]        = $pageBuilderService->getContentDataArray($pageContents, $selectedLanguage);
+            $data["pageBuilderData"] = $pageArray; // TODO: just used as development info
         }
         
         Oforge()->View()->assign($data);

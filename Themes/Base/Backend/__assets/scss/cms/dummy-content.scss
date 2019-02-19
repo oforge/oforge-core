@@ -27,3 +27,35 @@
 	margin: 0 auto;
 	margin-top: 25px;
 }
+
+.row-text1-class {
+	color: #f0f;
+	text-align: center;
+	font-size: 12px;
+	width: 200px;
+	padding: 15px;
+	margin: 25px;
+	border-style: dashed;
+	border-width: 1px;
+	border-color: #0ff;
+}
+
+.row-text2-class {
+	color: #0ff;
+	text-align: center;
+	font-size: 12px;
+	width: 200px;
+	padding: 15px;
+	margin: 25px;
+	border-style: dashed;
+	border-width: 1px;
+	border-color: #f0f;
+}
+
+.row-image-class {
+	width: 100px;
+	border-style: dotted;
+	border-width: 5px;
+	border-color: #f00;
+	margin: 25px;
+}
