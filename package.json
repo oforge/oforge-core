@@ -3,16 +3,9 @@
     "version": "0.0.1",
     "description": "A workflow for Angular made with Webpack",
     "scripts": {
-        "dockerinit": "docker swarm init",
-        "docker": "docker-compose -f docker/stack.yml up --remove-orphans ",
-        "docker:stop": "docker-compose -f docker/stack.yml stop",
-        "docker:kill": "docker-compose kill",
-        "docker:rm" : "docker rm oforgemysql oforgeadminer",
-
-
         "docker:compose": "cd docker && docker-compose -p oforgemysql build",
         "docker:compose:up": "cd docker && docker-compose -p oforgemysql up",
         "docker:compose:down": "cd docker && docker-compose -p oforgemysql down",
-        "docker2": "npm run docker:compose:down && npm run docker:compose && npm run docker:compose:up"
+        "docker": "npm run docker:compose:down && npm run docker:compose && npm run docker:compose:up"
     }
 }
