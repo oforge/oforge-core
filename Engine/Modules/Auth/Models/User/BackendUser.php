@@ -72,6 +72,12 @@ class BackendUser extends AbstractModel
      */
     private $active = false;
 
+    public function __construct() {
+        $dateTimeNow = new \DateTime('now');
+        $this->createdAt = $dateTimeNow;
+        $this->updatedAt = $dateTimeNow;
+    }
+
     /**
      * @ORM\PrePersist
      * @ORM\PreUpdate
