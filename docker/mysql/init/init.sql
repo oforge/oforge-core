@@ -13,18 +13,21 @@ USE `oforge`;
 
 DROP TABLE IF EXISTS `oforge_auth_backend_user`;
 CREATE TABLE `oforge_auth_backend_user` (
-                                          `id` int(11) NOT NULL AUTO_INCREMENT,
-                                          `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-                                          `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-                                          `role` int(11) NOT NULL,
-                                          PRIMARY KEY (`id`),
-                                          UNIQUE KEY `UNIQ_E2EA19C7E7927C74` (`email`)
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `role` int(11) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  `active` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UNIQ_E2EA19C7E7927C74` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
 -- insert default user with password geheim
-INSERT INTO `oforge_auth_backend_user` (`id`, `email`, `password`, `role`) VALUES
-(1,	'admin@local.host',	'$2y$10$fnI/7By7ojrwUv51JRi.K.yskzFSy0N4iiE6VheIJUh6ln1EsYWSi',	1);
+INSERT INTO `oforge_auth_backend_user` (`id`, `email`, `password`, `role`, `created_at`, `updated_at`, `active`) VALUES
+(1,	'admin@local.host',	'$2y$10$fnI/7By7ojrwUv51JRi.K.yskzFSy0N4iiE6VheIJUh6ln1EsYWSi',	1, NOW(), NOW(), 1);
 
 
 DROP TABLE IF EXISTS `oforge_i18n_language`;
