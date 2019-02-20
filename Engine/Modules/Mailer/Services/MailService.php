@@ -31,13 +31,13 @@ class MailService
                  * Set Server Settings
                  */
                 $mail->isSMTP();
-                $mail->setFrom($configService->get("mailer.from"));
-                $mail->Host = $configService->get("mailer.host");
-                $mail->Username = $configService->get("mailer.username");
-                $mail->Port = $configService->get("mailer.port");
-                $mail->SMTPAuth = $configService->get("mailer.smtp.auth");
-                $mail->Password = $configService->get("mailer.smtp.password");
-                $mail->SMTPSecure = $configService->get("mailer.smtp.secure");
+                $mail->setFrom($configService->get("mailer_from"));
+                $mail->Host = $configService->get("mailer_host");
+                $mail->Username = $configService->get("mailer_username");
+                $mail->Port = $configService->get("mailer_port");
+                $mail->SMTPAuth = $configService->get("mailer_smtp_auth");
+                $mail->Password = $configService->get("mailer_smtp_password");
+                $mail->SMTPSecure = $configService->get("mailer_smtp_secure");
 
                 /**
                  * Add Recipients ({to,cc,bcc}Addresses)
@@ -110,7 +110,7 @@ class MailService
                 }
             } else {
                 //Array Key does not exist
-                throw new \InvalidArgumentException("Mandatory key $key doesn't exist");
+                // throw new \InvalidArgumentException("Mandatory key $key doesn't exist");
             }
         }
 
