@@ -6,6 +6,7 @@ use FrontendUserManagement\Services\RegistrationService;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Auth\Services\PasswordService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
+use Oforge\Engine\Modules\Mailer\Services\MailService;
 use Oforge\Engine\Modules\Session\Services\SessionManagementService;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -24,15 +25,17 @@ class RegistrationController extends AbstractController {
      * @return Response
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws \PHPMailer\PHPMailer\Exception
      */
     public function processAction(Request $request, Response $response) {
-        /** @var AuthService $authService */
         /** @var PasswordService $passwordService */
         /** @var RegistrationService $registrationService */
         /** @var SessionManagementService $sessionManagementService*/
         /** @var Router $router */
-        $authService                = null;
+        /** @var MailService $mailService */
         $passwordService            = null;
         $registrationService        = null;
         $sessionManagementService   = null;
@@ -44,15 +47,18 @@ class RegistrationController extends AbstractController {
         $password                   = null;
         $passwordConfirm            = null;
         $user                       = null;
+        $privacyNoticeAccepted      = null;
+        $activationLink             = null;
+        $mailService                = null;
 
         if (empty($_SESSION)) {
-            print_r("No session :/");
+            print_r('No session :/');
             die();
         }
 
         $registrationService    = Oforge()->Services()->get('frontend.user.management.registration');
-        $router                 = Oforge()->App()->getContainer()->get("router");
-        $uri                    = $router->pathFor("frontend_registration");
+        $router                 = Oforge()->App()->getContainer()->get('router');
+        $uri                    = $router->pathFor('frontend_registration');
 
         /**
          * disallow direct processAction call. Only post action is allowed
@@ -61,16 +67,17 @@ class RegistrationController extends AbstractController {
             return $response->withRedirect($uri, 302);
         }
 
-        $body               = $request->getParsedBody();
-        $email              = $body['frontend_registration_email'];
-        $password           = $body['frontend_registration_password'];
-        $passwordConfirm    = $body['frontend_registration_password_confirm'];
+        $body                   = $request->getParsedBody();
+        $email                  = $body['frontend_registration_email'];
+        $password               = $body['frontend_registration_password'];
+        $passwordConfirm        = $body['frontend_registration_password_confirm'];
+        $privacyNoticeAccepted  = $body['frontend_registration_privacy_notice_accepted'];
 
         /**
          * no token was sent
          */
         if (!isset($body['token']) || empty($body['token'])) {
-            Oforge()->Logger()->get()->addWarning("Someone tried to do a backend login with a form without csrf token! Redirecting to backend login.");
+            Oforge()->Logger()->get()->addWarning('Someone tried to do a backend login with a form without csrf token! Redirecting to backend login.');
 
             return $response->withRedirect($uri, 302);
         }
@@ -79,14 +86,14 @@ class RegistrationController extends AbstractController {
          * invalid token was sent
          */
         if (!hash_equals($_SESSION['token'], $body['token'])) {
-            Oforge()->Logger()->get()->addWarning("Someone tried a backend login without a valid form csrf token! Redirecting back to login.");
+            Oforge()->Logger()->get()->addWarning('Someone tried a backend login without a valid form csrf token! Redirecting back to login.');
             return $response->withRedirect($uri, 302);
         }
 
         /**
          * no email or password body was sent
          */
-        if (!$email || !$password || !$passwordConfirm) {
+        if (!$email || !$password || !$passwordConfirm || !$privacyNoticeAccepted) {
             return $response->withRedirect($uri, 302);
         }
 
@@ -98,7 +105,6 @@ class RegistrationController extends AbstractController {
         }
 
         $passwordService    = Oforge()->Services()->get('password');
-        $authService        = Oforge()->Services()->get('auth');
         $password           = $passwordService->hash($password);
         $user               = $registrationService->register($email, $password);
 
@@ -106,6 +112,61 @@ class RegistrationController extends AbstractController {
          * Registration failed
          * Maybe someone tried to register with an email address that is already in use
          * TODO: respond to the registration process with a nice information?
+         */
+        if (!$user) {
+            return $response->withRedirect($uri, 302);
+        }
+
+        /*
+         * create activation link
+         */
+        $activationLink = $registrationService->generateActivationLink($user);
+
+        $mailService = Oforge()->Services()->get('mail');
+
+        $mailOptions = [
+            'from' => 'dev@oforge.com',
+            'to' => [$user['email'] => $user['email']],
+            'subject' => 'Oforge | Your registration!',
+            'body' => 'You are registered and have to activate your account.\nYour activation link is: '.$activationLink
+        ];
+
+        $mailService->send($mailOptions);
+
+
+        $uri = $router->pathFor('frontend_login');
+
+        return $response->withRedirect($uri, 302);
+    }
+
+    /**
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function activateAction(Request $request, Response $response) {
+        /** @var SessionManagementService $sessionManagementService */
+        /** @var RegistrationService $registrationService */
+        /** @var AuthService $authService */
+        $sessionManagementService   = Oforge()->Services()->get('session.management');
+        $registrationService        = Oforge()->Services()->get('frontend.user.management.registration');
+        $authService                = Oforge()->Services()->get('auth');
+        $guid                       = $request->getParam('activate');
+        $router                     = Oforge()->App()->getContainer()->get('router');
+        $uri                        = $router->pathFor('frontend_registration');
+        $jwt                        = null;
+        $user                       = null;
+
+        /*
+         * if there is no guid
+         */
+        if (!$guid) {
+            return $response->withRedirect($uri, 302);
+        }
+
+        $user = $registrationService->activate($guid);
+
+        /*
+         * User not found
          */
         if (!$user) {
             return $response->withRedirect($uri, 302);
@@ -120,16 +181,10 @@ class RegistrationController extends AbstractController {
             return $response->withRedirect($uri, 302);
         }
 
-        $sessionManagementService = Oforge()->Services()->get('session.management');
         $sessionManagementService->regenerateSession();
-
         $_SESSION['auth'] = $jwt;
 
-        $uri = $router->pathFor("frontend_profile");
-
-        /**
-         * TODO: Send Email with registration information
-         */
+        $uri = $router->pathFor('frontend_profile');
 
         return $response->withRedirect($uri, 302);
     }

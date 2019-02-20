@@ -11,7 +11,7 @@
                     <input id="frontend_registration_email"
                            name="frontend_registration_email"
                            type="email"
-                           class="form__input form__input">
+                           class="form__input">
                 </div>
                 <div class="form__control">
                     <label for="frontend_registration_password"
@@ -19,7 +19,7 @@
                     <input id="frontend_registration_password"
                            name="frontend_registration_password"
                            type="password"
-                           class="form__input form__input">
+                           class="form__input">
                 </div>
                 <div class="form__control">
                     <label for="frontend_registration_password_confirm"
@@ -27,7 +27,15 @@
                     <input id="frontend_registration_password_confirm"
                            name="frontend_registration_password_confirm"
                            type="password"
-                           class="form__input form__input">
+                           class="form__input">
+                </div>
+                <div class="form__control flex flex--row flex--center">
+                    <input id="frontend_registration_privacy_notice_accepted"
+                           name="frontend_registration_privacy_notice_accepted"
+                           type="checkbox"
+                           class="form__input form__input--checkbox">
+                    <label for="frontend_registration_privacy_notice_accepted"
+                           class="form__label space-left">{{ i18n('accept_privacy_notice') }}</label>
                 </div>
                 <div class="form__control">
                     <input type="hidden" name="token" value="{{ token() }}">
