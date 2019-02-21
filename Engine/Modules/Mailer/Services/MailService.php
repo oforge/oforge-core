@@ -45,21 +45,29 @@ class MailService
                 foreach ($options["to"] as $key => $value) {
                     $mail->addAddress($key, $value);
                 }
-                foreach ($options["cc"] as $key => $value) {
-                    $mail->addCC($key, $value);
+                if (isset($options['cc'])) {
+                    foreach ($options["cc"] as $key => $value) {
+                        $mail->addCC($key, $value);
+                    }
                 }
-                foreach ($options["bcc"] as $key => $value) {
-                    $mail->addBCC($key, $value);
+                if (isset($options['bcc'])) {
+                    foreach ($options["bcc"] as $key => $value) {
+                        $mail->addBCC($key, $value);
+                    }
                 }
-                foreach ($options["replyTo"] as $key => $value) {
-                    $mail->addReplyTo($key, $value);
+                if (isset($options['replyTo'])) {
+                    foreach ($options["replyTo"] as $key => $value) {
+                        $mail->addReplyTo($key, $value);
+                    }
                 }
 
                 /**
                  * Add Attachments:
                  */
-                foreach ($options["attachment"] as $key => $value) {
-                    $mail->addAttachment($key, $value);
+                if (isset($options['attachment'])) {
+                    foreach ($options["attachment"] as $key => $value) {
+                        $mail->addAttachment($key, $value);
+                    }
                 }
 
                 /**
@@ -74,7 +82,7 @@ class MailService
 
                 Oforge()->Logger()->get("mailer")->info("Message has been sent", $options);
             } catch (Exception $e) {
-                Oforge()->Logger()->get("mailer")->error("Message has been sent", $mail->ErrorInfo);
+                Oforge()->Logger()->get("mailer")->error("Message has been sent", [$mail->ErrorInfo]);
             }
         }
     }
@@ -108,9 +116,6 @@ class MailService
                     // Argument is not an Array
                     throw new \InvalidArgumentException("Expected array for $key but get " . gettype($options[$key]));
                 }
-            } else {
-                //Array Key does not exist
-                // throw new \InvalidArgumentException("Mandatory key $key doesn't exist");
             }
         }
 
