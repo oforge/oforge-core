@@ -124,15 +124,14 @@ class RegistrationController extends AbstractController {
 
         $mailService = Oforge()->Services()->get('mail');
 
+        // TODO: add email snippets
         $mailOptions = [
-            'from' => 'dev@oforge.com',
             'to' => [$user['email'] => $user['email']],
             'subject' => 'Oforge | Your registration!',
-            'body' => 'You are registered and have to activate your account.\nYour activation link is: '.$activationLink
+            'body' => 'You are registered and have to activate your account. Your activation link is: '.$activationLink
         ];
 
         $mailService->send($mailOptions);
-
 
         $uri = $router->pathFor('frontend_login');
 
