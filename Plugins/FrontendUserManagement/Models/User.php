@@ -81,7 +81,6 @@ class User extends AbstractModel
 
     /**
      * @ORM\PrePersist
-     * @ORM\PreUpdate
      */
     public function updatedGuid(): void {
         $newGuid = Helper::generateGuid();

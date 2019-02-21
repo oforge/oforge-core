@@ -139,8 +139,12 @@ class RegistrationController extends AbstractController {
     }
 
     /**
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @param Request $request
+     * @param Response $response
+     *
+     * @return Response
      * @throws \Doctrine\ORM\ORMException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
     public function activateAction(Request $request, Response $response) {
         /** @var SessionManagementService $sessionManagementService */
