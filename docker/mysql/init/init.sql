@@ -11,6 +11,22 @@ SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
 USE `oforge`;
 
+DROP TABLE IF EXISTS `frontend_user_management_user`;
+CREATE TABLE `frontend_user_management_user` (
+                                               `id` int(11) NOT NULL AUTO_INCREMENT,
+                                               `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                                               `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                                               `guid` char(36) COLLATE utf8_unicode_ci NOT NULL COMMENT '(DC2Type:guid)',
+                                               `created_at` datetime NOT NULL,
+                                               `updated_at` datetime NOT NULL,
+                                               `active` tinyint(1) NOT NULL,
+                                               PRIMARY KEY (`id`),
+                                               UNIQUE KEY `UNIQ_CDBBD59EE7927C74` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `frontend_user_management_user` (`id`, `email`, `password`, `guid`, `created_at`, `updated_at`, `active`) VALUES
+(1,	'testuser@oforge.com',	'$2y$10$Dz8M/0r1RWNLV0AGVlx0be8BaEF2dQhJVdY54ShKefg9yXZPs4t8G',	'00000000-0000-4000-8000-000000000000',	NOW(),	NOW(),	1);
+
 DROP TABLE IF EXISTS `oforge_auth_backend_user`;
 CREATE TABLE `oforge_auth_backend_user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -143,7 +159,13 @@ INSERT INTO `oforge_i18n_snippet` (`id`, `scope`, `name`, `value`) VALUES
 (86,	'de',	'cms_page_builder_content_no_page_selected',	'Wählen Sie eine Seite zum Editieren!'),
 (87,	'en',	'cms_page_builder_content_no_page_selected',	'Select a page for editing!'),
 (88,	'de',	'cms_page_builder_content_types_title',	'Typen'),
-(89,	'en',	'cms_page_builder_content_types_title',	'Types');
+(89,	'en',	'cms_page_builder_content_types_title',	'Types'),
+(90,	'de',	'or_register',	'Oder registrieren'),
+(91,	'de',	'forgot_password',	'Passwort vergessen?'),
+(92,	'de',	'forgot_password_title',	'Passwort Vergessen?'),
+(93,	'de',	'reset_password',	'Passwort zurücksetzen'),
+(94,	'de',	'password_confirm',	'Passwort bestätigen'),
+(95,	'de',	'change_password',	'Passwort ändern');
 
 DROP TABLE IF EXISTS `oforge_cms_content_type_group`;
 CREATE TABLE `oforge_cms_content_type_group` (
