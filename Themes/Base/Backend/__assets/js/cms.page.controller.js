@@ -9,6 +9,18 @@ $('#cms_page_controller_jstree').on('changed.jstree', function (e, data) {
 	$('#cms_page_jstree_form').submit();
 });
 
+function resizePageBuilder() {
+	var calculatedHeight = $('.main-footer').position().top - $('#page_builder_container_wrapper').position().top;
+	
+	$('#cms_page_jstree_container').height(calculatedHeight);
+	$('#page_builder_container').height(calculatedHeight);
+	$('#cms_content_type_list_container').height(calculatedHeight);
+}
+
+$(window).resize(function() {
+    resizePageBuilder();
+});
+
 $(document).ready(function() {
     $('#cms_page_controller_jstree').jstree(cms_page_controller_jstree_config);
     $('#cms_page_builder_language_selector').change(
@@ -17,4 +29,6 @@ $(document).ready(function() {
     		$('#cms_page_jstree_form').submit();
     	}
     );
+    
+    resizePageBuilder();
 });

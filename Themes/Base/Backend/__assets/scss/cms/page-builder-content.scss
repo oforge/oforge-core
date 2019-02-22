@@ -1,0 +1,22 @@
+.cms-page-builder-content {
+ 	overflow: scroll;
+	
+	.url-language-row {
+		display: flex;
+		justify-content: space-between;
+	}
+	
+	hr {
+		border-bottom-style: solid;
+		border-bottom-width: 1px;
+		border-bottom-color: #000;
+	}
+}
+
+.cms-page-builder-preview {
+	font-size: 28px;
+	font-weight: bolder;
+	color: #000;
+	background-color: #eee;
+	text-align: center;
+}

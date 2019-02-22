@@ -68,6 +68,12 @@
 // jsTree classes
 @import "jstree/default/style";
 
+// CMS classes
+@import "cms/page-builder";
+@import "cms/page-jstree";
+@import "cms/page-builder-content";
+@import "cms/content-types";
+
 // CMS dummy content classes - REMOVE IN PRODUCTION ENVIRONMENT
 @import "cms/dummy-content";
 
