@@ -88,49 +88,266 @@ INSERT INTO `oforge_i18n_snippet` (`id`, `scope`, `name`, `value`) VALUES
 (31,	'de',	'backend_toggle_title',	'Title'),
 (32,	'de',	'favorites_title',	'Deine Favoriten'),
 (33,	'de',	'dashboard',	'Dashboard'),
-(34,	'de',	'cms_page_builder_page_tree_title',	'Seiten'),
-(35,	'de',	'cms_page_builder_content_title',	'Inhalt'),
-(36,	'de',	'cms_page_builder_content_no_page_selected',	'Keine Seite ausgewählt'),
-(37,	'de',	'cms_page_builder_content_types_title',	'Inhaltstypen'),
-(38,	'de',	'system',	'System'),
-(39,	'de',	'backend',	'Backend'),
-(40,	'de',	'mailer',	'Mailer'),
-(41,	'de',	'backend_settings_group',	'Einstellungsgruppe'),
-(42,	'de',	'Debug aktivieren',	'Debug aktivieren'),
-(43,	'de',	'submit',	'Abschicken'),
-(44,	'de',	'Projektname',	'Projektname'),
-(45,	'de',	'Projektkürzel',	'Projektkürzel'),
-(46,	'de',	'Copyright',	'Copyright'),
-(47,	'de',	'Footer Text',	'Footer Text'),
-(48,	'de',	'E-Mail Server',	'E-Mail Server'),
-(49,	'de',	'E-Mail Username',	'E-Mail Username'),
-(50,	'de',	'E-Mail Server Port',	'E-Mail Server Port'),
-(51,	'de',	'E-Mail Exceptions',	'E-Mail Exceptions'),
-(52,	'de',	'SMTP Password',	'SMTP Password'),
-(53,	'de',	'STMP Debug',	'STMP Debug'),
-(54,	'de',	'SMTP Auth',	'SMTP Auth'),
-(55,	'de',	'Enable TLS encryption',	'Enable TLS encryption'),
-(56,	'de',	'Mailer From',	'Mailer From'),
-(57,	'de',	'crud_add_new',	'Hinzufügen'),
-(58,	'de',	'backend_crud_header_id',	'ID'),
-(59,	'de',	'backend_crud_header_iso',	'ISO'),
-(60,	'de',	'backend_crud_header_name',	'Name'),
-(61,	'de',	'backend_crud_header_active',	'Aktiv'),
-(62,	'de',	'backend_crud_save',	'Speichern'),
-(63,	'de',	'backend_crud_header_scope',	'Scope'),
-(64,	'de',	'backend_crud_header_value',	'Wert'),
-(65,	'de',	'usermanagement_title',	'Usermanagement'),
-(66,	'de',	'user_add',	'Hinzufügen'),
-(67,	'de',	'email',	'E-Mail'),
-(68,	'de',	'update',	'Aktualisieren'),
-(69,	'de',	'delete',	'Löschen'),
-(70,	'de',	'user_delete_title',	'Benutzer löschen?'),
-(71,	'de',	'user_delete_message',	'Wollen Sie diesen Nutzer wirklich löschen?'),
-(72,	'de',	'yes',	'Ja'),
-(73,	'de',	'no',	'Nein'),
-(74,	'de',	'password',	'Passwort'),
-(75,	'de',	'cancel',	'Abbrechen'),
-(76,	'de',	'profile_title',	'Profil'),
-(77,	'de',	'add',	'Hinzufügen');
+(34,	'de',	'system',	'System'),
+(35,	'de',	'backend',	'Backend'),
+(36,	'de',	'mailer',	'Mailer'),
+(37,	'de',	'backend_settings_group',	'Einstellungsgruppe'),
+(38,	'de',	'Debug aktivieren',	'Debug aktivieren'),
+(39,	'de',	'submit',	'Abschicken'),
+(40,	'de',	'Projektname',	'Projektname'),
+(41,	'de',	'Projektkürzel',	'Projektkürzel'),
+(42,	'de',	'Copyright',	'Copyright'),
+(43,	'de',	'Footer Text',	'Footer Text'),
+(44,	'de',	'E-Mail Server',	'E-Mail Server'),
+(45,	'de',	'E-Mail Username',	'E-Mail Username'),
+(46,	'de',	'E-Mail Server Port',	'E-Mail Server Port'),
+(47,	'de',	'E-Mail Exceptions',	'E-Mail Exceptions'),
+(48,	'de',	'SMTP Password',	'SMTP Password'),
+(49,	'de',	'STMP Debug',	'STMP Debug'),
+(50,	'de',	'SMTP Auth',	'SMTP Auth'),
+(51,	'de',	'Enable TLS encryption',	'Enable TLS encryption'),
+(52,	'de',	'Mailer From',	'Mailer From'),
+(53,	'de',	'crud_add_new',	'Hinzufügen'),
+(54,	'de',	'backend_crud_header_id',	'ID'),
+(55,	'de',	'backend_crud_header_iso',	'ISO'),
+(56,	'de',	'backend_crud_header_name',	'Name'),
+(57,	'de',	'backend_crud_header_active',	'Aktiv'),
+(58,	'de',	'backend_crud_save',	'Speichern'),
+(59,	'de',	'backend_crud_header_scope',	'Scope'),
+(60,	'de',	'backend_crud_header_value',	'Wert'),
+(61,	'de',	'usermanagement_title',	'Usermanagement'),
+(62,	'de',	'user_add',	'Hinzufügen'),
+(63,	'de',	'email',	'E-Mail'),
+(64,	'de',	'update',	'Aktualisieren'),
+(65,	'de',	'delete',	'Löschen'),
+(66,	'de',	'user_delete_title',	'Benutzer löschen?'),
+(67,	'de',	'user_delete_message',	'Wollen Sie diesen Nutzer wirklich löschen?'),
+(68,	'de',	'yes',	'Ja'),
+(69,	'de',	'no',	'Nein'),
+(70,	'de',	'password',	'Passwort'),
+(71,	'de',	'cancel',	'Abbrechen'),
+(72,	'de',	'profile_title',	'Profil'),
+(73,	'de',	'add',	'Hinzufügen'),
+(74,	'de',	'cms_page_builder_page_tree_title',	'Seiten'),
+(75,	'en',	'cms_page_builder_page_tree_title',	'Pages'),
+(76,	'de',	'cms_page_builder_content_title',	'Inhalt'),
+(77,	'en',	'cms_page_builder_content_title',	'Content'),
+(78,	'de',	'cms_page_builder_content_language_selection',	'Sprache'),
+(79,	'en',	'cms_page_builder_content_language_selection',	'Language'),
+(80,	'de',	'cms_page_builder_content_page_active_checkbox_label',	'Aktiv'),
+(81,	'en',	'cms_page_builder_content_page_active_checkbox_label',	'Active'),
+(82,	'de',	'cms_page_builder_content_globals_link_label',	'Globals'),
+(83,	'en',	'cms_page_builder_content_globals_link_label',	'Globals'),
+(84,	'de',	'cms_page_builder_content_preview',	'Vorschau'),
+(85,	'en',	'cms_page_builder_content_preview',	'Preview'),
+(86,	'de',	'cms_page_builder_content_no_page_selected',	'WÃ¤hlen Sie eine Seite zum Editieren!'),
+(87,	'en',	'cms_page_builder_content_no_page_selected',	'Select a page for editing!'),
+(88,	'de',	'cms_page_builder_content_types_title',	'Typen'),
+(89,	'en',	'cms_page_builder_content_types_title',	'Types');
+
+DROP TABLE IF EXISTS `oforge_cms_content_type_group`;
+CREATE TABLE `oforge_cms_content_type_group` (
+                                     `id` int(11) NOT NULL,
+                                     `content_type_group_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                                     `description` varchar(255) COLLATE utf8_unicode_ci,
+                                     PRIMARY KEY (`id`),
+                                     UNIQUE KEY `content_type_group_name_unique` (`content_type_group_name`),
+                                     UNIQUE KEY `description_unique` (`description`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+INSERT INTO `oforge_cms_content_type_group` (`id`, `content_type_group_name`, `description`) VALUES
+(1,	'container',	'Container'),
+(2,	'basic',	'Basic'),
+(3,	'media',	'Media');
+
+DROP TABLE IF EXISTS `oforge_cms_content_type`;
+CREATE TABLE `oforge_cms_content_type` (
+                                     `id` int(11) NOT NULL AUTO_INCREMENT,
+                                     `content_type_group_id` int(11) NOT NULL,
+                                     `content_type_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                                     `content_type_icon` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                                     `description` varchar(255) COLLATE utf8_unicode_ci,
+                                     `class_path` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                                     PRIMARY KEY (`id`),
+                                     UNIQUE KEY `content_type_name_unique` (`content_type_name`),
+                                     INDEX `content_type_group_id_index` (`content_type_group_id`),
+				     FOREIGN KEY `content_type_group_id_foreign_key` (`content_type_group_id`)
+				     REFERENCES `oforge_cms_content_type_group` (`id`)
+				     ON UPDATE RESTRICT
+				     ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+INSERT INTO `oforge_cms_content_type` (`id`, `content_type_group_id`, `content_type_name`, `content_type_icon`, `description`, `class_path`) VALUES
+(1,	1,	'row',		'/Themes/Base/ContentTypes/__assets/img/row.png',	'Row',		'Oforge\\Engine\\Modules\\CMS\\ContentTypes\\Row'),
+(2,	2,	'richtext',	'/Themes/Base/ContentTypes/__assets/img/richtext.png',	'RichText',	'Oforge\\Engine\\Modules\\CMS\\ContentTypes\\RichText'),
+(3,	3,	'image',	'/Themes/Base/ContentTypes/__assets/img/image.png',	'Image',	'Oforge\\Engine\\Modules\\CMS\\ContentTypes\\Image');
+
+DROP TABLE IF EXISTS `oforge_cms_content`;
+CREATE TABLE `oforge_cms_content` (
+                                     `id` int(11) NOT NULL AUTO_INCREMENT,
+                                     `content_type_id` int(11) NOT NULL,
+                                     `parent_id` int(11) NOT NULL,
+                                     `content_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                                     `css_class` varchar(255) COLLATE utf8_unicode_ci,
+                                     `content_data` longtext COLLATE utf8_unicode_ci,
+                                     PRIMARY KEY (`id`),
+                                     INDEX `content_type_id_index` (`content_type_id`),
+				     FOREIGN KEY `content_type_id_foreign_key` (`content_type_id`)
+				     REFERENCES `oforge_cms_content_type` (`id`)
+				     ON UPDATE RESTRICT
+				     ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+INSERT INTO `oforge_cms_content` (`id`, `content_type_id`, `parent_id`, `content_name`, `css_class`, `content_data`) VALUES
+(1,	2,	0,	'text_home_de',		'home-class',		's:10:\"Startseite\";'),
+(2,	2,	0,	'text_home_en',		'home-class',		's:4:\"Home\";'),
+(3,	2,	0,	'text_imprint_de',	'imprint-class',	's:9:\"Impressum\";'),
+(4,	2,	0,	'text_imprint_en',	'imprint-class',	's:7:\"Imprint\";'),
+(5,	2,	0,	'text_privacy_de',	'privacy-class',	's:11:\"Datenschutz\";'),
+(6,	2,	0,	'text_privacy_en',	'privacy-class',	's:7:\"Privacy\";'),
+(7,	3,	0,	'world_image_de',	'image-class',		's:15:\"deutschland.png\";'),
+(8,	3,	0,	'world_image_en',	'image-class',		's:7:\"usa.png\";'),
+(9,	3,	0,	'multilanguage_image',	'image-class',		's:17:\"multilanguage.png\";'),
+(10,	2,	0,	'test_text1_de',	'row-text1-class',	's:107:\"Die grÃ¶ÃŸte TragÃ¶die im Leben ist, dass wir zu schnell alt und zu spÃ¤t weise werden. - Benjamin Franklin\";'),
+(11,	2,	0,	'test_text1_en',	'row-text1-class',	's:87:\"Life biggest tragedy is that we get old too soon and wise too late. - Benjamin Franklin\";'),
+(12,	2,	0,	'test_text2_de',	'row-text2-class',	's:147:\"Die grÃ¶ÃŸte Entscheidung deines Lebens liegt darin, dass du dein Leben Ã¤ndern kannst, indem du deine Geisteshaltung Ã¤nderst. - Albert Schweitzer\";'),
+(13,	2,	0,	'test_text2_en',	'row-text2-class',	's:104:\"The biggest decision in life is about changing your life through changing your mind. - Albert Schweitzer\";'),
+(14,	3,	0,	'landscape_image',	'row-image-class',	's:13:\"landscape.png\";'),
+(15,	3,	0,	'person_image',		'row-image-class',	's:10:\"person.png\";'),
+(16,	1,	0,	'test_row1_de',		'test-row1-class',	''),
+(17,	1,	0,	'test_row1_en',		'test-row1-class',	''),
+(18,	1,	0,	'test_row2_de',		'test-row2-class',	''),
+(19,	1,	0,	'test_row2_en',		'test-row2-class',	''),
+(20,	1,	0,	'test_row3_de',		'test-row3-class',	''),
+(21,	1,	0,	'test_row3_en',		'test-row3-class',	'');
+
+DROP TABLE IF EXISTS `oforge_cms_content_type_row`;
+CREATE TABLE `oforge_cms_content_type_row` (
+                                     `id` int(11) NOT NULL AUTO_INCREMENT,
+                                     `row_id` int(11) NOT NULL,
+                                     `content_id` int(11) NOT NULL,
+                                     `sort_order` int(11) NOT NULL,
+                                     PRIMARY KEY (`id`),
+                                     INDEX `content_id_index` (`content_id`),
+				     FOREIGN KEY `content_id_foreign_key` (`content_id`)
+				     REFERENCES `oforge_cms_content` (`id`)
+				     ON UPDATE RESTRICT
+				     ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+INSERT INTO `oforge_cms_content_type_row` (`id`, `row_id`, `content_id`, `sort_order`) VALUES
+(1,	16,	14,	1),
+(2,	16,	18,	2),
+(3,	16,	14,	3),
+(4,	18,	10,	1),
+(5,	18,	20,	2),
+(6,	20,	15,	1),
+(7,	20,	12,	2),
+(8,	17,	14,	1),
+(9,	17,	19,	2),
+(10,	17,	14,	3),
+(11,	19,	11,	1),
+(12,	19,	21,	2),
+(13,	21,	15,	1),
+(14,	21,	13,	2);
+
+DROP TABLE IF EXISTS `oforge_cms_site`;
+CREATE TABLE `oforge_cms_site` (
+                                     `id` int(11) NOT NULL AUTO_INCREMENT,
+                                     `site_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                                     `domain` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                                     `default_language_id` int(11) NOT NULL,
+                                     PRIMARY KEY (`id`),
+                                     UNIQUE KEY `site_name_unique` (`site_name`),
+                                     UNIQUE KEY `domain_unique` (`domain`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+INSERT INTO `oforge_cms_site` (`id`, `site_name`, `domain`, `default_language_id`) VALUES
+(1,	'oforge',	'localhost',	1);
+
+DROP TABLE IF EXISTS `oforge_cms_page`;
+CREATE TABLE `oforge_cms_page` (
+                                     `id` int(11) NOT NULL AUTO_INCREMENT,
+                                     `layout_id` int(11) NOT NULL,
+                                     `site_id` int(11) NOT NULL,
+                                     `parent_id` int(11) NOT NULL,
+                                     `page_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                                     PRIMARY KEY (`id`),
+                                     UNIQUE KEY `page_name_unique` (`page_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+INSERT INTO `oforge_cms_page` (`id`, `layout_id`, `site_id`, `parent_id`, `page_name`) VALUES
+(1,	1,	1,	0,	'home'),
+(2,	1,	1,	1,	'imprint'),
+(3,	1,	1,	1,	'privacy');
+
+DROP TABLE IF EXISTS `oforge_cms_page_path`;
+CREATE TABLE `oforge_cms_page_path` (
+                                     `id` int(11) NOT NULL AUTO_INCREMENT,
+                                     `page_id` int(11) NOT NULL,
+                                     `language_id` int(11) NOT NULL,
+                                     `path` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                                     PRIMARY KEY (`id`),
+                                     INDEX `page_id_index` (`page_id`),
+                                     INDEX `language_id_index` (`language_id`),
+				     FOREIGN KEY `page_id_foreign_key` (`page_id`)
+				     REFERENCES `oforge_cms_page` (`id`)
+				     ON UPDATE RESTRICT
+				     ON DELETE RESTRICT,
+				     FOREIGN KEY `language_id_foreign_key` (`language_id`)
+				     REFERENCES `oforge_i18n_language` (`id`)
+				     ON UPDATE RESTRICT
+				     ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+INSERT INTO `oforge_cms_page_path` (`id`, `page_id`, `language_id`, `path`) VALUES
+(1,	1,	1,	'/'),
+(2,	1,	2,	'/en'),
+(3,	2,	1,	'/impressum'),
+(4,	2,	2,	'/en/imprint'),
+(5,	3,	1,	'/datenschutz'),
+(6,	3,	2,	'/en/privacy');
+
+DROP TABLE IF EXISTS `oforge_cms_page_content`;
+CREATE TABLE `oforge_cms_page_content` (
+                                     `id` int(11) NOT NULL AUTO_INCREMENT,
+                                     `page_path_id` int(11) NOT NULL,
+                                     `content_id` int(11) NOT NULL,
+                                     `sort_order` int(11) NOT NULL,
+                                     PRIMARY KEY (`id`),
+                                     INDEX `page_path_id_index` (`page_path_id`),
+                                     INDEX `content_id_index` (`content_id`),
+				     FOREIGN KEY `page_path_id_foreign_key` (`page_path_id`)
+				     REFERENCES `oforge_cms_page_path` (`id`)
+				     ON UPDATE RESTRICT
+				     ON DELETE RESTRICT,
+				     FOREIGN KEY `content_id_foreign_key` (`content_id`)
+				     REFERENCES `oforge_cms_content` (`id`)
+				     ON UPDATE RESTRICT
+				     ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+INSERT INTO `oforge_cms_page_content` (`id`, `page_path_id`, `content_id`, `sort_order`) VALUES
+(1,	1,	1,	1),
+(2,	1,	7,	2),
+(3,	1,	9,	3),
+(4,	1,	16,	4),
+(5,	2,	2,	1),
+(6,	2,	8,	2),
+(7,	2,	9,	3),
+(8,	2,	17,	4),
+(9,	3,	3,	1),
+(10,	3,	7,	2),
+(11,	3,	9,	3),
+(12,	4,	4,	1),
+(13,	4,	8,	2),
+(14,	4,	9,	3),
+(15,	5,	5,	1),
+(16,	5,	7,	2),
+(17,	5,	9,	3),
+(18,	6,	6,	1),
+(19,	6,	8,	2),
+(20,	6,	9,	3);
+
 
 -- 2019-02-19 14:52:49

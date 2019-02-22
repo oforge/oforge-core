@@ -1,29 +1,27 @@
 {% block cms_content_type_list %}
-	<div id="cms_content_types" class="col-xs-2">
-		<div class="box box-solid box-default">
-			<div class="box-header">
-				<h4 class="box-title">{{ i18n('cms_page_builder_content_types_title') }}</h4>
-			</div>
-	    	<div class="box-body" id="cms_page_controller_types">
+	<div class="col-xs-2 cms-content-type-list-container" id="cms_content_type_list_container">
+		<div>
+			<div class="cms-page-builder-headline">{{ i18n('cms_page_builder_content_types_title') }}</div>
+	    	<div class="cms-content-type-list" id="cms_content_type_list">
                 <div class="container-fluid">
                 {% for contentTypeGroup in contentTypeGroups %}
-                	<div class="row" style="margin:0px;">
-                	<div class="col-xs-12" style="border-style:solid;border-size:1px;border-color:#090;">{{ contentTypeGroup.description }}</div>
-                	</div>
-                	{% if loop.index0 % 2 == 0 %}
-                	<div class="row" style="margin:0px;text-align:center;">
-                	{% endif %}
+                	<div class="row">
+                    	<div class="col-xs-12 content-type-group-header">{{ contentTypeGroup.description }}</div>
+                    	{% if loop.index0 % 2 == 0 %}
+                    	<div class="row">
+                    	{% endif %}
                         {% for type in contentTypeGroup.types %}
-                        	<div class="col-xs-5" style="border-style:solid;border-size:1px;border-color:#000;text-align:center;margin:5px;">
-                            	<div><img src="{{ type.icon }}" style="width:70%;"></div>
-                            	<div>{{ type.description }}</div>
+                        	<div class="col-xs-5 content-type-selector">
+                            	<div><img class="content-type-icon" src="{{ type.icon }}"></div>
+                            	<div class="content-type-description">{{ type.description }}</div>
                         	</div>
                         {% endfor %}	    	
-                	{% if loop.index0 % 2 == 0 %}
+                    	{% if loop.index0 % 2 == 0 %}
+                    	</div>
+                    	{% endif %}
                 	</div>
-                	{% endif %}
-                {% endfor %}    	
-                </div>
+                {% endfor %}
+                </div>    	
 	    	</div>
 		</div>
 	</div>

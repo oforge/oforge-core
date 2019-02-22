@@ -27,8 +27,8 @@ class PagesController extends AbstractController {
         $pageTreeService    = OForge()->Services()->get("page.tree.service");
         $pageBuilderService = OForge()->Services()->get("page.builder.service");
         
-        $selectedPage       = $_POST["cms_page_jstree_selected_page"] ? $_POST["cms_page_jstree_selected_page"] : 0;
-        $selectedLanguage   = $_POST["cms_page_selected_language"] ? $_POST["cms_page_selected_language"] : 0;
+        $selectedPage       = isset($_POST["cms_page_jstree_selected_page"]) && $_POST["cms_page_jstree_selected_page"] > 0 ? $_POST["cms_page_jstree_selected_page"] : 0;
+        $selectedLanguage   = isset($_POST["cms_page_selected_language"]) && $_POST["cms_page_selected_language"] > 0 ? $_POST["cms_page_selected_language"] : 0;
         
         $data = [
             "js"                => ["cms_page_controller_jstree_config" => $pageTreeService->generateJsTreeConfigJSON()],
