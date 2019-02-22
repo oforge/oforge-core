@@ -1,10 +1,10 @@
-CREATE DATABASE IF NOT EXISTS oforge;
+CREATE DATABASE IF NOT EXISTS oforge CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE oforge;
 
 
 -- Adminer 4.7.1 MySQL dump
 
-SET NAMES utf8;
+SET NAMES utf8mb4;
 SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
@@ -14,15 +14,15 @@ USE `oforge`;
 DROP TABLE IF EXISTS `oforge_auth_backend_user`;
 CREATE TABLE `oforge_auth_backend_user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `role` int(11) NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `active` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_E2EA19C7E7927C74` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
 -- insert default user with password geheim
@@ -33,12 +33,12 @@ INSERT INTO `oforge_auth_backend_user` (`id`, `email`, `password`, `role`, `crea
 DROP TABLE IF EXISTS `oforge_i18n_language`;
 CREATE TABLE `oforge_i18n_language` (
                                       `id` int(11) NOT NULL AUTO_INCREMENT,
-                                      `iso` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-                                      `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                                      `iso` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+                                      `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
                                       `active` tinyint(1) NOT NULL,
                                       PRIMARY KEY (`id`),
                                       UNIQUE KEY `UNIQ_88C35DDF61587F41` (`iso`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `oforge_i18n_language` (`id`, `iso`, `name`, `active`) VALUES
 (1,	'de',	'Deutsch',	1),
@@ -47,12 +47,12 @@ INSERT INTO `oforge_i18n_language` (`id`, `iso`, `name`, `active`) VALUES
 DROP TABLE IF EXISTS `oforge_i18n_snippet`;
 CREATE TABLE `oforge_i18n_snippet` (
                                      `id` int(11) NOT NULL AUTO_INCREMENT,
-                                     `scope` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-                                     `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-                                     `value` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                                     `scope` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+                                     `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+                                     `value` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
                                      PRIMARY KEY (`id`),
                                      UNIQUE KEY `scope_name_unique` (`scope`,`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `oforge_i18n_snippet` (`id`, `scope`, `name`, `value`) VALUES
 (1,	'de',	'site_name',	'Webseiten Name'),
@@ -148,12 +148,12 @@ INSERT INTO `oforge_i18n_snippet` (`id`, `scope`, `name`, `value`) VALUES
 DROP TABLE IF EXISTS `oforge_cms_content_type_group`;
 CREATE TABLE `oforge_cms_content_type_group` (
                                      `id` int(11) NOT NULL,
-                                     `content_type_group_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-                                     `description` varchar(255) COLLATE utf8_unicode_ci,
+                                     `content_type_group_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+                                     `description` varchar(255) COLLATE utf8mb4_unicode_ci,
                                      PRIMARY KEY (`id`),
                                      UNIQUE KEY `content_type_group_name_unique` (`content_type_group_name`),
                                      UNIQUE KEY `description_unique` (`description`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `oforge_cms_content_type_group` (`id`, `content_type_group_name`, `description`) VALUES
 (1,	'container',	'Container'),
@@ -164,10 +164,10 @@ DROP TABLE IF EXISTS `oforge_cms_content_type`;
 CREATE TABLE `oforge_cms_content_type` (
                                      `id` int(11) NOT NULL AUTO_INCREMENT,
                                      `content_type_group_id` int(11) NOT NULL,
-                                     `content_type_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-                                     `content_type_icon` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-                                     `description` varchar(255) COLLATE utf8_unicode_ci,
-                                     `class_path` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                                     `content_type_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+                                     `content_type_icon` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+                                     `description` varchar(255) COLLATE utf8mb4_unicode_ci,
+                                     `class_path` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
                                      PRIMARY KEY (`id`),
                                      UNIQUE KEY `content_type_name_unique` (`content_type_name`),
                                      INDEX `content_type_group_id_index` (`content_type_group_id`),
@@ -175,28 +175,28 @@ CREATE TABLE `oforge_cms_content_type` (
 				     REFERENCES `oforge_cms_content_type_group` (`id`)
 				     ON UPDATE RESTRICT
 				     ON DELETE RESTRICT
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `oforge_cms_content_type` (`id`, `content_type_group_id`, `content_type_name`, `content_type_icon`, `description`, `class_path`) VALUES
-(1,	1,	'row',		'/Themes/Base/ContentTypes/__assets/img/row.png',	'Row',		'Oforge\\Engine\\Modules\\CMS\\ContentTypes\\Row'),
-(2,	2,	'richtext',	'/Themes/Base/ContentTypes/__assets/img/richtext.png',	'RichText',	'Oforge\\Engine\\Modules\\CMS\\ContentTypes\\RichText'),
-(3,	3,	'image',	'/Themes/Base/ContentTypes/__assets/img/image.png',	'Image',	'Oforge\\Engine\\Modules\\CMS\\ContentTypes\\Image');
+(1,	1,	'Row',		'/Themes/Base/ContentTypes/__assets/img/row.png',	'Row',		'Oforge\\Engine\\Modules\\CMS\\ContentTypes\\Row'),
+(2,	2,	'RichText',	'/Themes/Base/ContentTypes/__assets/img/richtext.png',	'RichText',	'Oforge\\Engine\\Modules\\CMS\\ContentTypes\\RichText'),
+(3,	3,	'Image',	'/Themes/Base/ContentTypes/__assets/img/image.png',	'Image',	'Oforge\\Engine\\Modules\\CMS\\ContentTypes\\Image');
 
 DROP TABLE IF EXISTS `oforge_cms_content`;
 CREATE TABLE `oforge_cms_content` (
                                      `id` int(11) NOT NULL AUTO_INCREMENT,
                                      `content_type_id` int(11) NOT NULL,
                                      `parent_id` int(11) NOT NULL,
-                                     `content_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-                                     `css_class` varchar(255) COLLATE utf8_unicode_ci,
-                                     `content_data` longtext COLLATE utf8_unicode_ci,
+                                     `content_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+                                     `css_class` varchar(255) COLLATE utf8mb4_unicode_ci,
+                                     `content_data` longtext COLLATE utf8mb4_unicode_ci,
                                      PRIMARY KEY (`id`),
                                      INDEX `content_type_id_index` (`content_type_id`),
 				     FOREIGN KEY `content_type_id_foreign_key` (`content_type_id`)
 				     REFERENCES `oforge_cms_content_type` (`id`)
 				     ON UPDATE RESTRICT
 				     ON DELETE RESTRICT
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `oforge_cms_content` (`id`, `content_type_id`, `parent_id`, `content_name`, `css_class`, `content_data`) VALUES
 (1,	2,	0,	'text_home_de',		'home-class',		's:10:\"Startseite\";'),
@@ -233,7 +233,7 @@ CREATE TABLE `oforge_cms_content_type_row` (
 				     REFERENCES `oforge_cms_content` (`id`)
 				     ON UPDATE RESTRICT
 				     ON DELETE RESTRICT
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `oforge_cms_content_type_row` (`id`, `row_id`, `content_id`, `sort_order`) VALUES
 (1,	16,	14,	1),
@@ -254,13 +254,13 @@ INSERT INTO `oforge_cms_content_type_row` (`id`, `row_id`, `content_id`, `sort_o
 DROP TABLE IF EXISTS `oforge_cms_site`;
 CREATE TABLE `oforge_cms_site` (
                                      `id` int(11) NOT NULL AUTO_INCREMENT,
-                                     `site_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-                                     `domain` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                                     `site_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+                                     `domain` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
                                      `default_language_id` int(11) NOT NULL,
                                      PRIMARY KEY (`id`),
                                      UNIQUE KEY `site_name_unique` (`site_name`),
                                      UNIQUE KEY `domain_unique` (`domain`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `oforge_cms_site` (`id`, `site_name`, `domain`, `default_language_id`) VALUES
 (1,	'oforge',	'localhost',	1);
@@ -271,10 +271,10 @@ CREATE TABLE `oforge_cms_page` (
                                      `layout_id` int(11) NOT NULL,
                                      `site_id` int(11) NOT NULL,
                                      `parent_id` int(11) NOT NULL,
-                                     `page_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                                     `page_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
                                      PRIMARY KEY (`id`),
                                      UNIQUE KEY `page_name_unique` (`page_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `oforge_cms_page` (`id`, `layout_id`, `site_id`, `parent_id`, `page_name`) VALUES
 (1,	1,	1,	0,	'home'),
@@ -286,7 +286,7 @@ CREATE TABLE `oforge_cms_page_path` (
                                      `id` int(11) NOT NULL AUTO_INCREMENT,
                                      `page_id` int(11) NOT NULL,
                                      `language_id` int(11) NOT NULL,
-                                     `path` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                                     `path` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
                                      PRIMARY KEY (`id`),
                                      INDEX `page_id_index` (`page_id`),
                                      INDEX `language_id_index` (`language_id`),
@@ -298,7 +298,7 @@ CREATE TABLE `oforge_cms_page_path` (
 				     REFERENCES `oforge_i18n_language` (`id`)
 				     ON UPDATE RESTRICT
 				     ON DELETE RESTRICT
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `oforge_cms_page_path` (`id`, `page_id`, `language_id`, `path`) VALUES
 (1,	1,	1,	'/'),
@@ -325,7 +325,7 @@ CREATE TABLE `oforge_cms_page_content` (
 				     REFERENCES `oforge_cms_content` (`id`)
 				     ON UPDATE RESTRICT
 				     ON DELETE RESTRICT
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `oforge_cms_page_content` (`id`, `page_path_id`, `content_id`, `sort_order`) VALUES
 (1,	1,	1,	1),
