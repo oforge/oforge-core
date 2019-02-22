@@ -1,10 +1,8 @@
 {% block cms_content_type_list %}
-	<div id="cms_page_tree" class="col-xs-2">
-		<div class="box box-solid box-default">
-			<div class="box-header">
-				<h4 class="box-title">{{ i18n('cms_page_builder_page_tree_title') }}</h4>
-			</div>
-	    	<div class="box-body" id="cms_page_controller_jstree"></div>
+	<div class="col-xs-2 cms-page-jstree-container" id="cms_page_jstree_container">
+		<div>
+			<div class="cms-page-builder-headline">{{ i18n('cms_page_builder_page_tree_title') }}</div>
+	    	<div class="cms-page-controller-jstree" id="cms_page_controller_jstree"></div>
 		</div>
 	</div>
 {% endblock cms_content_type_list %}

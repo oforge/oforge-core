@@ -59,3 +59,10 @@
 	border-color: #f00;
 	margin: 25px;
 }
+
+.of-row .test-row1-class,
+.of-row .test-row1-class .test-row2-class,
+.of-row .test-row1-class .test-row2-class .test-row3-class {
+	justify-content: space-between;
+	align-items: center;
+}
