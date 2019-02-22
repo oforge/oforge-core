@@ -1,4 +1,4 @@
-<div class="row {{ data.css }}" style="display:flex;justify-content:space-between;align-items:center;">
+<div class="of-row {{ data.css }}">
     {% for column in data.columns %}
 		<div>
             {% include column.type with {'data': column} only %}
