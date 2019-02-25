@@ -6,6 +6,10 @@
         {% endblock layout__header %}
 
         <div class='container content'>
+            {% block flash_messages %}
+                {% include '@parent/Frontend/Components/FlashMessage.twig' %}
+            {% endblock flash_messages %}
+
             {% block content %}
             {% endblock content %}
         </div>

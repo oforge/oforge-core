@@ -64,6 +64,7 @@ class RegistrationController extends AbstractController {
          * disallow direct processAction call. Only post action is allowed
          */
         if (!$request->isPost()) {
+            Oforge()->View()->addFlashMessage('warning', 'Direct page call is not allowed.');
             return $response->withRedirect($uri, 302);
         }
 
@@ -77,6 +78,7 @@ class RegistrationController extends AbstractController {
          * no token was sent
          */
         if (!isset($body['token']) || empty($body['token'])) {
+            Oforge()->View()->addFlashMessage('warning', 'The data has been sent from an invalid form.');
             Oforge()->Logger()->get()->addWarning('Someone tried to do a backend login with a form without csrf token! Redirecting to backend login.');
 
             return $response->withRedirect($uri, 302);
@@ -86,6 +88,7 @@ class RegistrationController extends AbstractController {
          * invalid token was sent
          */
         if (!hash_equals($_SESSION['token'], $body['token'])) {
+            Oforge()->View()->addFlashMessage('warning', 'The data has been sent from an invalid form.');
             Oforge()->Logger()->get()->addWarning('Someone tried a backend login without a valid form csrf token! Redirecting back to login.');
             return $response->withRedirect($uri, 302);
         }
@@ -94,6 +97,7 @@ class RegistrationController extends AbstractController {
          * no email or password body was sent
          */
         if (!$email || !$password || !$passwordConfirm || !$privacyNoticeAccepted) {
+            Oforge()->View()->addFlashMessage('warning', 'Invalid form data.');
             return $response->withRedirect($uri, 302);
         }
 
@@ -101,6 +105,7 @@ class RegistrationController extends AbstractController {
          * Password and password confirmation are not equal
          */
         if ($password !== $passwordConfirm) {
+            Oforge()->View()->addFlashMessage('warning', 'Passwords do not match.');
             return $response->withRedirect($uri, 302);
         }
 
@@ -114,6 +119,7 @@ class RegistrationController extends AbstractController {
          * TODO: respond to the registration process with a nice information?
          */
         if (!$user) {
+            Oforge()->View()->addFlashMessage('warning', 'Registration failed.');
             return $response->withRedirect($uri, 302);
         }
 
@@ -134,6 +140,7 @@ class RegistrationController extends AbstractController {
         $mailService->send($mailOptions);
 
         $uri = $router->pathFor('frontend_login');
+        Oforge()->View()->addFlashMessage('success', 'Registration successful. You will receive an email with information about you account activation.');
 
         return $response->withRedirect($uri, 302);
     }
@@ -188,6 +195,8 @@ class RegistrationController extends AbstractController {
         $_SESSION['auth'] = $jwt;
 
         $uri = $router->pathFor('frontend_profile');
+
+        Oforge()->View()->addFlashMessage('success', 'Your account was activated successfully. You are now logged in.');
 
         return $response->withRedirect($uri, 302);
     }

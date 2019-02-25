@@ -19,12 +19,14 @@ class LogoutController {
         /**
          * @var $sessionManager SessionManagementService
          */
-        $sessionManager = Oforge()->Services()->get("session.management");
+        $sessionManager = Oforge()->Services()->get('session.management');
         $sessionManager->sessionDestroy();
+        $sessionManager->sessionStart();
         /**
          * @var $router Router
          */
-        $router = Oforge()->App()->getContainer()->get("router");
-        return $response->withRedirect($router->pathFor("frontend_login"), 302);
+        $router = Oforge()->App()->getContainer()->get('router');
+        Oforge()->View()->addFlashMessage('success', 'You have been logged out.');
+        return $response->withRedirect($router->pathFor('frontend_login'), 302);
     }
 }

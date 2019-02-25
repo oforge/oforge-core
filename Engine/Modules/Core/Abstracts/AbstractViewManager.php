@@ -38,6 +38,7 @@ abstract class AbstractViewManager {
      * Assign Data from a Controller to a Template
      *
      * @param array $data
+     * @return AbstractViewManager
      */
     public abstract function assign($data);
 
@@ -57,4 +58,22 @@ abstract class AbstractViewManager {
      * @return mixed
      */
     public abstract function get(string $key);
+
+    /**
+     * Check if a specific key exists and is not empty
+     *
+     * @param string $key
+     *
+     * @return bool
+     */
+    public abstract function has(string $key);
+
+    /**
+     * Add a message for the next request / redirect
+     * @param string $type
+     * @param string $message
+     *
+     * @return mixed
+     */
+    public abstract function addFlashMessage(string $type, string $message);
 }

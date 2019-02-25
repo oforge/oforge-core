@@ -1,4 +1,5 @@
 <?php
+// session_start();
 /**
  * This is the oforge portal starting point.
  */

@@ -25,9 +25,12 @@ class ViewManager extends AbstractViewManager {
      * Assign Data from a Controller to a Template
      *
      * @param array $data
+     *
+     * @return ViewManager
      */
     public function assign($data) {
         $this->viewData = $this->array_merge_recursive_ex($this->viewData, $data);
+        return $this;
     }
 
     /**
@@ -38,6 +41,18 @@ class ViewManager extends AbstractViewManager {
      */
     public function fetch() {
         return $this->viewData;
+    }
+
+    /**
+     * @param string $type
+     * @param string $message
+     *
+     * @return mixed|void
+     */
+    public function addFlashMessage(string $type, string $message) {
+        if (isset($_SESSION)) {
+            $_SESSION['flashMessage'] = ['type' => $type, 'message' => $message];
+        }
     }
 
     /**
@@ -73,5 +88,14 @@ class ViewManager extends AbstractViewManager {
      */
     public function get(string $key) {
         return key_exists($key, $this->viewData) ? $this->viewData[$key] : null;
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return bool
+     */
+    public function has(string $key) {
+        return isset($this->viewData[$key]) && !empty($this->viewData[$key]);
     }
 }

@@ -11,7 +11,8 @@
                         <input id="password_change"
                                name="password_change"
                                type="password"
-                               class="form__input">
+                               class="form__input"
+                               required>
                     </div>
                     <div class="form__control">
                         <label for="password_change_confirm"
@@ -19,7 +20,8 @@
                         <input id="password_change_confirm"
                                name="password_change_confirm"
                                type="password"
-                               class="form__input">
+                               class="form__input"
+                               required>
                     </div>
                     <div class="form__control">
                         <input type="hidden" name="token" value="{{ token() }}">

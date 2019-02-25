@@ -9,7 +9,7 @@ use Slim\Http\Response;
 
 class ProfileController extends SecureFrontendController {
     public function indexAction(Request $request, Response $response) {
-        Oforge()->View()->assign(["msg" => "hello user"]);
+        Oforge()->View()->assign(['msg' => 'hello user']);
     }
     public function editAction(Request $request, Response $response) {
     }
