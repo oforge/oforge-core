@@ -42,8 +42,11 @@ class PagesController extends AbstractController {
             $pageArray      = $pageBuilderService->getPageArray($selectedPage);
             $pageContents   = $pageArray["paths"][$selectedLanguage]["pageContent"];
             
-            $data["contents"]        = $pageBuilderService->getContentDataArray($pageContents, $selectedLanguage);
+            $data["contents"]        = $pageBuilderService->getContentDataArray($pageContents);
             $data["pageBuilderData"] = $pageArray; // TODO: just used as development info
+            
+            // TODO: remove $contentFinder debug code
+            $data["contentFinder"] = $pageBuilderService->getContentDataArrayById($pageContents, "17-19-21"); // 17-19-21-15
         }
         
         Oforge()->View()->assign($data);

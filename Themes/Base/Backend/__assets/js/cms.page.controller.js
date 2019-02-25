@@ -17,6 +17,15 @@ function resizePageBuilder() {
 	$('#cms_content_type_list_container').height(calculatedHeight);
 }
 
+$('[data-pb-id]:not([data-pb-id*="-"])').hover(
+	function() {
+		$(this).addClass("cms-page-builder-selected-element");
+	},
+	function() {
+		$(this).removeClass("cms-page-builder-selected-element");
+	}		
+);
+
 $(window).resize(function() {
     resizePageBuilder();
 });

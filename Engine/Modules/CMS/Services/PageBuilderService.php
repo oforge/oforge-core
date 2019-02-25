@@ -12,6 +12,7 @@ use Oforge\Engine\Modules\CMS\Models\Content\ContentTypeGroup;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
 use Oforge\Engine\Modules\CMS\Models\Content\Content;
 use Oforge\Engine\Modules\CMS\Models\ContentTypes\Row;
+use phpDocumentor\Reflection\Types\Null_;
 
 class PageBuilderService extends AbstractDatabaseAccess
 {
@@ -275,15 +276,64 @@ class PageBuilderService extends AbstractDatabaseAccess
         
         return $page;
     }
-  
+    
     /**
-     * Returns an array with prepared twig content data for page builder
-     * @param array page contents array
-     * @param int page path
+     * Returns the current element id based on element hierachy and own id
+     * @param string element id
+     * @param int content id
+     *
+     * @return string element id
+     */
+    private function createCurrentElementId(string $elementId, int $contentId)
+    {
+        return $elementId . (!empty($elementId) ? '-' : '') . $contentId;
+    }
+    
+    /**
+     * Creates and returns an array with prepared twig content data for page builder
+     * @param array contents array
      *
      * @return array|NULL Array filled with twig content data for page builder
      */
-    public function getContentDataArray(array $pageContents, $pagePath)
+    private function createContentDataArray(array $pageContent, string $_elementId)
+    {
+        $data = [];
+        switch($pageContent["content"]["type"]["name"])
+        {
+            case "Row":
+                $data["id"]     = $this->createCurrentElementId($_elementId, $pageContent["content"]["id"]);
+                $data["type"]   = "ContentTypes/Row/PageBuilder.twig";
+                $data["css"]    = $pageContent["content"]["cssClass"];
+                $data["columns"]= $this->getContentDataArray($this->getRowColumnDataArray($pageContent["content"]["id"]), $data["id"]);
+                break;
+            case "RichText":
+                $data["id"]     = $this->createCurrentElementId($_elementId, $pageContent["content"]["id"]);
+                $data["type"]   = "ContentTypes/RichText/PageBuilder.twig";
+                $data["css"]    = $pageContent["content"]["cssClass"];
+                $data["text"]   = $pageContent["content"]["data"];
+                break;
+            case "Image":
+                $data["id"]     = $this->createCurrentElementId($_elementId, $pageContent["content"]["id"]);
+                $data["type"]   = "ContentTypes/Image/PageBuilder.twig";
+                $data["css"]    = $pageContent["content"]["cssClass"];
+                $data["url"]    = "/Tests/dummy_media/" . $pageContent["content"]["data"];
+                $data["alt"]    = $pageContent["content"]["name"];
+                break;
+            default:
+                return false;
+        }
+        
+        return $data;
+    }
+  
+    /**
+     * Returns an array with prepared twig content data for page builder
+     * @param array page contents array at base level
+     * @param int element id for history level data (internal use only)
+     *
+     * @return array|NULL Array filled with twig content data for page builder
+     */
+    public function getContentDataArray(array $pageContents, $_elementId = '')
     {
         if (!$pageContents)
         {
@@ -293,33 +343,75 @@ class PageBuilderService extends AbstractDatabaseAccess
         $contents = [];
         foreach($pageContents as $pageContent)
         {
-            $data = [];
-            // TODO: set or choose correct language
-            switch($pageContent["content"]["type"]["name"])
+            $_contents = $this->createContentDataArray($pageContent, $_elementId);
+            if ($_contents === false)
             {
-                case "row":
-                    $data["type"]   = "ContentTypes/Row/PageBuilder.twig";
-                    $data["css"]    = $pageContent["content"]["cssClass"];
-                    $data["columns"]= $this->getContentDataArray($this->getRowColumnDataArray($pageContent["content"]["id"]), $pagePath);
-                    break;
-                case "richtext":
-                    $data["type"]   = "ContentTypes/RichText/PageBuilder.twig";
-                    $data["css"]    = $pageContent["content"]["cssClass"];
-                    $data["text"]   = $pageContent["content"]["data"];
-                    break;
-                case "image":
-                    $data["type"]   = "ContentTypes/Image/PageBuilder.twig";
-                    $data["css"]    = $pageContent["content"]["cssClass"];
-                    $data["url"]    = "/Tests/dummy_media/" . $pageContent["content"]["data"];
-                    $data["alt"]    = $pageContent["content"]["name"];
-                    break;
-                default:
-                    continue 2;
+                continue;
             }
             
-            $contents[] = $data;
+            $contents[] = $_contents;
         }
         
         return $contents;
     }
+    
+    /**
+     * Returns an array with prepared twig content data for page builder by element id
+     * @param array page contents array at base level
+     * @param int element id to search for
+     * @param int element id for history level data (internal use only)
+     *
+     * @return array|NULL Array filled with twig content data for page builder
+     */
+    public function getContentDataArrayById(array $pageContents, $elementId, $_elementId = '', &$contentFinder = false)
+    {
+// TODO: remove $contentFinder debug code
+if ($contentFinder === false) {
+    $contentFinder = [];
+    $contentFinder["hierachy"] = "*";
+    $contentFinder["genid"] = "*";
+    $contentFinder["success"] = "false";
+    $contentFinder["recursion"] = 0;
+    $contentFinder["result"] = "false";
+}
+$contentFinder["recursion"] += 1;
+
+        if (!$pageContents)
+        {
+            return NULL;
+        }
+        
+        foreach($pageContents as $pageContent)
+        {
+$contentFinder["hierachy"] .= ":" . $pageContent["content"]["id"];
+
+if ($pageContent["content"]["id"] > 0) {
+    $contentFinder["genid"] .= ":" . $this->createCurrentElementId($_elementId, $pageContent["content"]["id"]);
+}
+    
+            // if element is found return content to display on page
+            if ($pageContent["content"]["id"] > 0 && $this->createCurrentElementId($_elementId, $pageContent["content"]["id"]) === $elementId)
+            {
+$contentFinder["success"] = "true";
+$contentFinder["result"] = $this->createContentDataArray($pageContent, $_elementId);;
+                return $this->createContentDataArray($pageContent, $_elementId);
+            }
+            
+            // if element was not found but is a container type recursivly call getContentDataArrayById
+            if ($pageContent["content"]["type"]["group"]["name"] === "container")
+            {
+                switch($pageContent["content"]["type"]["name"])
+                {
+                    case "Row":
+$contentFinder["comment"] = "Row found";
+$contentFinder["data"] = $this->getRowColumnDataArray($pageContent["content"]["id"]);
+                        $this->getContentDataArrayById($this->getRowColumnDataArray($pageContent["content"]["id"]), $elementId, $this->createCurrentElementId($_elementId, $pageContent["content"]["id"]), $contentFinder);
+                        break;
+                }
+            }
+        }
+        
+return $contentFinder;
+        //return NULL; // TODO: uncomment after removing $contentFinder debug code
+   }
 }
