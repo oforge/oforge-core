@@ -46,6 +46,8 @@ class ForgotPasswordController extends AbstractController {
          * no token was sent
          */
         if (!isset($body['token']) || empty($body['token'])) {
+            Oforge()->View()->addFlashMessage('warning', 'The data has been sent from an invalid form.');
+
             Oforge()->Logger()->get()->addWarning('Someone tried to do a backend login with a form without csrf token! Redirecting to backend login.');
 
             return $response->withRedirect($uri, 302);
@@ -55,6 +57,8 @@ class ForgotPasswordController extends AbstractController {
          * invalid token was sent
          */
         if (!hash_equals($_SESSION['token'], $body['token'])) {
+            Oforge()->View()->addFlashMessage('warning', 'The data has been sent from an invalid form.');
+
             Oforge()->Logger()->get()->addWarning('Someone tried a backend login without a valid form csrf token! Redirecting back to login.');
             return $response->withRedirect($uri, 302);
         }
@@ -63,6 +67,8 @@ class ForgotPasswordController extends AbstractController {
          * no email body was sent
          */
         if (!$email) {
+            Oforge()->View()->addFlashMessage('warning', 'Invalid form data.');
+
             return $response->withRedirect($uri, 302);
         }
 
@@ -70,6 +76,8 @@ class ForgotPasswordController extends AbstractController {
          * Email not found
          */
         if (!$passwordResetService->emailExists($email)) {
+            Oforge()->View()->addFlashMessage('warning', 'Email not found.');
+
             return $response->withRedirect($uri, 302);
         }
 
@@ -87,6 +95,8 @@ class ForgotPasswordController extends AbstractController {
         $mailService->send($mailOptions);
 
         $uri = $router->pathFor('frontend_login');
+
+        Oforge()->View()->addFlashMessage('success', 'You will receive an email with your password change information.');
 
         return $response->withRedirect($uri, 302);
     }
@@ -112,6 +122,7 @@ class ForgotPasswordController extends AbstractController {
          * No guid
          */
         if (!$guid) {
+            Oforge()->View()->addFlashMessage('warning', 'Invalid link.');
             return $response->withRedirect($uri, 302);
         }
 
@@ -119,6 +130,7 @@ class ForgotPasswordController extends AbstractController {
          * Reset link is not valid
          */
         if (!$passwordResetService->isResetLinkValid($guid)) {
+            Oforge()->View()->addFlashMessage('warning', 'Invalid link.');
             return $response->withRedirect($uri, 302);
         }
 
@@ -161,6 +173,7 @@ class ForgotPasswordController extends AbstractController {
          * no valid form data found
          */
         if (!$guid||!$token||!$password||!$passwordConfirm) {
+            Oforge()->View()->addFlashMessage('warning', 'Invalid form data.');
             return $response->withRedirect($uri, 302);
         }
 
@@ -168,6 +181,7 @@ class ForgotPasswordController extends AbstractController {
          * invalid token was sent
          */
         if (!hash_equals($_SESSION['token'], $body['token'])) {
+            Oforge()->View()->addFlashMessage('warning', 'The data has been sent from an invalid form.');
             Oforge()->Logger()->get()->addWarning('Someone tried a backend login without a valid form csrf token! Redirecting back to login.');
             return $response->withRedirect($uri, 302);
         }
@@ -176,6 +190,7 @@ class ForgotPasswordController extends AbstractController {
          * Passwords are not identical
          */
         if ($password !== $passwordConfirm) {
+            Oforge()->View()->addFlashMessage('warning', 'Passwords do not match.');
             return $response->withRedirect($uri, 302);
         }
 
@@ -186,6 +201,7 @@ class ForgotPasswordController extends AbstractController {
          * User not found
          */
         if (!$user) {
+            Oforge()->View()->addFlashMessage('warning', 'User not found.');
             return $response->withRedirect($uri, 302);
         }
 
@@ -195,6 +211,7 @@ class ForgotPasswordController extends AbstractController {
          * $jwt is null if the login credentials are incorrect
          */
         if (!isset($jwt)) {
+            Oforge()->View()->addFlashMessage('warning', 'Invalid login credentials.');
             return $response->withRedirect($uri, 302);
         }
 
@@ -202,6 +219,8 @@ class ForgotPasswordController extends AbstractController {
         $_SESSION['auth'] = $jwt;
 
         $uri = $router->pathFor('frontend_profile');
+
+        Oforge()->View()->addFlashMessage('success', 'You have successfully changed your password. You are now logged in.');
 
         return $response->withRedirect($uri, 302);
     }

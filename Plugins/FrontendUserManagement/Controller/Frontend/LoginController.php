@@ -18,7 +18,7 @@ use Slim\Router;
 class LoginController extends AbstractController {
     public function indexAction(Request $request, Response $response) {
     }
-    
+
     /**
      * @param Request $request
      * @param Response $response
@@ -28,7 +28,8 @@ class LoginController extends AbstractController {
      */
     public function processAction(Request $request, Response $response) {
         if (empty($_SESSION)) {
-            print_r("No session :/");
+            // TODO: do something not so stupid like this.
+            print_r('No session :/');
             die();
         }
     
@@ -38,13 +39,14 @@ class LoginController extends AbstractController {
         /**
          * @var $router Router
          */
-        $router = Oforge()->App()->getContainer()->get("router");
-        $uri = $router->pathFor("frontend_login");
+        $router = Oforge()->App()->getContainer()->get('router');
+        $uri = $router->pathFor('frontend_login');
     
         /**
          * disallow direct processAction call. Only post action is allowed
          */
         if (!$request->isPost()) {
+            Oforge()->View()->addFlashMessage('warning', 'Direct page call is not allowed.');
             return $response->withRedirect($uri, 302);
         }
     
@@ -55,8 +57,8 @@ class LoginController extends AbstractController {
          * no token was sent
          */
         if (!isset($body['token']) || empty($body['token'])) {
-            Oforge()->Logger()->get()->addWarning("Someone tried to do a backend login with a form without csrf token! Redirecting to backend login.");
-        
+            Oforge()->Logger()->get()->addWarning('Someone tried to do a backend login with a form without csrf token! Redirecting to backend login.');
+            Oforge()->View()->addFlashMessage('warning', 'The data has been sent from an invalid form.');
             return $response->withRedirect($uri, 302);
         }
     
@@ -64,24 +66,27 @@ class LoginController extends AbstractController {
          * invalid token was sent
          */
         if (!hash_equals($_SESSION['token'], $body['token'])) {
-            Oforge()->Logger()->get()->addWarning("Someone tried a backend login without a valid form csrf token! Redirecting back to login.");
+            Oforge()->Logger()->get()->addWarning('Someone tried a backend login without a valid form csrf token! Redirecting back to login.');
+            Oforge()->View()->addFlashMessage('warning', 'The data has been sent from an invalid form.');
             return $response->withRedirect($uri, 302);
         }
     
         /**
          * no email or password body was sent
          */
-        if (!array_key_exists("frontend_login_email", $body) ||
-            !array_key_exists("frontend_login_password", $body)) {
-            return $response->withRedirect($router->pathFor("frontend_login"), 302);
+        if (!array_key_exists('frontend_login_email', $body) ||
+            !array_key_exists('frontend_login_password', $body)) {
+            Oforge()->View()->addFlashMessage('warning', 'Invalid username or password.');
+            return $response->withRedirect($router->pathFor('frontend_login'), 302);
         }
     
-        $jwt = $loginService->login($body["frontend_login_email"], $body["frontend_login_password"]);
+        $jwt = $loginService->login($body['frontend_login_email'], $body['frontend_login_password']);
     
         /**
          * $jwt is null if the login credentials are incorrect
          */
         if (!isset($jwt)) {
+            Oforge()->View()->addFlashMessage('warning', 'Invalid username or password.');
             return $response->withRedirect($uri, 302);
         }
     
@@ -93,7 +98,9 @@ class LoginController extends AbstractController {
     
         $_SESSION['auth'] = $jwt;
     
-        $uri = $router->pathFor("frontend_profile");
+        $uri = $router->pathFor('frontend_profile');
+
+        Oforge()->View()->addFlashMessage('success', 'you have successfully logged in!');
     
         return $response->withRedirect($uri, 302);
     }

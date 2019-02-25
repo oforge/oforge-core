@@ -19,6 +19,14 @@ $color-secondary-transparent-3: transparentize($color-light, .3); //sWeiß-1
 $text-light: $color-light;
 $text-dark: $color-primary;
 
+$success: #0d0;
+$info: #fc0;
+$warning: #d00;
+
+$success-font: $text-dark;
+$info-font: $text-dark;
+$warning-font: $text-light;
+
 
 /*
  * Fonts

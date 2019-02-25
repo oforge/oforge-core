@@ -11,14 +11,20 @@ class RenderMiddleware {
      * @param  callable $next Next middleware
      *
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
-     * @throws \Twig_Error_Loader
      */
     public function __invoke( $request, $response, $next ) {
+        $data = [];
+
+        if ($_SESSION['flashMessage']) {
+            $data['flashMessage'] = $_SESSION['flashMessage'];
+            unset($_SESSION['flashMessage']);
+        }
         $response = $next( $request, $response );
-        $data = Oforge()->View()->fetch();
+        if (empty($data)) {
+            $data = Oforge()->View()->fetch();
+        } else {
+            $data = array_merge($data, Oforge()->View()->fetch());
+        }
         return Oforge()->Templates()->render( $request, $response, $data );
     }
 }
