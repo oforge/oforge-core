@@ -15,7 +15,7 @@ class RenderMiddleware {
     public function __invoke( $request, $response, $next ) {
         $data = [];
 
-        if ($_SESSION['flashMessage']) {
+        if (isset($_SESSION['flashMessage'])) {
             $data['flashMessage'] = $_SESSION['flashMessage'];
             unset($_SESSION['flashMessage']);
         }
