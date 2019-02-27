@@ -368,19 +368,8 @@ class PageBuilderService extends AbstractDatabaseAccess
      *
      * @return array|NULL Array filled with twig content data for page builder
      */
-    public function getContentDataArrayById(array $pageContents, string $elementId, string $_elementId = '', &$contentFinder = false)
+    public function getContentDataArrayById(array $pageContents, string $elementId, string $_elementId = '')
     {
-// TODO: remove $contentFinder debug code
-if ($contentFinder === false) {
-    $contentFinder = [];
-    $contentFinder["hierachy"] = "*";
-    $contentFinder["genid"] = "*";
-    $contentFinder["success"] = "false";
-    $contentFinder["recursion"] = 0;
-    $contentFinder["result"] = "false";
-}
-$contentFinder["recursion"] += 1;
-
         if (!$pageContents)
         {
             return NULL;
@@ -388,17 +377,9 @@ $contentFinder["recursion"] += 1;
         
         foreach($pageContents as $pageContent)
         {
-$contentFinder["hierachy"] .= ":" . $pageContent["content"]["id"];
-
-if ($pageContent["content"]["id"] > 0) {
-    $contentFinder["genid"] .= ":" . $this->createCurrentElementId($_elementId, $pageContent["content"]["id"]);
-}
-    
             // if element is found return content to display on page
             if ($pageContent["content"]["id"] > 0 && $this->createCurrentElementId($_elementId, $pageContent["content"]["id"]) === $elementId)
             {
-$contentFinder["success"] = "true";
-$contentFinder["result"] = $this->createContentDataArray($pageContent, $elementId, $_elementId);
                 return $this->createContentDataArray($pageContent, $elementId, $_elementId);
             }
             
@@ -408,15 +389,11 @@ $contentFinder["result"] = $this->createContentDataArray($pageContent, $elementI
                 switch($pageContent["content"]["type"]["name"])
                 {
                     case "Row":
-$contentFinder["comment"] = "Row found";
-$contentFinder["data"] = $this->getRowColumnDataArray($pageContent["content"]["id"]);
-                        $this->getContentDataArrayById($this->getRowColumnDataArray($pageContent["content"]["id"]), $elementId, $this->createCurrentElementId($_elementId, $pageContent["content"]["id"]), $contentFinder);
-                        break;
+                        return $this->getContentDataArrayById($this->getRowColumnDataArray($pageContent["content"]["id"]), $elementId, $this->createCurrentElementId($_elementId, $pageContent["content"]["id"]));
                 }
             }
         }
         
-return $contentFinder;
-        //return NULL; // TODO: uncomment after removing $contentFinder debug code
+        return NULL; // TODO: uncomment after removing $contentFinder debug code
    }
 }

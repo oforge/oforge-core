@@ -29,7 +29,7 @@ class PagesController extends AbstractController {
         
         $selectedPage       = isset($_POST["cms_page_jstree_selected_page"]) && $_POST["cms_page_jstree_selected_page"] > 0 ? $_POST["cms_page_jstree_selected_page"] : 0;
         $selectedLanguage   = isset($_POST["cms_page_selected_language"]) && $_POST["cms_page_selected_language"] > 0 ? $_POST["cms_page_selected_language"] : 0;
-        $selectedElement    = isset($_POST["cms_page_selected_element"]) && $_POST["cms_page_selected_element"] > 0 ? $_POST["cms_page_selected_element"] : 0;
+        $selectedElement    = isset($_POST["cms_page_selected_element"]) && !empty($_POST["cms_page_selected_element"]) ? $_POST["cms_page_selected_element"] : 0;
         
         $data = [
             "js"                => ["cms_page_controller_jstree_config" => $pageTreeService->generateJsTreeConfigJSON()],
@@ -44,19 +44,12 @@ class PagesController extends AbstractController {
             $pageArray      = $pageBuilderService->getPageArray($selectedPage);
             $pageContents   = $pageArray["paths"][$selectedLanguage]["pageContent"];
             
-$data["selectedElement"] = $selectedElement; // TODO: just used as development info
             if ($selectedElement)
             {
-$data["selectedElement1"] = $selectedElement; // TODO: just used as development info
                 $data["contents"]   = $pageBuilderService->getContentDataArrayById($pageContents, $selectedElement);
-                //$data["contents"]   = $pageBuilderService->getContentDataArrayById($pageContents, "17-19-21");
-                
-                // TODO: remove $contentFinder debug code
-                $data["contentFinder"] = $pageBuilderService->getContentDataArrayById($pageContents, $selectedElement); // 17-19-21-15
             }
             else
             {
-$data["selectedElement1"] = $selectedElement; // TODO: just used as development info
                 $data["contents"]   = $pageBuilderService->getContentDataArray($pageContents);
             }
             
