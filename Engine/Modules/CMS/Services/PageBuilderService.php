@@ -291,29 +291,33 @@ class PageBuilderService extends AbstractDatabaseAccess
     
     /**
      * Creates and returns an array with prepared twig content data for page builder
-     * @param array contents array
+     * @param string element id to search for
+     * @param string element id for history level data (internal use only)
      *
      * @return array|NULL Array filled with twig content data for page builder
      */
-    private function createContentDataArray(array $pageContent, string $_elementId)
+    private function createContentDataArray(array $pageContent, string $elementId, string $_elementId)
     {
         $data = [];
         switch($pageContent["content"]["type"]["name"])
         {
             case "Row":
                 $data["id"]     = $this->createCurrentElementId($_elementId, $pageContent["content"]["id"]);
+                $data["se"]     = $elementId;
                 $data["type"]   = "ContentTypes/Row/PageBuilder.twig";
                 $data["css"]    = $pageContent["content"]["cssClass"];
-                $data["columns"]= $this->getContentDataArray($this->getRowColumnDataArray($pageContent["content"]["id"]), $data["id"]);
+                $data["columns"]= $this->getContentDataArray($this->getRowColumnDataArray($pageContent["content"]["id"]), $elementId, $data["id"]);
                 break;
             case "RichText":
                 $data["id"]     = $this->createCurrentElementId($_elementId, $pageContent["content"]["id"]);
+                $data["se"]     = $elementId;
                 $data["type"]   = "ContentTypes/RichText/PageBuilder.twig";
                 $data["css"]    = $pageContent["content"]["cssClass"];
                 $data["text"]   = $pageContent["content"]["data"];
                 break;
             case "Image":
                 $data["id"]     = $this->createCurrentElementId($_elementId, $pageContent["content"]["id"]);
+                $data["se"]     = $elementId;
                 $data["type"]   = "ContentTypes/Image/PageBuilder.twig";
                 $data["css"]    = $pageContent["content"]["cssClass"];
                 $data["url"]    = "/Tests/dummy_media/" . $pageContent["content"]["data"];
@@ -329,11 +333,12 @@ class PageBuilderService extends AbstractDatabaseAccess
     /**
      * Returns an array with prepared twig content data for page builder
      * @param array page contents array at base level
-     * @param int element id for history level data (internal use only)
+     * @param string element id to search for
+     * @param string element id for history level data (internal use only)
      *
      * @return array|NULL Array filled with twig content data for page builder
      */
-    public function getContentDataArray(array $pageContents, $_elementId = '')
+    public function getContentDataArray(array $pageContents, string $elementId = '', string $_elementId = '')
     {
         if (!$pageContents)
         {
@@ -343,7 +348,7 @@ class PageBuilderService extends AbstractDatabaseAccess
         $contents = [];
         foreach($pageContents as $pageContent)
         {
-            $_contents = $this->createContentDataArray($pageContent, $_elementId);
+            $_contents = $this->createContentDataArray($pageContent, $elementId, $_elementId);
             if ($_contents === false)
             {
                 continue;
@@ -358,12 +363,12 @@ class PageBuilderService extends AbstractDatabaseAccess
     /**
      * Returns an array with prepared twig content data for page builder by element id
      * @param array page contents array at base level
-     * @param int element id to search for
-     * @param int element id for history level data (internal use only)
+     * @param string element id to search for
+     * @param string element id for history level data (internal use only)
      *
      * @return array|NULL Array filled with twig content data for page builder
      */
-    public function getContentDataArrayById(array $pageContents, $elementId, $_elementId = '', &$contentFinder = false)
+    public function getContentDataArrayById(array $pageContents, string $elementId, string $_elementId = '', &$contentFinder = false)
     {
 // TODO: remove $contentFinder debug code
 if ($contentFinder === false) {
@@ -393,8 +398,8 @@ if ($pageContent["content"]["id"] > 0) {
             if ($pageContent["content"]["id"] > 0 && $this->createCurrentElementId($_elementId, $pageContent["content"]["id"]) === $elementId)
             {
 $contentFinder["success"] = "true";
-$contentFinder["result"] = $this->createContentDataArray($pageContent, $_elementId);;
-                return $this->createContentDataArray($pageContent, $_elementId);
+$contentFinder["result"] = $this->createContentDataArray($pageContent, $elementId, $_elementId);
+                return $this->createContentDataArray($pageContent, $elementId, $_elementId);
             }
             
             // if element was not found but is a container type recursivly call getContentDataArrayById
