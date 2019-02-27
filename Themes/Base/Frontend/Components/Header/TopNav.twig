@@ -2,11 +2,9 @@
 {% block top_nav %}
 <nav class="top-nav">
     <ul class="top-nav-list flex flex--row">
-        {% block top_nav_login %}
-        <li class="top-nav-list__item item--login">
-            <a href="#" class="icon icon--user" title="Login"></a>
-        </li>
-        {% endblock top_nav_login %}
+        {% block top_nav_links %}
+            <!-- additional nav links -->
+        {% endblock top_nav_links %}
     </ul>
 </nav>
 {% endblock top_nav %}

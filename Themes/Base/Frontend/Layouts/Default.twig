@@ -9,14 +9,13 @@
             {% include 'Frontend/Components/Header/Header.twig' %}
         {% endblock layout__header %}
 
-        <div class='container content'>
-            {% block flash_messages %}
-                {% include '@parent/Frontend/Components/FlashMessage.twig' %}
-            {% endblock flash_messages %}
+        {% block flash_messages %}
+            {% include '@parent/Frontend/Components/FlashMessage.twig' %}
+        {% endblock flash_messages %}
 
-            {% block content %}
-            {% endblock content %}
-        </div>
+        {% block content %}
+
+        {% endblock content %}
 
     {% block layout__footer %}
         {% include 'Frontend/Components/Footer/Footer.twig' %}

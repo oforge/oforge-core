@@ -1,54 +1,11 @@
 {% extends "@parent/Frontend/Layout.twig" %}
 
 {% block content %}
-    {% block registration %}
-    <div class="registration">
-        <form action="{{ url('frontend_registration_process') }}" method="post">
-            <div class="form-controls">
-                <div class="form__control">
-                    <label for="frontend_registration_email"
-                           class="form__label">{{ i18n('email') }}</label>
-                    <input id="frontend_registration_email"
-                           name="frontend_registration_email"
-                           type="email"
-                           class="form__input"
-                           required>
-                </div>
-                <div class="form__control">
-                    <label for="frontend_registration_password"
-                           class="form__label">{{ i18n('password') }}</label>
-                    <input id="frontend_registration_password"
-                           name="frontend_registration_password"
-                           type="password"
-                           class="form__input"
-                           required>
-                </div>
-                <div class="form__control">
-                    <label for="frontend_registration_password_confirm"
-                           class="form__label">{{ i18n('password_confirm') }}</label>
-                    <input id="frontend_registration_password_confirm"
-                           name="frontend_registration_password_confirm"
-                           type="password"
-                           class="form__input"
-                           required>
-                </div>
-                <div class="form__control flex flex--row flex--center">
-                    <input id="frontend_registration_privacy_notice_accepted"
-                           name="frontend_registration_privacy_notice_accepted"
-                           type="checkbox"
-                           class="form__input form__input--checkbox"
-                           required>
-                    <label for="frontend_registration_privacy_notice_accepted"
-                           class="form__label space-left">{{ i18n('accept_privacy_notice') }}</label>
-                </div>
-                <div class="form__control">
-                    <input type="hidden" name="token" value="{{ token() }}">
-                    <input type="submit"
-                           value="{{ i18n('registration') }}"
-                           class="form__input button button--primary">
-                </div>
+    <div class="content">
+        {% block registration %}
+            <div class="registration">
+                {% include 'Frontend/Components/Forms/RegistrationForm.twig' %}
             </div>
-        </form>
+        {% endblock registration %}
     </div>
-    {% endblock registration %}
 {% endblock content %}
