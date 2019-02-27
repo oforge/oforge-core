@@ -1,0 +1,21 @@
+.panel--login-registration {
+    max-width: 95%;
+    margin: 0 auto;
+    position: relative;
+    top: -50rem;
+
+    .form {
+        display: none;
+
+        &.search__content--visible {
+            display: block;
+        }
+    }
+}
+
+@media screen and (min-width: $screen-medium) {
+    .panel--login-registration {
+        max-width: 80%;
+        top: -44rem;
+    }
+}
