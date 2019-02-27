@@ -31,9 +31,15 @@
     				<hr>
     			</div>
 				<div>
-                    {% for data in contents %}
-    	                {% include data.type %}
-                    {% endfor %}
+                    {% if contents.type %}
+                        {% include contents.type with {'data': contents} only %}
+                    {% else %}
+                        {% for data in contents %}
+                            {% if data.type %}
+	                            {% include data.type %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
 				</div>
 	    	</div>
 		</div>
