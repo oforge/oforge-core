@@ -11,6 +11,7 @@ class Bootstrap extends AbstractBootstrap {
     public function __construct() {
         $this->endpoints = [
             "/login" => ["controller" => Controller\Frontend\LoginController::class, "name" => "frontend_login"],
+            "/login-registration" => ["controller" => Controller\Frontend\LoginRegistrationController::class, "name" => "frontend_login_registration"],
             "/logout" => ["controller" => Controller\Frontend\LogoutController::class, "name" => "frontend_logout"],
             "/register" => ["controller" => Controller\Frontend\RegistrationController::class, "name" => "frontend_registration"],
             "/forgot-password" => ["controller" => Controller\Frontend\ForgotPasswordController::class, "name" => "frontend_forgot_password"],

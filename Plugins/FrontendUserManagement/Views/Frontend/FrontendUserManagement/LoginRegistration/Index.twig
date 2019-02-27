@@ -1,0 +1,33 @@
+{% extends '@parent/Frontend/Layout.twig' %}
+{% block content %}
+    <div class="content">
+        {% block login_registration %}
+            <div class="panel panel--login-registration">
+                <h2 class="title">{{ i18n('welcome') }}</h2>
+                <div class="row">
+                    <div class="left">
+                        <h3 class="sub-title">{{ i18n('I want to...') }}</h3>
+                        <div class="buttons">
+                            <a href="#" class="button button--secondary">
+                                {{ i18n('login') }}
+                            </a>
+
+                            <a href="#" class="button button--primary">
+                                {{ i18n('register') }}
+                            </a>
+                        </div>
+                        <div class="form form--login">
+                            {% include 'Frontend/Components/Forms/LoginForm.twig' %}
+                        </div>
+
+                        <div class="form form--registration">
+                            <form action="{{ url('frontend_login_process') }}">
+                                {% include 'Frontend/Components/Forms/RegistrationForm.twig' %}
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endblock login_registration %}
+    </div>
+{% endblock content %}

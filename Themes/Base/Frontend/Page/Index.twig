@@ -3,9 +3,11 @@
 {% block content %}
     {% block content_types %}
         {% if content %}
-            {% for contentItem in content %}
-                {% include 'ContentTypes/' ~ contentItem.type ~ '/Index.twig' with {'data': contentItem.data} %}
-            {% endfor %}
+            <div class="content">
+                {% for contentItem in content %}
+                    {% include 'ContentTypes/' ~ contentItem.type ~ '/Index.twig' with {'data': contentItem.data} %}
+                {% endfor %}
+            </div>
         {% endif %}
     {% endblock content_types %}
 {% endblock %}

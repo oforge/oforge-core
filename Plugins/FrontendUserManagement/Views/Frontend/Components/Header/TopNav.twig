@@ -1,6 +1,7 @@
 {% extends '@parent/Frontend/Components/Header/TopNav.twig' %}
-{% block top_nav_login %}
+{% block top_nav_links %}
+    {{ parent() }}
     <li class="top-nav-list__item item--login">
-        <a href="{{ url('frontend_login') }}" class="icon icon--user" title="Login"></a>
+        <a href="{{ url('frontend_login_registration') }}" class="icon icon--user" title="Login"></a>
     </li>
-{% endblock top_nav_login %}
+{% endblock top_nav_links %}
