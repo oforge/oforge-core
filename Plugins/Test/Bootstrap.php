@@ -8,9 +8,6 @@ use Test\Services\TestService;
 
 class Bootstrap extends AbstractBootstrap {
     public function __construct() {
-        $this->endpoints = [
-            "/" => ["controller" => \Test\Controller\Frontend\HomeController::class, "name" => "home2"]
-        ];
         
         $this->middleware = [
             "home2" => ["class" => \Test\Middleware\HomeMiddleware::class, "position" => 0]
