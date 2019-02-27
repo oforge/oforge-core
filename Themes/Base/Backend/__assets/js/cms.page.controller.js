@@ -1,25 +1,10 @@
 // jsTree callback function
 $('#cms_page_controller_jstree').on('changed.jstree', function (e, data) {
-	/*
-	console.log(data.selected);
-	console.log("Selected Id:"+$('#cms_page_controller_jstree').jstree('get_selected'));
-	console.log("Selected Page:"+$('#cms_page_controller_jstree').jstree('get_selected', true)[0].text);
-	*/
-	
 	// switch page on page select
 	$('#cms_page_jstree_selected_page').val($('#cms_page_controller_jstree').jstree('get_selected'));
 	$('#cms_page_selected_element').val('');
 	$('#cms_page_builder_form').submit();
 });
-
-// adopt cms content builder containers to parents height on window resize event
-function resizePageBuilder() {
-	var calculatedHeight = $('.main-footer').position().top - $('#page_builder_container_wrapper').position().top;
-	
-	$('#cms_page_jstree_container').height(calculatedHeight);
-	$('#page_builder_container').height(calculatedHeight);
-	$('#cms_content_type_list_container').height(calculatedHeight);
-}
 
 // mark and select selectable elements in page builder
 $('[data-pb-id]').each(
@@ -52,6 +37,42 @@ $('[data-pb-id]').each(
 		}
 	}
 );
+
+//on edit cancel button event
+$('#cms-page-builder-cancel').click(
+	function() {
+		var lastElementIdPosition = $(this).attr('data-pb-se').lastIndexOf('-');
+		var newSelectedElementId = '';
+		if (lastElementIdPosition > 0) {
+			newSelectedElementId = $(this).attr('data-pb-se').substring(0, lastElementIdPosition);
+		}
+		$('#cms_page_selected_element').val(newSelectedElementId);
+		$('#cms_page_builder_form').submit();
+	}
+);
+
+//on edit submit button event
+$('#cms-page-builder-submit').click(
+	function() {
+		var lastElementIdPosition = $(this).attr('data-pb-se').lastIndexOf('-');
+		var newSelectedElementId = '';
+		if (lastElementIdPosition > 0) {
+			newSelectedElementId = $(this).attr('data-pb-se').substring(0, lastElementIdPosition);
+		}
+		$('#cms_page_selected_element').val(newSelectedElementId);
+		// TODO: add submit new content info data
+		$('#cms_page_builder_form').submit();
+	}
+);
+
+//adopt cms content builder containers to parents height on window resize event
+function resizePageBuilder() {
+	var calculatedHeight = $('.main-footer').position().top - $('#page_builder_container_wrapper').position().top;
+	
+	$('#cms_page_jstree_container').height(calculatedHeight);
+	$('#page_builder_container').height(calculatedHeight);
+	$('#cms_content_type_list_container').height(calculatedHeight);
+}
 
 // bind functions to window resize event
 $(window).resize(function() {

@@ -4,6 +4,7 @@
 		<div>
 			<div class="cms-page-builder-headline">{{ i18n('cms_page_builder_content_title') }}</div>
 	    	<div class="cms-page-builder-content" id="cms_page_builder_content">
+                {% if contents.type == false %}
     			<div class="url-language-row">
     				<div>Url: <input type="text" value="{{ pages[post["cms_page_jstree_selected_page"]-1].paths.0.path }}"></div>
     				<div>
@@ -30,6 +31,17 @@
     			<div>
     				<hr>
     			</div>
+                {% else %}
+    			<div>
+    				<hr>
+    			</div>
+    			<div>
+    				<div class="cms-page-builder-preview">{{ i18n('cms_page_builder_edit_content_types_title') }}</div>
+    			</div>
+    			<div>
+    				<hr>
+    			</div>
+                {% endif %}
 				<div>
                     {% if contents.type %}
                         {% include contents.type with {'data': contents} only %}
@@ -41,6 +53,12 @@
                         {% endfor %}
                     {% endif %}
 				</div>
+                {% if contents.type %}
+    			<div class="cms-cancel-submit-row">
+    				<div><button class="cms-cancel-button" id="cms-page-builder-cancel" data-pb-se="{{ post.cms_page_selected_element }}">{{ i18n('cancel') }}</button></div>
+    				<div><button class="cms-submit-button" id="cms-page-builder-submit" data-pb-se="{{ post.cms_page_selected_element }}">{{ i18n('backend_crud_save') }}</button></div>
+    			</div>
+                {% endif %}
 	    	</div>
 		</div>
 	</div>

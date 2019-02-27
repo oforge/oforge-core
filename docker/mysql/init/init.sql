@@ -165,7 +165,9 @@ INSERT INTO `oforge_i18n_snippet` (`id`, `scope`, `name`, `value`) VALUES
 (92,	'de',	'forgot_password_title',	'Passwort Vergessen?'),
 (93,	'de',	'reset_password',	'Passwort zurücksetzen'),
 (94,	'de',	'password_confirm',	'Passwort bestätigen'),
-(95,	'de',	'change_password',	'Passwort ändern');
+(95,	'de',	'change_password',	'Passwort ändern'),
+(96,	'de',	'cms_page_builder_edit_content_types_title',	'Content Type Editieren'),
+(97,	'en',	'cms_page_builder_edit_content_types_title',	'Edit Content Type');
 
 DROP TABLE IF EXISTS `oforge_cms_content_type_group`;
 CREATE TABLE `oforge_cms_content_type_group` (
