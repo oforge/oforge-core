@@ -1,4 +1,15 @@
 .panel {
     background: $color-light;
     padding: $size-large * 3;
+
+    &__column {
+        width: 100%;
+        flex: 1 1 0;
+
+        &.panel__column--border {
+            margin-left: $size-large * 3;
+            padding-left: $size-large * 3;
+            border-left: 1px solid $color-primary;
+        }
+    }
 }
