@@ -50,7 +50,7 @@ class CssAssetService extends BaseAssetService {
         $scss          = new Compiler();
         $scssService   = Oforge()->Services()->get('scss.variables');
         $dbVariables   = $scssService->get(Statics::TEMPLATE_DIR . '\\' . $context . '\\Template', $scope);
-        $scssVariables = [];
+        $scssVariables = Statics::DEFAULT_SCSS_VARIABLES;
 
         /** @var ScssVariable $var */
         foreach ($dbVariables as $var) {
