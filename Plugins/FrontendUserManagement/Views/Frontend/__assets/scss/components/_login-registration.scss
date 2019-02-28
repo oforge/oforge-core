@@ -2,7 +2,15 @@
     max-width: 95%;
     margin: 0 auto;
     position: relative;
-    top: -50rem;
+
+    .title {
+        margin-bottom: $size-large * 3;
+    }
+    .sub-title {
+        margin-bottom: $size-large * 2;
+        font-weight: normal;
+        color: $text-dark;
+    }
 
     .form {
         display: none;
@@ -11,11 +19,17 @@
             display: block;
         }
     }
+
+    .buttons {
+
+        .button {
+            width: calc(50% - #{$size-medium})
+        }
+    }
 }
 
 @media screen and (min-width: $screen-medium) {
     .panel--login-registration {
         max-width: 80%;
-        top: -44rem;
     }
 }

@@ -19,6 +19,9 @@
                        class="form__input form__input"
                        required>
             </div>
+            <div class="form__control flex flex--row flex--end">
+                <a href="{{ url('frontend_forgot_password') }}" class="forgot-password">{{ i18n('Forgot password?') }}</a>
+            </div>
             <div class="form__control">
                 <input type="hidden" name="token" value="{{ token() }}">
                 <input type="submit"
