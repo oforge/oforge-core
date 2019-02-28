@@ -2,33 +2,31 @@
 
 namespace Oforge\Engine\Modules\CMS\Abstracts;
 
+use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
 use Oforge\Engine\Modules\CMS\Models\Content\Content;
 
-abstract class AbstractContentType
+abstract class AbstractContentType extends AbstractDatabaseAccess
 {
-    protected $entityManager;
-    protected $contentTypeRepository;
-    protected $contentRepository;
+    protected $entityManager = Null;
     
-    private $contentTypeId = Null;
-    private $content = Null;
+    private $content         = Null;
     
-    private $id = Null;
-    private $parentId = Null;
-    private $name = Null;
-    private $cssClass = Null;
-    private $data = Null;
+    private $id              = Null;
+    private $contentTypeId   = Null;
+    private $parentId        = Null;
+    private $name            = Null;
+    private $cssClass        = Null;
+    private $data            = Null;
     
     public function __construct()
     {
-        $this->entityManager = Oforge()->DB()->getManager();
+        parent::__construct(['contentType' => ContentType::class, 'content' => Content::class]);
         
-        $this->contentTypeRepository = $this->entityManager->getRepository(ContentType::class);
-        $this->contentRepository = $this->entityManager->getRepository(Content::class);
-        
-        $contentTypeEntity = $this->contentTypeRepository->findOneBy(["classPath" => get_class($this)]);
+        $contentTypeEntity   = $this->repository('contentType')->findOneBy(["classPath" => get_class($this)]);
         $this->contentTypeId = $contentTypeEntity->getId();
+        
+        $this->entityManager = Oforge()->DB()->getManager();
     }
     
     /**
@@ -141,7 +139,7 @@ abstract class AbstractContentType
         $this->content->setParent($this->parentId);
         $this->content->setName($this->name);
         $this->content->setCssClass($this->cssClass);
-        $this->content->setData($this->data);
+        $this->content->setData(serialize($this->data));
         
         $this->entityManager->persist($this->content);
         $this->entityManager->flush();
@@ -168,10 +166,23 @@ abstract class AbstractContentType
         
         $content = $this->contentRepository->findOneBy(["id" => $id]);
         
-        if ($content && $content->getId() > 0)
+        if ($content && $content->getId() > 0 && $content->getType() == $this->contentTypeId)
         {
-            $this->content = $content;
-            $this->id = $this->content->getId();
+            $this->id            = $content->getId();
+            $this->parentId      = $content->getParent();
+            $this->name          = $content->getName();
+            $this->cssClass      = $content->getCssClass();
+            $this->data          = unserialize($content->getData());
+        }
+        else
+        {
+            $this->content       = Null;
+            
+            $this->id            = Null;
+            $this->parentId      = Null;
+            $this->name          = Null;
+            $this->cssClass      = Null;
+            $this->data          = Null;
         }
         
         return $this;
