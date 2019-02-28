@@ -28,8 +28,9 @@ class PagesController extends AbstractController {
         $pageBuilderService = OForge()->Services()->get("page.builder.service");
         
         $selectedPage       = isset($_POST["cms_page_jstree_selected_page"]) && $_POST["cms_page_jstree_selected_page"] > 0 ? $_POST["cms_page_jstree_selected_page"] : 0;
-        $selectedLanguage   = isset($_POST["cms_page_selected_language"]) && $_POST["cms_page_selected_language"] > 0 ? $_POST["cms_page_selected_language"] : 0;
-        $selectedElement    = isset($_POST["cms_page_selected_element"]) && !empty($_POST["cms_page_selected_element"]) ? $_POST["cms_page_selected_element"] : 0;
+        $selectedLanguage   = isset($_POST["cms_page_selected_language"])    && $_POST["cms_page_selected_language"] > 0    ? $_POST["cms_page_selected_language"]    : 0;
+        $selectedElement    = isset($_POST["cms_page_selected_element"])     && !empty($_POST["cms_page_selected_element"]) ? $_POST["cms_page_selected_element"]     : 0;
+        $selectedAction     = isset($_POST["cms_page_selected_action"])      && !empty($_POST["cms_page_selected_action"])  ? $_POST["cms_page_selected_action"]      : 'edit';
         
         $data = [
             "js"                => ["cms_page_controller_jstree_config" => $pageTreeService->generateJsTreeConfigJSON()],
@@ -41,16 +42,48 @@ class PagesController extends AbstractController {
 
         if ($selectedPage)
         {
-            $pageArray      = $pageBuilderService->getPageArray($selectedPage);
-            $pageContents   = $pageArray["paths"][$selectedLanguage]["pageContent"];
+            $pageArray        = $pageBuilderService->getPageArray($selectedPage);
+            $pageContents     = $pageArray["paths"][$selectedLanguage]["pageContent"];
             
             if ($selectedElement)
             {
-                $data["contents"]   = $pageBuilderService->getContentDataArrayById($pageContents, $selectedElement);
+                $data["contents"] = $pageBuilderService->getContentDataArrayById($pageContents, $selectedElement);
+                
+                $selectedElementId = end(explode("-", $selectedElement));
+                
+                $data["__selectedElement"] = $selectedElement;
+                $data["__selectedElementId"] = $selectedElementId;
+                $data["__selectedElementTypeId"] = $data["contents"]["typeId"];
+                $data["__selectedAction"] = $selectedAction;
+                
+                if (is_numeric($selectedElementId) && $selectedElementId > 0)
+                {
+                    $selectedElementTypeId = $data["contents"]["typeId"];
+                    
+                    if (!is_numeric($selectedElementTypeId))
+                    {
+                        $selectedElementTypeId = 0;
+                    }
+                    
+                    switch ($selectedAction)
+                    {
+                        case "submit":
+                            // persist new content element data to database and reload content data from database
+                            $data["contentElementData"] = $contentTypeService->setContentDataArray($selectedElementId, $selectedElementTypeId, [])->getContentDataArray($selectedElementId, $selectedElementTypeId);
+                            $data["contents"]           = $pageBuilderService->getContentDataArrayById($pageContents, $selectedElement);
+                            break;
+                        case "delete":
+                            break;
+                            // action equals 'edit' or is unknown
+                        default:
+                            $data["contentElementData"] = $contentTypeService->getContentDataArray($selectedElementId, $selectedElementTypeId);
+                            break;
+                    }
+                }
             }
             else
             {
-                $data["contents"]   = $pageBuilderService->getContentDataArray($pageContents);
+                $data["contents"] = $pageBuilderService->getContentDataArray($pageContents);
             }
             
             $data["pageBuilderData"] = $pageArray; // TODO: just used as development info

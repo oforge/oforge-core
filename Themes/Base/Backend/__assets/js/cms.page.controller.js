@@ -59,7 +59,7 @@ $('#cms-page-builder-submit').click(
 		if (lastElementIdPosition > 0) {
 			newSelectedElementId = $(this).attr('data-pb-se').substring(0, lastElementIdPosition);
 		}
-		$('#cms_page_selected_element').val(newSelectedElementId);
+		$('#cms_page_selected_action').val('submit');
 		// TODO: add submit new content info data
 		$('#cms_page_builder_form').submit();
 	}

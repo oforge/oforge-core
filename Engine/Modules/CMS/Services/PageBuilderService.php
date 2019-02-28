@@ -12,7 +12,6 @@ use Oforge\Engine\Modules\CMS\Models\Content\ContentTypeGroup;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
 use Oforge\Engine\Modules\CMS\Models\Content\Content;
 use Oforge\Engine\Modules\CMS\Models\ContentTypes\Row;
-use phpDocumentor\Reflection\Types\Null_;
 
 class PageBuilderService extends AbstractDatabaseAccess
 {
@@ -305,6 +304,7 @@ class PageBuilderService extends AbstractDatabaseAccess
                 $data["id"]     = $this->createCurrentElementId($_elementId, $pageContent["content"]["id"]);
                 $data["se"]     = $elementId;
                 $data["type"]   = "ContentTypes/Row/PageBuilder.twig";
+                $data["typeId"] = $pageContent["content"]["type"]["group"]["id"];
                 $data["css"]    = $pageContent["content"]["cssClass"];
                 $data["columns"]= $this->getContentDataArray($this->getRowColumnDataArray($pageContent["content"]["id"]), $elementId, $data["id"]);
                 break;
@@ -312,6 +312,7 @@ class PageBuilderService extends AbstractDatabaseAccess
                 $data["id"]     = $this->createCurrentElementId($_elementId, $pageContent["content"]["id"]);
                 $data["se"]     = $elementId;
                 $data["type"]   = "ContentTypes/RichText/PageBuilder.twig";
+                $data["typeId"] = $pageContent["content"]["type"]["group"]["id"];
                 $data["css"]    = $pageContent["content"]["cssClass"];
                 $data["text"]   = $pageContent["content"]["data"];
                 break;
@@ -319,6 +320,7 @@ class PageBuilderService extends AbstractDatabaseAccess
                 $data["id"]     = $this->createCurrentElementId($_elementId, $pageContent["content"]["id"]);
                 $data["se"]     = $elementId;
                 $data["type"]   = "ContentTypes/Image/PageBuilder.twig";
+                $data["typeId"] = $pageContent["content"]["type"]["group"]["id"];
                 $data["css"]    = $pageContent["content"]["cssClass"];
                 $data["url"]    = "/Tests/dummy_media/" . $pageContent["content"]["data"];
                 $data["alt"]    = $pageContent["content"]["name"];
