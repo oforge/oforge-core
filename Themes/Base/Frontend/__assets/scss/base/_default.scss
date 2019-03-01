@@ -14,6 +14,7 @@ html body .content {
     width: 100%;
     margin: 0 auto;
     padding: $size-large 0;
+    z-index: 1;
 
     &.content--relative {
         position: relative;
@@ -37,6 +38,7 @@ h1,h2,h3,h4,h5,h6 {
     margin: auto;
     overflow: hidden;
 }
+
 .container {
     flex: 1 0 auto;
     padding: $size-large 0;

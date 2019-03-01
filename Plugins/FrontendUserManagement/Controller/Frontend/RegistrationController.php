@@ -6,6 +6,7 @@ use FrontendUserManagement\Services\RegistrationService;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Auth\Services\PasswordService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
+use Oforge\Engine\Modules\Core\Services\RedirectService;
 use Oforge\Engine\Modules\Mailer\Services\MailService;
 use Oforge\Engine\Modules\Session\Services\SessionManagementService;
 use Slim\Http\Request;
@@ -14,6 +15,9 @@ use Slim\Router;
 
 class RegistrationController extends AbstractController {
     public function indexAction(Request $request, Response $response) {
+        /** @var RedirectService $redirectService */
+        $redirectService = Oforge()->Services()->get('redirect');
+        $redirectService->setRedirectUrlName('frontend_registration');
     }
 
     /**
@@ -58,7 +62,15 @@ class RegistrationController extends AbstractController {
 
         $registrationService    = Oforge()->Services()->get('frontend.user.management.registration');
         $router                 = Oforge()->App()->getContainer()->get('router');
-        $uri                    = $router->pathFor('frontend_registration');
+
+        /** @var RedirectService $redirectService */
+        $redirectService = Oforge()->Services()->get('redirect');
+        $redirectUrlName = 'frontend_registration';
+        if ($redirectService->hasRedirectUrlName()) {
+            $redirectUrlName = $redirectService->getRedirectUrlName();
+        }
+
+        $uri = $router->pathFor($redirectUrlName);
 
         /**
          * disallow direct processAction call. Only post action is allowed

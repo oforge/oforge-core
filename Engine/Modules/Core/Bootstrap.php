@@ -17,6 +17,7 @@ use Oforge\Engine\Modules\Core\Services\MiddlewareService;
 use Oforge\Engine\Modules\Core\Services\PingService;
 use Oforge\Engine\Modules\Core\Services\PluginAccessService;
 use Oforge\Engine\Modules\Core\Services\PluginStateService;
+use Oforge\Engine\Modules\Core\Services\RedirectService;
 
 class Bootstrap extends AbstractBootstrap {
 	public function __construct() {
@@ -38,6 +39,7 @@ class Bootstrap extends AbstractBootstrap {
 			'middleware'     => MiddlewareService::class,
 			'store.keyvalue' => KeyValueStoreService::class,
 			'ping'           => PingService::class,
+            'redirect'       => RedirectService::class
 		];
 
 		$this->order = 0;
