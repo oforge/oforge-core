@@ -165,7 +165,9 @@ INSERT INTO `oforge_i18n_snippet` (`id`, `scope`, `name`, `value`) VALUES
 (92,	'de',	'forgot_password_title',	'Passwort Vergessen?'),
 (93,	'de',	'reset_password',	'Passwort zurücksetzen'),
 (94,	'de',	'password_confirm',	'Passwort bestätigen'),
-(95,	'de',	'change_password',	'Passwort ändern');
+(95,	'de',	'change_password',	'Passwort ändern'),
+(96,	'de',	'cms_page_builder_edit_content_types_title',	'Content Type Editieren'),
+(97,	'en',	'cms_page_builder_edit_content_types_title',	'Edit Content Type');
 
 DROP TABLE IF EXISTS `oforge_cms_content_type_group`;
 CREATE TABLE `oforge_cms_content_type_group` (
@@ -230,9 +232,9 @@ INSERT INTO `oforge_cms_content` (`id`, `content_type_id`, `parent_id`, `content
 (7,	3,	0,	'world_image_de',	'image-class',		's:15:\"deutschland.png\";'),
 (8,	3,	0,	'world_image_en',	'image-class',		's:7:\"usa.png\";'),
 (9,	3,	0,	'multilanguage_image',	'image-class',		's:17:\"multilanguage.png\";'),
-(10,	2,	0,	'test_text1_de',	'row-text1-class',	's:107:\"Die größte Tragödie im Leben ist, dass wir zu schnell alt und zu spät weise werden. - Benjamin Franklin\";'),
+(10,	2,	0,	'test_text1_de',	'row-text1-class',	's:103:\"Die größte Tragödie im Leben ist, dass wir zu schnell alt und zu spät weise werden. - Benjamin Franklin\";'),
 (11,	2,	0,	'test_text1_en',	'row-text1-class',	's:87:\"Life biggest tragedy is that we get old too soon and wise too late. - Benjamin Franklin\";'),
-(12,	2,	0,	'test_text2_de',	'row-text2-class',	's:147:\"Die größte Entscheidung deines Lebens liegt darin, dass du dein Leben ändern kannst, indem du deine Geisteshaltung änderst. - Albert Schweitzer\";'),
+(12,	2,	0,	'test_text2_de',	'row-text2-class',	's:143:\"Die größte Entscheidung deines Lebens liegt darin, dass du dein Leben ändern kannst, indem du deine Geisteshaltung änderst. - Albert Schweitzer\";'),
 (13,	2,	0,	'test_text2_en',	'row-text2-class',	's:104:\"The biggest decision in life is about changing your life through changing your mind. - Albert Schweitzer\";'),
 (14,	3,	0,	'landscape_image',	'row-image-class',	's:13:\"landscape.png\";'),
 (15,	3,	0,	'person_image',		'row-image-class',	's:10:\"person.png\";'),
