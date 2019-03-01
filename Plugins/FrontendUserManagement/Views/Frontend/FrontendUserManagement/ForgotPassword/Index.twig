@@ -2,32 +2,12 @@
 {% block content %}
     <div class="content">
         {% block forgot_password %}
-            <div class="forgot-password">
-                {% block forgot_password_title %}
-                    <h2 class="forgot-password__title">
-                        {{ i18n('forgot_password_title') }}
-                    </h2>
-                {% endblock forgot_password_title %}
-                <form class="form" action="{{ url('frontend_forgot_password_process') }}" method="post">
-                    <div class="form-controls">
-                        <div class="form__control">
-                            <label for="forgot-password__email"
-                                   class="form__label">{{ i18n('email') }}</label>
-                            <input id="forgot-password__email"
-                                   name="forgot-password__email"
-                                   type="email"
-                                   class="form__input form__input"
-                                   required>
-                        </div>
-                        <div class="form__control">
-                            <input type="hidden" name="token" value="{{ token() }}">
-                            <input type="submit"
-                                   value="{{ i18n('reset_password') }}"
-                                   class="form__input button button--primary">
-                        </div>
-                    </div>
-                </form>
+            <div class="panel panel--forgot-password flex flex--center flex--justify">
+                <h2 class="title">{{ i18n('welcome') }}</h2>
+                <div class="panel__content flex flex--wrap">
+                    {% include 'Frontend/Components/Forms/ForgotPasswordForm.twig' %}
+                </div>
             </div>
-        {% endblock forgot_password %}
+    {% endblock forgot_password %}
     </div>
 {% endblock content %}
