@@ -1,4 +1,4 @@
-<div class="of-row {{ data.css }}">
+<div class="of-row {{ data.css }}" data-pb-id="{{ data.id }}" data-pb-se="{{ data.se }}">
     {% for column in data.columns %}
 		<div>
             {% include column.type with {'data': column} only %}

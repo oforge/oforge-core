@@ -20,21 +20,22 @@ class Image extends AbstractContentType
     /**
      * Return data of content type
      *
-     * @return mixed
+     * @return string
      */
     public function getData()
     {
-        return Null;
+        return $this->data;
     }
     
     /**
      * Set data of content type
-     * @param mixed $data
+     * @param string $imagePath
      *
      * @return ContentType $this
      */
     public function setData($data)
     {
+        $this->data = $data;
         return $this;
     }
 }
