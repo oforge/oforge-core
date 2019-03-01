@@ -2,11 +2,28 @@
     background: $color-light;
     padding: $size-large * 3;
 
+    &__content {
+        flex-direction: column;
+    }
+
     &__column {
         width: 100%;
         flex: 1 1 0;
 
         &.panel__column--border {
+            margin-top: $size-large * 2;
+        }
+    }
+}
+
+@media screen and (min-width: $screen-large) {
+    .panel {
+        &__content {
+            flex-direction: row;
+        }
+
+        &__column.panel__column--border {
+            margin-top: 0;
             margin-left: $size-large * 3;
             padding-left: $size-large * 3;
             border-left: 1px solid $color-primary;

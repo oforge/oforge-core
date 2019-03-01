@@ -10,6 +10,7 @@ namespace FrontendUserManagement\Controller\Frontend;
 
 use FrontendUserManagement\Services\FrontendUserLoginService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
+use Oforge\Engine\Modules\Core\Services\RedirectService;
 use Oforge\Engine\Modules\Session\Services\SessionManagementService;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -17,6 +18,9 @@ use Slim\Router;
 
 class LoginController extends AbstractController {
     public function indexAction(Request $request, Response $response) {
+        /** @var RedirectService $redirectService */
+        $redirectService = Oforge()->Services()->get('redirect');
+        $redirectService->setRedirectUrlName('frontend_login');
     }
 
     /**
@@ -27,6 +31,7 @@ class LoginController extends AbstractController {
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
     public function processAction(Request $request, Response $response) {
+
         if (empty($_SESSION)) {
             // TODO: do something not so stupid like this.
             print_r('No session :/');
@@ -40,7 +45,15 @@ class LoginController extends AbstractController {
          * @var $router Router
          */
         $router = Oforge()->App()->getContainer()->get('router');
-        $uri = $router->pathFor('frontend_login');
+
+        /** @var RedirectService $redirectService */
+        $redirectService = Oforge()->Services()->get('redirect');
+        $redirectUrlName = 'frontend_login';
+        if ($redirectService->hasRedirectUrlName()) {
+            $redirectUrlName = $redirectService->getRedirectUrlName();
+        }
+
+        $uri = $router->pathFor($redirectUrlName);
     
         /**
          * disallow direct processAction call. Only post action is allowed

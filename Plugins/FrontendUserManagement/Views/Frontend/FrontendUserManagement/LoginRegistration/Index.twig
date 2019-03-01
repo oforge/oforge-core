@@ -4,7 +4,7 @@
         {% block login_registration %}
             <div class="panel panel--login-registration">
                 <h2 class="title">{{ i18n('welcome') }}</h2>
-                <div class="panel__content flex flex--row">
+                <div class="panel__content flex flex--wrap">
                     <div class="panel__column">
                         <h3 class="sub-title">{{ i18n('I want to...') }}</h3>
                         <div class="buttons flex flex--row flex--center flex--between">
@@ -23,9 +23,7 @@
                         </div>
 
                         <div class="form form--registration" data-tab-content="registration">
-                            <form action="{{ url('frontend_login_process') }}">
-                                {% include 'Frontend/Components/Forms/RegistrationForm.twig' %}
-                            </form>
+                            {% include 'Frontend/Components/Forms/RegistrationForm.twig' %}
                         </div>
                     </div>
                     <div class="panel__column panel__column--border">
