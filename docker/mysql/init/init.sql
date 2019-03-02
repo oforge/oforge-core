@@ -189,6 +189,7 @@ CREATE TABLE `oforge_cms_content_type` (
                                      `id` int(11) NOT NULL AUTO_INCREMENT,
                                      `content_type_group_id` int(11) NOT NULL,
                                      `content_type_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+                                     `content_type_path` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
                                      `content_type_icon` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
                                      `description` varchar(255) COLLATE utf8mb4_unicode_ci,
                                      `class_path` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -201,10 +202,10 @@ CREATE TABLE `oforge_cms_content_type` (
 				     ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `oforge_cms_content_type` (`id`, `content_type_group_id`, `content_type_name`, `content_type_icon`, `description`, `class_path`) VALUES
-(1,	1,	'Row',		'/Themes/Base/ContentTypes/__assets/img/row.png',	'Row',		'Oforge\\Engine\\Modules\\CMS\\ContentTypes\\Row'),
-(2,	2,	'RichText',	'/Themes/Base/ContentTypes/__assets/img/richtext.png',	'RichText',	'Oforge\\Engine\\Modules\\CMS\\ContentTypes\\RichText'),
-(3,	3,	'Image',	'/Themes/Base/ContentTypes/__assets/img/image.png',	'Image',	'Oforge\\Engine\\Modules\\CMS\\ContentTypes\\Image');
+INSERT INTO `oforge_cms_content_type` (`id`, `content_type_group_id`, `content_type_name`, `content_type_path`, `content_type_icon`, `description`, `class_path`) VALUES
+(1,	1,	'row',		'Row',		'/Themes/Base/ContentTypes/__assets/img/row.png',	'Row',		'Oforge\\Engine\\Modules\\CMS\\ContentTypes\\Row'),
+(2,	2,	'richtext',	'RichText',	'/Themes/Base/ContentTypes/__assets/img/richtext.png',	'RichText',	'Oforge\\Engine\\Modules\\CMS\\ContentTypes\\RichText'),
+(3,	3,	'image',	'Image',	'/Themes/Base/ContentTypes/__assets/img/image.png',	'Image',	'Oforge\\Engine\\Modules\\CMS\\ContentTypes\\Image');
 
 DROP TABLE IF EXISTS `oforge_cms_content`;
 CREATE TABLE `oforge_cms_content` (

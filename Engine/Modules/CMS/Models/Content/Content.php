@@ -27,13 +27,6 @@ class Content extends AbstractModel
     private $id;
     
     /**
-     * @var PageContent
-     * @ORM\OneToMany(targetEntity="Oforge\Engine\Modules\CMS\Models\Page\PageContent", mappedBy="content", fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="id", referencedColumnName="page_content_id")
-     */
-    private $pageContents;
-    
-    /**
      * @var ContentType
      * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Content\ContentType", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="content_type_id", referencedColumnName="id")
@@ -64,34 +57,17 @@ class Content extends AbstractModel
      */
     private $data;
     
-    public function __construct() {
+    public function __construct()
+    {
         $this->pageContents = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
     /**
      * @return int
      */
-    public function getId(): ?int {
+    public function getId(): ?int
+    {
         return $this->id;
-    }
-    
-    /**
-     * @return PageContent[]
-     */
-    public function getPageContents(): ?PageContent
-    {
-        return $this->pageContents;
-    }
-    
-    /**
-     * @param PageContent[] $pageContents
-     *
-     * @return Content
-     */
-    public function setPageContents(?array $pageContents): Content
-    {
-        $this->pageContents = $pageContents;
-        return $this;
     }
     
     /**

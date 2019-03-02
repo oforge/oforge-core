@@ -1,7 +1,7 @@
 <div class="of-row {{ data.css }}" data-pb-id="{{ data.id }}" data-pb-se="{{ data.se }}">
-    {% for column in data.columns %}
+    {% for child in data.childs %}
 		<div>
-            {% include column.type with {'data': column} only %}
+            {% include child.type with {'data': child} only %}
 		</div>
     {% endfor %}
 </div>

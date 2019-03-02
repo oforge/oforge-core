@@ -41,6 +41,12 @@ class ContentType extends AbstractModel
     
     /**
      * @var string
+     * @ORM\Column(name="content_type_path", type="string", nullable=false, unique=true)
+     */
+    private $path;
+    
+    /**
+     * @var string
      * @ORM\Column(name="content_type_icon", type="string", nullable=true)
      */
     private $icon;
@@ -94,12 +100,31 @@ class ContentType extends AbstractModel
     
     /**
      * @param string $name
-     * 
+     *
      * @return ContentType
      */
     public function setName(string $name): ContentType
     {
         $this->name = $name;
+        return $this;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getPath(): string
+    {
+        return $this->path;
+    }
+    
+    /**
+     * @param string $path
+     *
+     * @return ContentType
+     */
+    public function setPath(string $path): ContentType
+    {
+        $this->path = $path;
         return $this;
     }
     
