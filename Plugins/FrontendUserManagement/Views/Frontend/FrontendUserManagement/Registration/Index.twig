@@ -3,8 +3,9 @@
 {% block content %}
     <div class="content">
         {% block registration %}
-            <div class="registration">
-                {% include 'Frontend/Components/Forms/RegistrationForm.twig' %}
+            <div class="panel panel--registration flex flex--center flex--justify">
+                <h2 class="title">{{ i18n('welcome') }}</h2>
+                    {% include 'Frontend/Components/Forms/RegistrationForm.twig' %}
             </div>
         {% endblock registration %}
     </div>

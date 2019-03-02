@@ -4,35 +4,7 @@
     <div class="content">
         {% block forgot_password_reset %}
             <div class="forgot-password">
-                <form action="{{ url('frontend_forgot_password_change') }}" method="post">
-                    <div class="form-controls">
-                        <div class="form__control">
-                            <label for="password_change"
-                                   class="form__label">{{ i18n('password') }}</label>
-                            <input id="password_change"
-                                   name="password_change"
-                                   type="password"
-                                   class="form__input"
-                                   required>
-                        </div>
-                        <div class="form__control">
-                            <label for="password_change_confirm"
-                                   class="form__label">{{ i18n('password_confirm') }}</label>
-                            <input id="password_change_confirm"
-                                   name="password_change_confirm"
-                                   type="password"
-                                   class="form__input"
-                                   required>
-                        </div>
-                        <div class="form__control">
-                            <input type="hidden" name="token" value="{{ token() }}">
-                            <input type="hidden" name="guid" value="{{ guid }}">
-                            <input type="submit"
-                                   value="{{ i18n('change_password') }}"
-                                   class="form__input button button--primary">
-                        </div>
-                    </div>
-                </form>
+                {% import 'Frontend/Components/ForgotPasswordResetForm.twig' %}
             </div>
         {% endblock forgot_password_reset %}
     </div>
