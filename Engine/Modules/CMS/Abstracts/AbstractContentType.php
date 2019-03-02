@@ -8,25 +8,41 @@ use Oforge\Engine\Modules\CMS\Models\Content\Content;
 
 abstract class AbstractContentType extends AbstractDatabaseAccess
 {
-    protected $entityManager = Null;
+    protected $entityManager    = Null;
     
-    private $content         = Null;
+    private $contentTypeEntity  = Null;
     
-    private $id              = Null;
-    private $contentTypeId   = Null;
-    private $parentId        = Null;
-    private $name            = Null;
-    private $cssClass        = Null;
-    private $data            = Null;
+    private $contentEntity      = Null;
+    
+    private $id                 = Null;
+    private $groupId            = Null;
+    private $name               = Null;
+    private $path               = Null;
+    private $icon               = Null;
+    private $description        = Null;
+    private $classPath          = Null;
+    
+    private $contentId          = Null;
+    private $contentParentId    = Null;
+    private $contentName        = Null;
+    private $contentCssClass    = Null;
+    private $contentData        = Null;
     
     public function __construct()
     {
         parent::__construct(['contentType' => ContentType::class, 'content' => Content::class]);
         
-        $contentTypeEntity   = $this->repository('contentType')->findOneBy(["classPath" => get_class($this)]);
-        $this->contentTypeId = $contentTypeEntity->getId();
-        
         $this->entityManager = Oforge()->DB()->getManager();
+        
+        $this->contentTypeEntity = $this->repository('contentType')->findOneBy(["classPath" => get_class($this)]);
+        
+        $this->id          = $this->contentTypeEntity->getId();
+        $this->groupId     = $this->contentTypeEntity->getGroup()->getId();
+        $this->name        = $this->contentTypeEntity->getName();
+        $this->path        = $this->contentTypeEntity->getPath();
+        $this->icon        = $this->contentTypeEntity->getIcon();
+        $this->description = $this->contentTypeEntity->getDescription();
+        $this->class_path  = $this->contentTypeEntity->getClassPath();
     }
     
     /**
@@ -37,41 +53,57 @@ abstract class AbstractContentType extends AbstractDatabaseAccess
     abstract public function isContainer(): bool;
     
     /**
-     * Return data of content type
+     * Return edit data for page builder of content type
      *
      * @return mixed
      */
-    abstract public function getData();
+    abstract public function getEditData();
     
     /**
-     * Set data of content type
+     * Set edit data for page builder of content type
      * @param mixed $data
      *
      * @return ContentType $this
      */
-    abstract public function setData($data);
+    abstract public function setEditData($data);
     
     /**
-     * Return parent id of content type
+     * Return data for page rendering of content type
+     *
+     * @return mixed
+     */
+    abstract public function getRenderData();
+    
+    /**
+     * Return child data of content type
+     *
+     * @return array|false should return false if no child content data is available
+     * 
+     * If child data should be returned create an array of the following format:
+     * $childContent["id"]      : integer        : fill with child content id
+     * $childContent["content"] : content entity : fill with child content entity
+     * $childContent["order"]   : integer        : fill with child content order index
+     */
+    abstract public function getChildData();
+    
+    /**
+     * Return id of content type
      *
      * @return int
      */
-    public function getParentId()
+    public function getId()
     {
-        return $this->parentId;
+        return $this->id;
     }
     
     /**
-     * Set parent id content type
-     * @param int $parentId
+     * Return id of content type group
      *
-     * @return ContentType $this
+     * @return int
      */
-    public function setParentId(int $parentId)
+    public function getGroupId()
     {
-        $this->parentId = $parentId;
-        
-        return $this;
+        return $this->groupId;
     }
     
     /**
@@ -85,37 +117,143 @@ abstract class AbstractContentType extends AbstractDatabaseAccess
     }
     
     /**
-     * Set name content type
-     * @param string $name
+     * Return path of content type
+     *
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
+    
+    /**
+     * Return icon of content type
+     *
+     * @return string
+     */
+    public function getIcon()
+    {
+        return $this->icon;
+    }
+    
+    /**
+     * Return description of content type
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+    
+    /**
+     * Return class path of content type
+     *
+     * @return string
+     */
+    public function getClassPath()
+    {
+        return $this->classPath;
+    }
+    
+    /**
+     * Return id of content
+     *
+     * @return int
+     */
+    public function getContentId()
+    {
+        return $this->contentId;
+    }
+    
+    /**
+     * Return parent id of content
+     *
+     * @return int
+     */
+    public function getContentParentId()
+    {
+        return $this->contentParentId;
+    }
+    
+    /**
+     * Set parent id of content
+     * @param int $contentParentId
      *
      * @return ContentType $this
      */
-    public function setName(string $name)
+    public function setContentParentId(int $contentParentId)
     {
-        $this->name = $name;
+        $this->contentParentId = $contentParentId;
         
         return $this;
     }
     
     /**
-     * Return css class of content type
+     * Return name of content
      *
      * @return string
      */
-    public function getCssClass()
+    public function getContentName()
     {
-        return $this->cssClass;
+        return $this->contentName;
     }
     
     /**
-     * Set css class content type
-     * @param string $cssClass
+     * Set name of content
+     * @param string $contentName
      *
      * @return ContentType $this
      */
-    public function setCssClass(string $cssClass)
+    public function setContentName(string $contentName)
     {
-        $this->cssClass = $cssClass;
+        $this->contentName = $contentName;
+        
+        return $this;
+    }
+    
+    /**
+     * Return css class of content
+     *
+     * @return string
+     */
+    public function getContentCssClass()
+    {
+        return $this->contentCssClass;
+    }
+    
+    /**
+     * Set css class of content
+     * @param string $contentCssClass
+     *
+     * @return ContentType $this
+     */
+    public function setContentCssClass(string $contentCssClass)
+    {
+        $this->contentCssClass = $contentCssClass;
+        
+        return $this;
+    }
+    
+    /**
+     * Return data of content
+     *
+     * @return mixed
+     */
+    public function getContentData()
+    {
+        return $this->contentData;
+    }
+    
+    /**
+     * Set data of content
+     * @param string $contentCssClass
+     *
+     * @return ContentType $this
+     */
+    public function setContentData(string $contentData)
+    {
+        $this->contentData = $contentData;
         
         return $this;
     }
@@ -126,35 +264,36 @@ abstract class AbstractContentType extends AbstractDatabaseAccess
      * @return ContentType $this
      */
     public function save() {
-        if (!$this->id || !$this->content)
+        if (!$this->contentId || !$this->contentEntity)
         {
-            $this->content = new Content;
+            $this->contentEntity = new Content;
         }
         else
         {
-            $this->content->setId($this->id);
+            $this->contentEntity->setId($this->contentId);
         }
         
-        $this->content->setType($this->contentTypeId);
-        $this->content->setParent($this->parentId);
-        $this->content->setName($this->name);
-        $this->content->setCssClass($this->cssClass);
-        $this->content->setData(serialize($this->data));
+        $this->contentEntity->setType($this->id);
+        $this->contentEntity->setParent($this->contentParentId);
+        $this->contentEntity->setName($this->contentName);
+        $this->contentEntity->setCssClass($this->contentCssClass);
+        $this->contentEntity->setData(serialize($this->contentData));
         
-        $this->entityManager->persist($this->content);
+        $this->entityManager->persist($this->contentEntity);
         $this->entityManager->flush();
         
-        if (!$this->id)
+        if (!$this->contentId)
         {
-            $this->id = $this->entityManager->getId();
-            $this->content->setId($this->id);
+            $this->contentId = $this->entityManager->getId();
+            $this->contentEntity->setId($this->contentId);
         }
         
         return $this;
     }
     
     /**
-     * Load data of content type from database to $content
+     * Load content entity from database to $content
+     * @param int $id content id
      *
      * @return ContentType $this
      */
@@ -164,25 +303,25 @@ abstract class AbstractContentType extends AbstractDatabaseAccess
             return $this;
         }
         
-        $content = $this->contentRepository->findOneBy(["id" => $id]);
+        $this->contentEntity = $this->repository('content')->findOneBy(["id" => $id]);
         
-        if ($content && $content->getId() > 0 && $content->getType() == $this->contentTypeId)
+        if ($this->contentEntity && $this->contentEntity->getId() > 0 && $this->contentEntity->getType() && $this->contentEntity->getType()->getId() === $this->id)
         {
-            $this->id            = $content->getId();
-            $this->parentId      = $content->getParent();
-            $this->name          = $content->getName();
-            $this->cssClass      = $content->getCssClass();
-            $this->data          = unserialize($content->getData());
+            $this->contentId        = $this->contentEntity->getId();
+            $this->contentParentId  = $this->contentEntity->getParent();
+            $this->contentName      = $this->contentEntity->getName();
+            $this->contentCssClass  = $this->contentEntity->getCssClass();
+            $this->contentData      = $this->contentEntity->getData();
         }
         else
         {
-            $this->content       = Null;
+            $this->contentEntity    = Null;
             
-            $this->id            = Null;
-            $this->parentId      = Null;
-            $this->name          = Null;
-            $this->cssClass      = Null;
-            $this->data          = Null;
+            $this->contentId        = Null;
+            $this->contentParentId  = Null;
+            $this->contentName      = Null;
+            $this->contentCssClass  = Null;
+            $this->contentData      = Null;
         }
         
         return $this;

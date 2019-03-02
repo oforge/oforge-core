@@ -104,8 +104,8 @@ class ContentTypeService extends AbstractDatabaseAccess
             
             switch ($contentTypeEntity->getName())
             {
-                case "Row":
-                    $rowEntities       = $this->repository('rowContent')->findBy(["row" => $data["id"]], ["order" => "ASC"]);
+                case "row":
+                    $rowEntities       = $this->repository('row')->findBy(["row" => $data["id"]], ["order" => "ASC"]);
                     
                     $rowColumns = [];
                     foreach ($rowEntities as $rowEntity)
@@ -118,10 +118,10 @@ class ContentTypeService extends AbstractDatabaseAccess
                     }
                     $data["columns"] = $rowColumns;
                     break;
-                case "RichText":
+                case "richtext":
                     $data["text"]  = $contentEntity->getData();
                     break;
-                case "Image":
+                case "image":
                     $data["image"] = $contentEntity->getData();
                     break;
                 default:
