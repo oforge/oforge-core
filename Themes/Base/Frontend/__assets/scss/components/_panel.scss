@@ -1,6 +1,7 @@
 .panel {
     background: $color-light;
     padding: $size-large * 3;
+    margin: 0 auto;
 
     &__content {
         flex-direction: column;
@@ -13,6 +14,12 @@
         &.panel__column--border {
             margin-top: $size-large * 2;
         }
+    }
+}
+
+@media screen and (min-width: $screen-medium) {
+    .panel--is-small {
+        max-width: 60%;
     }
 }
 
