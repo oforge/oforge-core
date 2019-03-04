@@ -1,0 +1,16 @@
+.tab {
+    background: $color-primary;
+    color: $text-light;
+
+    &.tab--active {
+        background: $color-secondary;
+    }
+
+    &__content {
+        display: none;
+
+        &.tab__content--visible {
+            display: block;
+        }
+    }
+}
