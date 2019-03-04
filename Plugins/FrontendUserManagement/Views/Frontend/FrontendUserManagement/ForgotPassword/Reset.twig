@@ -3,7 +3,10 @@
 {% block content %}
     <div class="content">
         {% block forgot_password_reset %}
-            <div class="forgot-password">
+            <div class="panel panel--forgot-password-reset flex flex--center flex--justify">
+                {% block forgot_password_reset_title %}
+                    <h2 class="title">{{ i18n('welcome') }}</h2>
+                {% endblock forgot_password_title %}
                 {% import 'Frontend/Components/ForgotPasswordResetForm.twig' %}
             </div>
         {% endblock forgot_password_reset %}
