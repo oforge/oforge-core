@@ -14,15 +14,15 @@ if (typeof Oforge !== 'undefined') {
 
                 tab.addEventListener('click', function (e) {
                     tabs.forEach(function (tabToDeactivate) {
-                        tabToDeactivate.classList.remove('search__tab--active');
+                        tabToDeactivate.classList.remove('tab--active');
                     });
 
                     tabContents.forEach(function (tabContentToDeactivate) {
-                        tabContentToDeactivate.classList.remove('search__content--visible');
+                        tabContentToDeactivate.classList.remove('tab__content--visible');
                     });
 
-                    tab.classList.add('search__tab--active');
-                    currentContent.classList.add('search__content--visible');
+                    tab.classList.add('tab--active');
+                    currentContent.classList.add('tab__content--visible');
                 });
             });
             console.info("Module " + self.name + " initialized");
