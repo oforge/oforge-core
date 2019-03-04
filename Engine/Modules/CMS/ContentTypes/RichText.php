@@ -30,7 +30,7 @@ class RichText extends AbstractContentType
         $data["parent"] = $this->getContentParentId();
         $data["name"]   = $this->getContentName();
         $data["css"]    = $this->getContentCssClass();
-        $data["text"]  = $contentEntity->getData();
+        $data["text"]   = $this->getContentData();
         
         return $data;
     }
