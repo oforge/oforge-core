@@ -21,7 +21,8 @@ class Row extends AbstractContentType
         if (isset($rowEntities)) {
             return $rowEntities;
         }
-        return null;
+        
+        return NULL;
     }
     
     /**
@@ -41,6 +42,30 @@ class Row extends AbstractContentType
      */
     public function getEditData()
     {
+        $rowEntities = $this->getRowEntities($this->getContentId());
+        
+        $rowColumns = [];
+        
+        if ($rowEntities)
+        {
+            foreach ($rowEntities as $rowEntity)
+            {
+                $rowContent = [];
+                $rowContent["id"] = $rowEntity->getContent()->getId();
+                $rowContent["typeId"] = $rowEntity->getContent()->getType()->getId();
+                
+                $rowColumns[] = $rowContent;
+            }
+        }
+        
+        $data = [];
+        $data["id"]      = $this->getContentId();
+        $data["type"]    = $this->getId();
+        $data["parent"]  = $this->getContentParentId();
+        $data["name"]    = $this->getContentName();
+        $data["css"]     = $this->getContentCssClass();
+        $data["columns"] = $rowColumns;
+        
         return $data;
     }
     
@@ -53,6 +78,7 @@ class Row extends AbstractContentType
     public function setEditData($data)
     {
         $this->setContentData($data);
+        
         return $this;
     }
     
@@ -88,10 +114,10 @@ class Row extends AbstractContentType
         $rowColumnContents = [];
         foreach($rowEntities as $rowEntity)
         {
-            $rowColumnContent           = [];
-            $rowColumnContent["id"]     = $rowEntity->getId();
+            $rowColumnContent            = [];
+            $rowColumnContent["id"]      = $rowEntity->getId();
             $rowColumnContent["content"] = $rowEntity->getContent();
-            $rowColumnContent["order"]  = $rowEntity->getOrder();
+            $rowColumnContent["order"]   = $rowEntity->getOrder();
             
             $rowColumnContents[] = $rowColumnContent;
         }
