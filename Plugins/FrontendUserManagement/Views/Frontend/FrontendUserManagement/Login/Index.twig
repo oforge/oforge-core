@@ -3,7 +3,9 @@
     <div class="content">
         {% block login %}
         <div class="panel panel--login flex flex--center flex--justify">
-            <h2 class="title">{{ i18n('welcome') }}</h2>
+            {% block login_title %}
+                <h2 class="title">{{ i18n('welcome') }}</h2>
+            {% endblock login_title %}
             {% include 'Frontend/Components/Forms/LoginForm.twig' %}
             <div class="form-controls pad-l-top">
                 <div class="form__control flex flex--row flex--center flex--between">

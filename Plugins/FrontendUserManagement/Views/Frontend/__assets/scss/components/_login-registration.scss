@@ -20,14 +20,13 @@
     max-width: 95%;
     margin: 0 auto;
     position: relative;
+}
 
-    .form {
-        display: none;
-
-        &.search__content--visible {
-            display: block;
-        }
-    }
+.panel--login,
+.panel--registration,
+.panel--forgot-password,
+.panel--forgot-password-reset {
+    max-width: 50%;
 }
 
 @media screen and (min-width: $screen-medium) {
