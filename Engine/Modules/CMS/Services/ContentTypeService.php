@@ -116,14 +116,37 @@ class ContentTypeService extends AbstractDatabaseAccess
      */
     public function setContentDataArray(int $id, int $typeId, array $data)
     {
-        // get content type of selected content element
+        $contentTypeEntity = $this->repository('contentType')->findOneBy(["id" => $typeId]);
+        $contentEntity     = $this->repository('content')->findOneBy(["id" => $id]);
         
-        // switch depending on selected content element
-        // create new instance of selected content element type
-        // get content element from db if available
-        // set new data in content element instance
-        // store data to db
+        if ($contentTypeEntity && $contentEntity)
+        {
+// set mock data for content edit functionality test
+switch ($contentTypeEntity->getName())
+{
+    case 'image':
+        $data['css']='saving-test-image-class';
+        $data['url']='usa.png';
+        break;
+    case 'richtext':
+        $data['css']='saving-test-richtext-class';
+        $data['text']='blah blah blah, blub?';
+        break;
+    case 'row':
+        break;
         
-        return $this;
+}
+            $contentTypeClassPath = $contentTypeEntity->getClassPath();
+            
+            $content = new $contentTypeClassPath;
+            
+            $content->load($id);
+            
+            $content->setEditData($data);
+            
+            $content->save();
+            
+            return $this;
+        }
     }
 }

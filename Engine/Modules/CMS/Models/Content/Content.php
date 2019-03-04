@@ -71,6 +71,17 @@ class Content extends AbstractModel
     }
     
     /**
+     * @param int $id
+     *
+     * @return Content
+     */
+    public function setId(int $id): Content
+    {
+        $this->id = $id;
+        return $this;
+    }
+    
+    /**
      * @return ContentType
      */
     public function getType(): ?ContentType
