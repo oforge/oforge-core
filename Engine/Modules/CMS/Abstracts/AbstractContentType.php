@@ -8,25 +8,25 @@ use Oforge\Engine\Modules\CMS\Models\Content\Content;
 
 abstract class AbstractContentType extends AbstractDatabaseAccess
 {
-    protected $entityManager    = Null;
+    protected $entityManager    = NULL;
     
-    private $contentTypeEntity  = Null;
+    private $contentTypeEntity  = NULL;
     
-    private $contentEntity      = Null;
+    private $contentEntity      = NULL;
     
-    private $id                 = Null;
-    private $groupId            = Null;
-    private $name               = Null;
-    private $path               = Null;
-    private $icon               = Null;
-    private $description        = Null;
-    private $classPath          = Null;
+    private $id                 = NULL;
+    private $groupId            = NULL;
+    private $name               = NULL;
+    private $path               = NULL;
+    private $icon               = NULL;
+    private $description        = NULL;
+    private $classPath          = NULL;
     
-    private $contentId          = Null;
-    private $contentParentId    = Null;
-    private $contentName        = Null;
-    private $contentCssClass    = Null;
-    private $contentData        = Null;
+    private $contentId          = NULL;
+    private $contentParentId    = NULL;
+    private $contentName        = NULL;
+    private $contentCssClass    = NULL;
+    private $contentData        = NULL;
     
     public function __construct()
     {
@@ -315,13 +315,13 @@ abstract class AbstractContentType extends AbstractDatabaseAccess
         }
         else
         {
-            $this->contentEntity    = Null;
+            $this->contentEntity    = NULL;
             
-            $this->contentId        = Null;
-            $this->contentParentId  = Null;
-            $this->contentName      = Null;
-            $this->contentCssClass  = Null;
-            $this->contentData      = Null;
+            $this->contentId        = NULL;
+            $this->contentParentId  = NULL;
+            $this->contentName      = NULL;
+            $this->contentCssClass  = NULL;
+            $this->contentData      = NULL;
         }
         
         return $this;

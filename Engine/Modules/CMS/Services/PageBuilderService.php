@@ -35,7 +35,7 @@ class PageBuilderService extends AbstractDatabaseAccess
         if (isset($pageContentEntities)) {
             return $pageContentEntities;
         }
-        return null;
+        return NULL;
     }
     
     /**
@@ -52,13 +52,13 @@ class PageBuilderService extends AbstractDatabaseAccess
         if (isset($pageEntity)) {
             return $pageEntity;
         }
-        return null;
+        return NULL;
     }
     
     /**
      * Returns the content type group found as an associative array
      *
-     * @param ContentTypeGroup|null $contentTypeGroupEntity
+     * @param ContentTypeGroup|NULL $contentTypeGroupEntity
      *
      * @return array|NULL Array filled with available content type group data
      */
@@ -202,7 +202,7 @@ class PageBuilderService extends AbstractDatabaseAccess
     
      /**
      * Returns all found page paths as an associative array
-     * @param PersistentCollection|PagePath[]|null $pathEntities
+     * @param PersistentCollection|PagePath[]|NULL $pathEntities
      *
      * @return array|NULL Array filled with available paths
      */
@@ -280,8 +280,8 @@ class PageBuilderService extends AbstractDatabaseAccess
         $content->load($pageContent["content"]["id"]);
         
         $data = [];
-        $data["id"]     = $this->createCurrentElementId($_elementId, $pageContent["content"]["id"]);
-        $data["se"]     = $elementId;
+        $data["id"] = $this->createCurrentElementId($_elementId, $pageContent["content"]["id"]);
+        $data["se"] = $elementId;
         
         $data = array_merge($data, $content->getRenderData());
         
@@ -352,7 +352,7 @@ class PageBuilderService extends AbstractDatabaseAccess
             }
             
             // if element was not found but is a container type recursivly call getContentDataArrayById
-            if ($pageContent["content"]["type"]["group"]["name"] === "container")
+            if ($pageContent["content"]["type"]["group"]["name"] == "container")
             {
                 $content = new $pageContent["content"]["type"]["classPath"];
                 
@@ -364,12 +364,12 @@ class PageBuilderService extends AbstractDatabaseAccess
                     
                     if (is_array($childDatas))
                     {
-                        return $this->getContentDataArray($this->getChildContentDataArray($childDatas), $elementId, $this->createCurrentElementId($_elementId, $pageContent["content"]["id"]));
+                        return $this->getContentDataArrayById($this->getChildContentDataArray($childDatas), $elementId, $this->createCurrentElementId($_elementId, $pageContent["content"]["id"]));
                     }
                 }
             }
         }
         
-        return NULL; // TODO: uncomment after removing $contentFinder debug code
+        return NULL;
    }
 }

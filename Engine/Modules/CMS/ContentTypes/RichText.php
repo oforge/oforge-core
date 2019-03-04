@@ -24,6 +24,14 @@ class RichText extends AbstractContentType
      */
     public function getEditData()
     {
+        $data = [];
+        $data["id"]     = $this->getContentId();
+        $data["type"]   = $this->getId();
+        $data["parent"] = $this->getContentParentId();
+        $data["name"]   = $this->getContentName();
+        $data["css"]    = $this->getContentCssClass();
+        $data["text"]  = $contentEntity->getData();
+        
         return $data;
     }
     
