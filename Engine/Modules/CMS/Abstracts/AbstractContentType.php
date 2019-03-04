@@ -264,28 +264,36 @@ abstract class AbstractContentType extends AbstractDatabaseAccess
      * @return ContentType $this
      */
     public function save() {
-        if (!$this->contentId || !$this->contentEntity)
+        if ($this->id)
         {
-            $this->contentEntity = new Content;
-        }
-        else
-        {
-            $this->contentEntity->setId($this->contentId);
-        }
-        
-        $this->contentEntity->setType($this->id);
-        $this->contentEntity->setParent($this->contentParentId);
-        $this->contentEntity->setName($this->contentName);
-        $this->contentEntity->setCssClass($this->contentCssClass);
-        $this->contentEntity->setData(serialize($this->contentData));
-        
-        $this->entityManager->persist($this->contentEntity);
-        $this->entityManager->flush();
-        
-        if (!$this->contentId)
-        {
-            $this->contentId = $this->entityManager->getId();
-            $this->contentEntity->setId($this->contentId);
+            $this->contentTypeEntity = $this->repository('contentType')->findOneBy(["id" => $this->id]);
+            
+            if ($this->contentTypeEntity)
+            {
+                if (!$this->contentId || !$this->contentEntity)
+                {
+                    $this->contentEntity = new Content;
+                }
+                else
+                {
+                    $this->contentEntity->setId($this->contentId);
+                }
+                
+                $this->contentEntity->setType($this->contentTypeEntity);
+                $this->contentEntity->setParent($this->contentParentId);
+                $this->contentEntity->setName($this->contentName);
+                $this->contentEntity->setCssClass($this->contentCssClass);
+                $this->contentEntity->setData($this->contentData);
+                
+                $this->entityManager->persist($this->contentEntity);
+                $this->entityManager->flush();
+                
+                if (!$this->contentId)
+                {
+                    $this->contentId = $this->entityManager->getId();
+                    $this->contentEntity->setId($this->contentId);
+                }
+            }
         }
         
         return $this;

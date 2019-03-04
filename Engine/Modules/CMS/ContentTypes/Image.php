@@ -43,7 +43,9 @@ class Image extends AbstractContentType
      */
     public function setEditData($data)
     {
-        $this->setContentData($data);
+        $this->setContentCssClass($data['css']);
+        $this->setContentData($data['url']);
+        
         return $this;
     }
     
