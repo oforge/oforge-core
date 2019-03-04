@@ -31,9 +31,12 @@
                             {% include 'Frontend/Components/Forms/RegistrationForm.twig' %}
                         </div>
                     </div>
+                    {% block login_registration__registration_benefits %}
                     <div class="panel__column panel__column--border">
                         <h3 class="sub-title">{{ i18n('Registration benefits:') }}</h3>
+                        {% include 'Frontend/FrontendUserManagement/Registration/Benefits.twig' %}
                     </div>
+                    {% endblock login_registration__registration_benefits %}
                 </div>
             </div>
         {% endblock login_registration %}

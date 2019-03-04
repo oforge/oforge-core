@@ -25,6 +25,10 @@ form {
 .form__label {
     cursor: pointer;
     color: $color-primary;
+
+    &.form__label--checkbox {
+        max-width: calc (100% - 4rem);
+    }
 }
 
 .form__input {
