@@ -29,6 +29,14 @@
     max-width: 50%;
 }
 
+.benefit {
+    margin-top: $size-large * 3;
+}
+.benefit__description {
+    margin-left: $size-large;
+    width: calc (100% - 4rem);
+}
+
 @media screen and (min-width: $screen-medium) {
     .panel--login-registration {
         max-width: 80%;
