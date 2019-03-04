@@ -16,6 +16,7 @@ $color-secondary-transparent-1: transparentize($color-secondary, .25); // sGrün
 $color-secondary-transparent-2: rgba(169, 185, 134, .75); // sGrün-2
 $color-light: rgba(255, 255, 255, 1);
 $color-secondary-transparent-3: transparentize($color-light, .3); //sWeiß-1
+
 $text-light: $color-light;
 $text-dark: $color-primary;
 

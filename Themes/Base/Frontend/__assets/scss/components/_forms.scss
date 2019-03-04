@@ -1,3 +1,11 @@
+form {
+    width: 100%;
+}
+
+.form-controls {
+    width: 100%;
+}
+
 .form-controls + .form-controls {
     margin-top: $size-large;
 }
@@ -17,6 +25,10 @@
 .form__label {
     cursor: pointer;
     color: $color-primary;
+
+    &.form__label--checkbox {
+        max-width: calc(100% - 4rem);
+    }
 }
 
 .form__input {
@@ -43,6 +55,11 @@
             background-repeat: no-repeat;
             background-size: contain;
         }
+    }
+
+    &.form__input--submit {
+        background: $color-primary;
+        color: $text-light;
     }
 
     &.button {

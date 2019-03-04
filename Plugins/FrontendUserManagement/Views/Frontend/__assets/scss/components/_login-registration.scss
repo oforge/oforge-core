@@ -20,14 +20,21 @@
     max-width: 95%;
     margin: 0 auto;
     position: relative;
+}
 
-    .form {
-        display: none;
+.panel--login,
+.panel--registration,
+.panel--forgot-password,
+.panel--forgot-password-reset {
+    max-width: 50%;
+}
 
-        &.search__content--visible {
-            display: block;
-        }
-    }
+.benefit {
+    margin-top: $size-large * 3;
+}
+.benefit__description {
+    margin-left: $size-large;
+    width: calc(100% - 4rem);
 }
 
 @media screen and (min-width: $screen-medium) {
