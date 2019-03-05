@@ -2,12 +2,10 @@
 {% block content %}
     <div class="content">
         {% block profile %}
-            <div class="profile">
+            <div class="panel panel--profile">
                 <h1>{{ msg }}</h1>
                 <a class="button button--primary" href="{{ url('frontend_logout') }}">
-                <span>
                     Logout
-                </span>
                 </a>
             </div>
         {% endblock profile %}

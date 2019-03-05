@@ -59,6 +59,8 @@ class Statics {
         '$font-size-2'                      => '2.4rem',
         '$font-size-3'                      => '2rem',
         '$font-size-4'                      => '1.8rem',
+        '$font-size-5'                      => '1.6rem',
+        '$font-size-6'                      => '1.2rem',
         '$font-biggest'                     => '$font-size-1 $font-family',
         '$font-bigger'                      => '$font-size-2 $font-family',
         '$font-big'                         => '$font-size-3 $font-family',
