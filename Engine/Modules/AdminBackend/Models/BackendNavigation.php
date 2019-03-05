@@ -61,6 +61,12 @@ class BackendNavigation extends AbstractModel
     private $visible = true;
 
     /**
+     * @var string
+     * @ORM\Column(name="position", type="string")
+     */
+    private $position;
+
+    /**
      * @return int
      */
     public function getId(): int
@@ -78,10 +84,13 @@ class BackendNavigation extends AbstractModel
 
     /**
      * @param string $path
+     *
+     * @return BackendNavigation
      */
     public function setPath(string $path)
     {
         $this->path = $path;
+        return $this;
     }
 
     /**
@@ -94,10 +103,13 @@ class BackendNavigation extends AbstractModel
 
     /**
      * @param string $icon
+     *
+     * @return BackendNavigation
      */
     public function setIcon(string $icon)
     {
         $this->icon = $icon;
+        return $this;
     }
 
     /**
@@ -110,10 +122,13 @@ class BackendNavigation extends AbstractModel
 
     /**
      * @param int $order
+     *
+     * @return BackendNavigation
      */
     public function setOrder(int $order)
     {
         $this->order = $order;
+        return $this;
     }
 
     /**
@@ -126,10 +141,13 @@ class BackendNavigation extends AbstractModel
 
     /**
      * @param string $name
+     *
+     * @return BackendNavigation
      */
     public function setName(string $name)
     {
         $this->name = $name;
+        return $this;
     }
 
     /**
@@ -142,10 +160,13 @@ class BackendNavigation extends AbstractModel
 
     /**
      * @param string $title
+     *
+     * @return BackendNavigation
      */
     public function setTitle(string $title)
     {
         $this->title = $title;
+        return $this;
     }
 
     /**
@@ -158,10 +179,13 @@ class BackendNavigation extends AbstractModel
 
     /**
      * @param string $parent
+     *
+     * @return BackendNavigation
      */
     public function setParent(string $parent)
     {
         $this->parent = $parent;
+        return $this;
     }
 
     /**
@@ -174,10 +198,29 @@ class BackendNavigation extends AbstractModel
 
     /**
      * @param bool $visible
+     *
+     * @return BackendNavigation
      */
     public function setVisible(bool $visible)
     {
         $this->visible = $visible;
+        return $this;
     }
 
+    /**
+     * @return string
+     */
+    public function getPosition() : string {
+        return $this->position;
+    }
+
+    /**
+     * @param string $position
+     *
+     * @return BackendNavigation
+     */
+    public function setPosition(string $position) : BackendNavigation {
+        $this->position = $position;
+        return $this;
+    }
 }

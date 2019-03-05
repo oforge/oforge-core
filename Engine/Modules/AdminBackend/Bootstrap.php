@@ -102,7 +102,8 @@ class Bootstrap extends AbstractBootstrap
 
         $sidebarNavigation->put([
             "name" => "admin",
-            "order" => 99
+            "order" => 99,
+            "position" => "sidebar",
         ]);
 
         /*

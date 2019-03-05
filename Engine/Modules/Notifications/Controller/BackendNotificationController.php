@@ -8,6 +8,7 @@ use Oforge\Engine\Modules\AdminBackend\Abstracts\SecureBackendController;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Notifications\Models\BackendNotification;
+use Oforge\Engine\Modules\Notifications\Services\BackendNotificationService;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -33,7 +34,7 @@ class BackendNotificationController extends SecureBackendController {
                 $backendNotificationService->markAsSeen($notification->getId());
                 $response = $response->withStatus(302);
                 $link     = $notification->getLink();
-                if ($link == '') {
+                if ($link === '' || $link === null ) {
                     $response = $response->withRedirect('/backend/dashboard');
                 } else {
                     $response = $response->withRedirect($link);
