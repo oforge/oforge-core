@@ -70,7 +70,7 @@ class PagesController extends AbstractController {
                     {
                         case "submit":
                             // persist new content element data to database and reload content data from database
-                            $data["contentElementData"] = $contentTypeService->setContentDataArray($selectedElementId, $selectedElementTypeId, [])->getContentDataArray($selectedElementId, $selectedElementTypeId);
+                            $data["contentElementData"] = $contentTypeService->setContentDataArray($selectedElementId, $selectedElementTypeId, $_POST)->getContentDataArray($selectedElementId, $selectedElementTypeId);
                             $data["contents"]           = $pageBuilderService->getContentDataArrayById($pageContents, $selectedElement);
                             break;
                         case "delete":

@@ -1,8 +1,12 @@
 {% block cms_page_builder %}
 	{% if post["cms_page_jstree_selected_page"] %}
-	<div class="col-xs-8 cms-page-builder-container" id="cms_page_builder_container">
+	<div class="{% if not contents.type %}col-xs-8{% else %}col-xs-10{% endif %} cms-page-builder-container" id="cms_page_builder_container">
 		<div>
+            {% if not contents.type %}
 			<div class="cms-page-builder-headline">{{ i18n('cms_page_builder_content_title') }}</div>
+            {% else %}
+			<div class="cms-page-builder-headline">{{ i18n('cms_page_builder_edit_content_types_title') }}</div>
+            {% endif %}
 	    	<div class="cms-page-builder-content" id="cms_page_builder_content">
                 {% if contents.type == false %}
     			<div class="url-language-row">
@@ -31,16 +35,6 @@
     			<div>
     				<hr>
     			</div>
-                {% else %}
-    			<div>
-    				<hr>
-    			</div>
-    			<div>
-    				<div class="cms-page-builder-preview">{{ i18n('cms_page_builder_edit_content_types_title') }}</div>
-    			</div>
-    			<div>
-    				<hr>
-    			</div>
                 {% endif %}
 				<div>
                     {% if contents.type %}
@@ -53,6 +47,7 @@
                         {% endfor %}
                     {% endif %}
 				</div>
+                {% include 'Backend/Pages/PageBuilderForm.twig' %}
                 {% if contents.type %}
     			<div class="cms-cancel-submit-row">
     				<div><button class="cms-cancel-button" id="cms-page-builder-cancel" data-pb-se="{{ post.cms_page_selected_element }}">{{ i18n('cancel') }}</button></div>
@@ -71,5 +66,6 @@
 			</div>
 		</div>
 	</div>
+    {% include 'Backend/Pages/PageBuilderForm.twig' %}
 	{% endif %}
 {% endblock cms_page_builder %}
