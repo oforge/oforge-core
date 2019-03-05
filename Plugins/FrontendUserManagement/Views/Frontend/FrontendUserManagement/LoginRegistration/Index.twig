@@ -4,13 +4,13 @@
         {% block login_registration %}
             <div class="panel panel--login-registration">
                 {% block login_registration_title %}
-                    <h2 class="title">{{ i18n('welcome') }}</h2>
+                    <h2 class="panel__title">{{ i18n('welcome') }}</h2>
                 {% endblock login_registration_title %}
 
                 <div class="panel__content flex flex--wrap">
                     <div class="panel__column">
                         {% block login_registration_subtitle %}
-                            <h3 class="sub-title">{{ i18n('I want to...') }}</h3>
+                            <h3 class="panel__sub-title">{{ i18n('I want to...') }}</h3>
                         {% endblock login_registration_subtitle %}
                         <div class="buttons flex flex--row flex--center flex--between">
                             <a class="button tab tab--active" data-tab="login">
@@ -22,7 +22,7 @@
                             </a>
                         </div>
                         <div class="separator"></div>
-                        <h3 class="sub-title">{{ i18n('Insert your login data:') }}</h3>
+                        <h3 class="form__title">{{ i18n('Insert your login data:') }}</h3>
                         <div class="tab__content tab__content--visible" data-tab-content="login">
                             {% include 'Frontend/Components/Forms/LoginForm.twig' %}
                         </div>
@@ -33,7 +33,7 @@
                     </div>
                     {% block login_registration__registration_benefits %}
                     <div class="panel__column panel__column--border">
-                        <h3 class="sub-title">{{ i18n('Registration benefits:') }}</h3>
+                        <h3 class="panel__sub-title">{{ i18n('Registration benefits:') }}</h3>
                         {% include 'Frontend/FrontendUserManagement/Registration/Benefits.twig' %}
                     </div>
                     {% endblock login_registration__registration_benefits %}
