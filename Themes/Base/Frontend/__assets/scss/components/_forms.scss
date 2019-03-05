@@ -1,5 +1,11 @@
-form {
+.form {
     width: 100%;
+
+    &__title {
+        margin-bottom: $size-large * 2;
+        font-weight: normal;
+        color: $text-dark;
+    }
 }
 
 .form-controls {
