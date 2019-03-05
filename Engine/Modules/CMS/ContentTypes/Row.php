@@ -88,6 +88,7 @@ class Row extends AbstractContentType
     public function getRenderData()
     {
         $data = [];
+        $data["form"]   = "ContentTypes/" . $this->getPath() . "/PageBuilderForm.twig";
         $data["type"]   = "ContentTypes/" . $this->getPath() . "/PageBuilder.twig";
         $data["typeId"] = $this->getId();
         $data["css"]    = $this->getContentCssClass();

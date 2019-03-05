@@ -57,10 +57,11 @@ class Image extends AbstractContentType
     public function getRenderData()
     {
         $data = [];
+        $data["form"]   = "ContentTypes/" . $this->getPath() . "/PageBuilderForm.twig";
         $data["type"]   = "ContentTypes/" . $this->getPath() . "/PageBuilder.twig";
         $data["typeId"] = $this->getId();
         $data["css"]    = $this->getContentCssClass();
-        $data["url"]    = "/Tests/dummy_media/" . $this->getContentData();
+        $data["url"]    = $this->getContentData();
         $data["alt"]    = $this->getContentData();
         
         return $data;

@@ -121,21 +121,6 @@ class ContentTypeService extends AbstractDatabaseAccess
         
         if ($contentTypeEntity && $contentEntity)
         {
-// set mock data for content edit functionality test
-switch ($contentTypeEntity->getName())
-{
-    case 'image':
-        $data['css']='saving-test-image-class';
-        $data['url']='usa.png';
-        break;
-    case 'richtext':
-        $data['css']='saving-test-richtext-class';
-        $data['text']='blah blah blah, blub?';
-        break;
-    case 'row':
-        break;
-        
-}
             $contentTypeClassPath = $contentTypeEntity->getClassPath();
             
             $content = new $contentTypeClassPath;
