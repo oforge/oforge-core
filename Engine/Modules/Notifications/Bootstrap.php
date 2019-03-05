@@ -2,6 +2,7 @@
 
 namespace Oforge\Engine\Modules\Notifications;
 
+use Oforge\Engine\Modules\AdminBackend\Services\BackendNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Notifications\Models\BackendNotification;
 use Oforge\Engine\Modules\Notifications\Controller\BackendNotificationController;
@@ -27,5 +28,15 @@ class Bootstrap extends AbstractBootstrap {
         $this->models = [
             BackendNotification::class,
         ];
+    }
+
+    public function activate() {
+        /** @var $navigationService BackendNavigationService */
+        $navigationService = Oforge()->Services()->get('backend.navigation');
+        $navigationService->put([
+            "name" => "notifications",
+            "order" => 1,
+            "position" => "topbar",
+        ]);
     }
 }
