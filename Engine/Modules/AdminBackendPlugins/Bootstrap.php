@@ -3,6 +3,7 @@
 namespace Oforge\Engine\Modules\AdminBackendPlugins;
 
 use Oforge\Engine\Modules\AdminBackend\Controller\Backend\LoginController;
+use Oforge\Engine\Modules\AdminBackend\Services\BackendNavigationService;
 use Oforge\Engine\Modules\AdminBackendPlugins\Controller\Backend\PluginController;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 
@@ -24,6 +25,7 @@ class Bootstrap extends AbstractBootstrap
      */
     public function install()
     {
+        /** @var $sidebarNavigation BackendNavigationService */
         $sidebarNavigation = Oforge()->Services()->get("backend.navigation");
 
         $sidebarNavigation->put([
@@ -31,7 +33,8 @@ class Bootstrap extends AbstractBootstrap
             "order" => 1,
             "parent" => "admin",
             "icon" => "fa fa-plug",
-            "path" => "backend_plugins"
+            "path" => "backend_plugins",
+            "position" => "sidebar",
         ]);
     }
 }

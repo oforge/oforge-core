@@ -8,6 +8,7 @@
 
 namespace Oforge\Engine\Modules\CMS;
 
+use Oforge\Engine\Modules\AdminBackend\Services\BackendNavigationService;
 use Oforge\Engine\Modules\CMS\Controller\Backend\ElementsController;
 use Oforge\Engine\Modules\CMS\Controller\Backend\PagesController;
 use Oforge\Engine\Modules\CMS\Controller\Backend\TypesController;
@@ -90,11 +91,15 @@ class Bootstrap extends AbstractBootstrap {
         $service = Oforge()->Services()->get("dummy.page.generator");
         $service->create();
 
+        /**
+         * @var $sidebarNavigation BackendNavigationService
+         */
         $sidebarNavigation = Oforge()->Services()->get("backend.navigation");
 
         $sidebarNavigation->put([
             "name" => "backend_content",
             "order" => 2,
+            "position" => "sidebar",
         ]);
 
         $sidebarNavigation->put([
@@ -102,7 +107,8 @@ class Bootstrap extends AbstractBootstrap {
             "order" => 1,
             "parent" => "backend_content",
             "icon" => "fa fa-sitemap",
-            "path" => "backend_content_pages"
+            "path" => "backend_content_pages",
+            "position" => "sidebar",
         ]);
 
         $sidebarNavigation->put([
@@ -110,7 +116,8 @@ class Bootstrap extends AbstractBootstrap {
             "order" => 1,
             "parent" => "backend_content",
             "icon" => "fa fa-folder",
-            "path" => "backend_content_elements"
+            "path" => "backend_content_elements",
+            "position" => "sidebar",
         ]);
 
         $sidebarNavigation->put([
@@ -118,7 +125,8 @@ class Bootstrap extends AbstractBootstrap {
             "order" => 1,
             "parent" => "backend_content",
             "icon" => "fa fa-cog",
-            "path" => "backend_content_types"
+            "path" => "backend_content_types",
+            "position" => "sidebar",
         ]);
 
     }

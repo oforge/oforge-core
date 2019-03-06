@@ -2,6 +2,7 @@
 
 namespace Oforge\Engine\Modules\I18n;
 
+use Oforge\Engine\Modules\AdminBackend\Services\BackendNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\I18n\Controller\Backend\LanguageController;
@@ -51,14 +52,16 @@ class Bootstrap extends AbstractBootstrap
 
         $sidebarNavigation->put([
             "name" => "admin",
-            "order" => 100
+            "order" => 100,
+            "position" => "sidebar",
         ]);
 
         $sidebarNavigation->put([
             "name" => "backend_i18n",
             "order" => 100,
             "parent" => "admin",
-            "icon" => "glyphicon glyphicon-globe"
+            "icon" => "glyphicon glyphicon-globe",
+            "position" => "sidebar",
         ]);
 
         $sidebarNavigation->put([
@@ -66,7 +69,8 @@ class Bootstrap extends AbstractBootstrap
             "order" => 1,
             "parent" => "backend_i18n",
             "icon" => "fa fa-language",
-            "path" => "backend_i18n_languages"
+            "path" => "backend_i18n_languages",
+            "position" => "sidebar",
         ]);
 
         $sidebarNavigation->put([
@@ -74,7 +78,8 @@ class Bootstrap extends AbstractBootstrap
             "order" => 2,
             "parent" => "backend_i18n",
             "icon" => "fa fa-file-text-o",
-            "path" => "backend_i18n_snippets"
+            "path" => "backend_i18n_snippets",
+            "position" => "sidebar",
         ]);
 
     }

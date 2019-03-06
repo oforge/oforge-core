@@ -2,6 +2,8 @@
 
 namespace Oforge\Engine\Modules\TemplateExtensions\Twig;
 
+use Oforge\Engine\Modules\AdminBackend\Services\BackendNavigationService;
+use Oforge\Engine\Modules\AdminBackend\Services\UserFavoritesService;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Notifications\Abstracts\AbstractNotificationService;
 use Oforge\Engine\Modules\Notifications\Services\BackendNotificationService;
@@ -12,6 +14,7 @@ class BackendExtension extends Twig_Extension implements \Twig_ExtensionInterfac
     public function getFunctions() {
         return [
             new Twig_Function('backend_sidebar_navigation', [$this, 'get_sidebar_navigation']),
+            new Twig_Function('backend_topbar_navigation', [$this, 'get_topbar_navigation']),
             new Twig_Function('backend_breadcrumbs', [$this, 'get_breadcrumbs']),
             new Twig_Function('backend_breadcrumbs_map', [$this, 'get_breadcrumbs_map']),
             new Twig_Function('backend_has_visible_children', [$this, 'get_visible_navigation_children']),
@@ -44,9 +47,31 @@ class BackendExtension extends Twig_Extension implements \Twig_ExtensionInterfac
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
     public function get_sidebar_navigation() {
-        $configService = Oforge()->Services()->get("backend.navigation");
+        /** @var $sidebarNavigation BackendNavigationService */
+        $sidebarNavigation = Oforge()->Services()->get("backend.navigation");
 
-        return $configService->get();
+        return $sidebarNavigation->get("sidebar");
+    }
+
+    /**
+     * @return mixed
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     */
+    public function get_topbar_navigation() {
+        /** @var $topbarNavigation BackendNavigationService */
+        $topbarNavigation = Oforge()->Services()->get("backend.navigation");
+        $topbarData       = $topbarNavigation->get("topbar");
+
+        foreach ($topbarData as $key => $element) {
+            $nameSplit = explode("_", $element['name']);
+            foreach ($nameSplit as $index => $subString) {
+                $nameSplit[$index] = ucfirst($subString);
+            }
+            $element['filename'] = implode('', $nameSplit);
+            $topbarData[$key]    = $element;
+        }
+
+        return $topbarData;
     }
 
     /**
@@ -56,10 +81,11 @@ class BackendExtension extends Twig_Extension implements \Twig_ExtensionInterfac
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
     public function get_breadcrumbs(...$vars) {
-        $configService = Oforge()->Services()->get("backend.navigation");
+        /** @var $sidebarNavigation BackendNavigationService */
+        $sidebarNavigation = Oforge()->Services()->get("backend.navigation");
 
         if (isset($vars) && sizeof($vars) == 1) {
-            return $configService->breadcrumbs($vars[0]);
+            return $sidebarNavigation->breadcrumbs($vars[0]);
         }
 
         return [];
@@ -72,10 +98,11 @@ class BackendExtension extends Twig_Extension implements \Twig_ExtensionInterfac
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
     public function get_breadcrumbs_map(...$vars) {
-        $configService = Oforge()->Services()->get("backend.navigation");
+        /** @var $sidebarNavigation BackendNavigationService */
+        $sidebarNavigation = Oforge()->Services()->get("backend.navigation");
 
         if (isset($vars) && sizeof($vars) == 1) {
-            $result = $configService->breadcrumbs($vars[0]);
+            $result = $sidebarNavigation->breadcrumbs($vars[0]);
             $output = [];
             foreach ($result as $item) {
                 if (isset($item["name"])) {
@@ -89,11 +116,10 @@ class BackendExtension extends Twig_Extension implements \Twig_ExtensionInterfac
         return [];
     }
 
-
     /**
      * @param mixed ...$vars
      *
-     * @return array
+     * @return bool
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
     public function is_favorite(...$vars) {
@@ -109,7 +135,6 @@ class BackendExtension extends Twig_Extension implements \Twig_ExtensionInterfac
 
         return false;
     }
-
 
     /**
      * @param mixed ...$vars
@@ -138,8 +163,6 @@ class BackendExtension extends Twig_Extension implements \Twig_ExtensionInterfac
 
         return [];
     }
-
-
 
     /**
      * @param mixed ...$vars
