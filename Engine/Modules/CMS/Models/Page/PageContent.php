@@ -35,7 +35,7 @@ class PageContent extends AbstractModel
     
     /**
      * @var Content
-     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Content\Content", inversedBy="content", fetch="EXTRA_LAZY")
+     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Content\Content", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="content_id", referencedColumnName="id")
      */
     private $content;

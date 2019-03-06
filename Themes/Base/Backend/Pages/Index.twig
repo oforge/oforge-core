@@ -5,13 +5,13 @@
     {{ o_dump() }}
 
     {% block cms_page_builder %}
-        {% include 'Backend/Pages/PageBuilderForm.twig' %}
-
         <div class="container-fluid page-builder-container-wrapper" id="page_builder_container_wrapper">
             <div class="row">
                 {% include 'Backend/Pages/PageJsTree.twig' %}
                 {% include 'Backend/Pages/PageContent.twig' %}
-                {% include 'Backend/Pages/ContentTypeList.twig' %}
+                {% if not contents.type %}
+                    {% include 'Backend/Pages/ContentTypeList.twig' %}
+                {% endif %}
             </div>
         </div>
     {% endblock cms_page_builder %}

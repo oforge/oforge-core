@@ -60,7 +60,6 @@ $('#cms-page-builder-submit').click(
 			newSelectedElementId = $(this).attr('data-pb-se').substring(0, lastElementIdPosition);
 		}
 		$('#cms_page_selected_action').val('submit');
-		// TODO: add submit new content info data
 		$('#cms_page_builder_form').submit();
 	}
 );
@@ -88,6 +87,16 @@ $(document).ready(function() {
     		$('#cms_page_builder_form').submit();
     	}
     );
+    
+    // TODO: move to own function that is triggered after document loaded by RichText-PageBuilderForm.twig
+    if ($('#cms_page_builder_form').length && $('#cms_page_richtext_editor').length) {
+    	$('#cms_page_builder_form').submit(
+	        function() {
+	            $('#cms_page_richtext_text').val($('#cms_page_richtext_editor').val());
+	        }
+		);
+		$('#cms_page_richtext_editor').wysihtml5();
+    }
     
     resizePageBuilder();
 });
