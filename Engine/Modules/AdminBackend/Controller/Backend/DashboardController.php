@@ -67,7 +67,8 @@ class DashboardController extends SecureBackendController {
 
         $sidebarNavigation->put([
             "name" => "admin",
-            "order" => 99
+            "order" => 99,
+            "position" => "sidebar",
         ]);
 
 
@@ -75,7 +76,8 @@ class DashboardController extends SecureBackendController {
             "name" => "help",
             "order" => 99,
             "parent" => "admin",
-            "icon" => "ion-help"
+            "icon" => "ion-help",
+            "position" => "sidebar",
         ]);
 
         $sidebarNavigation->put([
@@ -83,7 +85,8 @@ class DashboardController extends SecureBackendController {
             "order" => 2,
             "parent" => "help",
             "icon" => "ion-nuclear",
-            "path" => "backend_dashboard_ionicons"
+            "path" => "backend_dashboard_ionicons",
+            "position" => "sidebar",
         ]);
 
         $sidebarNavigation->put([
@@ -91,7 +94,8 @@ class DashboardController extends SecureBackendController {
             "order" => 1,
             "parent" => "help",
             "icon" => "fa-fort-awesome",
-            "path" => "backend_dashboard_fontAwesome"
+            "path" => "backend_dashboard_fontAwesome",
+            "position" => "sidebar",
         ]);
 
     }

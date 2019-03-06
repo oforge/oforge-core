@@ -88,9 +88,9 @@ class BackendNotification extends AbstractModel {
     }
 
     /**
-     * @return string
+     * @return string | null
      */
-    public function getLink() : string {
+    public function getLink() : ?string {
         return $this->link;
     }
 

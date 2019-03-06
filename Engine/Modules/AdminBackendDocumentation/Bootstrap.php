@@ -30,14 +30,16 @@ class Bootstrap extends AbstractBootstrap
 
         $sidebarNavigation->put([
             "name" => "backend_documentation",
-            "order" => 100
+            "order" => 100,
+            "position" => "sidebar",
         ]);
 
         $sidebarNavigation->put([
             "name" => "backend_ui_elements",
             "order" => 100,
             "parent" => "backend_documentation",
-            "icon" => "fa fa-laptop"
+            "icon" => "fa fa-laptop",
+            "position" => "sidebar",
         ]);
 
         $sidebarNavigation->put([
@@ -45,7 +47,8 @@ class Bootstrap extends AbstractBootstrap
             "order" => 1,
             "parent" => "backend_ui_elements",
             "icon" => "fa fa-circle-o",
-            "path" => "backend_documentation_ui_general"
+            "path" => "backend_documentation_ui_general",
+            "position" => "sidebar",
         ]);
 
         $sidebarNavigation->put([
@@ -53,7 +56,8 @@ class Bootstrap extends AbstractBootstrap
             "order" => 2,
             "parent" => "backend_ui_elements",
             "icon" => "fa fa-circle-o",
-            "path" => "backend_documentation_ui_icons"
+            "path" => "backend_documentation_ui_icons",
+            "position" => "sidebar",
         ]);
 
         $sidebarNavigation->put([
@@ -61,7 +65,8 @@ class Bootstrap extends AbstractBootstrap
             "order" => 3,
             "parent" => "backend_ui_elements",
             "icon" => "fa fa-circle-o",
-            "path" => "backend_documentation_ui_buttons"
+            "path" => "backend_documentation_ui_buttons",
+            "position" => "sidebar",
         ]);
 
         $sidebarNavigation->put([
@@ -69,7 +74,8 @@ class Bootstrap extends AbstractBootstrap
             "order" => 4,
             "parent" => "backend_ui_elements",
             "icon" => "fa fa-circle-o",
-            "path" => "backend_documentation_ui_sliders"
+            "path" => "backend_documentation_ui_sliders",
+            "position" => "sidebar",
         ]);
 
         $sidebarNavigation->put([
@@ -77,7 +83,8 @@ class Bootstrap extends AbstractBootstrap
             "order" => 5,
             "parent" => "backend_ui_elements",
             "icon" => "fa fa-circle-o",
-            "path" => "backend_documentation_ui_timeline"
+            "path" => "backend_documentation_ui_timeline",
+            "position" => "sidebar",
         ]);
 
         $sidebarNavigation->put([
@@ -85,7 +92,8 @@ class Bootstrap extends AbstractBootstrap
             "order" => 6,
             "parent" => "backend_ui_elements",
             "icon" => "fa fa-circle-o",
-            "path" => "backend_documentation_ui_modals"
+            "path" => "backend_documentation_ui_modals",
+            "position" => "sidebar",
         ]);
     }
 }

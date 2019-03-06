@@ -44,6 +44,7 @@ class Bootstrap extends AbstractBootstrap {
             "parent" => "admin",
             "icon"   => "fa fa-gears",
             "path"   => "backend_settings",
+            "position" => "sidebar",
         ]);
 
         $backendNavigation->put([
@@ -51,6 +52,7 @@ class Bootstrap extends AbstractBootstrap {
             "parent"  => "backend_settings",
             "visible" => false,
             "path"    => "backend_settings_group",
+            "position" => "sidebar",
         ]);
     }
 }
