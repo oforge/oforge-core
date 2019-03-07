@@ -38,6 +38,7 @@ class Bootstrap extends AbstractBootstrap {
             "parent" => "admin",
             "icon"   => "fa fa-paint-brush",
             "path"   => "backend_template_settings",
+            "position" => "sidebar",
         ]);
     }
 }
