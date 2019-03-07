@@ -35,14 +35,17 @@ class BackendNavigationService extends AbstractDatabaseAccess {
     }
 
     /**
+     * @param $position
+     *
      * @return array Tree of SidebarNavigation data
      */
-    public function get() {
+    public function get($position) {
         //find all plugins order by "order"
         /** @var BackendNavigation[] $entries */
-        $entries = $this->repository()->findBy(["parent" => 0], ['order' => 'ASC']);
+        $entries = $this->repository()->findBy(["parent" => 0, "position" => $position], ['order' => 'ASC']);
         $result  = $this->fill($entries);
 
+        // TODO: Nested Topbar-Menus
         return $result;
     }
 
@@ -79,6 +82,11 @@ class BackendNavigationService extends AbstractDatabaseAccess {
         // Check if correct type are set
         if (isset($options["order"]) && !is_integer($options["order"])) {
             throw new \InvalidArgumentException("Required value should be of type integer. ");
+        }
+
+        // Check if correct type are set
+        if (isset($options["position"]) && !is_string($options["position"])) {
+            throw new \InvalidArgumentException("Required value should be of type string. ");
         }
 
         //Check if correct type are set
