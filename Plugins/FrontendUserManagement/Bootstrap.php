@@ -3,8 +3,10 @@
 namespace FrontendUserManagement;
 
 use FrontendUserManagement\Middleware\FrontendSecureMiddleware;
+use FrontendUserManagement\Models\ProfileNavigation;
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\FrontendSecureMiddlewareService;
+use FrontendUserManagement\Services\ProfileNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 
 class Bootstrap extends AbstractBootstrap {
@@ -23,6 +25,7 @@ class Bootstrap extends AbstractBootstrap {
         ];
         
         $this->models = [
+            ProfileNavigation::class,
             User::class
         ];
         
@@ -31,19 +34,33 @@ class Bootstrap extends AbstractBootstrap {
             'frontend.user.management.login' => Services\FrontendUserLoginService::class,
             'frontend.user.management.registration' => Services\RegistrationService::class,
             'frontend.secure.middleware' => Services\FrontendSecureMiddlewareService::class,
+            'frontend.user.management.profile.navigation' => Services\ProfileNavigationService::class,
             'password.reset' => Services\PasswordResetService::class
         ];
     }
-    
+
     /**
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
     public function activate() {
         /** @var FrontendSecureMiddlewareService $frontendSecureMiddlewareService */
+        /** @var ProfileNavigationService $profileNavigationService */
         $frontendSecureMiddlewareService = Oforge()->Services()->get('frontend.secure.middleware');
         $frontendSecureMiddlewareService->activate('frontend_profile');
+
+        $profileNavigationService = Oforge()->Services()->get('frontend.user.management.profile.navigation');
+        $profileNavigationService->put([
+            "name" => "frontend_logout",
+            "order" => 1000,
+            "icon" => "icon icon--logout",
+            "path" => "frontend_logout",
+            "position" => "sidebar",
+        ]);
     }
     
     /**
