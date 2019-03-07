@@ -3,6 +3,7 @@
 namespace Oforge\Engine\Modules\Core;
 
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
+use Oforge\Engine\Modules\Core\Controller\Frontend\NotFoundController;
 use Oforge\Engine\Modules\Core\Models\Config\Element;
 use Oforge\Engine\Modules\Core\Models\Config\Value;
 use Oforge\Engine\Modules\Core\Models\Endpoints\Endpoint;
@@ -41,6 +42,14 @@ class Bootstrap extends AbstractBootstrap {
 			'ping'           => PingService::class,
             'redirect'       => RedirectService::class
 		];
+
+		$this->endpoints = [
+            "/404" => [
+                "controller" => NotFoundController::class,
+                "name" => "not_found",
+                "asset_scope" => "Frontend",
+            ],
+        ];
 
 		$this->order = 0;
 	}
