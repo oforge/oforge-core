@@ -50,13 +50,13 @@ DROP TABLE IF EXISTS `oforge_i18n_language`;
 CREATE TABLE `oforge_i18n_language` (
                                       `id` int(11) NOT NULL AUTO_INCREMENT,
                                       `iso` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-                                      `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+                                      `language` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
                                       `active` tinyint(1) NOT NULL,
                                       PRIMARY KEY (`id`),
                                       UNIQUE KEY `UNIQ_88C35DDF61587F41` (`iso`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `oforge_i18n_language` (`id`, `iso`, `name`, `active`) VALUES
+INSERT INTO `oforge_i18n_language` (`id`, `iso`, `language`, `active`) VALUES
 (1,	'de',	'Deutsch',	1),
 (2,	'en',	'English',	1);
 
@@ -64,13 +64,13 @@ DROP TABLE IF EXISTS `oforge_i18n_snippet`;
 CREATE TABLE `oforge_i18n_snippet` (
                                      `id` int(11) NOT NULL AUTO_INCREMENT,
                                      `scope` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-                                     `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+                                     `snippet_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
                                      `value` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
                                      PRIMARY KEY (`id`),
                                      UNIQUE KEY `scope_name_unique` (`scope`,`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `oforge_i18n_snippet` (`id`, `scope`, `name`, `value`) VALUES
+INSERT INTO `oforge_i18n_snippet` (`id`, `scope`, `snippet_name`, `value`) VALUES
 (1,	'de',	'site_name',	'Webseiten Name'),
 (2,	'de',	'legal_rights',	'Impressum'),
 (3,	'de',	'admin_label',	'Admin'),
