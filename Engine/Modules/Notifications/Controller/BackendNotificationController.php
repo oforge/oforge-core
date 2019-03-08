@@ -4,7 +4,7 @@ namespace Oforge\Engine\Modules\Notifications\Controller;
 
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Oforge\Engine\Modules\AdminBackend\Abstracts\SecureBackendController;
+use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Notifications\Models\BackendNotification;
