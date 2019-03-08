@@ -28,6 +28,11 @@
     {% include 'Frontend/Components/Scripts.twig' %}
 {% endblock master__footer_scripts %}
 
+
+{% block svg_icons %}
+    {% include 'Frontend/Components/SVG.twig' %}
+{% endblock svg_icons %}
+
 {% block master__meta %}
     {% if session %}
         <style>
