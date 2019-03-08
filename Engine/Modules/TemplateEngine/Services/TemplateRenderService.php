@@ -46,48 +46,52 @@ class TemplateRenderService {
      * @throws TemplateNotFoundException
      */
     public function render(Request $request, Response $response, $data) {
-        $namespace = explode("\\", Oforge()->View()->get('meta')['controller_method']);
-
-        $templatePath   = null;
-        $moduleName     = null;
-        $region         = null;
-        $controllerName = null;
-        $fileName       = null;
-        $folderDepth    = null;
-
-        if ($namespace[0] === "Oforge") {
-            $moduleName  = null; //$namespace[3];
-            $region      = $namespace[5];
-            $folderDepth = sizeof($namespace) - 7;
+        if (isset($data["json"]) && is_array($data["json"])) {
+            return $this->renderJson($request, $response, $data["json"]);
         } else {
-            $moduleName  = $namespace[0];
-            $region      = $namespace[2];
-            $folderDepth = sizeof($namespace) - 4;
-        }
+            $namespace = explode("\\", Oforge()->View()->get('meta')['controller_method']);
 
-        while ($folderDepth > 0) {
-            $controllerName .= $namespace[sizeof($namespace) - 1 - $folderDepth] . DIRECTORY_SEPARATOR;
-            $folderDepth--;
-        }
+            $templatePath   = null;
+            $moduleName     = null;
+            $region         = null;
+            $controllerName = null;
+            $fileName       = null;
+            $folderDepth    = null;
 
-        $controllerName .= explode("Controller", explode(":", $namespace[sizeof($namespace) - 1])[0])[0];
-        $fileName       = explode("Action", explode(":", $namespace[sizeof($namespace) - 1])[1])[0];
+            if ($namespace[0] === "Oforge") {
+                $moduleName  = null; //$namespace[3];
+                $region      = $namespace[5];
+                $folderDepth = sizeof($namespace) - 7;
+            } else {
+                $moduleName  = $namespace[0];
+                $region      = $namespace[2];
+                $folderDepth = sizeof($namespace) - 4;
+            }
 
-        $templatePath .= DIRECTORY_SEPARATOR . $region . DIRECTORY_SEPARATOR . (isset($moduleName) ? ($moduleName . DIRECTORY_SEPARATOR) : "") . $controllerName
-                         . DIRECTORY_SEPARATOR . ucwords($fileName) . ".twig";
+            while ($folderDepth > 0) {
+                $controllerName .= $namespace[sizeof($namespace) - 1 - $folderDepth] . DIRECTORY_SEPARATOR;
+                $folderDepth--;
+            }
 
-        if (isset($data["template"]["path"])) {
-            $templatePath = $data["template.path"];
-        } else {
-            $data["template.path"] = $templatePath;
-        }
+            $controllerName .= explode("Controller", explode(":", $namespace[sizeof($namespace) - 1])[0])[0];
+            $fileName       = explode("Action", explode(":", $namespace[sizeof($namespace) - 1])[1])[0];
 
-        if (!isset($data["template_layout"])) {
-            $data["template_layout"] = "Default";
-        }
+            $templatePath .= DIRECTORY_SEPARATOR . $region . DIRECTORY_SEPARATOR . (isset($moduleName) ? ($moduleName . DIRECTORY_SEPARATOR) : "")
+                             . $controllerName . DIRECTORY_SEPARATOR . ucwords($fileName) . ".twig";
 
-        if ($this->hasTemplate($templatePath)) {
-            return $this->renderTemplate($request, $response, $templatePath, $data);
+            if (isset($data["template"]["path"])) {
+                $templatePath = $data["template.path"];
+            } else {
+                $data["template.path"] = $templatePath;
+            }
+
+            if (!isset($data["template_layout"])) {
+                $data["template_layout"] = "Default";
+            }
+
+            if ($this->hasTemplate($templatePath)) {
+                return $this->renderTemplate($request, $response, $templatePath, $data);
+            }
         }
 
         return $this->renderJson($request, $response, $data);
@@ -169,7 +173,7 @@ class TemplateRenderService {
             if ($activeTemplate->getName() !== Statics::DEFAULT_THEME) {
                 $paths[Twig_Loader_Filesystem::MAIN_NAMESPACE] = [ROOT_PATH . DIRECTORY_SEPARATOR . $templatePath];
             }
-            $paths["parent"]                               = [];
+            $paths["parent"] = [];
 
             foreach ($plugins as $plugin) {
                 $viewsDir = ROOT_PATH . DIRECTORY_SEPARATOR . Statics::PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin->getName() . DIRECTORY_SEPARATOR
@@ -187,8 +191,7 @@ class TemplateRenderService {
                 }
             }
 
-            array_push($paths["parent"],
-                ROOT_PATH . DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . Statics::DEFAULT_THEME);
+            array_push($paths["parent"], ROOT_PATH . DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . Statics::DEFAULT_THEME);
             array_push($paths[Twig_Loader_Filesystem::MAIN_NAMESPACE],
                 ROOT_PATH . DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . Statics::DEFAULT_THEME);
 

@@ -24,7 +24,7 @@ class InternationalizationService extends AbstractDatabaseAccess {
     }
 
 
-    public function get($key, $language)
+    public function get($key, $language, $defaultValue = null)
     {
         /**
          * @var $element Snippet
@@ -34,7 +34,7 @@ class InternationalizationService extends AbstractDatabaseAccess {
             return $element->getValue();
         }
 
-        $element = Snippet::create(["scope" => $language, "name" => $key, "value" => $key]);
+        $element = Snippet::create(["scope" => $language, "name" => $key, "value" => $defaultValue ?: $key]);
 
         $this->entityManager()->persist($element);
         $this->entityManager()->flush();
