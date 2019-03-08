@@ -19,7 +19,7 @@ class Element extends AbstractModel
     private $id;
     /**
      * @var string
-     * @ORM\Column(name="name", type="string", nullable=false)
+     * @ORM\Column(name="i18n_name", type="string", nullable=false)
      */
     private $name;
     /**

@@ -38,19 +38,19 @@ class BackendNavigation extends AbstractModel
 
     /**
      * @var int
-     * @ORM\Column(name="loadorder", type="integer", nullable=false)
+     * @ORM\Column(name="sort_order", type="integer", nullable=false)
      */
     private $order = 1;
 
     /**
      * @var string
-     * @ORM\Column(name="name", type="string", nullable=false, unique=true)
+     * @ORM\Column(name="i18n_name", type="string", nullable=false, unique=true)
      */
     private $name = null;
 
     /**
      * @var string
-     * @ORM\Column(name="title", type="string", nullable=true)
+     * @ORM\Column(name="i18n_title", type="string", nullable=true)
      */
     private $title = null;
 

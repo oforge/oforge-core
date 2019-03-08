@@ -20,7 +20,7 @@ class Module extends AbstractModel
     private $id;
     /**
      * @var string
-     * @ORM\Column(name="name", type="string", nullable=false)
+     * @ORM\Column(name="class_path", type="string", nullable=false)
      */
     private $name;
 
@@ -38,7 +38,7 @@ class Module extends AbstractModel
 
     /**
      * @var int
-     * @ORM\Column(name="orderby", type="integer", nullable=true)
+     * @ORM\Column(name="sort_order", type="integer", nullable=true)
      */
     private $order;
 

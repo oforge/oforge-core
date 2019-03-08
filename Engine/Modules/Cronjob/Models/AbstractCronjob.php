@@ -75,7 +75,7 @@ abstract class AbstractCronjob extends AbstractModel {
     private $lastExecutionDuration = null;
     /**
      * @var int
-     * @ORM\Column(name="orderby", type="integer", nullable=true, options={"default":Statics::DEFAULT_ORDER})
+     * @ORM\Column(name="sort_order", type="integer", nullable=true, options={"default":Statics::DEFAULT_ORDER})
      */
     private $order = Statics::DEFAULT_ORDER;
 

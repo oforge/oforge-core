@@ -24,7 +24,7 @@ class Endpoint extends AbstractModel {
     private $active = false;
     /**
      * @var string
-     * @ORM\Column(name="name", type="string", nullable=false)
+     * @ORM\Column(name="path_name", type="string", nullable=false)
      */
     private $name;
     /**
@@ -34,7 +34,7 @@ class Endpoint extends AbstractModel {
     private $path;
     /**
      * @var string
-     * @ORM\Column(name="controller", type="string", nullable=false)
+     * @ORM\Column(name="controller_action", type="string", nullable=false)
      */
     private $controller;
     /**
@@ -50,7 +50,7 @@ class Endpoint extends AbstractModel {
     
     /**
      * @var int
-     * @ORM\Column(name="orderby", type="integer", nullable=false, options={"default":1337})
+     * @ORM\Column(name="sort_order", type="integer", nullable=false, options={"default":1337})
      */
     private $order;
     

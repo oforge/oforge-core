@@ -20,7 +20,7 @@ class ScssVariable extends AbstractModel {
 
     /**
      * @var string
-     * @ORM\Column(name="name", type="string", nullable=false)
+     * @ORM\Column(name="variable_name", type="string", nullable=false)
      */
     private $name;
 

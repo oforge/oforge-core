@@ -1,14 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Alexander Wegner
- * Date: 06.12.2018
- * Time: 11:15
- */
 
 namespace Oforge\Engine\Modules\I18n\Models;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\UniqueConstraint;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
@@ -17,7 +10,7 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
  * @ORM\Table(name="oforge_i18n_snippet",
  *     uniqueConstraints={
  *        @UniqueConstraint(name="scope_name_unique",
- *            columns={"scope", "name"})
+ *            columns={"scope", "snippet_name"})
  *    }))
  * @ORM\Entity
  */
@@ -39,7 +32,7 @@ class Snippet extends AbstractModel
     
     /**
      * @var string
-     * @ORM\Column(name="name", type="string", nullable=false)
+     * @ORM\Column(name="snippet_name", type="string", nullable=false)
      */
     private $name;
 

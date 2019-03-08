@@ -20,7 +20,7 @@ class Template extends AbstractModel {
 
     /**
      * @var string
-     * @ORM\Column(name="name", type="string", nullable=false)
+     * @ORM\Column(name="template_name", type="string", nullable=false)
      */
     private $name;
 
