@@ -8,6 +8,8 @@
 
 namespace Oforge\Engine\Modules\Session\Middleware;
 
+use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
+use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\Session\Services\SessionManagementService;
 
 class SessionMiddleware {
@@ -26,8 +28,14 @@ class SessionMiddleware {
         $sessionManager = Oforge()->Services()->get("session.management");
         $sessionManager->sessionStart();
 
+        /** @var ConfigService $configService */
+        $configService = Oforge()->Services()->get('config');
+        $sessionDebug = $configService->get('session_debug');
+
         /** for debugging purposes */
-        Oforge()->View()->assign(["session" => $_SESSION]);
+        if ($sessionDebug) {
+            Oforge()->View()->assign(["session" => $_SESSION]);
+        }
 
         return $next($request, $response);
     }
