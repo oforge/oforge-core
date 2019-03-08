@@ -40,7 +40,7 @@ class BackendNotification extends AbstractModel {
 
     /**
      * @var int
-     * @ORM\Column(name="userId", type="integer", nullable=true)
+     * @ORM\Column(name="user_id", type="integer", nullable=true)
      * @ManyToOne(targetEntity="\Oforge\Engine\Modules\Auth\Models\BackendUser", fetch="EXTRA_LAZY")
      */
     private $userId = null;
