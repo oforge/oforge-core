@@ -21,7 +21,7 @@ class Middleware extends AbstractModel
 
     /**
      * @var string
-     * @ORM\Column(name="name", type="string", nullable=false)
+     * @ORM\Column(name="path_name", type="string", nullable=false)
      */
     private $name;
 
