@@ -44,7 +44,7 @@ class PageController extends AbstractController {
         /** @var Router $router */
         $router = Oforge()->App()->getContainer()->get('router');
         $uri = $router->pathFor('not_found');
-        $response = $response->withRedirect('/404', 302);
+        $response = $response->withRedirect($uri, 302);
         return $response;
     }
 }
