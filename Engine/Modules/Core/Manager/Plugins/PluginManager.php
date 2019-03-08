@@ -40,7 +40,7 @@ class PluginManager
         $pluginService = Oforge()->Services()->get("plugin.state");
 
         foreach ($pluginFiles as $pluginName => $dir) {
-            $pluginService->register($pluginName);
+            $pluginService->register("\\" . $pluginName);
         }
         $em = Oforge()->DB()->getManager();
         $pluginRepository = $em->getRepository(Plugin::class);

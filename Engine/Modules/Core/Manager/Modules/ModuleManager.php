@@ -64,9 +64,8 @@ class ModuleManager {
 
         // register all modules
         foreach ($files as $key => $dir) {
-            $this->register("\\Oforge\\Engine\\Modules\\" . $key . "\\Bootstrap");
+            $this->register("Oforge\\Engine\\" . $key . "\\Bootstrap");
         }
-
         // save all db changes
         $this->entityManger()->flush();
 
