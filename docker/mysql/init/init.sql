@@ -67,7 +67,7 @@ CREATE TABLE `oforge_i18n_snippet` (
                                      `snippet_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
                                      `value` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
                                      PRIMARY KEY (`id`),
-                                     UNIQUE KEY `scope_name_unique` (`scope`,`name`)
+                                     UNIQUE KEY `scope_name_unique` (`scope`,`snippet_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `oforge_i18n_snippet` (`id`, `scope`, `snippet_name`, `value`) VALUES
