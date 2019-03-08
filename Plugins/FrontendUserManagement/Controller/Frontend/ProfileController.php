@@ -4,12 +4,18 @@ namespace FrontendUserManagement\Controller\Frontend;
 
 use FrontendUserManagement\Abstracts\SecureFrontendController;
 use FrontendUserManagement\Models\User;
+use FrontendUserManagement\Services\ProfileNavigationService;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
 class ProfileController extends SecureFrontendController {
     public function indexAction(Request $request, Response $response) {
-        Oforge()->View()->assign(['msg' => 'hello user']);
+
+        /** @var ProfileNavigationService $profileNavigationService */
+        $profileNavigationService = Oforge()->Services()->get('frontend.user.management.profile.navigation');
+        $sidebarNavigation = $profileNavigationService->get('sidebar');
+
+        Oforge()->View()->assign(['sidebar_navigation' => $sidebarNavigation, 'content' => $sidebarNavigation]);
     }
     public function editAction(Request $request, Response $response) {
     }

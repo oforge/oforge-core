@@ -13,9 +13,11 @@ class RedirectService {
         }
         return $urlName;
     }
+
     public function hasRedirectUrlName() {
         return (isset($_SESSION['redirectUrlName']));
     }
+
     public function setRedirectUrlName($name) {
         $_SESSION['redirectUrlName'] = $name;
     }

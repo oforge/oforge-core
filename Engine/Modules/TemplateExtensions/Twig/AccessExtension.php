@@ -47,7 +47,7 @@ class AccessExtension extends Twig_Extension implements \Twig_ExtensionInterface
     public function get_internationalization($context, ...$vars)
     {
         $result = "";
-        if (sizeof($vars) == 1 && isset($vars[0])) {
+        if (sizeof($vars) > 0  && isset($vars[0])) {
             /**
              * @var $service InternationalizationService
              */
@@ -58,7 +58,7 @@ class AccessExtension extends Twig_Extension implements \Twig_ExtensionInterface
              * @var $lService LanguageIdentificationService
              */
             $lService = Oforge()->Services()->get("language.identifier");
-            $result = $service->get($vars[0], $lService->getCurrentLanguage($context));
+            $result = $service->get($vars[0], $lService->getCurrentLanguage($context), sizeof($vars) > 1 ? $vars[1] : null);
         }
 
         return $result;

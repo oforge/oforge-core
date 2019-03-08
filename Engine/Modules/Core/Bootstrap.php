@@ -3,6 +3,7 @@
 namespace Oforge\Engine\Modules\Core;
 
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
+use Oforge\Engine\Modules\Core\Controller\Frontend\NotFoundController;
 use Oforge\Engine\Modules\Core\Models\Config\Element;
 use Oforge\Engine\Modules\Core\Models\Config\Value;
 use Oforge\Engine\Modules\Core\Models\Endpoints\Endpoint;
@@ -42,6 +43,14 @@ class Bootstrap extends AbstractBootstrap {
             'redirect'       => RedirectService::class
 		];
 
+		$this->endpoints = [
+            "/404" => [
+                "controller" => NotFoundController::class,
+                "name" => "not_found",
+                "asset_scope" => "Frontend",
+            ],
+        ];
+
 		$this->order = 0;
 	}
 
@@ -54,5 +63,6 @@ class Bootstrap extends AbstractBootstrap {
 		 */
 		$configService = Oforge()->Services()->get( 'config' );
 		$configService->update( [ 'name' => 'system_debug', 'label' => 'Debug aktivieren', 'type' => 'boolean', 'default' => true, 'group' => 'system' ] );
+		$configService->update( [ 'name' => 'session_debug', 'label' => 'session_debug', 'type' => 'boolean', 'default' => false, 'group' => 'system' ] );
 	}
 }
