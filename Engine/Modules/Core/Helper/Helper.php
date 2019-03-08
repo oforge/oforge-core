@@ -91,7 +91,11 @@ class Helper {
         $path = realpath($path);
         foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path)) as $f) {
             if (strtolower($f->getFileName()) == $fileName) {
-                $result[basename($f->getPath())] = $f->getPath() . DIRECTORY_SEPARATOR . $f->getFileName();
+
+                $classpath = str_replace($path . "\\", "", $f->getPath());
+                $classpath = str_replace(".php", "", $classpath);
+
+                $result[$classpath] = $f->getPath() . DIRECTORY_SEPARATOR . $f->getFileName();
             }
         }
 
