@@ -8,7 +8,6 @@
 
 namespace Oforge\Engine\Modules\Session\Middleware;
 
-use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\Session\Services\SessionManagementService;
 
@@ -19,6 +18,7 @@ class SessionMiddleware {
      * @param  callable $next Next middleware
      *
      * @return mixed
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
     public function __invoke( $request, $response, $next ) {
