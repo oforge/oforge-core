@@ -49,12 +49,13 @@ class PagesController extends AbstractController {
             {
                 $data["contents"] = $pageBuilderService->getContentDataArrayById($pageContents, $selectedElement);
                 
-                $selectedElementId = end(explode("-", $selectedElement));
+                $selectedElementIdArray = explode("-", $selectedElement);
+                $selectedElementId = end($selectedElementIdArray);
                 
-                $data["__selectedElement"] = $selectedElement;
-                $data["__selectedElementId"] = $selectedElementId;
-                $data["__selectedElementTypeId"] = $data["contents"]["typeId"];
-                $data["__selectedAction"] = $selectedAction;
+                $data["__selectedElement"] = $selectedElement; // TODO: just used as development info
+                $data["__selectedElementId"] = $selectedElementId; // TODO: just used as development info
+                $data["__selectedElementTypeId"] = $data["contents"]["typeId"]; // TODO: just used as development info
+                $data["__selectedAction"] = $selectedAction; // TODO: just used as development info
                 
                 if (is_numeric($selectedElementId) && $selectedElementId > 0)
                 {
@@ -69,13 +70,13 @@ class PagesController extends AbstractController {
                     {
                         case "submit":
                             // persist new content element data to database and reload content data from database
-                            $data["contentElementData"] = $contentTypeService->setContentDataArray($selectedElementId, $selectedElementTypeId, [])->getContentDataArray($selectedElementId, $selectedElementTypeId);
+                            $data["contentElementData"] = $contentTypeService->setContentDataArray($selectedElementId, $selectedElementTypeId, $_POST)->getContentDataArray($selectedElementId, $selectedElementTypeId);
                             $data["contents"]           = $pageBuilderService->getContentDataArrayById($pageContents, $selectedElement);
                             break;
                         case "delete":
                             break;
-                            // action equals 'edit' or is unknown
                         default:
+                            // action equals 'edit' or is unknown
                             $data["contentElementData"] = $contentTypeService->getContentDataArray($selectedElementId, $selectedElementTypeId);
                             break;
                     }

@@ -33,14 +33,13 @@ class ContentTypeService extends AbstractDatabaseAccess
         }
         else
         {
-            return null;
+            return NULL;
         }
     }
 
     /**
      * Returns all found content type groups as an associative array
-     *use phpDocumentor\Reflection\Types\Null_;
-
+     * 
      * @return array|NULL Array filled with available content type groups
      */
     public function getContentTypeGroupArray()
@@ -49,7 +48,7 @@ class ContentTypeService extends AbstractDatabaseAccess
 
         if (!$contentTypeGroupEntities)
         {
-            return null;
+            return NULL;
         }
 
         $contentTypeGroups = [];
@@ -93,43 +92,18 @@ class ContentTypeService extends AbstractDatabaseAccess
         $contentTypeEntity = $this->repository('contentType')->findOneBy(["id" => $typeId]);
         $contentEntity     = $this->repository('content')->findOneBy(["id" => $id]);
         
-        if ($contentTypeEntity && $contentEntity && $contentTypeEntity == $contentEntity->getType())
+        if ($contentTypeEntity && $contentEntity)
         {
-            $data = [];
-            $data["id"]     = $contentEntity->getId();
-            $data["type"]   = $contentEntity->getType()->getId();
-            $data["parent"] = $contentEntity->getParent();
-            $data["name"]   = $contentEntity->getName();
-            $data["css"]    = $contentEntity->getCssClass();
+            $contentTypeClassPath = $contentTypeEntity->getClassPath();
             
-            switch ($contentTypeEntity->getName())
-            {
-                case "Row":
-                    $rowEntities       = $this->repository('rowContent')->findBy(["row" => $data["id"]], ["order" => "ASC"]);
-                    
-                    $rowColumns = [];
-                    foreach ($rowEntities as $rowEntity)
-                    {
-                        $rowContent = [];
-                        $rowContent["id"] = $rowEntity->getContent()->getId();
-                        $rowContent["typeId"] = $rowEntity->getContent()->getType()->getId();
-                        
-                        $rowColumns[] = $rowContent;
-                    }
-                    $data["columns"] = $rowColumns;
-                    break;
-                case "RichText":
-                    $data["text"]  = $contentEntity->getData();
-                    break;
-                case "Image":
-                    $data["image"] = $contentEntity->getData();
-                    break;
-                default:
-                    return false;
-            }
+            $content = new $contentTypeClassPath;
+            
+            $content->load($id);
+            
+            return $content->getEditData();
         }
         
-        return $data;
+        return NULL;
     }
     
     /**
@@ -142,14 +116,22 @@ class ContentTypeService extends AbstractDatabaseAccess
      */
     public function setContentDataArray(int $id, int $typeId, array $data)
     {
-        // get content type of selected content element
+        $contentTypeEntity = $this->repository('contentType')->findOneBy(["id" => $typeId]);
+        $contentEntity     = $this->repository('content')->findOneBy(["id" => $id]);
         
-        // switch depending on selected content element
-        // create new instance of selected content element type
-        // get content element from db if available
-        // set new data in content element instance
-        // store data to db
-        
-        return $this;
+        if ($contentTypeEntity && $contentEntity)
+        {
+            $contentTypeClassPath = $contentTypeEntity->getClassPath();
+            
+            $content = new $contentTypeClassPath;
+            
+            $content->load($id);
+            
+            $content->setEditData($data);
+            
+            $content->save();
+            
+            return $this;
+        }
     }
 }

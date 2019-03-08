@@ -12,6 +12,7 @@ use Oforge\Engine\Modules\CMS\Services\PageService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Slim\Router;
 
 class PageController extends AbstractController {
     
@@ -23,12 +24,13 @@ class PageController extends AbstractController {
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
     public function indexAction(Request $request, Response $response) {
+
         /**
          * @var PageService $pagePathService
          */
         $pagePathService = Oforge()->Services()->get("page.path");
         $path = $request->getUri()->getPath();
-        
+
         $page = null;
         if ($pagePathService->hasPath($path)) {
             $page = $pagePathService->getPage($path);
@@ -39,8 +41,10 @@ class PageController extends AbstractController {
             }
         }
 
-        Oforge()->View()->assign(["template_path" => "/Frontend/Page/404.twig"]);
-
-        return $response->withStatus(404);
+        /** @var Router $router */
+        $router = Oforge()->App()->getContainer()->get('router');
+        $uri = $router->pathFor('not_found');
+        $response = $response->withRedirect($uri, 302);
+        return $response;
     }
 }

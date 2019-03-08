@@ -1,0 +1,48 @@
+.panel--profile {
+    flex-direction: column;
+}
+
+.content-item {
+    width: 200px;
+    height: 200px;
+    margin: 1rem;
+    background: $color-secondary;
+}
+
+.profile-nav__link {
+    color: $text-dark;
+    text-decoration: none;
+    padding: 1rem 0;
+    border-bottom: 2px solid $color-primary;
+
+    &:active,
+    &:hover {
+        color: $text-dark;
+        text-decoration: none;
+
+        border-bottom: 2px solid $color-secondary;
+    }
+}
+.profile-nav__link + .profile-nav__link {
+    margin-top: 1rem;
+}
+
+
+@media screen and (min-width: $screen-large) {
+    .panel--profile {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+
+    .profile {
+        &__sidebar {
+            width: 24rem;
+        }
+        &__content {
+            width: calc(100% - 24rem);
+            margin-left: 3rem;
+            border-left: 1px solid $color-primary;
+            padding-left: 3rem;
+        }
+    }
+}

@@ -6,7 +6,7 @@
 
 .cms-content-type-list {
  	overflow: hidden;
- 	overflow-y: scroll;
+ 	overflow-y: auto;
  	
  	.row {
  		margin: 0px;
@@ -38,6 +38,43 @@
 	.content-type-icon {
 		text-align: center;
 		width: 70%;
+	}
+}
+
+.content-type-edit-form-image {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: space-evenly;
+	margin: 50px 0;
+	
+	input[type="text"] {
+		width: 40rem;
+	}
+}
+
+.content-type-edit-form-richtext {
+	margin: 50px 0;
+	
+	.editor {
+		border-style: solid;
+		border-width: 1px;
+		border-color: #aaa;
+		width: 69rem;
+	}
+	
+	.spacer {
+		height: 2rem; 
+		line-height: 2rem; 
+	}
+	
+	input {
+		width: 40rem;
+	}
+}
+
+.content-type-edit-form-row {
+	input {
 	}
 }
  

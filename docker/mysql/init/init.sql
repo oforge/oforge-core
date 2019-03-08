@@ -189,6 +189,7 @@ CREATE TABLE `oforge_cms_content_type` (
                                      `id` int(11) NOT NULL AUTO_INCREMENT,
                                      `content_type_group_id` int(11) NOT NULL,
                                      `content_type_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+                                     `content_type_path` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
                                      `content_type_icon` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
                                      `description` varchar(255) COLLATE utf8mb4_unicode_ci,
                                      `class_path` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -201,10 +202,10 @@ CREATE TABLE `oforge_cms_content_type` (
 				     ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `oforge_cms_content_type` (`id`, `content_type_group_id`, `content_type_name`, `content_type_icon`, `description`, `class_path`) VALUES
-(1,	1,	'Row',		'/Themes/Base/ContentTypes/__assets/img/row.png',	'Row',		'Oforge\\Engine\\Modules\\CMS\\ContentTypes\\Row'),
-(2,	2,	'RichText',	'/Themes/Base/ContentTypes/__assets/img/richtext.png',	'RichText',	'Oforge\\Engine\\Modules\\CMS\\ContentTypes\\RichText'),
-(3,	3,	'Image',	'/Themes/Base/ContentTypes/__assets/img/image.png',	'Image',	'Oforge\\Engine\\Modules\\CMS\\ContentTypes\\Image');
+INSERT INTO `oforge_cms_content_type` (`id`, `content_type_group_id`, `content_type_name`, `content_type_path`, `content_type_icon`, `description`, `class_path`) VALUES
+(1,	1,	'row',		'Row',		'/Themes/Base/ContentTypes/__assets/img/row.png',	'Row',		'Oforge\\Engine\\Modules\\CMS\\ContentTypes\\Row'),
+(2,	2,	'richtext',	'RichText',	'/Themes/Base/ContentTypes/__assets/img/richtext.png',	'RichText',	'Oforge\\Engine\\Modules\\CMS\\ContentTypes\\RichText'),
+(3,	3,	'image',	'Image',	'/Themes/Base/ContentTypes/__assets/img/image.png',	'Image',	'Oforge\\Engine\\Modules\\CMS\\ContentTypes\\Image');
 
 DROP TABLE IF EXISTS `oforge_cms_content`;
 CREATE TABLE `oforge_cms_content` (
@@ -229,15 +230,15 @@ INSERT INTO `oforge_cms_content` (`id`, `content_type_id`, `parent_id`, `content
 (4,	2,	0,	'text_imprint_en',	'imprint-class',	's:7:\"Imprint\";'),
 (5,	2,	0,	'text_privacy_de',	'privacy-class',	's:11:\"Datenschutz\";'),
 (6,	2,	0,	'text_privacy_en',	'privacy-class',	's:7:\"Privacy\";'),
-(7,	3,	0,	'world_image_de',	'image-class',		's:15:\"deutschland.png\";'),
+(7,	3,	0,	'world_image_de',	'image-class',		's:34:\"/Tests/dummy_media/deutschland.png\";'),
 (8,	3,	0,	'world_image_en',	'image-class',		's:7:\"usa.png\";'),
-(9,	3,	0,	'multilanguage_image',	'image-class',		's:17:\"multilanguage.png\";'),
-(10,	2,	0,	'test_text1_de',	'row-text1-class',	's:103:\"Die größte Tragödie im Leben ist, dass wir zu schnell alt und zu spät weise werden. - Benjamin Franklin\";'),
+(9,	3,	0,	'multilanguage_image',	'image-class',		's:36:\"/Tests/dummy_media/multilanguage.png\";'),
+(10,	2,	0,	'test_text1_de',	'row-text1-class',	's:107:\"Die größte Tragödie im Leben ist, dass wir zu schnell alt und zu spät weise werden. - Benjamin Franklin\";'),
 (11,	2,	0,	'test_text1_en',	'row-text1-class',	's:87:\"Life biggest tragedy is that we get old too soon and wise too late. - Benjamin Franklin\";'),
-(12,	2,	0,	'test_text2_de',	'row-text2-class',	's:143:\"Die größte Entscheidung deines Lebens liegt darin, dass du dein Leben ändern kannst, indem du deine Geisteshaltung änderst. - Albert Schweitzer\";'),
+(12,	2,	0,	'test_text2_de',	'row-text2-class',	's:147:\"Die größte Entscheidung deines Lebens liegt darin, dass du dein Leben ändern kannst, indem du deine Geisteshaltung änderst. - Albert Schweitzer\";'),
 (13,	2,	0,	'test_text2_en',	'row-text2-class',	's:104:\"The biggest decision in life is about changing your life through changing your mind. - Albert Schweitzer\";'),
-(14,	3,	0,	'landscape_image',	'row-image-class',	's:13:\"landscape.png\";'),
-(15,	3,	0,	'person_image',		'row-image-class',	's:10:\"person.png\";'),
+(14,	3,	0,	'landscape_image',	'row-image-class',	's:32:\"/Tests/dummy_media/landscape.png\";'),
+(15,	3,	0,	'person_image',		'row-image-class',	's:29:\"/Tests/dummy_media/person.png\";'),
 (16,	1,	0,	'test_row1_de',		'test-row1-class',	''),
 (17,	1,	0,	'test_row1_en',		'test-row1-class',	''),
 (18,	1,	0,	'test_row2_de',		'test-row2-class',	''),

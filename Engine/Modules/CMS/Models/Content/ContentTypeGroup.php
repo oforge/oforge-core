@@ -48,17 +48,6 @@ class ContentTypeGroup extends AbstractModel
     }
     
     /**
-     * @param int $id
-     * 
-     * @return ContentTypeGroup
-     */
-    public function setId(int $id): ContentTypeGroup
-    {
-        $this->id = $id;
-        return $this;
-    }
-    
-    /**
      * @return string
      */
     public function getName(): string

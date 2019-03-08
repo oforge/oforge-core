@@ -1,16 +1,25 @@
 {% extends '@parent/Frontend/Layout.twig' %}
+
 {% block content %}
     <div class="content">
         {% block login %}
-        <div class="panel panel--login flex flex--center flex--justify">
+        <div class="panel panel--login flex">
             {% block login_title %}
-                <h2 class="title">{{ i18n('welcome') }}</h2>
+                <h2 class="panel__title">{{ i18n('welcome') }}</h2>
             {% endblock login_title %}
+
+                {% block login_subtitle %}
+                <div class="panel__content">
+                    <h3 class="panel__sub-title">
+                        {{ i18n('Login') }}
+                    </h3>
+                </div>
+                {% endblock login_subtitle %}
+
             {% include 'Frontend/Components/Forms/LoginForm.twig' %}
             <div class="form-controls pad-l-top">
                 <div class="form__control flex flex--row flex--center flex--between">
                     <a href="{{ url('frontend_registration') }}" class="button button--secondary">{{ i18n('or_register') }}</a>
-                    <a href="{{ url('frontend_forgot_password') }}" class="button button--primary">{{ i18n('forgot_password') }}</a>
                 </div>
             </div>
         </div>

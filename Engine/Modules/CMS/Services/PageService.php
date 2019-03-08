@@ -33,7 +33,7 @@ class PageService extends AbstractDatabaseAccess {
     /**
      * @param string $path
      *
-     * @return PagePath|null
+     * @return PagePath|object|null
      */
     public function getPage(string $path) : ?PagePath {
         return $this->repository()->findOneBy(["path" => $path]);
@@ -62,7 +62,11 @@ class PageService extends AbstractDatabaseAccess {
             $content = $pageContent->getContent();
             if (isset($content)) {
                 //todo call load method from content_type
-                array_push($result["content"], ["type" => $content->getType()->getName(), "data" => $content->getData()]);
+                array_push($result["content"], [
+                    "type" => $content->getType()->getName(),
+                    "path" => $content->getType()->getPath(),
+                    "data" => $content->getData(),
+                ]);
             }
         }
 

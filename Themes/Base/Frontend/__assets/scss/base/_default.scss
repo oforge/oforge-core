@@ -39,6 +39,14 @@ h1,h2,h3,h4,h5,h6 {
     overflow: hidden;
 }
 
+.description {
+    font-size: $font-size-5;
+}
+
+.sub {
+    font-size: $font-size-6;
+}
+
 .container {
     flex: 1 0 auto;
     padding: $size-large 0;
