@@ -2,6 +2,10 @@
 {% block top_nav_links %}
     {{ parent() }}
     <li class="top-nav-list__item item--login">
-        <a href="{{ url('frontend_login_registration') }}" class="icon icon--user" title="Login"></a>
+        <a href="{{ url('frontend_login_registration') }}" class="" title="Login">
+            <svg class="icon icon--secondary">
+                <use xlink:href="#profil"></use>
+            </svg>
+        </a>
     </li>
 {% endblock top_nav_links %}
