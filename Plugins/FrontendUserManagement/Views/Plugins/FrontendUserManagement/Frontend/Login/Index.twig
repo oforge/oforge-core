@@ -16,7 +16,7 @@
                 </div>
                 {% endblock login_subtitle %}
 
-            {% include 'Frontend/Components/Forms/LoginForm.twig' %}
+            {% include 'Plugins/FrontendUserManagement/Frontend/Components/Forms/LoginForm.twig' %}
             <div class="form-controls pad-l-top">
                 <div class="form__control flex flex--row flex--center flex--between">
                     <a href="{{ url('frontend_registration') }}" class="button button--secondary">{{ i18n('or_register') }}</a>
