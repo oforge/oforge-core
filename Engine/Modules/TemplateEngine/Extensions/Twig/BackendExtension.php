@@ -2,8 +2,8 @@
 
 namespace Oforge\Engine\Modules\TemplateEngine\Extensions\Twig;
 
-use Oforge\Engine\Modules\AdminBackend\Services\BackendNavigationService;
-use Oforge\Engine\Modules\AdminBackend\Services\UserFavoritesService;
+use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
+use Oforge\Engine\Modules\AdminBackend\Core\Services\UserFavoritesService;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Notifications\Abstracts\AbstractNotificationService;
 use Oforge\Engine\Modules\Notifications\Services\BackendNotificationService;

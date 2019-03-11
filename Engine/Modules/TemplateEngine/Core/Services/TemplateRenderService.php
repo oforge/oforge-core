@@ -58,7 +58,10 @@ class TemplateRenderService {
 
             // register all modules
             foreach ($namespace as $key) {
-                if ($foundController && $index + 1 != $size) {
+                if($index == 0 && $key !== "Oforge") {
+                    $templatePath = DIRECTORY_SEPARATOR . "Plugins" . DIRECTORY_SEPARATOR . $key;
+                }
+                if ($foundController && $index + 1 !== $size) {
                     $templatePath .= DIRECTORY_SEPARATOR . $key;
                 }
 
