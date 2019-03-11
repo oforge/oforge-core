@@ -167,7 +167,9 @@ INSERT INTO `oforge_i18n_snippet` (`id`, `scope`, `snippet_name`, `value`) VALUE
 (94,	'de',	'password_confirm',	'Passwort bestätigen'),
 (95,	'de',	'change_password',	'Passwort ändern'),
 (96,	'de',	'cms_page_builder_edit_content_types_title',	'Content Type Editieren'),
-(97,	'en',	'cms_page_builder_edit_content_types_title',	'Edit Content Type');
+(97,	'en',	'cms_page_builder_edit_content_types_title',	'Edit Content Type'),
+(98,	'de',	'cms_page_builder_create_new_root_page',	'Hier klicken um eine neue Root-Seite zu erstellen ...'),
+(99,	'en',	'cms_page_builder_create_new_root_page',	'Click here to create a new root page ...');
 
 DROP TABLE IF EXISTS `oforge_cms_content_type_group`;
 CREATE TABLE `oforge_cms_content_type_group` (
@@ -231,11 +233,11 @@ INSERT INTO `oforge_cms_content` (`id`, `content_type_id`, `parent_id`, `content
 (5,	2,	0,	'text_privacy_de',	'privacy-class',	's:11:\"Datenschutz\";'),
 (6,	2,	0,	'text_privacy_en',	'privacy-class',	's:7:\"Privacy\";'),
 (7,	3,	0,	'world_image_de',	'image-class',		's:34:\"/Tests/dummy_media/deutschland.png\";'),
-(8,	3,	0,	'world_image_en',	'image-class',		's:7:\"usa.png\";'),
+(8,	3,	0,	'world_image_en',	'image-class',		's:26:\"/Tests/dummy_media/usa.png\";'),
 (9,	3,	0,	'multilanguage_image',	'image-class',		's:36:\"/Tests/dummy_media/multilanguage.png\";'),
-(10,	2,	0,	'test_text1_de',	'row-text1-class',	's:107:\"Die größte Tragödie im Leben ist, dass wir zu schnell alt und zu spät weise werden. - Benjamin Franklin\";'),
+(10,	2,	0,	'test_text1_de',	'row-text1-class',	's:107:\"Die grÃ¶ÃŸte TragÃ¶die im Leben ist, dass wir zu schnell alt und zu spÃ¤t weise werden. - Benjamin Franklin\";'),
 (11,	2,	0,	'test_text1_en',	'row-text1-class',	's:87:\"Life biggest tragedy is that we get old too soon and wise too late. - Benjamin Franklin\";'),
-(12,	2,	0,	'test_text2_de',	'row-text2-class',	's:147:\"Die größte Entscheidung deines Lebens liegt darin, dass du dein Leben ändern kannst, indem du deine Geisteshaltung änderst. - Albert Schweitzer\";'),
+(12,	2,	0,	'test_text2_de',	'row-text2-class',	's:147:\"Die grÃ¶ÃŸte Entscheidung deines Lebens liegt darin, dass du dein Leben Ã¤ndern kannst, indem du deine Geisteshaltung Ã¤nderst. - Albert Schweitzer\";'),
 (13,	2,	0,	'test_text2_en',	'row-text2-class',	's:104:\"The biggest decision in life is about changing your life through changing your mind. - Albert Schweitzer\";'),
 (14,	3,	0,	'landscape_image',	'row-image-class',	's:32:\"/Tests/dummy_media/landscape.png\";'),
 (15,	3,	0,	'person_image',		'row-image-class',	's:29:\"/Tests/dummy_media/person.png\";'),
