@@ -24,17 +24,17 @@
                         <div class="separator"></div>
                         <h3 class="form__title">{{ i18n('Insert your login data:') }}</h3>
                         <div class="tab__content tab__content--visible" data-tab-content="login">
-                            {% include 'Frontend/Components/Forms/LoginForm.twig' %}
+                            {% include 'Plugins/FrontendUserManagement/Frontend/Components/Forms/LoginForm.twig' %}
                         </div>
 
                         <div class="tab__content" data-tab-content="registration">
-                            {% include 'Frontend/Components/Forms/RegistrationForm.twig' %}
+                            {% include 'Plugins/FrontendUserManagement/Frontend/Components/Forms/RegistrationForm.twig' %}
                         </div>
                     </div>
                     {% block login_registration__registration_benefits %}
                     <div class="panel__column panel__column--border">
                         <h3 class="panel__sub-title">{{ i18n('Registration benefits:') }}</h3>
-                        {% include 'Frontend/FrontendUserManagement/Registration/Benefits.twig' %}
+                        {% include 'Plugins/FrontendUserManagement/Frontend/Registration/Benefits.twig' %}
                     </div>
                     {% endblock login_registration__registration_benefits %}
                 </div>
