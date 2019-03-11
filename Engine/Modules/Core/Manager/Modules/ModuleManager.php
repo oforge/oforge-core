@@ -64,7 +64,10 @@ class ModuleManager {
 
         // register all modules
         foreach ($files as $key => $dir) {
-            $this->register("Oforge\\Engine\\" . $key . "\\Bootstrap");
+
+            // TODO: Check if suppressing error here is ok
+            $fileMeta = @Helper::getFileMeta($dir);
+            $this->register($fileMeta['namespace'] . "\\" . $fileMeta['class_name']);
         }
         // save all db changes
         $this->entityManger()->flush();

@@ -27,7 +27,9 @@ class PluginManager
      * @throws CouldNotInstallPluginException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists
      * @throws \Oforge\Engine\Modules\Core\Exceptions\InvalidClassException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceAlreadyDefinedException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
     public function init()
@@ -40,7 +42,9 @@ class PluginManager
         $pluginService = Oforge()->Services()->get("plugin.state");
 
         foreach ($pluginFiles as $pluginName => $dir) {
-            $pluginService->register("\\" . $pluginName);
+            // TODO: check if suppressing error message here is ok
+            $fileMeta = @Helper::getFileMeta($dir);
+            $pluginService->register($fileMeta['namespace']);
         }
         $em = Oforge()->DB()->getManager();
         $pluginRepository = $em->getRepository(Plugin::class);
