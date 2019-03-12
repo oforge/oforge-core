@@ -2,7 +2,11 @@
     {% block cms_page_jstree_form %}
     	<form id="cms_page_jstree_form" action={{ url('backend_content_pages') }} method="post">
  			<input name="cms_form" type="hidden" value="cms_page_jstree_form">
-     	</form> 
+     		<input id="cms_edit_page_id" name="cms_edit_page_id" type="hidden">
+     		<input id="cms_edit_page_parent_id" name="cms_edit_page_parent_id" type="hidden">
+     		<input id="cms_edit_page_name" name="cms_edit_page_name" type="hidden">
+     		<input id="cms_edit_page_action" name="cms_edit_page_action" type="hidden">
+     	</form>
     {% endblock cms_page_jstree_form %}
 	<div class="col-xs-2 cms-page-jstree-container" id="cms_page_jstree_container">
 		<div>

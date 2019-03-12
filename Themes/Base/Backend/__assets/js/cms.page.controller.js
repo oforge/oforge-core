@@ -10,50 +10,41 @@ $('#cms_page_controller_jstree').on('select_node.jstree', function (event, data)
 	$('#cms_page_builder_form').submit();
 });
 
+// called after creating the node in jstree. afterwards rename_node.jstree-callback
+// will be called when user finished editing the node's name
 $('#cms_page_controller_jstree').on('create_node.jstree', function (event, data) {
 	var node = data.node;
 	var parent = data.parent;
 	var position = data.position;
 	
-	console.log("#!!! A new node has been created:");
-	console.log("Page Id: " + node.id);
-	console.log("Page Parent: " + node.parent);
-	console.log("Page Name: " + node.text);
-	console.log("-");
-	console.log("New node was added to parent: " + parent);
-	console.log("New node was added at position: " + position);
-	console.log("---");
+	$('#cms_edit_page_parent_id').val(node.parent);
+	$('#cms_edit_page_action').val('create');
 });
 
+// called after user finished editing the node's name
 $('#cms_page_controller_jstree').on('rename_node.jstree', function (event, data) {
 	var node = data.node;
 	var text = data.text;
 	var old = data.old;
 	
-	console.log("#!!! A node has been renamed:");
-	console.log("Page Id: " + node.id);
-	console.log("Page Parent: " + node.parent);
-	console.log("Page Name: " + node.text);
-	console.log("-");
-	console.log("Node was renamed to: " + text);
-	console.log("Node was renamed from: " + old);
-	console.log("---");
+	if ($('#cms_edit_page_action').val() != 'create') {
+		$('#cms_edit_page_id').val(node.id);
+		$('#cms_edit_page_action').val('rename');
+	}
+	
+	$('#cms_edit_page_name').val(node.text);
+	$('#cms_page_jstree_form').submit();
 });
 
+// called after deleting a jstree node
 $('#cms_page_controller_jstree').on('delete_node.jstree', function (event, data) {
 	var node = data.node;
 	var parent = data.parent;
 	
-	console.log("#!!! A node has been deleted:");
-	console.log("Page Id: " + node.id);
-	console.log("Page Parent: " + node.parent);
-	console.log("Page Name: " + node.text);
-	console.log("-");
-	console.log("Node was deleted from parent: " + parent);
-	console.log("---");
+	$('#cms_edit_page_id').val(node.id);
+	$('#cms_edit_page_action').val('delete');
+	$('#cms_page_jstree_form').submit();
 });
-
-
 
 // mark and select selectable elements in page builder
 $('[data-pb-id]').each(
@@ -87,7 +78,7 @@ $('[data-pb-id]').each(
 	}
 );
 
-//on click create new root page
+// on click create new root page
 $('#cms-page-builder-create-new-root-page').click(
 	function() {
 	    var tree = $('#cms_page_controller_jstree').jstree(true);
@@ -95,16 +86,10 @@ $('#cms-page-builder-create-new-root-page').click(
     	
 	    node = tree.create_node(node, {"type":"folder"});
 	    tree.edit(node);
-	    
-    	console.log("Creating page:");
-    	console.log("Page Id: " + node.id);
-    	console.log("Page Parent: " + node.parent);
-    	console.log("Page Name: " + node.text);
-    	console.log("---");
 	}
 );
 
-//on edit cancel button event
+// on edit cancel button event
 $('#cms-page-builder-cancel').click(
 	function() {
 		var lastElementIdPosition = $(this).attr('data-pb-se').lastIndexOf('-');
@@ -117,7 +102,7 @@ $('#cms-page-builder-cancel').click(
 	}
 );
 
-//on edit submit button event
+// on edit submit button event
 $('#cms-page-builder-submit').click(
 	function() {
 		var lastElementIdPosition = $(this).attr('data-pb-se').lastIndexOf('-');
@@ -130,7 +115,7 @@ $('#cms-page-builder-submit').click(
 	}
 );
 
-//adopt cms content builder containers to parents height on window resize event
+// adopt cms content builder containers to parents height on window resize event
 function resizePageBuilder() {
 	var calculatedHeight = $('.main-footer').position().top - $('#page_builder_container_wrapper').position().top;
 	
@@ -162,12 +147,6 @@ $(document).ready(function() {
 		            	
 		        	    node = tree.create_node(node, {"type":"folder"});
 		        	    tree.edit(node);
-		        	    
-		            	console.log("Creating page:");
-		            	console.log("Page Id: " + node.id);
-		            	console.log("Page Parent: " + node.parent);
-		            	console.log("Page Name: " + node.text);
-		            	console.log("---");
 		            }
 		        },
 		        "renameItem": {
@@ -177,12 +156,6 @@ $(document).ready(function() {
 		        	    var node = tree.get_node(obj.reference);
 		        	    
 		        	    tree.edit(node);
-		        	    
-		            	console.log("Renaming page:");
-		            	console.log("Page Id: " + node.id);
-		            	console.log("Page Parent: " + node.parent);
-		            	console.log("Page Name: " + node.text);
-		            	console.log("---");
 		            }
 		        },
 		        "deleteItem": {
@@ -192,12 +165,6 @@ $(document).ready(function() {
 		        	    var node = tree.get_node(obj.reference);
 		        	    
 		        	    tree.delete_node(node);
-		        	    
-		            	console.log("Deleting page:");
-		            	console.log("Page Id: " + node.id);
-		            	console.log("Page Parent: " + node.parent);
-		            	console.log("Page Name: " + node.text);
-		            	console.log("---");
 		            }
 		        }
 		    }
