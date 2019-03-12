@@ -26,10 +26,11 @@ class PagesController extends AbstractController {
         switch ($_POST["cms_form"])
         {
             case "cms_page_jstree_form":
+                $data = $pagesControllerService->editPageData($_POST);
                 break;
             case "cms_page_builder_form":
             default:
-                $data = $pagesControllerService->getSelectedPageData($_POST);
+                $data = $pagesControllerService->editContentData($_POST);
                 break;
         }
         

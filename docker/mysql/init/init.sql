@@ -278,6 +278,17 @@ INSERT INTO `oforge_cms_content_type_row` (`id`, `row_id`, `content_id`, `sort_o
 (13,	21,	15,	1),
 (14,	21,	13,	2);
 
+DROP TABLE IF EXISTS `oforge_cms_layout`;
+CREATE TABLE `oforge_cms_layout` (
+  					`id` int(11) NOT NULL AUTO_INCREMENT,
+					`layout_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  					PRIMARY KEY (`id`),
+  					UNIQUE KEY `layout_name_unique` (`layout_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `oforge_cms_layout` (`id`, `layout_name`) VALUES
+(1,	'oforge');
+
 DROP TABLE IF EXISTS `oforge_cms_site`;
 CREATE TABLE `oforge_cms_site` (
                                      `id` int(11) NOT NULL AUTO_INCREMENT,

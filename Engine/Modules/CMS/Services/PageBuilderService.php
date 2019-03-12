@@ -273,8 +273,13 @@ class PageBuilderService extends AbstractDatabaseAccess
      *
      * @return array|NULL Array filled with twig content data for page builder
      */
-    private function createContentDataArray(array $pageContent, string $elementId, string $_elementId)
+    private function createContentDataArray(?array $pageContent, string $elementId, string $_elementId)
     {
+        if (!$pageContent)
+        {
+            return NULL;
+        }
+        
         $content = new $pageContent["content"]["type"]["classPath"];
         
         $content->load($pageContent["content"]["id"]);
@@ -306,7 +311,7 @@ class PageBuilderService extends AbstractDatabaseAccess
      *
      * @return array|NULL Array filled with twig content data for page builder
      */
-    public function getContentDataArray(array $pageContents, string $elementId = '', string $_elementId = '')
+    public function getContentDataArray(?array $pageContents, string $elementId = '', string $_elementId = '')
     {
         if (!$pageContents)
         {
@@ -336,7 +341,7 @@ class PageBuilderService extends AbstractDatabaseAccess
      *
      * @return array|NULL Array filled with twig content data for page builder
      */
-    public function getContentDataArrayById(array $pageContents, string $elementId, string $_elementId = '')
+    public function getContentDataArrayById(?array $pageContents, string $elementId, string $_elementId = '')
     {
         if (!$pageContents)
         {
