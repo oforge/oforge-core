@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Alexander Wegner
- * Date: 11.02.2019
- * Time: 10:05
- */
 
 namespace FrontendUserManagement\Controller\Frontend;
 
@@ -110,6 +104,7 @@ class LoginController extends AbstractController {
         $sessionManagement->regenerateSession();
     
         $_SESSION['auth'] = $jwt;
+        $_SESSION['user_logged_in'] = true;
     
         $uri = $router->pathFor('frontend_profile');
 

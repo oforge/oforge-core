@@ -3,11 +3,13 @@
 namespace FrontendUserManagement;
 
 use FrontendUserManagement\Middleware\FrontendSecureMiddleware;
+use FrontendUserManagement\Middleware\FrontendUserStateMiddleware;
 use FrontendUserManagement\Models\ProfileNavigation;
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\FrontendSecureMiddlewareService;
 use FrontendUserManagement\Services\ProfileNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
+use Oforge\Engine\Modules\Core\Models\Plugin\Middleware;
 
 class Bootstrap extends AbstractBootstrap {
     public function __construct() {
@@ -21,7 +23,8 @@ class Bootstrap extends AbstractBootstrap {
         ];
         
         $this->middleware = [
-            "frontend_profile" => ["class" => FrontendSecureMiddleware::class, "position" => 1]
+            "frontend_profile" => ["class" => FrontendSecureMiddleware::class, "position" => 1],
+            "frontend" => ["class" => FrontendUserStateMiddleware::class, "position" => 1]
         ];
         
         $this->models = [
