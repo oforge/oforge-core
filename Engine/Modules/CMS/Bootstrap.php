@@ -8,7 +8,6 @@
 
 namespace Oforge\Engine\Modules\CMS;
 
-use Oforge\Engine\Modules\AdminBackend\Services\BackendNavigationService;
 use Oforge\Engine\Modules\CMS\Controller\Backend\ElementsController;
 use Oforge\Engine\Modules\CMS\Controller\Backend\PagesController;
 use Oforge\Engine\Modules\CMS\Controller\Backend\TypesController;
@@ -24,10 +23,11 @@ use Oforge\Engine\Modules\CMS\Models\Page\PagePath;
 use Oforge\Engine\Modules\CMS\Models\Page\PageContent;
 use Oforge\Engine\Modules\CMS\Models\Site\Site;
 use Oforge\Engine\Modules\CMS\Services\DummyPageGenerator;
-use Oforge\Engine\Modules\CMS\Services\ContentTypeService;
 use Oforge\Engine\Modules\CMS\Services\PageService;
+use Oforge\Engine\Modules\CMS\Services\PagesControllerService;
 use Oforge\Engine\Modules\CMS\Services\PageTreeService;
 use Oforge\Engine\Modules\CMS\Services\PageBuilderService;
+use Oforge\Engine\Modules\CMS\Services\ContentTypeService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 
 class Bootstrap extends AbstractBootstrap {
@@ -74,11 +74,12 @@ class Bootstrap extends AbstractBootstrap {
         ];
 
         $this->services = [
+            "dummy.page.generator" => DummyPageGenerator::class,
+            "page.path" => PageService::class,
+            "pages.controller.service" => PagesControllerService::class,
             "page.tree.service" => PageTreeService::class,
             "page.builder.service" => PageBuilderService::class,
-            "content.type.service" => ContentTypeService::class,
-            "page.path" => PageService::class,
-            'dummy.page.generator' => DummyPageGenerator::class
+            "content.type.service" => ContentTypeService::class
         ];
     }
     
