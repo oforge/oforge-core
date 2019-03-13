@@ -30,7 +30,14 @@ class PagesController extends AbstractController {
                 break;
             case "cms_page_builder_form":
             default:
-                $data = $pagesControllerService->editContentData($_POST);
+                if ($pagesControllerService->checkForValidPagePath($_POST))
+                {
+                    $data = $pagesControllerService->editContentData($_POST);
+                }
+                else
+                {
+                    $data = $pagesControllerService->editPagePathData($_POST);
+                }
                 break;
         }
         
