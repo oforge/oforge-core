@@ -76,7 +76,7 @@ class PluginStateService extends AbstractDatabaseAccess {
             if (isset($instance)) {
                 $pluginMiddlewares = $instance->getMiddleware();
                 $plugin = Plugin::create(array("name" => $pluginName, "active" => 0, "installed" => 0, "order" => $instance->getOrder()));
-                $this->entityManager()->flush();
+
                 if(isset($pluginMiddlewares) && is_array($pluginMiddlewares) && sizeof($pluginMiddlewares) > 0) {
                     
                     /**
@@ -86,6 +86,7 @@ class PluginStateService extends AbstractDatabaseAccess {
                     $middlewares = $middlewaresService->register($pluginMiddlewares, $plugin);
                     $plugin->setMiddlewares($middlewares);
                 }
+                $this->entityManager()->persist($plugin);
                 $this->entityManager()->flush();
             }
         }
