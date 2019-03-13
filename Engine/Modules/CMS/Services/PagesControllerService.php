@@ -3,6 +3,7 @@
 namespace Oforge\Engine\Modules\CMS\Services;
 
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
+use Oforge\Engine\Modules\I18n\Models\Language;
 use Oforge\Engine\Modules\CMS\Models\Layout\Layout;
 use Oforge\Engine\Modules\CMS\Models\Site\Site;
 use Oforge\Engine\Modules\CMS\Models\Page\Page;
@@ -12,9 +13,45 @@ class PagesControllerService extends AbstractDatabaseAccess {
     private $entityManager = NULL;
     
     public function __construct() {
-        parent::__construct(["layout" => Layout::class, "site" => Site::class, "page" => Page::class, "pagePath" => PagePath::class]);
+        parent::__construct(["language" => Language::class, "layout" => Layout::class, "site" => Site::class, "page" => Page::class, "pagePath" => PagePath::class]);
         
         $this->entityManager = Oforge()->DB()->getManager();
+    }
+    
+    public function getAvailableLanuages()
+    {
+        $languageEntities = $this->repository('language')->findAll();
+        
+        $languages = [];
+        foreach ($languageEntities as $languageEntity)
+        {
+            $language = [];
+            $language["id"] = $languageEntity->getId();
+            $language["iso"] = $languageEntity->getIso();
+            $language["name"] = $languageEntity->getName();
+            $language["active"] = $languageEntity->isActive();
+            
+            $languages[] = $language;
+        }
+        
+        return $languages;
+    }
+    
+    public function getDefaultLanguageForPage($id)
+    {
+        $pageEntity = $this->repository('page')->findOneBy(["id" => $id]);
+        
+        if ($pageEntity)
+        {
+            $siteEntity = $this->repository('site')->findOneBy(["id" => $pageEntity->getSite()]);
+            
+            if ($siteEntity)
+            {
+                return $siteEntity->getId();
+            }
+        }
+        
+        return 0;
     }
     
     private function findAndRemoveChildPages($parentId)
@@ -85,8 +122,8 @@ class PagesControllerService extends AbstractDatabaseAccess {
         }
         
         $data = [
-            "js"                => ["cms_page_controller_jstree_config" => $pageTreeService->generateJsTreeConfigJSON()],
-            "post"              => $post
+            "js"   => ["cms_page_controller_jstree_config" => $pageTreeService->generateJsTreeConfigJSON()],
+            "post" => $post
         ];
         
         $data["__newlyCreatedPageId"] = $pageId; // TODO: just used as development info
@@ -98,6 +135,34 @@ class PagesControllerService extends AbstractDatabaseAccess {
         return $data;
     }
     
+    public function checkForValidPagePath($post)
+    {
+        $selectedPage       = isset($post["cms_page_jstree_selected_page"]) && $post["cms_page_jstree_selected_page"] > 0 ? $post["cms_page_jstree_selected_page"] : 0;
+        $selectedLanguage   = isset($post["cms_page_selected_language"])    && $post["cms_page_selected_language"] > 0    ? $post["cms_page_selected_language"]    : $post["cms_page_selected_language"] = $this->getDefaultLanguageForPage($selectedPage);
+        
+        $pagePathEntity = $this->repository('pagePath')->findOneBy(["page" => $selectedPage, "language" => $selectedLanguage]);
+        
+        if ($pagePathEntity)
+        {
+            return TRUE;
+        }
+        
+        return FALSE;
+    }
+    
+    public function editPagePathData($post)
+    {
+        $pageTreeService = OForge()->Services()->get("page.tree.service");
+        
+        $data = [
+            "js"                      => ["cms_page_controller_jstree_config" => $pageTreeService->generateJsTreeConfigJSON()],
+            "post"                    => $post,
+            "cms_page_builder_action" => "edit_page_path"
+        ];
+        
+        return $data;
+    }
+    
     public function editContentData($post)
     {
         $pageTreeService    = OForge()->Services()->get("page.tree.service");
@@ -105,12 +170,13 @@ class PagesControllerService extends AbstractDatabaseAccess {
         $contentTypeService = OForge()->Services()->get("content.type.service");
         
         $selectedPage       = isset($post["cms_page_jstree_selected_page"]) && $post["cms_page_jstree_selected_page"] > 0 ? $post["cms_page_jstree_selected_page"] : 0;
-        $selectedLanguage   = isset($post["cms_page_selected_language"])    && $post["cms_page_selected_language"] > 0    ? $post["cms_page_selected_language"]    : 0;
+        $selectedLanguage   = isset($post["cms_page_selected_language"])    && $post["cms_page_selected_language"] > 0    ? $post["cms_page_selected_language"]    : $post["cms_page_selected_language"] = $this->getDefaultLanguageForPage($selectedPage);
         $selectedElement    = isset($post["cms_page_selected_element"])     && !empty($post["cms_page_selected_element"]) ? $post["cms_page_selected_element"]     : 0;
         $selectedAction     = isset($post["cms_page_selected_action"])      && !empty($post["cms_page_selected_action"])  ? $post["cms_page_selected_action"]      : 'edit';
         
         $data = [
             "js"                => ["cms_page_controller_jstree_config" => $pageTreeService->generateJsTreeConfigJSON()],
+            "languages"         => $this->getAvailableLanuages(),
             "pages"             => $pageTreeService->getPageArray(),
             "contentTypeGroups" => $contentTypeService->getContentTypeGroupArray(),
             "selectedElement"   => $selectedElement,

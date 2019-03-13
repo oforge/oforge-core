@@ -14,9 +14,10 @@
     				<div>
     					{{ i18n('cms_page_builder_content_language_selection') }}:&nbsp;
                         <select id="cms_page_builder_language_selector">
-                        	<!-- TODO: generate options programmatically -->
-                            <option value="0" {% if post.cms_page_selected_language == 0 %}selected{% endif %}>Deutsch</option>
-                            <option value="1" {% if post.cms_page_selected_language == 1 %}selected{% endif %}>English</option>
+                            <option value="0" {% if post.cms_page_selected_language == 0 %}selected{% endif %}>{{ i18n('cms_page_builder_select_language') }}</option>
+                        	{% for language in languages %}
+                            <option value="{{ language.id }}" {% if post.cms_page_selected_language == language.id %}selected{% endif %}>{{ language.name }}</option>
+                        	{% endfor %}
                         </select>     				
     				</div>
     			</div>
