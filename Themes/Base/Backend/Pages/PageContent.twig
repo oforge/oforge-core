@@ -9,21 +9,7 @@
             {% endif %}
 	    	<div class="cms-page-builder-content" id="cms_page_builder_content">
                 {% if contents.type == false %}
-    			<div class="url-language-row">
-    				<div>Url: <input type="text" value="{{ pages[post["cms_page_jstree_selected_page"]-1].paths.0.path }}"></div>
-    				<div>
-    					{{ i18n('cms_page_builder_content_language_selection') }}:&nbsp;
-                        <select id="cms_page_builder_language_selector">
-                            <option value="0" {% if post.cms_page_selected_language == 0 %}selected{% endif %}>{{ i18n('cms_page_builder_select_language') }}</option>
-                        	{% for language in languages %}
-                            <option value="{{ language.id }}" {% if post.cms_page_selected_language == language.id %}selected{% endif %}>{{ language.name }}</option>
-                        	{% endfor %}
-                        </select>     				
-    				</div>
-    			</div>
-    			<div>
-    				<p><input type="checkbox" id="cms_page_active" name="cms_page_active">&nbsp;{{ i18n('cms_page_builder_content_page_active_checkbox_label') }}</p>
-    			</div>
+                {% include 'Backend/Pages/PageDataForm.twig' %}
     			<div>
     				<hr>
     			</div>

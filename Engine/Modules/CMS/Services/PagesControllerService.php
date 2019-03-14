@@ -154,13 +154,51 @@ class PagesControllerService extends AbstractDatabaseAccess {
     {
         $pageTreeService = OForge()->Services()->get("page.tree.service");
         
+        $selectedPage = isset($post["cms_page_jstree_selected_page"]) && $post["cms_page_jstree_selected_page"] > 0 ? $post["cms_page_jstree_selected_page"] : 0;
+        
+        if (!isset($post["cms_page_selected_language"]) || $post["cms_page_selected_language"] < 1)
+        {
+            $post["cms_page_selected_language"] = $this->getDefaultLanguageForPage($selectedPage);
+        }
+        
         $data = [
             "js"                      => ["cms_page_controller_jstree_config" => $pageTreeService->generateJsTreeConfigJSON()],
-            "post"                    => $post,
-            "cms_page_builder_action" => "edit_page_path"
+            "languages"               => $this->getAvailableLanuages(),
+            "cms_page_builder_action" => "edit_page_path",
+            "post"                    => $post
         ];
         
         return $data;
+    }
+    
+    public function updatePagePathData($post)
+    {
+        $selectedPage       = isset($post["cms_page_jstree_selected_page"]) && $post["cms_page_jstree_selected_page"] > 0 ? $post["cms_page_jstree_selected_page"] : 0;
+        $selectedLanguage   = isset($post["cms_page_selected_language"])    && $post["cms_page_selected_language"] > 0    ? $post["cms_page_selected_language"]    : $post["cms_page_selected_language"] = $this->getDefaultLanguageForPage($selectedPage);
+        $pagePath           = isset($post["cms_page_data_page_path"])       && !empty($post["cms_page_data_page_path"])   ? $post["cms_page_data_page_path"]       : false;
+
+        if ($pagePath)
+        {
+            $pageEntity     = $this->repository('page')->findOneBy(["id" => $selectedPage]);
+            $languageEntity = $this->repository('language')->findOneBy(["id" => $selectedLanguage]);
+            
+            if ($pageEntity && $languageEntity)
+            {
+                $pagePathEntity = $this->repository('pagePath')->findOneBy(["page" => $selectedPage, "language" => $selectedLanguage]);
+                
+                if (!$pagePathEntity)
+                {
+                    $pagePathEntity = new PagePath;
+                    $pagePathEntity->setPage($pageEntity);
+                    $pagePathEntity->setLanguage($languageEntity);
+                }
+                
+                $pagePathEntity->setPath($pagePath);
+                
+                $this->entityManager->persist($pagePathEntity);
+                $this->entityManager->flush();
+            }
+        }
     }
     
     public function editContentData($post)
