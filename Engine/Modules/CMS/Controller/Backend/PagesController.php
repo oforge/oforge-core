@@ -28,6 +28,10 @@ class PagesController extends AbstractController {
             case "cms_page_jstree_form":
                 $data = $pagesControllerService->editPageData($_POST);
                 break;
+            case "cms_page_data_form":
+                $data = $pagesControllerService->updatePagePathData($_POST);
+                // DO NOT INSERT A BREAK HERE SO THAT EDIT MODE IS ACTIVATED
+                // AFTER UPDATING PAGE DATA
             case "cms_page_builder_form":
             default:
                 if ($pagesControllerService->checkForValidPagePath($_POST))

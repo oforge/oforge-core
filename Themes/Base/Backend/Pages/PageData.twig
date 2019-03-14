@@ -1,0 +1,17 @@
+{% block cms_page_data %}
+	<div class="col-xs-10 cms-page-builder-container" id="cms_page_builder_container">
+		<div>
+			<div class="cms-page-builder-headline">{{ i18n('cms_page_builder_page_data_title') }}</div>
+	    	<div class="cms-page-builder-content" id="cms_page_builder_content">
+	            {% if post["cms_page_jstree_selected_page"] %}
+                    {% include 'Backend/Pages/PageDataForm.twig' %}
+	            {% else %}
+        	    	<div class="cms-page-builder-content" id="cms_page_builder_content">
+        	    		<div>{{ i18n('cms_page_builder_content_no_page_selected') }}</div>
+        			</div>
+	            {% endif %}
+	    	</div>
+		</div>
+	</div>
+	{% include 'Backend/Pages/PageBuilderForm.twig' %}
+{% endblock cms_page_data %}
