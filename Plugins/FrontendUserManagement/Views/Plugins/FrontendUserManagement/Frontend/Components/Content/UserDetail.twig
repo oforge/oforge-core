@@ -1,0 +1,7 @@
+{# block profile__content #}
+{% block profile_content %}
+    {% include 'Plugins/FrontendUserManagement/Frontend/Components/ProfileNavBar.twig' with { back_link : true} %}
+    <div class="profile__content flex flex--row flex--wrap">
+        {% include  'Plugins/FrontendUserManagement/Frontend/Components/Forms/UserDetailsForm.twig' %}
+    </div>
+{% endblock profile_content %}

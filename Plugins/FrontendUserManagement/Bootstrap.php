@@ -6,6 +6,8 @@ use FrontendUserManagement\Middleware\FrontendSecureMiddleware;
 use FrontendUserManagement\Middleware\FrontendUserStateMiddleware;
 use FrontendUserManagement\Models\ProfileNavigation;
 use FrontendUserManagement\Models\User;
+use FrontendUserManagement\Models\UserAddress;
+use FrontendUserManagement\Models\UserDetail;
 use FrontendUserManagement\Services\FrontendSecureMiddlewareService;
 use FrontendUserManagement\Services\ProfileNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
@@ -20,6 +22,7 @@ class Bootstrap extends AbstractBootstrap {
             "/registration" => ["controller" => Controller\Frontend\RegistrationController::class, "name" => "frontend_registration"],
             "/forgot-password" => ["controller" => Controller\Frontend\ForgotPasswordController::class, "name" => "frontend_forgot_password"],
             "/profile" => ["controller" => Controller\Frontend\ProfileController::class, "name" => "frontend_profile"],
+            "/user-details" => ["controller" => Controller\Frontend\UserDetailsController::class, "name" => "frontend_user_details"],
         ];
         
         $this->middleware = [
@@ -29,7 +32,9 @@ class Bootstrap extends AbstractBootstrap {
         
         $this->models = [
             ProfileNavigation::class,
-            User::class
+            User::class,
+            UserDetail::class,
+            UserAddress::class,
         ];
         
         $this->services = [
@@ -62,6 +67,14 @@ class Bootstrap extends AbstractBootstrap {
             "order" => 1000,
             "icon" => "icon icon--logout",
             "path" => "frontend_logout",
+            "position" => "sidebar",
+        ]);
+
+        $profileNavigationService->put([
+            "name" => "frontend_user_details",
+            "order" => 1000,
+            "icon" => "icon icon--contact",
+            "path" => "frontend_user_details",
             "position" => "sidebar",
         ]);
     }
