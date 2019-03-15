@@ -1,7 +1,15 @@
-<div class="of-row {{ data.css }}" data-pb-id="{{ data.id }}" data-pb-se="{{ data.se }}">
-    {% for child in data.childs %}
-		<div>
-            {% include child.type with {'data': child} only %}
-		</div>
-    {% endfor %}
+<div class="content-type-edit-selector" data-pb-id="{{ data.id }}" data-pb-se="{{ data.se }}">
+    <div class="content-type-edit-row-wrapper">
+        {% for child in data.childs %}
+            {% if data.id == data.se %}
+                {% include 'ContentTypes/PageBuilderPlaceholder.twig' %}
+            {% endif %}
+    		<div>
+                {% include child.type with {'data': child} only %}
+    		</div>
+        {% endfor %}
+        {% if data.id == data.se %}
+            {% include 'ContentTypes/PageBuilderPlaceholder.twig' %}
+        {% endif %}
+    </div>
 </div>
