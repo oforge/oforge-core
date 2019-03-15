@@ -117,11 +117,15 @@ $('#cms-page-builder-submit').click(
 
 // adopt cms content builder containers to parents height on window resize event
 function resizePageBuilder() {
-	var calculatedHeight = $('.main-footer').position().top - $('#page_builder_container_wrapper').position().top;
+	var calculatedHeight = window.innerHeight - $('#page_builder_container_wrapper').position().top - $('.main-footer').outerHeight(true) - $('.content').css('padding-top').replace('px', '') - $('.content').css('padding-bottom').replace('px', '');
+	
+	$('#page_builder_container_wrapper').height(calculatedHeight);
 	
 	$('#cms_page_jstree_container').height(calculatedHeight);
-	$('#page_builder_container').height(calculatedHeight);
+	$('#cms_page_builder_container').height(calculatedHeight);
 	$('#cms_content_type_list_container').height(calculatedHeight);
+	
+	$('#cms_content_type_editor_wrapper').height(calculatedHeight - $('#cms_content_type_editor_wrapper').position().top);
 }
 
 // bind functions to window resize event

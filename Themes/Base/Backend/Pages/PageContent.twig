@@ -20,24 +20,28 @@
     				<hr>
     			</div>
                 {% endif %}
-				<div>
+				<div class="cms-content-type-editor-wrapper" id="cms_content_type_editor_wrapper">
+    				<div class="cms-content-type-editor-container">
+                        {% if contents.type %}
+                            {% include contents.type with {'data': contents} only %}
+                        {% else %}
+                            {% for data in contents %}
+                                {% if data.type %}
+                                    {% include 'ContentTypes/PageBuilderPlaceholder.twig' %}
+    	                            {% include data.type %}
+                                {% endif %}
+                            {% endfor %}
+                            {% include 'ContentTypes/PageBuilderPlaceholder.twig' %}
+                        {% endif %}
+    				</div>
+                    {% include 'Backend/Pages/PageBuilderForm.twig' %}
                     {% if contents.type %}
-                        {% include contents.type with {'data': contents} only %}
-                    {% else %}
-                        {% for data in contents %}
-                            {% if data.type %}
-	                            {% include data.type %}
-                            {% endif %}
-                        {% endfor %}
+        			<div class="cms-cancel-submit-row">
+        				<div><button class="cms-cancel-button" id="cms-page-builder-cancel" data-pb-se="{{ post.cms_page_selected_element }}">{{ i18n('cancel') }}</button></div>
+        				<div><button class="cms-submit-button" id="cms-page-builder-submit" data-pb-se="{{ post.cms_page_selected_element }}">{{ i18n('backend_crud_save') }}</button></div>
+        			</div>
                     {% endif %}
-				</div>
-                {% include 'Backend/Pages/PageBuilderForm.twig' %}
-                {% if contents.type %}
-    			<div class="cms-cancel-submit-row">
-    				<div><button class="cms-cancel-button" id="cms-page-builder-cancel" data-pb-se="{{ post.cms_page_selected_element }}">{{ i18n('cancel') }}</button></div>
-    				<div><button class="cms-submit-button" id="cms-page-builder-submit" data-pb-se="{{ post.cms_page_selected_element }}">{{ i18n('backend_crud_save') }}</button></div>
     			</div>
-                {% endif %}
 	    	</div>
 		</div>
 	</div>
