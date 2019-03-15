@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityRepository;
  *
  * @package Oforge\Engine\Modules\Core\Abstracts
  */
-class AbstractDatabaseAccess {
+abstract class AbstractDatabaseAccess {
 
     private $entityManger;
     private $repository;
