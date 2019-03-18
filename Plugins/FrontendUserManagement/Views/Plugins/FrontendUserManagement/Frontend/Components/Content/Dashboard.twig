@@ -1,0 +1,17 @@
+{# block profile__content #}
+{% block profile_content %}
+    <div class="profile__content flex flex--row flex--wrap">
+        {% if content is defined %}
+            {% for nav_item in sidebar_navigation %}
+                <a href="{{ url(nav_item.path) }}" class="content-item flex flex--center flex--justify">
+                    <span class="content-item__text">
+                        {{ i18n(nav_item.name) }}
+                    </span>
+                    {% if nav_item.icon %}
+                        <i class="{{ nav_item.icon }}"></i>
+                    {% endif %}
+                </a>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endblock profile_content %}

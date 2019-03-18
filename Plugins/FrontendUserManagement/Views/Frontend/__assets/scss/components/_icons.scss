@@ -1,0 +1,8 @@
+.icon {
+    &.icon--light {
+        fill: $color-light;
+    }
+    &.icon--turn-left {
+        transform: rotate(90deg);
+    }
+}

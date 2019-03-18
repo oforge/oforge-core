@@ -1,0 +1,23 @@
+.toggle-menu {
+    display: none;
+
+    &__icon {
+        cursor: pointer;
+    }
+
+    &__nav {
+        overflow: hidden;
+    }
+}
+
+.toggle-down {
+    height: 0;
+}
+
+.toggle-menu:checked ~ .toggle-down {
+    height: auto;
+}
+
+.nav-profile__item {
+    color: white;
+}
