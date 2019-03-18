@@ -9,6 +9,33 @@
     background: $color-secondary;
 }
 
+.profile {
+    &__sidebar {
+        display: none;
+    }
+
+    &__nav-bar {
+        background: $color-primary;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: $size-medium;
+        z-index: 1;
+    }
+}
+.nav-bar {
+    &__title {
+        position: absolute;
+        left: 50%;
+        transform: translatex(-50%);
+        text-align: center;
+        font-size: $font-size-3;
+        color: $color-light;
+    }
+}
+
 .profile-nav__link {
     color: $text-dark;
     text-decoration: none;
@@ -36,6 +63,7 @@
 
     .profile {
         &__sidebar {
+            display: block;
             width: 24rem;
         }
         &__content {
@@ -43,6 +71,9 @@
             margin-left: 3rem;
             border-left: 1px solid $color-primary;
             padding-left: 3rem;
+        }
+        &__nav-bar {
+            display: none;
         }
     }
 }
