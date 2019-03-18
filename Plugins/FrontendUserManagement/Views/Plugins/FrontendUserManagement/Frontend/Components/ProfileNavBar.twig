@@ -4,13 +4,42 @@
             {% block back_link %}
                 <a href="{{ url('frontend_profile') }}" class="back-link">
                     <svg class="icon icon--light icon--turn-left">
-                        <use xlink:href="#pfeil"></use>
+                        <use xlink:href="#arrow"></use>
                     </svg>
                 </a>
             {% endblock back_link %}
+        {% else %}
+            <div></div>
         {% endif %}
-        <h3 class="nav-bar__title">
-            {{ i18n('overview', 'Overview') }}
-        </h3>
+        <h3 class="nav-bar__title">{{ content_title }}</h3>
+
+        {% block profile_menu %}
+            <div class="profile__menu">
+                <input type="checkbox" id="profile-nav" class="toggle-menu toggle-menu--profile">
+                <label for="profile-nav" class="toggle-menu__icon">
+                    <svg class="icon icon--light">
+                        <use xlink:href="#arrow"></use>
+                    </svg>
+                </label>
+                <nav class="toggle-menu__nav toggle-menu__nav--profile toggle-down">
+                    <ul class="toggle-nav toggle-nav--profile">
+                        {% for nav_item in sidebar_navigation %}
+                            <li class="nav-profile__item">
+                                <a href="{{ url(nav_item.path) }}">
+                                    <span class="nav-profile__text">
+                                        {{ i18n(nav_item.name) }}
+                                    </span>
+                                    {% if nav_item.icon %}
+                                        <svg class="icon">
+                                            <use xlink:href="#{{ nav_item.icon }}"></use>
+                                        </svg>
+                                    {% endif %}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </nav>
+            </div>
+        {% endblock %}
     </div>
 {% endblock profile_nav_bar %}
