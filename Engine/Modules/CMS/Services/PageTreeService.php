@@ -9,7 +9,7 @@ class PageTreeService extends AbstractDatabaseAccess
 {
     private $entityManager;
     private $repository;
-
+    
     public function __construct()
     {
         parent::__construct(["default" => Page::class]);
@@ -17,7 +17,7 @@ class PageTreeService extends AbstractDatabaseAccess
     
     /**
      * Returns all available page entities
-     * 
+     *
      * @return Page[]|NULL
      */
     private function getPageEntities()
@@ -36,7 +36,7 @@ class PageTreeService extends AbstractDatabaseAccess
     
     /**
      * Returns all found pages as an associative array
-     * 
+     *
      * @return array|NULL Array filled with available pages including path data
      */
     public function getPageArray()
@@ -45,7 +45,7 @@ class PageTreeService extends AbstractDatabaseAccess
         
         if (!$pageEntities)
         {
-            return NULL;    
+            return NULL;
         }
         
         $pages = [];
@@ -82,7 +82,7 @@ class PageTreeService extends AbstractDatabaseAccess
     
     /**
      * Generate a jsTree configuration file with page data included
-     * 
+     *
      * @return array|NULL jsTree configuration file as PHP array
      */
     public function generateJsTreeConfigJSON()
@@ -106,6 +106,7 @@ class PageTreeService extends AbstractDatabaseAccess
         
         $jsTreeJSON = [
             "core" => [
+                "multiple" => FALSE,
                 "animation" => 0,
                 "check_callback" => TRUE,
                 "force_text" => TRUE,

@@ -59,17 +59,6 @@ class FileSystemHelper {
     }
 
     /**
-     * Get all Bootstrap.php files inside a defined path
-     *
-     * @param string $path
-     *
-     * @return string[]
-     */
-    public static function getBootstrapFiles(string $path) {
-        return self::findFiles($path, 'bootstrap');
-    }
-
-    /**
      * Get all template files inside a defined path
      *
      * @param string $path

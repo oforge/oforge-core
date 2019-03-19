@@ -1,0 +1,23 @@
+{% extends "@parent/Frontend/Layout.twig" %}
+
+{% block content %}
+    <div class="content">
+        {% block registration %}
+            <div class="panel panel--registration flex">
+                {% block registration_title %}
+                    <h2 class="panel__title">{{ i18n('welcome') }}</h2>
+                {% endblock registration_title %}
+
+                {% block registration_subtitle %}
+                <div class="panel__content">
+                    <h3 class="panel__sub-title">
+                        {{ i18n('Registration') }}
+                    </h3>
+                </div>
+                {% endblock registration_subtitle %}
+
+                {% include 'Plugins/FrontendUserManagement/Frontend/Components/Forms/RegistrationForm.twig' %}
+            </div>
+        {% endblock registration %}
+    </div>
+{% endblock content %}
