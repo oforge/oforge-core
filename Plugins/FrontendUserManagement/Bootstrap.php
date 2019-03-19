@@ -11,7 +11,7 @@ use FrontendUserManagement\Models\UserDetail;
 use FrontendUserManagement\Services\FrontendSecureMiddlewareService;
 use FrontendUserManagement\Services\ProfileNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
-use Oforge\Engine\Modules\Core\Models\Plugin\Middleware;
+use Oforge\Engine\Modules\TemplateEngine\Core\Services\TemplateManagementService;
 
 class Bootstrap extends AbstractBootstrap {
     public function __construct() {
@@ -54,6 +54,8 @@ class Bootstrap extends AbstractBootstrap {
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\TemplateNotFoundException
+     * @throws \Oforge\Engine\Modules\TemplateEngine\Core\Exceptions\InvalidScssVariableException
      */
     public function activate() {
         /** @var FrontendSecureMiddlewareService $frontendSecureMiddlewareService */
