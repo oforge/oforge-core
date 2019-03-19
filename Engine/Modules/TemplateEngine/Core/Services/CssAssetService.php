@@ -68,6 +68,7 @@ class CssAssetService extends BaseAssetService {
                 $result .= $scss->compile('@import "' . Statics::ASSETS_ALL_SCSS . '";');
             }
         }
+        $this->removeOldAssets($fullFolder, $fileName, ".css");
 
         file_put_contents($outputFull . ".css", $result);
 
@@ -75,7 +76,6 @@ class CssAssetService extends BaseAssetService {
         $minifier->minify($outputFull . ".min.css");
 
         $this->store->set($this->getAccessKey($scope), $output . ".min.css");
-        $this->removeOldAssets($fullFolder, $fileName, ".css");
 
         return $output . ".min.css";
     }

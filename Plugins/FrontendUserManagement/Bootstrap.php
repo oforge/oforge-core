@@ -11,7 +11,8 @@ use FrontendUserManagement\Models\UserDetail;
 use FrontendUserManagement\Services\FrontendSecureMiddlewareService;
 use FrontendUserManagement\Services\ProfileNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
-use Oforge\Engine\Modules\Core\Models\Plugin\Middleware;
+use Oforge\Engine\Modules\Core\Services\MiddlewareService;
+use Oforge\Engine\Modules\TemplateEngine\Core\Services\TemplateManagementService;
 
 class Bootstrap extends AbstractBootstrap {
     public function __construct() {
@@ -26,7 +27,7 @@ class Bootstrap extends AbstractBootstrap {
         ];
         
         $this->middleware = [
-            "frontend_profile" => ["class" => FrontendSecureMiddleware::class, "position" => 1],
+            "frontend" => ["class" => FrontendSecureMiddleware::class, "position" => 1],
             "frontend" => ["class" => FrontendUserStateMiddleware::class, "position" => 1]
         ];
         
@@ -41,7 +42,6 @@ class Bootstrap extends AbstractBootstrap {
             'frontend.user.management.password.reset' => Services\PasswordResetService::class,
             'frontend.user.management.login' => Services\FrontendUserLoginService::class,
             'frontend.user.management.registration' => Services\RegistrationService::class,
-            'frontend.secure.middleware' => Services\FrontendSecureMiddlewareService::class,
             'frontend.user.management.profile.navigation' => Services\ProfileNavigationService::class,
             'password.reset' => Services\PasswordResetService::class
         ];
@@ -56,10 +56,10 @@ class Bootstrap extends AbstractBootstrap {
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
     public function activate() {
-        /** @var FrontendSecureMiddlewareService $frontendSecureMiddlewareService */
+        /** @var MiddlewareService $middlewareService */
         /** @var ProfileNavigationService $profileNavigationService */
-        $frontendSecureMiddlewareService = Oforge()->Services()->get('frontend.secure.middleware');
-        $frontendSecureMiddlewareService->activate('frontend_profile');
+        $middlewareService = Oforge()->Services()->get('middleware');
+        $middlewareService->activate('frontend_profile');
 
         $profileNavigationService = Oforge()->Services()->get('frontend.user.management.profile.navigation');
         $profileNavigationService->put([
@@ -85,8 +85,8 @@ class Bootstrap extends AbstractBootstrap {
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
     public function deactivate() {
-        /** @var FrontendSecureMiddlewareService $frontendSecureMiddlewareService */
-        $frontendSecureMiddlewareService = Oforge()->Services()->get('frontend.secure.middleware');
-        $frontendSecureMiddlewareService->deactivate('frontend_profile');
+        /** @var MiddlewareService $middlewareService */
+        $middlewareService = Oforge()->Services()->get('frontend.secure.middleware');
+        $middlewareService->deactivate('frontend_profile');
     }
 }

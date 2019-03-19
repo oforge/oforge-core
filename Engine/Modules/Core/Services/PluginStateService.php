@@ -1,9 +1,6 @@
 <?php
 namespace Oforge\Engine\Modules\Core\Services;
 
-use Doctrine\Common\Persistence\ObjectRepository;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\CouldNotActivatePluginException;
@@ -11,6 +8,7 @@ use Oforge\Engine\Modules\Core\Exceptions\CouldNotDeactivatePluginException;
 use Oforge\Engine\Modules\Core\Exceptions\PluginNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\Helper;
 use Oforge\Engine\Modules\Core\Models\Plugin\Plugin;
+use Oforge\Engine\Modules\TemplateEngine\Core\Services\TemplateManagementService;
 
 class PluginStateService extends AbstractDatabaseAccess {
 
@@ -176,6 +174,9 @@ class PluginStateService extends AbstractDatabaseAccess {
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\InvalidClassException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceAlreadyDefinedException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\TemplateNotFoundException
+     * @throws \Oforge\Engine\Modules\TemplateEngine\Core\Exceptions\InvalidScssVariableException
      * @throws \ReflectionException
      */
     public function activate($pluginName) {
@@ -216,6 +217,10 @@ class PluginStateService extends AbstractDatabaseAccess {
         }
 
         $this->entityManager()->flush();
+
+        /** @var TemplateManagementService $templateManagementService */
+        $templateManagementService = Oforge()->Services()->get("template.management");
+        $templateManagementService->build();
     }
     
     /**
