@@ -9,7 +9,7 @@
 namespace Oforge\Engine\Modules\CRUD\Controller\Backend;
 
 
-use Oforge\Engine\Modules\AdminBackend\Abstracts\SecureBackendController;
+use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\CRUD\Services\GenericCrudService;
 use Oforge\Engine\Modules\I18n\Services\InternationalizationService;

@@ -167,7 +167,9 @@ INSERT INTO `oforge_i18n_snippet` (`id`, `scope`, `snippet_name`, `value`) VALUE
 (94,	'de',	'password_confirm',	'Passwort bestätigen'),
 (95,	'de',	'change_password',	'Passwort ändern'),
 (96,	'de',	'cms_page_builder_edit_content_types_title',	'Content Type Editieren'),
-(97,	'en',	'cms_page_builder_edit_content_types_title',	'Edit Content Type');
+(97,	'en',	'cms_page_builder_edit_content_types_title',	'Edit Content Type'),
+(98,	'de',	'cms_page_builder_create_new_root_page',	'Hier klicken um eine neue Root-Seite zu erstellen ...'),
+(99,	'en',	'cms_page_builder_create_new_root_page',	'Click here to create a new root page ...');
 
 DROP TABLE IF EXISTS `oforge_cms_content_type_group`;
 CREATE TABLE `oforge_cms_content_type_group` (
@@ -231,7 +233,7 @@ INSERT INTO `oforge_cms_content` (`id`, `content_type_id`, `parent_id`, `content
 (5,	2,	0,	'text_privacy_de',	'privacy-class',	's:11:\"Datenschutz\";'),
 (6,	2,	0,	'text_privacy_en',	'privacy-class',	's:7:\"Privacy\";'),
 (7,	3,	0,	'world_image_de',	'image-class',		's:34:\"/Tests/dummy_media/deutschland.png\";'),
-(8,	3,	0,	'world_image_en',	'image-class',		's:7:\"usa.png\";'),
+(8,	3,	0,	'world_image_en',	'image-class',		's:26:\"/Tests/dummy_media/usa.png\";'),
 (9,	3,	0,	'multilanguage_image',	'image-class',		's:36:\"/Tests/dummy_media/multilanguage.png\";'),
 (10,	2,	0,	'test_text1_de',	'row-text1-class',	's:107:\"Die größte Tragödie im Leben ist, dass wir zu schnell alt und zu spät weise werden. - Benjamin Franklin\";'),
 (11,	2,	0,	'test_text1_en',	'row-text1-class',	's:87:\"Life biggest tragedy is that we get old too soon and wise too late. - Benjamin Franklin\";'),
@@ -275,6 +277,17 @@ INSERT INTO `oforge_cms_content_type_row` (`id`, `row_id`, `content_id`, `sort_o
 (12,	19,	21,	2),
 (13,	21,	15,	1),
 (14,	21,	13,	2);
+
+DROP TABLE IF EXISTS `oforge_cms_layout`;
+CREATE TABLE `oforge_cms_layout` (
+  					`id` int(11) NOT NULL AUTO_INCREMENT,
+					`layout_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  					PRIMARY KEY (`id`),
+  					UNIQUE KEY `layout_name_unique` (`layout_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `oforge_cms_layout` (`id`, `layout_name`) VALUES
+(1,	'oforge');
 
 DROP TABLE IF EXISTS `oforge_cms_site`;
 CREATE TABLE `oforge_cms_site` (

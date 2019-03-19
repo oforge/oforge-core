@@ -1,9 +1,6 @@
 <?php
 namespace Oforge\Engine\Modules\Core\Services;
 
-use Doctrine\Common\Persistence\ObjectRepository;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\CouldNotActivatePluginException;
@@ -11,6 +8,7 @@ use Oforge\Engine\Modules\Core\Exceptions\CouldNotDeactivatePluginException;
 use Oforge\Engine\Modules\Core\Exceptions\PluginNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\Helper;
 use Oforge\Engine\Modules\Core\Models\Plugin\Plugin;
+use Oforge\Engine\Modules\TemplateEngine\Core\Services\TemplateManagementService;
 
 class PluginStateService extends AbstractDatabaseAccess {
 
@@ -76,8 +74,7 @@ class PluginStateService extends AbstractDatabaseAccess {
             if (isset($instance)) {
                 $pluginMiddlewares = $instance->getMiddleware();
                 $plugin = Plugin::create(array("name" => $pluginName, "active" => 0, "installed" => 0, "order" => $instance->getOrder()));
-                $this->entityManager()->persist($plugin);
-                $this->entityManager()->flush();
+
                 if(isset($pluginMiddlewares) && is_array($pluginMiddlewares) && sizeof($pluginMiddlewares) > 0) {
                     
                     /**
@@ -115,18 +112,20 @@ class PluginStateService extends AbstractDatabaseAccess {
             throw new PluginNotFoundException($pluginName);
         }
         $instance = Helper::getBootstrapInstance($pluginName);
+
         if (isset($instance)) {
             $models = $instance->getModels();
             if (sizeof($models) > 0) {
                 Oforge()->DB()->initSchema($models);
             }
-            $services = $instance->getServices();
-            Oforge()->Services()->register($services);
-            $instance->install();
-            $plugin->setInstalled(true);
-            $this->entityManager()->persist($plugin);
-            $this->entityManager()->flush();
+            if ($plugin->getInstalled() === false) {
+                $services = $instance->getServices();
+                Oforge()->Services()->register($services);
+                $instance->install();
+                $plugin->setInstalled(true);
+            }
         }
+        $this->entityManager()->flush();
     }
     
     /**
@@ -139,21 +138,29 @@ class PluginStateService extends AbstractDatabaseAccess {
      * @throws \Oforge\Engine\Modules\Core\Exceptions\InvalidClassException
      */
     public function uninstall(string $pluginName) {
-        // First deactivate plugin
-        $this->deactivate($pluginName);
-        
         /**
          * @var $plugin Plugin
          */
         $plugin = $this->repository()->findOneBy(['name' => $pluginName]);
+
         if (!isset($plugin)) {
             throw new PluginNotFoundException($pluginName);
         }
-        $plugin->setInstalled(false);
-        $this->entityManager()->persist($plugin);
+
+        if ($plugin->getActive() === true) {
+            // First deactivate plugin
+            $this->deactivate($pluginName);
+
+            $instance = Helper::getBootstrapInstance($pluginName);
+            if (isset($instance)) {
+                $instance->uninstall();
+            }
+            $plugin->setInstalled(false);
+        }
+
         $this->entityManager()->flush();
     }
-    
+
     /**
      * If dependencies aren't installed, throw
      * else
@@ -162,8 +169,14 @@ class PluginStateService extends AbstractDatabaseAccess {
      * @param $pluginName
      *
      * @throws CouldNotActivatePluginException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\InvalidClassException
+     * @throws PluginNotFoundException
      * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\InvalidClassException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceAlreadyDefinedException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\TemplateNotFoundException
+     * @throws \Oforge\Engine\Modules\TemplateEngine\Core\Exceptions\InvalidScssVariableException
      * @throws \ReflectionException
      */
     public function activate($pluginName) {
@@ -172,6 +185,10 @@ class PluginStateService extends AbstractDatabaseAccess {
          */
         $plugin = $this->repository()->findOneBy(['name' => $pluginName]);
         $instance = Helper::getBootstrapInstance($pluginName);
+
+        if (!isset($instance)) {
+            throw new PluginNotFoundException($pluginName);
+        }
  
         if (sizeof($instance->getDependencies()) > 0) {
             foreach ($instance->getDependencies() as $dependency) {
@@ -192,9 +209,18 @@ class PluginStateService extends AbstractDatabaseAccess {
             }
         }
 
-        $plugin->setActive(true);
-        $this->entityManager()->persist($plugin);
+        if ($plugin->getActive() === false) {
+            $services = $instance->getServices();
+            Oforge()->Services()->register($services);
+            $instance->activate();
+            $plugin->setActive(true);
+        }
+
         $this->entityManager()->flush();
+
+        /** @var TemplateManagementService $templateManagementService */
+        $templateManagementService = Oforge()->Services()->get("template.management");
+        $templateManagementService->build();
     }
     
     /**
@@ -243,8 +269,16 @@ class PluginStateService extends AbstractDatabaseAccess {
             }
         }
 
-        $pluginToDeactivate->setActive(false);
-        $this->entityManager()->persist($pluginToDeactivate);
+        if ($pluginToDeactivate->getActive() === true) {
+            $instance = Helper::getBootstrapInstance($pluginName);
+
+            if (isset($instance)) {
+                $instance->deactivate();
+            }
+
+            $pluginToDeactivate->setActive(false);
+        }
+
         $this->entityManager()->flush();
     }
     

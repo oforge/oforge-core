@@ -290,8 +290,7 @@ abstract class AbstractContentType extends AbstractDatabaseAccess
                 
                 if (!$this->contentId)
                 {
-                    $this->contentId = $this->entityManager->getId();
-                    $this->contentEntity->setId($this->contentId);
+                    $this->contentId = $this->contentEntity->getId();
                 }
             }
         }

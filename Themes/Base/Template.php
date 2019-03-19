@@ -1,7 +1,7 @@
 <?php
 namespace Themes\Base;
 
-use Oforge\Engine\Modules\TemplateEngine\Abstracts\AbstractTemplate;
+use Oforge\Engine\Modules\TemplateEngine\Core\Abstracts\AbstractTemplate;
 
 class Template extends AbstractTemplate {
 
