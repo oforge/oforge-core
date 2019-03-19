@@ -46,8 +46,8 @@ class TemplateSettingsController extends SecureBackendController
         }
         $scssData = $scssVariableService->getScope('Frontend');
         $templateData = $templateManagementService->list();
-        Oforge()-> View()->assign(["scssVariables" => $scssData]);
-        Oforge()-> View()->assign(["templates" => $templateData]);
+        Oforge()->View()->assign(["scssVariables" => $scssData]);
+        Oforge()->View()->assign(["templates" => $templateData]);
     }
 
     public function initPermissions()
