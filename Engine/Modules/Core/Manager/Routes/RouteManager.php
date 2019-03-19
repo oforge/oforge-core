@@ -76,7 +76,6 @@ class RouteManager {
                 if ( preg_match( $pattern, $endpointName ) ) {
                     $activeMiddlewares = $middlewareService->getActive( $middlewareName );
                     $slimRoute->add( new MiddlewarePluginManager( $activeMiddlewares ) );
-                    break;
                 }
             }
 
