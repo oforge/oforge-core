@@ -4,6 +4,7 @@ namespace Oforge\Engine\Modules\CMS\ContentTypes;
 
 use Oforge\Engine\Modules\CMS\Abstracts\AbstractContentType;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
+use Oforge\Engine\Modules\CMS\Models\Content\Content;
 
 class RichText extends AbstractContentType
 {
@@ -57,13 +58,26 @@ class RichText extends AbstractContentType
     public function getRenderData()
     {
         $data = [];
-        $data["form"]   = "ContentTypes/" . $this->getPath() . "/PageBuilderForm.twig";
-        $data["type"]   = "ContentTypes/" . $this->getPath() . "/PageBuilder.twig";
-        $data["typeId"] = $this->getId();
-        $data["css"]    = $this->getContentCssClass();
-        $data["text"]   = $this->getContentData();
+        $data["form"]        = "ContentTypes/" . $this->getPath() . "/PageBuilderForm.twig";
+        $data["type"]        = "ContentTypes/" . $this->getPath() . "/PageBuilder.twig";
+        $data["typeId"]      = $this->getId();
+        $data["isContainer"] = $this->isContainer();
+        $data["css"]         = $this->getContentCssClass();
+        $data["text"]        = $this->getContentData();
         
         return $data;
+    }
+    
+    /**
+     * Create a child of given content type
+     * @param Content $contentEntity
+     * @param int $order
+     *
+     * @return ContentType $this
+     */
+    public function createChild($contentEntity, $order)
+    {
+        return $this;
     }
     
     /**

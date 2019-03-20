@@ -1,7 +1,23 @@
-<div class="of-row {{ data.css }}" data-pb-id="{{ data.id }}" data-pb-se="{{ data.se }}">
-    {% for child in data.childs %}
-		<div>
-            {% include child.type with {'data': child} only %}
-		</div>
-    {% endfor %}
+<div class="content-type-edit-selector" data-pb-id="{{ data.id }}" data-pb-se="{{ data.se }}" data-pb-order="{{ order }}">
+    <div class="content-type-edit-row-wrapper">
+        {% set parentOrder = order %}
+        {% set order = 0 %}
+        {% for child in data.childs %}
+            {% if data.id == data.se %}
+                {% set order = order + 1 %}
+                {% include 'ContentTypes/PageBuilderPlaceholder.twig' %}
+            {% endif %}
+    		<div>
+                {% if data.id == data.se %}
+                    {% set order = order + 1 %}
+                {% endif %}
+                {% include child.type with {'data': child, 'order': order} only %}
+    		</div>
+        {% endfor %}
+        {% if data.id == data.se %}
+            {% set order = 999999999 %}
+            {% include 'ContentTypes/PageBuilderPlaceholder.twig' %}
+        {% endif %}
+        {% set order = parentOrder %}
+    </div>
 </div>
