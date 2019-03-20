@@ -4,6 +4,7 @@ namespace FrontendUserManagement;
 
 use FrontendUserManagement\Middleware\FrontendSecureMiddleware;
 use FrontendUserManagement\Middleware\FrontendUserStateMiddleware;
+use FrontendUserManagement\Middleware\ProfileNavigationMiddleware;
 use FrontendUserManagement\Models\ProfileNavigation;
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Models\UserAddress;
@@ -20,15 +21,19 @@ class Bootstrap extends AbstractBootstrap {
             "/logout" => ["controller" => Controller\Frontend\LogoutController::class, "name" => "frontend_logout"],
             "/registration" => ["controller" => Controller\Frontend\RegistrationController::class, "name" => "frontend_registration"],
             "/forgot-password" => ["controller" => Controller\Frontend\ForgotPasswordController::class, "name" => "frontend_forgot_password"],
-            "/profile" => ["controller" => Controller\Frontend\ProfileController::class, "name" => "frontend_profile"],
-            "/user-details" => ["controller" => Controller\Frontend\UserDetailsController::class, "name" => "frontend_user_details"],
+            "/profile" => ["controller" => Controller\Frontend\ProfileController::class, "name" => "frontend_profile_dashboard"],
+            "/profile/details" => ["controller" => Controller\Frontend\UserDetailsController::class, "name" => "frontend_profile_details"],
         ];
         
         $this->middleware = [
             "frontend" => [
-                ["class" => FrontendSecureMiddleware::class, "position" => 1],
-                ["class" => FrontendUserStateMiddleware::class, "position" => 1],
+                "class" => FrontendUserStateMiddleware::class,
+                "position" => 1,
             ],
+            "frontend_profile" => [
+                ["class" => FrontendSecureMiddleware::class, "position" => 1],
+                ["class" => ProfileNavigationMiddleware::class, "position" => 1],
+            ]
         ];
         
         $this->models = [
@@ -71,10 +76,10 @@ class Bootstrap extends AbstractBootstrap {
         ]);
 
         $profileNavigationService->put([
-            "name" => "frontend_user_details",
+            "name" => "frontend_profile_details",
             "order" => 1000,
             "icon" => "icon icon--contact",
-            "path" => "frontend_user_details",
+            "path" => "frontend_profile_details",
             "position" => "sidebar",
         ]);
     }
