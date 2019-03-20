@@ -30,6 +30,11 @@
 	min-width: 75px;
 	max-width: 75px;
 	width: 75px;
+	cursor: grab;
+	
+	:active {
+		cursor: grabbing;
+	}
 	
 	.content-type-description {
 		text-align: center;
@@ -39,6 +44,59 @@
 		text-align: center;
 		width: 70%;
 	}
+}
+
+.content-type-edit-placeholder {
+	border-style: dashed;
+	border-radius: 15px;
+	border-width: 1px;
+	border-color: #999;
+	font-size: 5rem;
+	color: #999;
+	text-align: center;
+	vertical-align: middle;
+	margin: 16px 0px;
+	width: 100%;
+	height: 8rem;
+}
+
+.content-type-edit-placeholder-drag-over {
+	border-width: 2px !important;
+	border-color: #0f0 !important;
+}
+
+.content-type-edit-selector {
+	border-style: dashed;
+	border-radius: 15px;
+	border-width: 1px;
+	border-color: #000;
+	text-align: center;
+	vertical-align: middle;
+	margin: 16px 0px;
+	padding: 16px;
+	width: 100%;
+	cursor: pointer;
+}
+
+.content-type-edit-image-wrapper {
+	height: 15rem;
+}
+
+.content-type-edit-richtext-wrapper {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 15rem;
+	overflow: hidden;
+	overflow-y: auto;
+}
+
+.content-type-edit-row-wrapper {
+	text-align: center;
+	vertical-align: middle;
+	width: 100%;
 }
 
 .content-type-edit-form-image {
@@ -74,7 +132,14 @@
 }
 
 .content-type-edit-form-row {
-	input {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: space-evenly;
+	margin: 50px 0;
+	
+	input[type="text"] {
+		width: 40rem;
 	}
 }
  

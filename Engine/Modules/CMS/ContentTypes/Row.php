@@ -4,6 +4,7 @@ namespace Oforge\Engine\Modules\CMS\ContentTypes;
 
 use Oforge\Engine\Modules\CMS\Abstracts\AbstractContentType;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
+use Oforge\Engine\Modules\CMS\Models\Content\Content;
 
 class Row extends AbstractContentType
 {
@@ -88,12 +89,35 @@ class Row extends AbstractContentType
     public function getRenderData()
     {
         $data = [];
-        $data["form"]   = "ContentTypes/" . $this->getPath() . "/PageBuilderForm.twig";
-        $data["type"]   = "ContentTypes/" . $this->getPath() . "/PageBuilder.twig";
-        $data["typeId"] = $this->getId();
-        $data["css"]    = $this->getContentCssClass();
+        $data["form"]        = "ContentTypes/" . $this->getPath() . "/PageBuilderForm.twig";
+        $data["type"]        = "ContentTypes/" . $this->getPath() . "/PageBuilder.twig";
+        $data["typeId"]      = $this->getId();
+        $data["isContainer"] = $this->isContainer();
+        $data["css"]         = $this->getContentCssClass();
         
         return $data;
+    }
+    
+    /**
+     * Create a child of given content type
+     * @param Content $contentEntity
+     * @param int $order
+     *
+     * @return ContentType $this
+     */
+    public function createChild($contentEntity, $order)
+    {
+        // TODO: re-enumerate order indizes for other child contents
+        
+        $rowEntity =  new \Oforge\Engine\Modules\CMS\Models\ContentTypes\Row;
+        $rowEntity->setRow($this->getContentId());
+        $rowEntity->setContent($contentEntity);
+        $rowEntity->setOrder($order);
+        
+        $this->entityManager->persist($rowEntity);
+        $this->entityManager->flush();
+        
+        return $this;
     }
     
     /**
