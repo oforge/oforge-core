@@ -1,6 +1,6 @@
 <?php
 
-namespace Messenger\Services;
+namespace Helpdesk\Services;
 
 use Messenger\Abstracts\AbstractMessengerService;
 use Messenger\Models\Conversation;
