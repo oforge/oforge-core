@@ -8,11 +8,9 @@ use FrontendUserManagement\Models\ProfileNavigation;
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Models\UserAddress;
 use FrontendUserManagement\Models\UserDetail;
-use FrontendUserManagement\Services\FrontendSecureMiddlewareService;
 use FrontendUserManagement\Services\ProfileNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Services\MiddlewareService;
-use Oforge\Engine\Modules\TemplateEngine\Core\Services\TemplateManagementService;
 
 class Bootstrap extends AbstractBootstrap {
     public function __construct() {
@@ -27,8 +25,10 @@ class Bootstrap extends AbstractBootstrap {
         ];
         
         $this->middleware = [
-            "frontend" => ["class" => FrontendSecureMiddleware::class, "position" => 1],
-            "frontend" => ["class" => FrontendUserStateMiddleware::class, "position" => 1]
+            "frontend" => [
+                ["class" => FrontendSecureMiddleware::class, "position" => 1],
+                ["class" => FrontendUserStateMiddleware::class, "position" => 1],
+            ],
         ];
         
         $this->models = [
@@ -59,7 +59,7 @@ class Bootstrap extends AbstractBootstrap {
         /** @var MiddlewareService $middlewareService */
         /** @var ProfileNavigationService $profileNavigationService */
         $middlewareService = Oforge()->Services()->get('middleware');
-        $middlewareService->activate('frontend_profile');
+        $middlewareService->activate('frontend');
 
         $profileNavigationService = Oforge()->Services()->get('frontend.user.management.profile.navigation');
         $profileNavigationService->put([
@@ -86,7 +86,11 @@ class Bootstrap extends AbstractBootstrap {
      */
     public function deactivate() {
         /** @var MiddlewareService $middlewareService */
-        $middlewareService = Oforge()->Services()->get('frontend.secure.middleware');
-        $middlewareService->deactivate('frontend_profile');
+        $middlewareService = Oforge()->Services()->get('middleware');
+        $middlewareService->deactivate('frontend');
+    }
+
+    public function uninstall() {
+
     }
 }

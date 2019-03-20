@@ -61,63 +61,66 @@ class MiddlewareService extends AbstractDatabaseAccess {
     }
 
     /**
-     * @param $options
-     * @param $middleware
+     * @param $middlewares
+     * @param $plugin
+     * @param bool $activate
      *
      * @return Middleware[]
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function register($options, $middleware)
-    {
+    public function register($middlewares, $plugin = null, $activate = false) {
         /**
          * @var $result Middleware[]
          */
         $result = [];
-        if (is_array($options)) {
 
-            foreach ($options as $key => $option) {
-                if ($this->isValid($option)) {
-                    /**
-                     * Check if the element is already within the system
-                     */
-                    $element = $this->repository()->findOneBy(["class" => $option["class"]]);
-                    if(!isset($element)) {
-                        $element = Middleware::create(["name" => $key,  "class" => $option["class"], "position" => $option["position"]]);
-                        $element->setPlugin($middleware);
+        if (is_array($middlewares) && sizeof($middlewares) > 0) {
+
+            foreach ($middlewares as $pathName => $middleware) {
+                $element = null;
+
+                if (array_key_exists("class", $middleware)) {
+                    $element = $this->createMiddleware($middleware, $pathName, $plugin, $activate);
+                } elseif (is_array($middleware)) {
+                    foreach ($middleware as $key => $value) {
+                        $element = $this->createMiddleware($value, $pathName, $plugin, $activate);
                     }
+                } else {
+                    // TODO
+                }
 
+                if (isset($element)) {
                     array_push($result, $element);
                 }
             }
+            $this->entityManager()->flush();
+
         }
 
         return $result;
     }
-    
-    /**
-     * @param $options
-     *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function registerFromModule($options)
-    {
-        if (is_array($options)) {
+
+    private function createMiddleware($middleware, $pathName, $plugin = null, $activate = false) {
+        $active = $activate ? 1 : 0;
+
+        if ($this->isValid($middleware)) {
             /**
              * Check if the element is already within the system
              */
-            foreach ($options as $key => $option) {
-                if ($this->isValid($option)) {
+            $element = $this->repository()->findOneBy(["class" => $middleware["class"]]);
+            if(!isset($element)) {
+                $element = Middleware::create(["name" => $pathName,  "class" => $middleware["class"], "active" => $active, "position" => $middleware["position"]]);
 
-                    $element = $this->repository()->findOneBy(["class" => $option["class"]]);
-                    if(!isset($element)) {
-                        $element = Middleware::create(["name" => $key,  "class" => $option["class"], "active" => 1, "position" => $option["position"]]);
-                        $this->entityManager()->persist($element);
-                    }
+                if (isset($plugin)) {
+                    $element->setPlugin($plugin);
                 }
+                $this->entityManager()->persist($element);
             }
-        }
 
-        $this->entityManager()->flush();
+            return $element;
+        }
+        return null;
     }
     
     /**
