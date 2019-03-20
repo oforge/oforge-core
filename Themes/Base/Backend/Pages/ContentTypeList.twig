@@ -11,9 +11,9 @@
                     	<div class="row">
                     	{% endif %}
                         {% for type in contentTypeGroup.types %}
-                        	<div class="col-xs-5 content-type-selector">
-                            	<div><img class="content-type-icon" src="{{ type.icon }}"></div>
-                            	<div class="content-type-description">{{ type.description }}</div>
+                        	<div class="col-xs-5 content-type-selector" draggable="true" ondragstart="dragContentType(event)" data-ct-id="{{ type.id }}">
+                            	<div draggable="false"><img class="content-type-icon" src="{{ type.icon }}" draggable="false"></div>
+                            	<div class="content-type-description" draggable="false">{{ type.description }}</div>
                         	</div>
                         {% endfor %}	    	
                     	{% if loop.index0 % 2 == 0 %}

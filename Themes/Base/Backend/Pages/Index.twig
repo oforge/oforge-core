@@ -12,7 +12,7 @@
                     {% include 'Backend/Pages/PageData.twig' %}
                 {% else %}
                     {% include 'Backend/Pages/PageContent.twig' %}
-                    {% if not contents.type %}
+                    {% if contents.isContainer or not contents.type %}
                         {% include 'Backend/Pages/ContentTypeList.twig' %}
                     {% endif %}
                 {% endif %}

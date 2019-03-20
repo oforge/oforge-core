@@ -1,6 +1,6 @@
 {% block cms_page_builder %}
 	{% if post["cms_page_jstree_selected_page"] %}
-	<div class="{% if not contents.type %}col-xs-8{% else %}col-xs-10{% endif %} cms-page-builder-container" id="cms_page_builder_container">
+	<div class="{% if contents.isContainer or not contents.type %}col-xs-8{% else %}col-xs-10{% endif %} cms-page-builder-container" id="cms_page_builder_container">
 		<div>
             {% if not contents.type %}
 			<div class="cms-page-builder-headline">{{ i18n('cms_page_builder_content_title') }}</div>

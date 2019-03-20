@@ -89,6 +89,37 @@ $('#cms-page-builder-create-new-root-page').click(
 	}
 );
 
+// content type drag 'n drop functionality
+function dragContentType(event) {
+	console.log("Dragging content type id: " + $(event.target).attr('data-ct-id'));
+	event.dataTransfer.setData('text', $(event.target).attr('data-ct-id'));
+}
+
+function dragOverPlaceholder(event) {
+	event.preventDefault();
+	console.log("Dragged over placeholder with order: " + $(event.target).attr('data-pb-order'));
+	$(event.target).addClass("content-type-edit-placeholder-drag-over");
+}
+
+function dragLeavePlaceholder(event) {
+	event.preventDefault();
+	console.log("Drag leaving placeholder with order: " + $(event.target).attr('data-pb-order'));
+	$(event.target).removeClass("content-type-edit-placeholder-drag-over");
+}
+
+function dropOverPlaceholder(event) {
+	event.preventDefault();
+	console.log("Dropped on placeholder with order: " + $(event.target).attr('data-pb-order'));
+	$(event.target).removeClass("content-type-edit-placeholder-drag-over");
+	
+	var data = event.dataTransfer.getData("text");
+	
+	$('#cms_page_create_content_with_type_id').val(data);
+	$('#cms_page_create_content_at_order_index').val($(event.target).attr('data-pb-order'));
+	$('#cms_page_selected_action').val('create');
+	$('#cms_page_builder_form').submit();
+}
+
 // on edit cancel button event
 $('#cms-page-builder-cancel').click(
 	function() {
