@@ -2,7 +2,7 @@
 
 namespace Oforge\Engine\Modules\Notifications;
 
-use Oforge\Engine\Modules\AdminBackend\Services\BackendNavigationService;
+use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Notifications\Models\BackendNotification;
 use Oforge\Engine\Modules\Notifications\Controller\BackendNotificationController;
