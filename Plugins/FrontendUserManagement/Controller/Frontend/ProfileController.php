@@ -15,7 +15,7 @@ class ProfileController extends SecureFrontendController {
         $profileNavigationService = Oforge()->Services()->get('frontend.user.management.profile.navigation');
         $sidebarNavigation = $profileNavigationService->get('sidebar');
 
-        Oforge()->View()->assign(['sidebar_navigation' => $sidebarNavigation, 'content' => $sidebarNavigation]);
+        Oforge()->View()->assign(['content' => $sidebarNavigation]);
     }
     public function editAction(Request $request, Response $response) {
     }
