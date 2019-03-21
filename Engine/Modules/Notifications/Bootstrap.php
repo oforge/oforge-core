@@ -17,7 +17,6 @@ class Bootstrap extends AbstractBootstrap {
             '/backend/notifications/{id}' => [
                 'controller'   => BackendNotificationController::class,
                 'name'         => 'backend_notifications',
-                'assets_scope' => 'Backend',
             ],
         ];
 

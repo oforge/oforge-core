@@ -5,7 +5,7 @@ namespace Helpdesk\Services;
 use Messenger\Abstracts\AbstractMessengerService;
 use Messenger\Models\Conversation;
 
-class MessengerHelpdeskService extends AbstractMessengerService {
+class HelpdeskMessengerService extends AbstractMessengerService {
 
     /**
      * @param $requester
