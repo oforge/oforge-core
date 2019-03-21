@@ -3,7 +3,9 @@
 namespace Helpdesk;
 
 use Helpdesk\Controller\Backend\BackendHelpdeskController;
-use Helpdesk\Services\MessengerHelpdeskService;
+use Helpdesk\Controller\Backend\BackendHelpdeskMessengerController;
+use Helpdesk\Services\HelpdeskMessengerService;
+use Helpdesk\Services\HelpdeskTicketService;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 
@@ -13,15 +15,21 @@ class Bootstrap extends AbstractBootstrap {
      */
     public function __construct() {
         $this->endpoints = [
-            '/backend/helpdesk[/]' => [
+            '/backend/helpdesk' => [
                 'controller'   => BackendHelpdeskController::class,
                 'name'         => 'backend_helpdesk',
-                'assets_scope' => 'Backend',
+                'asset_scope' => 'Backend',
+            ],
+            '/backend/helpdesk/messenger/{id}' => [
+                'controller'   => BackendHelpdeskMessengerController::class,
+                'name'         => 'backend_helpdesk_messenger',
+                'asset_scope' => 'Backend',
             ],
         ];
 
         $this->services = [
-            'helpdesk.messenger' => MessengerHelpdeskService::class,
+            'helpdesk.messenger' => HelpdeskMessengerService::class,
+            'helpdesk.ticket' => HelpdeskTicketService::class,
         ];
 
     }
