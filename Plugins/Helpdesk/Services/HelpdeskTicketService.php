@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: steffen
- * Date: 20.03.19
- * Time: 13:44
- */
 
 namespace Helpdesk\Services;
 
@@ -16,6 +10,68 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
         parent::__construct([
             'default' => Ticket::class,
         ]);
+    }
+
+    /**
+     * @param $opener
+     * @param $issueType
+     * @param $title
+     * @param $message
+     *
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function createNewTicket($opener, $issueType, $title, $message) {
+        $ticket = new Ticket();
+        $ticket->setIssueType($issueType);
+        $ticket->setOpener($opener);
+        $ticket->setStatus("open");
+        $ticket->setTitle($title);
+        $ticket->setMessage($message);
+
+        $this->entityManager()->persist($ticket);
+        $this->entityManager()->flush();
+
+        /** @var HelpdeskMessengerService $helpdeskMessengerService */
+        $helpdeskMessengerService = Oforge()->Services()->get("helpdesk.messenger");
+
+        $helpdeskMessengerService->createNewConversation($opener, $ticket->getId(), $title, $message);
+    }
+
+    /**
+     * @param string $status
+     *
+     * @return array
+     */
+    public function getTickets($status = "") {
+        return $this->repository()->findBy(['ticket_status' => $status]);
+    }
+
+    /**
+     * @param $id
+     *
+     * @return Ticket|null
+     */
+    public function getTicketById($id) {
+        /** @var Ticket $ticket */
+        $ticket = $this->repository()->find($id);
+        return $ticket;
+    }
+
+    /**
+     * @param $id
+     * @param $status
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function changeStatus($id, $status) {
+        $ticket = $this->getTicketById($id);
+
+        $ticket->setStatus($status);
+
+        $this->entityManager()->persist($ticket);
+        $this->entityManager()->flush();
     }
 
 }

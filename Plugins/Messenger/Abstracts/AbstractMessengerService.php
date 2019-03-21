@@ -34,10 +34,28 @@ abstract class AbstractMessengerService extends AbstractDatabaseAccess {
     /**
      * @param $conversationId
      *
-     * @return array
+     * @return Message|array
      */
-    public function getConversation($conversationId) {
+    public function getMessages($conversationId) {
         return $this->repository('messages')->findBy(['conversation_id' => $conversationId]);
+    }
+
+    /**
+     * @param $targetId
+     *
+     * @return Conversation|object
+     */
+    public function getConversationByTarget($targetId) {
+        return $this->repository('messages')->findOneBy(['target_id' => $targetId]);
+    }
+
+    /**
+     * @param $targetId
+     *
+     * @return Conversation|object
+     */
+    public function getConversationById($conversationId) {
+        return $this->repository('conversation')->findOneBy(['id' => $conversationId]);
     }
 
     /**
