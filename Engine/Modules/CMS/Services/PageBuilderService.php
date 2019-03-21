@@ -285,8 +285,9 @@ class PageBuilderService extends AbstractDatabaseAccess
         $content->load($pageContent["content"]["id"]);
         
         $data = [];
-        $data["id"] = $this->createCurrentElementId($_elementId, $pageContent["content"]["id"]);
-        $data["se"] = $elementId;
+        $data["id"]    = $this->createCurrentElementId($_elementId, $pageContent["content"]["id"]);
+        $data["se"]    = $elementId;
+        $data["order"] = $pageContent["order"];
         
         $data = array_merge($data, $content->getRenderData());
         

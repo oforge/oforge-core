@@ -25,12 +25,10 @@
                         {% if contents.type %}
                             {% include contents.type with {'data': contents} only %}
                         {% else %}
-                            {% set order = 0 %}
                             {% for data in contents %}
                                 {% if data.type %}
-                                    {% set order = order + 1 %}
+                                    {% set order = data.order %}
                                     {% include 'ContentTypes/PageBuilderPlaceholder.twig' %}
-                                    {% set order = order + 1 %}
     	                            {% include data.type %}
                                 {% endif %}
                             {% endfor %}

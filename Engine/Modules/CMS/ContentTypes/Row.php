@@ -107,7 +107,22 @@ class Row extends AbstractContentType
      */
     public function createChild($contentEntity, $order)
     {
-        // TODO: re-enumerate order indizes for other child contents
+        $rowEntities = $this->getRowEntities($this->getContentId());
+        
+        if ($rowEntities)
+        {
+            foreach ($rowEntities as $rowEntity)
+            {
+                $currentOrder = $rowEntity->getOrder();
+                if ($currentOrder >= $order)
+                {
+                    $rowEntity->setOrder($currentOrder + 1);
+                    
+                    $this->entityManager->persist($rowEntity);
+                    $this->entityManager->flush();
+                }
+            }
+        }
         
         $rowEntity =  new \Oforge\Engine\Modules\CMS\Models\ContentTypes\Row;
         $rowEntity->setRow($this->getContentId());

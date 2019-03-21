@@ -8,15 +8,15 @@ use Oforge\Engine\Modules\CMS\Models\Layout\Layout;
 use Oforge\Engine\Modules\CMS\Models\Site\Site;
 use Oforge\Engine\Modules\CMS\Models\Page\Page;
 use Oforge\Engine\Modules\CMS\Models\Page\PagePath;
-use Oforge\Engine\Modules\CMS\Models\Content\Content;
 use Oforge\Engine\Modules\CMS\Models\Page\PageContent;
+use Oforge\Engine\Modules\CMS\Models\Content\Content;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
 
 class PagesControllerService extends AbstractDatabaseAccess {
     private $entityManager = NULL;
     
     public function __construct() {
-        parent::__construct(["language" => Language::class, "layout" => Layout::class, "site" => Site::class, "page" => Page::class, "pagePath" => PagePath::class, "contentType" => ContentType::class, "content" => Content::class]);
+        parent::__construct(["language" => Language::class, "layout" => Layout::class, "site" => Site::class, "page" => Page::class, "pagePath" => PagePath::class, "pageContent" => PageContent::class, "contentType" => ContentType::class, "content" => Content::class]);
         
         $this->entityManager = Oforge()->DB()->getManager();
     }
@@ -223,7 +223,22 @@ class PagesControllerService extends AbstractDatabaseAccess {
             
             if ($selectedElementId < 1)
             {
-                // TODO: re-enumerate order indizes for other contents
+                $pageContentEntities = $this->repository('pageContent')->findBy(["pagePath" => $pagePathId]);
+                
+                if ($pageContentEntities)
+                {
+                    foreach ($pageContentEntities as $pageContentEntity)
+                    {
+                        $currentOrder = $pageContentEntity->getOrder();
+                        if ($currentOrder >= $createContentAtOrderIndex)
+                        {
+                            $pageContentEntity->setOrder($currentOrder + 1);
+                            
+                            $this->entityManager->persist($pageContentEntity);
+                            $this->entityManager->flush();
+                        }
+                    }
+                }
                 
                 $pagePathEntity = $this->repository('pagePath')->findOneBy(["id" => $pagePathId]);
                 
@@ -251,7 +266,7 @@ class PagesControllerService extends AbstractDatabaseAccess {
                     if ($containerContentTypeEntity)
                     {
                         $containerContentTypeEntity->load($containerContentEntity->getId());
-                        $containerContentTypeEntity->createChild($contentEntity, $createContentWithTypeId, $createContentAtOrderIndex);
+                        $containerContentTypeEntity->createChild($contentEntity, $createContentAtOrderIndex);
                     }
                 }
             }
