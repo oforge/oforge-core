@@ -111,15 +111,33 @@ class Row extends AbstractContentType
         
         if ($rowEntities)
         {
+            $highestOrder = 1;
+            
             foreach ($rowEntities as $rowEntity)
             {
                 $currentOrder = $rowEntity->getOrder();
-                if ($currentOrder >= $order)
+
+                if ($createContentAtOrderIndex < 999999999)
                 {
-                    $rowEntity->setOrder($currentOrder + 1);
-                    
-                    $this->entityManager->persist($rowEntity);
-                    $this->entityManager->flush();
+                    if ($currentOrder >= $order)
+                    {
+                        $rowEntity->setOrder($currentOrder + 1);
+                        
+                        $this->entityManager->persist($rowEntity);
+                        $this->entityManager->flush();
+                    }
+                }
+                else
+                {
+                    if ($currentOrder >= $highestOrder)
+                    {
+                        $highestOrder = $currentOrder;
+                    }
+                }
+                
+                if ($createContentAtOrderIndex == 999999999)
+                {
+                    $order = $highestOrder + 1;
                 }
             }
         }

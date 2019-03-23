@@ -208,6 +208,8 @@ class PagesControllerService extends AbstractDatabaseAccess {
     {
         $contentTypeEntity = $this->repository('contentType')->findOneBy(["id" => $createContentWithTypeId]);
         
+        $contentId = false;
+        
         if ($contentTypeEntity)
         {
             $contentEntity =  new Content;
@@ -227,16 +229,34 @@ class PagesControllerService extends AbstractDatabaseAccess {
                 
                 if ($pageContentEntities)
                 {
+                    $highestOrder = 1;
+                    
                     foreach ($pageContentEntities as $pageContentEntity)
                     {
                         $currentOrder = $pageContentEntity->getOrder();
-                        if ($currentOrder >= $createContentAtOrderIndex)
+                        
+                        if ($createContentAtOrderIndex < 999999999)
                         {
-                            $pageContentEntity->setOrder($currentOrder + 1);
-                            
-                            $this->entityManager->persist($pageContentEntity);
-                            $this->entityManager->flush();
+                            if ($currentOrder >= $createContentAtOrderIndex)
+                            {
+                                $pageContentEntity->setOrder($currentOrder + 1);
+                                
+                                $this->entityManager->persist($pageContentEntity);
+                                $this->entityManager->flush();
+                            }
                         }
+                        else
+                        {
+                            if ($currentOrder >= $highestOrder)
+                            {
+                                $highestOrder = $currentOrder;
+                            }
+                        }
+                    }
+                    
+                    if ($createContentAtOrderIndex == 999999999)
+                    {
+                        $createContentAtOrderIndex = $highestOrder + 1;
                     }
                 }
                 
@@ -271,6 +291,8 @@ class PagesControllerService extends AbstractDatabaseAccess {
                 }
             }
         }
+        
+        return $contentId;
     }
     
     public function editContentData($post)
@@ -324,8 +346,13 @@ class PagesControllerService extends AbstractDatabaseAccess {
                     switch ($selectedAction)
                     {
                         case "create":
-                            $this->createContentElement($pageArray["paths"][$selectedLanguage]["id"], $selectedElementId, $createContentWithTypeId, $createContentAtOrderIndex);
-                            $data["contentElementData"] = $contentTypeService->getContentDataArray($selectedElementId, $selectedElementTypeId);
+                            $newContentId = $this->createContentElement($pageArray["paths"][$selectedLanguage]["id"], $selectedElementId, $createContentWithTypeId, $createContentAtOrderIndex);
+                            if ($newContentId)
+                            {
+                                $post["cms_page_selected_element"] = $post["cms_page_selected_element"] . "-" . $newContentId;
+                                $post["cms_page_selected_action"] = "edit";
+                                return $this->editContentData($post);
+                            }
                             break;
                         case "submit":
                             // persist new content element data to database and reload content data from database
@@ -347,7 +374,13 @@ class PagesControllerService extends AbstractDatabaseAccess {
                 switch ($selectedAction)
                 {
                     case "create":
-                        $this->createContentElement($pageArray["paths"][$selectedLanguage]["id"], $selectedElementId, $createContentWithTypeId, $createContentAtOrderIndex);
+                        $newContentId = $this->createContentElement($pageArray["paths"][$selectedLanguage]["id"], $selectedElementId, $createContentWithTypeId, $createContentAtOrderIndex);
+                        if ($newContentId)
+                        {
+                            $post["cms_page_selected_element"] = $newContentId;
+                            $post["cms_page_selected_action"] = "edit";
+                            return $this->editContentData($post);
+                        }
                         break;
                 }
                 
