@@ -56,7 +56,7 @@ class Conversation extends AbstractModel {
 
     /**
      * @var string
-     * @ORM\Column(name="last_message", type="string", nullable=true);
+     * @ORM\Column(name="last_message", type="text", nullable=true);
      */
     private $lastMessage;
 

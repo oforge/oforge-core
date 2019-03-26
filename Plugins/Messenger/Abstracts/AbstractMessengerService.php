@@ -36,8 +36,8 @@ abstract class AbstractMessengerService extends AbstractDatabaseAccess {
      *
      * @return Message|array
      */
-    public function getMessages($conversationId) {
-        return $this->repository('messages')->findBy(['conversation_id' => $conversationId]);
+    public function getMessagesOfConversation($conversationId) {
+        return $this->repository('message')->findBy(['conversationId' => $conversationId]);
     }
 
     /**
@@ -46,7 +46,7 @@ abstract class AbstractMessengerService extends AbstractDatabaseAccess {
      * @return Conversation|object
      */
     public function getConversationByTarget($targetId) {
-        return $this->repository('messages')->findOneBy(['target_id' => $targetId]);
+        return $this->repository('conversation')->findOneBy(['targetId' => $targetId]);
     }
 
     /**
@@ -65,24 +65,18 @@ abstract class AbstractMessengerService extends AbstractDatabaseAccess {
      *
      * @throws Exception
      */
-    public function sendMessage($conversationId, $sender, $messageContent) {
+    public function sendMessage($conversationId, $senderType, $sender, $messageContent) {
         /** @var Conversation $conversation */
-        $conversation = $this->repository('conversation')->findBy(['id' => $conversationId]);
-
-        $recipient = "";
-        if ($conversation->getRequested() === $sender) {
-            $recipient = $recipient . $conversation->getRequester();
-        } else {
-            $recipient = $recipient . $conversation->getRequested();
-        }
+        $conversation = $this->repository('conversation')->findOneBy(['id' => $conversationId]);
 
         $messageObject = new Message();
-        $messageObject->setSender($sender);
-        $messageObject->setRecipient($recipient);
+        $messageObject->setSender($senderType . '_' . $sender);
         $messageObject->setMessage($messageContent);
         $messageObject->setConversationId($conversationId);
         $this->entityManager()->persist($messageObject);
         $this->entityManager()->flush();
+
+
 
         $conversation->setLastMessage($messageObject->getMessage());
         $conversation->setLastMessageTimestamp($messageObject->getTimestamp());

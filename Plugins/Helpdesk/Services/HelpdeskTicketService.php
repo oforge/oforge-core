@@ -41,10 +41,10 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
     /**
      * @param string $status
      *
-     * @return array
+     * @return array|null
      */
-    public function getTickets($status = "") {
-        return $this->repository()->findBy(['ticket_status' => $status]);
+    public function getTickets($status = "open") {
+        return $this->repository()->findBy(['status' => $status]);
     }
 
     /**
