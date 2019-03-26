@@ -3,14 +3,18 @@
     <div class="profile__content flex flex--row flex--wrap">
         {% if content is defined %}
             {% for nav_item in sidebar_navigation %}
-                <a href="{{ url(nav_item.path) }}" class="content-item flex flex--center flex--justify">
-                    <span class="content-item__text">
-                        {{ i18n(nav_item.name) }}
-                    </span>
-                    {% if nav_item.icon %}
-                        <i class="{{ nav_item.icon }}"></i>
-                    {% endif %}
-                </a>
+                <div class="box">
+                    <a href="{{ url(nav_item.path) }}" class="box__content flex flex--center flex--justify">
+                        {% if nav_item.icon %}
+                        <svg class="icon icon--light icon--{{ nav_item.icon }}">
+                            <use xlink:href="#{{ nav_item.icon }}"></use>
+                        </svg>
+                        {% endif %}
+                        <span class="box__text">
+                            {{ i18n(nav_item.name) }}
+                        </span>
+                    </a>
+                </div>
             {% endfor %}
         {% endif %}
     </div>
