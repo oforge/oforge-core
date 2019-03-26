@@ -2855,7 +2855,7 @@ table.text-center {
   -o-transform: translate(0, 0);
   transform: translate(0, 0);
   padding: 10px;
-  height: 250px;
+  height: 66vh;
   overflow: auto;
 }
 
@@ -2884,6 +2884,7 @@ table.text-center {
 }
 
 .direct-chat-text {
+  word-break: break-all;
   border-radius: 5px;
   position: relative;
   padding: 5px 10px;
