@@ -3,8 +3,6 @@
 namespace Messenger\Models;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\JoinColumn;
-use Doctrine\ORM\Mapping\ManyToOne;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 
 /**
@@ -29,13 +27,7 @@ class Message extends AbstractModel {
 
     /**
      * @var string
-     * @ORM\Column(name="recipient", type="string", nullable=false)
-     */
-    private $recipient;
-
-    /**
-     * @var string
-     * @ORM\Column(name="message", type="string", nullable=false)
+     * @ORM\Column(name="message", type="text", nullable=false)
      */
     private $message;
 
@@ -47,8 +39,7 @@ class Message extends AbstractModel {
 
     /**
      * @var string
-     * @ManyToOne(targetEntity="Conversation")
-     * @JoinColumn(name="conversation_id", referencedColumnName="id")
+     * @ORM\Column(name="conversation_id", type="string", nullable=false)
      */
     private $conversationId;
 
@@ -81,20 +72,6 @@ class Message extends AbstractModel {
      */
     public function setSender(string $sender) : void {
         $this->sender = $sender;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRecipient() : string {
-        return $this->recipient;
-    }
-
-    /**
-     * @param string $recipient
-     */
-    public function setRecipient(string $recipient) : void {
-        $this->recipient = $recipient;
     }
 
     /**

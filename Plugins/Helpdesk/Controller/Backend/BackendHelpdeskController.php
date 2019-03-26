@@ -15,13 +15,19 @@ class BackendHelpdeskController extends SecureBackendController {
         $helpdeskTicketService = Oforge()->Services()->get('helpdesk.ticket');
 
         $ticketData = $helpdeskTicketService->getTickets();
-
         Oforge()->View()->assign(["tickets" => $ticketData]);
     }
 
-    public function setStatusAction(Request $request, Response $response) {
+    public function closeTicketAction(Request $request, Response $response) {
         if($request->isPost()) {
-            // TODO
+            /** @var HelpdeskTicketService $helpdeskTicketService */
+            $helpdeskTicketService = Oforge()->Services()->get('helpdesk.ticket');
+
+            $ticketId = $request->getParsedBody()['ticketId'];
+
+            $helpdeskTicketService->changeStatus($ticketId, "closed");
+
+            return $response->withRedirect('/backend/helpdesk');
         }
     }
 

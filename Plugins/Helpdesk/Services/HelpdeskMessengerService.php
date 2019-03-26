@@ -30,7 +30,7 @@ class HelpdeskMessengerService extends AbstractMessengerService {
         $this->entityManager()->persist($conversation);
         $this->entityManager()->flush();
 
-        parent::sendMessage($conversation->getId(), $requester, $firstMessage);
+        parent::sendMessage($conversation->getId(), 'frontend',$requester, $firstMessage);
     }
 
     /**
