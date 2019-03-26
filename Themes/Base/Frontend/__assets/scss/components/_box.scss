@@ -1,0 +1,91 @@
+.box {
+    position: relative;
+    background: $color-secondary;
+    width: calc(50% - (#{$size-medium} / 2));
+
+    &:before {
+        content: '';
+        display: block;
+        padding-top: 100%;
+    }
+
+    &.box--ratio-2-1:before {
+        padding-top: 50%;
+    }
+
+    &__content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        text-decoration: none;
+        padding: $size-small;
+
+        .icon {
+            width: 50%;
+            height: 50%;
+            margin-bottom: $size-medium;
+        }
+    }
+
+    &__text {
+        color: $color-light;
+        word-break: break-all;
+    }
+
+    &:nth-child(n + 3) {
+        margin-top: $size-medium;
+    }
+    &:nth-child(even) {
+        margin-left: $size-medium;
+    }
+}
+
+@media screen and (min-width: $screen-medium) {
+    .box {
+        width: calc((1 / 3 * 100%) - (#{$size-large} / (3 / 2)));
+
+        &:nth-child(n + 3) {
+            margin-top: 0;
+        }
+        &:nth-child(n + 4) {
+            margin-top: $size-large;
+        }
+        &:nth-child(even) {
+            margin-left: 0;
+        }
+
+        &:nth-child(3n),
+        &:nth-child(3n + 2) {
+            margin-left: $size-large;
+        }
+    }
+}
+
+@media screen and (min-width: $screen-large) {
+    .box {
+        width: calc(25% - (#{$size-large} / (4 / 3)));
+
+        &:nth-child(n + 4) {
+            margin-top: 0;
+        }
+        &:nth-child(n + 5) {
+            margin-top: $size-large;
+        }
+
+        &:nth-child(even) {
+            margin-left: 0;
+        }
+
+        &:nth-child(3n),
+        &:nth-child(3n + 2) {
+            margin-left: 0;
+        }
+        &:nth-child(4n),
+        &:nth-child(4n + 2),
+        &:nth-child(4n + 3) {
+            margin-left: $size-large;
+        }
+    }
+}
