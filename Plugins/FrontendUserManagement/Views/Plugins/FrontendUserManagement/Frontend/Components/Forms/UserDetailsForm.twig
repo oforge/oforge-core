@@ -3,9 +3,10 @@
           action="{{ url('frontend_profile_details_process_details') }}"
           method="post">
 
-        <h3 class="form__title">{{ i18n('user_data', 'User data') }}</h3>
-
         <div class="form-controls">
+
+            <h3 class="form__title">{{ i18n('user_data', 'User data') }}</h3>
+
             <div class="form__control">
                 {% block user_details_label_first_name %}
                     <label for="frontend_profile_details_first_name"
@@ -47,9 +48,14 @@
 
         </div>
 
-        <h3 class="form__title">{{ i18n('user_contact_data', 'Contact data') }}</h3>
+        {% block user_details_data_separator %}
+            <div class="separator"></div>
+        {% endblock user_details_data_separator %}
 
         <div class="form-controls">
+
+            <h3 class="form__title">{{ i18n('user_contact_data', 'Contact data') }}</h3>
+
             <div class="form__control">
                 {% block user_details_label_contact_email %}
                     <label for="frontend_profile_details_contact_email"
@@ -83,5 +89,9 @@
                        class="form__input form__input--submit button">
             </div>
         </div>
+
+        {% block user_details_contact_separator %}
+            <div class="separator"></div>
+        {% endblock user_details_contact_separator %}
     </form>
 {% endblock user_details_form %}
