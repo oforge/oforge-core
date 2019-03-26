@@ -1,0 +1,103 @@
+{% block user_address_form %}
+    <form class="form form--user-address"
+          action="{{ url('frontend_profile_details_process_address') }}"
+          method="post">
+
+        <div class="form-controls">
+
+            <h3 class="form__title">{{ i18n('address', 'Address') }}</h3>
+
+            <div class="form__control">
+                {% block user_address_label_street_name %}
+                    <label for="user_address_street_name"
+                           class="form__label">{{ i18n('street_name', 'Street') }}</label>
+                {% endblock user_address_label_street_name %}
+                <input id="user_address_street_name"
+                       name="user_address_street_name"
+                       type="text"
+                       class="form__input form__input"
+                       placeholder="{{ i18n('street_name') }}"
+                       required>
+            </div>
+
+            <div class="form__control">
+                {% block user_address_label_street_number %}
+                    <label for="user_address_street_number"
+                           class="form__label">{{ i18n('street_number', 'No.') }}</label>
+                {% endblock user_address_label_street_number %}
+                <input id="user_address_street_number"
+                       name="user_address_street_number"
+                       type="text"
+                       class="form__input form__input"
+                       placeholder="{{ i18n('street_number') }}"
+                       required>
+            </div>
+
+            <div class="form__control">
+                {% block user_address_label_post_code %}
+                    <label for="user_address_post_code"
+                           class="form__label">{{ i18n('post_code', 'Post code') }}</label>
+                {% endblock user_address_label_post_code %}
+                <input id="user_address_post_code"
+                       name="user_address_post_code"
+                       type="text"
+                       class="form__input form__input"
+                       placeholder="{{ i18n('post_code') }}"
+                       required>
+            </div>
+
+            <div class="form__control">
+                {% block user_address_label_city %}
+                    <label for="user_address_city"
+                           class="form__label">{{ i18n('city', 'City') }}</label>
+                {% endblock user_address_label_city %}
+                <input id="user_address_city"
+                       name="user_address_city"
+                       type="text"
+                       class="form__input form__input"
+                       placeholder="{{ i18n('city') }}"
+                       required>
+            </div>
+
+        </div>
+
+        <div class="form-controls">
+
+            <h3 class="form__title">{{ i18n('user_contact_data', 'Contact data') }}</h3>
+
+            <div class="form__control">
+                {% block user_address_label_contact_email %}
+                    <label for="user_address_contact_email"
+                           class="form__label">{{ i18n('contact_email', 'Contact email address') }}</label>
+                {% endblock user_address_label_contact_email %}
+                <input id="user_address_contact_email"
+                       name="user_address_contact_email"
+                       type="text"
+                       class="form__input form__input"
+                       placeholder="{{ i18n('contact_email') }}"
+                       required>
+            </div>
+
+            <div class="form__control">
+                {% block user_address_label_contact_phone %}
+                    <label for="user_address_contact_phone"
+                           class="form__label">{{ i18n('contact_phone', 'Contact phone no') }}</label>
+                {% endblock user_address_label_contact_phone %}
+                <input id="user_address_contact_phone"
+                       name="user_address_contact_phone"
+                       type="text"
+                       class="form__input form__input"
+                       placeholder="{{ i18n('contact_phone') }}"
+                       required>
+            </div>
+        </div>
+        <div class="form-controls">
+            <div class="form__control">
+                <input type="hidden" name="token" value="{{ token() }}">
+                <input type="submit"
+                       value="{{ i18n('save') }}"
+                       class="form__input form__input--submit button">
+            </div>
+        </div>
+    </form>
+{% endblock user_address_form %}
