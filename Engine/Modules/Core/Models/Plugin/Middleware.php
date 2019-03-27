@@ -21,7 +21,7 @@ class Middleware extends AbstractModel
 
     /**
      * @var string
-     * @ORM\Column(name="name", type="string", nullable=false)
+     * @ORM\Column(name="path_name", type="string", nullable=false)
      */
     private $name;
 
@@ -44,9 +44,9 @@ class Middleware extends AbstractModel
     private $position = 0;
 
     /**
-     * @var string
-     * @ORM\ManyToOne(targetEntity="Plugin", inversedBy="middlewares")
-     * @ORM\JoinColumn(name="plugin_id", referencedColumnName="id")
+     * @var Plugin
+     * @ORM\ManyToOne(targetEntity="Plugin", inversedBy="middlewares", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="plugin_id", referencedColumnName="id", nullable=true)
      */
     private $plugin;
 
@@ -66,7 +66,7 @@ class Middleware extends AbstractModel
      *
      * @param string $name
      *
-     * @return Plugin
+     * @return Middleware
      */
     public function setName($name)
     {
@@ -89,7 +89,7 @@ class Middleware extends AbstractModel
      *
      * @param string $class
      *
-     * @return Plugin
+     * @return Middleware
      */
     public function setClass($class)
     {
@@ -133,7 +133,7 @@ class Middleware extends AbstractModel
     /**
      * @param bool $active
      *
-     * @return Plugin
+     * @return Middleware
      */
     public function setActive($active)
     {
@@ -162,12 +162,10 @@ class Middleware extends AbstractModel
     }
 
     /**
-     * @return Middleware[]
+     * @return Plugin
      */
     public function getPlugin()
     {
         return $this->plugin;
     }
-
-
 }

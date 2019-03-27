@@ -1,0 +1,61 @@
+* {
+    font-family: $font-family;
+}
+html {
+    background-repeat: repeat;
+}
+body {
+    font-size: $font-size-4;
+    position: relative;
+}
+
+html body .content {
+    max-width: $content-max;
+    width: 100%;
+    margin: 0 auto;
+    padding: $size-large 0;
+    z-index: 1;
+
+    &.content--relative {
+        position: relative;
+        padding: 0;
+    }
+    &.content--no-pad {
+        padding: 0;
+    }
+}
+
+h1,h2,h3,h4,h5,h6 {
+    color: $color-secondary;
+    font-weight: bold;
+}
+
+.wrap {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    max-width: $screen-max;
+    margin: auto;
+    overflow: hidden;
+}
+
+.description {
+    font-size: $font-size-5;
+}
+
+.sub {
+    font-size: $font-size-6;
+}
+
+.container {
+    flex: 1 0 auto;
+    padding: $size-large 0;
+}
+
+.space-left.space-left {
+    margin-left: $size-medium;
+}
+
+.pad-l-top {
+    padding-top: $size-large;
+}

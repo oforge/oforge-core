@@ -7,7 +7,7 @@
  */
 namespace Oforge\Engine\Modules\UserManagement\Controller\Backend;
 
-use Oforge\Engine\Modules\AdminBackend\Abstracts\SecureBackendController;
+use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\UserManagement\Services\BackendUsersCrudService;
 use Slim\Http\Request;

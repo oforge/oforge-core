@@ -1,14 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Alexander Wegner
- * Date: 06.12.2018
- * Time: 11:15
- */
 
 namespace Oforge\Engine\Modules\Auth\Models\User;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 

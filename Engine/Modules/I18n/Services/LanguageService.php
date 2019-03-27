@@ -8,6 +8,9 @@
 
 namespace Oforge\Engine\Modules\I18n\Services;
 
+use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
 use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
 use Oforge\Engine\Modules\I18n\Models\Language;
 
@@ -16,17 +19,14 @@ use Oforge\Engine\Modules\I18n\Models\Language;
  * Class LanguageService
  * @package Oforge\Engine\Modules\I18n\Services
  */
-class LanguageService {
-    /**
-     * BackendAuthService constructor.
-     */
+class LanguageService extends AbstractDatabaseAccess {
+
     public function __construct() {
-        $this->em = Oforge()->DB()->getManager();
-        $this->repo = $this->em->getRepository(Language::class);
+        parent::__construct(["default" => Language::class]);
     }
 
     public function list() {
-        $this->repo->findAll();
+        $this->repository()->findAll();
     }
 
     public function create(array $options) {
@@ -41,7 +41,7 @@ class LanguageService {
             /**
              * @var $element Language
              */
-            $element = $this->repo->findOneBy(["iso" => strtolower($options["iso"])]);
+            $element = $this->repository()->findOneBy(["iso" => strtolower($options["iso"])]);
             if (!isset($element)) {
                 throw new NotFoundException("Language with code ". $options["iso"] . " not found!");
             }
@@ -69,7 +69,7 @@ class LanguageService {
          * Check if the element is already within the system
          */
 
-        $element = $this->repo->findOneBy(["iso" => strtolower($options["iso"])]);
+        $element = $this->repository()->findOneBy(["iso" => strtolower($options["iso"])]);
         if (isset($element)) throw new ConfigElementAlreadyExists(strtolower($options["iso"]));
 
         /**

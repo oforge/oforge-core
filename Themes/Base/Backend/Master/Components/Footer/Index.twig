@@ -3,9 +3,9 @@
 <footer class="main-footer">
     <!-- To the right -->
     <div class="pull-right hidden-xs">
-        Anything you want
+        {{ config("backend_project_footer_text") }}
     </div>
     <!-- Default to the left -->
-    <strong>Copyright &copy; 2018 <a href="#">oforge</a>.</strong> All rights reserved.
+    <strong>Copyright &copy; 2019 {{ config("backend_project_copyright") }}.</strong> All rights reserved.
 </footer>
 {% endblock footer_content %}

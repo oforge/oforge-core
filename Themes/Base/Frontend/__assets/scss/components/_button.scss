@@ -1,0 +1,31 @@
+.buttons {
+    margin: $size-medium 0;
+}
+
+.button {
+    display: inline-block;
+    padding: $size-medium $size-large;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+
+    &.button--primary {
+        background: $color-primary;
+        color: $text-light;
+    }
+
+    &.button--secondary {
+        background: $color-secondary;
+        color: $text-light;
+    }
+    &.button--shadow {
+        box-shadow: 0 $size-small .8rem $color-primary-light;
+    }
+    &.button--uppercase {
+        text-transform: uppercase;
+    }
+
+    &.button--header {
+        font-size: 1.2rem;
+    }
+}

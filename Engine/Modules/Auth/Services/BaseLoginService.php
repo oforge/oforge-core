@@ -12,25 +12,21 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Auth\Models\User\User;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 
 /**
  * This Base class has the default methods for logging users in and validating passwords.
  * It can be extended by specific LoginServices e.g. for the backend or the portal
- *
  * Class BaseLoginService
+ *
  * @package Oforge\Engine\Modules\Auth\Services
  */
-class BaseLoginService {
-    /**
-     * @var $em EntityManager
-     */
-    protected $em;
-    
-    /**
-     * @var $repo EntityRepository
-     */
-    protected $repo;
-    
+class BaseLoginService extends AbstractDatabaseAccess {
+
+    public function __construct($models) {
+        parent::__construct($models);
+    }
+
     /**
      * Validate login credentials against entities in the database and if valid, respond with a JWT.
      *
@@ -45,30 +41,31 @@ class BaseLoginService {
          * @var $authService AuthService
          */
         $authService = Oforge()->Services()->get("auth");
-    
+
         /**
          * @var $passwordService PasswordService
          */
         $passwordService = Oforge()->Services()->get("password");
-        
+
         /**
-         * @var $user BackendUser|User
+         * @var BackendUser|User $user
          */
-        $user = $this->repo->findOneBy(["email" => $email]);
-        
+        $user = $this->repository()->findOneBy(["email" => $email]);
+
         if (isset($user)) {
             if ($passwordService->validate($password, $user->getPassword())) {
                 $userObj = $user->toArray();
                 unset($userObj["password"]);
-                
+
                 $userObj["type"] = get_class($user);
                 if (get_class($user) == BackendUser::class) {
                     $userObj["role"] = $user->getRole();
                 }
-                
+
                 return $authService->createJWT($userObj);
             }
         }
+
         return null;
     }
 }

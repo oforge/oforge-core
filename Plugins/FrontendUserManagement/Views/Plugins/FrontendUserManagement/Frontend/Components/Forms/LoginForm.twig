@@ -1,0 +1,43 @@
+{% block login_form %}
+    <form class="form form--login"
+          action="{{ url('frontend_login_process') }}"
+          method="post">
+        <div class="form-controls">
+            <div class="form__control">
+                {% block login_label_email %}
+                <label for="frontend_login_email"
+                       class="form__label">{{ i18n('email') }}</label>
+                {% endblock login_label_email %}
+                <input id="frontend_login_email"
+                       name="frontend_login_email"
+                       type="email"
+                       class="form__input form__input {% block login_input_email_classes %}{% endblock login_input_email_classes %}"
+                       placeholder="{{ i18n('email') }}"
+                       required>
+            </div>
+            <div class="form__control">
+                {% block login_label_password %}
+                <label for="frontend_login_password"
+                       class="form__label">{{ i18n('password') }}</label>
+                {% endblock login_label_password %}
+                <input id="frontend_login_password"
+                       name="frontend_login_password"
+                       type="password"
+                       class="form__input form__input {% block login_input_password_classes %}{% endblock login_input_password_classes %}"
+                       placeholder="{{ i18n('password') }}"
+                       required>
+            </div>
+            {% block login_forgot_password %}
+            <div class="form__control flex flex--row flex--end">
+                <a href="{{ url('frontend_forgot_password') }}" class="forgot-password sub">{{ i18n('Forgot password?') }}</a>
+            </div>
+            {% endblock login_forgot_password %}
+            <div class="form__control">
+                <input type="hidden" name="token" value="{{ token() }}">
+                <input type="submit"
+                       value="{{ i18n('signin') }}"
+                       class="form__input form__input--submit button">
+            </div>
+        </div>
+    </form>
+{% endblock login_form %}

@@ -34,7 +34,7 @@ class Language extends AbstractModel
 
     /**
      * @var string
-     * @ORM\Column(name="name", type="string", nullable=false)
+     * @ORM\Column(name="language", type="string", nullable=false)
      */
     private $name;
 
@@ -47,7 +47,7 @@ class Language extends AbstractModel
     /**
      * @return int
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

@@ -51,5 +51,28 @@
     {% include 'Backend/Master/Components/Footer/Scripts.twig' %}
 {% endblock %}
 
+{% block meta %}
+    {% if session %}
+        <style>
+            .meta {
+                background: #d87a68;
+                color: #fff;
+                padding: 1rem;
+                width: 100%;
+                min-height: 300px;
+                font-size: 1.2rem;
+                line-height: 1.4;
+                word-break: break-all;
+            }
+        </style>
+        <div class="meta">
+            {% for key, val in session  %}
+                <p>{{ key }} : {{ val }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock meta %}
+
+
 </body>
 </html>

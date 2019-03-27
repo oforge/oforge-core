@@ -1,0 +1,63 @@
+{% block cms_page_builder %}
+	{% if post["cms_page_jstree_selected_page"] %}
+	<div class="{% if contents.isContainer or not contents.type %}col-xs-8{% else %}col-xs-10{% endif %} cms-page-builder-container" id="cms_page_builder_container">
+		<div>
+            {% if not contents.type %}
+			<div class="cms-page-builder-headline">{{ i18n('cms_page_builder_content_title') }}</div>
+            {% else %}
+			<div class="cms-page-builder-headline">{{ i18n('cms_page_builder_edit_content_types_title') }}</div>
+            {% endif %}
+	    	<div class="cms-page-builder-content" id="cms_page_builder_content">
+                {% if contents.type == false %}
+                {% include 'Backend/Pages/PageDataForm.twig' %}
+    			<div>
+    				<hr>
+    			</div>
+    			<div>
+    				<div class="cms-page-builder-preview">{{ i18n('cms_page_builder_content_preview') }}</div>
+    			</div>
+    			<div>
+    				<hr>
+    			</div>
+                {% endif %}
+				<div class="cms-content-type-editor-wrapper" id="cms_content_type_editor_wrapper">
+    				<div class="cms-content-type-editor-container">
+                        {% if contents.type %}
+                            {% include contents.type with {'data': contents} only %}
+                        {% else %}
+                            {% set order = 0 %}
+                            {% for data in contents %}
+                                {% if data.type %}
+                                    {% set order = order + 1 %}
+                                    {% include 'ContentTypes/PageBuilderPlaceholder.twig' %}
+                                    {% set order = order + 1 %}
+    	                            {% include data.type %}
+                                {% endif %}
+                            {% endfor %}
+                            {% set order = 999999999 %}
+                            {% include 'ContentTypes/PageBuilderPlaceholder.twig' %}
+                        {% endif %}
+    				</div>
+                    {% include 'Backend/Pages/PageBuilderForm.twig' %}
+                    {% if contents.type %}
+        			<div class="cms-cancel-submit-row">
+        				<div><button class="cms-cancel-button" id="cms-page-builder-cancel" data-pb-se="{{ post.cms_page_selected_element }}">{{ i18n('cancel') }}</button></div>
+        				<div><button class="cms-submit-button" id="cms-page-builder-submit" data-pb-se="{{ post.cms_page_selected_element }}">{{ i18n('backend_crud_save') }}</button></div>
+        			</div>
+                    {% endif %}
+    			</div>
+	    	</div>
+		</div>
+	</div>
+	{% else %}
+	<div class="col-xs-8">
+		<div>
+			<div class="cms-page-builder-headline">{{ i18n('cms_page_builder_content_title') }}</div>
+	    	<div class="cms-page-builder-content" id="cms_page_builder_content">
+	    		<div>{{ i18n('cms_page_builder_content_no_page_selected') }}</div>
+			</div>
+		</div>
+	</div>
+    {% include 'Backend/Pages/PageBuilderForm.twig' %}
+	{% endif %}
+{% endblock cms_page_builder %}

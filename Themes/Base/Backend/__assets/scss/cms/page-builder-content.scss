@@ -1,0 +1,35 @@
+.cms-page-builder-container {
+ 	overflow: hidden;
+}
+
+.cms-content-type-editor-wrapper {
+ 	overflow: hidden;
+	overflow-y: auto;
+}
+
+.cms-page-builder-content {
+	.url-language-row {
+		display: flex;
+		justify-content: space-between;
+	}
+	
+	hr {
+		border-bottom-style: solid;
+		border-bottom-width: 1px;
+		border-bottom-color: #000;
+	}
+}
+
+.cms-page-builder-preview {
+	font-size: 28px;
+	font-weight: bolder;
+	color: #000;
+	background-color: #eee;
+	text-align: center;
+}
+
+.cms-content-type-editor-container {
+	margin: 0px;
+	padding: 16px;
+	width: 100%;
+}

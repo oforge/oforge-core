@@ -19,7 +19,7 @@ class Element extends AbstractModel
     private $id;
     /**
      * @var string
-     * @ORM\Column(name="name", type="string", nullable=false)
+     * @ORM\Column(name="i18n_name", type="string", nullable=false)
      */
     private $name;
     /**
@@ -27,6 +27,7 @@ class Element extends AbstractModel
      * @ORM\Column(name="value", type="object", nullable=true)
      */
     private $value;
+    
     /**
      * @var string
      * @ORM\Column(name="description", type="string", nullable=true)
@@ -65,7 +66,7 @@ class Element extends AbstractModel
 
     /**
      * @var Value[]
-     * @ORM\OneToMany(targetEntity="Value", mappedBy="element", cascade={"all"})
+     * @ORM\OneToMany(targetEntity="Value", mappedBy="element", cascade={"all"}, fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="id", referencedColumnName="element_id")
      */
     private $values;

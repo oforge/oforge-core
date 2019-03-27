@@ -3,6 +3,7 @@
 namespace Oforge\Engine\Modules\Core\Models;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
@@ -11,8 +12,7 @@ use Doctrine\ORM\Tools\SchemaValidator;
 use Doctrine\ORM\Tools\Setup;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 
-class ForgeDataBase
-{
+class ForgeDataBase {
     protected static $instance = null;
     /**
      * @var $manager EntityManager
@@ -25,49 +25,49 @@ class ForgeDataBase
     private $validator = null;
     private $metaDataCollection = [];
     private $loadedSchemata = [];
+    private $settings;
+    private $config;
 
-    protected function __construct()
-    {
+    protected function __construct() {
     }
 
-    protected function __clone()
-    {
+    protected function __clone() {
     }
 
-    public static function getInstance()
-    {
+    public static function getInstance() {
         if (null === self::$instance) {
             self::$instance = new ForgeDataBase();
         }
+
         return self::$instance;
     }
 
-    protected function addMetaData(string $text)
-    {
-        $metaData = $this->manager->getClassMetadata($text);
+    protected function addMetaData(string $text) {
+        $metaData = $this->getManager()->getClassMetadata($text);
 
         array_push($this->metaDataCollection, $metaData);
-        $inSync = $this->validator->schemaInSyncWithMetadata();
+        $inSync = $this->getValidator()->schemaInSyncWithMetadata();
 
         if (!$inSync) {
-            $this->tool->updateSchema($this->metaDataCollection, true);
+            $this->getSchemaTool()->updateSchema($this->metaDataCollection, true);
         }
     }
 
-    public function initSchema(array $schemata, $forceReinit = false)
-    {
+    public function initSchema(array $schemata, $forceReinit = false) {
         if (isset($schemata)) {
-            if (sizeof($this->loadedSchemata) == 0) $this->loadLoadedSchemata();
+            if (sizeof($this->loadedSchemata) == 0) {
+                $this->loadLoadedSchemata();
+            }
 
             $changed = false;
             foreach ($schemata as $schema) {
-                if(!array_key_exists($schema, $this->loadedSchemata) || $forceReinit) {
+                if (!array_key_exists($schema, $this->loadedSchemata) || $forceReinit) {
                     $this->addMetaData($schema);
                     $changed = true;
                 }
             }
 
-            if($changed) {
+            if ($changed) {
                 $this->saveLoadedSchemata($schemata);
             }
         }
@@ -78,54 +78,53 @@ class ForgeDataBase
      *
      * @throws \Doctrine\ORM\ORMException
      */
-    public function init(Array $settings)
-    {
-        $config = Setup::createAnnotationMetadataConfiguration(
-            $settings['metadata_dirs'],
-            $settings['dev_mode']
-        );
+    public function init(Array $settings) {
+        $this->settings = $settings;
 
-        $config->setMetadataDriverImpl(
-            new AnnotationDriver(new AnnotationReader, $settings['metadata_dirs'])
-        );
+        $cache = new FilesystemCache($settings['cache_dir']);
 
-        $config->setMetadataCacheImpl(
-            new FilesystemCache($settings['cache_dir'])
-        );
-
-        $this->manager = EntityManager::create(
-            $settings['connection'],
-            $config
-        );
-
-        $this->validator = new SchemaValidator($this->manager);
-        $this->tool = new SchemaTool($this->manager);
+        $this->config = Setup::createAnnotationMetadataConfiguration($settings['metadata_dirs'], $settings["dev_mode"], null, $cache);
+        $this->config->setMetadataDriverImpl(new AnnotationDriver(new CachedReader(new AnnotationReader(), $cache, $settings["dev_mode"]), $settings['metadata_dirs']));
     }
 
-    public function getManager(): EntityManager
-    {
+    /**
+     * @return EntityManager
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function getManager() : EntityManager {
+        if (!isset($this->manager)) {
+            $this->manager = EntityManager::create($this->settings['connection'], $this->config);
+
+            DiscriminatorEntryListener::register($this->manager);
+        }
+
         return $this->manager;
     }
 
-    public function getValidator(): SchemaValidator
-    {
+    public function getValidator() : SchemaValidator {
+        if (!isset($this->validator)) {
+            $this->validator = new SchemaValidator($this->manager);
+        }
+
         return $this->validator;
     }
 
-    public function getSchemaTool(): SchemaTool
-    {
+    public function getSchemaTool() : SchemaTool {
+        if (!isset($this->tool)) {
+            $this->tool = new SchemaTool($this->manager);
+        }
+
         return $this->tool;
     }
 
-    private function loadLoadedSchemata()
-    {
+    private function loadLoadedSchemata() {
         $filePath = ROOT_PATH . Statics::DB_CACHE_FILE;
         if (file_exists($filePath)) {
             $this->loadedSchemata = [];
 
             if ($file = fopen($filePath, "r")) {
                 while (!feof($file)) {
-                    $line = trim(fgets($file));
+                    $line                        = trim(fgets($file));
                     $this->loadedSchemata[$line] = 1;
                 }
                 fclose($file);
@@ -133,8 +132,7 @@ class ForgeDataBase
         }
     }
 
-    private function saveLoadedSchemata($schemata)
-    {
+    private function saveLoadedSchemata($schemata) {
         foreach ($schemata as $schema) {
             $this->loadedSchemata[$schema] = 1;
         }

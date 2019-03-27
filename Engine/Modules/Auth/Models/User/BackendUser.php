@@ -15,6 +15,7 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 /**
  * @ORM\Table(name="oforge_auth_backend_user")
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  */
 class BackendUser extends AbstractModel
 {
@@ -49,6 +50,46 @@ class BackendUser extends AbstractModel
      * @ORM\Column(name="role", type="integer", nullable=false)
      */
     private $role;
+
+    /**
+     * @var \DateTime $createdAt
+     *
+     * @ORM\Column(name="created_at", type="datetime", nullable=false)
+     */
+
+    private $createdAt;
+    /**
+     * @var \DateTime $updatedAt
+     *
+     * @ORM\Column(name="updated_at", type="datetime", nullable=false)
+     */
+
+    private $updatedAt;
+
+    /**
+     * @var bool $active
+     * @ORM\Column(name="active", type="boolean", nullable=false)
+     */
+    private $active = false;
+
+    public function __construct() {
+        $dateTimeNow = new \DateTime('now');
+        $this->createdAt = $dateTimeNow;
+        $this->updatedAt = $dateTimeNow;
+    }
+
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function updatedTimestamps(): void
+    {
+        $dateTimeNow = new \DateTime('now');
+        $this->setUpdatedAt($dateTimeNow);
+        if ($this->getCreatedAt() === null) {
+            $this->setCreatedAt($dateTimeNow);
+        }
+    }
     
     /**
      * @return int
@@ -102,5 +143,48 @@ class BackendUser extends AbstractModel
      */
     public function setRole($role) {
         $this->role = $role;
+    }
+
+
+    /**
+     * @return \DateTime|null
+     */
+    public function getCreatedAt() : ?\DateTime {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param \DateTime $createdAt
+     */
+    public function setCreatedAt(\DateTime $createdAt) : void {
+        $this->createdAt = $createdAt;
+    }
+
+    /**
+     * @return \DateTime|null
+     */
+    public function getUpdatedAt() : ?\DateTime {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @param \DateTime $updatedAt
+     */
+    public function setUpdatedAt(\DateTime $updatedAt) : void {
+        $this->updatedAt = $updatedAt;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getActive() : bool {
+        return $this->active;
+    }
+
+    /**
+     * @param bool $active
+     */
+    public function setActive(bool $active) : void {
+        $this->active = $active;
     }
 }

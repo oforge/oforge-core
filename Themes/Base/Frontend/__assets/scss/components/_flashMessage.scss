@@ -1,0 +1,20 @@
+.flash {
+    margin: 1rem 0;
+    padding: 1rem;
+
+    &--success {
+        background: $success;
+        color: $success-font;
+    }
+    &--info {
+        background: $info;
+        color: $info-font;
+    }
+    &--warning {
+        background: $warning;
+        color: $warning-font;
+    }
+    &__message {
+        color: inherit;
+    }
+}

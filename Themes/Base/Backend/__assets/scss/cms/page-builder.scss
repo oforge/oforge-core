@@ -1,0 +1,53 @@
+.cms-page-builder-headline {
+	font-size: 24px;
+	font-weight: bolder;
+	color: #000;
+	background-color: #ccc;
+	margin: 0px;
+	margin-bottom: 15px;
+	padding: 0px 15px;
+}
+
+.cms-page-builder-selected-element {
+	border-style: dashed !important;
+	border-width: 2px !important;
+	border-color: #f00 !important;
+}
+
+.cms-cancel-submit-row {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 25px;
+}
+
+.cms-cancel-button {
+	background-color: #f00;
+	color: #fff;
+	font-weight: bolder;
+	text-align: center;
+	vertical-align: middle;
+	width: 150px;
+	height: 2.5rem;
+	line-height: 2.5rem;
+	outline: none;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #000;;
+	margin: 0 50px;
+}
+
+.cms-submit-button {
+	background-color: #0f0;
+	color: #fff;
+	font-weight: bolder;
+	text-align: center;
+	vertical-align: middle;
+	width: 150px;
+	height: 2.5rem;
+	line-height: 2.5rem;
+	outline: none;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #000;;
+	margin: 0 50px;
+}

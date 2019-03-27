@@ -1,0 +1,23 @@
+{% extends 'Backend/Master/Index.twig' %}
+
+{% block pagecontent %}
+
+    {{ o_dump() }}
+
+    {% block cms_page_builder %}
+        <div class="container-fluid page-builder-container-wrapper" id="page_builder_container_wrapper">
+            <div class="row">
+                {% include 'Backend/Pages/PageJsTree.twig' %}
+                {% if cms_page_builder_action == 'edit_page_path' %}
+                    {% include 'Backend/Pages/PageData.twig' %}
+                {% else %}
+                    {% include 'Backend/Pages/PageContent.twig' %}
+                    {% if contents.isContainer or not contents.type %}
+                        {% include 'Backend/Pages/ContentTypeList.twig' %}
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    {% endblock cms_page_builder %}
+
+{% endblock pagecontent %}

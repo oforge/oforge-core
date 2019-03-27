@@ -1,0 +1,68 @@
+.home-class {
+	color: #f00;
+	text-align: left;
+	font-size: 20px;
+	text-decoration: underline;
+}
+
+.imprint-class {
+	color: #0f0;
+	text-align: center;
+	font-size: 20px;
+	font-weight: bolder;
+}
+
+.privacy-class {
+	color: #00f;
+	text-align: right;
+	font-size: 20px;
+	font-style: italic;
+}
+
+.image-class {
+	width: 300px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #000;
+	margin: 0 auto;
+	margin-top: 25px;
+}
+
+.row-text1-class {
+	color: #f0f;
+	text-align: center;
+	font-size: 12px;
+	width: 200px;
+	padding: 15px;
+	margin: 25px;
+	border-style: dashed;
+	border-width: 1px;
+	border-color: #0ff;
+}
+
+.row-text2-class {
+	color: #0ff;
+	text-align: center;
+	font-size: 12px;
+	width: 200px;
+	padding: 15px;
+	margin: 25px;
+	border-style: dashed;
+	border-width: 1px;
+	border-color: #f0f;
+}
+
+.row-image-class {
+	width: 100px;
+	border-style: dotted;
+	border-width: 5px;
+	border-color: #f00;
+	margin: 25px;
+}
+
+.of-row .test-row1-class,
+.of-row .test-row1-class .test-row2-class,
+.of-row .test-row1-class .test-row2-class .test-row3-class {
+	justify-content: space-between;
+	align-items: center;
+}
