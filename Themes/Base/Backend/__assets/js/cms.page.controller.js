@@ -223,10 +223,13 @@ $(document).ready(function() {
     if ($('#cms_page_builder_form').length && $('#cms_page_richtext_editor').length) {
     	$('#cms_page_builder_form').submit(
 	        function() {
-	            $('#cms_page_richtext_text').val($('#cms_page_richtext_editor').val());
+	            $('#cms_page_richtext_text').val(quill.root.innerHTML);
 	        }
 		);
-		$('#cms_page_richtext_editor').wysihtml5();
+    	
+    	const quill = new Quill('#cms_page_richtext_editor', {
+			theme: 'snow'
+		});
     }
     
     resizePageBuilder();
