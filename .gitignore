@@ -1,5 +1,6 @@
 .git
 .settings
+.vscode
 .idea/*
 !/.idea/codeStyles/
 !/.idea/dictionaries/
