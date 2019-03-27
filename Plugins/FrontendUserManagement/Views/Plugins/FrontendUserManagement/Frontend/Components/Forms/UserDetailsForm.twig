@@ -1,18 +1,19 @@
 {% block user_details_form %}
     <form class="form form--user-details"
-          action="{{ url('frontend_user_details_process_details') }}"
+          action="{{ url('frontend_profile_details_process_details') }}"
           method="post">
 
-        <h3 class="form__title">{{ i18n('user_data', 'User data') }}</h3>
-
         <div class="form-controls">
+
+            <h3 class="form__title">{{ i18n('user_data', 'User data') }}</h3>
+
             <div class="form__control">
                 {% block user_details_label_first_name %}
-                    <label for="frontend_user_details_first_name"
+                    <label for="frontend_profile_details_first_name"
                            class="form__label">{{ i18n('first_name', 'First name') }}</label>
                 {% endblock user_details_label_first_name %}
-                <input id="frontend_user_details_first_name"
-                       name="frontend_user_details_first_name"
+                <input id="frontend_profile_details_first_name"
+                       name="frontend_profile_details_first_name"
                        type="text"
                        class="form__input form__input"
                        placeholder="{{ i18n('first_name') }}"
@@ -21,11 +22,11 @@
 
             <div class="form__control">
                 {% block user_details_label_last_name %}
-                    <label for="frontend_user_details_last_name"
+                    <label for="frontend_profile_details_last_name"
                            class="form__label">{{ i18n('last_name', 'Last name') }}</label>
                 {% endblock user_details_label_last_name %}
-                <input id="frontend_user_details_last_name"
-                       name="frontend_user_details_last_name"
+                <input id="frontend_profile_details_last_name"
+                       name="frontend_profile_details_last_name"
                        type="text"
                        class="form__input form__input"
                        placeholder="{{ i18n('last_name') }}"
@@ -34,11 +35,11 @@
 
             <div class="form__control">
                 {% block user_details_label_nick_name %}
-                    <label for="frontend_user_details_nick_name"
+                    <label for="frontend_profile_details_nick_name"
                            class="form__label">{{ i18n('nick_name', 'Nickname') }}</label>
                 {% endblock user_details_label_nick_name %}
-                <input id="frontend_user_details_nick_name"
-                       name="frontend_user_details_nick_name"
+                <input id="frontend_profile_details_nick_name"
+                       name="frontend_profile_details_nick_name"
                        type="text"
                        class="form__input form__input"
                        placeholder="{{ i18n('nick_name') }}"
@@ -47,16 +48,21 @@
 
         </div>
 
-        <h3 class="form__title">{{ i18n('user_contact_data', 'Contact data') }}</h3>
+        {% block user_details_data_separator %}
+            <div class="separator"></div>
+        {% endblock user_details_data_separator %}
 
         <div class="form-controls">
+
+            <h3 class="form__title">{{ i18n('user_contact_data', 'Contact data') }}</h3>
+
             <div class="form__control">
                 {% block user_details_label_contact_email %}
-                    <label for="frontend_user_details_contact_email"
+                    <label for="frontend_profile_details_contact_email"
                            class="form__label">{{ i18n('contact_email', 'Contact email address') }}</label>
                 {% endblock user_details_label_contact_email %}
-                <input id="frontend_user_details_contact_email"
-                       name="frontend_user_details_contact_email"
+                <input id="frontend_profile_details_contact_email"
+                       name="frontend_profile_details_contact_email"
                        type="text"
                        class="form__input form__input"
                        placeholder="{{ i18n('contact_email') }}"
@@ -65,11 +71,11 @@
 
             <div class="form__control">
                 {% block user_details_label_contact_phone %}
-                    <label for="frontend_user_details_contact_phone"
+                    <label for="frontend_profile_details_contact_phone"
                            class="form__label">{{ i18n('contact_phone', 'Contact phone no') }}</label>
                 {% endblock user_details_label_contact_phone %}
-                <input id="frontend_user_details_contact_phone"
-                       name="frontend_user_details_contact_phone"
+                <input id="frontend_profile_details_contact_phone"
+                       name="frontend_profile_details_contact_phone"
                        type="text"
                        class="form__input form__input"
                        placeholder="{{ i18n('contact_phone') }}"
@@ -83,5 +89,9 @@
                        class="form__input form__input--submit button">
             </div>
         </div>
+
+        {% block user_details_contact_separator %}
+            <div class="separator"></div>
+        {% endblock user_details_contact_separator %}
     </form>
 {% endblock user_details_form %}

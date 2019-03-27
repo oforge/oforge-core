@@ -1,6 +1,13 @@
+.cms-page-builder-container {
+ 	overflow: hidden;
+}
+
+.cms-content-type-editor-wrapper {
+ 	overflow: hidden;
+	overflow-y: auto;
+}
+
 .cms-page-builder-content {
- 	overflow: auto;
-	
 	.url-language-row {
 		display: flex;
 		justify-content: space-between;
@@ -19,4 +26,10 @@
 	color: #000;
 	background-color: #eee;
 	text-align: center;
+}
+
+.cms-content-type-editor-container {
+	margin: 0px;
+	padding: 16px;
+	width: 100%;
 }

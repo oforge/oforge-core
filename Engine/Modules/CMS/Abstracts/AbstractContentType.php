@@ -75,10 +75,19 @@ abstract class AbstractContentType extends AbstractDatabaseAccess
     abstract public function getRenderData();
     
     /**
+     * Create a child of given content type
+     * @param Content $contentEntity
+     * @param int $order
+     *
+     * @return ContentType $this
+     */
+    abstract public function createChild($contentEntity, $order);
+    
+    /**
      * Return child data of content type
      *
      * @return array|false should return false if no child content data is available
-     * 
+     *
      * If child data should be returned create an array of the following format:
      * $childContent["id"]      : integer        : fill with child content id
      * $childContent["content"] : content entity : fill with child content entity
