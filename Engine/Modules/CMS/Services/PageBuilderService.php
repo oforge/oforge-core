@@ -349,15 +349,12 @@ class PageBuilderService extends AbstractDatabaseAccess
             return NULL;
         }
         
-        $data = NULL;
-        
         foreach($pageContents as $pageContent)
         {
             // if element is found return content to display on page
             if ($pageContent["content"]["id"] > 0 && $this->createCurrentElementId($_elementId, $pageContent["content"]["id"]) === $elementId)
             {
-                $data = $this->createContentDataArray($pageContent, $elementId, $_elementId);
-                break;
+                return $this->createContentDataArray($pageContent, $elementId, $_elementId);
             }
             
             // if element was not found but is a container type recursivly call getContentDataArrayById
@@ -374,11 +371,16 @@ class PageBuilderService extends AbstractDatabaseAccess
                     if (is_array($childDatas))
                     {
                         $data = $this->getContentDataArrayById($this->getChildContentDataArray($childDatas), $elementId, $this->createCurrentElementId($_elementId, $pageContent["content"]["id"]));
+
+                        if ($data)
+                        {
+                            return $data;
+                        }
                     }
                 }
             }
         }
-        
-        return $data;
-   }
+
+        return NULL;
+    }
 }
