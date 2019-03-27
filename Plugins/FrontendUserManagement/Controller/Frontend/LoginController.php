@@ -106,7 +106,7 @@ class LoginController extends AbstractController {
         $_SESSION['auth'] = $jwt;
         $_SESSION['user_logged_in'] = true;
     
-        $uri = $router->pathFor('frontend_profile');
+        $uri = $router->pathFor('frontend_profile_dashboard');
 
         Oforge()->View()->addFlashMessage('success', 'you have successfully logged in!');
     

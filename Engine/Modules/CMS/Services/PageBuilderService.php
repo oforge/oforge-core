@@ -222,7 +222,7 @@ class PageBuilderService extends AbstractDatabaseAccess
             $path["path"]         = $pathEntity->getPath();
             $path["pageContent"]  = $this->getPageContentArray($path["id"]);
             
-            $paths[] = $path;
+            $paths[$path["language"]["id"]] = $path;
         }
         
         return $paths;

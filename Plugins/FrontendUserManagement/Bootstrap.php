@@ -4,6 +4,7 @@ namespace FrontendUserManagement;
 
 use FrontendUserManagement\Middleware\FrontendSecureMiddleware;
 use FrontendUserManagement\Middleware\FrontendUserStateMiddleware;
+use FrontendUserManagement\Middleware\ProfileNavigationMiddleware;
 use FrontendUserManagement\Models\ProfileNavigation;
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Models\UserAddress;
@@ -20,15 +21,19 @@ class Bootstrap extends AbstractBootstrap {
             "/logout" => ["controller" => Controller\Frontend\LogoutController::class, "name" => "frontend_logout"],
             "/registration" => ["controller" => Controller\Frontend\RegistrationController::class, "name" => "frontend_registration"],
             "/forgot-password" => ["controller" => Controller\Frontend\ForgotPasswordController::class, "name" => "frontend_forgot_password"],
-            "/profile" => ["controller" => Controller\Frontend\ProfileController::class, "name" => "frontend_profile"],
-            "/user-details" => ["controller" => Controller\Frontend\UserDetailsController::class, "name" => "frontend_user_details"],
+            "/profile" => ["controller" => Controller\Frontend\ProfileController::class, "name" => "frontend_profile_dashboard"],
+            "/profile/details" => ["controller" => Controller\Frontend\UserDetailsController::class, "name" => "frontend_profile_details"],
         ];
         
         $this->middleware = [
             "frontend" => [
-                ["class" => FrontendSecureMiddleware::class, "position" => 1],
-                ["class" => FrontendUserStateMiddleware::class, "position" => 1],
+                "class" => FrontendUserStateMiddleware::class,
+                "position" => 1,
             ],
+            "frontend_profile" => [
+                ["class" => FrontendSecureMiddleware::class, "position" => 1],
+                ["class" => ProfileNavigationMiddleware::class, "position" => 1],
+            ]
         ];
         
         $this->models = [
@@ -65,18 +70,91 @@ class Bootstrap extends AbstractBootstrap {
         $profileNavigationService->put([
             "name" => "frontend_logout",
             "order" => 1000,
-            "icon" => "icon icon--logout",
+            "icon" => "profil",
             "path" => "frontend_logout",
             "position" => "sidebar",
         ]);
 
         $profileNavigationService->put([
-            "name" => "frontend_user_details",
-            "order" => 1000,
-            "icon" => "icon icon--contact",
-            "path" => "frontend_user_details",
+            "name" => "frontend_profile_details",
+            "order" => 1,
+            "icon" => "inserat_erstellen",
+            "path" => "frontend_profile_details",
             "position" => "sidebar",
         ]);
+
+        $profileNavigationService->put([
+            "name" => "not_found",
+            "order" => 1,
+            "icon" => "inserat_melden",
+            "path" => "not_found",
+            "position" => "sidebar",
+        ]);
+
+        $profileNavigationService->put([
+            "name" => "inserat_melden",
+            "order" => 1,
+            "icon" => "inserat_melden",
+            "path" => "not_found",
+            "position" => "sidebar",
+        ]);
+
+        $profileNavigationService->put([
+            "name" => "eigenschaften",
+            "order" => 1,
+            "icon" => "eigenschaften",
+            "path" => "not_found",
+            "position" => "sidebar",
+        ]);
+
+        $profileNavigationService->put([
+            "name" => "facebook",
+            "order" => 1,
+            "icon" => "facebook",
+            "path" => "not_found",
+            "position" => "sidebar",
+        ]);
+
+        $profileNavigationService->put([
+            "name" => "kleinanzeigen",
+            "order" => 1,
+            "icon" => "kleinanzeigen",
+            "path" => "not_found",
+            "position" => "sidebar",
+        ]);
+
+        $profileNavigationService->put([
+            "name" => "kostenlos",
+            "order" => 1,
+            "icon" => "kostenlos",
+            "path" => "not_found",
+            "position" => "sidebar",
+        ]);
+
+        $profileNavigationService->put([
+            "name" => "merkliste",
+            "order" => 1,
+            "icon" => "merkliste",
+            "path" => "not_found",
+            "position" => "sidebar",
+        ]);
+
+        $profileNavigationService->put([
+            "name" => "merken",
+            "order" => 1,
+            "icon" => "merken",
+            "path" => "not_found",
+            "position" => "sidebar",
+        ]);
+
+        $profileNavigationService->put([
+            "name" => "top_inserat",
+            "order" => 1,
+            "icon" => "top_inserat",
+            "path" => "not_found",
+            "position" => "sidebar",
+        ]);
+
     }
     
     /**
