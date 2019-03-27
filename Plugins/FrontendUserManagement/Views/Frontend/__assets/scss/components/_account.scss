@@ -1,9 +1,9 @@
-.panel--profile {
+.panel--account {
     flex-direction: column;
     padding: 0;
 }
 
-.profile {
+.account {
     &__sidebar {
         display: none;
     }
@@ -31,7 +31,7 @@
     }
 }
 
-.profile-nav__link {
+.account-nav__link {
     color: $text-dark;
     text-decoration: none;
     padding: 1rem 0;
@@ -45,18 +45,18 @@
         border-bottom: 2px solid $color-secondary;
     }
 }
-.profile-nav__link + .profile-nav__link {
+.account-nav__link + .account-nav__link {
     margin-top: 1rem;
 }
 
 
 @media screen and (min-width: $screen-large) {
-    .panel--profile {
+    .panel--account {
         flex-direction: row;
         align-items: flex-start;
     }
 
-    .profile {
+    .account {
         &__sidebar {
             display: block;
             width: 24rem;
