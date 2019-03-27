@@ -1,0 +1,44 @@
+.panel {
+    &__title {
+        margin-bottom: $size-large * 3;
+    }
+    &__sub-title {
+        margin-bottom: $size-large * 2;
+        font-weight: bold;
+        color: $text-dark;
+    }
+
+    .buttons {
+
+        .button {
+            width: calc(50% - #{$size-medium})
+        }
+    }
+}
+
+.panel--login-registration {
+    max-width: 95%;
+    margin: 0 auto;
+    position: relative;
+}
+
+.panel--login,
+.panel--registration,
+.panel--forgot-password,
+.panel--forgot-password-reset {
+    max-width: 50%;
+}
+
+.benefit {
+    margin-top: $size-large * 3;
+}
+.benefit__description {
+    margin-left: $size-large;
+    width: calc(100% - 4rem);
+}
+
+@media screen and (min-width: $screen-medium) {
+    .panel--login-registration {
+        max-width: 80%;
+    }
+}

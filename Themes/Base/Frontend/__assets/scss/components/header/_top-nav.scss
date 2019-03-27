@@ -1,0 +1,24 @@
+.top-nav {
+    display: none;
+}
+
+.top-nav-list__item {
+    display: flex;
+    align-items: center;
+}
+
+.top-nav-list__item + .top-nav-list__item {
+    margin-left: 2rem;
+}
+
+@media screen and (min-width: $screen-medium) {
+    .top-nav {
+        display: block;
+        margin-right: 5rem;
+    }
+}
+@media screen and (min-width: $content-max) {
+    .top-nav {
+        margin-right: 0;
+    }
+}

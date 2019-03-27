@@ -1,0 +1,18 @@
+{% extends "@parent/Frontend/Layout.twig" %}
+{% block content %}
+    {% include 'Plugins/FrontendUserManagement/Frontend/Components/ProfileNavBar.twig' with { back_link : true, content_title: i18n('user_details', 'User details')} %}
+    <div class="profile content">
+        {% block profile %}
+            <div class="panel panel--profile flex">
+                {% block profile__sidebar %}
+                    {% include 'Plugins/FrontendUserManagement/Frontend/Components/Sidebar.twig' %}
+                {% endblock profile__sidebar %}
+
+                {% block profile__content %}
+                    {% include 'Plugins/FrontendUserManagement/Frontend/Components/Content/UserDetail.twig' %}
+                {% endblock profile__content %}
+
+            </div>
+        {% endblock profile %}
+    </div>
+{% endblock content %}

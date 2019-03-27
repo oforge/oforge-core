@@ -2,7 +2,6 @@
 namespace Oforge\Engine\Modules\Core;
 
 use \Slim\App as SlimApp;
-use Oforge\Engine\Modules\Core\Manager\Routes\Router;
 
 /**
  * Class App

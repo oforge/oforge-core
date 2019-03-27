@@ -20,7 +20,7 @@ class KeyValue extends AbstractModel
 
     /**
      * @var string
-     * @ORM\Column(name="name", type="string", nullable=false, unique=true)
+     * @ORM\Column(name="key_name", type="string", nullable=false, unique=true)
      */
     private $name;
 

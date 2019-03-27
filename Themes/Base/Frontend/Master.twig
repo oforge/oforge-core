@@ -1,0 +1,60 @@
+{#
+    This is the top (Master) template file, that defines the basic structure of a theme.
+#}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}Default Title{% endblock title %}</title>
+
+    {% block master__additional_meta %}
+    {% endblock master__additional_meta %}
+
+    {% block master__styles %}
+        {% if assets.css %}
+            <link rel="stylesheet" href="{{ assets.css }}"/>
+        {% endif %}
+    {% endblock master__styles %}
+</head>
+<body>
+
+{% block body %}
+{% endblock body %}
+
+{% block master__footer_scripts %}
+    {% include 'Frontend/Components/Scripts.twig' %}
+{% endblock master__footer_scripts %}
+
+
+{% block svg_icons %}
+    {% include 'Frontend/Components/SVG.twig' %}
+{% endblock svg_icons %}
+
+{% block master__meta %}
+    {% if session %}
+        <style>
+            .meta {
+                background: #d87a68;
+                color: #fff;
+                padding: 1rem;
+                width: 100%;
+                min-height: 300px;
+                font-size: 1.2rem;
+                line-height: 1.4;
+                word-break: break-all;
+            }
+        </style>
+        <div class="meta">
+            {% for key, val in session  %}
+                <p>{{ key }} : {{ val }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {{ o_dump() }}
+{% endblock master__meta %}
+
+</body>
+</html>

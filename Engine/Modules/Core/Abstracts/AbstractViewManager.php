@@ -33,14 +33,12 @@
  **********************************************************/
 namespace Oforge\Engine\Modules\Core\Abstracts;
 
-use Slim\Http\Request;
-use Slim\Http\Response;
-
 abstract class AbstractViewManager {
     /**
      * Assign Data from a Controller to a Template
      *
      * @param array $data
+     * @return AbstractViewManager
      */
     public abstract function assign($data);
 
@@ -55,9 +53,27 @@ abstract class AbstractViewManager {
     /**
      * Get a specific key value from the viewData
      *
-     * @param $key
+     * @param string $key
      *
      * @return mixed
      */
     public abstract function get(string $key);
+
+    /**
+     * Check if a specific key exists and is not empty
+     *
+     * @param string $key
+     *
+     * @return bool
+     */
+    public abstract function has(string $key);
+
+    /**
+     * Add a message for the next request / redirect
+     * @param string $type
+     * @param string $message
+     *
+     * @return mixed
+     */
+    public abstract function addFlashMessage(string $type, string $message);
 }

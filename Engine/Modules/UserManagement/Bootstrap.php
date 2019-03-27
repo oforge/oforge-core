@@ -51,10 +51,11 @@ class Bootstrap extends AbstractBootstrap {
          * @var $backendNavigation BackendNavigationService
          */
         $backendNavigation = Oforge()->Services()->get("backend.navigation");
-    
+        
         $backendNavigation->put([
             "name" => "admin",
-            "order" => 100
+            "order" => 100,
+            "position" => "sidebar",
         ]);
     
         $backendNavigation->put([
@@ -62,7 +63,8 @@ class Bootstrap extends AbstractBootstrap {
             "order" => 100,
             "parent" => "admin",
             "icon" => "fa fa-user",
-            "path" => "backend_users"
+            "path" => "backend_users",
+            "position" => "sidebar",
         ]);
     }
 }

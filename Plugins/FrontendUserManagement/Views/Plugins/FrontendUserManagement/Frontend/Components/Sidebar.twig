@@ -1,0 +1,29 @@
+{# block profile__sidebar #}
+{% block sidebar %}
+
+<div class="profile__sidebar">
+    <div class="profile__user"></div>
+
+    {% if sidebar_navigation is defined %}
+        <div class="profile__navigation">
+            <nav class="profile-nav">
+                <ul class="profile-nav__list">
+                    {% for nav_item in sidebar_navigation %}
+                        <li class="profile-nav__list-item">
+                            <a href="{{ url(nav_item.path) }}" class="profile-nav__link flex flex--row flex--center flex--between">
+                                <span class="profile-nav__text">
+                                    {{ i18n(nav_item.name) }}
+                                </span>
+                                {% if nav_item.icon %}
+                                    <i class="{{ nav_item.icon }}"></i>
+                                {% endif %}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </nav>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock sidebar %}
