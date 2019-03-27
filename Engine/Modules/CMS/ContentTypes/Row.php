@@ -117,7 +117,7 @@ class Row extends AbstractContentType
             {
                 $currentOrder = $rowEntity->getOrder();
 
-                if ($createContentAtOrderIndex < 999999999)
+                if ($order < 999999999)
                 {
                     if ($currentOrder >= $order)
                     {
@@ -134,14 +134,18 @@ class Row extends AbstractContentType
                         $highestOrder = $currentOrder;
                     }
                 }
+            }
                 
-                if ($createContentAtOrderIndex == 999999999)
-                {
-                    $order = $highestOrder + 1;
-                }
+            if ($order == 999999999)
+            {
+                $order = $highestOrder + 1;
             }
         }
-        
+        else
+        {
+            $order = 1;
+        }
+
         $rowEntity =  new \Oforge\Engine\Modules\CMS\Models\ContentTypes\Row;
         $rowEntity->setRow($this->getContentId());
         $rowEntity->setContent($contentEntity);
