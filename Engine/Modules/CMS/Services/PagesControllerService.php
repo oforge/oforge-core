@@ -259,6 +259,10 @@ class PagesControllerService extends AbstractDatabaseAccess {
                         $createContentAtOrderIndex = $highestOrder + 1;
                     }
                 }
+                else
+                {
+                    $createContentAtOrderIndex = 1;
+                }
                 
                 $pagePathEntity = $this->repository('pagePath')->findOneBy(["id" => $pagePathId]);
                 
