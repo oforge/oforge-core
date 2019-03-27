@@ -1,17 +1,17 @@
-{# block profile__sidebar #}
+{# block account__sidebar #}
 {% block sidebar %}
 
-<div class="profile__sidebar">
-    <div class="profile__user"></div>
+<div class="account__sidebar">
+    <div class="account__user"></div>
 
     {% if sidebar_navigation is defined %}
-        <div class="profile__navigation">
-            <nav class="profile-nav">
-                <ul class="profile-nav__list">
+        <div class="account__navigation">
+            <nav class="account-nav">
+                <ul class="account-nav__list">
                     {% for nav_item in sidebar_navigation %}
-                        <li class="profile-nav__list-item">
-                            <a href="{{ url(nav_item.path) }}" class="profile-nav__link flex flex--row flex--center flex--between">
-                                <span class="profile-nav__text">
+                        <li class="account-nav__list-item">
+                            <a href="{{ url(nav_item.path) }}" class="account-nav__link flex flex--row flex--center flex--between">
+                                <span class="account-nav__text">
                                     {{ i18n(nav_item.name) }}
                                 </span>
                                 {% if nav_item.icon %}
