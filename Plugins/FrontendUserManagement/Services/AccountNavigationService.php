@@ -2,16 +2,16 @@
 
 namespace FrontendUserManagement\Services;
 
-use FrontendUserManagement\Models\ProfileNavigation;
+use FrontendUserManagement\Models\AccountNavigation;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
 use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
 
-class ProfileNavigationService extends AbstractDatabaseAccess {
+class AccountNavigationService extends AbstractDatabaseAccess {
 
     public function __construct() {
-        parent::__construct(["default" => ProfileNavigation::class]);
+        parent::__construct(["default" => AccountNavigation::class]);
     }
 
     /**
@@ -27,7 +27,7 @@ class ProfileNavigationService extends AbstractDatabaseAccess {
         $element = $this->repository()->findOneBy(["name" => strtolower($options["name"])]);
         if (!isset($element)) {
             if ($this->isValid($options)) {
-                $entity = ProfileNavigation::create($options);
+                $entity = AccountNavigation::create($options);
                 $this->entityManager()->persist($entity);
                 $this->entityManager()->flush();
             }
@@ -41,7 +41,7 @@ class ProfileNavigationService extends AbstractDatabaseAccess {
      */
     public function get($position) {
         //find all plugins order by "order"
-        /** @var ProfileNavigation[] $entries */
+        /** @var AccountNavigation[] $entries */
         $entries = $this->repository()->findBy(["parent" => 0, "position" => $position], ['order' => 'ASC']);
         $result  = $this->fill($entries);
 
@@ -100,7 +100,7 @@ class ProfileNavigationService extends AbstractDatabaseAccess {
     }
 
     /**
-     * @param ProfileNavigation[] $entries
+     * @param AccountNavigation[] $entries
      *
      * @return array
      */
@@ -109,7 +109,7 @@ class ProfileNavigationService extends AbstractDatabaseAccess {
 
         foreach ($entries as $entry) {
             $data = $entry->toArray();
-            /** @var ProfileNavigation[] $entries */
+            /** @var AccountNavigation[] $entries */
             $entries  = $this->repository()->findBy(["parent" => $data["name"]], ['order' => 'ASC']);
             $children = $this->fill($entries);
             if (sizeof($children) > 0) {
@@ -128,7 +128,7 @@ class ProfileNavigationService extends AbstractDatabaseAccess {
      */
     public function breadcrumbs($activePath) {
         $breadcrumbs = [];
-        /** @var null|ProfileNavigation $entry */
+        /** @var null|AccountNavigation $entry */
         $entry = $this->repository()->findOneBy(["path" => $activePath], ['order' => 'ASC']);
 
         if (isset($entry)) {
@@ -143,11 +143,11 @@ class ProfileNavigationService extends AbstractDatabaseAccess {
     }
 
     /**
-     * @param ProfileNavigation $entry
+     * @param AccountNavigation $entry
      * @param array $breadcrumbs
      */
     private function findParents($entry, &$breadcrumbs) {
-        /** @var null|ProfileNavigation $entry */
+        /** @var null|AccountNavigation $entry */
         $entry = $this->repository()->findOneBy(["name" => $entry->getParent()], ['order' => 'ASC']);
         if (isset($entry)) {
             array_push($breadcrumbs, $entry->toArray());

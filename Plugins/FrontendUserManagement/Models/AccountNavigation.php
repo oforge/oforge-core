@@ -5,10 +5,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 
 /**
- * @ORM\Table(name="frontend_user_management_profile_navigation")
+ * @ORM\Table(name="frontend_user_management_account_navigation")
  * @ORM\Entity
  */
-class ProfileNavigation extends AbstractModel
+class AccountNavigation extends AbstractModel
 {
     /**
      * @var int
@@ -85,7 +85,7 @@ class ProfileNavigation extends AbstractModel
     /**
      * @param string $path
      *
-     * @return ProfileNavigation
+     * @return AccountNavigation
      */
     public function setPath(string $path)
     {
@@ -104,7 +104,7 @@ class ProfileNavigation extends AbstractModel
     /**
      * @param string $icon
      *
-     * @return ProfileNavigation
+     * @return AccountNavigation
      */
     public function setIcon(string $icon)
     {
@@ -123,7 +123,7 @@ class ProfileNavigation extends AbstractModel
     /**
      * @param int $order
      *
-     * @return ProfileNavigation
+     * @return AccountNavigation
      */
     public function setOrder(int $order)
     {
@@ -142,7 +142,7 @@ class ProfileNavigation extends AbstractModel
     /**
      * @param string $name
      *
-     * @return ProfileNavigation
+     * @return AccountNavigation
      */
     public function setName(string $name)
     {
@@ -161,7 +161,7 @@ class ProfileNavigation extends AbstractModel
     /**
      * @param string $title
      *
-     * @return ProfileNavigation
+     * @return AccountNavigation
      */
     public function setTitle(string $title)
     {
@@ -180,7 +180,7 @@ class ProfileNavigation extends AbstractModel
     /**
      * @param string $parent
      *
-     * @return ProfileNavigation
+     * @return AccountNavigation
      */
     public function setParent(string $parent)
     {
@@ -199,7 +199,7 @@ class ProfileNavigation extends AbstractModel
     /**
      * @param bool $visible
      *
-     * @return ProfileNavigation
+     * @return AccountNavigation
      */
     public function setVisible(bool $visible)
     {
@@ -217,9 +217,9 @@ class ProfileNavigation extends AbstractModel
     /**
      * @param string $position
      *
-     * @return ProfileNavigation
+     * @return AccountNavigation
      */
-    public function setPosition(string $position) : ProfileNavigation {
+    public function setPosition(string $position) : AccountNavigation {
         $this->position = $position;
         return $this;
     }

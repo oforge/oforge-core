@@ -218,7 +218,7 @@ class ForgotPasswordController extends AbstractController {
         $sessionManagementService->regenerateSession();
         $_SESSION['auth'] = $jwt;
 
-        $uri = $router->pathFor('frontend_profile_dashboard');
+        $uri = $router->pathFor('frontend_account_dashboard');
 
         Oforge()->View()->addFlashMessage('success', 'You have successfully changed your password. You are now logged in.');
 

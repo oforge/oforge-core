@@ -1,6 +1,7 @@
 {% extends "@parent/Frontend/Layout.twig" %}
 {% block content %}
-    {% include 'Plugins/FrontendUserManagement/Frontend/Components/AccountNavBar.twig' with { back_link : true, content_title: i18n('user_details', 'User details')} %}
+    {% include 'Plugins/FrontendUserManagement/Frontend/Components/AccountNavBar.twig' with { content_title: i18n('overview', 'Overview') } %}
+
     <div class="account content">
         {% block account %}
             <div class="panel panel--account flex">
@@ -9,9 +10,8 @@
                 {% endblock account__sidebar %}
 
                 {% block account__content %}
-                    {% include 'Plugins/FrontendUserManagement/Frontend/Components/Content/UserDetail.twig' %}
+                    {% include 'Plugins/FrontendUserManagement/Frontend/Components/Content/Dashboard.twig' %}
                 {% endblock account__content %}
-
             </div>
         {% endblock account %}
     </div>
