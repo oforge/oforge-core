@@ -1,6 +1,6 @@
-{# block profile__content #}
-{% block profile_content %}
-    <div class="profile__content flex flex--row flex--wrap">
+{# block account__content #}
+{% block account_content %}
+    <div class="account__content flex flex--row flex--wrap">
         {% if content is defined %}
             {% for nav_item in sidebar_navigation %}
                 <div class="box">
@@ -18,4 +18,4 @@
             {% endfor %}
         {% endif %}
     </div>
-{% endblock profile_content %}
+{% endblock account_content %}

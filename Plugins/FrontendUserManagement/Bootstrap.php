@@ -4,12 +4,12 @@ namespace FrontendUserManagement;
 
 use FrontendUserManagement\Middleware\FrontendSecureMiddleware;
 use FrontendUserManagement\Middleware\FrontendUserStateMiddleware;
-use FrontendUserManagement\Middleware\ProfileNavigationMiddleware;
-use FrontendUserManagement\Models\ProfileNavigation;
+use FrontendUserManagement\Middleware\AccountNavigationMiddleware;
+use FrontendUserManagement\Models\AccountNavigation;
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Models\UserAddress;
 use FrontendUserManagement\Models\UserDetail;
-use FrontendUserManagement\Services\ProfileNavigationService;
+use FrontendUserManagement\Services\AccountNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Services\MiddlewareService;
 
@@ -21,8 +21,8 @@ class Bootstrap extends AbstractBootstrap {
             "/logout" => ["controller" => Controller\Frontend\LogoutController::class, "name" => "frontend_logout"],
             "/registration" => ["controller" => Controller\Frontend\RegistrationController::class, "name" => "frontend_registration"],
             "/forgot-password" => ["controller" => Controller\Frontend\ForgotPasswordController::class, "name" => "frontend_forgot_password"],
-            "/profile" => ["controller" => Controller\Frontend\ProfileController::class, "name" => "frontend_profile_dashboard"],
-            "/profile/details" => ["controller" => Controller\Frontend\UserDetailsController::class, "name" => "frontend_profile_details"],
+            "/account" => ["controller" => Controller\Frontend\AccountController::class, "name" => "frontend_account"],
+            "/account/details" => ["controller" => Controller\Frontend\UserDetailsController::class, "name" => "frontend_account_details"],
         ];
         
         $this->middleware = [
@@ -30,14 +30,14 @@ class Bootstrap extends AbstractBootstrap {
                 "class" => FrontendUserStateMiddleware::class,
                 "position" => 1,
             ],
-            "frontend_profile" => [
+            "frontend_account" => [
                 ["class" => FrontendSecureMiddleware::class, "position" => 1],
-                ["class" => ProfileNavigationMiddleware::class, "position" => 1],
+                ["class" => AccountNavigationMiddleware::class, "position" => 1],
             ]
         ];
         
         $this->models = [
-            ProfileNavigation::class,
+            AccountNavigation::class,
             User::class,
             UserDetail::class,
             UserAddress::class,
@@ -47,7 +47,7 @@ class Bootstrap extends AbstractBootstrap {
             'frontend.user.management.password.reset' => Services\PasswordResetService::class,
             'frontend.user.management.login' => Services\FrontendUserLoginService::class,
             'frontend.user.management.registration' => Services\RegistrationService::class,
-            'frontend.user.management.profile.navigation' => Services\ProfileNavigationService::class,
+            'frontend.user.management.account.navigation' => Services\AccountNavigationService::class,
             'password.reset' => Services\PasswordResetService::class
         ];
     }
@@ -62,12 +62,12 @@ class Bootstrap extends AbstractBootstrap {
      */
     public function activate() {
         /** @var MiddlewareService $middlewareService */
-        /** @var ProfileNavigationService $profileNavigationService */
+        /** @var AccountNavigationService $accountNavigationService */
         $middlewareService = Oforge()->Services()->get('middleware');
         $middlewareService->activate('frontend');
 
-        $profileNavigationService = Oforge()->Services()->get('frontend.user.management.profile.navigation');
-        $profileNavigationService->put([
+        $accountNavigationService = Oforge()->Services()->get('frontend.user.management.account.navigation');
+        $accountNavigationService->put([
             "name" => "frontend_logout",
             "order" => 1000,
             "icon" => "profil",
@@ -75,15 +75,15 @@ class Bootstrap extends AbstractBootstrap {
             "position" => "sidebar",
         ]);
 
-        $profileNavigationService->put([
-            "name" => "frontend_profile_details",
+        $accountNavigationService->put([
+            "name" => "frontend_account_details",
             "order" => 1,
             "icon" => "inserat_erstellen",
-            "path" => "frontend_profile_details",
+            "path" => "frontend_account_details",
             "position" => "sidebar",
         ]);
 
-        $profileNavigationService->put([
+        $accountNavigationService->put([
             "name" => "not_found",
             "order" => 1,
             "icon" => "inserat_melden",
@@ -91,7 +91,7 @@ class Bootstrap extends AbstractBootstrap {
             "position" => "sidebar",
         ]);
 
-        $profileNavigationService->put([
+        $accountNavigationService->put([
             "name" => "inserat_melden",
             "order" => 1,
             "icon" => "inserat_melden",
@@ -99,7 +99,7 @@ class Bootstrap extends AbstractBootstrap {
             "position" => "sidebar",
         ]);
 
-        $profileNavigationService->put([
+        $accountNavigationService->put([
             "name" => "eigenschaften",
             "order" => 1,
             "icon" => "eigenschaften",
@@ -107,7 +107,7 @@ class Bootstrap extends AbstractBootstrap {
             "position" => "sidebar",
         ]);
 
-        $profileNavigationService->put([
+        $accountNavigationService->put([
             "name" => "facebook",
             "order" => 1,
             "icon" => "facebook",
@@ -115,7 +115,7 @@ class Bootstrap extends AbstractBootstrap {
             "position" => "sidebar",
         ]);
 
-        $profileNavigationService->put([
+        $accountNavigationService->put([
             "name" => "kleinanzeigen",
             "order" => 1,
             "icon" => "kleinanzeigen",
@@ -123,7 +123,7 @@ class Bootstrap extends AbstractBootstrap {
             "position" => "sidebar",
         ]);
 
-        $profileNavigationService->put([
+        $accountNavigationService->put([
             "name" => "kostenlos",
             "order" => 1,
             "icon" => "kostenlos",
@@ -131,7 +131,7 @@ class Bootstrap extends AbstractBootstrap {
             "position" => "sidebar",
         ]);
 
-        $profileNavigationService->put([
+        $accountNavigationService->put([
             "name" => "merkliste",
             "order" => 1,
             "icon" => "merkliste",
@@ -139,7 +139,7 @@ class Bootstrap extends AbstractBootstrap {
             "position" => "sidebar",
         ]);
 
-        $profileNavigationService->put([
+        $accountNavigationService->put([
             "name" => "merken",
             "order" => 1,
             "icon" => "merken",
@@ -147,7 +147,7 @@ class Bootstrap extends AbstractBootstrap {
             "position" => "sidebar",
         ]);
 
-        $profileNavigationService->put([
+        $accountNavigationService->put([
             "name" => "top_inserat",
             "order" => 1,
             "icon" => "top_inserat",
