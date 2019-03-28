@@ -84,6 +84,14 @@ class Bootstrap extends AbstractBootstrap {
         ]);
 
         $accountNavigationService->put([
+            "name" => "frontend_account_edit",
+            "order" => 1,
+            "icon" => "profil",
+            "path" => "frontend_account_edit",
+            "position" => "sidebar",
+        ]);
+
+        $accountNavigationService->put([
             "name" => "not_found",
             "order" => 1,
             "icon" => "inserat_melden",

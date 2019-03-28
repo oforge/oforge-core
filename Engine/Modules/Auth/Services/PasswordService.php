@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Alexander Wegner
- * Date: 17.12.2018
- * Time: 10:47
- */
 
 namespace Oforge\Engine\Modules\Auth\Services;
 
