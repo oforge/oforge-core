@@ -1,4 +1,4 @@
-<div class="content-type-edit-selector" data-pb-id="{{ data.id }}" data-pb-se="{{ data.se }}">
+<div class="content-type-edit-selector" data-pb-id="{{ data.id }}" data-pb-se="{{ data.se }}" data-pb-order="{{ order }}">
     <div class="content-type-edit-row-wrapper">
         {% for child in data.childs %}
             {% if data.id == data.se %}
@@ -6,7 +6,7 @@
                 {% include 'ContentTypes/PageBuilderPlaceholder.twig' %}
             {% endif %}
     		<div>
-                {% include child.type with {'data': child} only %}
+                {% include child.type with {'data': child, 'order': child.order} only %}
     		</div>
         {% endfor %}
         {% if data.id == data.se %}

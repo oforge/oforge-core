@@ -298,6 +298,57 @@ class PagesControllerService extends AbstractDatabaseAccess {
         
         return $contentId;
     }
+
+    private function deleteContentElement($pagePathId, $selectedElementId, $deleteContentWithId, $deleteContentAtOrderIndex)
+    {
+        if ($selectedElementId)
+        {
+            $array = explode("-", $selectedElementId);
+            $containerElementId = end($array);
+        }
+
+        if ($deleteContentWithId)
+        {
+            $array = explode("-", $deleteContentWithId);
+            $contentElementId = end($array);
+        }
+
+        $contentElementAtOrderIndex = $deleteContentAtOrderIndex;
+
+        $data = [];
+        $data["__deleteFromElementPagePathId"] = $pagePathId;
+        $data["__deleteElementWithId"] = $contentElementId;
+        $data["__deleteElementAtOrderIndex"] = $contentElementAtOrderIndex;
+        $data["__deleteElementFromContainerWithId"] = $containerElementId;
+
+
+        if ($contentElementId && $contentElementAtOrderIndex)
+        {
+            if ($containerElementId)
+            {
+                // TODO: remove element from container
+                $data["__deleteAction"] = "Removing element from container";
+            }
+            else
+            {
+                // TODO: remove element from pagecontent
+                $data["__deleteAction"] = "Removing element from page content";
+
+                $pageContentEntity = $this->repository('pageContent')->findOneBy(["pagePath" => $pagePathId, "content" => $contentElementId, "order" => $contentElementAtOrderIndex]);
+
+                if ($pageContentEntity)
+                {
+                    $data["__deleteResult"] = "Found page content to delete with id: " . $pageContentEntity->getId();
+                }
+                else
+                {
+                    $data["__deleteResult"] = "No page content to delete found!";
+                }
+            }
+        }
+
+        return $data;
+    }
     
     public function editContentData($post)
     {
@@ -305,12 +356,14 @@ class PagesControllerService extends AbstractDatabaseAccess {
         $pageBuilderService = OForge()->Services()->get("page.builder.service");
         $contentTypeService = OForge()->Services()->get("content.type.service");
         
-        $selectedPage              = isset($post["cms_page_jstree_selected_page"])          && $post["cms_page_jstree_selected_page"] > 0           ? $post["cms_page_jstree_selected_page"]          : 0;
-        $selectedLanguage          = isset($post["cms_page_selected_language"])             && $post["cms_page_selected_language"] > 0              ? $post["cms_page_selected_language"]             : $post["cms_page_selected_language"] = $this->getDefaultLanguageForPage($selectedPage);
-        $selectedElement           = isset($post["cms_page_selected_element"])              && !empty($post["cms_page_selected_element"])           ? $post["cms_page_selected_element"]              : 0;
-        $createContentWithTypeId   = isset($post["cms_page_create_content_with_type_id"])   && $post["cms_page_create_content_with_type_id"] > 0    ? $post["cms_page_create_content_with_type_id"]   : 0;
-        $createContentAtOrderIndex = isset($post["cms_page_create_content_at_order_index"]) && $post["cms_page_create_content_at_order_index"] > 0  ? $post["cms_page_create_content_at_order_index"] : 0;
-        $selectedAction            = isset($post["cms_page_selected_action"])               && !empty($post["cms_page_selected_action"])            ? $post["cms_page_selected_action"]               : 'edit';
+        $selectedPage              = isset($post["cms_page_jstree_selected_page"])          && $post["cms_page_jstree_selected_page"] > 0               ? $post["cms_page_jstree_selected_page"]          : 0;
+        $selectedLanguage          = isset($post["cms_page_selected_language"])             && $post["cms_page_selected_language"] > 0                  ? $post["cms_page_selected_language"]             : $post["cms_page_selected_language"] = $this->getDefaultLanguageForPage($selectedPage);
+        $selectedElement           = isset($post["cms_page_selected_element"])              && !empty($post["cms_page_selected_element"])               ? $post["cms_page_selected_element"]              : 0;
+        $createContentWithTypeId   = isset($post["cms_page_create_content_with_type_id"])   && $post["cms_page_create_content_with_type_id"] > 0        ? $post["cms_page_create_content_with_type_id"]   : 0;
+        $createContentAtOrderIndex = isset($post["cms_page_create_content_at_order_index"]) && $post["cms_page_create_content_at_order_index"] > 0      ? $post["cms_page_create_content_at_order_index"] : 0;
+        $deleteContentWithId       = isset($post["cms_page_delete_content_with_id"])        && !empty($post["cms_page_delete_content_with_id"])         ? $post["cms_page_delete_content_with_id"]        : 0;
+        $deleteContentAtOrderIndex = isset($post["cms_page_delete_content_at_order_index"]) && !empty($post["cms_page_delete_content_at_order_index"])  ? $post["cms_page_delete_content_at_order_index"] : 0;
+        $selectedAction            = isset($post["cms_page_selected_action"])               && !empty($post["cms_page_selected_action"])                ? $post["cms_page_selected_action"]               : 'edit';
         
         $data = [
             "js"                => ["cms_page_controller_jstree_config" => $pageTreeService->generateJsTreeConfigJSON()],
@@ -358,13 +411,23 @@ class PagesControllerService extends AbstractDatabaseAccess {
                                 return $this->editContentData($post);
                             }
                             break;
+                        case "delete":
+                            // TODO: remove return of debug data from delete function call
+                            $__deleteDebugData = $this->deleteContentElement($pageArray["paths"][$selectedLanguage]["id"], $selectedElementId, $deleteContentWithId, $deleteContentAtOrderIndex);
+                            $data["__deleteDebugData"] = $__deleteDebugData;
+                            /*
+                            if ($newContentId)
+                            {
+                                $post["cms_page_selected_element"] = $post["cms_page_selected_element"];
+                                $post["cms_page_selected_action"] = "edit";
+                                return $this->editContentData($post);
+                            }
+                            */
+                            break;
                         case "submit":
                             // persist new content element data to database and reload content data from database
                             $data["contentElementData"] = $contentTypeService->setContentDataArray($selectedElementId, $selectedElementTypeId, $post)->getContentDataArray($selectedElementId, $selectedElementTypeId);
                             $data["contents"]           = $pageBuilderService->getContentDataArrayById($pageContents, $selectedElement);
-                            break;
-                        case "delete":
-                            $data["contentElementData"] = $contentTypeService->getContentDataArray($selectedElementId, $selectedElementTypeId);
                             break;
                         default:
                             // action equals 'edit' or is unknown
@@ -385,6 +448,19 @@ class PagesControllerService extends AbstractDatabaseAccess {
                             $post["cms_page_selected_action"] = "edit";
                             return $this->editContentData($post);
                         }
+                        break;
+                    case "delete":
+                        // TODO: remove return of debug data from delete function call
+                        $__deleteDebugData = $this->deleteContentElement($pageArray["paths"][$selectedLanguage]["id"], $selectedElementId, $deleteContentWithId, $deleteContentAtOrderIndex);
+                        $data["__deleteDebugData"] = $__deleteDebugData;
+                        /*
+                        if ($newContentId)
+                        {
+                            $post["cms_page_selected_element"] = $post["cms_page_selected_element"];
+                            $post["cms_page_selected_action"] = "edit";
+                            return $this->editContentData($post);
+                        }
+                        */
                         break;
                 }
                 
