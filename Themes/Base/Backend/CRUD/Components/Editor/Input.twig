@@ -1,0 +1,13 @@
+<input
+    {% if editor.editable %}name="data[{{ property.name }}]"{% else %}readonly{% endif %}
+    value="{{ editor.value }}" type="{{ editor.type|default('text') }}"
+    class="form-control {{ editor.class|default('') }}"
+    {% if editor.disabled %}disabled{% endif %}
+    {% if editor.placeholder %}placeholder="{{ editor.placeholder }}"{% endif %}
+    {% if editor.pattern %}pattern="{{ editor.pattern }}"{% endif %}
+    {% if editor.maxlength %}maxlength="{{ editor.maxlength }}"{% endif %}
+    {% if editor.min %}min="{{ editor.min }}"{% endif %}
+    {% if editor.max %}max="{{ editor.max }}"{% endif %}
+    {% if editor.step %}step="{{ editor.step }}"{% endif %}
+/>
+

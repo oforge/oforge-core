@@ -1,0 +1,8 @@
+{% include 'Backend/CRUD/Components/Editor/Input.twig' with {
+    editor: {
+        type: 'email',
+        name: property.name,
+        value: item[property.name]|default(property.editor.default)|default(''),
+        editable: property.crud[crud.context] == 'editable',
+    }
+} %}

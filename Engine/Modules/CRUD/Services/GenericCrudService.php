@@ -8,12 +8,9 @@
 
 namespace Oforge\Engine\Modules\CRUD\Services;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
 use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
 
 /**
@@ -37,34 +34,18 @@ class GenericCrudService extends AbstractDatabaseAccess {
      */
     public function list(string $class, array $params = []) : array {
         $repository = $this->getRepository($class);
-        /** @var AbstractModel[] $items */
+        /** @var AbstractModel[] $entities */
         if (empty($params)) {
-            //TODO
-            $items = $repository->findAll();
+            $entities = $repository->findAll();
         } else {
-            $items = $repository->findAll();
+            $entities = $repository->findBy($params);
         }
         $result = [];
-        foreach ($items as $item) {
+        foreach ($entities as $item) {
             $result[] = $item->toArray();
         }
 
         return $result;
-    }
-
-    /**
-     * TODO @MS
-     *
-     * @param string $class
-     *
-     * @return array
-     */
-    public function definition(string $class) : array {
-        if (is_subclass_of($class, AbstractModel::class)) {
-            return $class::definition();
-        }
-
-        return [];
     }
 
     /**
@@ -77,7 +58,9 @@ class GenericCrudService extends AbstractDatabaseAccess {
      */
     public function getById(string $class, int $id) {
         $repo   = $this->getRepository($class);
-        $result = $repo->findOneBy(["id" => $id]);
+        $result = $repo->findOneBy([
+            'id' => $id,
+        ]);
 
         return $result;
     }
@@ -90,13 +73,17 @@ class GenericCrudService extends AbstractDatabaseAccess {
      *
      * @throws ConfigElementAlreadyExists
      * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \ReflectionException
      */
     public function create(string $class, array $options) {
         $repository = $this->getRepository($class);
 
         if (isset($options['id'])) {
             $id     = $options['id'];
-            $entity = $repository->findOneBy(['id' => $id]);
+            $entity = $repository->findOneBy([
+                'id' => $id,
+            ]);
             if (isset($entity)) {
                 throw new ConfigElementAlreadyExists("Entity with id '$id' already exists!");
             }
@@ -117,23 +104,30 @@ class GenericCrudService extends AbstractDatabaseAccess {
      * @param array $options
      *
      * @throws NotFoundException
-     * @throws ConfigOptionKeyNotExists
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function update(string $class, array $options) {
         $repository = $this->getRepository($class);
+
         if (isset($options['id'])) {
-            $id     = $options['id'];
-            $entity = $repository->findOneBy(['id' => $id]);
+            $id = $options['id'];
+            unset($options['id']);
+            $entity = $repository->findOneBy([
+                'id' => $id,
+            ]);
             if (!isset($entity)) {
                 throw new NotFoundException("Entity with id '$id' not found!");
             }
             $entity->fromArray($options);
-        } else {
-            $objects = $this->structure($options);
-            foreach ($objects as $id => $objectData) {
-                $entity = $repository->findOneBy(['id' => $id]);
+        } elseif (isset($options['data'])) {
+            $objectsData = $options['data'];
+            foreach ($objectsData as $id => $objectData) {
+                // echo "<pre>", print_r($id, true), "</pre>";
+                // echo "<pre>", print_r($objectData, true), "</pre>";
+                $entity = $repository->findOneBy([
+                    'id' => $id,
+                ]);
                 if (!isset($entity)) {
                     throw new NotFoundException("Entity with id '$id' not found!");
                 }
@@ -150,39 +144,22 @@ class GenericCrudService extends AbstractDatabaseAccess {
      * @param string $class
      * @param int $id
      *
+     * @throws NotFoundException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function delete(string $class, int $id) {
         $repository = $this->getRepository($class);
-        $entity     = $repository->findOneBy(['id' => $id]);
 
+        $entity = $repository->findOneBy([
+            'id' => $id,
+        ]);
+        if (!isset($entity)) {
+            throw new NotFoundException("Entity with id '$id' not found!");
+        }
         $this->entityManager()->remove($entity);
         $this->entityManager()->flush();
         $repository->clear();
-    }
-
-    /**
-     * TODO @MS
-     *
-     * @param $options
-     *
-     * @return array
-     */
-    protected function structure($options) {
-        $result = [];
-        foreach ($options as $key => $value) {
-            $ex = explode("_", $key);
-            if (sizeof($ex) == 2) {
-                if (!isset($result[$ex[0]])) {
-                    $result[$ex[0]] = [];
-                }
-
-                $result[$ex[0]][$ex[1]] = $value;
-            }
-        }
-
-        return $result;
     }
 
 }
