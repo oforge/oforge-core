@@ -1,0 +1,10 @@
+{% include 'Backend/CRUD/Components/Editor/Input.twig' with {
+    editor: {
+        type: 'text',
+        name: property.name,
+        value: item[property.name]|default(property.editor.default)|default(''),
+        editable: property.crud[crud.context] == 'editable',
+        pattern: property.editor.pattern|default(''),
+        maxlength: property.editor.maxlength|default(''),
+    }
+} %}

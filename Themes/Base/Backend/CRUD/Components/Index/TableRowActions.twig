@@ -1,0 +1,17 @@
+<td class="table_row_actions text-center">
+    <div class="container-fluid">
+        <div class="btn-group">
+            {% if not crud.actions.update %}
+                <a class="btn btn-info {% if not crud.actions.read %}disabled{% endif %}"
+                   href="{{ url(meta.route.name  ~ "_view") ~ '?id=' ~ item.id }}"
+                   title="{{ i18n('backend_crud_btn_view') }}"><i class="fa fa-chevron-right"></i></a>
+            {% endif %}
+            <a class="btn btn-primary {% if not crud.actions.update %}disabled{% endif %}"
+               href="{{ url(meta.route.name  ~ '_update') ~ '?id=' ~ item.id }}"
+               title="{{ i18n('backend_crud_btn_update') }}"><i class="fa fa-pencil"></i></a>
+            <a class="btn btn-danger {% if not crud.actions.delete %}disabled{% endif %}"
+               href="{{ url(meta.route.name  ~ '_delete') ~ '?id=' ~ item.id }}"
+               title="{{ i18n('backend_crud_btn_delete') }}"><i class="fa fa-close"></i></a>
+        </div>
+    </div>
+</td>

@@ -1,0 +1,11 @@
+{% if not property.objectKey %}
+    <div class="alert alert-danger" role="alert">
+        Missing object key
+    </div>
+{% elseif not item[property.name][property.objectKey] %}
+    <div class="alert alert-danger" role="alert">
+        Key '{{ property.objectKey }}' not found in object
+    </div>
+{% else %}
+    {{ item[property.name][property.objectKey]|escape }}
+{% endif %}

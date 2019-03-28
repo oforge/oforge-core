@@ -1,0 +1,32 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box box-primary">
+            <div class="box-body">
+                {% if crud.actions[crud.context] %}
+                    <form method="post">
+                        {% for property in crud.properties if property.crud[crud.context] and property.crud[crud.context] != 'off' %}
+                            <div class="form-group crud-datatype-{{ property.type }} crud-property-{{ property.name }}">
+                                <label for="form-">
+                                    {{ i18n(property.label|default('backend_crud_property__' ~ crud.model ~ '_' ~ property.name) ) }}
+                                </label>
+                                {% include 'Backend/CRUD/Components/Editor.twig' %}
+                            </div>
+                        {% endfor %}
+                        <input type="hidden" name="action" value="{{ crud.context }}" />
+                        <a href="{{ url(meta.route.name|trim('_create', 'right')) }}" class="btn btn-default">
+                            {{ i18n('backend_crud_btn_cancel') }}
+                        </a>
+                        <input type="submit" class="btn btn-primary" value="{{ i18n('backend_crud_btn_' ~ crud.context) }}">
+                    </form>
+                {% else %}
+                    <div class="alert alert-info" role="alert">
+                        {{ i18n('backend_crud_action_disabled')|format(crud.context) }}
+                    </div>
+                {% endif %}
+            </div>
+            {# /.box-body #}
+        </div>
+        {# /.box #}
+    </div>
+    {{ o_dump() }}
+</div>

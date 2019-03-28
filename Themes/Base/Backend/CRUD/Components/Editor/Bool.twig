@@ -1,0 +1,19 @@
+{% set label_id = ['label', crud.context, crud.model, property.name]|join('_') %}
+{#<div>#}
+    {#<div class="btn-group">#}
+        {#<input id="{{ label_id ~ '_0' }}" name="data[{{ property.name }}]" type="radio" value="0" />#}
+        {#<input id="{{ label_id ~ '_1' }}" name="data[{{ property.name }}]" type="radio" value="1" />#}
+        {#<label for="{{ label_id ~ '_0' }}" class="btn btn-danger">-</label>#}
+        {#<label for="{{ label_id ~ '_1' }}" class="btn btn-success">+</label>#}
+    {#</div>#}
+{#</div>#}
+<div>
+    <input type="hidden" name="data[{{ property.name }}]" value="0" />
+    <input type="checkbox" id="{{ label_id }}" class="form-check-input"
+           {% if item[property.name] %}checked{% endif %} value="1"
+        {% if property.crud[crud.context] == 'editable' %}name="data[{{ property.name }}]"{% else %}readonly{% endif %}
+    />
+    <label for="{{ label_id }}">
+        {{ i18n(property.label|default('backend_crud_property__' ~ crud.model ~ '_' ~ property.name) ) }}
+    </label>
+</div>

@@ -26,7 +26,7 @@ class LanguageService extends AbstractDatabaseAccess {
     }
 
     public function list() {
-        $this->repository()->findAll();
+        return $this->repository()->findAll();
     }
 
     public function create(array $options) {

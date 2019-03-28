@@ -1,54 +1,47 @@
-{% extends "Backend/Master/Index.twig" %}
+{% extends 'Backend/Master/Index.twig' %}
 
 {% block pagecontent %}
     <section class="content">
         <div class="row">
             <div class="col-xs-12">
-                <a href="" class="btn btn-primary">{{ i18n('crud_add_new') }}</a>
+                <div class="btn-group" role="group">
+                    {% block crud_actions_group %}
+                        <a href="{{ url(meta.route.name  ~ '_create') }}" title="{{ i18n('backend_crud_btn_create') }}"
+                           class="btn btn-primary {% if not crud.actions.create %}disabled{% endif %}">
+                            <i class="fa fa-plus"></i>
+                        </a>
+                    {% endblock %}
+                </div>
             </div>
+        </div>
+        <div class="row">
             <div class="col-xs-12">
-
-                <div class="box">
-                    <div class="box-body table-responsive no-padding">
-                        {% if editInline %}
+                <div class="box box-primary">
+                    <div class="box-body table-responsive">
+                        {% if crud.hasEditors %}
                         <form method="post">
                             {% endif %}
-                            <table class="table table-hover">
-                                <thead>
-                                <tr>
-                                    {% for head in header %}
-                                        <th>{{ i18n('backend_crud_header_' ~ head.name ) }}</th>
-                                    {% endfor %}
-                                </tr>
-                                </thead>
-
-                                <tbody>
-                                {% for item in result %}
-                                    <tr>
-                                        {% for head in header %}
-                                            <td>
-                                                {% if editInline %}
-                                                    {% include 'Backend/CRUD/Components/Inline.twig' with  {'item':item, 'column': head } %}
-                                                {% else %}
-                                                    <a href="{{ url(meta.route.name  ~ "_detail") ~ "?id=" ~ item.id }}">{{ item[head.name] }}</a>
-                                                {% endif %}
-                                            </td>
-                                        {% endfor %}
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                            {% if editInline %}
-                            <input type="hidden" name="type" value="update" />
-                            <input type="submit" class="btn btn-primary" value="{{ i18n('backend_crud_save') }}">
+                            {% include 'Backend/CRUD/Components/Index/Table.twig' %}
+                            {% if crud.hasEditors %}
+                            <input type="hidden" name="action" value="update" />
+                            <input type="submit" class="btn btn-primary" value="{{ i18n('backend_crud_btn_update') }}">
                         </form>
                         {% endif %}
                     </div>
-                    <!-- /.box-body -->
+                    {# /.box-body #}
                 </div>
-                <!-- /.box -->
+                {# /.box #}
             </div>
         </div>
     </section>
     {{ o_dump() }}
 {% endblock %}
+
+{#{% block scripts %}#}
+    {#{{ parent() }}#}
+    {#<script defer>#}
+        {#jQuery(document).ready(function () {#}
+            {#jQuery('#crud_index_table').DataTable();#}
+        {#});#}
+    {#</script>#}
+{#{% endblock scripts %}#}
