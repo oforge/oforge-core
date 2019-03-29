@@ -1,59 +1,47 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Alexander Wegner
- * Date: 06.12.2018
- * Time: 11:11
- */
 
 namespace Oforge\Engine\Modules\I18n\Services;
 
-use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\I18n\Models\Language;
-use Oforge\Engine\Modules\I18n\Models\Snippet;
-
 
 /**
  * Class LanguageIdentificationService
+ *
  * @package Oforge\Engine\Modules\I18n\Services
  */
 class LanguageIdentificationService extends AbstractDatabaseAccess {
 
     public function __construct() {
-        parent::__construct(["default" => Language::class]);
+        parent::__construct(['default' => Language::class]);
     }
-
 
     /**
      * @param $context
+     *
      * @return string
      */
-    public function getCurrentLanguage($context)
-    {
-        if (key_exists("meta", $context) &&
-            key_exists("route", $context["meta"]) &&
-            key_exists("assetScope", $context["meta"]["route"]) &&
-            key_exists("languageId", $context["meta"]["route"]) &&
-            strtolower($context["meta"]["route"]["assetScope"]) != "backend"
-        ) {
-
-            return $context["meta"]["route"]["languageId"];
+    public function getCurrentLanguage($context) {
+        if (isset($context['meta'])
+            && isset($context['meta']['route'])
+            && isset($context['meta']['route']['assetScope'])
+            && isset($context['meta']['route']['languageId'])
+            && strtolower($context['meta']['route']['assetScope']) !== 'backend') {
+            return $context['meta']['route']['languageId'];
         }
 
-        if (key_exists("config", $_SESSION) && key_exists("language", $_SESSION["config"])) {
-            return $_SESSION["config"]["language"];
+        if (isset($_SESSION) && isset($_SESSION['config']) && isset($_SESSION['config']['language'])) {
+            return $_SESSION['config']['language'];
         }
 
-        /**
-         * @var $all Language[]
-         */
-        $all = $this->repository()->findBy(["active" => true]);
+        /** @var ?Language $all */
+        $language = $this->repository()->findOneBy(['active' => true]);
 
-        if (sizeof($all) > 0) {
-            return $all[0]->getIso();
+        if (isset($language)) {
+            return $language->getIso();
         }
 
-        return "en";
+        return 'en';
     }
+
 }
