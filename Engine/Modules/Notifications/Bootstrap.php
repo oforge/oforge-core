@@ -2,7 +2,7 @@
 
 namespace Oforge\Engine\Modules\Notifications;
 
-use Oforge\Engine\Modules\AdminBackend\Services\BackendNavigationService;
+use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Notifications\Models\BackendNotification;
 use Oforge\Engine\Modules\Notifications\Controller\BackendNotificationController;
@@ -17,7 +17,6 @@ class Bootstrap extends AbstractBootstrap {
             '/backend/notifications/{id}' => [
                 'controller'   => BackendNotificationController::class,
                 'name'         => 'backend_notifications',
-                'assets_scope' => 'Backend',
             ],
         ];
 
@@ -30,6 +29,14 @@ class Bootstrap extends AbstractBootstrap {
         ];
     }
 
+    /**
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     */
     public function activate() {
         /** @var $navigationService BackendNavigationService */
         $navigationService = Oforge()->Services()->get('backend.navigation');

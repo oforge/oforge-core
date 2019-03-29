@@ -10,7 +10,7 @@ use Doctrine\ORM\PersistentCollection;
  *
  * @package Oforge\Engine\Modules\Core\Abstracts
  */
-class AbstractModel {
+abstract class AbstractModel {
 
     /**
      * Fluent interface for constructor so methods can be called after construction.
