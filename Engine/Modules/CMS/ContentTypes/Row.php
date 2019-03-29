@@ -16,10 +16,10 @@ class Row extends AbstractContentType
      */
     private function getRowEntities(int $rowId)
     {
-        /** @var Row[] $rowEntities */
         $rowEntities = $this->entityManager->getRepository('Oforge\Engine\Modules\CMS\Models\ContentTypes\Row')->findBy(["row" => $rowId], ["order" => "ASC"]);
         
-        if (isset($rowEntities)) {
+        if ($rowEntities)
+        {
             return $rowEntities;
         }
         
@@ -154,6 +154,26 @@ class Row extends AbstractContentType
         $this->entityManager->persist($rowEntity);
         $this->entityManager->flush();
         
+        return $this;
+    }
+    
+    /**
+     * Delete a child
+     * @param Content $contentEntity
+     * @param int $order
+     *
+     * @return ContentType $this
+     */
+    public function deleteChild($contentElementId, $contentElementAtOrderIndex)
+    {
+        $rowEntity = $this->entityManager->getRepository('Oforge\Engine\Modules\CMS\Models\ContentTypes\Row')->findOneBy(["row" => $this->getContentId(), "content" => $contentElementId, "order" => $contentElementAtOrderIndex]);
+        
+        if ($rowEntity)
+        {
+            $this->entityManager->remove($rowEntity);
+            $this->entityManager->flush();
+        }
+
         return $this;
     }
     

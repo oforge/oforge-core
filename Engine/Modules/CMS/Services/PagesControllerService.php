@@ -315,39 +315,36 @@ class PagesControllerService extends AbstractDatabaseAccess {
 
         $contentElementAtOrderIndex = $deleteContentAtOrderIndex;
 
-        $data = [];
-        $data["__deleteFromElementPagePathId"] = $pagePathId;
-        $data["__deleteElementWithId"] = $contentElementId;
-        $data["__deleteElementAtOrderIndex"] = $contentElementAtOrderIndex;
-        $data["__deleteElementFromContainerWithId"] = $containerElementId;
-
-
         if ($contentElementId && $contentElementAtOrderIndex)
         {
             if ($containerElementId)
             {
-                // TODO: remove element from container
-                $data["__deleteAction"] = "Removing element from container";
+                $containerContentEntity = $this->repository('content')->findOneBy(["id" => $containerElementId]);
+                
+                if ($containerContentEntity)
+                {
+                    $contentTypeClassPath = $containerContentEntity->getType()->getClassPath();
+                    
+                    $containerContentTypeEntity = new $contentTypeClassPath;
+                    
+                    if ($containerContentTypeEntity)
+                    {
+                        $containerContentTypeEntity->load($containerContentEntity->getId());
+                        $containerContentTypeEntity->deleteChild($contentElementId, $contentElementAtOrderIndex);
+                    }
+                }
             }
             else
             {
-                // TODO: remove element from pagecontent
-                $data["__deleteAction"] = "Removing element from page content";
-
                 $pageContentEntity = $this->repository('pageContent')->findOneBy(["pagePath" => $pagePathId, "content" => $contentElementId, "order" => $contentElementAtOrderIndex]);
 
                 if ($pageContentEntity)
                 {
-                    $data["__deleteResult"] = "Found page content to delete with id: " . $pageContentEntity->getId();
-                }
-                else
-                {
-                    $data["__deleteResult"] = "No page content to delete found!";
+                    $this->entityManager->remove($pageContentEntity);
+                    $this->entityManager->flush();
                 }
             }
         }
-
-        return $data;
     }
     
     public function editContentData($post)
@@ -408,22 +405,18 @@ class PagesControllerService extends AbstractDatabaseAccess {
                             {
                                 $post["cms_page_selected_element"] = $post["cms_page_selected_element"] . "-" . $newContentId;
                                 $post["cms_page_selected_action"] = "edit";
+
                                 return $this->editContentData($post);
                             }
                             break;
                         case "delete":
-                            // TODO: remove return of debug data from delete function call
-                            $__deleteDebugData = $this->deleteContentElement($pageArray["paths"][$selectedLanguage]["id"], $selectedElementId, $deleteContentWithId, $deleteContentAtOrderIndex);
-                            $data["__deleteDebugData"] = $__deleteDebugData;
-                            /*
-                            if ($newContentId)
-                            {
-                                $post["cms_page_selected_element"] = $post["cms_page_selected_element"];
-                                $post["cms_page_selected_action"] = "edit";
-                                return $this->editContentData($post);
-                            }
-                            */
-                            break;
+                            $this->deleteContentElement($pageArray["paths"][$selectedLanguage]["id"], $selectedElementId, $deleteContentWithId, $deleteContentAtOrderIndex);
+
+                            $post["cms_page_selected_element"] = $post["cms_page_selected_element"];
+                            $post["cms_page_selected_action"] = "edit";
+
+                            return $this->editContentData($post);
+                        break;
                         case "submit":
                             // persist new content element data to database and reload content data from database
                             $data["contentElementData"] = $contentTypeService->setContentDataArray($selectedElementId, $selectedElementTypeId, $post)->getContentDataArray($selectedElementId, $selectedElementTypeId);
@@ -450,17 +443,12 @@ class PagesControllerService extends AbstractDatabaseAccess {
                         }
                         break;
                     case "delete":
-                        // TODO: remove return of debug data from delete function call
-                        $__deleteDebugData = $this->deleteContentElement($pageArray["paths"][$selectedLanguage]["id"], $selectedElementId, $deleteContentWithId, $deleteContentAtOrderIndex);
-                        $data["__deleteDebugData"] = $__deleteDebugData;
-                        /*
-                        if ($newContentId)
-                        {
-                            $post["cms_page_selected_element"] = $post["cms_page_selected_element"];
-                            $post["cms_page_selected_action"] = "edit";
-                            return $this->editContentData($post);
-                        }
-                        */
+                        $this->deleteContentElement($pageArray["paths"][$selectedLanguage]["id"], $selectedElementId, $deleteContentWithId, $deleteContentAtOrderIndex);
+
+                        $post["cms_page_selected_element"] = $post["cms_page_selected_element"];
+                        $post["cms_page_selected_action"] = "edit";
+                        
+                        return $this->editContentData($post);
                         break;
                 }
                 
