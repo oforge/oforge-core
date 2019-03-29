@@ -1,44 +1,48 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Alexander Wegner
- * Date: 06.12.2018
- * Time: 11:11
- */
 
 namespace Oforge\Engine\Modules\I18n\Services;
 
-use Monolog\Logger;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\I18n\Models\Snippet;
 
-
 /**
  * Class InternationalizationService
+ *
  * @package Oforge\Engine\Modules\I18n\Services
  */
 class InternationalizationService extends AbstractDatabaseAccess {
 
     public function __construct() {
-        parent::__construct(["default" => Snippet::class]);
+        parent::__construct(['default' => Snippet::class]);
     }
 
-
-    public function get($key, $language, $defaultValue = null)
-    {
-        /**
-         * @var $element Snippet
-         */
-        $element = $this->repository()->findOneBy(["scope" => $language, "name" => $key]);
-        if (isset($element)) {
-            return $element->getValue();
+    /**
+     * @param $key
+     * @param $language
+     * @param null $defaultValue
+     *
+     * @return string
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function get($key, $language, $defaultValue = null) {
+        /** @var Snippet $snippet */
+        $snippet = $this->repository()->findOneBy([
+            'name'  => $key,
+            'scope' => $language,
+        ]);
+        if (!isset($snippet)) {
+            $snippet = Snippet::create([
+                'name'  => $key,
+                'scope' => $language,
+                'value' => $defaultValue ? : $key,
+            ]);
+            $this->entityManager()->persist($snippet);
+            $this->entityManager()->flush($snippet);
         }
 
-        $element = Snippet::create(["scope" => $language, "name" => $key, "value" => $defaultValue ?: $key]);
-
-        $this->entityManager()->persist($element);
-        $this->entityManager()->flush();
-
-        return $element->getValue();
+        return $snippet->getValue();
     }
 }

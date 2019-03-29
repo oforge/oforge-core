@@ -1,14 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Alexander Wegner
- * Date: 06.12.2018
- * Time: 11:15
- */
 
 namespace Oforge\Engine\Modules\I18n\Models;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 
@@ -16,8 +9,7 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
  * @ORM\Table(name="oforge_i18n_language")
  * @ORM\Entity
  */
-class Language extends AbstractModel
-{
+class Language extends AbstractModel {
     /**
      * @var int
      * @ORM\Column(name="id", type="integer", nullable=false)
@@ -25,19 +17,16 @@ class Language extends AbstractModel
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-    
     /**
      * @var string
      * @ORM\Column(name="iso", type="string", nullable=false, unique=true)
      */
     private $iso;
-
     /**
      * @var string
      * @ORM\Column(name="language", type="string", nullable=false)
      */
     private $name;
-
     /**
      * @var bool
      * @ORM\Column(name="active", type="boolean", nullable=false)
@@ -47,56 +36,50 @@ class Language extends AbstractModel
     /**
      * @return int
      */
-    public function getId(): ?int
-    {
+    public function getId() : ?int {
         return $this->id;
     }
 
     /**
      * @return string
      */
-    public function getIso(): ?string
-    {
+    public function getIso() : ?string {
         return $this->iso;
     }
 
     /**
      * @param string $iso
      */
-    public function setIso(string $iso)
-    {
-        $this->iso = $iso;
+    public function setIso(string $iso) {
+        $this->iso = strtolower($iso);
     }
 
     /**
      * @return string
      */
-    public function getName(): ?string
-    {
+    public function getName() : ?string {
         return $this->name;
     }
 
     /**
      * @param string $name
      */
-    public function setName(string $name)
-    {
+    public function setName(string $name) {
         $this->name = $name;
     }
 
     /**
      * @return bool
      */
-    public function isActive(): bool
-    {
+    public function isActive() : bool {
         return $this->active;
     }
 
     /**
      * @param bool $active
      */
-    public function setActive(bool $active)
-    {
+    public function setActive(bool $active) {
         $this->active = $active;
     }
+
 }
