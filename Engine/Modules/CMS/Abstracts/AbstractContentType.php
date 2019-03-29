@@ -84,6 +84,15 @@ abstract class AbstractContentType extends AbstractDatabaseAccess
     abstract public function createChild($contentEntity, $order);
     
     /**
+     * Delete a child
+     * @param Content $contentEntity
+     * @param int $order
+     *
+     * @return ContentType $this
+     */
+    abstract public function deleteChild($contentEntity, $order);
+    
+    /**
      * Return child data of content type
      *
      * @return array|false should return false if no child content data is available

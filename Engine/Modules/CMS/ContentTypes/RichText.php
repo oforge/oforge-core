@@ -81,6 +81,18 @@ class RichText extends AbstractContentType
     }
     
     /**
+     * Delete a child
+     * @param Content $contentEntity
+     * @param int $order
+     *
+     * @return ContentType $this
+     */
+    public function deleteChild($contentEntity, $order)
+    {
+        return $this;
+    }
+    
+    /**
      * Return child data of content type
      *
      * @return array|false should return false if no child content data is available
