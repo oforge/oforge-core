@@ -17,7 +17,8 @@
                        type="text"
                        class="form__input form__input"
                        placeholder="{{ i18n('first_name') }}"
-                       required>
+                       required
+                       {% if (userDetails) %}value="{{ userDetails.firstName }}"{% endif %}>
             </div>
 
             <div class="form__control">
@@ -30,7 +31,8 @@
                        type="text"
                        class="form__input form__input"
                        placeholder="{{ i18n('last_name') }}"
-                       required>
+                       required
+                       {% if (userDetails) %}value="{{ userDetails.lastName }}"{% endif %}>
             </div>
 
             <div class="form__control">
@@ -43,7 +45,8 @@
                        type="text"
                        class="form__input form__input"
                        placeholder="{{ i18n('nick_name') }}"
-                       required>
+                       required
+                       {% if (userDetails) %}value="{{ userDetails.nickName }}"{% endif %}>
             </div>
 
         </div>
@@ -66,7 +69,8 @@
                        type="text"
                        class="form__input form__input"
                        placeholder="{{ i18n('contact_email') }}"
-                       required>
+                       required
+                       {% if (userDetails) %}value="{{ userDetails.contactEmail }}"{% endif %}>
             </div>
 
             <div class="form__control">
@@ -79,7 +83,8 @@
                        type="text"
                        class="form__input form__input"
                        placeholder="{{ i18n('contact_phone') }}"
-                       required>
+                       required
+                       {% if (userDetails) %}value="{{ userDetails.phoneNumber }}"{% endif %}>
             </div>
 
             <div class="form__control">

@@ -4,6 +4,7 @@ namespace FrontendUserManagement\Controller\Frontend;
 
 use FrontendUserManagement\Services\FrontendUserLoginService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Services\RedirectService;
 use Oforge\Engine\Modules\Session\Services\SessionManagementService;
 use Slim\Http\Request;
@@ -22,7 +23,7 @@ class LoginController extends AbstractController {
      * @param Response $response
      *
      * @return Response
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ServiceNotFoundException
      */
     public function processAction(Request $request, Response $response) {
 

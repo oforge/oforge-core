@@ -48,10 +48,12 @@ class UserDetail extends AbstractModel {
     private $phoneNumber;
 
     /**
+     * @var int
      * @ORM\OneToOne(targetEntity="User")
+     * @ORM\Column(name="user_id", type="integer")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
-    private $userID;
+    private $userId;
 
     /**
      * @return int
@@ -152,20 +154,20 @@ class UserDetail extends AbstractModel {
     }
 
     /**
-     * @param mixed $userID
+     * @param int $userId
      * @return UserDetail
      */
-    public function setUserID($userID)
+    public function setUserId($userId)
     {
-        $this->userID = $userID;
+        $this->userId = $userId;
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getUserID()
+    public function getUserId()
     {
-        return $this->userID;
+        return $this->userId;
     }
 }
