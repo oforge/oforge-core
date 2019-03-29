@@ -8,6 +8,7 @@ use FrontendUserManagement\Services\AccountNavigationService;
 use FrontendUserManagement\Services\PasswordResetService;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Auth\Services\PasswordService;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Session\Services\SessionManagementService;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -44,9 +45,10 @@ class AccountController extends SecureFrontendController {
      * @return Response
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ServiceNotFoundException
      */
     public function edit_processAction(Request $request, Response $response) {
+
         /** @var SessionManagementService $sessionManagementService */
         /** @var PasswordResetService $passwordResetService */
         /** @var AuthService $authService */
@@ -62,8 +64,8 @@ class AccountController extends SecureFrontendController {
         $newPassword                = $body['change_password_new_password'];
         $passwordConfirm            = $body['change_password_new_password_confirm'];
         $uri                        = $router->pathFor('frontend_account_dashboard');
+        $user                       = Oforge()->View()->get('user');
         $jwt                        = null;
-        $user                       = null;
 
         /**
          * no valid form data found
@@ -87,9 +89,6 @@ class AccountController extends SecureFrontendController {
             Oforge()->Logger()->get()->addWarning('Someone tried to change the password without a valid form csrf token! Redirecting back to login.');
             return $response->withRedirect($uri, 302);
         }
-
-        $jwt = $_SESSION['auth'];
-        $user = $authService->decode($jwt);
 
         if (!isset($user['guid'])) {
             Oforge()->View()->addFlashMessage('warning', 'No guid.');
@@ -155,7 +154,7 @@ class AccountController extends SecureFrontendController {
     }
     
     /**
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ServiceNotFoundException
      */
     public function initPermissions() {
         $this->ensurePermissions("indexAction", User::class);

@@ -22,13 +22,13 @@ class BackendNotification extends AbstractModel {
 
     /**
      * @var string
-     * @ORM\Column(name="type", type="string", nullable=false)
+     * @ORM\Column(name="notification_type", type="string", nullable=false)
      */
     private $type;
 
     /**
      * @var string
-     * @ORM\Column(name="message", type="string", nullable=false)
+     * @ORM\Column(name="notification_message", type="string", nullable=false)
      */
     private $message;
 
