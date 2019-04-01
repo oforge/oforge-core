@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Alexander Wegner
- * Date: 12.12.2018
- * Time: 13:53
- */
 
 namespace Oforge\Engine\Modules\Session\Middleware;
 

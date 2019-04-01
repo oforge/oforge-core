@@ -21,6 +21,10 @@
 </head>
 <body>
 
+{% if debug_mode %}
+    {{ o_dump() }}
+{% endif %}
+
 {% block body %}
 {% endblock body %}
 
@@ -53,7 +57,6 @@
             {% endfor %}
         </div>
     {% endif %}
-    {{ o_dump() }}
 {% endblock master__meta %}
 
 </body>

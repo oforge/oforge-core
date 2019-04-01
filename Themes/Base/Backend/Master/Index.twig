@@ -8,6 +8,10 @@
 <body class="hold-transition skin-oforge sidebar-mini">
 <div class="wrapper">
 
+    {% if debug_mode is same as(true) %}
+        {{ o_dump() }}
+    {% endif %}
+
     {% set breadcrumbsmap = backend_breadcrumbs_map(meta.route.name) %}
 
     {% block pageheader %}
@@ -19,23 +23,23 @@
     {% endblock %}
 
     {% block content %}
-            <!-- Content Wrapper. Contains page content -->
-            <div class="content-wrapper">
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
 
-                {% block content_header %}
-                    {% include 'Backend/Master/Components/Content/Header.twig' %}
+            {% block content_header %}
+                {% include 'Backend/Master/Components/Content/Header.twig' %}
+            {% endblock %}
+
+            <!-- Main content -->
+            <section class="content container-fluid">
+                {% block pagecontent %}
+                    <!--------------------------
+                      | Your Page Content Here |
+                      -------------------------->
                 {% endblock %}
-
-                <!-- Main content -->
-                <section class="content container-fluid">
-                    {% block pagecontent %}
-                        <!--------------------------
-                          | Your Page Content Here |
-                          -------------------------->
-                    {% endblock %}
-                </section>
-                <!-- /.content -->
-            </div>
+            </section>
+            <!-- /.content -->
+        </div>
     {% endblock %}
 
     {% block footer %}
@@ -66,7 +70,7 @@
             }
         </style>
         <div class="meta">
-            {% for key, val in session  %}
+            {% for key, val in session %}
                 <p>{{ key }} : {{ val }}</p>
             {% endfor %}
         </div>
