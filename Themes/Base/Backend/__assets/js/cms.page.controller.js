@@ -57,6 +57,9 @@ $('[data-pb-id]').each(
 			&& $(this).attr('data-pb-id').startsWith($(this).attr('data-pb-se'))
 			&& $(this).attr('data-pb-id').replace(regularExpression, '').indexOf('-') === -1
 		) {
+			// add delete button to element
+			$(this).append('<div class="content-type-delete-button" onclick="deleteContentType(event, this)"><img src="/Themes/Base/Backend/__assets/img/pagebuilder/delete.svg"></div>');
+
 			// mark selectable elements in page builder on mouse hover
 			$(this).hover(
 				function() {
@@ -117,6 +120,24 @@ function dropOverPlaceholder(event) {
 	$('#cms_page_create_content_with_type_id').val(data);
 	$('#cms_page_create_content_at_order_index').val($(event.target).attr('data-pb-order'));
 	$('#cms_page_selected_action').val('create');
+	$('#cms_page_builder_form').submit();
+}
+
+function deleteContentType(event, element) {
+	if (event.stopPropagation) {
+		event.stopPropagation();
+	} else {
+		event.cancelBubble = true;
+	}
+
+	console.log("-----------");
+	console.log("element id: " + $(element).parent().attr('data-pb-id'));
+	console.log("selected element: " + $(element).parent().attr('data-pb-se'));
+	console.log("element order: " + $(element).parent().attr('data-pb-order'));
+	
+	$('#cms_page_delete_content_with_id').val($(element).parent().attr('data-pb-id'));
+	$('#cms_page_delete_content_at_order_index').val($(element).parent().attr('data-pb-order'));
+	$('#cms_page_selected_action').val('delete');
 	$('#cms_page_builder_form').submit();
 }
 
@@ -223,10 +244,13 @@ $(document).ready(function() {
     if ($('#cms_page_builder_form').length && $('#cms_page_richtext_editor').length) {
     	$('#cms_page_builder_form').submit(
 	        function() {
-	            $('#cms_page_richtext_text').val($('#cms_page_richtext_editor').val());
+	            $('#cms_page_richtext_text').val(quill.root.innerHTML);
 	        }
 		);
-		$('#cms_page_richtext_editor').wysihtml5();
+    	
+    	const quill = new Quill('#cms_page_richtext_editor', {
+			theme: 'snow'
+		});
     }
     
     resizePageBuilder();

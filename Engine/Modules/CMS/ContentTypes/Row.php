@@ -16,10 +16,10 @@ class Row extends AbstractContentType
      */
     private function getRowEntities(int $rowId)
     {
-        /** @var Row[] $rowEntities */
         $rowEntities = $this->entityManager->getRepository('Oforge\Engine\Modules\CMS\Models\ContentTypes\Row')->findBy(["row" => $rowId], ["order" => "ASC"]);
         
-        if (isset($rowEntities)) {
+        if ($rowEntities)
+        {
             return $rowEntities;
         }
         
@@ -107,8 +107,45 @@ class Row extends AbstractContentType
      */
     public function createChild($contentEntity, $order)
     {
-        // TODO: re-enumerate order indizes for other child contents
+        $rowEntities = $this->getRowEntities($this->getContentId());
         
+        if ($rowEntities)
+        {
+            $highestOrder = 1;
+            
+            foreach ($rowEntities as $rowEntity)
+            {
+                $currentOrder = $rowEntity->getOrder();
+
+                if ($order < 999999999)
+                {
+                    if ($currentOrder >= $order)
+                    {
+                        $rowEntity->setOrder($currentOrder + 1);
+                        
+                        $this->entityManager->persist($rowEntity);
+                        $this->entityManager->flush();
+                    }
+                }
+                else
+                {
+                    if ($currentOrder >= $highestOrder)
+                    {
+                        $highestOrder = $currentOrder;
+                    }
+                }
+            }
+                
+            if ($order == 999999999)
+            {
+                $order = $highestOrder + 1;
+            }
+        }
+        else
+        {
+            $order = 1;
+        }
+
         $rowEntity =  new \Oforge\Engine\Modules\CMS\Models\ContentTypes\Row;
         $rowEntity->setRow($this->getContentId());
         $rowEntity->setContent($contentEntity);
@@ -117,6 +154,26 @@ class Row extends AbstractContentType
         $this->entityManager->persist($rowEntity);
         $this->entityManager->flush();
         
+        return $this;
+    }
+    
+    /**
+     * Delete a child
+     * @param Content $contentEntity
+     * @param int $order
+     *
+     * @return ContentType $this
+     */
+    public function deleteChild($contentElementId, $contentElementAtOrderIndex)
+    {
+        $rowEntity = $this->entityManager->getRepository('Oforge\Engine\Modules\CMS\Models\ContentTypes\Row')->findOneBy(["row" => $this->getContentId(), "content" => $contentElementId, "order" => $contentElementAtOrderIndex]);
+        
+        if ($rowEntity)
+        {
+            $this->entityManager->remove($rowEntity);
+            $this->entityManager->flush();
+        }
+
         return $this;
     }
     

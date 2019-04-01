@@ -285,8 +285,9 @@ class PageBuilderService extends AbstractDatabaseAccess
         $content->load($pageContent["content"]["id"]);
         
         $data = [];
-        $data["id"] = $this->createCurrentElementId($_elementId, $pageContent["content"]["id"]);
-        $data["se"] = $elementId;
+        $data["id"]    = $this->createCurrentElementId($_elementId, $pageContent["content"]["id"]);
+        $data["se"]    = $elementId;
+        $data["order"] = $pageContent["order"];
         
         $data = array_merge($data, $content->getRenderData());
         
@@ -357,7 +358,7 @@ class PageBuilderService extends AbstractDatabaseAccess
             }
             
             // if element was not found but is a container type recursivly call getContentDataArrayById
-            if ($pageContent["content"]["type"]["group"]["name"] == "container")
+            else if ($pageContent["content"]["type"]["group"]["name"] == "container")
             {
                 $content = new $pageContent["content"]["type"]["classPath"];
                 
@@ -369,12 +370,17 @@ class PageBuilderService extends AbstractDatabaseAccess
                     
                     if (is_array($childDatas))
                     {
-                        return $this->getContentDataArrayById($this->getChildContentDataArray($childDatas), $elementId, $this->createCurrentElementId($_elementId, $pageContent["content"]["id"]));
+                        $data = $this->getContentDataArrayById($this->getChildContentDataArray($childDatas), $elementId, $this->createCurrentElementId($_elementId, $pageContent["content"]["id"]));
+
+                        if ($data)
+                        {
+                            return $data;
+                        }
                     }
                 }
             }
         }
-        
+
         return NULL;
-   }
+    }
 }
