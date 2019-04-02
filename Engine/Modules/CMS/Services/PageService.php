@@ -1,13 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Alexander Wegner
- * Date: 17.01.2019
- * Time: 10:52
- */
 
 namespace Oforge\Engine\Modules\CMS\Services;
 
+use Oforge\Engine\Modules\CMS\Abstracts\AbstractContentType;
+use Oforge\Engine\Modules\CMS\Models\Content\Content;
+use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
+use Oforge\Engine\Modules\CMS\Models\Page\PageContent;
 use Oforge\Engine\Modules\CMS\Models\Page\PagePath;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 
@@ -23,6 +21,7 @@ class PageService extends AbstractDatabaseAccess {
      * @param string $path
      *
      * @return bool
+     * @throws \Doctrine\ORM\ORMException
      */
     public function hasPath(string $path) {
         $data = $this->repository()->findOneBy(["path" => $path]);
@@ -34,8 +33,9 @@ class PageService extends AbstractDatabaseAccess {
      * @param string $path
      *
      * @return PagePath|object|null
+     * @throws \Doctrine\ORM\ORMException
      */
-    public function getPage(string $path) : ?PagePath {
+    private function getPagePath(string $path) : ?PagePath {
         return $this->repository()->findOneBy(["path" => $path]);
     }
 
@@ -72,4 +72,45 @@ class PageService extends AbstractDatabaseAccess {
 
         return $result;
     }
+
+    /**
+     * @param string $path
+     *
+     * @return array | null
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function loadContentForPagePath($path) {
+
+        $pagePath = $this->getPagePath($path);
+
+        if (isset($pagePath)) {
+            $pageContents = $pagePath->getPageContent()->getValues();
+            $result["content"] = [];
+
+            foreach ($pageContents as $pageContent) {
+                /** @var PageContent $pageContent */
+                /** @var Content $content */
+                /** @var ContentType $contentType */
+                $content = $pageContent->getContent();
+                $contentType = $content->getType();
+                $data = $content->getData();
+
+                if (!$data) {
+                    /** @var AbstractContentType $classPath */
+                    $classPath = $contentType->getClassPath();
+                    $data = (new $classPath)->load($content->getId());
+                }
+
+                array_push($result['content'], [
+                    "type" => $contentType->getName(),
+                    "path" => $contentType->getPath(),
+                    "data" => $data,
+                ]);
+            }
+
+            return $result;
+        }
+        return null;
+    }
 }
+
