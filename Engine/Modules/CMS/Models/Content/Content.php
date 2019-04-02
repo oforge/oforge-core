@@ -8,6 +8,7 @@
 
 namespace Oforge\Engine\Modules\CMS\Models\Content;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Oforge\Engine\Modules\CMS\Models\Page\PageContent;
@@ -56,10 +57,13 @@ class Content extends AbstractModel
      * @ORM\Column(name="content_data", type="object", nullable=true)
      */
     private $data;
-    
+
+    /**
+     * Content constructor.
+     */
     public function __construct()
     {
-        $this->pageContents = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->pageContents = new ArrayCollection();
     }
     
     /**

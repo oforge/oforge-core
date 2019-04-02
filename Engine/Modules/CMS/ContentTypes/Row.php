@@ -204,4 +204,22 @@ class Row extends AbstractContentType
         
         return $rowColumnContents;
     }
+
+    public function load(int $id) {
+        $rows = $this->entityManager->getRepository('Oforge\Engine\Modules\CMS\Models\ContentTypes\Row')->findBy(['row' => $id],['order' => 'ASC']);
+        $result = [];
+        if (isset($rows)) {
+            foreach ($rows as $row) {
+                /** @var \Oforge\Engine\Modules\CMS\Models\ContentTypes\Row $row */
+                $data = $row->getContent()->getData();
+                if (!$data) {
+                    $data = $this->load($row->getContent()->getId());
+                }
+                array_push($result, ['type' => $row->getContent()->getType()->getName(), 'path' => $row->getContent()->getType()->getPath(), 'data' => $data]);
+            }
+
+            return $result;
+        }
+        return null;
+    }
 }

@@ -15,13 +15,14 @@ use Slim\Http\Response;
 use Slim\Router;
 
 class PageController extends AbstractController {
-    
+
     /**
      * @param Request $request
      * @param Response $response
      *
      * @return Response
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws \Doctrine\ORM\ORMException
      */
     public function indexAction(Request $request, Response $response) {
 
@@ -31,14 +32,11 @@ class PageController extends AbstractController {
         $pagePathService = Oforge()->Services()->get("page.path");
         $path = $request->getUri()->getPath();
 
-        $page = null;
-        if ($pagePathService->hasPath($path)) {
-            $page = $pagePathService->getPage($path);
-            if(isset($path)) {
-                $normalized = $pagePathService->normalize($page);
-                Oforge()->View()->assign($normalized);
-                return $response;
-            }
+        $cmsContent = $pagePathService->loadContentForPagePath($path);
+
+        if ($cmsContent !== null) {
+            Oforge()->View()->assign($cmsContent);
+            return $response;
         }
 
         /** @var Router $router */
