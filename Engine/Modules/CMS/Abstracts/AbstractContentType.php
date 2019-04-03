@@ -2,6 +2,8 @@
 
 namespace Oforge\Engine\Modules\CMS\Abstracts;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
 use Oforge\Engine\Modules\CMS\Models\Content\Content;
@@ -27,7 +29,11 @@ abstract class AbstractContentType extends AbstractDatabaseAccess
     private $contentName        = NULL;
     private $contentCssClass    = NULL;
     private $contentData        = NULL;
-    
+
+    /**
+     * AbstractContentType constructor.
+     * @throws ORMException
+     */
     public function __construct()
     {
         parent::__construct(['contentType' => ContentType::class, 'content' => Content::class]);
@@ -193,12 +199,12 @@ abstract class AbstractContentType extends AbstractDatabaseAccess
     {
         return $this->contentParentId;
     }
-    
+
     /**
      * Set parent id of content
      * @param int $contentParentId
      *
-     * @return ContentType $this
+     * @return AbstractContentType $this
      */
     public function setContentParentId(int $contentParentId)
     {
@@ -216,12 +222,12 @@ abstract class AbstractContentType extends AbstractDatabaseAccess
     {
         return $this->contentName;
     }
-    
+
     /**
      * Set name of content
      * @param string $contentName
      *
-     * @return ContentType $this
+     * @return AbstractContentType $this
      */
     public function setContentName(string $contentName)
     {
@@ -239,12 +245,12 @@ abstract class AbstractContentType extends AbstractDatabaseAccess
     {
         return $this->contentCssClass;
     }
-    
+
     /**
      * Set css class of content
      * @param string $contentCssClass
      *
-     * @return ContentType $this
+     * @return AbstractContentType $this
      */
     public function setContentCssClass(string $contentCssClass)
     {
@@ -262,12 +268,11 @@ abstract class AbstractContentType extends AbstractDatabaseAccess
     {
         return $this->contentData;
     }
-    
+
     /**
      * Set data of content
-     * @param string $contentCssClass
-     *
-     * @return ContentType $this
+     * @param string $contentData
+     * @return AbstractContentType $this
      */
     public function setContentData(string $contentData)
     {
@@ -275,11 +280,13 @@ abstract class AbstractContentType extends AbstractDatabaseAccess
         
         return $this;
     }
-    
+
     /**
      * Persist data stored in $content of content type to database
      *
-     * @return ContentType $this
+     * @return AbstractContentType $this
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function save() {
         if ($this->id)
@@ -315,21 +322,22 @@ abstract class AbstractContentType extends AbstractDatabaseAccess
         
         return $this;
     }
-    
+
     /**
      * Load content entity from database to $content
      * @param int $id content id
      *
-     * @return ContentType $this
+     * @return AbstractContentType $this
+     * @throws ORMException
      */
     public function load(int $id) {
         if (!$id)
         {
             return $this;
         }
-        
+
         $this->contentEntity = $this->repository('content')->findOneBy(["id" => $id]);
-        
+
         if ($this->contentEntity && $this->contentEntity->getId() > 0 && $this->contentEntity->getType() && $this->contentEntity->getType()->getId() === $this->id)
         {
             $this->contentId        = $this->contentEntity->getId();
