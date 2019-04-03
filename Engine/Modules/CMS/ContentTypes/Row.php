@@ -14,7 +14,7 @@ class Row extends AbstractContentType
      *
      * @return Row[]|NULL
      */
-    private function getRowEntities(int $rowId)
+    private function getRowEntities(?int $rowId)
     {
         $rowEntities = $this->entityManager->getRepository('Oforge\Engine\Modules\CMS\Models\ContentTypes\Row')->findBy(["row" => $rowId], ["order" => "ASC"]);
         
@@ -205,7 +205,9 @@ class Row extends AbstractContentType
         return $rowColumnContents;
     }
 
-    public function load(int $id) {
+    // yes this is a typo
+    public function loadr(int $id) {
+        parent::load($id);
         $rows = $this->entityManager->getRepository('Oforge\Engine\Modules\CMS\Models\ContentTypes\Row')->findBy(['row' => $id],['order' => 'ASC']);
         $result = [];
         if (isset($rows)) {
