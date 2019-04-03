@@ -121,6 +121,7 @@ class PageTreeService extends AbstractDatabaseAccess
         {
             $jsTreePages[] = [
                 "id"     => $page["id"],
+                "icon"   => "jstree-file",
                 "parent" => $page["parent"] ? $page["parent"] : "#",
                 "text"   => $page["name"]
             ];

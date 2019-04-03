@@ -1,18 +1,18 @@
 // jsTree callback functions
-$('#cms_page_controller_jstree').on('loaded.jstree', function (event, data) {
-	$('#cms_page_controller_jstree').jstree('open_all');
+$('#cms_pages_controller_jstree').on('loaded.jstree', function (event, data) {
+	$('#cms_pages_controller_jstree').jstree('open_all');
 });
 
-$('#cms_page_controller_jstree').on('select_node.jstree', function (event, data) {
+$('#cms_pages_controller_jstree').on('select_node.jstree', function (event, data) {
 	// switch page on page select
-	$('#cms_page_jstree_selected_page').val($('#cms_page_controller_jstree').jstree('get_selected'));
+	$('#cms_page_jstree_selected_page').val($('#cms_pages_controller_jstree').jstree('get_selected'));
 	$('#cms_page_selected_element').val('');
 	$('#cms_page_builder_form').submit();
 });
 
 // called after creating the node in jstree. afterwards rename_node.jstree-callback
 // will be called when user finished editing the node's name
-$('#cms_page_controller_jstree').on('create_node.jstree', function (event, data) {
+$('#cms_pages_controller_jstree').on('create_node.jstree', function (event, data) {
 	var node = data.node;
 	var parent = data.parent;
 	var position = data.position;
@@ -22,7 +22,7 @@ $('#cms_page_controller_jstree').on('create_node.jstree', function (event, data)
 });
 
 // called after user finished editing the node's name
-$('#cms_page_controller_jstree').on('rename_node.jstree', function (event, data) {
+$('#cms_pages_controller_jstree').on('rename_node.jstree', function (event, data) {
 	var node = data.node;
 	var text = data.text;
 	var old = data.old;
@@ -37,7 +37,7 @@ $('#cms_page_controller_jstree').on('rename_node.jstree', function (event, data)
 });
 
 // called after deleting a jstree node
-$('#cms_page_controller_jstree').on('delete_node.jstree', function (event, data) {
+$('#cms_pages_controller_jstree').on('delete_node.jstree', function (event, data) {
 	var node = data.node;
 	var parent = data.parent;
 	
@@ -84,7 +84,7 @@ $('[data-pb-id]').each(
 // on click create new root page
 $('#cms-page-builder-create-new-root-page').click(
 	function() {
-	    var tree = $('#cms_page_controller_jstree').jstree(true);
+	    var tree = $('#cms_pages_controller_jstree').jstree(true);
 	    var node = tree.get_node("#");
     	
 	    node = tree.create_node(node, {"type":"folder"});
@@ -130,11 +130,6 @@ function deleteContentType(event, element) {
 		event.cancelBubble = true;
 	}
 
-	console.log("-----------");
-	console.log("element id: " + $(element).parent().attr('data-pb-id'));
-	console.log("selected element: " + $(element).parent().attr('data-pb-se'));
-	console.log("element order: " + $(element).parent().attr('data-pb-order'));
-	
 	$('#cms_page_delete_content_with_id').val($(element).parent().attr('data-pb-id'));
 	$('#cms_page_delete_content_at_order_index').val($(element).parent().attr('data-pb-order'));
 	$('#cms_page_selected_action').val('delete');
@@ -146,9 +141,11 @@ $('#cms-page-builder-cancel').click(
 	function() {
 		var lastElementIdPosition = $(this).attr('data-pb-se').lastIndexOf('-');
 		var newSelectedElementId = '';
+
 		if (lastElementIdPosition > 0) {
 			newSelectedElementId = $(this).attr('data-pb-se').substring(0, lastElementIdPosition);
 		}
+
 		$('#cms_page_selected_element').val(newSelectedElementId);
 		$('#cms_page_builder_form').submit();
 	}
@@ -159,9 +156,11 @@ $('#cms-page-builder-submit').click(
 	function() {
 		var lastElementIdPosition = $(this).attr('data-pb-se').lastIndexOf('-');
 		var newSelectedElementId = '';
+
 		if (lastElementIdPosition > 0) {
 			newSelectedElementId = $(this).attr('data-pb-se').substring(0, lastElementIdPosition);
 		}
+
 		$('#cms_page_selected_action').val('submit');
 		$('#cms_page_builder_form').submit();
 	}
@@ -169,15 +168,19 @@ $('#cms-page-builder-submit').click(
 
 // adopt cms content builder containers to parents height on window resize event
 function resizePageBuilder() {
-	var calculatedHeight = window.innerHeight - $('#page_builder_container_wrapper').position().top - $('.main-footer').outerHeight(true) - $('.content').css('padding-top').replace('px', '') - $('.content').css('padding-bottom').replace('px', '');
+	if (typeof $('#page_builder_container_wrapper') !== typeof undefined && typeof $('#page_builder_container_wrapper').position() !== typeof undefined) {
+		var calculatedHeight = window.innerHeight - $('#page_builder_container_wrapper').position().top - $('.main-footer').outerHeight(true) - $('.content').css('padding-top').replace('px', '') - $('.content').css('padding-bottom').replace('px', '');
 	
-	$('#page_builder_container_wrapper').height(calculatedHeight);
-	
-	$('#cms_page_jstree_container').height(calculatedHeight);
-	$('#cms_page_builder_container').height(calculatedHeight);
-	$('#cms_content_type_list_container').height(calculatedHeight);
-	
-	$('#cms_content_type_editor_wrapper').height(calculatedHeight - $('#cms_content_type_editor_wrapper').position().top);
+		$('#page_builder_container_wrapper').height(calculatedHeight);
+		
+		$('#cms_page_jstree_container').height(calculatedHeight);
+		$('#cms_page_builder_container').height(calculatedHeight);
+		$('#cms_content_type_list_container').height(calculatedHeight);
+		
+		if (typeof $('#cms_content_type_editor_wrapper') !== typeof undefined && typeof $('#cms_content_type_editor_wrapper').position() !== typeof undefined) {
+			$('#cms_content_type_editor_wrapper').height(calculatedHeight - $('#cms_content_type_editor_wrapper').position().top);
+		}
+	}
 }
 
 // bind functions to window resize event
@@ -187,51 +190,53 @@ $(window).resize(function() {
 
 // bind functions to document load event
 $(document).ready(function() {
-	// create jstree configs
-	var jsTreeCoreConfig   = cms_page_controller_jstree_config;
-	var jsTreeCustomConfig = {
-		"plugins" : ["contextmenu"],
-		"contextmenu" : {
-		    "select_node" : false,
-		    "show_at_node" : true,
-		    "items" : {
-		        "createItem": {
-		            "label": "Create",
-		            "action": function (obj) {
-		        	    var tree = $('#cms_page_controller_jstree').jstree(true);
-		        	    var node = tree.get_node(obj.reference);
-		            	
-		        	    node = tree.create_node(node, {"type":"folder"});
-		        	    tree.edit(node);
-		            }
-		        },
-		        "renameItem": {
-		            "label": "Rename",
-		            "action": function (obj) {
-		        	    var tree = $('#cms_page_controller_jstree').jstree(true);
-		        	    var node = tree.get_node(obj.reference);
-		        	    
-		        	    tree.edit(node);
-		            }
-		        },
-		        "deleteItem": {
-		            "label": "Delete",
-		            "action": function (obj) {
-		        	    var tree = $('#cms_page_controller_jstree').jstree(true);
-		        	    var node = tree.get_node(obj.reference);
-		        	    
-		        	    tree.delete_node(node);
-		            }
-		        }
-		    }
-		}
-	};
-	
-	// merge jstree configs
-	var jsTreeConfig = Object.assign(jsTreeCoreConfig, jsTreeCustomConfig);
-	
+	if (typeof cms_pages_controller_jstree_config !== typeof undefined && cms_pages_controller_jstree_config) {
+		// create jstree configs
+		var jsTreeCoreConfig   = cms_pages_controller_jstree_config;
+		var jsTreeCustomConfig = {
+			"plugins" : ["contextmenu"],
+			"contextmenu" : {
+				"select_node" : false,
+				"show_at_node" : true,
+				"items" : {
+					"createItem": {
+						"label": "Create",
+						"action": function (obj) {
+							var tree = $('#cms_pages_controller_jstree').jstree(true);
+							var node = tree.get_node(obj.reference);
+							
+							node = tree.create_node(node, {"type":"folder"});
+							tree.edit(node);
+						}
+					},
+					"renameItem": {
+						"label": "Rename",
+						"action": function (obj) {
+							var tree = $('#cms_pages_controller_jstree').jstree(true);
+							var node = tree.get_node(obj.reference);
+							
+							tree.edit(node);
+						}
+					},
+					"deleteItem": {
+						"label": "Delete",
+						"action": function (obj) {
+							var tree = $('#cms_pages_controller_jstree').jstree(true);
+							var node = tree.get_node(obj.reference);
+							
+							tree.delete_node(node);
+						}
+					}
+				}
+			}
+		};
+		
+		// merge jstree configs
+		var jsTreeConfig = Object.assign(jsTreeCoreConfig, jsTreeCustomConfig);
+	}
+
 	// create jstree object
-    $('#cms_page_controller_jstree').jstree(jsTreeConfig);
+    $('#cms_pages_controller_jstree').jstree(jsTreeConfig);
     
     $('#cms_page_builder_language_selector').change(
     	function() {
