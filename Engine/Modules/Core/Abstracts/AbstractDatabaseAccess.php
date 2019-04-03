@@ -17,13 +17,13 @@ abstract class AbstractDatabaseAccess {
     private $entityManger;
     /** @var array $repositories */
     private $repositories;
-    /** @var string[] $models */
+    /** @var array $models */
     private $models;
 
     /**
      * AbstractDatabaseAccess constructor.
      *
-     * @param string|string[] $models
+     * @param string|array $models
      */
     public function __construct($models) {
         $this->models = is_string($models) ? ['default' => $models] : $models;
@@ -66,5 +66,4 @@ abstract class AbstractDatabaseAccess {
     protected function getRepository(string $class) : EntityRepository {
         return $this->entityManager()->getRepository($class);
     }
-
 }
