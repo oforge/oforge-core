@@ -173,7 +173,15 @@ INSERT INTO `oforge_i18n_snippet` (`id`, `scope`, `snippet_name`, `value`) VALUE
 (100,	'de',	'cms_page_builder_select_language',	'Sprache wählen ...'),
 (101,	'en',	'cms_page_builder_select_language',	'Choose language ...'),
 (102,	'de',	'cms_page_builder_page_data_title',	'Seiten Daten editieren'),
-(103,	'en',	'cms_page_builder_page_data_title',	'Edit page data');
+(103,	'en',	'cms_page_builder_page_data_title',	'Edit page data'),
+(104,	'de',	'cms_element_editor_element_tree_title',	'Elemente'),
+(105,	'en',	'cms_element_editor_element_tree_title',	'Elements'),
+(106,	'de',	'cms_element_editor_content_title',	'Inhalt'),
+(107,	'en',	'cms_element_editor_content_title',	'Content'),
+(108,	'de',	'cms_element_editor_content_no_content_selected',	'Wählen Sie ein Content Element zum Editieren!'),
+(109,	'en',	'cms_element_editor_content_no_content_selected',	'Select a content element for editing!'),
+(110,	'de',	'cms_element_editor_create_new_root_folder',	'Hier klicken um einen neuen Root-Ordner zu erstellen ...'),
+(111,	'en',	'cms_element_editor_create_new_root_folder',	'Click here to create a new root folder ...');
 
 DROP TABLE IF EXISTS `oforge_cms_content_type_group`;
 CREATE TABLE `oforge_cms_content_type_group` (

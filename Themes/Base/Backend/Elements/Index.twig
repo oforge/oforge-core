@@ -1,10 +1,17 @@
-{% extends "Backend/Master/Index.twig" %}
+{% extends 'Backend/Master/Index.twig' %}
 
 {% block pagecontent %}
-    TBD
 
-    <ul>
-        <li>CMS Inhalte auflisten/bearbeiten/löschen</li>
-    </ul>
+    {% block cms_element_editor %}
+        <div class="container-fluid element-editor-container-wrapper" id="element_editor_container_wrapper">
+            <div class="row">
+                {% include 'Backend/Elements/ElementJsTree.twig' %}
+                {% include 'Backend/Pages/PageContent.twig' %}
+                {% if contents.isContainer or not contents.type %}
+                    {% include 'Backend/Pages/ContentTypeList.twig' %}
+                {% endif %}
+        </div>
+        </div>
+    {% endblock cms_element_editor %}
 
-{% endblock %}
+{% endblock pagecontent %}
