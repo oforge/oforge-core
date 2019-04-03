@@ -61,12 +61,16 @@ class ViewManager extends AbstractViewManager {
      *
      * @return array
      */
-    function array_merge_recursive_ex(array & $array1, array & $array2) {
+    function array_merge_recursive_ex(array &$array1, array &$array2) {
         $merged = $array1;
 
-        foreach ($array2 as $key => & $value) {
+        foreach ($array2 as $key => &$value) {
             if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
-                $merged[$key] = $this->array_merge_recursive_ex($merged[$key], $value);
+                if (is_string($key)) {
+                    $merged[$key] = is_array($merged[$key]) ? $this->array_merge_recursive_ex($merged[$key], $value) : $value;
+                } else {
+                    $merged[] = $value;
+                }
             } elseif (is_numeric($key)) {
                 if (!in_array($value, $merged)) {
                     $merged[] = $value;
