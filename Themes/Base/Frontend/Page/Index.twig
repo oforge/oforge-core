@@ -5,7 +5,7 @@
         {% if content %}
             <div class="content">
                 {% for contentItem in content %}
-                    {% include 'ContentTypes/' ~ contentItem.path ~ '/Index.twig' with {'data': contentItem.data} %}
+                    {% include 'ContentTypes/' ~ contentItem.path ~ '/Index.twig' with {'data': contentItem} %}
                 {% endfor %}
             </div>
         {% endif %}

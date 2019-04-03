@@ -2,7 +2,11 @@
 
 namespace Oforge\Engine\Modules\CMS\Services;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Oforge\Engine\Modules\CMS\Abstracts\AbstractContentType;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\I18n\Models\Language;
 use Oforge\Engine\Modules\CMS\Models\Layout\Layout;
 use Oforge\Engine\Modules\CMS\Models\Site\Site;
@@ -14,15 +18,32 @@ use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
 
 class PagesControllerService extends AbstractDatabaseAccess {
     private $entityManager = NULL;
-    
+
+    /**
+     * PagesControllerService constructor.
+     * @throws ORMException
+     */
     public function __construct() {
-        parent::__construct(["language" => Language::class, "layout" => Layout::class, "site" => Site::class, "page" => Page::class, "pagePath" => PagePath::class, "pageContent" => PageContent::class, "contentType" => ContentType::class, "content" => Content::class]);
+        parent::__construct([
+            "language" => Language::class, 
+            "layout" => Layout::class, 
+            "site" => Site::class, 
+            "page" => Page::class, 
+            "pagePath" => PagePath::class, 
+            "pageContent" => PageContent::class, 
+            "contentType" => ContentType::class, 
+            "content" => Content::class]);
         
         $this->entityManager = Oforge()->DB()->getManager();
     }
-    
-    public function getAvailableLanuages()
+
+    /**
+     * @return array
+     * @throws ORMException
+     */
+    public function getAvailableLanguages()
     {
+        /** @var Language[] $languageEntities */
         $languageEntities = $this->repository('language')->findAll();
         
         $languages = [];
@@ -39,7 +60,12 @@ class PagesControllerService extends AbstractDatabaseAccess {
         
         return $languages;
     }
-    
+
+    /**
+     * @param $id
+     * @return int
+     * @throws ORMException
+     */
     public function getDefaultLanguageForPage($id)
     {
         $pageEntity = $this->repository('page')->findOneBy(["id" => $id]);
@@ -56,7 +82,12 @@ class PagesControllerService extends AbstractDatabaseAccess {
         
         return 0;
     }
-    
+
+    /**
+     * @param $parentId
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     private function findAndRemoveChildPages($parentId)
     {
         $pageEntities = $this->repository('page')->findBy(["parent" => $parentId]);
@@ -69,7 +100,14 @@ class PagesControllerService extends AbstractDatabaseAccess {
             $this->entityManager->flush();
         }
     }
-    
+
+    /**
+     * @param $post
+     * @return array
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ServiceNotFoundException
+     */
     public function editPageData($post)
     {
         $pageTreeService = OForge()->Services()->get("page.tree.service");
@@ -152,7 +190,13 @@ class PagesControllerService extends AbstractDatabaseAccess {
         
         return FALSE;
     }
-    
+
+    /**
+     * @param $post
+     * @return array
+     * @throws ORMException
+     * @throws ServiceNotFoundException
+     */
     public function editPagePathData($post)
     {
         $pageTreeService = OForge()->Services()->get("page.tree.service");
@@ -166,14 +210,19 @@ class PagesControllerService extends AbstractDatabaseAccess {
         
         $data = [
             "js"                      => ["cms_page_controller_jstree_config" => $pageTreeService->generateJsTreeConfigJSON()],
-            "languages"               => $this->getAvailableLanuages(),
+            "languages"               => $this->getAvailableLanguages(),
             "cms_page_builder_action" => "edit_page_path",
             "post"                    => $post
         ];
         
         return $data;
     }
-    
+
+    /**
+     * @param $post
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     public function updatePagePathData($post)
     {
         $selectedPage       = isset($post["cms_page_jstree_selected_page"]) && $post["cms_page_jstree_selected_page"] > 0 ? $post["cms_page_jstree_selected_page"] : 0;
@@ -182,7 +231,9 @@ class PagesControllerService extends AbstractDatabaseAccess {
 
         if ($pagePath)
         {
+            /** @var Page $pageEntity */
             $pageEntity     = $this->repository('page')->findOneBy(["id" => $selectedPage]);
+            /** @var Language $languageEntity */
             $languageEntity = $this->repository('language')->findOneBy(["id" => $selectedLanguage]);
             
             if ($pageEntity && $languageEntity)
@@ -203,9 +254,19 @@ class PagesControllerService extends AbstractDatabaseAccess {
             }
         }
     }
-    
+
+    /**
+     * @param $pagePathId
+     * @param $selectedElementId
+     * @param $createContentWithTypeId
+     * @param $createContentAtOrderIndex
+     * @return bool|int|null
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     private function createContentElement($pagePathId, $selectedElementId, $createContentWithTypeId, $createContentAtOrderIndex)
     {
+        /** @var ContentType $contentTypeEntity */
         $contentTypeEntity = $this->repository('contentType')->findOneBy(["id" => $createContentWithTypeId]);
         
         $contentId = false;
@@ -263,7 +324,8 @@ class PagesControllerService extends AbstractDatabaseAccess {
                 {
                     $createContentAtOrderIndex = 1;
                 }
-                
+
+                /** @var PagePath $pagePathEntity */
                 $pagePathEntity = $this->repository('pagePath')->findOneBy(["id" => $pagePathId]);
                 
                 if ($pagePathEntity)
@@ -284,7 +346,8 @@ class PagesControllerService extends AbstractDatabaseAccess {
                 if ($containerContentEntity)
                 {
                     $contentTypeClassPath = $containerContentEntity->getType()->getClassPath();
-                    
+
+                    /** @var AbstractContentType $containerContentTypeEntity */
                     $containerContentTypeEntity = new $contentTypeClassPath;
                     
                     if ($containerContentTypeEntity)
@@ -299,6 +362,14 @@ class PagesControllerService extends AbstractDatabaseAccess {
         return $contentId;
     }
 
+    /**
+     * @param $pagePathId
+     * @param $selectedElementId
+     * @param $deleteContentWithId
+     * @param $deleteContentAtOrderIndex
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     private function deleteContentElement($pagePathId, $selectedElementId, $deleteContentWithId, $deleteContentAtOrderIndex)
     {
         if ($selectedElementId)
@@ -324,7 +395,8 @@ class PagesControllerService extends AbstractDatabaseAccess {
                 if ($containerContentEntity)
                 {
                     $contentTypeClassPath = $containerContentEntity->getType()->getClassPath();
-                    
+
+                    /** @var AbstractContentType $containerContentTypeEntity */
                     $containerContentTypeEntity = new $contentTypeClassPath;
                     
                     if ($containerContentTypeEntity)
@@ -346,7 +418,14 @@ class PagesControllerService extends AbstractDatabaseAccess {
             }
         }
     }
-    
+
+    /**
+     * @param $post
+     * @return array
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ServiceNotFoundException
+     */
     public function editContentData($post)
     {
         $pageTreeService    = OForge()->Services()->get("page.tree.service");
@@ -364,7 +443,7 @@ class PagesControllerService extends AbstractDatabaseAccess {
         
         $data = [
             "js"                => ["cms_page_controller_jstree_config" => $pageTreeService->generateJsTreeConfigJSON()],
-            "languages"         => $this->getAvailableLanuages(),
+            "languages"         => $this->getAvailableLanguages(),
             "pages"             => $pageTreeService->getPageArray(),
             "contentTypeGroups" => $contentTypeService->getContentTypeGroupArray(),
             "selectedElement"   => $selectedElement,
