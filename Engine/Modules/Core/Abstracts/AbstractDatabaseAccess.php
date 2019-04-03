@@ -63,7 +63,7 @@ abstract class AbstractDatabaseAccess {
      * @return EntityRepository
      * @throws ORMException
      */
-    protected function getRepositories(string $class) : EntityRepository {
+    protected function getRepository(string $class) : EntityRepository {
         return $this->entityManager()->getRepository($class);
     }
 
