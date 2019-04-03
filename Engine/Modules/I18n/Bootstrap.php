@@ -53,7 +53,7 @@ class Bootstrap extends AbstractBootstrap {
             'name' => 'i18n_language_en',
         ]);
 
-        /** @var $sidebarNavigation BackendNavigationService */
+        /** @var BackendNavigationService $sidebarNavigation */
         $sidebarNavigation = Oforge()->Services()->get('backend.navigation');
         $sidebarNavigation->put([
             'name'     => 'admin',

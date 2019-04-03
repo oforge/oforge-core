@@ -9,14 +9,19 @@
                                 <label for="form-">
                                     {{ i18n(property.label|default('backend_crud_property__' ~ crud.model ~ '_' ~ property.name) ) }}
                                 </label>
-                                {% include 'Backend/CRUD/Components/Editor.twig' %}
+                                {% if property.name != 'id' and property.crud[crud.context] == 'editable' %}
+                                    {% include 'Backend/CRUD/Components/Editor.twig' %}
+                                {% else %}
+                                    {% include 'Backend/CRUD/Components/Renderer.twig' %}
+                                {% endif %}
                             </div>
                         {% endfor %}
                         <input type="hidden" name="action" value="{{ crud.context }}" />
-                        <a href="{{ url(meta.route.name|trim('_create', 'right')) }}" class="btn btn-default">
+                        <a href="{{ url(meta.route.name|split('_' ~ crud.context)|first) }}" class="btn btn-default">
                             {{ i18n('backend_crud_btn_cancel') }}
                         </a>
-                        <input type="submit" class="btn btn-primary" value="{{ i18n('backend_crud_btn_' ~ crud.context) }}">
+                        <input type="submit" class="btn btn-primary"
+                               value="{{ i18n('backend_crud_btn_' ~ crud.context) }}">
                     </form>
                 {% else %}
                     <div class="alert alert-info" role="alert">

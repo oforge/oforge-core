@@ -124,8 +124,33 @@ class CrudController extends SecureBackendController {
     }
 
     public function createAction(Request $request, Response $response) {
-        list($properties, $hasEditors) = $this->filterPropertiesFor('create');
         if (isset($this->model)) {
+            $params = $request->getParams();
+            if ($request->isPost() && !empty($params)) {
+                try {
+                    $this->crudService->create($this->model, $params['data']);
+                    Oforge()->View()->assign([
+                        'message' => [
+                            'type'     => 'success',
+                            'body'     => 'backend_message_create_success_body',
+                            'headline' => 'backend_message_create_success_headline',
+                        ],
+                    ]);
+                } catch (\Exception $e) {
+                    Oforge()->View()->assign([
+                        'message' => [
+                            'type'     => 'danger',
+                            'body'     => 'backend_message_create_error_body',
+                            'headline' => 'backend_message_create_error_headline',
+                            'exception' => [
+                                'message' => $e->getMessage(),
+                                'trace' => $e->getTrace(),
+                            ]
+                        ],
+                    ]);
+                }
+            }
+            list($properties, $hasEditors) = $this->filterPropertiesFor('create');
             Oforge()->View()->assign([
                 'crud' => [
                     'context'    => 'create',
@@ -136,8 +161,6 @@ class CrudController extends SecureBackendController {
                 ],
             ]);
         }
-        // echo "<pre>";print_r(Oforge()->View()->fetch());echo "</pre>";
-        //TODO
     }
 
     /**
@@ -265,6 +288,9 @@ class CrudController extends SecureBackendController {
         return [$properties, $hasEditors];
     }
 
+    /**
+     * @return string
+     */
     protected function extractModuleModelName() {
         $parts = explode('\\Models\\', $this->model, 2);
         if (count($parts) === 2) {
@@ -291,30 +317,6 @@ class CrudController extends SecureBackendController {
         }
 
         return false;
-    }
-
-    /**
-     * @param Request $request
-     * @param Response $response
-     *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists
-     * @throws \ReflectionException
-     */
-    protected function create(Request $request, Response $response) {
-        if (isset($this->model)) {
-            $params = $request->getParams();
-
-            $this->crudService->create($this->model, $params);
-            Oforge()->View()->assign([
-                'message' => [
-                    'type'     => 'danger',
-                    'body'     => 'backend_message_create_success_body',
-                    'headline' => 'backend_message_create_success_headline',
-                ],
-            ]);
-        }
     }
 
     /**

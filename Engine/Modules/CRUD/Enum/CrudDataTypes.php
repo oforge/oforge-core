@@ -30,14 +30,14 @@ class CrudDataTypes {
     public const INT = 'int';
     /**
      * Renderer: Div with default right alinment.<br/>
+     * Editor: Number input with step = 0.01.<br/>
+     */
+    public const DECIMAL = 'decimal';
+    /**
+     * Renderer: Div with default right alinment.<br/>
      * Editor: Number input.<br/>
      */
     public const FLOAT = 'float';
-    /**
-     * Renderer: Div with default right alinment.<br/>
-     * Editor: Number input with step = 0.01.<br/>
-     */
-    public const CURRENCY = 'currency';
     /**
      * Renderer: Div.<br/>
      * Editor: Select.<br/>
