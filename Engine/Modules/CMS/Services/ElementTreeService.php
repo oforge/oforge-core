@@ -5,6 +5,7 @@ namespace Oforge\Engine\Modules\CMS\Services;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentTypeGroup;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
+use Oforge\Engine\Modules\CMS\Models\Content\ContentParent;
 use Oforge\Engine\Modules\CMS\Models\Content\Content;
 
 class ElementTreeService extends AbstractDatabaseAccess
@@ -14,7 +15,7 @@ class ElementTreeService extends AbstractDatabaseAccess
     
     public function __construct()
     {
-        parent::__construct(["contentTypeGroup" => ContentTypeGroup::class, "contentType" => ContentType::class, "content" => Content::class]);
+        parent::__construct(["contentTypeGroup" => ContentTypeGroup::class, "contentType" => ContentType::class, "contentParent" => ContentParent::class, "content" => Content::class]);
     }
     
     /**
@@ -48,6 +49,25 @@ class ElementTreeService extends AbstractDatabaseAccess
         if (isset($contentTypeEntityArray))
         {
             return $contentTypeEntityArray;
+        }
+        else
+        {
+            return NULL;
+        }
+    }
+    
+    /**
+     * Returns all available content parent entities
+     *
+     * @return ContentParent[]|NULL
+     */
+    private function getContentParentEntities()
+    {
+        $contentParentEntityArray = $this->repository("contentParent")->findAll();
+        
+        if (isset($contentParentEntityArray))
+        {
+            return $contentParentEntityArray;
         }
         else
         {
@@ -132,6 +152,34 @@ class ElementTreeService extends AbstractDatabaseAccess
     }
     
     /**
+     * Returns all found content parents as an associative array
+     *
+     * @return array|NULL Array filled with available content parents
+     */
+    public function getContentParentArray()
+    {
+        $contentParentEntities = $this->getContentParentEntities();
+        
+        if (!$contentParentEntities)
+        {
+            return NULL;
+        }
+        
+        $contentParents = [];
+        foreach($contentParentEntities as $contentParentEntity)
+        {
+            $contentParent = [];
+            $contentParent["id"]          = $contentParentEntity->getId();
+            $contentParent["parent"]      = ($contentParentEntity->getParent() && $contentParentEntity->getParent()->getId()) ? "_parent#" . $contentParentEntity->getParent()->getId() : "#";
+            $contentParent["description"] = $contentParentEntity->getDescription();
+            
+            $contentParents[] = $contentParent;
+        }
+        
+        return $contentParents;
+    }
+    
+    /**
      * Returns all found content elements as an associative array
      *
      * @return array|NULL Array filled with available content elements
@@ -169,6 +217,7 @@ class ElementTreeService extends AbstractDatabaseAccess
     {
         $contentTypeGroups = $this->getContentTypeGroupArray();
         $contentTypes      = $this->getContentTypeArray();
+        $contentParents    = $this->getContentParentArray();
         $contentElements   = $this->getContentElementArray();
         
         if (!$contentTypeGroups || !$contentTypes || !$contentElements)
@@ -177,6 +226,7 @@ class ElementTreeService extends AbstractDatabaseAccess
         }
         
         $jsTreeContentElementData = [];
+
         foreach ($contentTypeGroups as $contentTypeGroup)
         {
             $jsTreeContentElementData[] = [
@@ -197,12 +247,22 @@ class ElementTreeService extends AbstractDatabaseAccess
             ];
         }
         
+        foreach ($contentParents as $contentParent)
+        {
+            $jsTreeContentElementData[] = [
+                "id"     => "_parent#" . $contentParent["id"],
+                "icon"   => "jstree-folder",
+                "parent" => $contentParent["parent"],
+                "text"   => $contentParent["description"]
+            ];
+        }
+        
         foreach ($contentElements as $contentElement)
         {
             $jsTreeContentElementData[] = [
-                "id"     => $contentElement["id"],
+                "id"     => "_element#" . $contentElement["id"],
                 "icon"   => "jstree-file",
-                "parent" => $contentElement["parent"] ? $contentElement["parent"] : $contentElement["type"],
+                "parent" => $contentElement["parent"] ? "_parent#" . $contentElement["parent"] : $contentElement["type"],
                 "text"   => $contentElement["name"]
             ];
         }
