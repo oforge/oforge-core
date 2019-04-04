@@ -22,6 +22,13 @@ class ContentParent extends AbstractModel
     private $id;
     
     /**
+     * @var ContentParent
+     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Content\ContentParent", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="content_parent_id", referencedColumnName="id")
+     */
+    private $parent;
+    
+    /**
      * @var string
      * @ORM\Column(name="description", type="string", nullable=false)
      */
@@ -43,6 +50,25 @@ class ContentParent extends AbstractModel
     public function setId(int $id): ContentParent
     {
         $this->id = $id;
+        return $this;
+    }
+    
+    /**
+     * @return int
+     */
+    public function getParent(): ?int
+    {
+        return $this->parent;
+    }
+    
+    /**
+     * @param int $parent
+     * 
+     * @return ContentParent
+     */
+    public function setParent(?ContentParent $parent): ContentParent
+    {
+        $this->parent = $parent;
         return $this;
     }
 
