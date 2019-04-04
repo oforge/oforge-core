@@ -50,9 +50,9 @@ class PagesControllerService extends AbstractDatabaseAccess {
         foreach ($languageEntities as $languageEntity)
         {
             $language = [];
-            $language["id"] = $languageEntity->getId();
-            $language["iso"] = $languageEntity->getIso();
-            $language["name"] = $languageEntity->getName();
+            $language["id"]     = $languageEntity->getId();
+            $language["iso"]    = $languageEntity->getIso();
+            $language["name"]   = $languageEntity->getName();
             $language["active"] = $languageEntity->isActive();
             
             $languages[] = $language;
@@ -210,7 +210,7 @@ class PagesControllerService extends AbstractDatabaseAccess {
         
         $data = [
             "js"                      => ["cms_pages_controller_jstree_config" => $pageTreeService->generateJsTreeConfigJSON()],
-            "languages"               => $this->getAvailableLanuages(),
+            "languages"               => $this->getAvailableLanguages(),
             "cms_page_builder_action" => "edit_page_path",
             "post"                    => $post
         ];
@@ -443,7 +443,7 @@ class PagesControllerService extends AbstractDatabaseAccess {
         
         $data = [
             "js"                => ["cms_pages_controller_jstree_config" => $pageTreeService->generateJsTreeConfigJSON()],
-            "languages"         => $this->getAvailableLanuages(),
+            "languages"         => $this->getAvailableLanguages(),
             "pages"             => $pageTreeService->getPageArray(),
             "contentTypeGroups" => $contentTypeService->getContentTypeGroupArray(),
             "selectedElement"   => $selectedElement,
