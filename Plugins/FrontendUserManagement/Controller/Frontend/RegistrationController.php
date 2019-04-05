@@ -146,10 +146,13 @@ class RegistrationController extends AbstractController {
         $mailOptions = [
             'to' => [$user['email'] => $user['email']],
             'subject' => 'Oforge | Your registration!',
-            'body' => 'You are registered and have to activate your account. Your activation link is: '.$activationLink
+            'template' => 'Test.twig',
+        ];
+        $templateData = [
+            'activationLink' => $activationLink,
         ];
 
-        $mailService->send($mailOptions);
+        $mailService->send($mailOptions ,$templateData);
 
         $uri = $router->pathFor('frontend_login');
         Oforge()->View()->addFlashMessage('success', 'Registration successful. You will receive an email with information about you account activation.');
