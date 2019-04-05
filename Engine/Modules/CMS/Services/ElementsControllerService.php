@@ -52,14 +52,16 @@ class ElementsControllerService extends AbstractDatabaseAccess {
 
     public function editElementData($post)
     {
-        $selectedElementId          = isset($post["cms_edit_element_id"])          && $post["cms_edit_element_id"] > 0              ? $post["cms_edit_element_id"]          : 0;
-        $selectedElementParentId    = isset($post["cms_edit_element_parent_id"])   && $post["cms_edit_element_parent_id"] > 0       ? $post["cms_edit_element_parent_id"]   : 0;
+        $selectedElementId          = isset($post["cms_edit_element_id"])          && !empty($post["cms_edit_element_id"])          ? $post["cms_edit_element_id"]          : false;
+        $selectedElementParentId    = isset($post["cms_edit_element_parent_id"])   && !empty($post["cms_edit_element_parent_id"])   ? $post["cms_edit_element_parent_id"]   : false;
         $selectedElementDescription = isset($post["cms_edit_element_description"]) && !empty($post["cms_edit_element_description"]) ? $post["cms_edit_element_description"] : false;
         $selectedAction             = isset($post["cms_edit_element_action"])      && !empty($post["cms_edit_element_action"])      ? $post["cms_edit_element_action"]      : false;
-        
+
         switch($selectedAction)
         {
             case 'create':
+                $selectedElementParentId = intval(str_replace("_parent#", "", $selectedElementParentId));
+
                 if (is_numeric($selectedElementParentId) && is_int($selectedElementParentId) && $selectedElementParentId > 0)
                 {
                     $contentParentEntity = $this->repository('contentParent')->findOneBy(["id" => $selectedElementParentId]);
@@ -69,45 +71,64 @@ class ElementsControllerService extends AbstractDatabaseAccess {
                     $contentParentEntity = NULL;
                 }
 
-                $contentParentEntity = new ContentParent;
-                $contentParentEntity->setParent($contentParentEntity);
-                $contentParentEntity->setDescription($selectedElementDescription);
+                $newContentParentEntity = new ContentParent;
+                $newContentParentEntity->setParent($contentParentEntity);
+                $newContentParentEntity->setDescription($selectedElementDescription);
                 
-                $this->entityManager->persist($contentParentEntity);
+                $this->entityManager->persist($newContentParentEntity);
                 $this->entityManager->flush();
                 
-                $contentParentId = $contentParentEntity->getId();
+                $contentParentId = $newContentParentEntity->getId();
                 break;
             case 'rename':
-                $contentParentEntity = $this->repository('contentParent')->findOneBy(["id" => $selectedElementParentId]);
+                $selectedElementId = intval(str_replace("_parent#", "", $selectedElementId));
 
-                if ($contentParentEntity)
+                if (is_numeric($selectedElementId) && is_int($selectedElementId) && $selectedElementId > 0)
                 {
-                    $contentParentEntity->setDescription($selectedElementDescription);
-            
-                    $this->entityManager->persist($contentParentEntity);
-                    $this->entityManager->flush();
+                    $contentParentEntity = $this->repository('contentParent')->findOneBy(["id" => $selectedElementId]);
+
+                    if ($contentParentEntity)
+                    {
+                        $contentParentEntity->setDescription($selectedElementDescription);
+                
+                        $this->entityManager->persist($contentParentEntity);
+                        $this->entityManager->flush();
+                    }
                 }
                 break;
             case 'delete':
-                $contentParentEntity = $this->repository('contentParent')->findOneBy(["id" => $selectedElementParentId]);
+                $selectedElementId = intval(str_replace("_parent#", "", $selectedElementId));
 
-                if ($contentParentEntity)
+                if (is_numeric($selectedElementId) && is_int($selectedElementId) && $selectedElementId > 0)
                 {
-                    $this->findAndRemoveChildContentParents($contentParentEntity->getId());
+                    $contentParentEntity = $this->repository('contentParent')->findOneBy(["id" => $selectedElementId]);
 
-                    $this->resetContentElementContentParent($contentParentEntity);
-                    
-                    $this->entityManager->remove($contentParentEntity);
-                    $this->entityManager->flush();
+                    if ($contentParentEntity)
+                    {
+                        $this->findAndRemoveChildContentParents($contentParentEntity->getId());
+    
+                        $this->resetContentElementContentParent($contentParentEntity);
+                        
+                        $this->entityManager->remove($contentParentEntity);
+                        $this->entityManager->flush();
+                    }
                 }
                 break;
         }
 
-        return $this->getElementData();
+        $data = [];
+        $data["__selectedElementId"] = $selectedElementId; // TODO: just used as development info
+        $data["__selectedElementParentId"] = $selectedElementParentId; // TODO: just used as development info
+        $data["__selectedElementDescription"] = $selectedElementDescription; // TODO: just used as development info
+        $data["__selectedAction"] = $selectedAction; // TODO: just used as development info
+
+        $data = array_merge($data, $this->getElementData($post));
+
+        //return $this->getElementData();
+        return $data;
     }
 
-    public function getElementData()
+    public function getElementData($post)
     {
         $elementTreeService = OForge()->Services()->get("element.tree.service");
         $contentTypeService = OForge()->Services()->get("content.type.service");

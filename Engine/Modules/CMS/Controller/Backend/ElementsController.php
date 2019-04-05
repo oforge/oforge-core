@@ -24,7 +24,7 @@ class ElementsController extends AbstractController {
     public function indexAction(Request $request, Response $response) {
         $elementsControllerService = OForge()->Services()->get("elements.controller.service");
 
-        $data = $elementsControllerService->getElementData();
+        $data = $elementsControllerService->getElementData($_POST);
         
         switch ($_POST["cms_form"])
         {
