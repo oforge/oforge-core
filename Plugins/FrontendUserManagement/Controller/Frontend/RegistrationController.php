@@ -21,18 +21,21 @@ class RegistrationController extends AbstractController {
     }
 
     /**
-     * Register the user and send the user to the profile page
-     *
      * @param Request $request
      * @param Response $response
      *
-     * @return Response
+     * @return static
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      * @throws \PHPMailer\PHPMailer\Exception
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     public function processAction(Request $request, Response $response) {
         /** @var PasswordService $passwordService */
