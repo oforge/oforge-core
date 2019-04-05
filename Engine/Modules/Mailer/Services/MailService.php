@@ -3,40 +3,51 @@
 namespace Oforge\Engine\Modules\Mailer\Services;
 
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
+use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
+use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
+use Oforge\Engine\Modules\TemplateEngine\Core\Twig\TwigEnvironment;
 use PHPMailer\PHPMailer\PHPMailer;
+use Oforge\Engine\Modules\TemplateEngine\Core\Twig\TwigFileSystemLoader;
 
-class MailService
-{
+class MailService {
 
     /**
+     * Initialises PHP Mailer Instance from specified Mailer Settings, Options and TemplateData
+     *
+     * Options = ['to' => [], 'cc' => [], 'bcc' => [], 'replyTo' => [], 'attachment' => [], "subject" => string "html" => bool]
+     *
+     * Template Data = ['key_1' => value, ...]
+     *
      * @param array $options
+     * @param array $templateData
+     *
      * @throws ConfigOptionKeyNotExists
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      * @throws \PHPMailer\PHPMailer\Exception
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
-    public function send(array $options)
-    {
+    public function send(array $options, array $templateData = []) {
         if ($this->isValid($options)) {
-
             try {
                 /**
                  * @var $configService ConfigService
                  */
                 $configService = Oforge()->Services()->get("config");
-                $mail = new PHPMailer(true);
+                $mail          = new PHPMailer(true);
 
-                /**
-                 * Set Server Settings
-                 */
+                // Set Server Settings
+
                 $mail->isSMTP();
                 $mail->setFrom($configService->get("mailer_from"));
-                $mail->Host = $configService->get("mailer_host");
-                $mail->Username = $configService->get("mailer_username");
-                $mail->Port = $configService->get("mailer_port");
-                $mail->SMTPAuth = $configService->get("mailer_smtp_auth");
-                $mail->Password = $configService->get("mailer_smtp_password");
+                $mail->Host       = $configService->get("mailer_host");
+                $mail->Username   = $configService->get("mailer_username");
+                $mail->Port       = $configService->get("mailer_port");
+                $mail->SMTPAuth   = $configService->get("mailer_smtp_auth");
+                $mail->Password   = $configService->get("mailer_smtp_password");
                 $mail->SMTPSecure = $configService->get("mailer_smtp_secure");
 
                 /**
@@ -71,29 +82,41 @@ class MailService
                 }
 
                 /**
+                 * Render Mail Template
+                 */
+                $templateData = [
+                    'mail' => $options,
+                    'data' => $templateData
+                ];
+                $renderedTemplate = $this->renderMail($templateData);
+
+                /**
                  * Add Content
                  */
-                $mail->isHTML($options["html"]);
+                $mail->isHTML(ArrayHelper::get($options, 'html', true));
                 $mail->Subject = $options["subject"];
-                $mail->Body = $options["body"];
+                $mail->Body    = $renderedTemplate;
 
                 $mail->send();
 
 
+
                 Oforge()->Logger()->get("mailer")->info("Message has been sent", $options);
             } catch (Exception $e) {
-                Oforge()->Logger()->get("mailer")->error("Message has been sent", [$mail->ErrorInfo]);
+                Oforge()->Logger()->get("mailer")->error("Message has not been sent", [$mail->ErrorInfo]);
             }
         }
     }
 
-    private function isValid(array $options): bool
-    {
+    /**
+     * @param array $options
+     *
+     * @return bool
+     * @throws ConfigOptionKeyNotExists
+     */
+    private function isValid(array $options) : bool {
 
-        /**
-         * Check if required keys are within the options-array
-         */
-        $keys = ["to", "subject", "body"];
+        $keys = ["to", "subject", "template"];
         foreach ($keys as $key) {
             if (!array_key_exists($key, $options)) {
                 throw new ConfigOptionKeyNotExists($key);
@@ -120,5 +143,44 @@ class MailService
         }
 
         return true;
+    }
+
+    /**
+     * Renders the HTML from specified template
+     * @param array $data
+     *
+     * @return string
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    public function renderMail(array $data) {
+
+        $loader = new TwigFileSystemLoader(Statics::MAIL_TEMPLATE_DIR);
+        $twig = new TwigEnvironment($loader);
+        $template = $twig->load($data['mail']['template']);
+
+        return $template->render($data['data']);
+    }
+
+    /**
+     * Writes mail body to a logfile ( path is specified in Statics: MAILER_DEBUG_LOGFILE )
+     * @param array $options
+     * @param array $templateData
+     *
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    public function writeMail(array $options, array $templateData = []) {
+
+        $data = [
+            'mail' => $options,
+            'data' => $templateData
+        ];
+        $renderedTemplate = $this->renderMail($data);
+
+        $handle = fopen(Statics::MAIL_TEMPLATE_DIR . DIRECTORY_SEPARATOR .  'logs','a+');
+        fwrite($handle, $renderedTemplate);
     }
 }
