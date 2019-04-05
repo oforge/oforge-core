@@ -89,10 +89,12 @@ class ForgotPasswordController extends AbstractController {
         $mailOptions = [
             'to' => [$email => $email],
             'subject' => 'Oforge | Your password reset!',
-            'body' => 'You want to reset your password. Your password reset link is: '.$passwordResetLink
+            'template' => 'ResetPassword.twig',
+            //'body' => 'You want to reset your password. Your password reset link is: '.$passwordResetLink
         ];
+        $templateData = ['passwordResetLink'  => $passwordResetLink];
 
-        $mailService->send($mailOptions);
+        $mailService->send($mailOptions, $templateData);
 
         $uri = $router->pathFor('frontend_login');
 
