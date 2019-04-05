@@ -13,7 +13,7 @@ use Oforge\Engine\Modules\TemplateEngine\Core\Twig\TwigFileSystemLoader;
 class MailService {
 
     /**
-     * Initialises PHP Mailer Instance from specified Mailer Settings, Options and TemplateData
+     * Initialises PHP Mailer Instance with specified Mailer Settings, Options and TemplateData
      *
      * Options = ['to' => [], 'cc' => [], 'bcc' => [], 'replyTo' => [], 'attachment' => [], "subject" => string "html" => bool]
      *
@@ -39,8 +39,7 @@ class MailService {
                 $configService = Oforge()->Services()->get("config");
                 $mail          = new PHPMailer(true);
 
-                // Set Server Settings
-
+                /** Set Server Settings */
                 $mail->isSMTP();
                 $mail->setFrom($configService->get("mailer_from"));
                 $mail->Host       = $configService->get("mailer_host");
@@ -50,9 +49,7 @@ class MailService {
                 $mail->Password   = $configService->get("mailer_smtp_password");
                 $mail->SMTPSecure = $configService->get("mailer_smtp_secure");
 
-                /**
-                 * Add Recipients ({to,cc,bcc}Addresses)
-                 */
+                /** Add Recipients ({to,cc,bcc}Addresses) */
                 foreach ($options["to"] as $key => $value) {
                     $mail->addAddress($key, $value);
                 }
@@ -72,34 +69,27 @@ class MailService {
                     }
                 }
 
-                /**
-                 * Add Attachments:
-                 */
+
+                /** Add Attachments: */
                 if (isset($options['attachment'])) {
                     foreach ($options["attachment"] as $key => $value) {
                         $mail->addAttachment($key, $value);
                     }
                 }
 
-                /**
-                 * Render Mail Template
-                 */
+                /** Render Mail Template */
                 $templateData = [
                     'mail' => $options,
                     'data' => $templateData
                 ];
                 $renderedTemplate = $this->renderMail($templateData);
 
-                /**
-                 * Add Content
-                 */
+
+                /** Add Content */
                 $mail->isHTML(ArrayHelper::get($options, 'html', true));
                 $mail->Subject = $options["subject"];
                 $mail->Body    = $renderedTemplate;
-
                 $mail->send();
-
-
 
                 Oforge()->Logger()->get("mailer")->info("Message has been sent", $options);
             } catch (Exception $e) {
@@ -123,9 +113,7 @@ class MailService {
             }
         }
 
-        /**
-         * Validate Mail Addresses
-         */
+        /** Validate Mail Addresses */
         $emailKeys = ["to", "cc", "bcc", "replyTo"];
         foreach ($emailKeys as $key) {
             if (array_key_exists($key, $options)) {
@@ -141,7 +129,6 @@ class MailService {
                 }
             }
         }
-
         return true;
     }
 
@@ -163,24 +150,4 @@ class MailService {
         return $template->render($data['data']);
     }
 
-    /**
-     * Writes mail body to a logfile ( path is specified in Statics: MAILER_DEBUG_LOGFILE )
-     * @param array $options
-     * @param array $templateData
-     *
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
-     */
-    public function writeMail(array $options, array $templateData = []) {
-
-        $data = [
-            'mail' => $options,
-            'data' => $templateData
-        ];
-        $renderedTemplate = $this->renderMail($data);
-
-        $handle = fopen(Statics::MAIL_TEMPLATE_DIR . DIRECTORY_SEPARATOR .  'logs','a+');
-        fwrite($handle, $renderedTemplate);
-    }
 }

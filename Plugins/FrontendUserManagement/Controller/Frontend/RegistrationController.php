@@ -149,7 +149,7 @@ class RegistrationController extends AbstractController {
         $mailOptions = [
             'to' => [$user['email'] => $user['email']],
             'subject' => 'Oforge | Your registration!',
-            'template' => 'Test.twig',
+            'template' => 'RegisterConfirmation.twig',
         ];
         $templateData = [
             'activationLink' => $activationLink,
@@ -167,9 +167,11 @@ class RegistrationController extends AbstractController {
      * @param Request $request
      * @param Response $response
      *
-     * @return Response
+     * @return static
      * @throws \Doctrine\ORM\ORMException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function activateAction(Request $request, Response $response) {
         /** @var SessionManagementService $sessionManagementService */
