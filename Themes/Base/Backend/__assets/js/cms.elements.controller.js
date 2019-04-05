@@ -16,7 +16,7 @@ $('#cms_elements_controller_jstree').on('create_node.jstree', function (event, d
 	var node = data.node;
 	var parent = data.parent;
 	var position = data.position;
-	
+
 	$('#cms_edit_element_parent_id').val(node.parent);
 	$('#cms_edit_element_action').val('create');
 });
@@ -31,8 +31,8 @@ $('#cms_elements_controller_jstree').on('rename_node.jstree', function (event, d
 		$('#cms_edit_element_id').val(node.id);
 		$('#cms_edit_element_action').val('rename');
 	}
-	
-	$('#cms_edit_element_name').val(node.text);
+
+	$('#cms_edit_element_description').val(node.text);
 	$('#cms_element_jstree_form').submit();
 });
 
@@ -40,7 +40,7 @@ $('#cms_elements_controller_jstree').on('rename_node.jstree', function (event, d
 $('#cms_elements_controller_jstree').on('delete_node.jstree', function (event, data) {
 	var node = data.node;
 	var parent = data.parent;
-	
+
 	$('#cms_edit_element_id').val(node.id);
 	$('#cms_edit_element_action').val('delete');
 	$('#cms_element_jstree_form').submit();
@@ -50,10 +50,15 @@ $('#cms_elements_controller_jstree').on('delete_node.jstree', function (event, d
 $('#cms-element-editor-create-new-root-element').click(
 	function() {
 	    var tree = $('#cms_elements_controller_jstree').jstree(true);
-	    var node = tree.get_node("#");
-    	
-	    node = tree.create_node(node, {"type":"folder"});
-	    tree.edit(node);
+		var node = tree.get_node("#");
+
+		if (node.id === "#" || node.id.startsWith("_parent")) {
+			node = tree.create_node(node, {"type":"folder"});
+			tree.edit(node);
+		} else {
+			alert("New folders can only be created as root folders or as sub-folders in user created folders!");
+		}
+
 	}
 );
 
@@ -95,9 +100,13 @@ $(document).ready(function() {
 						"action": function (obj) {
 							var tree = $('#cms_elements_controller_jstree').jstree(true);
 							var node = tree.get_node(obj.reference);
-							
-							node = tree.create_node(node, {"type":"folder"});
-							tree.edit(node);
+
+							if (node.id === "#" || node.id.startsWith("_parent")) {
+								node = tree.create_node(node, {"type":"folder"});
+								tree.edit(node);
+							} else {
+								alert("New folders can only be created as root folders or as sub-folders in user created folders!");
+							}
 						}
 					},
 					"renameItem": {
@@ -105,8 +114,12 @@ $(document).ready(function() {
 						"action": function (obj) {
 							var tree = $('#cms_elements_controller_jstree').jstree(true);
 							var node = tree.get_node(obj.reference);
-							
-							tree.edit(node);
+
+							if (node.id.startsWith("_parent")) {
+								tree.edit(node);
+							} else {
+								alert("Only user created folders can be renamed!");
+							}
 						}
 					},
 					"deleteItem": {
@@ -115,7 +128,11 @@ $(document).ready(function() {
 							var tree = $('#cms_elements_controller_jstree').jstree(true);
 							var node = tree.get_node(obj.reference);
 							
-							tree.delete_node(node);
+							if (node.id.startsWith("_parent")) {
+								tree.delete_node(node);
+							} else {
+								alert("Only user created folders can be deleted!");
+							}
 						}
 					}
 				}
