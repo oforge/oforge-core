@@ -58,39 +58,8 @@
                        placeholder="{{ i18n('city') }}"
                        required>
             </div>
-
         </div>
 
-        <div class="form-controls">
-
-            <h3 class="form__title">{{ i18n('user_contact_data', 'Contact data') }}</h3>
-
-            <div class="form__control">
-                {% block user_address_label_contact_email %}
-                    <label for="user_address_contact_email"
-                           class="form__label">{{ i18n('contact_email', 'Contact email address') }}</label>
-                {% endblock user_address_label_contact_email %}
-                <input id="user_address_contact_email"
-                       name="user_address_contact_email"
-                       type="text"
-                       class="form__input form__input"
-                       placeholder="{{ i18n('contact_email') }}"
-                       required>
-            </div>
-
-            <div class="form__control">
-                {% block user_address_label_contact_phone %}
-                    <label for="user_address_contact_phone"
-                           class="form__label">{{ i18n('contact_phone', 'Contact phone no') }}</label>
-                {% endblock user_address_label_contact_phone %}
-                <input id="user_address_contact_phone"
-                       name="user_address_contact_phone"
-                       type="text"
-                       class="form__input form__input"
-                       placeholder="{{ i18n('contact_phone') }}"
-                       required>
-            </div>
-        </div>
         <div class="form-controls">
             <div class="form__control">
                 <input type="hidden" name="token" value="{{ token() }}">
