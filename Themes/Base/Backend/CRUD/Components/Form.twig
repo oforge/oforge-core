@@ -2,30 +2,61 @@
     <div class="col-xs-12">
         <div class="box box-primary">
             <div class="box-body">
-                {% if crud.actions[crud.context] %}
-                    <form method="post">
-                        {% for property in crud.properties if property.crud[crud.context] and property.crud[crud.context] != 'off' %}
-                            <div class="form-group crud-datatype-{{ property.type }} crud-property-{{ property.name }}">
-                                <label for="form-">
-                                    {{ i18n(property.label|default('backend_crud_property__' ~ crud.model ~ '_' ~ property.name) ) }}
-                                </label>
-                                {% if property.name != 'id' and property.crud[crud.context] == 'editable' %}
-                                    {% include 'Backend/CRUD/Components/Editor.twig' %}
-                                {% else %}
+                {% if not item and crud.context != 'create' %}
+                    <p>
+                        {{ i18n('backend_crud_entity_not_exist', 'Entity does not exist.') }}
+                    </p>
+                    <a href="{{ url(meta.route.name|split('_' ~ crud.context)|first) }}" class="btn btn-default">
+                        {{ i18n('backend_crud_btn_back2index', 'back to overwiew') }}
+                    </a>
+                {% elseif crud.actions[crud.context] %}
+                    {% if crud.context != 'view' %}
+                        <form method="post">
+                    {% endif %}
+                    {% if crud.context != 'create' %}
+                        <input type="hidden" name="data[id]" value="{{ item['id'] }}" />
+                        <p>{{ crud.model|replace({'_': ' '}) }} - ID: {{ item['id'] }}</p>
+                    {% endif %}
+                    {% for property in crud.properties if property.crud[crud.context] and property.crud[crud.context]|default('off') != 'off' and property.name != 'id' %}
+                        <div class="form-group crud-datatype-{{ property.type }} crud-property-{{ property.name }}">
+                            <label for="form-">
+                                {{ i18n(property.label|default('backend_crud_property__' ~ crud.model ~ '_' ~ property.name) ) }}
+                            </label>
+                            {% if crud.context =='delete' or property.name == 'id' or property.crud[crud.context] == 'readonly' %}
+                                <div>
                                     {% include 'Backend/CRUD/Components/Renderer.twig' %}
-                                {% endif %}
-                            </div>
-                        {% endfor %}
-                        <input type="hidden" name="action" value="{{ crud.context }}" />
-                        <a href="{{ url(meta.route.name|split('_' ~ crud.context)|first) }}" class="btn btn-default">
-                            {{ i18n('backend_crud_btn_cancel') }}
-                        </a>
-                        <input type="submit" class="btn btn-primary"
-                               value="{{ i18n('backend_crud_btn_' ~ crud.context) }}">
-                    </form>
+                                </div>
+                            {% else %}
+                                {% include 'Backend/CRUD/Components/Editor.twig' %}
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    <input type="hidden" name="action" value="{{ crud.context }}" />
+                    <a href="{{ url(meta.route.name|split('_' ~ crud.context)|first) }}" class="btn btn-default">
+                        {{ i18n('backend_crud_btn_back2index', 'back to overwiew') }}
+                    </a>
+                    {% if crud.context == 'view' %}
+                        {% if crud.actions['update'] %}
+                            <a href="{{ url(meta.route.name|split('_' ~ crud.context)|first ~ '_update') ~ '?id=' ~ crud.item.id }}"
+                               class="btn btn-primary">
+                                {{ i18n('backend_crud_btn_update', 'update') }}
+                            </a>
+                        {% endif %}
+                        {% if crud.actions['delete'] %}
+                            <a href="{{ url(meta.route.name|split('_' ~ crud.context)|first ~ '_delete') ~ '?id=' ~ crud.item.id }}"
+                               class="btn btn-danger">
+                                {{ i18n('backend_crud_btn_delete', 'delete') }}
+                            </a>
+                        {% endif %}
+                    {% else %}
+                        <input type="submit"
+                               class="btn {% if crud.context == 'delete' %}btn-danger{% else %}btn-primary{% endif %}"
+                               value="{{ i18n('backend_crud_btn_' ~ crud.context, crud.context) }}">
+                        </form>
+                    {% endif %}
                 {% else %}
                     <div class="alert alert-info" role="alert">
-                        {{ i18n('backend_crud_action_disabled')|format(crud.context) }}
+                        {{ i18n('backend_crud_action_disabled', 'Action %s is disabled.')|format(crud.context) }}
                     </div>
                 {% endif %}
             </div>
@@ -33,5 +64,4 @@
         </div>
         {# /.box #}
     </div>
-    {{ o_dump() }}
 </div>

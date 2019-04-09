@@ -24,7 +24,7 @@ class Bootstrap extends AbstractBootstrap {
         $this->services  = [
             'crud' => GenericCrudService::class,
         ];
-        $this->models = [
+        $this->models    = [
             CrudTest::class,
         ];
     }

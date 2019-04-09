@@ -59,11 +59,6 @@ class CrudDataTypes {
      */
     public const COLOR = 'color';
     /**
-     * Renderer: Div.<br/>
-     * Editor: Input.<br/>
-     */
-    public const OBJECT = 'object';
-    /**
      * Renderer: Custom render twig template path.<br/>
      * Editor: Custom editor twig template path.<br/>
      */
