@@ -37,7 +37,7 @@ class ElementsControllerService extends AbstractDatabaseAccess {
      */
     private function findAndRemoveChildContentParents($parentId)
     {
-        $contentParentEntities = $this->repository('contentParent')->findBy(["id" => $selectedElementParentId]);
+        $contentParentEntities = $this->repository('contentParent')->findBy(["parent" => $parentId]);
         
         foreach ($contentParentEntities as $contentParentEntity)
         {

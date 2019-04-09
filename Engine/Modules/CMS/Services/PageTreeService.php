@@ -127,17 +127,6 @@ class PageTreeService extends AbstractDatabaseAccess
             ];
         }
         
-        $jsTreeJSON = [
-            "core" => [
-                "multiple"       => FALSE,
-                "animation"      => 0,
-                "check_callback" => TRUE,
-                "force_text"     => TRUE,
-                "themes"         => ["stripes" => FALSE],
-                "data"           => $jsTreePages
-            ]
-        ];
-        
-        return $jsTreeJSON;
+        return $jsTreePages;
     }
 }

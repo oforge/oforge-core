@@ -267,17 +267,6 @@ class ElementTreeService extends AbstractDatabaseAccess
             ];
         }
         
-        $jsTreeJSON = [
-            "core" => [
-                "multiple"       => FALSE,
-                "animation"      => 0,
-                "check_callback" => TRUE,
-                "force_text"     => TRUE,
-                "themes"         => ["stripes" => FALSE],
-                "data"           => $jsTreeContentElementData
-            ]
-        ];
-        
-        return $jsTreeJSON;
+        return $jsTreeContentElementData;
     }
 }
