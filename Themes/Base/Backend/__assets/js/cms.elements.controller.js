@@ -1,6 +1,61 @@
+// make foreign objects draggable to jsTree
+$('.jstree_draggable').on('mousedown', function (event) {
+	$(this).wrap( "<div id='jstree-drag-element'></div>" );
+	var dragHelper = '<div id="jstree-dnd" class="jstree-default"><i class="jstree-icon jstree-er"></i>' + $('#jstree-drag-element').html() + '<ins class="jstree-copy" style="display:none;">+</ins></div>';
+	$(this).unwrap();
+
+	return $.vakata.dnd.start(
+		event,
+		{
+			'jstree' : true,
+			'object' : $(this),
+			'nodes' : [{
+                'icon'		 : 'jstree-file',
+                'text'		 : 'New Content Element',
+				'data-ct-id' : $(this).attr('data-ct-id')
+			}]
+		},
+		dragHelper
+	);
+});
+
+// drag 'n drop event listeners for jsTree for foreign objects
+$(document).bind("dnd_start.vakata", function(event, data) {
+	console.log("jsTree - Start dnd");
+	console.log("Data:");
+	console.log(JSON.stringify(data.data.jstree));
+	console.log(JSON.stringify(data.data.object));
+	console.log(JSON.stringify(data.data.nodes));
+	console.log("------------------");
+})
+.bind("dnd_stop.vakata", function(event, data) {
+    console.log("jsTree - Stop dnd");
+	console.log("Data:");
+	console.log(JSON.stringify(data.data.jstree));
+	console.log(JSON.stringify(data.data.object));
+	console.log(JSON.stringify(data.data.nodes));
+	console.log("------------------");
+});
+
 // jsTree callback functions
 $('#cms_elements_controller_jstree').on('loaded.jstree', function (event, data) {
 	$('#cms_elements_controller_jstree').jstree('open_all');
+});
+
+// drag 'n drop event listener for jsTree's internal node objects
+$('#cms_elements_controller_jstree').on('move_node.jstree', function (event, data) {
+	console.log("move_node - new position: " + data.position);
+	console.log("move_node - old position: " + data.old_position);
+	/*
+	console.log("node: " + data.node);
+	console.log("parent: " + data.parent);
+	console.log("position: " + data.position);
+	console.log("old_parent: " + data.old_parent);
+	console.log("old_position: " + data.old_position);
+	console.log("is_multi: " + data.is_multi);
+	console.log("old_instance: " + data.old_instance);
+	console.log("new_instance: " + data.new_instance);
+	*/
 });
 
 $('#cms_elements_controller_jstree').on('select_node.jstree', function (event, data) {
@@ -88,9 +143,32 @@ $(window).resize(function() {
 $(document).ready(function() {
 	if (typeof cms_elements_controller_jstree_config !== typeof undefined && cms_elements_controller_jstree_config) {
 		// create jstree configs
-		var jsTreeCoreConfig   = cms_elements_controller_jstree_config;
-		var jsTreeCustomConfig = {
-			"plugins" : ["contextmenu"],
+		var jsTreeConfig = {
+            "core" : {
+                "multiple"       : false,
+                "animation"      : 0,
+                "check_callback" : function (op, node, par, pos, more) {
+					/*
+					if ((op === "move_node" || op === "copy_node") && node.type && node.type == "root") {
+						return false;
+					}
+					if ((op === "move_node" || op === "copy_node") && more && more.core && !confirm('Are you sure ...')) {
+						return false;
+					}
+					*/
+					console.log("check_callback - op: " + op);
+					console.log("check_callback - node: " + JSON.stringify(node));
+					console.log("check_callback - par: " + JSON.stringify(par));
+					console.log("check_callback - pos: " + JSON.stringify(pos));
+					console.log("check_callback - more: " + JSON.stringify(more));
+					console.log("-----------------------");
+					return true;
+				},
+                "force_text"     : true,
+                "themes"         : {"stripes" : false},
+                "data"           : cms_elements_controller_jstree_config
+			},
+			"plugins" : ["contextmenu", "dnd", "html_data"],
 			"contextmenu" : {
 				"select_node" : false,
 				"show_at_node" : true,
@@ -138,9 +216,6 @@ $(document).ready(function() {
 				}
 			}
 		};
-		
-		// merge jstree configs
-		var jsTreeConfig = Object.assign(jsTreeCoreConfig, jsTreeCustomConfig);
 	}
 
 	// create jstree object

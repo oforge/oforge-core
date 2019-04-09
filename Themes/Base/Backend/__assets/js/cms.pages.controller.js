@@ -192,8 +192,15 @@ $(window).resize(function() {
 $(document).ready(function() {
 	if (typeof cms_pages_controller_jstree_config !== typeof undefined && cms_pages_controller_jstree_config) {
 		// create jstree configs
-		var jsTreeCoreConfig   = cms_pages_controller_jstree_config;
-		var jsTreeCustomConfig = {
+		var jsTreeConfig = {
+            "core" : {
+                "multiple"       : false,
+                "animation"      : 0,
+                "check_callback" : true,
+                "force_text"     : true,
+                "themes"         : {"stripes" : false},
+                "data"           : cms_pages_controller_jstree_config
+			},
 			"plugins" : ["contextmenu"],
 			"contextmenu" : {
 				"select_node" : false,
@@ -230,9 +237,6 @@ $(document).ready(function() {
 				}
 			}
 		};
-		
-		// merge jstree configs
-		var jsTreeConfig = Object.assign(jsTreeCoreConfig, jsTreeCustomConfig);
 	}
 
 	// create jstree object
