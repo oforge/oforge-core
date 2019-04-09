@@ -11,56 +11,69 @@ namespace Oforge\Engine\Modules\TemplateEngine\Extensions\Twig;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\I18n\Services\InternationalizationService;
 use Oforge\Engine\Modules\I18n\Services\LanguageIdentificationService;
-use Twig_Environment;
 use Twig_Extension;
 use Twig_Function;
-use Twig_TemplateWrapper;
 
-class AccessExtension extends Twig_Extension implements \Twig_ExtensionInterface
-{
-    public function getFunctions()
-    {
-        return array(
-            new Twig_Function('config', array($this, 'get_config'), array('is_safe' => array('html'))),
-            new Twig_Function('i18n', array($this, 'get_internationalization'),
-                array(
-                    'is_safe' => array('html'),
-                    'needs_context' => true)
-            ),
-        );
+/**
+ * Class AccessExtension
+ *
+ * @package Oforge\Engine\Modules\TemplateEngine\Extensions\Twig
+ */
+class AccessExtension extends Twig_Extension implements \Twig_ExtensionInterface {
+
+    /**
+     * @inheritDoc
+     */
+    public function getFunctions() {
+        return [
+            new Twig_Function('config', [$this, 'getConfig'], ['is_safe' => ['html']]),
+            new Twig_Function('i18n', [$this, 'getInternationalization'], [
+                'is_safe'       => ['html'],
+                'needs_context' => true,
+            ]),
+        ];
     }
 
-    public function get_config(...$vars)
-    {
-        $result = "";
-        if (sizeof($vars) == 1) {
-            /**
-             * @var $configService ConfigService
-             */
-            $configService = Oforge()->Services()->get("config");
+    /**
+     * @param mixed ...$vars
+     *
+     * @return mixed|string
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     */
+    public function getConfig(...$vars) {
+        $result = '';
+        if (count($vars) == 1) {
+            /** @var ConfigService $configService */
+            $configService = Oforge()->Services()->get('config');
 
             $result = $configService->get($vars[0]);
         }
+
         return $result;
     }
 
-    public function get_internationalization($context, ...$vars)
-    {
+    /**
+     * @param $context
+     * @param mixed ...$vars
+     *
+     * @return string
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     */
+    public function getInternationalization($context, ...$vars) {
         $result = "";
-        if (sizeof($vars) > 0  && isset($vars[0])) {
-            /**
-             * @var $service InternationalizationService
-             */
-            $service = Oforge()->Services()->get("i18n");
+        if (count($vars) > 0 && isset($vars[0])) {
+            /** @var InternationalizationService $service */
+            $service = Oforge()->Services()->get('i18n');
+            /**@var LanguageIdentificationService $languageIdentificationService */
+            $languageIdentificationService = Oforge()->Services()->get('language.identifier');
 
-
-            /**
-             * @var $lService LanguageIdentificationService
-             */
-            $lService = Oforge()->Services()->get("language.identifier");
-            $result = $service->get($vars[0], $lService->getCurrentLanguage($context), sizeof($vars) > 1 ? $vars[1] : null);
+            $currentLanguage = $languageIdentificationService->getCurrentLanguage($context);
+            $defaultValue    = count($vars) > 1 ? $vars[1] : null;
+            $result          = $service->get($vars[0], $currentLanguage, $defaultValue);
         }
 
         return $result;
     }
+
 }
