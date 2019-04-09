@@ -1,8 +1,13 @@
-{% include 'Backend/CRUD/Components/Editor/Input.twig' with {
-    editor: {
-        type: 'color',
-        name: property.name,
-        value: item[property.name]|default(property.editor.default)|default(''),
-        editable: property.crud[crud.context] == 'editable',
-    }
-} %}
+<div class="input-group my-colorpicker2 colorpicker-element">
+    {% include 'Backend/CRUD/Components/Editor/Input.twig' with {
+        editor: {
+            type: 'text',
+            name: property.name,
+            value: item[property.name]|default(property.editor.default)|default(''),
+            editable: property.crud[crud.context] == 'editable',
+        }
+    } %}
+    <div class="input-group-addon">
+        <i></i>
+    </div>
+</div>

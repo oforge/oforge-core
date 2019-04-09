@@ -8,5 +8,6 @@
         {{ item[property.name] }}
     </div>
 {% else %}
-    {{ i18n(property.list[item[property.name]]) }}
+    {% set value = property.list[item[property.name]] %}
+    {% if property.listI18nLabel is defined and property.listI18nLabel %}{{ i18n(value) }}{% else %}{{ value }}{% endif %}
 {% endif %}

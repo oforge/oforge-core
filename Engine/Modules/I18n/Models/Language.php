@@ -29,9 +29,9 @@ class Language extends AbstractModel {
     private $name;
     /**
      * @var bool
-     * @ORM\Column(name="active", type="boolean", nullable=false)
+     * @ORM\Column(name="active", type="boolean", nullable=false, options={"default":false})
      */
-    private $active;
+    private $active = false;
 
     /**
      * @return int

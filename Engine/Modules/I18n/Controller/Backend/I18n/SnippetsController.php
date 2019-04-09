@@ -3,7 +3,8 @@
 namespace Oforge\Engine\Modules\I18n\Controller\Backend\I18n;
 
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
-use Oforge\Engine\Modules\CRUD\Controller\Backend\CrudController;
+use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
+use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
 use Oforge\Engine\Modules\I18n\Models\Language;
 use Oforge\Engine\Modules\I18n\Models\Snippet;
 use Oforge\Engine\Modules\I18n\Services\LanguageService;
@@ -13,46 +14,51 @@ use Oforge\Engine\Modules\I18n\Services\LanguageService;
  *
  * @package Oforge\Engine\Modules\I18n\Controller\Backend
  */
-class SnippetsController extends CrudController {
+class SnippetsController extends BaseCrudController {
     /** @var string $model */
     protected $model = Snippet::class;
     /** @var array $modelProperties */
     protected $modelProperties = [
         [
             'name' => 'id',
-            'type' => 'int',
+            'type' => CrudDataTypes::INT,
             'crud' => [
-                'index'  => 'readonly',
-                'create' => 'off',
-                'update' => 'readonly',
+                'index' => 'readonly',
             ],
         ],
         [
-            'name' => 'scope',
-            'type' => 'select',
-            'list' => 'getSelectLanguages',
-            'crud' => [
+            'name'          => 'scope',
+            'type'          => CrudDataTypes::SELECT,
+            'crud'          => [
                 'index'  => 'readonly',
+                'view'   => 'readonly',
                 'create' => 'editable',
-                'update' => 'readonly',
+                'update' => 'editable',
+                'delete' => 'readonly',
             ],
+            'list'          => 'getSelectLanguages',
+            'listI18nLabel' => false,
         ],
         [
             'name' => 'name',
-            'type' => 'string',
+            'type' => CrudDataTypes::STRING,
             'crud' => [
                 'index'  => 'readonly',
+                'view'   => 'readonly',
                 'create' => 'editable',
-                'update' => 'readonly',
+                'update' => 'editable',
+                'delete' => 'readonly',
             ],
         ],
         [
             'name' => 'value',
-            'type' => 'string',
+            'type' => CrudDataTypes::STRING,
             'crud' => [
                 'index'  => 'editable',
+                'view'   => 'readonly',
                 'create' => 'editable',
                 'update' => 'editable',
+                'delete' => 'readonly',
             ],
         ],
     ];
