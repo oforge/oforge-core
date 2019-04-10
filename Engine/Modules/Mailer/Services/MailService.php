@@ -7,13 +7,15 @@ use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\TemplateEngine\Core\Twig\TwigEnvironment;
+use Oforge\Engine\Modules\TemplateEngine\Extensions\Twig\AccessExtension;
 use PHPMailer\PHPMailer\PHPMailer;
 use Oforge\Engine\Modules\TemplateEngine\Core\Twig\TwigFileSystemLoader;
+
 
 class MailService {
 
     /**
-     * Initialises PHP Mailer Instance with specified Mailer Settings, Options and TemplateData
+     * Initialises PHP Mailer Instance with specified Mailer Settings, Options and TemplateData.
      *
      * Options = ['to' => [], 'cc' => [], 'bcc' => [], 'replyTo' => [], 'attachment' => [], "subject" => string "html" => bool]
      *
@@ -69,7 +71,6 @@ class MailService {
                     }
                 }
 
-
                 /** Add Attachments: */
                 if (isset($options['attachment'])) {
                     foreach ($options["attachment"] as $key => $value) {
@@ -83,7 +84,6 @@ class MailService {
                     'data' => $templateData
                 ];
                 $renderedTemplate = $this->renderMail($templateData);
-
 
                 /** Add Content */
                 $mail->isHTML(ArrayHelper::get($options, 'html', true));
@@ -133,21 +133,21 @@ class MailService {
     }
 
     /**
-     * Renders the HTML from specified template
-     * @param array $data
-     *
-     * @return string
+     * Loads minimal twig environment and returns rendered HTML
+     * @param array $options
+     * @param array $templateData
+     * @return string The rendered HTML
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      */
-    public function renderMail(array $data) {
+    public function renderMail(array $options, array $templateData) {
 
         $loader = new TwigFileSystemLoader(Statics::MAIL_TEMPLATE_DIR);
         $twig = new TwigEnvironment($loader);
-        $template = $twig->load($data['mail']['template']);
+        $twig->addExtension(new AccessExtension());
+        $template = $twig->load($options['template']);
 
-        return $template->render($data['data']);
+        return $template->render($templateData);
     }
-
 }

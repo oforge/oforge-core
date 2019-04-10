@@ -345,7 +345,7 @@
     </style>
 </head>
 <body class="">
-<span class="preheader">This is preheader text. Some clients will show this text as a preview.</span>
+
 <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="body">
     <tr>
         <td>&nbsp;</td>
@@ -363,14 +363,15 @@
                                     {% block logo %}
                                         <tr>
                                             <td>
-                                                <p>----------------<br>|  Your logo  |<br>----------------</p>
+                                                <p>----------------<br>| Your logo |<br>----------------</p>
                                             </td>
                                         </tr>
                                     {% endblock logo %}
                                     <tr>
                                         <td>
                                             <p>Thank you for your registration,</p>
-                                            <p>in order to complete the activation process, please click the link below.</p>
+                                            <p>in order to complete the activation process, please click the link
+                                                below.</p>
                                             <table role="presentation" border="0" cellpadding="0" cellspacing="0"
                                                    class="btn btn-primary">
                                                 <tbody>
@@ -380,7 +381,7 @@
                                                                cellspacing="0">
                                                             <tbody>
                                                             <tr>
-                                                                <td><a href="{{ activationLink }}" target="_blank">Activate
+                                                                <td><a href="{{ i18n(activationLink) }}" target="_blank">Activate
                                                                         Account</a></td>
                                                             </tr>
                                                             </tbody>
@@ -401,20 +402,20 @@
 
                 <!-- START FOOTER -->
                 {% block footer %}
-                <div class="footer">
-                    <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                        <tr>
-                            <td class="content-block">
-                                <span class="apple-link">7PKonzepte GmbH, Rheinische Straße 171, Dortmund</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="content-block powered-by">
-                                Powered by Oforge.
-                            </td>
-                        </tr>
-                    </table>
-                </div>
+                    <div class="footer">
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td class="content-block">
+                                    <span class="apple-link">7PKonzepte GmbH, Rheinische Straße 171, Dortmund</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="content-block powered-by">
+                                    Powered by Oforge.
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                 {% endblock footer %}
                 <!-- END FOOTER -->
             </div>
