@@ -8,10 +8,12 @@
 
 namespace Oforge\Engine\Modules\TemplateEngine\Extensions\Twig;
 
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
-use Oforge\Engine\Modules\I18n\Services\InternationalizationService;
-use Oforge\Engine\Modules\I18n\Services\LanguageIdentificationService;
+use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Twig_Extension;
+use Twig_ExtensionInterface;
 use Twig_Function;
 
 /**
@@ -19,7 +21,7 @@ use Twig_Function;
  *
  * @package Oforge\Engine\Modules\TemplateEngine\Extensions\Twig
  */
-class AccessExtension extends Twig_Extension implements \Twig_ExtensionInterface {
+class AccessExtension extends Twig_Extension implements Twig_ExtensionInterface {
 
     /**
      * @inheritDoc
@@ -38,8 +40,8 @@ class AccessExtension extends Twig_Extension implements \Twig_ExtensionInterface
      * @param mixed ...$vars
      *
      * @return mixed|string
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ConfigElementNotFoundException
+     * @throws ServiceNotFoundException
      */
     public function getConfig(...$vars) {
         $result = '';
@@ -58,19 +60,14 @@ class AccessExtension extends Twig_Extension implements \Twig_ExtensionInterface
      * @param mixed ...$vars
      *
      * @return string
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ServiceNotFoundException
      */
     public function getInternationalization($context, ...$vars) {
         $result = "";
         if (count($vars) > 0 && isset($vars[0])) {
-            /** @var InternationalizationService $service */
-            $service = Oforge()->Services()->get('i18n');
-            /**@var LanguageIdentificationService $languageIdentificationService */
-            $languageIdentificationService = Oforge()->Services()->get('language.identifier');
+            $defaultValue = count($vars) > 1 ? $vars[1] : null;
 
-            $currentLanguage = $languageIdentificationService->getCurrentLanguage($context);
-            $defaultValue    = count($vars) > 1 ? $vars[1] : null;
-            $result          = $service->get($vars[0], $currentLanguage, $defaultValue);
+            $result = I18N::twigTranslate($context, $vars[0], $defaultValue);
         }
 
         return $result;
