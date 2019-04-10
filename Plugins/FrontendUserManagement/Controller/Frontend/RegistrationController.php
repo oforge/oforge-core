@@ -215,6 +215,7 @@ class RegistrationController extends AbstractController {
         $_SESSION['auth'] = $jwt;
 
         $uri = $router->pathFor('frontend_account_dashboard');
+        $uri = $router->pathFor('frontend_account_dashboard');
 
         Oforge()->View()->addFlashMessage('success', 'Your account was activated successfully. You are now logged in.');
 

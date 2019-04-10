@@ -10,6 +10,8 @@ use Oforge\Engine\Modules\TemplateEngine\Core\Twig\CustomTwig;
 use Oforge\Engine\Modules\TemplateEngine\Extensions\Twig\AccessExtension;
 use PHPMailer\PHPMailer\PHPMailer;
 
+use Oforge\Engine\Modules\TemplateEngine\Core\Twig\TwigOforgeDebugExtension;
+
 
 class MailService {
 
@@ -18,7 +20,7 @@ class MailService {
      *
      * Options = ['to' => [], 'cc' => [], 'bcc' => [], 'replyTo' => [], 'attachment' => [], "subject" => string "html" => bool]
      *
-     * Template Data = ['key_1' => value, ...]
+     * Template Data = ['key_1' => value_1, ...]
      *
      * @param array $options
      * @param array $templateData
@@ -49,6 +51,7 @@ class MailService {
                 $mail->SMTPAuth   = $configService->get("mailer_smtp_auth");
                 $mail->Password   = $configService->get("mailer_smtp_password");
                 $mail->SMTPSecure = $configService->get("mailer_smtp_secure");
+                $mail->charSet = "UTF-8";
 
                 /** Add Recipients ({to,cc,bcc}Addresses) */
                 foreach ($options["to"] as $key => $value) {
@@ -142,6 +145,7 @@ class MailService {
 
         $twig = new CustomTwig($path = Statics::MAIL_TEMPLATE_DIR);
         $twig->addExtension(new AccessExtension());
-        return $twig->fetch($template = $options['template'], $templateData);
+
+        return $twig->fetch($template = $options['template'], $data = $templateData);
     }
 }

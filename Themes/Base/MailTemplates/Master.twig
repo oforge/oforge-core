@@ -231,18 +231,6 @@
             margin-bottom: 0;
         }
 
-        .preheader {
-            color: transparent;
-            display: none;
-            height: 0;
-            max-height: 0;
-            max-width: 0;
-            opacity: 0;
-            overflow: hidden;
-            mso-hide: all;
-            visibility: hidden;
-            width: 0;
-        }
 
         .powered-by a {
             text-decoration: none;
@@ -363,33 +351,39 @@
                                     {% block logo %}
                                         <tr>
                                             <td>
-                                                <p>----------------<br>| Your logo |<br>----------------</p>
+                                                Cannot find a logo ¯\_(ツ)_/¯
                                             </td>
                                         </tr>
                                     {% endblock logo %}
                                     <tr>
                                         <td>
-                                            <p>Thank you for your registration,</p>
-                                            <p>in order to complete the activation process, please click the link
-                                                below.</p>
-                                            <table role="presentation" border="0" cellpadding="0" cellspacing="0"
-                                                   class="btn btn-primary">
-                                                <tbody>
-                                                <tr>
-                                                    <td align="left">
-                                                        <table role="presentation" border="0" cellpadding="0"
-                                                               cellspacing="0">
-                                                            <tbody>
-                                                            <tr>
-                                                                <td><a href="{{ i18n(activationLink) }}" target="_blank">Activate
-                                                                        Account</a></td>
-                                                            </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
+                                            {% block headline %}
+                                                <p>{{ i18n('site_name') }}</p>
+                                                <p>Thank you for your registration,</p>
+                                                <p>in order to complete the activation process, please click the link
+                                                    below.</p>
+                                            {% endblock headline %}
+
+                                            {% block button %}
+                                                <table role="presentation" border="0" cellpadding="0" cellspacing="0"
+                                                       class="btn btn-primary">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td align="left">
+                                                            <table role="presentation" border="0" cellpadding="0"
+                                                                   cellspacing="0">
+                                                                <tbody>
+                                                                <tr>
+                                                                    <td><a href="{{ activationLinK }}" target="_blank">Activate
+                                                                            Account</a></td>
+                                                                </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            {% endblock button %}
                                         </td>
                                     </tr>
                                 </table>
@@ -400,7 +394,6 @@
                 </table>
                 <!-- END CENTERED WHITE CONTAINER -->
 
-                <!-- START FOOTER -->
                 {% block footer %}
                     <div class="footer">
                         <table role="presentation" border="0" cellpadding="0" cellspacing="0">
@@ -417,7 +410,6 @@
                         </table>
                     </div>
                 {% endblock footer %}
-                <!-- END FOOTER -->
             </div>
         </td>
         <td>&nbsp;</td>
