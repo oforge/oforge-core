@@ -31,9 +31,8 @@ class TestMailController extends AbstractController {
             die();
         }
         $mailservice = Oforge()->Services()->get('mail');
-        $data = ['mail'=> $testOptions, 'data'=> []];
         try {
-            $mail = $mailservice->renderMail($data);
+            $mail = $mailservice->renderMail($testOptions, $templateData = []);
         }
         catch(\Exception $e) {
             echo $e;
