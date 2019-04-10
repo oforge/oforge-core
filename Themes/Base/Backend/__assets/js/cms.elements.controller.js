@@ -1,3 +1,6 @@
+// status variable to check if foreign object was dragged to jsTree
+var isForeignDND = false;
+
 // make foreign objects draggable to jsTree
 $('.jstree_draggable').on('mousedown', function (event) {
 	$(this).wrap( "<div id='jstree-drag-element'></div>" );
@@ -8,8 +11,8 @@ $('.jstree_draggable').on('mousedown', function (event) {
 		event,
 		{
 			'jstree' : true,
-			'object' : $(this),
-			'nodes' : [{
+			'obj' 	 : $(this),
+			'nodes'  : [{
                 'icon'		 : 'jstree-file',
                 'text'		 : 'New Content Element',
 				'data-ct-id' : $(this).attr('data-ct-id')
@@ -19,21 +22,22 @@ $('.jstree_draggable').on('mousedown', function (event) {
 	);
 });
 
-// drag 'n drop event listeners for jsTree for foreign objects
+// drag 'n drop event listeners for jsTree foreign objects
 $(document).bind("dnd_start.vakata", function(event, data) {
 	console.log("jsTree - Start dnd");
 	console.log("Data:");
-	console.log(JSON.stringify(data.data.jstree));
-	console.log(JSON.stringify(data.data.object));
-	console.log(JSON.stringify(data.data.nodes));
+	console.log(jsonStringify(data.data.jstree));
+	console.log(jsonStringify(data.data.obj));
+	console.log(jsonStringify(data.data.nodes));
 	console.log("------------------");
 })
 .bind("dnd_stop.vakata", function(event, data) {
     console.log("jsTree - Stop dnd");
 	console.log("Data:");
-	console.log(JSON.stringify(data.data.jstree));
-	console.log(JSON.stringify(data.data.object));
-	console.log(JSON.stringify(data.data.nodes));
+	console.log(jsonStringify(data.data.jstree));
+	console.log(jsonStringify(data.data.obj));
+	console.log(jsonStringify(data.data.nodes));
+	console.log("this was a foreign operation: " + isForeignDND);
 	console.log("------------------");
 });
 
@@ -65,7 +69,7 @@ $('#cms_elements_controller_jstree').on('select_node.jstree', function (event, d
 	$('#cms_element_editor_form').submit();
 });
 
-// called after creating the node in jstree. afterwards rename_node.jstree-callback
+// called after creating the node in jsTree. afterwards "rename_node.jstree"-callback
 // will be called when user finished editing the node's name
 $('#cms_elements_controller_jstree').on('create_node.jstree', function (event, data) {
 	var node = data.node;
@@ -91,7 +95,7 @@ $('#cms_elements_controller_jstree').on('rename_node.jstree', function (event, d
 	$('#cms_element_jstree_form').submit();
 });
 
-// called after deleting a jstree node
+// called after deleting a jsTree node
 $('#cms_elements_controller_jstree').on('delete_node.jstree', function (event, data) {
 	var node = data.node;
 	var parent = data.parent;
@@ -139,6 +143,57 @@ $(window).resize(function() {
     resizeContentEditor();
 });
 
+function customMenu(node) {
+	var items = {
+		"createItem": {
+			"label": "Create",
+			"action": function (obj) {
+				var tree = $('#cms_elements_controller_jstree').jstree(true);
+				var node = tree.get_node(obj.reference);
+
+				if (node.id === "#" || node.id.startsWith("_parent#")) {
+					node = tree.create_node(node, {"type":"folder"});
+					tree.edit(node);
+				} else {
+					alert("New folders can only be created as root folders or as sub-folders in user created folders!");
+				}
+			}
+		},
+		"renameItem": {
+			"label": "Rename",
+			"action": function (obj) {
+				var tree = $('#cms_elements_controller_jstree').jstree(true);
+				var node = tree.get_node(obj.reference);
+
+				if (node.id.startsWith("_parent#")) {
+					tree.edit(node);
+				} else {
+					alert("Only user created folders can be renamed!");
+				}
+			}
+		},
+		"deleteItem": {
+			"label": "Delete",
+			"action": function (obj) {
+				var tree = $('#cms_elements_controller_jstree').jstree(true);
+				var node = tree.get_node(obj.reference);
+				
+				if (node.id.startsWith("_parent#")) {
+					tree.delete_node(node);
+				} else {
+					alert("Only user created folders can be deleted!");
+				}
+			}
+		}
+	}
+
+	if (node.id && node.id.startsWith("_parent#")) {
+		return items;
+	}
+
+	return false;
+}
+
 // bind functions to document load event
 $(document).ready(function() {
 	if (typeof cms_elements_controller_jstree_config !== typeof undefined && cms_elements_controller_jstree_config) {
@@ -148,21 +203,40 @@ $(document).ready(function() {
                 "multiple"       : false,
                 "animation"      : 0,
                 "check_callback" : function (op, node, par, pos, more) {
-					/*
-					if ((op === "move_node" || op === "copy_node") && node.type && node.type == "root") {
-						return false;
-					}
-					if ((op === "move_node" || op === "copy_node") && more && more.core && !confirm('Are you sure ...')) {
-						return false;
-					}
-					*/
-					console.log("check_callback - op: " + op);
-					console.log("check_callback - node: " + JSON.stringify(node));
-					console.log("check_callback - par: " + JSON.stringify(par));
-					console.log("check_callback - pos: " + JSON.stringify(pos));
-					console.log("check_callback - more: " + JSON.stringify(more));
+					console.log("check_callback - op: " + op + " | node: " + node.id + " | parent: " + par.id);
 					console.log("-----------------------");
-					return true;
+
+					// by default assume that this is not a foreign dnd operation
+					isForeignDND = false;
+
+					// check if this is a context menu operation and if yes permit it
+					if (op === "create_node" || op === "rename_node" || op === "delete_node" || op === "edit") {
+						return true;
+					}
+
+					// check if this is a foreign dnd operation and if yes allow it
+					if (op === "move_node" && !node && more.dnd === true && more.is_foreign === true) {
+						isForeignDND = true;
+						return true;
+					}
+
+					// check if this is a dnd operation of a user created content parent folder
+					// if yes only permit it if it is dragged to another user created content parent folder
+					if (op === "move_node" && node && node.id && (node.id.startsWith("_parent#"))) {
+						if (par && par.id && par.id.startsWith("_parent#")) {
+							return true;
+						} else {
+							return false;
+						}
+					// check if this is a dnd operation of an existing content element and if yes allow it:
+					// if content elements are dragged to any default content type folder they will always
+					// automatically sorted into their default folder by setting their parent to NULL
+					} else if (op === "move_node" && node && node.id && (node.id.startsWith("_element#"))) {
+						return true;
+					// deny all other jsTree operations
+					} else {
+						return false;
+					}
 				},
                 "force_text"     : true,
                 "themes"         : {"stripes" : false},
@@ -172,53 +246,12 @@ $(document).ready(function() {
 			"contextmenu" : {
 				"select_node" : false,
 				"show_at_node" : true,
-				"items" : {
-					"createItem": {
-						"label": "Create",
-						"action": function (obj) {
-							var tree = $('#cms_elements_controller_jstree').jstree(true);
-							var node = tree.get_node(obj.reference);
-
-							if (node.id === "#" || node.id.startsWith("_parent")) {
-								node = tree.create_node(node, {"type":"folder"});
-								tree.edit(node);
-							} else {
-								alert("New folders can only be created as root folders or as sub-folders in user created folders!");
-							}
-						}
-					},
-					"renameItem": {
-						"label": "Rename",
-						"action": function (obj) {
-							var tree = $('#cms_elements_controller_jstree').jstree(true);
-							var node = tree.get_node(obj.reference);
-
-							if (node.id.startsWith("_parent")) {
-								tree.edit(node);
-							} else {
-								alert("Only user created folders can be renamed!");
-							}
-						}
-					},
-					"deleteItem": {
-						"label": "Delete",
-						"action": function (obj) {
-							var tree = $('#cms_elements_controller_jstree').jstree(true);
-							var node = tree.get_node(obj.reference);
-							
-							if (node.id.startsWith("_parent")) {
-								tree.delete_node(node);
-							} else {
-								alert("Only user created folders can be deleted!");
-							}
-						}
-					}
-				}
+				"items" : customMenu
 			}
 		};
 	}
 
-	// create jstree object
+	// create jsTree object
 	$('#cms_elements_controller_jstree').jstree(jsTreeConfig);
 	
     resizeContentEditor();
