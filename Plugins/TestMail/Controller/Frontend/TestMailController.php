@@ -8,8 +8,8 @@ use Slim\Http\Response;
 
 class TestMailController extends AbstractController {
     /**
-     * Returns rendered Mail to the browser for more convenient testing.
-     * To display mail, go to: /testmail?template=<template-name>
+     * Returns rendered HTML for convenient testing.
+     * To display mail, request -> <base-path>/testmail?template=<template-name>
      *
      * @param Request $request
      * @param Response $response

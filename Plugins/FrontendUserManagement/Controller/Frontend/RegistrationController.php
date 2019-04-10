@@ -167,7 +167,7 @@ class RegistrationController extends AbstractController {
      * @param Request $request
      * @param Response $response
      *
-     * @return static
+     * @return Response
      * @throws \Doctrine\ORM\ORMException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      * @throws \Psr\Container\ContainerExceptionInterface
