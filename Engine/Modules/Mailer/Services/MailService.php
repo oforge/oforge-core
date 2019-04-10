@@ -10,20 +10,16 @@ use Oforge\Engine\Modules\TemplateEngine\Core\Twig\CustomTwig;
 use Oforge\Engine\Modules\TemplateEngine\Extensions\Twig\AccessExtension;
 use PHPMailer\PHPMailer\PHPMailer;
 
-use Oforge\Engine\Modules\TemplateEngine\Core\Twig\TwigOforgeDebugExtension;
-
 
 class MailService {
 
     /**
      * Initialises PHP Mailer Instance with specified Mailer Settings, Options and TemplateData.
      *
-     * Options = ['to' => [], 'cc' => [], 'bcc' => [], 'replyTo' => [], 'attachment' => [], "subject" => string "html" => bool]
-     *
-     * Template Data = ['key_1' => value_1, ...]
+     * Options = ['to' => [], 'cc' => [], 'bcc' => [], 'replyTo' => [], 'attachment' => [], "subject" => string "html" => bool
      *
      * @param array $options
-     * @param array $templateData
+     * @param array $templateData Associative Array
      *
      * @throws ConfigOptionKeyNotExists
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException
@@ -80,7 +76,7 @@ class MailService {
                     }
                 }
 
-                /** Render Mail Template */
+                /** Render HTML */
                 $renderedTemplate = $this->renderMail($options,$templateData);
 
                 /** Add Content */
