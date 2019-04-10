@@ -3,6 +3,7 @@
 namespace Oforge\Engine\Modules\TemplateEngine\Core\Manager;
 
 use Oforge\Engine\Modules\Core\Abstracts\AbstractViewManager;
+use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\TemplateEngine\Core\Twig\TwigFlash;
 
 /**
@@ -50,7 +51,7 @@ class ViewManager extends AbstractViewManager {
      * @return ViewManager
      */
     public function assign($data) {
-        $this->viewData = $this->array_merge_recursive_ex($this->viewData, $data);
+        $this->viewData = ArrayHelper::mergeRecursive($this->viewData, $data);
 
         return $this;
     }
@@ -63,34 +64,6 @@ class ViewManager extends AbstractViewManager {
      */
     public function fetch() {
         return $this->viewData;
-    }
-
-    /**
-     * @param array $array1
-     * @param array $array2
-     *
-     * @return array
-     */
-    function array_merge_recursive_ex(array &$array1, array &$array2) {
-        $merged = $array1;
-
-        foreach ($array2 as $key => &$value) {
-            if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
-                if (is_string($key)) {
-                    $merged[$key] = is_array($merged[$key]) ? $this->array_merge_recursive_ex($merged[$key], $value) : $value;
-                } else {
-                    $merged[] = $value;
-                }
-            } elseif (is_numeric($key)) {
-                if (!in_array($value, $merged)) {
-                    $merged[] = $value;
-                }
-            } else {
-                $merged[$key] = $value;
-            }
-        }
-
-        return $merged;
     }
 
     /**

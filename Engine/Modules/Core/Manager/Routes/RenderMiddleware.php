@@ -2,6 +2,7 @@
 
 namespace Oforge\Engine\Modules\Core\Manager\Routes;
 
+use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -33,9 +34,12 @@ class RenderMiddleware {
         if (empty($data)) {
             $data = Oforge()->View()->fetch();
         } else {
-            $data = array_merge($data, Oforge()->View()->fetch());
+            $fetcheData = Oforge()->View()->fetch();
+
+            $data = ArrayHelper::mergeRecursive($data, $fetcheData);
         }
 
         return Oforge()->Templates()->render($request, $response, $data);
     }
+
 }
