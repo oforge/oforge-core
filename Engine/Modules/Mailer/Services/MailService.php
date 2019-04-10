@@ -6,10 +6,9 @@ use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
-use Oforge\Engine\Modules\TemplateEngine\Core\Twig\TwigEnvironment;
+use Oforge\Engine\Modules\TemplateEngine\Core\Twig\CustomTwig;
 use Oforge\Engine\Modules\TemplateEngine\Extensions\Twig\AccessExtension;
 use PHPMailer\PHPMailer\PHPMailer;
-use Oforge\Engine\Modules\TemplateEngine\Core\Twig\TwigFileSystemLoader;
 
 
 class MailService {
@@ -79,11 +78,7 @@ class MailService {
                 }
 
                 /** Render Mail Template */
-                $templateData = [
-                    'mail' => $options,
-                    'data' => $templateData
-                ];
-                $renderedTemplate = $this->renderMail($templateData);
+                $renderedTemplate = $this->renderMail($options,$templateData);
 
                 /** Add Content */
                 $mail->isHTML(ArrayHelper::get($options, 'html', true));
@@ -133,21 +128,20 @@ class MailService {
     }
 
     /**
-     * Loads minimal twig environment and returns rendered HTML
+     * Loads minimal twig environments and returns rendered HTML
+     *
      * @param array $options
      * @param array $templateData
-     * @return string The rendered HTML
+     *
+     * @return string
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      */
     public function renderMail(array $options, array $templateData) {
 
-        $loader = new TwigFileSystemLoader(Statics::MAIL_TEMPLATE_DIR);
-        $twig = new TwigEnvironment($loader);
+        $twig = new CustomTwig($path = Statics::MAIL_TEMPLATE_DIR);
         $twig->addExtension(new AccessExtension());
-        $template = $twig->load($options['template']);
-
-        return $template->render($templateData);
+        return $twig->fetch($template = $options['template'], $templateData);
     }
 }
