@@ -142,8 +142,6 @@ class ForgotPasswordController extends AbstractController {
     }
 
     /**
-     * Change the password
-     *
      * @param Request $request
      * @param Response $response
      *
@@ -151,6 +149,8 @@ class ForgotPasswordController extends AbstractController {
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function changeAction(Request $request, Response $response) {
         /** @var SessionManagementService $sessionManagementService */

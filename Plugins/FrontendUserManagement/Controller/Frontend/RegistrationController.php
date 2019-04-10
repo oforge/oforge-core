@@ -138,7 +138,7 @@ class RegistrationController extends AbstractController {
             return $response->withRedirect($uri, 302);
         }
 
-        /*
+        /**
          * create activation link
          */
         $activationLink = $registrationService->generateActivationLink($user);
@@ -186,7 +186,7 @@ class RegistrationController extends AbstractController {
         $jwt                        = null;
         $user                       = null;
 
-        /*
+        /**
          * if there is no guid
          */
         if (!$guid) {
@@ -195,7 +195,7 @@ class RegistrationController extends AbstractController {
 
         $user = $registrationService->activate($guid);
 
-        /*
+        /**
          * User not found
          */
         if (!$user) {
@@ -214,7 +214,6 @@ class RegistrationController extends AbstractController {
         $sessionManagementService->regenerateSession();
         $_SESSION['auth'] = $jwt;
 
-        $uri = $router->pathFor('frontend_account_dashboard');
         $uri = $router->pathFor('frontend_account_dashboard');
 
         Oforge()->View()->addFlashMessage('success', 'Your account was activated successfully. You are now logged in.');
