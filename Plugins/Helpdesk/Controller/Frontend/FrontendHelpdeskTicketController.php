@@ -6,7 +6,13 @@ use Slim\Http\Response;
 
 class FrontendHelpdeskTicketController {
     public function indexAction(Request $request, Response $response, $args) {
-        Oforge()->View()->assign(['message' => 'Go to Account -> Messages?']);
-        print_r($args['id']);
+
+        if ($request->isPost()) {
+
+        }
+        /* When there is a ticket id, redirect to the MessageController */
+        if (isset($args) && isset($args['id'])) {
+
+        }
     }
 }

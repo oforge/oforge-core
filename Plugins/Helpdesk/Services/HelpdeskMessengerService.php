@@ -13,28 +13,28 @@ class HelpdeskMessengerService extends AbstractMessengerService {
 
     /**
      * @param $requester
+     * @param null $requested
+     * @param $conversationType
      * @param $targetId
      * @param $title
      * @param $firstMessage
-     * @param null $requested
      *
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws Exception
      */
-    public function createNewConversation($requester, $targetId, $title, $firstMessage, $requested = null) {
+    public function createNewConversation($requester, $requested, $conversationType, $targetId, $title, $firstMessage) {
         $conversation = new Conversation();
         $conversation->setRequester($requester);
         $conversation->setRequested($requested);
         $conversation->setTargetId($targetId);
         $conversation->setTitle($title);
         $conversation->setState('open');
-        $conversation->setType('helpdesk_inquiry');
+        $conversation->setType($conversationType);
 
         $this->entityManager()->persist($conversation);
         $this->entityManager()->flush();
 
-        parent::sendMessage($conversation->getId(), 'frontend',$requester, $firstMessage);
+        parent::sendMessage($conversation->getId(), 'frontend', $requester, $firstMessage);
     }
 
     /**
