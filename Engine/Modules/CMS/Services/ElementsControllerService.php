@@ -50,6 +50,83 @@ class ElementsControllerService extends AbstractDatabaseAccess {
         }
     }
 
+    private function moveContentParent($selectedElementId, $selectedElementParentId) {
+        $moveContentParentId = intval(str_replace("_parent#", "", $selectedElementId));
+        $toContentParentId   = intval(str_replace("_parent#", "", $selectedElementParentId));
+
+        if ($moveContentParentId > 0 && $toContentParentId > 0)
+        {
+            $moveContentParentEntity = $this->repository('contentParent')->findOneBy(["id" => $moveContentParentId]);
+            $toContentParentEntity   = $this->repository('contentParent')->findOneBy(["id" => $toContentParentId]);
+
+            if ($moveContentParentEntity && $toContentParentEntity)
+            {
+                $moveContentParentEntity->setParent($toContentParentEntity);
+                
+                $this->entityManager->persist($moveContentParentEntity);
+                $this->entityManager->flush();
+            }
+        }
+        elseif ($moveContentParentId > 0 && $selectedElementParentId === "#")
+        {
+            $moveContentParentEntity = $this->repository('contentParent')->findOneBy(["id" => $moveContentParentId]);
+
+            if ($moveContentParentEntity)
+            {
+                $moveContentParentEntity->setParent(NULL);
+                
+                $this->entityManager->persist($moveContentParentEntity);
+                $this->entityManager->flush();
+            }
+        }
+    }
+
+    private function moveContentElement($selectedElementId, $selectedElementParentId) {
+        $moveContentElementId = intval(str_replace("_element#", "", $selectedElementId));
+        $toContentParentId    = intval(str_replace("_parent#", "", $selectedElementParentId));
+
+        if ($moveContentElementId > 0 && $toContentParentId > 0)
+        {
+            $moveContentElementEntity = $this->repository('content')->findOneBy(["id" => $moveContentElementId]);
+            $toContentParentEntity    = $this->repository('contentParent')->findOneBy(["id" => $toContentParentId]);
+
+            if ($moveContentElementEntity && $toContentParentEntity)
+            {
+                $moveContentElementEntity->setParent($toContentParentEntity);
+                
+                $this->entityManager->persist($moveContentElementEntity);
+                $this->entityManager->flush();
+            }
+        }
+        elseif ($moveContentElementId > 0 && strpos($selectedElementParentId, "_parent#") !== 0)
+        {
+            $moveContentElementEntity = $this->repository('content')->findOneBy(["id" => $moveContentElementId]);
+
+            if ($moveContentElementEntity)
+            {
+                $moveContentElementEntity->setParent(NULL);
+                
+                $this->entityManager->persist($moveContentElementEntity);
+                $this->entityManager->flush();
+            }
+        }
+    }
+
+    public function moveElementData($post)
+    {
+        $selectedElementId          = isset($post["cms_edit_element_id"])          && !empty($post["cms_edit_element_id"])          ? $post["cms_edit_element_id"]          : false;
+        $selectedElementParentId    = isset($post["cms_edit_element_parent_id"])   && !empty($post["cms_edit_element_parent_id"])   ? $post["cms_edit_element_parent_id"]   : false;
+
+        if (strpos($selectedElementId, "_parent#") === 0)
+        {
+            $this->moveContentParent($selectedElementId, $selectedElementParentId);
+        } elseif (strpos($selectedElementId, "_element#") === 0) {
+            $this->moveContentElement($selectedElementId, $selectedElementParentId);
+        }
+
+        return $this->getElementData($post);
+    }
+
     public function editElementData($post)
     {
         $selectedElementId          = isset($post["cms_edit_element_id"])          && !empty($post["cms_edit_element_id"])          ? $post["cms_edit_element_id"]          : false;

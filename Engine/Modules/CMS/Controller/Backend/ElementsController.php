@@ -29,7 +29,15 @@ class ElementsController extends AbstractController {
         switch ($_POST["cms_form"])
         {
             case "cms_element_jstree_form":
-                $data = $elementsControllerService->editElementData($_POST);
+                switch ($_POST["cms_edit_element_action"])
+                {
+                    case "move":
+                        $data = $elementsControllerService->moveElementData($_POST);
+                        break;
+                    default:
+                        $data = $elementsControllerService->editElementData($_POST);
+                        break;
+                }
                 break;
             case "cms_page_builder_form":
                 $data = $pagesControllerService->editContentData($_POST);

@@ -199,7 +199,7 @@ class ElementTreeService extends AbstractDatabaseAccess
             $contentElement = [];
             $contentElement["id"]     = $contentEntity->getId();
             $contentElement["type"]   = $contentEntity->getType()->getName();
-            $contentElement["parent"] = $contentEntity->getParent();
+            $contentElement["parent"] = $contentEntity->getParent() ? $contentEntity->getParent()->getId() : false;
             $contentElement["name"]   = $contentEntity->getName();
             
             $contentElements[] = $contentElement;
