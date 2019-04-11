@@ -1,6 +1,9 @@
 // status variable to check if foreign object was dragged to jsTree
 var isForeignDND = false;
 
+// variable that holds the selected parent for content type dragged to jsTree
+var contentTypeParentForeignDND = false;
+
 // make foreign objects draggable to jsTree
 $('.jstree_draggable').on('mousedown', function (event) {
 	$(this).wrap( "<div id='jstree-drag-element'></div>" );
@@ -15,7 +18,7 @@ $('.jstree_draggable').on('mousedown', function (event) {
 			'nodes'  : [{
                 'icon'		 : 'jstree-file',
                 'text'		 : 'New Content Element',
-				'data-ct-id' : $(this).attr('data-ct-id')
+				'data_ct_id' : $(this).attr('data-ct-id')
 			}]
 		},
 		dragHelper
@@ -39,6 +42,21 @@ $(document).bind("dnd_start.vakata", function(event, data) {
 	console.log(jsonStringify(data.data.nodes));
 	console.log("this was a foreign operation: " + isForeignDND);
 	console.log("------------------");
+
+	var dndData = data.data;
+
+	if (isForeignDND && contentTypeParentForeignDND) {
+		if (data && data.data && data.data.nodes &&  data.data.nodes.length > 0) {
+			var node = data.data.nodes[0];
+	
+			if (node && node.data_ct_id) {
+				$('#cms_edit_element_id').val(node.data_ct_id);
+				$('#cms_edit_element_parent_id').val(contentTypeParentForeignDND);
+				$('#cms_edit_element_action').val('dnd');
+				$('#cms_element_jstree_form').submit();
+			}
+		}
+	}
 });
 
 // jsTree callback functions
@@ -229,6 +247,7 @@ $(document).ready(function() {
 
 					// by default assume that this is not a foreign dnd operation
 					isForeignDND = false;
+					contentTypeParentForeignDND = false;
 
 					// check if this is a context menu operation and if yes permit it
 					if (op === "create_node" || op === "rename_node" || op === "delete_node" || op === "edit") {
@@ -237,8 +256,13 @@ $(document).ready(function() {
 
 					// check if this is a foreign dnd operation and if yes allow it
 					if (op === "move_node" && !node && more.dnd === true && more.is_foreign === true) {
-						isForeignDND = true;
-						return true;
+						if (par && par.id && !par.id.startsWith("_element#")) {
+							isForeignDND = true;
+							contentTypeParentForeignDND = par.id;
+							return true;
+						} else {
+							return false;
+						}
 					}
 
 					// check if this is a dnd operation of a user created content parent folder

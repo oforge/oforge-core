@@ -25,8 +25,8 @@ class ElementsControllerService extends AbstractDatabaseAccess {
         {
             $contentEntity->setParent(NULL);
             
-            $this->contentEntity->persist($contentParentEntity);
-            $this->contentEntity->flush();
+            $this->entityManager->persist($contentEntity);
+            $this->entityManager->flush();
         }
     }
 
@@ -110,6 +110,43 @@ class ElementsControllerService extends AbstractDatabaseAccess {
                 $this->entityManager->flush();
             }
         }
+    }
+
+    public function createContentElement($post) {
+        $selectedElementId          = isset($post["cms_edit_element_id"])          && !empty($post["cms_edit_element_id"])          ? $post["cms_edit_element_id"]          : false;
+        $selectedElementParentId    = isset($post["cms_edit_element_parent_id"])   && !empty($post["cms_edit_element_parent_id"])   ? $post["cms_edit_element_parent_id"]   : false;
+
+        $selectedElementId   = intval($selectedElementId);
+        $contentParentEntity = NULL;
+
+        if (strpos($selectedElementParentId, "_parent#") === 0)
+        {
+            $selectedElementParentId = intval(str_replace("_parent#", "", $selectedElementParentId));
+        
+            if ($selectedElementParentId > 0)
+            {
+                $contentParentEntity = $this->repository('contentParent')->findOneBy(["id" => $selectedElementParentId]);
+            }
+        }
+
+        $contentTypeEntity = $this->repository('contentType')->findOneBy(["id" => $selectedElementId]);
+        
+        $contentId = false;
+        
+        if ($contentTypeEntity) {
+            $contentEntity =  new Content;
+            $contentEntity->setType($contentTypeEntity);
+            $contentEntity->setParent($contentParentEntity);
+            $contentEntity->setName(uniqid());
+            $contentEntity->setCssClass('');
+            
+            $this->entityManager->persist($contentEntity);
+            $this->entityManager->flush();
+            
+            $contentId = $contentEntity->getId();
+        }
+
+        return $this->getElementData($post);
     }
 
     public function moveElementData($post)
