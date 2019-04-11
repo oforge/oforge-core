@@ -13,28 +13,28 @@ class MessengerFrontendService extends AbstractMessengerService {
 
     /**
      * @param $requester
+     * @param $requested
+     * @param $conversationType
      * @param $targetId
      * @param $title
      * @param $firstMessage
-     * @param $requested
      *
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws Exception
      */
-    public function createNewConversation($requester, $targetId, $title, $firstMessage, $requested) {
+    public function createNewConversation($requester, $requested, $conversationType, $targetId, $title, $firstMessage) {
         $conversation = new Conversation();
         $conversation->setRequester($requester);
         $conversation->setRequested($requested);
+        $conversation->setType($conversationType);
+        $conversation->setState('open');
         $conversation->setTargetId($targetId);
         $conversation->setTitle($title);
-        $conversation->setState('open');
-        $conversation->setType('classified_advert');
 
         $this->entityManager()->persist($conversation);
         $this->entityManager()->flush();
 
-        parent::sendMessage($conversation->getId(), $requester, $firstMessage );
+        parent::sendMessage($conversation->getId(), $conversationType, $requester, $firstMessage);
     }
 
     /**
@@ -63,5 +63,9 @@ class MessengerFrontendService extends AbstractMessengerService {
             ->getQuery();
 
         return $query->execute();
+    }
+
+    public function getConversationById($conversationId) {
+        return parent::getConversationById($conversationId);
     }
 }

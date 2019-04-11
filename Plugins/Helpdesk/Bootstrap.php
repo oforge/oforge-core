@@ -39,12 +39,7 @@ class Bootstrap extends AbstractBootstrap {
                 'controller'  => FrontendHelpdeskController::class,
                 'name'        => 'frontend_account_support',
                 'asset_scope' => 'Frontend',
-            ],
-            '/account/support/ticket/{id}' => [
-                'controller'  => FrontendHelpdeskTicketController::class,
-                'name'        => 'frontend_account_support_ticket',
-                'asset_scope' => 'Frontend',
-            ],
+            ]
         ];
 
         $this->services = [
