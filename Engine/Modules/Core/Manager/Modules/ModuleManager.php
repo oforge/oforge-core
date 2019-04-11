@@ -252,7 +252,7 @@ class ModuleManager {
             $endpoints = $instance->getEndpoints();
             Oforge()->Services()->get("endpoints")->register($endpoints);
 
-            $middleware = $instance->getMiddleware();
+            $middleware = $instance->getMiddlewares();
             Oforge()->Services()->get("middleware")->register($middleware, null, true);
 
             /**

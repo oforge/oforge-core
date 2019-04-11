@@ -9,7 +9,7 @@ use Test\Services\TestService;
 class Bootstrap extends AbstractBootstrap {
     public function __construct() {
         
-        $this->middleware = [
+        $this->middlewares = [
             "home2" => ["class" => \Test\Middleware\HomeMiddleware::class, "position" => 0]
         ];
         
