@@ -2,6 +2,8 @@
 
 namespace FrontendUserManagement;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Middleware\FrontendSecureMiddleware;
 use FrontendUserManagement\Middleware\FrontendUserStateMiddleware;
 use FrontendUserManagement\Middleware\AccountNavigationMiddleware;
@@ -11,6 +13,10 @@ use FrontendUserManagement\Models\UserAddress;
 use FrontendUserManagement\Models\UserDetail;
 use FrontendUserManagement\Services\AccountNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
+use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Services\MiddlewareService;
 
 class Bootstrap extends AbstractBootstrap {
@@ -25,7 +31,7 @@ class Bootstrap extends AbstractBootstrap {
             "/account/details" => ["controller" => Controller\Frontend\UserDetailsController::class, "name" => "frontend_account_details"],
         ];
         
-        $this->middleware = [
+        $this->middlewares = [
             "frontend" => [
                 "class" => FrontendUserStateMiddleware::class,
                 "position" => 1,
@@ -53,131 +59,4 @@ class Bootstrap extends AbstractBootstrap {
         ];
     }
 
-    /**
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
-     */
-    public function activate() {
-        /** @var MiddlewareService $middlewareService */
-        /** @var AccountNavigationService $accountNavigationService */
-        $middlewareService = Oforge()->Services()->get('middleware');
-        $middlewareService->activate('frontend');
-
-        $accountNavigationService = Oforge()->Services()->get('frontend.user.management.account.navigation');
-        $accountNavigationService->put([
-            "name" => "frontend_logout",
-            "order" => 1000,
-            "icon" => "profil",
-            "path" => "frontend_logout",
-            "position" => "sidebar",
-        ]);
-
-        $accountNavigationService->put([
-            "name" => "frontend_account_details",
-            "order" => 1,
-            "icon" => "inserat_erstellen",
-            "path" => "frontend_account_details",
-            "position" => "sidebar",
-        ]);
-
-        $accountNavigationService->put([
-            "name" => "frontend_account_edit",
-            "order" => 1,
-            "icon" => "profil",
-            "path" => "frontend_account_edit",
-            "position" => "sidebar",
-        ]);
-
-        $accountNavigationService->put([
-            "name" => "not_found",
-            "order" => 1,
-            "icon" => "inserat_melden",
-            "path" => "not_found",
-            "position" => "sidebar",
-        ]);
-
-        $accountNavigationService->put([
-            "name" => "inserat_melden",
-            "order" => 1,
-            "icon" => "inserat_melden",
-            "path" => "not_found",
-            "position" => "sidebar",
-        ]);
-
-        $accountNavigationService->put([
-            "name" => "eigenschaften",
-            "order" => 1,
-            "icon" => "eigenschaften",
-            "path" => "not_found",
-            "position" => "sidebar",
-        ]);
-
-        $accountNavigationService->put([
-            "name" => "facebook",
-            "order" => 1,
-            "icon" => "facebook",
-            "path" => "not_found",
-            "position" => "sidebar",
-        ]);
-
-        $accountNavigationService->put([
-            "name" => "kleinanzeigen",
-            "order" => 1,
-            "icon" => "kleinanzeigen",
-            "path" => "not_found",
-            "position" => "sidebar",
-        ]);
-
-        $accountNavigationService->put([
-            "name" => "kostenlos",
-            "order" => 1,
-            "icon" => "kostenlos",
-            "path" => "not_found",
-            "position" => "sidebar",
-        ]);
-
-        $accountNavigationService->put([
-            "name" => "merkliste",
-            "order" => 1,
-            "icon" => "merkliste",
-            "path" => "not_found",
-            "position" => "sidebar",
-        ]);
-
-        $accountNavigationService->put([
-            "name" => "merken",
-            "order" => 1,
-            "icon" => "merken",
-            "path" => "not_found",
-            "position" => "sidebar",
-        ]);
-
-        $accountNavigationService->put([
-            "name" => "top_inserat",
-            "order" => 1,
-            "icon" => "top_inserat",
-            "path" => "not_found",
-            "position" => "sidebar",
-        ]);
-
-    }
-    
-    /**
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
-     */
-    public function deactivate() {
-        /** @var MiddlewareService $middlewareService */
-        $middlewareService = Oforge()->Services()->get('middleware');
-        $middlewareService->deactivate('frontend');
-    }
-
-    public function uninstall() {
-
-    }
 }
