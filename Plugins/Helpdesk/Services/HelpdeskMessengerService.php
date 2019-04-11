@@ -2,6 +2,10 @@
 
 namespace Helpdesk\Services;
 
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Exception;
 use Messenger\Abstracts\AbstractMessengerService;
 use Messenger\Models\Conversation;
 
@@ -14,9 +18,9 @@ class HelpdeskMessengerService extends AbstractMessengerService {
      * @param $firstMessage
      * @param null $requested
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Exception
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws Exception
      */
     public function createNewConversation($requester, $targetId, $title, $firstMessage, $requested = null) {
         $conversation = new Conversation();
@@ -36,7 +40,8 @@ class HelpdeskMessengerService extends AbstractMessengerService {
     /**
      * @param $userId
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
+     * @throws ORMException
      */
     public function getConversationList($userId) {
         $queryBuilder = $this->entityManager()->createQueryBuilder();
