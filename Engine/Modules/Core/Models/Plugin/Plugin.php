@@ -36,19 +36,11 @@ class Plugin extends AbstractModel
      */
     private $installed = false;
 
-
     /**
      * @var int
      * @ORM\Column(name="sort_order", type="integer", nullable=true)
      */
     private $order;
-
-    /**
-     * @var Middleware[]
-     * @ORM\OneToMany(targetEntity="Middleware", mappedBy="plugin", cascade={"all"}, fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="id", referencedColumnName="plugin_id")
-     */
-    private $middlewares;
 
     /**
      * Get id
@@ -119,24 +111,6 @@ class Plugin extends AbstractModel
     public function getInstalled()
     {
         return $this->installed;
-    }
-
-    /**
-     * @param Middleware[] $middlewares
-     *
-     * @return Plugin
-     */
-    public function setMiddlewares($middlewares)
-    {
-        $this->middlewares = $middlewares;
-        return $this;
-    }
-    /**
-     * @return Middleware[]
-     */
-    public function getMiddlewares()
-    {
-        return $this->middlewares;
     }
 
     /**
