@@ -36,7 +36,7 @@ class Bootstrap extends AbstractBootstrap {
             ScssVariable::class,
         ];
 
-        $this->middleware = [
+        $this->middlewares = [
             "*" => ["class" => AssetsMiddleware::class, "position" => 0],
         ];
 
