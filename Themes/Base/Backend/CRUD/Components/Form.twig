@@ -19,9 +19,9 @@
                     {% endif %}
                     {% for property in crud.properties if property.crud[crud.context] and property.crud[crud.context]|default('off') != 'off' and property.name != 'id' %}
                         <div class="form-group crud-datatype-{{ property.type }} crud-property-{{ property.name }}">
-                            <label for="form-">
-                                {{ i18n(property.label|default('backend_crud_property__' ~ crud.model ~ '_' ~ property.name) ) }}
-                            </label>
+                            {% set fieldLabel = i18n(property.label|default('backend_crud_property__' ~ crud.model ~ '_' ~ property.name) ) %}
+                            {% set fieldID = ['form', crud.context, crud.model|lower, property.name]|join('_')%}
+                            <label for="{{ fieldID }}">{{ fieldLabel }}</label>
                             {% if crud.context =='delete' or property.name == 'id' or property.crud[crud.context] == 'readonly' %}
                                 <div>
                                     {% include 'Backend/CRUD/Components/Renderer.twig' %}

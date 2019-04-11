@@ -1,9 +1,6 @@
 {% include 'Backend/CRUD/Components/Editor/Input.twig' with {
     editor: {
         type: 'number',
-        name: property.name,
-        value: item[property.name]|default(property.editor.default)|default(''),
-        editable: property.crud[crud.context] == 'editable',
         min: property.editor.min|default(''),
         max: property.editor.max|default(''),
         step: property.editor.step|default(''),

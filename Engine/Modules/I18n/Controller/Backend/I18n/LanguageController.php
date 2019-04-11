@@ -50,9 +50,9 @@ class LanguageController extends BaseCrudController {
             'type' => CrudDataTypes::BOOL,
             'crud' => [
                 'index'  => 'editable',
-                'view'   => 'readonly',
+                'view'   => 'editable',
                 'create' => 'off',
-                'update' => 'readonly',
+                'update' => 'editable',
                 'delete' => 'readonly',
             ],
         ],

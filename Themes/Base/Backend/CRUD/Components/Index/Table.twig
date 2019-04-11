@@ -6,7 +6,7 @@
         {% endif %}
         {% for property in crud.properties if property.crud[crud.context] and property.crud[crud.context]|default('off') != 'off' %}
             <th>
-                {{ i18n(property.label|default('backend_crud_property__' ~ crud.model~ '_' ~ property.name) ) }}
+                {{ i18n(property.label|default('backend_crud_property__' ~ crud.model ~ '_' ~ property.name) ) }}
             </th>
         {% endfor %}
     </tr>

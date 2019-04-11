@@ -1,5 +1,5 @@
 {% if property.list %}
-    <select class="form-control"
+    <select class="form-control" {% if fieldID %}id="{{ fieldID }}"{% endif %}
             {% if property.crud[crud.context] == 'editable' %}name="data[{% if crud.context == 'index' %}{{ item.id }}][{% endif %}{{ property.name }}]"
             {% else %}readonly{% endif %}
             {% if property.editor.multiple %}multiple{% endif %}
