@@ -17,7 +17,6 @@ use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
 use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
-use Oforge\Engine\Modules\Core\Services\MiddlewareService;
 
 class Bootstrap extends AbstractBootstrap {
     public function __construct() {
@@ -59,4 +58,38 @@ class Bootstrap extends AbstractBootstrap {
         ];
     }
 
+    /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ConfigElementAlreadyExists
+     * @throws ConfigOptionKeyNotExists
+     * @throws ParentNotFoundException
+     * @throws ServiceNotFoundException
+     */
+    public function activate() {
+        /** @var AccountNavigationService $accountNavigationService */
+        $accountNavigationService = Oforge()->Services()->get('frontend.user.management.account.navigation');
+
+        $accountNavigationService->put([
+            "name" => "frontend_account_details",
+            "order" => 1,
+            "icon" => "inserat_erstellen",
+            "path" => "frontend_account_details",
+            "position" => "sidebar",
+        ]);
+        $accountNavigationService->put([
+            "name" => "frontend_account_edit",
+            "order" => 1,
+            "icon" => "profil",
+            "path" => "frontend_account_edit",
+            "position" => "sidebar",
+        ]);
+        $accountNavigationService->put([
+            "name" => "frontend_logout",
+            "order" => 1000,
+            "icon" => "profil",
+            "path" => "frontend_logout",
+            "position" => "sidebar",
+        ]);
+    }
 }

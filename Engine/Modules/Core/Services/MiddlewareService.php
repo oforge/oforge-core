@@ -66,7 +66,6 @@ class MiddlewareService extends AbstractDatabaseAccess {
 
     /**
      * @param $middlewares
-     * @param $plugin
      * @param bool $activate
      *
      * @return Middleware[]
@@ -74,7 +73,7 @@ class MiddlewareService extends AbstractDatabaseAccess {
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function register($middlewares, $plugin = null, $activate = false) {
+    public function register($middlewares, $activate = false) {
         /**
          * @var $result Middleware[]
          */
@@ -86,13 +85,11 @@ class MiddlewareService extends AbstractDatabaseAccess {
                 $element = null;
 
                 if (array_key_exists("class", $middleware)) {
-                    $element = $this->createMiddleware($middleware, $pathName, $plugin, $activate);
+                    $element = $this->createMiddleware($middleware, $pathName, $activate);
                 } elseif (is_array($middleware)) {
                     foreach ($middleware as $key => $value) {
-                        $element = $this->createMiddleware($value, $pathName, $plugin, $activate);
+                        $element = $this->createMiddleware($value, $pathName, $activate);
                     }
-                } else {
-                    // TODO
                 }
 
                 if (isset($element)) {
@@ -107,7 +104,6 @@ class MiddlewareService extends AbstractDatabaseAccess {
     /**
      * @param $middleware
      * @param $pathName
-     * @param null $plugin
      * @param bool $activate
      *
      * @return object|Middleware|null
@@ -115,7 +111,7 @@ class MiddlewareService extends AbstractDatabaseAccess {
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    private function createMiddleware($middleware, $pathName, $plugin = null, $activate = false) {
+    private function createMiddleware($middleware, $pathName, $activate = false) {
         $active = $activate ? 1 : 0;
 
         if ($this->isValid($middleware)) {
@@ -126,9 +122,6 @@ class MiddlewareService extends AbstractDatabaseAccess {
             if(!isset($element)) {
                 $element = Middleware::create(["name" => $pathName,  "class" => $middleware["class"], "active" => $active, "position" => $middleware["position"]]);
 
-                if (isset($plugin)) {
-                    $element->setPlugin($plugin);
-                }
                 $this->entityManager()->persist($element);
                 $this->entityManager()->flush();
             }

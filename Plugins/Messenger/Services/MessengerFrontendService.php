@@ -2,6 +2,10 @@
 
 namespace Messenger\Services;
 
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Exception;
 use Messenger\Abstracts\AbstractMessengerService;
 use Messenger\Models\Conversation;
 
@@ -14,11 +18,11 @@ class MessengerFrontendService extends AbstractMessengerService {
      * @param $firstMessage
      * @param $requested
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Exception
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws Exception
      */
-    public function createNewConversation($requester, $targetId, $title, $firstMessage,$requested) {
+    public function createNewConversation($requester, $targetId, $title, $firstMessage, $requested) {
         $conversation = new Conversation();
         $conversation->setRequester($requester);
         $conversation->setRequested($requested);
@@ -36,7 +40,8 @@ class MessengerFrontendService extends AbstractMessengerService {
     /**
      * @param $userId
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
+     * @throws ORMException
      */
     public function getConversationList($userId) {
         $queryBuilder = $this->entityManager()->createQueryBuilder();

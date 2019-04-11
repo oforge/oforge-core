@@ -95,10 +95,8 @@ class PluginStateService extends AbstractDatabaseAccess {
                 $this->entityManager()->flush();
 
                 if(isset($pluginMiddlewares) && is_array($pluginMiddlewares) && sizeof($pluginMiddlewares) > 0) {
-                    /**
-                     * @var $middlewaresService MiddlewareService
-                     */
-                    $middlewaresService = Oforge()->Services()->get("middleware");
+                    /** @var $middlewaresService MiddlewareService */
+                    $middlewaresService = Oforge()->Services()->get('middleware');
                     $middlewaresService->register($pluginMiddlewares, $plugin);
                 }
             }

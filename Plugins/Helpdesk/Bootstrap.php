@@ -2,13 +2,22 @@
 
 namespace Helpdesk;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use FrontendUserManagement\Services\AccountNavigationService;
 use Helpdesk\Controller\Backend\BackendHelpdeskController;
 use Helpdesk\Controller\Backend\BackendHelpdeskMessengerController;
+use Helpdesk\Controller\Frontend\FrontendHelpdeskController;
+use Helpdesk\Controller\Frontend\FrontendHelpdeskTicketController;
 use Helpdesk\Models\Ticket;
 use Helpdesk\Services\HelpdeskMessengerService;
 use Helpdesk\Services\HelpdeskTicketService;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
+use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 
 class Bootstrap extends AbstractBootstrap {
     /**
@@ -26,6 +35,16 @@ class Bootstrap extends AbstractBootstrap {
                 'name'        => 'backend_helpdesk_messenger',
                 'asset_scope' => 'Backend',
             ],
+            '/account/support' => [
+                'controller'  => FrontendHelpdeskController::class,
+                'name'        => 'frontend_account_support',
+                'asset_scope' => 'Frontend',
+            ],
+            '/account/support/ticket/{id}' => [
+                'controller'  => FrontendHelpdeskTicketController::class,
+                'name'        => 'frontend_account_support_ticket',
+                'asset_scope' => 'Frontend',
+            ],
         ];
 
         $this->services = [
@@ -37,12 +56,23 @@ class Bootstrap extends AbstractBootstrap {
             Ticket::class,
         ];
 
+        $this->dependencies = [
+            \FrontendUserManagement\Bootstrap::class,
+        ];
     }
 
+    /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ConfigElementAlreadyExists
+     * @throws ConfigOptionKeyNotExists
+     * @throws ParentNotFoundException
+     * @throws ServiceNotFoundException
+     */
     public function activate() {
-        /**
-         * @var $sidebarNavigation BackendNavigationService
-         */
+        /** @var $sidebarNavigation BackendNavigationService */
+        /** @var AccountNavigationService $accountNavigation */
+        $accountNavigation = Oforge()->Services()->get('frontend.user.management.account.navigation');
         $sidebarNavigation = Oforge()->Services()->get("backend.navigation");
 
         $sidebarNavigation->put([
@@ -53,5 +83,13 @@ class Bootstrap extends AbstractBootstrap {
             "path"     => "backend_helpdesk",
             "position" => "sidebar",
         ]);
+
+        $accountNavigation->put([
+                "name" => "frontend_account_support",
+                "order" => 1,
+                "icon" => "whatsapp",
+                "path" => "frontend_account_support",
+                "position" => "sidebar",
+            ]);
     }
 }

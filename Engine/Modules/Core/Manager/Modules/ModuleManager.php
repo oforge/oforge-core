@@ -4,14 +4,19 @@ namespace Oforge\Engine\Modules\Core\Manager\Modules;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Noodlehaus\Exception;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Bootstrap;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists;
 use Oforge\Engine\Modules\Core\Exceptions\CouldNotInstallModuleException;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceAlreadyDefinedException;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\Helper;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\Core\Models\Module\Module;
+use Oforge\Engine\Modules\Core\Services\MiddlewareService;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
@@ -49,10 +54,10 @@ class ModuleManager {
      * Initialize all modules
      *
      * @throws CouldNotInstallModuleException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceAlreadyDefinedException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ServiceNotFoundException
+     * @throws ServiceAlreadyDefinedException
      */
     public function init() {
         $startTime = microtime(true) * 1000;
@@ -148,10 +153,10 @@ class ModuleManager {
      *
      * @param $className
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceAlreadyDefinedException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ServiceAlreadyDefinedException
+     * @throws ServiceNotFoundException
      */
     private function initCoreModule($className) {
         $startTime = microtime(true) * 1000;
@@ -208,7 +213,7 @@ class ModuleManager {
      *
      * @param $className
      *
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      */
     protected function register($className) {
         if (is_subclass_of($className, AbstractBootstrap::class)) {
@@ -232,10 +237,11 @@ class ModuleManager {
      *
      * @param $className
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceAlreadyDefinedException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ServiceAlreadyDefinedException
+     * @throws ServiceNotFoundException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists
      */
     protected function initModule($className) {
         if (is_subclass_of($className, AbstractBootstrap::class)) {
@@ -252,8 +258,10 @@ class ModuleManager {
             $endpoints = $instance->getEndpoints();
             Oforge()->Services()->get("endpoints")->register($endpoints);
 
-            $middleware = $instance->getMiddlewares();
-            Oforge()->Services()->get("middleware")->register($middleware, null, true);
+            $middlewares = $instance->getMiddlewares();
+            /** @var MiddlewareService $middlewareService */
+            $middlewareService = Oforge()->Services()->get("middleware");
+            $middlewareService->register($middlewares, true);
 
             /**
              * @var $entry Module
