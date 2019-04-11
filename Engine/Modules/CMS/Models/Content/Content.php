@@ -106,9 +106,9 @@ class Content extends AbstractModel
     }
     
     /**
-     * @return int
+     * @return ContentParent
      */
-    public function getParent(): ?int
+    public function getParent(): ?ContentParent
     {
         return $this->parent;
     }

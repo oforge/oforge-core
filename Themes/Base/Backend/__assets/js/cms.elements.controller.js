@@ -50,9 +50,9 @@ $('#cms_elements_controller_jstree').on('loaded.jstree', function (event, data) 
 $('#cms_elements_controller_jstree').on('move_node.jstree', function (event, data) {
 	console.log("move_node - new position: " + data.position);
 	console.log("move_node - old position: " + data.old_position);
+	console.log("node: " + jsonStringify(data.node));
+	console.log("parent: " + jsonStringify(data.parent));
 	/*
-	console.log("node: " + data.node);
-	console.log("parent: " + data.parent);
 	console.log("position: " + data.position);
 	console.log("old_parent: " + data.old_parent);
 	console.log("old_position: " + data.old_position);
@@ -60,6 +60,27 @@ $('#cms_elements_controller_jstree').on('move_node.jstree', function (event, dat
 	console.log("old_instance: " + data.old_instance);
 	console.log("new_instance: " + data.new_instance);
 	*/
+
+	var node = data.node;
+	var parent = data.parent;
+
+	if (isForeignDND === false && node && node.id) {
+		if (node.id.startsWith("_parent#")) {
+			if (parent && (parent === ("#") || parent.startsWith("_parent#"))) {
+				$('#cms_edit_element_id').val(node.id);
+				$('#cms_edit_element_parent_id').val(parent);
+				$('#cms_edit_element_action').val('move');
+				$('#cms_element_jstree_form').submit();
+			}
+		} else if (node.id.startsWith("_element#")) {
+			if (parent) {
+				$('#cms_edit_element_id').val(node.id);
+				$('#cms_edit_element_parent_id').val(parent);
+				$('#cms_edit_element_action').val('move');
+				$('#cms_element_jstree_form').submit();
+			}
+		}
+	}
 });
 
 $('#cms_elements_controller_jstree').on('select_node.jstree', function (event, data) {
@@ -223,7 +244,7 @@ $(document).ready(function() {
 					// check if this is a dnd operation of a user created content parent folder
 					// if yes only permit it if it is dragged to another user created content parent folder
 					if (op === "move_node" && node && node.id && (node.id.startsWith("_parent#"))) {
-						if (par && par.id && par.id.startsWith("_parent#")) {
+						if (par && par.id && (par.id === "#" || par.id.startsWith("_parent#"))) {
 							return true;
 						} else {
 							return false;
@@ -232,7 +253,11 @@ $(document).ready(function() {
 					// if content elements are dragged to any default content type folder they will always
 					// automatically sorted into their default folder by setting their parent to NULL
 					} else if (op === "move_node" && node && node.id && (node.id.startsWith("_element#"))) {
-						return true;
+						if (par && par.id && !par.id.startsWith("_element#")) {
+							return true;
+						} else {
+							return false;
+						}
 					// deny all other jsTree operations
 					} else {
 						return false;
