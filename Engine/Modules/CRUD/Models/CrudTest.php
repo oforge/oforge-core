@@ -2,6 +2,7 @@
 
 namespace Oforge\Engine\Modules\CRUD\Models;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 
@@ -284,18 +285,18 @@ class CrudTest extends AbstractModel {
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
-    public function getTypeDatetime() : ?\DateTime {
+    public function getTypeDatetime() : ?DateTime {
         return $this->typeDatetime;
     }
 
     /**
-     * @param \DateTime $typeDatetime
+     * @param DateTime $typeDatetime
      *
      * @return CrudTest
      */
-    protected function setTypeDatetime(?\DateTime $typeDatetime) : CrudTest {
+    protected function setTypeDatetime(?DateTime $typeDatetime) : CrudTest {
         $this->typeDatetime = $typeDatetime;
 
         return $this;
@@ -372,5 +373,5 @@ class CrudTest extends AbstractModel {
 
         return $this;
     }
-    
+
 }
