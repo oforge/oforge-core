@@ -2,6 +2,7 @@
 
 namespace Oforge\Engine\Modules\CRUD\Controller\Backend;
 
+use Doctrine\ORM\ORMException;
 use Exception;
 use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
@@ -144,6 +145,7 @@ class BaseCrudController extends SecureBackendController {
      * @param Response $response
      *
      * @return Response
+     * @throws ORMException
      */
     public function indexAction(Request $request, Response $response) {
         $params = $request->getParams();
@@ -249,6 +251,7 @@ class BaseCrudController extends SecureBackendController {
      * @param Response $response
      *
      * @return Response
+     * @throws ORMException
      */
     public function viewAction(Request $request, Response $response) {
         $params = $request->getParams();
@@ -276,6 +279,7 @@ class BaseCrudController extends SecureBackendController {
      * @param Response $response
      *
      * @return Response
+     * @throws ORMException
      * @throws ServiceNotFoundException
      */
     public function updateAction(Request $request, Response $response) {
@@ -321,6 +325,7 @@ class BaseCrudController extends SecureBackendController {
      * @param Response $response
      *
      * @return Response
+     * @throws ORMException
      * @throws ServiceNotFoundException
      */
     public function deleteAction(Request $request, Response $response) {

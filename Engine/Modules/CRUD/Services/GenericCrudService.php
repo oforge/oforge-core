@@ -34,6 +34,7 @@ class GenericCrudService extends AbstractDatabaseAccess {
      * @param array $params
      *
      * @return array
+     * @throws ORMException
      */
     public function list(string $class, array $params = []) : array {
         $repository = $this->getRepository($class);
@@ -58,6 +59,7 @@ class GenericCrudService extends AbstractDatabaseAccess {
      * @param int $id
      *
      * @return array|null
+     * @throws ORMException
      */
     public function getById(string $class, int $id) {
         $repo   = $this->getRepository($class);
