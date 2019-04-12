@@ -2,6 +2,7 @@
 
 namespace Oforge\Engine\Modules\CMS\Services;
 
+use Oforge\Engine\Modules\I18n\Models\Language;
 use Oforge\Engine\Modules\CMS\Models\Page\Page;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 
@@ -35,6 +36,28 @@ class PageTreeService extends AbstractDatabaseAccess
     }
     
     /**
+     * Returns the language found as an associative array
+     * @param Language $languageEntity
+     *
+     * @return array|NULL Array filled with available language data
+     */
+    private function getLanguageArray(?Language $languageEntity)
+    {
+        if (!$languageEntity)
+        {
+            return NULL;
+        }
+        
+        $language           = [];
+        $language["id"]     = $languageEntity->getId();
+        $language["iso"]    = $languageEntity->getIso();
+        $language["name"]   = $languageEntity->getName();
+        $language["active"] = $languageEntity->isActive();
+        
+        return $language;
+    }
+    
+    /**
      * Returns all found pages as an associative array
      *
      * @return array|NULL Array filled with available pages including path data
@@ -52,10 +75,10 @@ class PageTreeService extends AbstractDatabaseAccess
         foreach($pageEntities as $pageEntity)
         {
             $page = [];
-            $page["id"] = $pageEntity->getId();
+            $page["id"]     = $pageEntity->getId();
             $page["layout"] = $pageEntity->getLayout();
-            $page["site"] = $pageEntity->getSite();
-            $page["name"] = $pageEntity->getName();
+            $page["site"]   = $pageEntity->getSite();
+            $page["name"]   = $pageEntity->getName();
             $page["parent"] = $pageEntity->getParent();
             
             $pathEntities = $pageEntity->getPaths();
@@ -64,12 +87,11 @@ class PageTreeService extends AbstractDatabaseAccess
             foreach($pathEntities as $pathEntity)
             {
                 $path = [];
-                $path["id"] = $pathEntity->getId();
-                // TODO: decode Language-Entity to Array
-                $path["language"] = $pathEntity->getLanguage();
-                $path["path"] = $pathEntity->getPath();
+                $path["id"]       = $pathEntity->getId();
+                $path["language"] = $this->getLanguageArray($pathEntity->getLanguage());
+                $path["path"]     = $pathEntity->getPath();
                 
-                $paths[] = $path;
+                $paths[$path["language"]["id"]] = $path;
             }
             
             $page["paths"] = $paths;
@@ -98,20 +120,20 @@ class PageTreeService extends AbstractDatabaseAccess
         foreach ($pages as $page)
         {
             $jsTreePages[] = [
-                "id" => $page["id"],
+                "id"     => $page["id"],
                 "parent" => $page["parent"] ? $page["parent"] : "#",
-                "text" => $page["name"]
+                "text"   => $page["name"]
             ];
         }
         
         $jsTreeJSON = [
             "core" => [
-                "multiple" => FALSE,
-                "animation" => 0,
+                "multiple"       => FALSE,
+                "animation"      => 0,
                 "check_callback" => TRUE,
-                "force_text" => TRUE,
-                "themes" => ["stripes" => FALSE],
-                "data" => $jsTreePages
+                "force_text"     => TRUE,
+                "themes"         => ["stripes" => FALSE],
+                "data"           => $jsTreePages
             ]
         ];
         

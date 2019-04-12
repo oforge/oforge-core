@@ -8,20 +8,23 @@
 
 namespace Oforge\Engine\Modules\CMS\Controller\Frontend;
 
+use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\CMS\Services\PageService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
 
 class PageController extends AbstractController {
-    
+
     /**
      * @param Request $request
      * @param Response $response
      *
      * @return Response
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ServiceNotFoundException
+     * @throws ORMException
      */
     public function indexAction(Request $request, Response $response) {
 
@@ -31,14 +34,11 @@ class PageController extends AbstractController {
         $pagePathService = Oforge()->Services()->get("page.path");
         $path = $request->getUri()->getPath();
 
-        $page = null;
-        if ($pagePathService->hasPath($path)) {
-            $page = $pagePathService->getPage($path);
-            if(isset($path)) {
-                $normalized = $pagePathService->normalize($page);
-                Oforge()->View()->assign($normalized);
-                return $response;
-            }
+        $cmsContent = $pagePathService->loadContentForPagePath($path);
+
+        if ($cmsContent !== null) {
+            Oforge()->View()->assign(['content' => $cmsContent]);
+            return $response;
         }
 
         /** @var Router $router */

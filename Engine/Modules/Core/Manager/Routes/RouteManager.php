@@ -3,6 +3,7 @@
 namespace Oforge\Engine\Modules\Core\Manager\Routes;
 
 use Oforge\Engine\Modules\Core\Helper\StringHelper;
+use Oforge\Engine\Modules\Core\Middleware\DebugModeMiddleware;
 use Oforge\Engine\Modules\Core\Models\Endpoints\Endpoint;
 use Oforge\Engine\Modules\Core\Models\Plugin\Middleware;
 use Oforge\Engine\Modules\Core\Services\MiddlewareService;
@@ -76,7 +77,6 @@ class RouteManager {
                 if ( preg_match( $pattern, $endpointName ) ) {
                     $activeMiddlewares = $middlewareService->getActive( $middlewareName );
                     $slimRoute->add( new MiddlewarePluginManager( $activeMiddlewares ) );
-                    break;
                 }
             }
 
@@ -84,6 +84,7 @@ class RouteManager {
             $slimRoute->add( new MiddlewarePluginManager( $activeMiddlewares ) );
             $slimRoute->add( new RenderMiddleware() );
             $slimRoute->add( new RouteMiddleware( $endpoint ) );
+            $slimRoute->add( new DebugModeMiddleware);
             $slimRoute->add( new SessionMiddleware());
         }
     }

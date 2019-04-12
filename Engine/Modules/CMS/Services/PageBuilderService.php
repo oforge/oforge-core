@@ -2,6 +2,7 @@
 
 namespace Oforge\Engine\Modules\CMS\Services;
 
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\PersistentCollection;
 use Oforge\Engine\Modules\CMS\Abstracts\AbstractContentType;
 use Oforge\Engine\Modules\CMS\Models\Page\PagePath;
@@ -12,7 +13,6 @@ use Oforge\Engine\Modules\CMS\Models\Page\PageContent;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentTypeGroup;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
 use Oforge\Engine\Modules\CMS\Models\Content\Content;
-use Oforge\Engine\Modules\CMS\Models\ContentTypes\Row;
 
 class PageBuilderService extends AbstractDatabaseAccess
 {
@@ -20,12 +20,13 @@ class PageBuilderService extends AbstractDatabaseAccess
     {
         parent::__construct(['pageContent' => PageContent::class, 'page' => Page::class]);
     }
-    
+
     /**
      * Return page entity for given page id
      * @param int $pathId
      *
      * @return PageContent[]|NULL
+     * @throws ORMException
      */
     private function getPageContentEntities(int $pathId)
     {
@@ -37,12 +38,13 @@ class PageBuilderService extends AbstractDatabaseAccess
         }
         return NULL;
     }
-    
+
     /**
      * Return page entity for given page id
      * @param int $id
-     * 
+     *
      * @return Page|NULL
+     * @throws ORMException
      */
     private function getPageEntity(int $id)
     {
@@ -148,12 +150,13 @@ class PageBuilderService extends AbstractDatabaseAccess
         
         return $childContents;
     }
-    
+
     /**
      * Returns all found page contents as an associative array
      * @param int $pathId
      *
      * @return array|NULL Array filled with available page contents
+     * @throws ORMException
      */
     private function getPageContentArray(int $pathId)
     {
@@ -199,12 +202,13 @@ class PageBuilderService extends AbstractDatabaseAccess
         
         return $language;
     }
-    
-     /**
+
+    /**
      * Returns all found page paths as an associative array
      * @param PersistentCollection|PagePath[]|NULL $pathEntities
      *
      * @return array|NULL Array filled with available paths
+     * @throws ORMException
      */
     private function getPathArray(?PersistentCollection $pathEntities)
     {
@@ -222,7 +226,7 @@ class PageBuilderService extends AbstractDatabaseAccess
             $path["path"]         = $pathEntity->getPath();
             $path["pageContent"]  = $this->getPageContentArray($path["id"]);
             
-            $paths[] = $path;
+            $paths[$path["language"]["id"]] = $path;
         }
         
         return $paths;
@@ -233,6 +237,7 @@ class PageBuilderService extends AbstractDatabaseAccess
      * @param int $id
      *
      * @return array|NULL Array filled with available page data
+     * @throws ORMException
      */
     public function getPageArray(int $id)
     {
@@ -255,7 +260,7 @@ class PageBuilderService extends AbstractDatabaseAccess
     }
     
     /**
-     * Returns the current element id based on element hierachy and own id
+     * Returns the current element id based on element hierarchy and own id
      * @param string element id
      * @param int content id
      *
@@ -265,12 +270,12 @@ class PageBuilderService extends AbstractDatabaseAccess
     {
         return $elementId . (!empty($elementId) ? '-' : '') . $contentId;
     }
-    
+
     /**
      * Creates and returns an array with prepared twig content data for page builder
-     * @param string element id to search for
-     * @param string element id for history level data (internal use only)
-     *
+     * @param array|null $pageContent
+     * @param string $elementId
+     * @param string $_elementId
      * @return array|NULL Array filled with twig content data for page builder
      */
     private function createContentDataArray(?array $pageContent, string $elementId, string $_elementId)
@@ -279,14 +284,17 @@ class PageBuilderService extends AbstractDatabaseAccess
         {
             return NULL;
         }
-        
+
+        /** @var AbstractContentType $content */
         $content = new $pageContent["content"]["type"]["classPath"];
         
         $content->load($pageContent["content"]["id"]);
         
         $data = [];
-        $data["id"] = $this->createCurrentElementId($_elementId, $pageContent["content"]["id"]);
-        $data["se"] = $elementId;
+        $data["id"]    = $this->createCurrentElementId($_elementId, $pageContent["content"]["id"]);
+        $data["se"]    = $elementId;
+        $data["order"] = $pageContent["order"];
+        $data["path"] = $pageContent["content"]["type"]["path"];
         
         $data = array_merge($data, $content->getRenderData());
         
@@ -296,7 +304,7 @@ class PageBuilderService extends AbstractDatabaseAccess
             
             if (is_array($childDatas))
             {
-                $data["childs"]= $this->getContentDataArray($this->getChildContentDataArray($childDatas), $elementId, $data["id"]);
+                $data["childs"] = $this->getContentDataArray($this->getChildContentDataArray($childDatas), $elementId, $data["id"]);
             }
         }
         
@@ -356,11 +364,12 @@ class PageBuilderService extends AbstractDatabaseAccess
                 return $this->createContentDataArray($pageContent, $elementId, $_elementId);
             }
             
-            // if element was not found but is a container type recursivly call getContentDataArrayById
-            if ($pageContent["content"]["type"]["group"]["name"] == "container")
+            // if element was not found but is a container type recursively call getContentDataArrayById
+            else if ($pageContent["content"]["type"]["group"]["name"] == "container")
             {
+                /** @var AbstractContentType $content */
                 $content = new $pageContent["content"]["type"]["classPath"];
-                
+
                 $content->load($pageContent["content"]["id"]);
                 
                 if ($content->isContainer())
@@ -369,12 +378,17 @@ class PageBuilderService extends AbstractDatabaseAccess
                     
                     if (is_array($childDatas))
                     {
-                        return $this->getContentDataArrayById($this->getChildContentDataArray($childDatas), $elementId, $this->createCurrentElementId($_elementId, $pageContent["content"]["id"]));
+                        $data = $this->getContentDataArrayById($this->getChildContentDataArray($childDatas), $elementId, $this->createCurrentElementId($_elementId, $pageContent["content"]["id"]));
+
+                        if ($data)
+                        {
+                            return $data;
+                        }
                     }
                 }
             }
         }
-        
+
         return NULL;
-   }
+    }
 }

@@ -3,10 +3,21 @@
 namespace Oforge\Engine\Modules\TemplateEngine\Core\Manager;
 
 use Oforge\Engine\Modules\Core\Abstracts\AbstractViewManager;
+use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
+use Oforge\Engine\Modules\TemplateEngine\Core\Twig\TwigFlash;
 
+/**
+ * Class ViewManager
+ *
+ * @package Oforge\Engine\Modules\TemplateEngine\Core\Manager
+ */
 class ViewManager extends AbstractViewManager {
+    /** @var ViewManager $instance */
     protected static $instance;
+    /** @var array $viewData */
     private $viewData = [];
+    /** @var TwigFlash $twigFlash */
+    private $twigFlash;
 
     /**
      * Create a singleton instance of the ViewManager
@@ -22,6 +33,17 @@ class ViewManager extends AbstractViewManager {
     }
 
     /**
+     * @inheritDoc
+     */
+    public function Flash() : TwigFlash {
+        if (!isset($this->twigFlash)) {
+            $this->twigFlash = new TwigFlash();
+        }
+
+        return $this->twigFlash;
+    }
+
+    /**
      * Assign Data from a Controller to a Template
      *
      * @param array $data
@@ -29,7 +51,8 @@ class ViewManager extends AbstractViewManager {
      * @return ViewManager
      */
     public function assign($data) {
-        $this->viewData = $this->array_merge_recursive_ex($this->viewData, $data);
+        $this->viewData = ArrayHelper::mergeRecursive($this->viewData, $data);
+
         return $this;
     }
 
@@ -41,42 +64,6 @@ class ViewManager extends AbstractViewManager {
      */
     public function fetch() {
         return $this->viewData;
-    }
-
-    /**
-     * @param string $type
-     * @param string $message
-     *
-     * @return mixed|void
-     */
-    public function addFlashMessage(string $type, string $message) {
-        if (isset($_SESSION)) {
-            $_SESSION['flashMessage'] = ['type' => $type, 'message' => $message];
-        }
-    }
-
-    /**
-     * @param array $array1
-     * @param array $array2
-     *
-     * @return array
-     */
-    function array_merge_recursive_ex(array & $array1, array & $array2) {
-        $merged = $array1;
-
-        foreach ($array2 as $key => & $value) {
-            if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
-                $merged[$key] = $this->array_merge_recursive_ex($merged[$key], $value);
-            } elseif (is_numeric($key)) {
-                if (!in_array($value, $merged)) {
-                    $merged[] = $value;
-                }
-            } else {
-                $merged[$key] = $value;
-            }
-        }
-
-        return $merged;
     }
 
     /**

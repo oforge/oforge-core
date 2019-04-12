@@ -1,5 +1,4 @@
 <?php
-
 namespace FrontendUserManagement\Middleware;
 
 use Oforge\Engine\Modules\Auth\Middleware\SecureMiddleware;

@@ -8,16 +8,31 @@
 
 namespace FrontendUserManagement\Controller\Frontend;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Services\PasswordResetService;
+use Interop\Container\Exception\ContainerException;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Auth\Services\PasswordService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\Session\Services\SessionManagementService;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
 
+/**
+ * Class ForgotPasswordController
+ *
+ * @package FrontendUserManagement\Controller\Frontend
+ */
 class ForgotPasswordController extends AbstractController {
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     */
     public function indexAction(Request $request, Response $response) {
         // show the email form for requesting a reset link
     }
@@ -27,27 +42,26 @@ class ForgotPasswordController extends AbstractController {
      * @param Response $response
      *
      * @return Response
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Interop\Container\Exception\ContainerException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ContainerException
+     * @throws ServiceNotFoundException
      */
     public function processAction(Request $request, Response $response) {
         /** @var PasswordResetService $passwordResetService */
         /** @var Router $router */
-        $passwordResetService   = Oforge()->Services()->get('password.reset');
-        $router                 = Oforge()->Container()->get('router');
-        $body                   = $request->getParsedBody();
-        $email                  = $body['forgot-password__email'];
-        $token                  = $body['token'];
-        $uri                    = $router->pathFor('frontend_forgot_password');
+        $passwordResetService = Oforge()->Services()->get('password.reset');
+        $router               = Oforge()->Container()->get('router');
+        $body                 = $request->getParsedBody();
+        $email                = $body['forgot-password__email'];
+        $token                = $body['token'];
+        $uri                  = $router->pathFor('frontend_forgot_password');
 
         /**
          * no token was sent
          */
         if (!isset($body['token']) || empty($body['token'])) {
-            Oforge()->View()->addFlashMessage('warning', 'The data has been sent from an invalid form.');
-
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('form_invalid_token', 'The data has been sent from an invalid form.'));
             Oforge()->Logger()->get()->addWarning('Someone tried to do a backend login with a form without csrf token! Redirecting to backend login.');
 
             return $response->withRedirect($uri, 302);
@@ -57,9 +71,9 @@ class ForgotPasswordController extends AbstractController {
          * invalid token was sent
          */
         if (!hash_equals($_SESSION['token'], $body['token'])) {
-            Oforge()->View()->addFlashMessage('warning', 'The data has been sent from an invalid form.');
-
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('form_invalid_token', 'The data has been sent from an invalid form.'));
             Oforge()->Logger()->get()->addWarning('Someone tried a backend login without a valid form csrf token! Redirecting back to login.');
+
             return $response->withRedirect($uri, 302);
         }
 
@@ -67,7 +81,7 @@ class ForgotPasswordController extends AbstractController {
          * no email body was sent
          */
         if (!$email) {
-            Oforge()->View()->addFlashMessage('warning', 'Invalid form data.');
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('form_invalid_data', 'Invalid form data.'));
 
             return $response->withRedirect($uri, 302);
         }
@@ -76,7 +90,7 @@ class ForgotPasswordController extends AbstractController {
          * Email not found
          */
         if (!$passwordResetService->emailExists($email)) {
-            Oforge()->View()->addFlashMessage('warning', 'Email not found.');
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('user_mail_missing', 'Email not found.'));
 
             return $response->withRedirect($uri, 302);
         }
@@ -87,16 +101,17 @@ class ForgotPasswordController extends AbstractController {
 
         // TODO: add email snippets
         $mailOptions = [
-            'to' => [$email => $email],
+            'to'      => [$email => $email],
             'subject' => 'Oforge | Your password reset!',
-            'body' => 'You want to reset your password. Your password reset link is: '.$passwordResetLink
+            'template' => 'ResetPassword.twig',
         ];
+        $templateData = ['passwordResetLink'  => $passwordResetLink];
 
-        $mailService->send($mailOptions);
+        $mailService->send($mailOptions, $templateData);
 
         $uri = $router->pathFor('frontend_login');
-
-        Oforge()->View()->addFlashMessage('success', 'You will receive an email with your password change information.');
+        Oforge()->View()->Flash()
+                ->addMessage('success', I18N::translate('password_reset_mail_send', 'You will receive an email with your password change information.'));
 
         return $response->withRedirect($uri, 302);
     }
@@ -106,23 +121,25 @@ class ForgotPasswordController extends AbstractController {
      * @param Response $response
      *
      * @return Response
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
-     * @throws \Interop\Container\Exception\ContainerException
+     * @throws ServiceNotFoundException
+     * @throws ContainerException
      */
     public function resetAction(Request $request, Response $response) {
         // show the reset password form
+
         /** @var PasswordResetService $passwordResetService */
         /** @var Router $router */
-        $passwordResetService   = Oforge()->Services()->get('password.reset');
-        $router                 = Oforge()->Container()->get('router');
-        $guid                   = $request->getParam('reset');
-        $uri                    = $router->pathFor('frontend_login');
+        $passwordResetService = Oforge()->Services()->get('password.reset');
+        $router               = Oforge()->Container()->get('router');
+        $guid                 = $request->getParam('reset');
+        $uri                  = $router->pathFor('frontend_login');
 
         /**
          * No guid
          */
         if (!$guid) {
-            Oforge()->View()->addFlashMessage('warning', 'Invalid link.');
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('password_reset_invalid_link', 'Invalid link.'));
+
             return $response->withRedirect($uri, 302);
         }
 
@@ -130,7 +147,8 @@ class ForgotPasswordController extends AbstractController {
          * Reset link is not valid
          */
         if (!$passwordResetService->isResetLinkValid($guid)) {
-            Oforge()->View()->addFlashMessage('warning', 'Invalid link.');
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('password_reset_invalid_link', 'Invalid link.'));
+
             return $response->withRedirect($uri, 302);
         }
 
@@ -140,40 +158,37 @@ class ForgotPasswordController extends AbstractController {
     }
 
     /**
-     * Change the password
-     *
      * @param Request $request
      * @param Response $response
      *
      * @return Response
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ServiceNotFoundException
      */
     public function changeAction(Request $request, Response $response) {
-        /** @var SessionManagementService $sessionManagementService */
-        /** @var PasswordResetService $passwordResetService */
-        /** @var AuthService $authService */
+        /** @var SessionManagementService $sessionManagementService */ /** @var PasswordResetService $passwordResetService */ /** @var AuthService $authService */
         /** @var PasswordService $passwordService */
-        $sessionManagementService   = Oforge()->Services()->get('session.management');
-        $passwordResetService       = Oforge()->Services()->get('password.reset');
-        $authService                = Oforge()->Services()->get('auth');
-        $passwordService            = Oforge()->Services()->get('password');
-        $router                     = Oforge()->App()->getContainer()->get('router');
-        $body                       = $request->getParsedBody();
-        $guid                       = $body['guid'];
-        $token                      = $body['token'];
-        $password                   = $body['password_change'];
-        $passwordConfirm            = $body['password_change_confirm'];
-        $uri                        = $router->pathFor('frontend_login');
-        $jwt                        = null;
-        $user                       = null;
+        $sessionManagementService = Oforge()->Services()->get('session.management');
+        $passwordResetService     = Oforge()->Services()->get('password.reset');
+        $authService              = Oforge()->Services()->get('auth');
+        $passwordService          = Oforge()->Services()->get('password');
+        $router                   = Oforge()->App()->getContainer()->get('router');
+        $body                     = $request->getParsedBody();
+        $guid                     = $body['guid'];
+        $token                    = $body['token'];
+        $password                 = $body['password_change'];
+        $passwordConfirm          = $body['password_change_confirm'];
+        $uri                      = $router->pathFor('frontend_login');
+        $jwt                      = null;
+        $user                     = null;
 
         /**
          * no valid form data found
          */
-        if (!$guid||!$token||!$password||!$passwordConfirm) {
-            Oforge()->View()->addFlashMessage('warning', 'Invalid form data.');
+        if (!$guid || !$token || !$password || !$passwordConfirm) {
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('form_invalid_data', 'Invalid form data.'));
+
             return $response->withRedirect($uri, 302);
         }
 
@@ -181,8 +196,9 @@ class ForgotPasswordController extends AbstractController {
          * invalid token was sent
          */
         if (!hash_equals($_SESSION['token'], $body['token'])) {
-            Oforge()->View()->addFlashMessage('warning', 'The data has been sent from an invalid form.');
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('form_invalid_token', 'The data has been sent from an invalid form.'));
             Oforge()->Logger()->get()->addWarning('Someone tried a backend login without a valid form csrf token! Redirecting back to login.');
+
             return $response->withRedirect($uri, 302);
         }
 
@@ -190,18 +206,20 @@ class ForgotPasswordController extends AbstractController {
          * Passwords are not identical
          */
         if ($password !== $passwordConfirm) {
-            Oforge()->View()->addFlashMessage('warning', 'Passwords do not match.');
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('form_password_mismatch', 'Passwords do not match.'));
+
             return $response->withRedirect($uri, 302);
         }
 
         $password = $passwordService->hash($password);
-        $user = $passwordResetService->changePassword($guid, $password);
+        $user     = $passwordResetService->changePassword($guid, $password);
 
         /*
          * User not found
          */
         if (!$user) {
-            Oforge()->View()->addFlashMessage('warning', 'User not found.');
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('user_not_found', 'User not found.'));
+
             return $response->withRedirect($uri, 302);
         }
 
@@ -211,17 +229,19 @@ class ForgotPasswordController extends AbstractController {
          * $jwt is null if the login credentials are incorrect
          */
         if (!isset($jwt)) {
-            Oforge()->View()->addFlashMessage('warning', 'Invalid login credentials.');
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('invalid_login_credentials', 'Invalid login credentials.'));
+
             return $response->withRedirect($uri, 302);
         }
 
         $sessionManagementService->regenerateSession();
         $_SESSION['auth'] = $jwt;
 
-        $uri = $router->pathFor('frontend_profile');
-
-        Oforge()->View()->addFlashMessage('success', 'You have successfully changed your password. You are now logged in.');
+        $uri = $router->pathFor('frontend_account_dashboard');
+        Oforge()->View()->Flash()->addMessage('success',
+            I18N::translate('password_changed_successfully', 'You have successfully changed your password. You are now logged in.'));
 
         return $response->withRedirect($uri, 302);
     }
+
 }

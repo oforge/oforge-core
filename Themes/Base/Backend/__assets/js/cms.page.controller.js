@@ -57,6 +57,9 @@ $('[data-pb-id]').each(
 			&& $(this).attr('data-pb-id').startsWith($(this).attr('data-pb-se'))
 			&& $(this).attr('data-pb-id').replace(regularExpression, '').indexOf('-') === -1
 		) {
+			// add delete button to element
+			$(this).append('<div class="content-type-delete-button" onclick="deleteContentType(event, this)"><img src="/Themes/Base/Backend/__assets/img/pagebuilder/delete.svg"></div>');
+
 			// mark selectable elements in page builder on mouse hover
 			$(this).hover(
 				function() {
@@ -89,6 +92,55 @@ $('#cms-page-builder-create-new-root-page').click(
 	}
 );
 
+// content type drag 'n drop functionality
+function dragContentType(event) {
+	console.log("Dragging content type id: " + $(event.target).attr('data-ct-id'));
+	event.dataTransfer.setData('text', $(event.target).attr('data-ct-id'));
+}
+
+function dragOverPlaceholder(event) {
+	event.preventDefault();
+	console.log("Dragged over placeholder with order: " + $(event.target).attr('data-pb-order'));
+	$(event.target).addClass("content-type-edit-placeholder-drag-over");
+}
+
+function dragLeavePlaceholder(event) {
+	event.preventDefault();
+	console.log("Drag leaving placeholder with order: " + $(event.target).attr('data-pb-order'));
+	$(event.target).removeClass("content-type-edit-placeholder-drag-over");
+}
+
+function dropOverPlaceholder(event) {
+	event.preventDefault();
+	console.log("Dropped on placeholder with order: " + $(event.target).attr('data-pb-order'));
+	$(event.target).removeClass("content-type-edit-placeholder-drag-over");
+	
+	var data = event.dataTransfer.getData("text");
+	
+	$('#cms_page_create_content_with_type_id').val(data);
+	$('#cms_page_create_content_at_order_index').val($(event.target).attr('data-pb-order'));
+	$('#cms_page_selected_action').val('create');
+	$('#cms_page_builder_form').submit();
+}
+
+function deleteContentType(event, element) {
+	if (event.stopPropagation) {
+		event.stopPropagation();
+	} else {
+		event.cancelBubble = true;
+	}
+
+	console.log("-----------");
+	console.log("element id: " + $(element).parent().attr('data-pb-id'));
+	console.log("selected element: " + $(element).parent().attr('data-pb-se'));
+	console.log("element order: " + $(element).parent().attr('data-pb-order'));
+	
+	$('#cms_page_delete_content_with_id').val($(element).parent().attr('data-pb-id'));
+	$('#cms_page_delete_content_at_order_index').val($(element).parent().attr('data-pb-order'));
+	$('#cms_page_selected_action').val('delete');
+	$('#cms_page_builder_form').submit();
+}
+
 // on edit cancel button event
 $('#cms-page-builder-cancel').click(
 	function() {
@@ -117,11 +169,15 @@ $('#cms-page-builder-submit').click(
 
 // adopt cms content builder containers to parents height on window resize event
 function resizePageBuilder() {
-	var calculatedHeight = $('.main-footer').position().top - $('#page_builder_container_wrapper').position().top;
+	var calculatedHeight = window.innerHeight - $('#page_builder_container_wrapper').position().top - $('.main-footer').outerHeight(true) - $('.content').css('padding-top').replace('px', '') - $('.content').css('padding-bottom').replace('px', '');
+	
+	$('#page_builder_container_wrapper').height(calculatedHeight);
 	
 	$('#cms_page_jstree_container').height(calculatedHeight);
-	$('#page_builder_container').height(calculatedHeight);
+	$('#cms_page_builder_container').height(calculatedHeight);
 	$('#cms_content_type_list_container').height(calculatedHeight);
+	
+	$('#cms_content_type_editor_wrapper').height(calculatedHeight - $('#cms_content_type_editor_wrapper').position().top);
 }
 
 // bind functions to window resize event
@@ -188,10 +244,13 @@ $(document).ready(function() {
     if ($('#cms_page_builder_form').length && $('#cms_page_richtext_editor').length) {
     	$('#cms_page_builder_form').submit(
 	        function() {
-	            $('#cms_page_richtext_text').val($('#cms_page_richtext_editor').val());
+	            $('#cms_page_richtext_text').val(quill.root.innerHTML);
 	        }
 		);
-		$('#cms_page_richtext_editor').wysihtml5();
+    	
+    	const quill = new Quill('#cms_page_richtext_editor', {
+			theme: 'snow'
+		});
     }
     
     resizePageBuilder();
