@@ -15,7 +15,6 @@ use Oforge\Engine\Modules\I18n\Controller\Backend\I18n\SnippetsController;
 use Oforge\Engine\Modules\I18n\Models\Language;
 use Oforge\Engine\Modules\I18n\Models\Snippet;
 use Oforge\Engine\Modules\I18n\Services\InternationalizationService;
-use Oforge\Engine\Modules\I18n\Services\LanguageIdentificationService;
 use Oforge\Engine\Modules\I18n\Services\LanguageService;
 
 /**
@@ -32,9 +31,8 @@ class Bootstrap extends AbstractBootstrap {
         ];
 
         $this->services = [
-            'i18n'                => InternationalizationService::class,
-            'languages'           => LanguageService::class,
-            'language.identifier' => LanguageIdentificationService::class,
+            'i18n'          => InternationalizationService::class,
+            'i18n.language' => LanguageService::class,
         ];
 
         $this->models = [
@@ -53,7 +51,7 @@ class Bootstrap extends AbstractBootstrap {
      */
     public function install() {
         /** @var LanguageService $languageService */
-        $languageService = Oforge()->Services()->get('languages');
+        $languageService = Oforge()->Services()->get('i18n.language');
         $languageService->create([
             'iso'  => 'en',
             'name' => 'English',

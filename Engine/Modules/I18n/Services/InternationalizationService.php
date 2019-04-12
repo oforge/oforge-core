@@ -15,19 +15,19 @@ use Oforge\Engine\Modules\I18n\Models\Snippet;
 class InternationalizationService extends AbstractDatabaseAccess {
 
     public function __construct() {
-        parent::__construct(['default' => Snippet::class]);
+        parent::__construct(Snippet::class);
     }
 
     /**
-     * @param $key
-     * @param $language
-     * @param null $defaultValue
+     * @param string $key
+     * @param string $language
+     * @param string|null $defaultValue
      *
      * @return string
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function get($key, $language, $defaultValue = null) {
+    public function get(string $key, string $language, ?string $defaultValue = null) {
         /** @var Snippet $snippet */
         $snippet = $this->repository()->findOneBy([
             'name'  => $key,
@@ -37,7 +37,7 @@ class InternationalizationService extends AbstractDatabaseAccess {
             $snippet = Snippet::create([
                 'name'  => $key,
                 'scope' => $language,
-                'value' => $defaultValue ? : $key,
+                'value' => isset($defaultValue) ? $defaultValue : $key,
             ]);
             $this->entityManager()->persist($snippet);
             $this->entityManager()->flush($snippet);
@@ -45,4 +45,5 @@ class InternationalizationService extends AbstractDatabaseAccess {
 
         return $snippet->getValue();
     }
+
 }

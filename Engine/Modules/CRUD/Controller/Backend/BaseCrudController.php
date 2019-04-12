@@ -208,7 +208,6 @@ class BaseCrudController extends SecureBackendController {
      * @param Response $response
      *
      * @return Response
-     * @throws ServiceNotFoundException
      */
     public function createAction(Request $request, Response $response) {
         $params = $request->getParams();
@@ -280,7 +279,6 @@ class BaseCrudController extends SecureBackendController {
      *
      * @return Response
      * @throws ORMException
-     * @throws ServiceNotFoundException
      */
     public function updateAction(Request $request, Response $response) {
         $params = $request->getParams();
@@ -326,7 +324,6 @@ class BaseCrudController extends SecureBackendController {
      *
      * @return Response
      * @throws ORMException
-     * @throws ServiceNotFoundException
      */
     public function deleteAction(Request $request, Response $response) {
         $params = $request->getParams();
@@ -410,8 +407,6 @@ class BaseCrudController extends SecureBackendController {
      * Handle update action on crud index.
      *
      * @param array $params
-     *
-     * @throws ServiceNotFoundException
      */
     protected function handleIndexUpdate(array $params) {
         $list = $params['data'];
@@ -482,5 +477,3 @@ class BaseCrudController extends SecureBackendController {
     }
 
 }
-
-

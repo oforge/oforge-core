@@ -4,8 +4,8 @@ namespace Oforge\Engine\Modules\CRUD;
 
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
-use Oforge\Engine\Modules\CRUD\Controller\Backend\CRUD\Test\ReadController;
-use Oforge\Engine\Modules\CRUD\Controller\Backend\CRUD\Test\WriteController;
+// use Oforge\Engine\Modules\CRUD\Controller\Backend\CRUD\Test\ReadController;
+// use Oforge\Engine\Modules\CRUD\Controller\Backend\CRUD\Test\WriteController;
 use Oforge\Engine\Modules\CRUD\Models\CrudTest;
 use Oforge\Engine\Modules\CRUD\Services\GenericCrudService;
 
@@ -18,8 +18,8 @@ class Bootstrap extends AbstractBootstrap {
 
     public function __construct() {
         $this->endpoints = [
-            '/backend/crudtest/read'  => ReadController::getBootstrapEndpointsArray(),
-            '/backend/crudtest/write' => WriteController::getBootstrapEndpointsArray(),
+            // '/backend/crudtest/read'  => ReadController::getBootstrapEndpointsArray(),
+            // '/backend/crudtest/write' => WriteController::getBootstrapEndpointsArray(),
         ];
         $this->services  = [
             'crud' => GenericCrudService::class,

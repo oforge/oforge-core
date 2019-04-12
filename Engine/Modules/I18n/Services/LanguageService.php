@@ -20,25 +20,70 @@ use ReflectionException;
 class LanguageService extends AbstractDatabaseAccess {
 
     public function __construct() {
-        parent::__construct(['default' => Language::class]);
+        parent::__construct(Language::class);
     }
 
     /**
      * @param array $criteria
      *
      * @return array
+     * @throws ORMException
      */
     public function list(array $criteria = []) {
         return $this->repository()->findBy($criteria);
     }
 
     /**
-     * @param int $criteria
+     * @param int $id
      *
-     * @return ?Language
+     * @return Language|null
+     * @throws ORMException
      */
     public function get(int $id) {
-        return $this->repository()->findOneBy(['id' => $id]);
+        /** @var Language|null $language */
+        $language = $this->repository()->findOneBy(['id' => $id]);
+
+        return $language;
+    }
+
+    /**
+     * Returns list of active languages, ordered by name.
+     *
+     * @return Language[]
+     * @throws ORMException
+     */
+    public function getActiveLanguages() {
+        return $this->repository()->findBy(['active' => true], ['name' => 'ASC']);
+    }
+
+    /**
+     * @param $context
+     *
+     * @return string
+     */
+    public function getCurrentLanguage($context) {
+        if (isset($context['meta'])
+            && isset($context['meta']['route'])
+            && isset($context['meta']['route']['assetScope'])
+            && isset($context['meta']['route']['languageId'])
+            && strtolower($context['meta']['route']['assetScope']) !== 'backend') {
+            return $context['meta']['route']['languageId'];
+        }
+        if (isset($_SESSION) && isset($_SESSION['config']) && isset($_SESSION['config']['language'])) {
+            return $_SESSION['config']['language'];
+        }
+
+        try {
+            /** @var ?Language $language */
+            $language = $this->repository()->findOneBy(['active' => true]);
+            if (isset($language)) {
+                return $language->getIso();
+            }
+        } catch (ORMException $exception) {
+            Oforge()->Logger()->get()->error($exception->getMessage(), $exception->getTrace());
+        }
+
+        return 'en';
     }
 
     /**
@@ -106,6 +151,7 @@ class LanguageService extends AbstractDatabaseAccess {
      * @return bool
      * @throws ConfigElementAlreadyExists
      * @throws ConfigOptionKeyNotExists
+     * @throws ORMException
      */
     protected function isValid($options, $checkExisting) {
         // Check if required keys are within the options
