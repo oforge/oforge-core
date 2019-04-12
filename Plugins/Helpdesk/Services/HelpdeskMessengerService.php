@@ -2,6 +2,10 @@
 
 namespace Helpdesk\Services;
 
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Exception;
 use Messenger\Abstracts\AbstractMessengerService;
 use Messenger\Models\Conversation;
 
@@ -9,34 +13,35 @@ class HelpdeskMessengerService extends AbstractMessengerService {
 
     /**
      * @param $requester
+     * @param null $requested
+     * @param $conversationType
      * @param $targetId
      * @param $title
      * @param $firstMessage
-     * @param null $requested
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Exception
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function createNewConversation($requester, $targetId, $title, $firstMessage, $requested = null) {
+    public function createNewConversation($requester, $requested, $conversationType, $targetId, $title, $firstMessage) {
         $conversation = new Conversation();
         $conversation->setRequester($requester);
         $conversation->setRequested($requested);
         $conversation->setTargetId($targetId);
         $conversation->setTitle($title);
         $conversation->setState('open');
-        $conversation->setType('helpdesk_inquiry');
+        $conversation->setType($conversationType);
 
         $this->entityManager()->persist($conversation);
         $this->entityManager()->flush();
 
-        parent::sendMessage($conversation->getId(), 'frontend',$requester, $firstMessage);
+        parent::sendMessage($conversation->getId(), 'frontend', $requester, $firstMessage);
     }
 
     /**
      * @param $userId
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
+     * @throws ORMException
      */
     public function getConversationList($userId) {
         $queryBuilder = $this->entityManager()->createQueryBuilder();
