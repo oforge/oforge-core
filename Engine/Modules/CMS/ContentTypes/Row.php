@@ -2,8 +2,12 @@
 
 namespace Oforge\Engine\Modules\CMS\ContentTypes;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\CMS\Abstracts\AbstractContentType;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
+use Oforge\Engine\Modules\CMS\Models\Content\Content;
+use Oforge\Engine\Modules\CMS\Models\ContentTypes\Row as RowModel;
 
 class Row extends AbstractContentType
 {
@@ -13,12 +17,12 @@ class Row extends AbstractContentType
      *
      * @return Row[]|NULL
      */
-    private function getRowEntities(int $rowId)
+    private function getRowEntities(?int $rowId)
     {
-        /** @var Row[] $rowEntities */
-        $rowEntities = $this->entityManager->getRepository('Oforge\Engine\Modules\CMS\Models\ContentTypes\Row')->findBy(["row" => $rowId], ["order" => "ASC"]);
+        $rowEntities = $this->entityManager->getRepository(RowModel::class)->findBy(["row" => $rowId], ["order" => "ASC"]);
         
-        if (isset($rowEntities)) {
+        if ($rowEntities)
+        {
             return $rowEntities;
         }
         
@@ -42,6 +46,7 @@ class Row extends AbstractContentType
      */
     public function getEditData()
     {
+        /** @var RowModel[] $rowEntities */
         $rowEntities = $this->getRowEntities($this->getContentId());
         
         $rowColumns = [];
@@ -68,12 +73,12 @@ class Row extends AbstractContentType
         
         return $data;
     }
-    
+
     /**
      * Set edit data for page builder of content type
      * @param mixed $data
      *
-     * @return ContentType $this
+     * @return Row $this
      */
     public function setEditData($data)
     {
@@ -88,12 +93,96 @@ class Row extends AbstractContentType
     public function getRenderData()
     {
         $data = [];
-        $data["form"]   = "ContentTypes/" . $this->getPath() . "/PageBuilderForm.twig";
-        $data["type"]   = "ContentTypes/" . $this->getPath() . "/PageBuilder.twig";
-        $data["typeId"] = $this->getId();
-        $data["css"]    = $this->getContentCssClass();
+        $data["form"]        = "ContentTypes/" . $this->getPath() . "/PageBuilderForm.twig";
+        $data["type"]        = "ContentTypes/" . $this->getPath() . "/PageBuilder.twig";
+        $data["typeId"]      = $this->getId();
+        $data["isContainer"] = $this->isContainer();
+        $data["css"]         = $this->getContentCssClass();
         
         return $data;
+    }
+
+    /**
+     * Create a child of given content type
+     * @param Content $contentEntity
+     * @param int $order
+     *
+     * @return Row $this
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function createChild($contentEntity, $order)
+    {
+        /** @var RowModel[] $rowEntities */
+        $rowEntities = $this->getRowEntities($this->getContentId());
+        
+        if ($rowEntities)
+        {
+            $highestOrder = 1;
+            
+            foreach ($rowEntities as $rowEntity)
+            {
+                $currentOrder = $rowEntity->getOrder();
+
+                if ($order < 999999999)
+                {
+                    if ($currentOrder >= $order)
+                    {
+                        $rowEntity->setOrder($currentOrder + 1);
+                        
+                        $this->entityManager->persist($rowEntity);
+                        $this->entityManager->flush();
+                    }
+                }
+                else
+                {
+                    if ($currentOrder >= $highestOrder)
+                    {
+                        $highestOrder = $currentOrder;
+                    }
+                }
+            }
+                
+            if ($order == 999999999)
+            {
+                $order = $highestOrder + 1;
+            }
+        }
+        else
+        {
+            $order = 1;
+        }
+
+        $rowEntity = new RowModel;
+        $rowEntity->setRow($this->getContentId());
+        $rowEntity->setContent($contentEntity);
+        $rowEntity->setOrder($order);
+        
+        $this->entityManager->persist($rowEntity);
+        $this->entityManager->flush();
+        
+        return $this;
+    }
+
+    /**
+     * Delete a child
+     * @param $contentElementId
+     * @param $contentElementAtOrderIndex
+     * @return Row $this
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function deleteChild($contentElementId, $contentElementAtOrderIndex)
+    {
+        $rowEntity = $this->entityManager->getRepository(RowModel::class)->findOneBy(["row" => $this->getContentId(), "content" => $contentElementId, "order" => $contentElementAtOrderIndex]);
+        
+        if ($rowEntity)
+        {
+            $this->entityManager->remove($rowEntity);
+            $this->entityManager->flush();
+        }
+
+        return $this;
     }
     
     /**
@@ -103,6 +192,7 @@ class Row extends AbstractContentType
      */
     public function getChildData()
     {
+        /** @var RowModel[] $rowEntities */
         $rowEntities = $this->getRowEntities($this->getContentId());
         
         if (!$rowEntities)

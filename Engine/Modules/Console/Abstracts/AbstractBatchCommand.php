@@ -14,7 +14,7 @@ use Oforge\Engine\Modules\Core\Helper\StringHelper;
  *
  * @package Oforge\Engine\Modules\Console\Abstracts
  */
-class AbstractBatchCommand extends AbstractCommand {
+abstract class AbstractBatchCommand extends AbstractCommand {
     /**
      * @var ConsoleService $consoleService ;
      */

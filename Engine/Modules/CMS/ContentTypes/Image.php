@@ -4,6 +4,7 @@ namespace Oforge\Engine\Modules\CMS\ContentTypes;
 
 use Oforge\Engine\Modules\CMS\Abstracts\AbstractContentType;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
+use Oforge\Engine\Modules\CMS\Models\Content\Content;
 
 class Image extends AbstractContentType
 {
@@ -16,11 +17,11 @@ class Image extends AbstractContentType
     {
         return false;
     }
-    
+
     /**
      * Return edit data for page builder of content type
      *
-     * @return string
+     * @return array
      */
     public function getEditData()
     {
@@ -34,12 +35,11 @@ class Image extends AbstractContentType
         
         return $data;
     }
-    
+
     /**
      * Set edit data for page builder of content type
-     * @param string $richText
-     *
-     * @return ContentType $this
+     * @param $data
+     * @return Image $this
      */
     public function setEditData($data)
     {
@@ -48,23 +48,48 @@ class Image extends AbstractContentType
         
         return $this;
     }
-    
+
     /**
      * Return data for page rendering of content type
      *
-     * @return string
+     * @return array
      */
     public function getRenderData()
     {
         $data = [];
-        $data["form"]   = "ContentTypes/" . $this->getPath() . "/PageBuilderForm.twig";
-        $data["type"]   = "ContentTypes/" . $this->getPath() . "/PageBuilder.twig";
-        $data["typeId"] = $this->getId();
-        $data["css"]    = $this->getContentCssClass();
-        $data["url"]    = $this->getContentData();
-        $data["alt"]    = $this->getContentData();
+        $data["form"]        = "ContentTypes/" . $this->getPath() . "/PageBuilderForm.twig";
+        $data["type"]        = "ContentTypes/" . $this->getPath() . "/PageBuilder.twig";
+        $data["typeId"]      = $this->getId();
+        $data["isContainer"] = $this->isContainer();
+        $data["css"]         = $this->getContentCssClass();
+        $data["url"]         = $this->getContentData();
+        $data["alt"]         = $this->getContentData();
         
         return $data;
+    }
+
+    /**
+     * Create a child of given content type
+     * @param Content $contentEntity
+     * @param int $order
+     *
+     * @return Image $this
+     */
+    public function createChild($contentEntity, $order)
+    {
+        return $this;
+    }
+
+    /**
+     * Delete a child
+     * @param Content $contentEntity
+     * @param int $order
+     *
+     * @return Image $this
+     */
+    public function deleteChild($contentEntity, $order)
+    {
+        return $this;
     }
     
     /**

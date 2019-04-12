@@ -2,14 +2,21 @@
 
 namespace FrontendUserManagement;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Middleware\FrontendSecureMiddleware;
 use FrontendUserManagement\Middleware\FrontendUserStateMiddleware;
-use FrontendUserManagement\Models\ProfileNavigation;
+use FrontendUserManagement\Middleware\AccountNavigationMiddleware;
+use FrontendUserManagement\Models\AccountNavigation;
 use FrontendUserManagement\Models\User;
-use FrontendUserManagement\Services\FrontendSecureMiddlewareService;
-use FrontendUserManagement\Services\ProfileNavigationService;
+use FrontendUserManagement\Models\UserAddress;
+use FrontendUserManagement\Models\UserDetail;
+use FrontendUserManagement\Services\AccountNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
-use Oforge\Engine\Modules\Core\Models\Plugin\Middleware;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
+use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 
 class Bootstrap extends AbstractBootstrap {
     public function __construct() {
@@ -19,61 +26,70 @@ class Bootstrap extends AbstractBootstrap {
             "/logout" => ["controller" => Controller\Frontend\LogoutController::class, "name" => "frontend_logout"],
             "/registration" => ["controller" => Controller\Frontend\RegistrationController::class, "name" => "frontend_registration"],
             "/forgot-password" => ["controller" => Controller\Frontend\ForgotPasswordController::class, "name" => "frontend_forgot_password"],
-            "/profile" => ["controller" => Controller\Frontend\ProfileController::class, "name" => "frontend_profile"],
+            "/account" => ["controller" => Controller\Frontend\AccountController::class, "name" => "frontend_account"],
+            "/account/details" => ["controller" => Controller\Frontend\UserDetailsController::class, "name" => "frontend_account_details"],
         ];
         
-        $this->middleware = [
-            "frontend_profile" => ["class" => FrontendSecureMiddleware::class, "position" => 1],
-            "frontend" => ["class" => FrontendUserStateMiddleware::class, "position" => 1]
+        $this->middlewares = [
+            "frontend" => [
+                "class" => FrontendUserStateMiddleware::class,
+                "position" => 1,
+            ],
+            "frontend_account" => [
+                ["class" => FrontendSecureMiddleware::class, "position" => 1],
+                ["class" => AccountNavigationMiddleware::class, "position" => 1],
+            ]
         ];
         
         $this->models = [
-            ProfileNavigation::class,
-            User::class
+            AccountNavigation::class,
+            User::class,
+            UserDetail::class,
+            UserAddress::class,
         ];
         
         $this->services = [
             'frontend.user.management.password.reset' => Services\PasswordResetService::class,
             'frontend.user.management.login' => Services\FrontendUserLoginService::class,
             'frontend.user.management.registration' => Services\RegistrationService::class,
-            'frontend.secure.middleware' => Services\FrontendSecureMiddlewareService::class,
-            'frontend.user.management.profile.navigation' => Services\ProfileNavigationService::class,
+            'frontend.user.management.account.navigation' => Services\AccountNavigationService::class,
+            'frontend.user.management.user.details' => Services\UserDetailsService::class,
             'password.reset' => Services\PasswordResetService::class
         ];
     }
 
     /**
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ConfigElementAlreadyExists
+     * @throws ConfigOptionKeyNotExists
+     * @throws ParentNotFoundException
+     * @throws ServiceNotFoundException
      */
     public function activate() {
-        /** @var FrontendSecureMiddlewareService $frontendSecureMiddlewareService */
-        /** @var ProfileNavigationService $profileNavigationService */
-        $frontendSecureMiddlewareService = Oforge()->Services()->get('frontend.secure.middleware');
-        $frontendSecureMiddlewareService->activate('frontend_profile');
+        /** @var AccountNavigationService $accountNavigationService */
+        $accountNavigationService = Oforge()->Services()->get('frontend.user.management.account.navigation');
 
-        $profileNavigationService = Oforge()->Services()->get('frontend.user.management.profile.navigation');
-        $profileNavigationService->put([
+        $accountNavigationService->put([
+            "name" => "frontend_account_details",
+            "order" => 1,
+            "icon" => "inserat_erstellen",
+            "path" => "frontend_account_details",
+            "position" => "sidebar",
+        ]);
+        $accountNavigationService->put([
+            "name" => "frontend_account_edit",
+            "order" => 1,
+            "icon" => "profil",
+            "path" => "frontend_account_edit",
+            "position" => "sidebar",
+        ]);
+        $accountNavigationService->put([
             "name" => "frontend_logout",
             "order" => 1000,
-            "icon" => "icon icon--logout",
+            "icon" => "profil",
             "path" => "frontend_logout",
             "position" => "sidebar",
         ]);
-    }
-    
-    /**
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
-     */
-    public function deactivate() {
-        /** @var FrontendSecureMiddlewareService $frontendSecureMiddlewareService */
-        $frontendSecureMiddlewareService = Oforge()->Services()->get('frontend.secure.middleware');
-        $frontendSecureMiddlewareService->deactivate('frontend_profile');
     }
 }

@@ -2855,7 +2855,7 @@ table.text-center {
   -o-transform: translate(0, 0);
   transform: translate(0, 0);
   padding: 10px;
-  height: 250px;
+  height: 66vh;
   overflow: auto;
 }
 
@@ -2884,6 +2884,7 @@ table.text-center {
 }
 
 .direct-chat-text {
+  word-break: break-all;
   border-radius: 5px;
   position: relative;
   padding: 5px 10px;
@@ -3413,17 +3414,6 @@ table.text-center {
 
 .login-logo a, .register-logo a {
   color: #444;
-}
-
-.login-page, .register-page {
- /* background: #d2d6de;
-
-  Nur für Dich Alex
-  */
-
-  background: transparent url('https://placeponi.es/1680/948') center center no-repeat;
-  background-size: cover;
-  overflow: hidden;
 }
 
 .login-box, .register-box {

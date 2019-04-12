@@ -1,5 +1,7 @@
 {% block row %}
-    <div class="row">
-        {{ data.data|raw }}
+    <div class="row {{ data.css }}">
+        {% for child in data.childs %}
+            {% include 'ContentTypes/' ~ child.path ~ '/Index.twig' with {'data': child} %}
+        {% endfor %}
     </div>
 {% endblock row %}

@@ -1,0 +1,36 @@
+.toggle-menu {
+    display: none;
+
+    &__icon {
+        cursor: pointer;
+    }
+
+    &__nav {
+        position: absolute;
+        overflow: hidden;
+    }
+}
+
+.toggle-down {
+    height: 0;
+
+    &.toggle-menu__nav {
+        right: 0;
+        top: 4rem;
+        background: $color-primary;
+    }
+}
+
+.toggle-menu:checked {
+    ~ .toggle-down {
+        height: auto;
+    }
+    ~ .toggle-menu__nav {
+        padding: $size-medium;
+    }
+}
+
+
+.nav-profile__text {
+    color: white;
+}

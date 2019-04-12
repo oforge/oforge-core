@@ -1,0 +1,98 @@
+{% extends "Backend/Master/Index.twig" %}
+
+{% block pagecontent %}
+    <section class="content">
+        <div class="row">
+            <!-- /.col -->
+            <div class="col-md-12">
+                <div class="box box-success direct-chat direct-chat-success">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><strong>{{ ticket.issueType }}</strong> - {{ ticket.title }}</h3>
+
+                        <div class="box-tools pull-right">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-warning" data-toggle="modal"
+                                        data-target="#modal-warning">
+                                    Ticket schließen
+                                </button>
+                                <a href="/backend/helpdesk" class="btn btn-default"><i class="fa fa-mail-reply"></i></a>
+                            </div>
+                        </div>
+
+                        <div class="modal modal-warning fade in" id="modal-warning" style="display: none; padding-right: 15px;">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span></button>
+                                        <h4 class="modal-title">Warnung</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        Sind Sie sicher das Sie dieses Ticket schließen wollen?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Abbrechen</button>
+                                        <form method="POST" action="/backend/helpdesk/closeTicket">
+                                            <input type="hidden" name="ticketId" value="{{ ticket.id }}">
+                                            <button class="btn btn-outline" type="submit">
+                                                Ticket schließen
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </div>
+
+                    </div>
+                    <div class="box-body">
+
+
+                        <div class="direct-chat-messages">
+                            {% for message in messages %}
+                                <div class="direct-chat-msg {% if 'helpdesk' in message.sender %}right{% endif %}">
+                                    <div class="direct-chat-info clearfix">
+                                    <span class="direct-chat-timestamp
+                                        {% if 'helpdesk' in message.sender %}
+                                            pull-left
+                                        {% else %}
+                                            pull-right
+                                        {% endif %}"
+                                    >
+                                        {{ message.timestamp|date }}
+                                    </span>
+                                    </div>
+                                    <i class="fa fa-user-circle fa--bigger
+                                        {% if 'helpdesk' in message.sender %}
+                                            pull-right
+                                        {% else %}
+                                            pull-left
+                                        {% endif %}"></i>
+                                    <div class="direct-chat-text">
+                                        {{ message.message }}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+
+                        <div class="box-footer">
+                            <form action="/backend/helpdesk/messenger/1" method="post">
+                                <div class="input-group">
+                                    <input type="hidden" name="sender" content="helpdesk_1">
+                                    <input type="text" name="message" placeholder="Type Message ..."
+                                           class="form-control">
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-success btn-flat">Send</button>
+                                    </span>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- /.box-footer-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

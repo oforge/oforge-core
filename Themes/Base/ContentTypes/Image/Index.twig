@@ -1,1 +1,3 @@
-<img src="{{ data }}" >
+{% block image %}
+    <img class="image {{ data.css }}" src="{{ data.url }}" alt="{{ data.alt }}">
+{% endblock image %}
