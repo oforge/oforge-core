@@ -1,0 +1,8 @@
+Work in progress:
+    Snippets for mail controller
+
+INSERT INTO `oforge_i18n_snippet` (`id`, `scope`, `snippet_name`, `value`) VALUES
+(121,'en','mailer_templates_register_confirmation_title','Thank you for your Registration!'),
+(122,'de','mailer_templates_register_confirmation_title','Vielen Dank für Ihre Registrierung!'),
+(124,'en','mailer_templates_register_confirmation_body','Please click the button below to complete your registration.'),
+(125,'en','mailer_templates_register_confirmation_body','Bitte klicken sie auf den Button, um Ihre Registrierung abzuschließen');
