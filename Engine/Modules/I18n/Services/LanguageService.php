@@ -18,6 +18,8 @@ use ReflectionException;
  * @package Oforge\Engine\Modules\I18n\Services
  */
 class LanguageService extends AbstractDatabaseAccess {
+    /** @var string $currentLanguageIso */
+    private $currentLanguageIso;
 
     public function __construct() {
         parent::__construct(Language::class);
@@ -57,33 +59,34 @@ class LanguageService extends AbstractDatabaseAccess {
     }
 
     /**
-     * @param $context
+     * @param mixed $context
      *
      * @return string
      */
-    public function getCurrentLanguage($context) {
-        if (isset($context['meta'])
-            && isset($context['meta']['route'])
+    public function getCurrentLanguageIso($context) {
+        if (isset($this->currentLanguageIso)) {
+            return $this->currentLanguageIso;
+        }
+        if (isset($context['meta']['route']['languageId'])
             && isset($context['meta']['route']['assetScope'])
-            && isset($context['meta']['route']['languageId'])
             && strtolower($context['meta']['route']['assetScope']) !== 'backend') {
-            return $context['meta']['route']['languageId'];
-        }
-        if (isset($_SESSION) && isset($_SESSION['config']) && isset($_SESSION['config']['language'])) {
-            return $_SESSION['config']['language'];
-        }
-
-        try {
-            /** @var ?Language $language */
-            $language = $this->repository()->findOneBy(['active' => true]);
-            if (isset($language)) {
-                return $language->getIso();
+            $this->currentLanguageIso = $context['meta']['route']['languageId'];
+        } elseif (isset($_SESSION['config']['language'])) {
+            $this->currentLanguageIso = $_SESSION['config']['language'];
+        } else {
+            $this->currentLanguageIso = 'en';
+            try {
+                /** @var ?Language $language */
+                $language = $this->repository()->findOneBy(['active' => true]);
+                if (isset($language)) {
+                    $this->currentLanguageIso = $language->getIso();
+                }
+            } catch (ORMException $exception) {
+                Oforge()->Logger()->get()->error($exception->getMessage(), $exception->getTrace());
             }
-        } catch (ORMException $exception) {
-            Oforge()->Logger()->get()->error($exception->getMessage(), $exception->getTrace());
         }
 
-        return 'en';
+        return $this->currentLanguageIso;
     }
 
     /**
