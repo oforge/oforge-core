@@ -35,7 +35,7 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
         /** @var HelpdeskMessengerService $helpdeskMessengerService */
         $helpdeskMessengerService = Oforge()->Services()->get("helpdesk.messenger");
 
-        $helpdeskMessengerService->createNewConversation($opener, $ticket->getId(), $title, $message);
+        return $helpdeskMessengerService->createNewConversation($opener, $ticket->getId(), $title, $message);
     }
 
     /**

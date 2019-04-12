@@ -35,6 +35,8 @@ class HelpdeskMessengerService extends AbstractMessengerService {
         $this->entityManager()->flush();
 
         parent::sendMessage($conversation->getId(), 'frontend', $requester, $firstMessage);
+
+        return $conversation;
     }
 
     /**
