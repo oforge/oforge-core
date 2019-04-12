@@ -2,6 +2,8 @@
 
 namespace Oforge\Engine\Modules\TemplateEngine\Core\Twig;
 
+use Exception;
+
 /**
  * Storage of messages and data for next request / redirect.
  *
@@ -21,6 +23,20 @@ class TwigFlash {
      */
     public function addMessage(string $type, string $message, $dismissible = true) {
         $this->addMessageArray(['type' => $type, 'message' => $message, 'dismissible' => $dismissible]);
+    }
+
+    /**
+     * Add a error message for the next request / redirect.
+     *
+     * @param string $type
+     * @param Exception $exception
+     * @param bool $dismissible
+     */
+    public function addExceptionMessage(string $type, Exception $exception, $dismissible = true) {
+        $errorTitle   = $exception->getMessage();
+        $errorTrace   = $exception->getTraceAsString();
+        $errorMessage = "<details><summary>$errorTitle</summary><div><pre>$errorTrace</pre></div></details>";
+        $this->addMessage($type, $errorMessage, $dismissible);
     }
 
     /**
@@ -86,6 +102,17 @@ class TwigFlash {
         }
 
         return [];
+    }
+
+    /**
+     * Exist data by key.
+     *
+     * @param string $key
+     *
+     * @return bool
+     */
+    public function hasData(string $key) : bool {
+        return isset($_SESSION[self::FLASH][self::DATA][$key]);
     }
 
     /**
