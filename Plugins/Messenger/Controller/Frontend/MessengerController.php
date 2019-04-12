@@ -18,7 +18,7 @@ class MessengerController extends SecureFrontendController {
                 return $response;
             }
 
-            $messengerFrontendService = Oforge()->Services()->get('messenger');
+            $messengerFrontendService = Oforge()->Services()->get('frontend.messenger');
 
         }
     }

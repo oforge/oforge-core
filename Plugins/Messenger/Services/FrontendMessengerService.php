@@ -9,7 +9,7 @@ use Exception;
 use Messenger\Abstracts\AbstractMessengerService;
 use Messenger\Models\Conversation;
 
-class MessengerFrontendService extends AbstractMessengerService {
+class FrontendMessengerService extends AbstractMessengerService {
 
     /**
      * @param $requester

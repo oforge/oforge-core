@@ -2,6 +2,7 @@
 
 namespace Helpdesk\Services;
 
+use Helpdesk\Models\IssueTypes;
 use Helpdesk\Models\Ticket;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 
@@ -9,6 +10,7 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
     public function __construct() {
         parent::__construct([
             'default' => Ticket::class,
+            'IssueTypes' => IssueTypes::class,
         ]);
     }
 
@@ -35,7 +37,7 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
         /** @var HelpdeskMessengerService $helpdeskMessengerService */
         $helpdeskMessengerService = Oforge()->Services()->get("helpdesk.messenger");
 
-        return $helpdeskMessengerService->createNewConversation($opener, $ticket->getId(), $title, $message);
+        return $helpdeskMessengerService->createNewConversation($opener, 'helpdesk', 'helpdesk_inquiry', $ticket->getId(), $title, $message);
     }
 
     /**
@@ -72,6 +74,18 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
 
         $this->entityManager()->persist($ticket);
         $this->entityManager()->flush();
+    }
+
+    public function createIssueType($issueName) {
+        $issueType = new IssueTypes();
+        $issueType->setIssueTypeName($issueName);
+
+        $this->entityManager()->persist($issueType);
+        $this->entityManager()->flush();
+    }
+
+    public function getIssueTypes() {
+        return $this->repository('IssueTypes')->findAll();
     }
 
 }
