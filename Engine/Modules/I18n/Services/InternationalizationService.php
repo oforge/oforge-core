@@ -13,6 +13,8 @@ use Oforge\Engine\Modules\I18n\Models\Snippet;
  * @package Oforge\Engine\Modules\I18n\Services
  */
 class InternationalizationService extends AbstractDatabaseAccess {
+    /** @var array $cache */
+    private $cache;
 
     public function __construct() {
         parent::__construct(Snippet::class);
@@ -27,23 +29,26 @@ class InternationalizationService extends AbstractDatabaseAccess {
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function get(string $key, string $language, ?string $defaultValue = null) {
-        /** @var Snippet $snippet */
-        $snippet = $this->repository()->findOneBy([
-            'name'  => $key,
-            'scope' => $language,
-        ]);
-        if (!isset($snippet)) {
-            $snippet = Snippet::create([
+    public function get(string $key, string $language, ?string $defaultValue = null) : string {
+        if (!isset($this->cache[$key])) {
+            /** @var Snippet $snippet */
+            $snippet = $this->repository()->findOneBy([
                 'name'  => $key,
                 'scope' => $language,
-                'value' => isset($defaultValue) ? $defaultValue : $key,
             ]);
-            $this->entityManager()->persist($snippet);
-            $this->entityManager()->flush($snippet);
+            if (!isset($snippet)) {
+                $snippet = Snippet::create([
+                    'name'  => $key,
+                    'scope' => $language,
+                    'value' => isset($defaultValue) ? $defaultValue : $key,
+                ]);
+                $this->entityManager()->persist($snippet);
+                $this->entityManager()->flush($snippet);
+            }
+            $this->cache[$key] = $snippet->getValue();
         }
 
-        return $snippet->getValue();
+        return $this->cache[$key];
     }
 
 }

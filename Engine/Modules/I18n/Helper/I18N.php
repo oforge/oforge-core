@@ -15,8 +15,8 @@ use Oforge\Engine\Modules\I18n\Services\LanguageService;
 class I18N {
     /** @var InternationalizationService $i18nService */
     private static $i18nService;
-    /** @var string $language */
-    private static $language;
+    /** @var LanguageService $language */
+    private static $languageService;
 
     /**
      * Internationalization of text or labels.
@@ -30,8 +30,7 @@ class I18N {
     public static function translate(string $key, ?string $defaultValue = null, ?string $language = null) : string {
         try {
             if (!isset($language)) {
-                self::initCurrentLanguage([]);
-                $language = self::$language;
+                $language = self::getCurrentLanguage([]);
             }
             if (!isset(self::$i18nService)) {
                 /** @var InternationalizationService $service */
@@ -57,9 +56,7 @@ class I18N {
      */
     public static function twigTranslate($context, string $key, ?string $defaultValue = null) : string {
         try {
-            self::initCurrentLanguage($context);
-
-            return self::translate($key, $defaultValue, self::$language);
+            return self::translate($key, $defaultValue, self::getCurrentLanguage($context));
         } catch (Exception $exception) {
             Oforge()->Logger()->get()->error($exception->getMessage(), $exception->getTrace());
         }
@@ -70,17 +67,18 @@ class I18N {
     /**
      * Init current language for internationalization.
      *
-     * @param $context
+     * @param mixed $context
      *
+     * @return string
      * @throws ServiceNotFoundException
      */
-    protected static function initCurrentLanguage($context) {
-        if (!isset(self::$language)) {
+    protected static function getCurrentLanguage($context) : string {
+        if (!isset(self::$languageService)) {
             /**@var LanguageService $languageService */
-            $languageService = Oforge()->Services()->get('i18n.language');
-
-            self::$language = $languageService->getCurrentLanguage($context);
+            self::$languageService = Oforge()->Services()->get('i18n.language');
         }
+
+        return self::$languageService->getCurrentLanguageIso($context);
     }
 
     /**
