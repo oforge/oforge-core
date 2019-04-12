@@ -21,8 +21,6 @@ class RegistrationController extends AbstractController {
     }
 
     /**
-     * Register the user and send the user to the profile page
-     *
      * @param Request $request
      * @param Response $response
      *
@@ -33,6 +31,11 @@ class RegistrationController extends AbstractController {
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      * @throws \PHPMailer\PHPMailer\Exception
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     public function processAction(Request $request, Response $response) {
         /** @var PasswordService $passwordService */
@@ -135,7 +138,7 @@ class RegistrationController extends AbstractController {
             return $response->withRedirect($uri, 302);
         }
 
-        /*
+        /**
          * create activation link
          */
         $activationLink = $registrationService->generateActivationLink($user);
@@ -146,10 +149,13 @@ class RegistrationController extends AbstractController {
         $mailOptions = [
             'to' => [$user['email'] => $user['email']],
             'subject' => 'Oforge | Your registration!',
-            'body' => 'You are registered and have to activate your account. Your activation link is: '.$activationLink
+            'template' => 'RegisterConfirmation.twig',
+        ];
+        $templateData = [
+            'activationLink' => $activationLink,
         ];
 
-        $mailService->send($mailOptions);
+        $mailService->send($mailOptions ,$templateData);
 
         $uri = $router->pathFor('frontend_login');
         Oforge()->View()->addFlashMessage('success', 'Registration successful. You will receive an email with information about you account activation.');
@@ -164,6 +170,8 @@ class RegistrationController extends AbstractController {
      * @return Response
      * @throws \Doctrine\ORM\ORMException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function activateAction(Request $request, Response $response) {
         /** @var SessionManagementService $sessionManagementService */
@@ -178,7 +186,7 @@ class RegistrationController extends AbstractController {
         $jwt                        = null;
         $user                       = null;
 
-        /*
+        /**
          * if there is no guid
          */
         if (!$guid) {
@@ -187,7 +195,7 @@ class RegistrationController extends AbstractController {
 
         $user = $registrationService->activate($guid);
 
-        /*
+        /**
          * User not found
          */
         if (!$user) {

@@ -89,10 +89,12 @@ class ForgotPasswordController extends AbstractController {
         $mailOptions = [
             'to' => [$email => $email],
             'subject' => 'Oforge | Your password reset!',
-            'body' => 'You want to reset your password. Your password reset link is: '.$passwordResetLink
+            'template' => 'ResetPassword.twig',
+            //'body' => 'You want to reset your password. Your password reset link is: '.$passwordResetLink
         ];
+        $templateData = ['passwordResetLink'  => $passwordResetLink];
 
-        $mailService->send($mailOptions);
+        $mailService->send($mailOptions, $templateData);
 
         $uri = $router->pathFor('frontend_login');
 
@@ -140,8 +142,6 @@ class ForgotPasswordController extends AbstractController {
     }
 
     /**
-     * Change the password
-     *
      * @param Request $request
      * @param Response $response
      *
@@ -149,6 +149,8 @@ class ForgotPasswordController extends AbstractController {
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function changeAction(Request $request, Response $response) {
         /** @var SessionManagementService $sessionManagementService */
