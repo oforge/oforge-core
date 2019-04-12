@@ -1,4 +1,4 @@
-<?php 
+<?php
 use Monolog\Logger;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 
@@ -21,7 +21,7 @@ return [
     'db' => [
         // if true, metadata caching is forcefully disabled
         'dev_mode' => true,
-        
+
         // path where the compiled metadata info will be cached
         // make sure the path exists and it is writable
         'cache_dir' => ROOT_PATH . Statics::DB_CACHE_DIR,
