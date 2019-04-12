@@ -8,7 +8,6 @@ use FrontendUserManagement\Services\AccountNavigationService;
 use Helpdesk\Controller\Backend\BackendHelpdeskController;
 use Helpdesk\Controller\Backend\BackendHelpdeskMessengerController;
 use Helpdesk\Controller\Frontend\FrontendHelpdeskController;
-use Helpdesk\Controller\Frontend\FrontendHelpdeskTicketController;
 use Helpdesk\Models\Ticket;
 use Helpdesk\Services\HelpdeskMessengerService;
 use Helpdesk\Services\HelpdeskTicketService;
@@ -53,6 +52,7 @@ class Bootstrap extends AbstractBootstrap {
 
         $this->dependencies = [
             \FrontendUserManagement\Bootstrap::class,
+            \Messenger\Bootstrap::class,
         ];
     }
 
