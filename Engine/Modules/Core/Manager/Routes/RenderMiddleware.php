@@ -30,13 +30,14 @@ class RenderMiddleware {
             $data['flashMessages'] = $twigFlash->getMessages();
             $twigFlash->clearMessages();
         }
+
         $response = $next($request, $response);
         if (empty($data)) {
             $data = Oforge()->View()->fetch();
         } else {
-            $fetcheData = Oforge()->View()->fetch();
+            $fetchedData = Oforge()->View()->fetch();
 
-            $data = ArrayHelper::mergeRecursive($data, $fetcheData);
+            $data = ArrayHelper::mergeRecursive($data, $fetchedData);
         }
 
         return Oforge()->Templates()->render($request, $response, $data);

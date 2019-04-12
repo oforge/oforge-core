@@ -2,7 +2,7 @@
 
 {% block pagecontent %}
     <section class="content">
-        {% include 'Backend/CRUD/Components/Form.twig' %}
+        {% include 'Backend/CRUD/Components/Form.twig' with { item: crud.item } %}
     </section>
     {{ o_dump() }}
 {% endblock %}
