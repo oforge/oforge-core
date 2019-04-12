@@ -32,10 +32,10 @@ class TwigFlash {
      * @param Exception $exception
      * @param bool $dismissible
      */
-    public function addExceptionMessage(string $type, Exception $exception, $dismissible = true) {
-        $errorTitle   = $exception->getMessage();
-        $errorTrace   = $exception->getTraceAsString();
-        $errorMessage = "<details><summary>$errorTitle</summary><div><pre>$errorTrace</pre></div></details>";
+    public function addExceptionMessage(string $type, string $message, Exception $exception, $dismissible = true) {
+        $exceptionMessage = $exception->getMessage();
+        $exceptionTrace   = $exception->getTraceAsString();
+        $errorMessage     = "<details><summary>$message</summary><div><p>$exceptionMessage</p><pre>$exceptionTrace</pre></div></details>";
         $this->addMessage($type, $errorMessage, $dismissible);
     }
 

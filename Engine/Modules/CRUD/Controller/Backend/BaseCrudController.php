@@ -217,8 +217,8 @@ class BaseCrudController extends SecureBackendController {
 
                 return $this->redirect($response, 'index');
             } catch (Exception $exception) {
-                Oforge()->View()->Flash()->addMessage('danger', I18N::translate('backend_crud_msg_create_failed', 'Entity creation failed.'));
-                Oforge()->View()->Flash()->addExceptionMessage('danger', $exception);
+                Oforge()->View()->Flash()
+                        ->addExceptionMessage('danger', I18N::translate('backend_crud_msg_create_failed', 'Entity creation failed.'), $exception);
                 Oforge()->View()->Flash()->setData($this->moduleModelName, $params['data']);
 
                 return $this->redirect($response, 'create');
@@ -286,8 +286,8 @@ class BaseCrudController extends SecureBackendController {
                 $this->crudService->update($this->model, $data);
                 Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_update_success', 'Entity successfully updated.'));
             } catch (Exception $exception) {
-                Oforge()->View()->Flash()->addMessage('danger', I18N::translate('backend_crud_msg_update_failed', 'Entity update failed.'));
-                Oforge()->View()->Flash()->addExceptionMessage('danger', $exception);
+                Oforge()->View()->Flash()
+                        ->addExceptionMessage('danger', I18N::translate('backend_crud_msg_update_failed', 'Entity update failed.'), $exception);
                 Oforge()->View()->Flash()->setData($this->moduleModelName, $params['data']);
             }
 
@@ -332,8 +332,8 @@ class BaseCrudController extends SecureBackendController {
 
                 return $this->redirect($response, 'index');
             } catch (Exception $exception) {
-                Oforge()->View()->Flash()->addMessage('danger', I18N::translate('backend_crud_msg_delete_failed', 'Entity delete failed.'));
-                Oforge()->View()->Flash()->addExceptionMessage('danger', $exception);
+                Oforge()->View()->Flash()
+                        ->addExceptionMessage('danger', I18N::translate('backend_crud_msg_delete_failed', 'Entity delete failed.'), $exception);
 
                 return $this->redirect($response, 'delete', [], ['id' => $params['id']]);
             }
@@ -418,8 +418,8 @@ class BaseCrudController extends SecureBackendController {
             $this->crudService->update($this->model, $params);
             Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_bulk_update_success', 'Entities successfully bulk updated.'));
         } catch (Exception $exception) {
-            Oforge()->View()->Flash()->addMessage('danger', I18N::translate('backend_crud_msg_bulk_update_failed', 'Entities bulk update failed.'));
-            Oforge()->View()->Flash()->addExceptionMessage('danger', $exception);
+            Oforge()->View()->Flash()
+                    ->addExceptionMessage('danger', I18N::translate('backend_crud_msg_bulk_update_failed', 'Entities bulk update failed.'), $exception);
             Oforge()->View()->Flash()->setData($this->moduleModelName, $params['data']);
         }
     }
