@@ -177,7 +177,7 @@ INSERT INTO `oforge_i18n_snippet` (`id`, `scope`, `snippet_name`, `value`) VALUE
 (121,'en','mailer_templates_register_confirmation_title','Thank you for your Registration!'),
 (122,'de','mailer_templates_register_confirmation_title','Vielen Dank für Ihre Registrierung!'),
 (124,'en','mailer_templates_register_confirmation_body','Please click the button below to complete your registration.'),
-(125,'en','mailer_templates_register_confirmation_body','Bitte klicken sie auf den Button, um Ihre Registrierung abzuschließen.');
+(125,'de','mailer_templates_register_confirmation_body','Bitte klicken sie auf den Button, um Ihre Registrierung abzuschließen.');
 
 DROP TABLE IF EXISTS `oforge_cms_content_type_group`;
 CREATE TABLE `oforge_cms_content_type_group` (
@@ -243,9 +243,9 @@ INSERT INTO `oforge_cms_content` (`id`, `content_type_id`, `parent_id`, `content
 (7,	3,	0,	'world_image_de',	'image-class',		's:34:\"/Tests/dummy_media/deutschland.png\";'),
 (8,	3,	0,	'world_image_en',	'image-class',		's:26:\"/Tests/dummy_media/usa.png\";'),
 (9,	3,	0,	'multilanguage_image',	'image-class',		's:36:\"/Tests/dummy_media/multilanguage.png\";'),
-(10,	2,	0,	'test_text1_de',	'row-text1-class',	's:103:\"Die größte Tragödie im Leben ist, dass wir zu schnell alt und zu spät weise werden. - Benjamin Franklin\";'),
+(10,	2,	0,	'test_text1_de',	'row-text1-class',	's:107:\"Die größte Tragödie im Leben ist, dass wir zu schnell alt und zu spät weise werden. - Benjamin Franklin\";'),
 (11,	2,	0,	'test_text1_en',	'row-text1-class',	's:87:\"Life biggest tragedy is that we get old too soon and wise too late. - Benjamin Franklin\";'),
-(12,	2,	0,	'test_text2_de',	'row-text2-class',	's:143:\"Die größte Entscheidung deines Lebens liegt darin, dass du dein Leben ändern kannst, indem du deine Geisteshaltung änderst. - Albert Schweitzer\";'),
+(12,	2,	0,	'test_text2_de',	'row-text2-class',	's:147:\"Die größte Entscheidung deines Lebens liegt darin, dass du dein Leben ändern kannst, indem du deine Geisteshaltung änderst. - Albert Schweitzer\";'),
 (13,	2,	0,	'test_text2_en',	'row-text2-class',	's:104:\"The biggest decision in life is about changing your life through changing your mind. - Albert Schweitzer\";'),
 (14,	3,	0,	'landscape_image',	'row-image-class',	's:32:\"/Tests/dummy_media/landscape.png\";'),
 (15,	3,	0,	'person_image',		'row-image-class',	's:29:\"/Tests/dummy_media/person.png\";'),
