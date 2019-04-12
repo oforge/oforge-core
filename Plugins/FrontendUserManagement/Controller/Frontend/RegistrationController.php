@@ -24,7 +24,7 @@ class RegistrationController extends AbstractController {
      * @param Request $request
      * @param Response $response
      *
-     * @return static
+     * @return Response
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException
