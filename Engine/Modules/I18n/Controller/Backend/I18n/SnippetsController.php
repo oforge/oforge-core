@@ -15,6 +15,8 @@ use Oforge\Engine\Modules\I18n\Services\LanguageService;
  * @package Oforge\Engine\Modules\I18n\Controller\Backend
  */
 class SnippetsController extends BaseCrudController {
+    /** @var string $baseEndpointName */
+    protected static $baseEndpointName = 'backend_i18n_snippets';
     /** @var string $model */
     protected $model = Snippet::class;
     /** @var array $modelProperties */
@@ -29,6 +31,7 @@ class SnippetsController extends BaseCrudController {
         [
             'name'          => 'scope',
             'type'          => CrudDataTypes::SELECT,
+            'label'         => ['key' => 'crud_i18n_snippet_scope', 'default' => 'Scope'],
             'crud'          => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
@@ -40,9 +43,10 @@ class SnippetsController extends BaseCrudController {
             'listI18nLabel' => false,
         ],
         [
-            'name' => 'name',
-            'type' => CrudDataTypes::STRING,
-            'crud' => [
+            'name'  => 'name',
+            'type'  => CrudDataTypes::STRING,
+            'label' => ['key' => 'crud_i18n_snippet_name', 'default' => 'Name'],
+            'crud'  => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
                 'create' => 'editable',
@@ -51,9 +55,10 @@ class SnippetsController extends BaseCrudController {
             ],
         ],
         [
-            'name' => 'value',
-            'type' => CrudDataTypes::STRING,
-            'crud' => [
+            'name'  => 'value',
+            'type'  => CrudDataTypes::STRING,
+            'label' => ['key' => 'crud_i18n_snippet_value', 'default' => 'Value'],
+            'crud'  => [
                 'index'  => 'editable',
                 'view'   => 'readonly',
                 'create' => 'editable',

@@ -6,7 +6,21 @@
         {% endif %}
         {% for property in crud.properties if property.crud[crud.context] and property.crud[crud.context]|default('off') != 'off' %}
             <th>
-                {{ i18n(property.label|default('backend_crud_property__' ~ crud.model ~ '_' ~ property.name) ) }}
+                {% if property.label is defined %}
+                    {% if property.label is empty %}
+                        {% set fieldLabel = '-' %}
+                    {% else %}
+                        {#    {% elseif property.label is string %}#}
+                        {#        {{ i18n(property.label) }}#}
+                        {#    {% elseif property.label is array %}#}
+
+                                {{ i18n(property.label.key, property.label.default) }}
+                    {% endif %}
+                {% elseif property.name == 'id' %}
+                    {% set fieldLabel = i18n(('crud_' ~ crud.model ~ '_' ~ property.name)|lower, 'ID') %}
+                {% else %}
+                    {% set fieldLabel = i18n(('crud_' ~ crud.model ~ '_' ~ property.name)|lower, property.name|capitalize) %}
+                {% endif %}
             </th>
         {% endfor %}
     </tr>

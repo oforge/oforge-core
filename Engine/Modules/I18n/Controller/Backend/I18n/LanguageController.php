@@ -12,6 +12,8 @@ use Oforge\Engine\Modules\I18n\Models\Language;
  * @package Oforge\Engine\Modules\I18n\Controller\Backend
  */
 class LanguageController extends BaseCrudController {
+    /** @var string $baseEndpointName */
+    protected static $baseEndpointName = 'backend_i18n_languages';
     /** @var string $model */
     protected $model = Language::class;
     /** @var array $modelProperties */
@@ -24,9 +26,10 @@ class LanguageController extends BaseCrudController {
             ],
         ],
         [
-            'name' => 'iso',
-            'type' => CrudDataTypes::STRING,
-            'crud' => [
+            'name'  => 'iso',
+            'type'  => CrudDataTypes::STRING,
+            'label' => ['key' => 'crud_i18n_language_iso', 'default' => 'ISO'],
+            'crud'  => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
                 'create' => 'editable',
@@ -35,9 +38,10 @@ class LanguageController extends BaseCrudController {
             ],
         ],
         [
-            'name' => 'name',
-            'type' => CrudDataTypes::STRING,
-            'crud' => [
+            'name'  => 'name',
+            'type'  => CrudDataTypes::STRING,
+            'label' => ['key' => 'crud_i18n_language_name', 'default' => 'Name'],
+            'crud'  => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
                 'create' => 'editable',
@@ -46,9 +50,10 @@ class LanguageController extends BaseCrudController {
             ],
         ],
         [
-            'name' => 'active',
-            'type' => CrudDataTypes::BOOL,
-            'crud' => [
+            'name'  => 'active',
+            'type'  => CrudDataTypes::BOOL,
+            'label' => ['key' => 'crud_i18n_language_active', 'default' => 'Active'],
+            'crud'  => [
                 'index'  => 'editable',
                 'view'   => 'editable',
                 'create' => 'off',
@@ -59,7 +64,7 @@ class LanguageController extends BaseCrudController {
         [
             'name'     => 'action',
             'type'     => CrudDataTypes::CUSTOM,
-            'label' => 'backend_i18n_snippets',
+            'label'    => 'backend_i18n_snippets',
             'crud'     => [
                 'index' => 'readonly',
             ],

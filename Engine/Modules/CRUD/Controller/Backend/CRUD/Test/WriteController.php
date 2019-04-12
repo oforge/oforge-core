@@ -12,6 +12,8 @@ use Oforge\Engine\Modules\CRUD\Models\CrudTest;
  * @package Oforge\Engine\Modules\CRUD\Controller\Backend
  */
 class WriteController extends BaseCrudController {
+    /** @var string $baseEndpointName */
+    protected static $baseEndpointName = 'backend_crudtest_write';
     /** @var string $model */
     protected $model = CrudTest::class;
     /** @var array $modelProperties */

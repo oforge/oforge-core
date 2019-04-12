@@ -2,10 +2,6 @@
 
 {% block pagecontent %}
     <section class="content">
-        {% if crud.deleted|default(false) %}
-            {% include 'Backend/CRUD/Components/Deleted/Content.twig' %}
-        {% else %}
-            {% include 'Backend/CRUD/Components/Form.twig' with { item: crud.item } %}
-        {% endif %}
+        {% include 'Backend/CRUD/Components/Form.twig' with { item: crud.item } %}
     </section>
 {% endblock %}

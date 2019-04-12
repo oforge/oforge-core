@@ -12,6 +12,8 @@ use Oforge\Engine\Modules\CRUD\Models\CrudTest;
  * @package Oforge\Engine\Modules\CRUD\Controller\Backend
  */
 class ReadController extends BaseCrudController {
+    /** @var string $baseEndpointName */
+    protected static $baseEndpointName = 'backend_crudtest_read';
     /** @var string $model */
     protected $model = CrudTest::class;
     /** @var array $modelProperties */
