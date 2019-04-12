@@ -18,8 +18,8 @@ class Bootstrap extends AbstractBootstrap {
 
     public function __construct() {
         $this->endpoints = [
-            '/backend/crudtest/read'  => ['controller' => ReadController::class, 'name' => 'backend_crudtest_read', 'asset_scope' => 'Backend'],
-            '/backend/crudtest/write' => ['controller' => WriteController::class, 'name' => 'backend_crudtest_write', 'asset_scope' => 'Backend'],
+            '/backend/crudtest/read'  => ReadController::getBootstrapEndpointsArray(),
+            '/backend/crudtest/write' => WriteController::getBootstrapEndpointsArray(),
         ];
         $this->services  = [
             'crud' => GenericCrudService::class,

@@ -2,16 +2,14 @@
 
 namespace Oforge\Engine\Modules\CRUD\Controller\Backend;
 
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Exception;
 use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
-use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\CRUD\Services\GenericCrudService;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Slim\Router;
 
 /**
  * Class CrudController
@@ -19,16 +17,21 @@ use Slim\Http\Response;
  * @package Oforge\Engine\Modules\CRUD\Controller\Backend
  */
 class BaseCrudController extends SecureBackendController {
+    /** @var string $baseEndpointName */
+    protected static $baseEndpointName = null;
     /** @var string $model */
     protected $model = null;
     /**
      * Define model properties (editor, visibility in index table and crate/update forms) e.g.
      *      protected $modelProperties = [
      *          [
-     *              'name'      => 'id',    // Property name. Required
-     *              'label'     => 'backend_crud_property__<Module><ModelName>_<propertyName>', //own i18n key
+     *              // Property name. Required
+     *              'name'      => 'id',
+     *               // Custom i18n key for label of form field, default('crud_<Module>_<ModelName>_<propertyName>' with name as default, or 'ID' default if name = id).
+     *               // String key or array with key and default value.
+     *              'label'     => 'label_id' | ['key' => 'label_id', 'default' => 'ID'],
      *              'type'      => CrudDataTypes::..., // Required
-     *              'crud'      => [        // default = off (not rendered). (Required)
+     *              'crud'      => [    // default = off (not rendered). (Required)
      *                  'index'     => 'off|readonly|editable',
      *                  'view'      => 'off|readonly|editable',
      *                  'create'    => 'off|readonly|editable',
@@ -89,6 +92,8 @@ class BaseCrudController extends SecureBackendController {
     protected $crudService;
     /** @var string $moduleModelName */
     private $moduleModelName;
+    /** @var Router $router */
+    private $router;
 
     /**
      * CrudController constructor.
@@ -96,6 +101,10 @@ class BaseCrudController extends SecureBackendController {
      * @throws ServiceNotFoundException
      */
     public function __construct() {
+        if (is_null($this->model) || is_null($this->modelProperties)) {
+            echo 'Properties "$model" and "$modelProperties" must be override!';
+            die();
+        }
         $this->crudService     = Oforge()->Services()->get('crud');
         $this->moduleModelName = '';
         if (isset($this->model)) {
@@ -109,27 +118,52 @@ class BaseCrudController extends SecureBackendController {
     }
 
     /**
+     * Endpoints config for Bootstrap class.
+     *
+     * @param array $config
+     *
+     * @return array
+     */
+    public static function getBootstrapEndpointsArray($config = []) : array {
+        if (is_null(static::$baseEndpointName)) {
+            echo 'Properties "$baseEndpointName" must be override!';
+            die();
+        }
+        $endpointsConfig = array_merge([
+            'controller'  => static::class,
+            'name'        => static::$baseEndpointName,
+            'asset_scope' => 'Backend',
+        ], $config);
+
+        return $endpointsConfig;
+    }
+
+    /**
      * @param Request $request
      * @param Response $response
      *
-     * @throws ORMException
-     * @throws OptimisticLockException
-     * @throws NotFoundException
+     * @return Response
      */
     public function indexAction(Request $request, Response $response) {
-        if (!isset($this->model)) {
-            return;
-        }
         $params = $request->getParams();
         if ($request->isPost() && !empty($params)) {
             if (isset($params['action'])) {
-                if ($params['action'] === 'update') {
-                    $this->indexUpdate($request, $response);
-                }
+                $methodName = 'handleIndex' . ucfirst($params['action']);
+                $result     = method_exists($this, $methodName) ? $this->{$methodName}($request, $response) : null;
+                if (!is_null($result)) {
+                    return $result;
+                };
             }
         }
         $params   = $request->getQueryParams();
         $entities = $this->crudService->list($this->model, $params);
+        if (!empty($entities)) {
+            foreach ($entities as $index => $entity) {
+                if (!empty($entity)) {
+                    $entities[$index] = $this->prepareItemData($entity, 'index');
+                }
+            }
+        }
         list($properties, $hasEditors) = $this->filterPropertiesFor('index');
         $hasRowActions = false;
         if (isset($this->crudActions)) {
@@ -153,27 +187,34 @@ class BaseCrudController extends SecureBackendController {
                 'items'         => $entities,
             ],
         ]);
+
+        return $response;
     }
 
     /**
      * @param Request $request
      * @param Response $response
+     *
+     * @return Response
      */
     public function createAction(Request $request, Response $response) {
-        if (!isset($this->model)) {
-            return;
-        }
         $params = $request->getParams();
         if ($request->isPost() && !empty($params)) {
             try {
                 $this->crudService->create($this->model, $params['data']);
-                // TODO flash message
-                // $this->viewAssignMessage('success', 'backend_message_create_success_body', 'backend_message_create_success_headline');
+                // TODO include after merged pull request
+                // Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_create_success', 'Entity successfully created.'));
+                return $this->redirect($response, 'index');
             } catch (Exception $exception) {
-                // TODO flash message
-                // $this->viewAssignMessage('danger', 'backend_message_create_error_body', 'backend_message_create_error_headline', $exception);
+                // TODO include after merged pull request
+                // Oforge()->View()->Flash()->addMessage('danger', I18N::translate('backend_crud_msg_create_failed', 'Entity creation failed.'));
+                // $errorTitle   = $exception->getMessage();
+                // $errorTrace   = str_replace("\n", "<br/>\n", $exception->getTraceAsString());
+                // $errorMessage = "<details><summary>$errorTitle</summary><div><pre>$errorTrace</pre></div></details>";
+                // Oforge()->View()->Flash()->addMessage('danger', $errorMessage);
             }
         }
+        $entity = $this->prepareItemData([], 'create');
         list($properties, $hasEditors) = $this->filterPropertiesFor('create');
         Oforge()->View()->assign([
             'crud' => [
@@ -181,54 +222,68 @@ class BaseCrudController extends SecureBackendController {
                 'properties' => $properties,
                 'model'      => $this->moduleModelName,
                 'actions'    => $this->crudActions,
-                'item'       => [],
+                'item'       => $entity,
             ],
         ]);
+
+        return $response;
     }
 
     /**
      * @param Request $request
      * @param Response $response
+     *
+     * @return Response
      */
     public function viewAction(Request $request, Response $response) {
-        if (isset($this->model)) {
-            $params = $request->getParams();
+        $params = $request->getParams();
 
-            $entity = $this->crudService->getById($this->model, $params['id']);
-            list($properties, $hasEditors) = $this->filterPropertiesFor('view');
-            Oforge()->View()->assign([
-                'crud' => [
-                    'context'    => 'view',
-                    'properties' => $properties,
-                    'model'      => $this->moduleModelName,
-                    'actions'    => $this->crudActions,
-                    'item'       => $entity,
-                ],
-            ]);
+        $entity = $this->crudService->getById($this->model, $params['id']);
+        if (!empty($entity)) {
+            $entity = $this->prepareItemData($entity, 'view');
         }
+        list($properties, $hasEditors) = $this->filterPropertiesFor('view');
+        Oforge()->View()->assign([
+            'crud' => [
+                'context'    => 'view',
+                'properties' => $properties,
+                'model'      => $this->moduleModelName,
+                'actions'    => $this->crudActions,
+                'item'       => $entity,
+            ],
+        ]);
+
+        return $response;
     }
 
     /**
      * @param Request $request
      * @param Response $response
+     *
+     * @return Response
      */
     public function updateAction(Request $request, Response $response) {
-        if (!isset($this->model)) {
-            return;
-        }
         $params = $request->getParams();
         if ($request->isPost() && !empty($params)) {
             try {
                 $data = $this->convertData($params['data']);
                 $this->crudService->update($this->model, $data);
-                // TODO flash message
-                // $this->viewAssignMessage('success', 'backend_message_update_success_body', 'backend_message_update_success_headline');
+                // TODO include after merged pull request
+                // Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_update_success', 'Entity successfully updated.'));
+                return $this->redirect($response, 'update');
             } catch (Exception $exception) {
-                // TODO flash message
-                // $this->viewAssignMessage('danger', 'backend_message_update_error_body', 'backend_message_update_error_headline', $exception);
+                // TODO include after merged pull request
+                // Oforge()->View()->Flash()->addMessage('danger', I18N::translate('backend_crud_msg_update_failed', 'Entity update failed.'));
+                // $errorTitle   = $exception->getMessage();
+                // $errorTrace   = str_replace("\n", "<br/>\n", $exception->getTraceAsString());
+                // $errorMessage = "<details><summary>$errorTitle</summary><div><pre>$errorTrace</pre></div></details>";
+                // Oforge()->View()->Flash()->addMessage('danger', $errorMessage);
             }
         }
         $entity = $this->crudService->getById($this->model, $params['id']);
+        if (!empty($entity)) {
+            $entity = $this->prepareItemData($entity, 'update');
+        }
         list($properties, $hasEditors) = $this->filterPropertiesFor('update');
         Oforge()->View()->assign([
             'crud' => [
@@ -239,49 +294,49 @@ class BaseCrudController extends SecureBackendController {
                 'item'       => $entity,
             ],
         ]);
+
+        return $response;
     }
 
     /**
      * @param Request $request
      * @param Response $response
+     *
+     * @return Response
      */
     public function deleteAction(Request $request, Response $response) {
-        if (!isset($this->model)) {
-            return;
-        }
-        $deleted = false;
-        $params  = $request->getParams();
+        $params = $request->getParams();
         if ($request->isPost() && !empty($params)) {
             try {
                 $this->crudService->delete($this->model, $params['id']);
-                // TODO flash message
-                // $this->viewAssignMessage('success', 'backend_message_delete_success_body', 'backend_message_delete_success_headline');
-                $deleted = true;
+                // TODO include after merged pull request
+                // Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_delete_success', 'Entity successfully delete.'));
+                return $this->redirect($response, 'index');
             } catch (Exception $exception) {
-                // TODO flash message
-                // $this->viewAssignMessage('danger', 'backend_message_delete_error_body', 'backend_message_delete_error_headline', $exception);
+                // TODO include after merged pull request
+                // Oforge()->View()->Flash()->addMessage('danger', I18N::translate('backend_crud_msg_delete_failed', 'Entity delete failed.'));
+                // $errorTitle   = $exception->getMessage();
+                // $errorTrace   = str_replace("\n", "<br/>\n", $exception->getTraceAsString());
+                // $errorMessage = "<details><summary>$errorTitle</summary><div><pre>$errorTrace</pre></div></details>";
+                // Oforge()->View()->Flash()->addMessage('danger', $errorMessage);
             }
         }
-        if ($deleted) {
-            Oforge()->View()->assign([
-                'crud' => [
-                    'context' => 'delete',
-                    'deleted' => true,
-                ],
-            ]);
-        } else {
-            $entity = $this->crudService->getById($this->model, $params['id']);
-            list($properties, $hasEditors) = $this->filterPropertiesFor('delete');
-            Oforge()->View()->assign([
-                'crud' => [
-                    'context'    => 'delete',
-                    'properties' => $properties,
-                    'model'      => $this->moduleModelName,
-                    'actions'    => $this->crudActions,
-                    'item'       => $entity,
-                ],
-            ]);
+        $entity = $this->crudService->getById($this->model, $params['id']);
+        if (!empty($entity)) {
+            $entity = $this->prepareItemData($entity, 'delete');
         }
+        list($properties, $hasEditors) = $this->filterPropertiesFor('delete');
+        Oforge()->View()->assign([
+            'crud' => [
+                'context'    => 'delete',
+                'properties' => $properties,
+                'model'      => $this->moduleModelName,
+                'actions'    => $this->crudActions,
+                'item'       => $entity,
+            ],
+        ]);
+
+        return $response;
     }
 
     /**
@@ -318,35 +373,51 @@ class BaseCrudController extends SecureBackendController {
     }
 
     /**
+     * Prepare Item data for view, e.G. DateTime to string or custom column data.
+     *
+     * @param array $data
+     * @param string $crudAction
+     *
+     * @return array
+     */
+    protected function prepareItemData(array $data, string $crudAction) : array {
+        return $data;
+    }
+
+    /**
      * @param Request $request
      * @param Response $response
      *
-     * @throws ORMException
-     * @throws OptimisticLockException
-     * @throws NotFoundException
+     * @return Response|void
      */
-    protected function indexUpdate(Request $request, Response $response) {
-        if (isset($this->model)) {
-            $params = $request->getParams();
-            $list   = $params['data'];
-            foreach ($list as $index => $data) {
-                $list[$index] = $this->convertData($data);
-            }
-            $params['data'] = $list;
+    protected function handleIndexUpdate(Request $request, Response $response) {
+        if (!isset($this->model)) {
+            return null;
+        }
+        $params = $request->getParams();
+        $list   = $params['data'];
+        foreach ($list as $index => $data) {
+            $list[$index] = $this->convertData($data);
+        }
+        $params['data'] = $list;
+        try {
             $this->crudService->update($this->model, $params);
-            // TODO flash message
-            // Oforge()->View()->addFlashMessage('success', $message);
-            // Oforge()->View()->assign([
-            //     'message' => [
-            //         'type'     => 'danger',
-            //         'body'     => 'backend_message_update_success_body',
-            //         'headline' => 'backend_message_update_success_headline',
-            //     ],
-            // ]);
+            // TODO include after merged pull request
+            // Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_bulk_update_success', 'Entities successfully bulk updated.'));
+            return $this->redirect($response, 'index');
+        } catch (Exception $e) {
+            // TODO include after merged pull request
+            // Oforge()->View()->Flash()->addMessage('danger', I18N::translate('backend_crud_msg_bulk_update_failed', 'Entities bulk update failed.'));
+            // $errorTitle   = $exception->getMessage();
+            // $errorTrace   = str_replace("\n", "<br/>\n", $exception->getTraceAsString());
+            // $errorMessage = "<details><summary>$errorTitle</summary><div><pre>$errorTrace</pre></div></details>";
+            // Oforge()->View()->Flash()->addMessage('danger', $errorMessage);
         }
     }
 
     /**
+     * Filter properties based on crud action for view.
+     *
      * @param string $crudAction
      *
      * @return array
@@ -371,6 +442,27 @@ class BaseCrudController extends SecureBackendController {
         }
 
         return [$properties, $hasEditors];
+    }
+
+    /**
+     * Redirect/reload after post request.
+     *
+     * @param Response $response
+     * @param string $endpointName
+     *
+     * @return Response
+     */
+    protected function redirect(Response $response, string $crudAction) {
+        if (!isset($this->router)) {
+            $this->router = Oforge()->App()->getContainer()->get('router');;
+        }
+        $endpointName = static::$baseEndpointName;
+        if ($crudAction !== 'index') {
+            $endpointName .= '_' . $crudAction;
+        }
+        $uri = $this->router->pathFor($endpointName);
+
+        return $response->withRedirect($uri, 303);
     }
 
 }
