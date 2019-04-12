@@ -32,8 +32,11 @@ class Ticket extends AbstractModel {
     private $status;
 
     /**
-     * @var string
-     * @ORM\Column(name="ticket_issue_type", type="string", nullable=false)
+     * @var int
+     *
+     * @ORM\OneToOne(targetEntity="IssueTypes")
+     * @ORM\JoinColumn(name="issue_type_id", referencedColumnName="id", nullable=false)
+     * @ORM\Column(type="integer")
      */
     private $issueType;
 
@@ -55,6 +58,20 @@ class Ticket extends AbstractModel {
      * @ORM\Column(name="timestamp", type="datetime", nullable=false);
      */
     private $timestamp;
+
+    /**
+     * Triggered on insert
+     *
+     * @ORM\PrePersist
+     * @throws \Exception
+     */
+    public function onPrePersist() {
+        $this->timestamp = new \DateTime("now");
+    }
+
+    public function onPreUpdate() {
+        $this->timestamp = new \DateTime("now");
+    }
 
     /**
      * @return int
@@ -98,19 +115,19 @@ class Ticket extends AbstractModel {
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getIssueType() : string {
+    public function getIssueType() : int {
         return $this->issueType;
     }
 
     /**
-     * @param string $issue
+     * @param int $issueType
      *
      * @return Ticket
      */
-    public function setIssueType(string $issueType) : Ticket {
-        $this->issue = $issueType;
+    public function setIssueType(int $issueType) : Ticket {
+        $this->issueType = $issueType;
         return $this;
     }
 

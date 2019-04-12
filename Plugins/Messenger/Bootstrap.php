@@ -5,6 +5,7 @@ namespace Messenger;
 use Messenger\Controller\Frontend\MessengerController;
 use Messenger\Models\Conversation;
 use Messenger\Models\Message;
+use Messenger\Services\FrontendMessengerService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 
 class Bootstrap extends AbstractBootstrap {
@@ -12,6 +13,10 @@ class Bootstrap extends AbstractBootstrap {
      * Bootstrap constructor.
      */
     public function __construct() {
+        $this->services = [
+            'frontend.messenger' => FrontendMessengerService::class,
+        ];
+
         $this->models = [
             Conversation::class,
             Message::class,

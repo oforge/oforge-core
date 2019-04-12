@@ -16,18 +16,18 @@
                 <select class="form__input form__input--select"
                         name="frontend_support_issue_type"
                         id="frontend_support_issue_type">
-                    {% for issueType in ticket.issueTypes %}
-                        <option value="{{ issueType }}">{{ issueType }}</option>
+                    {% for issueType in issueTypes %}
+                        <option value="{{ issueType.id }}">{{ issueType.issueTypeName }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="form__control">
                 {% block support_label_issue %}
-                    <label for="frontend_support_issue"
+                    <label for="frontend_support_issue_title"
                            class="form__label">{{ i18n('your_issue', 'Your issue') }}</label>
                 {% endblock support_label_issue %}
-                <input id="frontend_support_issue"
-                       name="frontend_support_issue"
+                <input id="frontend_support_issue_title"
+                       name="frontend_support_issue_title"
                        type="text"
                        class="form__input form__input {% block support_input_issue_classes %}{% endblock support_input_issue_classes %}"
                        placeholder="{{ i18n('your_issue') }}"
