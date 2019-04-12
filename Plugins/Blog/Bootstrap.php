@@ -12,7 +12,7 @@ class Bootstrap extends AbstractBootstrap {
             "/" => ["controller" => \Test\Controller\Frontend\HomeController::class, "name" => "Blog"]
         ];
         
-        $this->middleware = [
+        $this->middlewares = [
             "home2" => ["class" => \Test\Middleware\HomeMiddleware::class, "position" => 0]
         ];
         

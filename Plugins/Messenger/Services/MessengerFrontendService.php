@@ -2,6 +2,10 @@
 
 namespace Messenger\Services;
 
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Exception;
 use Messenger\Abstracts\AbstractMessengerService;
 use Messenger\Models\Conversation;
 
@@ -9,34 +13,35 @@ class MessengerFrontendService extends AbstractMessengerService {
 
     /**
      * @param $requester
+     * @param $requested
+     * @param $conversationType
      * @param $targetId
      * @param $title
      * @param $firstMessage
-     * @param $requested
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Exception
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function createNewConversation($requester, $targetId, $title, $firstMessage,$requested) {
+    public function createNewConversation($requester, $requested, $conversationType, $targetId, $title, $firstMessage) {
         $conversation = new Conversation();
         $conversation->setRequester($requester);
         $conversation->setRequested($requested);
+        $conversation->setType($conversationType);
+        $conversation->setState('open');
         $conversation->setTargetId($targetId);
         $conversation->setTitle($title);
-        $conversation->setState('open');
-        $conversation->setType('classified_advert');
 
         $this->entityManager()->persist($conversation);
         $this->entityManager()->flush();
 
-        parent::sendMessage($conversation->getId(), $requester, $firstMessage );
+        parent::sendMessage($conversation->getId(), $conversationType, $requester, $firstMessage);
     }
 
     /**
      * @param $userId
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
+     * @throws ORMException
      */
     public function getConversationList($userId) {
         $queryBuilder = $this->entityManager()->createQueryBuilder();
@@ -58,5 +63,9 @@ class MessengerFrontendService extends AbstractMessengerService {
             ->getQuery();
 
         return $query->execute();
+    }
+
+    public function getConversationById($conversationId) {
+        return parent::getConversationById($conversationId);
     }
 }
