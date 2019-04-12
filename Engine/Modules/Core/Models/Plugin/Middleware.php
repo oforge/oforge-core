@@ -44,14 +44,6 @@ class Middleware extends AbstractModel
     private $position = 0;
 
     /**
-     * @var Plugin
-     * @ORM\ManyToOne(targetEntity="Plugin", inversedBy="middlewares", fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="plugin_id", referencedColumnName="id", nullable=true)
-     */
-    private $plugin;
-
-
-    /**
      * Get id
      *
      * @return int
@@ -112,7 +104,7 @@ class Middleware extends AbstractModel
      *
      * @param string $position
      *
-     * @return Plugin
+     * @return Middleware
      */
     public function setPosition($position)
     {
@@ -147,25 +139,5 @@ class Middleware extends AbstractModel
     public function getActive()
     {
         return $this->active;
-    }
-
-
-    /**
-     * @param Plugin $plugin
-     *
-     * @return Middleware
-     */
-    public function setPlugin($plugin)
-    {
-        $this->plugin = $plugin;
-        return $this;
-    }
-
-    /**
-     * @return Plugin
-     */
-    public function getPlugin()
-    {
-        return $this->plugin;
     }
 }
