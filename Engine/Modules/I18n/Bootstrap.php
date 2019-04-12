@@ -59,36 +59,36 @@ class Bootstrap extends AbstractBootstrap {
             'name' => 'English',
         ]);
 
-        // /** @var BackendNavigationService $sidebarNavigation */
-        // $sidebarNavigation = Oforge()->Services()->get('backend.navigation');
-        // $sidebarNavigation->put([
-        //     'name'     => 'admin',
-        //     'order'    => 100,
-        //     'position' => 'sidebar',
-        // ]);
-        // $sidebarNavigation->put([
-        //     'name'     => 'backend_i18n',
-        //     'order'    => 100,
-        //     'parent'   => 'admin',
-        //     'icon'     => 'glyphicon glyphicon-globe',
-        //     'position' => 'sidebar',
-        // ]);
-        // $sidebarNavigation->put([
-        //     'name'     => 'backend_i18n_language',
-        //     'order'    => 1,
-        //     'parent'   => 'backend_i18n',
-        //     'icon'     => 'fa fa-language',
-        //     'path'     => 'backend_i18n_languages',
-        //     'position' => 'sidebar',
-        // ]);
-        // $sidebarNavigation->put([
-        //     'name'     => 'backend_i18n_snippets',
-        //     'order'    => 2,
-        //     'parent'   => 'backend_i18n',
-        //     'icon'     => 'fa fa-file-text-o',
-        //     'path'     => 'backend_i18n_snippets',
-        //     'position' => 'sidebar',
-        // ]);
+        /** @var BackendNavigationService $sidebarNavigation */
+        $sidebarNavigation = Oforge()->Services()->get('backend.navigation');
+        $sidebarNavigation->put([
+            'name'     => 'admin',
+            'order'    => 100,
+            'position' => 'sidebar',
+        ]);
+        $sidebarNavigation->put([
+            'name'     => 'backend_i18n',
+            'order'    => 100,
+            'parent'   => 'admin',
+            'icon'     => 'glyphicon glyphicon-globe',
+            'position' => 'sidebar',
+        ]);
+        $sidebarNavigation->put([
+            'name'     => 'backend_i18n_language',
+            'order'    => 1,
+            'parent'   => 'backend_i18n',
+            'icon'     => 'fa fa-language',
+            'path'     => 'backend_i18n_languages',
+            'position' => 'sidebar',
+        ]);
+        $sidebarNavigation->put([
+            'name'     => 'backend_i18n_snippets',
+            'order'    => 2,
+            'parent'   => 'backend_i18n',
+            'icon'     => 'fa fa-file-text-o',
+            'path'     => 'backend_i18n_snippets',
+            'position' => 'sidebar',
+        ]);
     }
 
 }

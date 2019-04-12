@@ -40,29 +40,29 @@ class Bootstrap extends AbstractBootstrap {
     public function install() {
         /** @var BackendNavigationService $sidebarNavigation */
         $sidebarNavigation = Oforge()->Services()->get('backend.navigation');
-        $sidebarNavigation->put([
-            'name'     => 'backend_crudtest',
-            'order'    => 100,
-            'parent'   => 'admin',
-            'icon'     => 'glyphicon glyphicon glyphicon-th',
-            'position' => 'sidebar',
-        ]);
-        $sidebarNavigation->put([
-            'name'     => 'backend_crudtest_read',
-            'order'    => 1,
-            'parent'   => 'backend_crudtest',
-            'icon'     => 'fa fa-search',
-            'path'     => 'backend_crudtest_read',
-            'position' => 'sidebar',
-        ]);
-        $sidebarNavigation->put([
-            'name'     => 'backend_crudtest_write',
-            'order'    => 2,
-            'parent'   => 'backend_crudtest',
-            'icon'     => 'fa fa-pencil',
-            'path'     => 'backend_crudtest_write',
-            'position' => 'sidebar',
-        ]);
+        // $sidebarNavigation->put([
+        //     'name'     => 'backend_crudtest',
+        //     'order'    => 100,
+        //     'parent'   => 'admin',
+        //     'icon'     => 'glyphicon glyphicon glyphicon-th',
+        //     'position' => 'sidebar',
+        // ]);
+        // $sidebarNavigation->put([
+        //     'name'     => 'backend_crudtest_read',
+        //     'order'    => 1,
+        //     'parent'   => 'backend_crudtest',
+        //     'icon'     => 'fa fa-search',
+        //     'path'     => 'backend_crudtest_read',
+        //     'position' => 'sidebar',
+        // ]);
+        // $sidebarNavigation->put([
+        //     'name'     => 'backend_crudtest_write',
+        //     'order'    => 2,
+        //     'parent'   => 'backend_crudtest',
+        //     'icon'     => 'fa fa-pencil',
+        //     'path'     => 'backend_crudtest_write',
+        //     'position' => 'sidebar',
+        // ]);
     }
 
 }
