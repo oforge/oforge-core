@@ -2,35 +2,40 @@
 
 namespace Oforge\Engine\Modules\Core\Manager\Plugins;
 
-use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
 use Oforge\Engine\Modules\Core\Exceptions\CouldNotInstallPluginException;
+use Oforge\Engine\Modules\Core\Exceptions\InvalidClassException;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceAlreadyDefinedException;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\Helper;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\Core\Models\Plugin\Plugin;
 use Oforge\Engine\Modules\Core\Services\PluginStateService;
 
-class PluginManager
-{
+class PluginManager extends AbstractDatabaseAccess {
     protected static $instance = null;
 
     public static function getInstance()
     {
         if (null === self::$instance) {
-            self::$instance = new PluginManager();
+            self::$instance = new PluginManager(['default' => Plugin::class]);
         }
         return self::$instance;
     }
 
     /**
-     * Initialize the pluginmanager. Register all plugins
+     * Initialize the PluginManager. Register all plugins
      *
      * @throws CouldNotInstallPluginException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\InvalidClassException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceAlreadyDefinedException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ConfigOptionKeyNotExists
+     * @throws InvalidClassException
+     * @throws ServiceAlreadyDefinedException
+     * @throws ServiceNotFoundException
      */
     public function init()
     {
@@ -46,11 +51,9 @@ class PluginManager
             $fileMeta = @Helper::getFileMeta($dir);
             $pluginService->register($fileMeta['namespace']);
         }
-        $em = Oforge()->DB()->getManager();
-        $pluginRepository = $em->getRepository(Plugin::class);
 
         //find all plugins order by "order"
-        $plugins = $pluginRepository->findBy(array("active" => 1), array('order' => 'ASC'));
+        $plugins = $this->repository()->findBy(array("active" => 1), array('order' => 'ASC'));
         //create working bucket with all plugins that should be started
         $bucket = [];
 

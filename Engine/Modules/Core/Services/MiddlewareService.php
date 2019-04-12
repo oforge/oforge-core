@@ -2,10 +2,12 @@
 
 namespace Oforge\Engine\Modules\Core\Services;
 
-use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use InvalidArgumentException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
 use Oforge\Engine\Modules\Core\Models\Plugin\Middleware;
-use Oforge\Engine\Modules\Core\Models\Plugin\Plugin;
 
 class MiddlewareService extends AbstractDatabaseAccess {
     public function __construct() {
@@ -16,6 +18,7 @@ class MiddlewareService extends AbstractDatabaseAccess {
      * @param $name
      *
      * @return array|Middleware[]
+     * @throws ORMException
      */
     public function getActive($name)
     {
@@ -38,6 +41,7 @@ class MiddlewareService extends AbstractDatabaseAccess {
      * get all active middlewares
      *
      * @return array|null
+     * @throws ORMException
      */
     public function getAllDistinctActiveNames() {
 
@@ -62,14 +66,14 @@ class MiddlewareService extends AbstractDatabaseAccess {
 
     /**
      * @param $middlewares
-     * @param $plugin
      * @param bool $activate
      *
      * @return Middleware[]
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ConfigOptionKeyNotExists
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function register($middlewares, $plugin = null, $activate = false) {
+    public function register($middlewares, $activate = false) {
         /**
          * @var $result Middleware[]
          */
@@ -81,27 +85,33 @@ class MiddlewareService extends AbstractDatabaseAccess {
                 $element = null;
 
                 if (array_key_exists("class", $middleware)) {
-                    $element = $this->createMiddleware($middleware, $pathName, $plugin, $activate);
+                    $element = $this->createMiddleware($middleware, $pathName, $activate);
                 } elseif (is_array($middleware)) {
                     foreach ($middleware as $key => $value) {
-                        $element = $this->createMiddleware($value, $pathName, $plugin, $activate);
+                        $element = $this->createMiddleware($value, $pathName, $activate);
                     }
-                } else {
-                    // TODO
                 }
 
                 if (isset($element)) {
                     array_push($result, $element);
                 }
             }
-            $this->entityManager()->flush();
-
         }
 
         return $result;
     }
 
-    private function createMiddleware($middleware, $pathName, $plugin = null, $activate = false) {
+    /**
+     * @param $middleware
+     * @param $pathName
+     * @param bool $activate
+     *
+     * @return object|Middleware|null
+     * @throws ConfigOptionKeyNotExists
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    private function createMiddleware($middleware, $pathName, $activate = false) {
         $active = $activate ? 1 : 0;
 
         if ($this->isValid($middleware)) {
@@ -112,21 +122,20 @@ class MiddlewareService extends AbstractDatabaseAccess {
             if(!isset($element)) {
                 $element = Middleware::create(["name" => $pathName,  "class" => $middleware["class"], "active" => $active, "position" => $middleware["position"]]);
 
-                if (isset($plugin)) {
-                    $element->setPlugin($plugin);
-                }
                 $this->entityManager()->persist($element);
+                $this->entityManager()->flush();
             }
 
             return $element;
         }
         return null;
     }
-    
+
     /**
      * @param array $options
      *
      * @return bool
+     * @throws ConfigOptionKeyNotExists
      */
     private function isValid(Array $options)
     {
@@ -142,7 +151,7 @@ class MiddlewareService extends AbstractDatabaseAccess {
          * Check if correct type are set
          */
         if (isset($options["position"]) && !is_integer($options["position"])) {
-            throw new \InvalidArgumentException("Position value should be of type integer. ");
+            throw new InvalidArgumentException("Position value should be of type integer. ");
         }
         return true;
     }
@@ -150,8 +159,8 @@ class MiddlewareService extends AbstractDatabaseAccess {
     /**
      * @param string $middlewareName
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function activate(string $middlewareName) {
         $this->changeActiveState($middlewareName, true);
@@ -160,8 +169,8 @@ class MiddlewareService extends AbstractDatabaseAccess {
     /**
      * @param string $middlewareName
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function deactivate(string $middlewareName) {
         $this->changeActiveState($middlewareName, false);
@@ -171,13 +180,13 @@ class MiddlewareService extends AbstractDatabaseAccess {
      * @param $middlewareName
      * @param $state
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     private function changeActiveState($middlewareName, $state) {
-        $middleware = $this->repository()->findOneBy(['name' => $middlewareName]);
+        $middleware = $this->repository()->findOneBy(['class' => $middlewareName]);
         $middleware->setActive($state);
-        $this->entityManager()->persist($middleware);
+        //$this->entityManager()->persist($middleware);
         $this->entityManager()->flush($middleware);
     }
 }

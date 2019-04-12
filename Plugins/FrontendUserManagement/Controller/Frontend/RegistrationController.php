@@ -40,8 +40,6 @@ class RegistrationController extends AbstractController {
     }
 
     /**
-     * Register the user and send the user to the profile page
-     *
      * @param Request $request
      * @param Response $response
      *
@@ -156,7 +154,7 @@ class RegistrationController extends AbstractController {
             return $response->withRedirect($uri, 302);
         }
 
-        /*
+        /**
          * create activation link
          */
         $activationLink = $registrationService->generateActivationLink($user);
@@ -167,10 +165,13 @@ class RegistrationController extends AbstractController {
         $mailOptions = [
             'to'      => [$user['email'] => $user['email']],
             'subject' => 'Oforge | Your registration!',
-            'body'    => 'You are registered and have to activate your account. Your activation link is: ' . $activationLink,
+            'template' => 'RegisterConfirmation.twig',
+        ];
+        $templateData = [
+            'activationLink' => $activationLink,
         ];
 
-        $mailService->send($mailOptions);
+        $mailService->send($mailOptions ,$templateData);
 
         $uri = $router->pathFor('frontend_login');
         Oforge()->View()->Flash()->addMessage('success', I18N::translate('registration_success_mail_send',
@@ -199,7 +200,7 @@ class RegistrationController extends AbstractController {
         $jwt                      = null;
         $user                     = null;
 
-        /*
+        /**
          * if there is no guid
          */
         if (!$guid) {
@@ -208,7 +209,7 @@ class RegistrationController extends AbstractController {
 
         $user = $registrationService->activate($guid);
 
-        /*
+        /**
          * User not found
          */
         if (!$user) {

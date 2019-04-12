@@ -36,7 +36,7 @@ class Bootstrap extends AbstractBootstrap
             "/backend/favorites" => ["controller" => FavoritesController::class, "name" => "backend_favorites", "asset_scope" => "Backend"]
         ];
 
-        $this->middleware = [
+        $this->middlewares = [
             "backend" => ["class" => BackendSecureMiddleware::class, "position" => 1]
         ];
 
