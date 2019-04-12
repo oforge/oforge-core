@@ -2,6 +2,7 @@
 
 namespace Oforge\Engine\Modules\I18n\Controller\Backend\I18n;
 
+use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
@@ -76,12 +77,13 @@ class SnippetsController extends BaseCrudController {
      * Get languages for select field.
      *
      * @return array
+     * @throws ORMException
      */
     protected function getSelectLanguages() {
         $result = [];
         try {
             /** @var LanguageService $languageService */
-            $languageService = Oforge()->Services()->get('languages');
+            $languageService = Oforge()->Services()->get('i18n.language');
             /** @var Language[] $entities */
             $entities = $languageService->list();
             foreach ($entities as $entity) {
