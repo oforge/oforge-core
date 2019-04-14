@@ -4,7 +4,7 @@ namespace Oforge\Engine\Modules\Core\Manager\Routes;
 
 use Oforge\Engine\Modules\Core\Helper\StringHelper;
 use Oforge\Engine\Modules\Core\Middleware\DebugModeMiddleware;
-use Oforge\Engine\Modules\Core\Models\Endpoints\Endpoint;
+use Oforge\Engine\Modules\Core\Models\Endpoint\Endpoint;
 use Oforge\Engine\Modules\Core\Models\Plugin\Middleware;
 use Oforge\Engine\Modules\Core\Services\MiddlewareService;
 use Oforge\Engine\Modules\Session\Middleware\SessionMiddleware;

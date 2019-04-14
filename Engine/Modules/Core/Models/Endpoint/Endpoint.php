@@ -1,6 +1,6 @@
 <?php
 
-namespace Oforge\Engine\Modules\Core\Models\Endpoints;
+namespace Oforge\Engine\Modules\Core\Models\Endpoint;
 
 use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
