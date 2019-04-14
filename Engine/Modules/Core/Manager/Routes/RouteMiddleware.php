@@ -2,7 +2,7 @@
 
 namespace Oforge\Engine\Modules\Core\Manager\Routes;
 
-use Oforge\Engine\Modules\Core\Models\Endpoints\Endpoint;
+use Oforge\Engine\Modules\Core\Models\Endpoint\Endpoint;
 
 class RouteMiddleware {
 	protected $endpoint = null;

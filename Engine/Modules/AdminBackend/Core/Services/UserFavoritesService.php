@@ -5,7 +5,7 @@ namespace Oforge\Engine\Modules\AdminBackend\Core\Services;
 use Oforge\Engine\Modules\AdminBackend\Core\Models\BackendUserFavorites;
 use Oforge\Engine\Modules\AdminBackend\Core\Models\BackendNavigation;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
-use Oforge\Engine\Modules\Core\Models\Endpoints\Endpoint;
+use Oforge\Engine\Modules\Core\Models\Endpoint\Endpoint;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
 use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;

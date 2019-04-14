@@ -5,7 +5,7 @@ namespace Oforge\Engine\Modules\Core\Services;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
-use Oforge\Engine\Modules\Core\Models\Endpoints\Endpoint;
+use Oforge\Engine\Modules\Core\Models\Endpoint\Endpoint;
 
 class EndpointService extends AbstractDatabaseAccess {
 

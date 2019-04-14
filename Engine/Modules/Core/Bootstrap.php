@@ -6,7 +6,7 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Controller\Frontend\NotFoundController;
 use Oforge\Engine\Modules\Core\Models\Config\Element;
 use Oforge\Engine\Modules\Core\Models\Config\Value;
-use Oforge\Engine\Modules\Core\Models\Endpoints\Endpoint;
+use Oforge\Engine\Modules\Core\Models\Endpoint\Endpoint;
 use Oforge\Engine\Modules\Core\Models\Module\Module;
 use Oforge\Engine\Modules\Core\Models\Plugin\Middleware;
 use Oforge\Engine\Modules\Core\Models\Plugin\Plugin;
