@@ -14,7 +14,7 @@ use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\SchemaValidator;
 use Doctrine\ORM\Tools\Setup;
-use Oforge\Engine\Modules\Core\Forge\OrmAnnotation\DiscriminatorEntryListener;
+use Oforge\Engine\Modules\Core\Annotation\ORM\DiscriminatorEntryListener;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 
 /**
