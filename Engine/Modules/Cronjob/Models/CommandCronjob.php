@@ -3,7 +3,7 @@
 namespace Oforge\Engine\Modules\Cronjob\Models;
 
 use Doctrine\ORM\Mapping as ORM;
-use Oforge\Engine\Modules\Core\Forge\OrmAnnotation\DiscriminatorEntry;
+use Oforge\Engine\Modules\Core\Annotation\ORM\DiscriminatorEntry;
 
 /**
  * Class CommandCronjob

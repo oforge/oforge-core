@@ -1,6 +1,6 @@
 <?php
 
-namespace Oforge\Engine\Modules\Core\Forge\OrmAnnotation;
+namespace Oforge\Engine\Modules\Core\Annotation\ORM;
 
 /**
  * @Annotation
