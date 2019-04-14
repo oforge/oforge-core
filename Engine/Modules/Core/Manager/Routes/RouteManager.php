@@ -28,7 +28,7 @@ class RouteManager {
      * @throws \Doctrine\ORM\ORMException
      */
     public function init() {
-        $entityManager = Oforge()->DB()->getManager();
+        $entityManager = Oforge()->DB()->getEnityManager();
         $repository    = $entityManager->getRepository( Endpoint::class );
 
         /** @var MiddlewareService $middlewareService */
