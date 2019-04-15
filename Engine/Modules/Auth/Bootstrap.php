@@ -5,7 +5,7 @@ use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Auth\Services\BackendLoginService;
 use Oforge\Engine\Modules\Auth\Services\PasswordService;
-use Oforge\Engine\Modules\Auth\Services\Permissions;
+use Oforge\Engine\Modules\Auth\Services\PermissionService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 
 /**
@@ -22,7 +22,7 @@ class Bootstrap extends AbstractBootstrap {
             "auth" => AuthService::class,
             "backend.login" => BackendLoginService::class,
             "password" => PasswordService::class,
-            "permissions" => Permissions::class
+            "permissions" => PermissionService::class
         ];
         
         $this->models = [

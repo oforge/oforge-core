@@ -3,7 +3,7 @@
 namespace Oforge\Engine\Modules\Auth\Middleware;
 
 use Oforge\Engine\Modules\Auth\Services\AuthService;
-use Oforge\Engine\Modules\Auth\Services\Permissions;
+use Oforge\Engine\Modules\Auth\Services\PermissionService;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
@@ -24,14 +24,16 @@ class SecureMiddleware {
      */
     public function prepend($request, $response) : ?Response
     {
-        $controllerMethod = Oforge()->View()->get("meta")["controller_method"];
+        $controller       = Oforge()->View()->get('meta')['controller'];
+        $controllerClass  = $controller['class'];
+        $controllerMethod = $controller['method'];
 
         /**
-         * @var $permissionService Permissions
+         * @var $permissionService PermissionService
          */
-        $permissionService = Oforge()->Services()->get("permissions");
+        $permissionService = Oforge()->Services()->get('permissions');
 
-        $permissions = $permissionService->get($controllerMethod);
+        $permissions = $permissionService->get($controllerClass, $controllerMethod);
         $auth = null;
 
         if (isset($_SESSION['auth'])) {

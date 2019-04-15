@@ -49,7 +49,8 @@ class TemplateRenderService {
         if (isset($data["json"]) && is_array($data["json"])) {
             return $this->renderJson($request, $response, $data["json"]);
         } else {
-            $namespace = explode("\\", Oforge()->View()->get('meta')['controller_method']);
+            $controller = Oforge()->View()->get('meta')['controller'];
+            $namespace  = explode("\\", $controller['class']);
 
             $foundController = false;
             $index           = 0;
@@ -73,7 +74,7 @@ class TemplateRenderService {
 
 
             $controllerName = explode("Controller", explode(":", $namespace[sizeof($namespace) - 1])[0])[0];
-            $fileName       = explode("Action", explode(":", $namespace[sizeof($namespace) - 1])[1])[0];
+            $fileName       = explode("Action", $controller['method'])[0];
 
             $templatePath .= DIRECTORY_SEPARATOR . $controllerName . DIRECTORY_SEPARATOR . ucwords($fileName) . ".twig";
 
