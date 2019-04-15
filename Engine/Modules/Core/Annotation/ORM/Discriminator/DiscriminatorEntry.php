@@ -1,6 +1,6 @@
 <?php
 
-namespace Oforge\Engine\Modules\Core\Annotation\ORM;
+namespace Oforge\Engine\Modules\Core\Annotation\ORM\Discriminator;
 
 /**
  * @Annotation
