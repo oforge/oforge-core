@@ -2,7 +2,11 @@
 
 namespace Oforge\Engine\Modules\Core\Forge;
 
+use Exception;
 use Slim\App as SlimApp;
+use Slim\Http\Cookies;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 /**
  * Class App
@@ -21,19 +25,32 @@ class ForgeSlimApp extends SlimApp {
      */
     public function __construct() {
         parent::__construct();
-        $c                    = $this->getContainer();
-        $c['errorHandler']    = function ($c) {
-            return function ($request, $response, $exception) use ($c) {
-                return $c['response']->withStatus(500)->withHeader('Content-Type', 'text/html')->write($exception);
+        $container = $this->getContainer();
+
+        $errorHandler = function ($container) {
+            return function (Request $request, Response $response, Exception $exception) use ($container) {
+                $message = $exception->getMessage();
+                $trace   = str_replace("\n", "<br />\n", $exception->getTraceAsString());
+                $file    = $exception->getFile();
+                $line    = $exception->getLine();
+                $html    = <<<TAG
+<h1>Exception: $message</h1>
+<dl>
+    <dt><strong>File</strong></dt><dd>$file</dd>
+    <dt><strong>Line</strong></dt><dd>$line</dd>
+    <dt><strong>Trace</strong></dt><dd>$trace</dd>
+</dl>
+TAG;
+
+                return $response->withStatus(500)->withHeader('Content-Type', 'text/html')->write($html);
             };
         };
-        $c['phpErrorHandler'] = function ($c) {
-            return function ($request, $response, $exception) use ($c) {
-                return $c['response']->withStatus(500)->withHeader('Content-Type', 'text/html')->write($exception);
-            };
-        };
-        $c['cookie']          = function ($c) {
-            return new \Slim\Http\Cookies();
+
+        $container['errorHandler']    = $errorHandler;
+        $container['phpErrorHandler'] = $errorHandler;
+
+        $container['cookie'] = function ($container) {
+            return new Cookies();
         };
     }
 
