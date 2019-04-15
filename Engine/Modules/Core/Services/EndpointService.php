@@ -9,11 +9,11 @@ use Oforge\Engine\Modules\Core\Models\Endpoint\Endpoint;
 
 class EndpointService extends AbstractDatabaseAccess {
 
+    const SLIM_ROUTE_METHODS = ['any', 'get', 'post', 'put', 'patch', 'delete', 'options'];
+
     public function __construct() {
         parent::__construct(["default" => Endpoint::class]);
     }
-
-    const SLIM_ROUTE_METHODS = ['any', 'get', 'post', 'put', 'patch', 'delete', 'options'];
 
     /**
      * Store endpoints in a database table
@@ -74,26 +74,6 @@ class EndpointService extends AbstractDatabaseAccess {
     }
 
     /**
-     * @param array $options
-     *
-     * @return bool
-     * @throws ConfigOptionKeyNotExists
-     */
-    private function isValid(array $options) {
-        /**
-         * Check if required keys are within the options
-         */
-        $keys = ['controller', 'name'];
-        foreach ($keys as $key) {
-            if (!array_key_exists($key, $options)) {
-                throw new ConfigOptionKeyNotExists($key);
-            }
-        }
-
-        return true;
-    }
-
-    /**
      * @param array $endpoints
      *
      * @return array
@@ -144,14 +124,14 @@ class EndpointService extends AbstractDatabaseAccess {
                         $httpMethod = 'any';
                     }
 
-                    $controllerMethod  = $controller . ':' . $classMethod;
                     $endpointConfigs[] = [
-                        'name'        => $name,
-                        'path'        => $actionPath,
-                        'controller'  => $controllerMethod,
-                        'asset_scope' => $scope,
-                        'http_method' => $httpMethod,
-                        'order'       => $order,
+                        'name'             => $name,
+                        'path'             => $actionPath,
+                        'controllerClass'  => $controller,
+                        'controllerMethod' => $classMethod,
+                        'asset_scope'      => $scope,
+                        'http_method'      => $httpMethod,
+                        'order'            => $order,
                     ];
                 }
                 if (empty($endpointConfigs)) {
@@ -163,4 +143,23 @@ class EndpointService extends AbstractDatabaseAccess {
 
         return $endpointConfigs;
     }
+
+    /**
+     * @param array $options
+     *
+     * @return bool
+     * @throws ConfigOptionKeyNotExists
+     */
+    private function isValid(array $options) {
+        // Check if required keys are within the options
+        $keys = ['controller', 'name'];
+        foreach ($keys as $key) {
+            if (!array_key_exists($key, $options)) {
+                throw new ConfigOptionKeyNotExists($key);
+            }
+        }
+
+        return true;
+    }
+
 }

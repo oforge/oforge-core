@@ -2,7 +2,6 @@
 
 use Oforge\Engine\Modules\Core\Abstracts\AbstractTemplateManager;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractViewManager;
-use Oforge\Engine\Modules\Core\Forge\ForgeDatabase;
 use Oforge\Engine\Modules\Core\Forge\ForgeSettings;
 use Oforge\Engine\Modules\Core\Forge\ForgeSlimApp;
 use Oforge\Engine\Modules\Core\Manager\Logger\LoggerManager;
@@ -10,6 +9,7 @@ use Oforge\Engine\Modules\Core\Manager\Modules\ModuleManager;
 use Oforge\Engine\Modules\Core\Manager\Plugins\PluginManager;
 use Oforge\Engine\Modules\Core\Manager\Routes\RouteManager;
 use Oforge\Engine\Modules\Core\Manager\Services\ServiceManager;
+use Oforge\Engine\Modules\Core\Forge\ForgeDatabase;
 
 // TODO: find a better way to use a TemplateEngine Module
 
@@ -35,7 +35,7 @@ class BlackSmith {
     /**
      *  DataBase
      *
-     * @var \Oforge\Engine\Modules\Core\Forge\ForgeDatabase $db
+     * @var ForgeDatabase $db
      */
     private $db = null;
     /**

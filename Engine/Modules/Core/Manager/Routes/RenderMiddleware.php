@@ -13,6 +13,7 @@ use Slim\Http\Response;
  * @package Oforge\Engine\Modules\Core\Manager\Routes
  */
 class RenderMiddleware {
+
     /**
      * Add a "Fetch Controller Data" Middleware function
      *
@@ -34,9 +35,9 @@ class RenderMiddleware {
         if (empty($data)) {
             $data = Oforge()->View()->fetch();
         } else {
-            $fetcheData = Oforge()->View()->fetch();
+            $fetchedData = Oforge()->View()->fetch();
 
-            $data = ArrayHelper::mergeRecursive($data, $fetcheData);
+            $data = ArrayHelper::mergeRecursive($data, $fetchedData);
         }
 
         return Oforge()->Templates()->render($request, $response, $data);

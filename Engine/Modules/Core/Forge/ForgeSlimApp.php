@@ -2,6 +2,7 @@
 
 namespace Oforge\Engine\Modules\Core\Forge;
 
+use Error;
 use Exception;
 use Slim\App as SlimApp;
 use Slim\Http\Cookies;
@@ -28,7 +29,8 @@ class ForgeSlimApp extends SlimApp {
         $container = $this->getContainer();
 
         $errorHandler = function ($container) {
-            return function (Request $request, Response $response, Exception $exception) use ($container) {
+            return function (Request $request, Response $response, $exception) use ($container) {
+                /** @var Exception|Error $exception */
                 $message = $exception->getMessage();
                 $trace   = str_replace("\n", "<br />\n", $exception->getTraceAsString());
                 $file    = $exception->getFile();

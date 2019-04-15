@@ -47,7 +47,7 @@ class RouteManager {
                 continue;
             }
 
-            $className = StringHelper::substringBefore( $endpoint->getController(), ':' );
+            $className = $endpoint->getControllerClass();
             if ( ! $container->has( $className ) ) {
                 $container[ $className ] = function () use ( $className ) {
                     return new $className;
@@ -59,7 +59,7 @@ class RouteManager {
              * @var \Slim\Interfaces\RouteInterface $slimRoute
              */
             $slimRoute = Oforge()->App()->$httpMethod(#
-                $endpoint->getPath(), $endpoint->getController()#
+                $endpoint->getPath(), $endpoint->getControllerClass() . ':' . $endpoint->getControllerMethod()#
             )->setName( $endpoint->getName() );
             
             /**
@@ -85,7 +85,7 @@ class RouteManager {
             $slimRoute->add( new RenderMiddleware() );
             $slimRoute->add( new RouteMiddleware( $endpoint ) );
             $slimRoute->add( new DebugModeMiddleware);
-            $slimRoute->add( new SessionMiddleware());
+            $slimRoute->add( new SessionMiddleware());//Designfehler Sessionmodule in core?
         }
     }
 }
