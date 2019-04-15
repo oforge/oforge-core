@@ -1,6 +1,6 @@
 <?php
 
-namespace Oforge\Engine\Modules\Core\Annotation\ORM;
+namespace Oforge\Engine\Modules\Core\Annotation\ORM\Discriminator;
 
 use Doctrine\Common\Annotations\Annotation;
 use Doctrine\Common\Annotations\AnnotationReader;
