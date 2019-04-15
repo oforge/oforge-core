@@ -14,10 +14,10 @@ final class DiscriminatorEntry {
     /**
      * DiscriminatorEntry constructor.
      *
-     * @param array $data
+     * @param array $config
      */
-    public function __construct(array $data) {
-        $this->value = $data['value'] ?? null;
+    public function __construct(array $config) {
+        $this->value = $config['value'] ?? null;
     }
 
     /**
@@ -26,4 +26,5 @@ final class DiscriminatorEntry {
     public function getValue() {
         return $this->value;
     }
+
 }
