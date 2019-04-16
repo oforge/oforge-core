@@ -97,7 +97,7 @@ class PluginStateService extends AbstractDatabaseAccess {
                 if(isset($pluginMiddlewares) && is_array($pluginMiddlewares) && sizeof($pluginMiddlewares) > 0) {
                     /** @var $middlewaresService MiddlewareService */
                     $middlewaresService = Oforge()->Services()->get('middleware');
-                    $middlewaresService->register($pluginMiddlewares, $plugin);
+                    $middlewaresService->register($pluginMiddlewares, false);
                 }
             }
         }

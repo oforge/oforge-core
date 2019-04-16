@@ -181,7 +181,11 @@ INSERT INTO `oforge_i18n_snippet` (`id`, `scope`, `snippet_name`, `value`) VALUE
 (108,	'de',	'cms_element_editor_content_no_content_selected',	'Wählen Sie ein Content Element zum Editieren!'),
 (109,	'en',	'cms_element_editor_content_no_content_selected',	'Select a content element for editing!'),
 (110,	'de',	'cms_element_editor_create_new_root_folder',	'Hier klicken um einen neuen Root-Ordner zu erstellen ...'),
-(111,	'en',	'cms_element_editor_create_new_root_folder',	'Click here to create a new root folder ...');
+(111,	'en',	'cms_element_editor_create_new_root_folder',	'Click here to create a new root folder ...'),
+(112, 'en', 'mailer_templates_register_confirmation_title', 'Thank you for your Registration!'),
+(113, 'de', 'mailer_templates_register_confirmation_title', 'Vielen Dank für Ihre Registrierung!'),
+(114, 'en', 'mailer_templates_register_confirmation_body', 'Please click the button below to complete your registration.'),
+(115, 'de', 'mailer_templates_register_confirmation_body', 'Bitte klicken sie auf den Button, um Ihre Registrierung abzuschließen.');
 
 DROP TABLE IF EXISTS `oforge_cms_content_type_group`;
 CREATE TABLE `oforge_cms_content_type_group` (

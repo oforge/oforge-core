@@ -6,11 +6,9 @@
         <div class="container-fluid element-editor-container-wrapper" id="element_editor_container_wrapper">
             <div class="row">
                 {% include 'Backend/Elements/ElementJsTree.twig' %}
-                {% include 'Backend/Pages/PageContent.twig' %}
-                {% if contents.isContainer or not contents.type %}
-                    {% include 'Backend/Pages/ContentTypeList.twig' %}
-                {% endif %}
-        </div>
+                {% include 'Backend/Elements/ElementContent.twig' %}
+                {% include 'Backend/Elements/ContentTypeList.twig' %}
+            </div>
         </div>
     {% endblock cms_element_editor %}
 

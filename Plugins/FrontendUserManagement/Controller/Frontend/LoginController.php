@@ -6,12 +6,25 @@ use FrontendUserManagement\Services\FrontendUserLoginService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Services\RedirectService;
+use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\Session\Services\SessionManagementService;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
 
+/**
+ * Class LoginController
+ *
+ * @package FrontendUserManagement\Controller\Frontend
+ */
 class LoginController extends AbstractController {
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     *
+     * @throws ServiceNotFoundException
+     */
     public function indexAction(Request $request, Response $response) {
         /** @var RedirectService $redirectService */
         $redirectService = Oforge()->Services()->get('redirect');
@@ -26,16 +39,15 @@ class LoginController extends AbstractController {
      * @throws ServiceNotFoundException
      */
     public function processAction(Request $request, Response $response) {
-
         if (empty($_SESSION)) {
             // TODO: do something not so stupid like this.
             print_r('No session :/');
             die();
         }
-    
+
         /** @var FrontendUserLoginService $loginService */
         $loginService = Oforge()->Services()->get('frontend.user.management.login');
-    
+
         /**
          * @var $router Router
          */
@@ -49,68 +61,73 @@ class LoginController extends AbstractController {
         }
 
         $uri = $router->pathFor($redirectUrlName);
-    
+
         /**
          * disallow direct processAction call. Only post action is allowed
          */
         if (!$request->isPost()) {
-            Oforge()->View()->addFlashMessage('warning', 'Direct page call is not allowed.');
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('invalid_direct_page_call', 'Direct page call is not allowed.'));
+
             return $response->withRedirect($uri, 302);
         }
-    
+
         $body = $request->getParsedBody();
-        $jwt = null;
-    
+        $jwt  = null;
+
         /**
          * no token was sent
          */
         if (!isset($body['token']) || empty($body['token'])) {
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('form_invalid_token', 'The data has been sent from an invalid form.'));
             Oforge()->Logger()->get()->addWarning('Someone tried to do a backend login with a form without csrf token! Redirecting to backend login.');
-            Oforge()->View()->addFlashMessage('warning', 'The data has been sent from an invalid form.');
+
             return $response->withRedirect($uri, 302);
         }
-    
+
         /**
          * invalid token was sent
          */
         if (!hash_equals($_SESSION['token'], $body['token'])) {
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('form_invalid_token', 'The data has been sent from an invalid form.'));
             Oforge()->Logger()->get()->addWarning('Someone tried a backend login without a valid form csrf token! Redirecting back to login.');
-            Oforge()->View()->addFlashMessage('warning', 'The data has been sent from an invalid form.');
+
             return $response->withRedirect($uri, 302);
         }
-    
+
         /**
          * no email or password body was sent
          */
-        if (!array_key_exists('frontend_login_email', $body) ||
-            !array_key_exists('frontend_login_password', $body)) {
-            Oforge()->View()->addFlashMessage('warning', 'Invalid username or password.');
+        if (!array_key_exists('frontend_login_email', $body)
+            || !array_key_exists('frontend_login_password', $body)) {
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('login_invalid_data', 'Invalid username or password.'));
+
             return $response->withRedirect($router->pathFor('frontend_login'), 302);
         }
-    
+
         $jwt = $loginService->login($body['frontend_login_email'], $body['frontend_login_password']);
-    
+
         /**
          * $jwt is null if the login credentials are incorrect
          */
         if (!isset($jwt)) {
-            Oforge()->View()->addFlashMessage('warning', 'Invalid username or password.');
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('login_invalid_data', 'Invalid username or password.'));
+
             return $response->withRedirect($uri, 302);
         }
-    
+
         /**
-         * @var $sessionManagement SessionManagementService
+         * @var SessionManagementService $sessionManagement
          */
         $sessionManagement = Oforge()->Services()->get('session.management');
         $sessionManagement->regenerateSession();
-    
-        $_SESSION['auth'] = $jwt;
-        $_SESSION['user_logged_in'] = true;
-    
-        $uri = $router->pathFor('frontend_account_dashboard');
 
-        Oforge()->View()->addFlashMessage('success', 'you have successfully logged in!');
-    
+        $_SESSION['auth']           = $jwt;
+        $_SESSION['user_logged_in'] = true;
+
+        $uri = $router->pathFor('frontend_account_dashboard');
+        Oforge()->View()->Flash()->addMessage('success', I18N::translate('login_success', 'You have successfully logged in!'));
+
         return $response->withRedirect($uri, 302);
     }
+
 }

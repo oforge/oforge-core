@@ -8,30 +8,35 @@
 
 namespace Oforge\Engine\Modules\TemplateEngine\Extensions\Twig;
 
-use Twig_Environment;
 use Twig_Extension;
 use Twig_Function;
-use Twig_TemplateWrapper;
 
-class TokenExtension extends Twig_Extension
-{
-    public function getFunctions()
-    {
-        return array(
-            new Twig_Function('token', array($this, 'getToken'), array('is_safe' => array('html')))
-        );
-    }
-    
+/**
+ * Class TokenExtension
+ *
+ * @package Oforge\Engine\Modules\TemplateEngine\Extensions\Twig
+ */
+class TokenExtension extends Twig_Extension {
+
     /**
-     *
+     * @inheritDoc
+     */
+    public function getFunctions() {
+        return [
+            new Twig_Function('token', [$this, 'getToken'], ['is_safe' => ['html']]),
+        ];
+    }
+
+    /**
      * @return string
      * @throws \Exception
      */
-    public function getToken()
-    {
+    public function getToken() {
         if (empty($_SESSION['token'])) {
             $_SESSION['token'] = bin2hex(random_bytes(32));
         }
+
         return $_SESSION['token'];
     }
+
 }

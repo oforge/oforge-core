@@ -250,9 +250,58 @@ class ElementsControllerService extends AbstractDatabaseAccess {
         $data = [
             "js"                => ["cms_elements_controller_jstree_config" => $elementTreeService->generateJsTreeConfigJSON()],
             "contentTypeGroups" => $contentTypeService->getContentTypeGroupArray(),
-            "post"              => $post
+            "post"              => $post,
+            "activatePageBuilder" => true
         ];
+
+        // TODO: call with selected content element id to display edit mode
+        //$data = array_merge($data, $this->getPageContentArrayForContentElement(17));
         
         return $data;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public function getPageContentArrayForContentElement($contentId)
+    {
+        $pageBuilderService = OForge()->Services()->get("page.builder.service");
+
+        $contentEntity = $this->repository('content')->findOneBy(["id" => $contentId]);
+
+        if ($contentEntity) {
+            $pageContents = [];
+
+            $pageContent            = [];
+            $pageContent["id"]      = 0;
+            $pageContent["content"] = $pageBuilderService->getContentArray($contentEntity);
+            $pageContent["order"]   = 0;
+            
+            $pageContents[] = $pageContent;
+
+            $data["contents"] = $pageBuilderService->getContentDataArrayById($pageContents, $contentEntity->getId());
+
+            return $data;
+        }
+
+        return NULL;
     }
 }
