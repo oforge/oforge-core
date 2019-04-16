@@ -157,7 +157,7 @@ class ConfigService
      * @return mixed
      * @throws ConfigElementNotFoundException
      */
-    public function get(string $key, integer $scope = null)
+    public function get(string $key, ?integer $scope = null)
     {
         $em = Oforge()->DB()->getManager();
         $repo = $em->getRepository(Element::class);

@@ -2,7 +2,11 @@
  	border-right-style: solid;
  	border-right-width: 1px;
  	border-right-color: #000;
- 	overflow: scroll;
+}
+
+.cms-page-jstree-wrapper {
+	height: 90%;
+	overflow: scroll;
 }
 
 .cms-page-builder-create-new-root-page {

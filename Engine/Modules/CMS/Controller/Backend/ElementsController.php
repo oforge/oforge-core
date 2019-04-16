@@ -43,7 +43,7 @@ class ElementsController extends AbstractController {
                 }
                 break;
             case "cms_page_builder_form":
-                $data = $pagesControllerService->editContentData($_POST);
+                $data = $elementsControllerService->getElementData($_POST);
                 break;
         }
         
