@@ -10,6 +10,7 @@ class Statics {
     public const VAR_DIR              = "var";
     public const ASSETS_DIR           = "__assets";
     public const PUBLIC_DIR           = DIRECTORY_SEPARATOR . Statics::VAR_DIR . DIRECTORY_SEPARATOR . "public";
+    public const IMAGES_DIR           = Statics::PUBLIC_DIR . DIRECTORY_SEPARATOR . "images";
     public const CACHE_DIR            = DIRECTORY_SEPARATOR . Statics::VAR_DIR . DIRECTORY_SEPARATOR . "cache";
     public const THEME_CACHE_DIR      = Statics::PUBLIC_DIR . DIRECTORY_SEPARATOR . "theme";
     public const DB_CACHE_DIR         = Statics::CACHE_DIR . DIRECTORY_SEPARATOR . "db";
