@@ -248,7 +248,7 @@ $(document).ready(function() {
 	        }
 		);
     	
-    	const quill = new Quill('#cms_page_richtext_editor', {
+    	const quill = new Quill('#cms_page_richtext_editor', {^^
 			theme: 'snow'
 		});
     }
