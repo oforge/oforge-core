@@ -33,5 +33,6 @@ class Bootstrap extends AbstractBootstrap {
         $templateRenderer->View()->addExtension(new SlimExtension());
         $templateRenderer->View()->addExtension(new BackendExtension());
         $templateRenderer->View()->addExtension(new TokenExtension());
+
     }
 }

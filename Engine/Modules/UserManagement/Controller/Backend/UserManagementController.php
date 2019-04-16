@@ -32,7 +32,7 @@ class UserManagementController extends SecureBackendController {
     public function indexAction(Request $request, Response $response) {
         $params = [];
         $users = $this->backendUsersCrudService->list($params);
-        Oforge()->View()->assign(["users" => $users]);
+        Oforge()->View()->assign(["json" => $users]);
     }
     
     /**
