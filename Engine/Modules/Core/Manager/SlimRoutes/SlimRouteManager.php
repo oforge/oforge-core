@@ -6,11 +6,11 @@ use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Forge\ForgeSlimApp;
 use Oforge\Engine\Modules\Core\Middleware\DebugModeMiddleware;
+use Oforge\Engine\Modules\Core\Middleware\SessionMiddleware;
 use Oforge\Engine\Modules\Core\Models\Endpoint\Endpoint;
 use Oforge\Engine\Modules\Core\Models\Endpoint\EndpointMethod;
 use Oforge\Engine\Modules\Core\Models\Plugin\Middleware;
 use Oforge\Engine\Modules\Core\Services\MiddlewareService;
-use Oforge\Engine\Modules\Session\Middleware\SessionMiddleware;
 use Psr\Container\ContainerInterface;
 use Slim\Interfaces\RouteInterface;
 
@@ -92,7 +92,7 @@ class SlimRouteManager {
             $slimRoute->add(new RenderMiddleware());
             $slimRoute->add(new RouteMiddleware($endpoint));
             $slimRoute->add(new DebugModeMiddleware());
-            $slimRoute->add(new SessionMiddleware());//Designfehler Sessionmodule in core?
+            $slimRoute->add(new SessionMiddleware());
         }
     }
 

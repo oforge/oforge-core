@@ -12,9 +12,9 @@ use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Services\RedirectService;
+use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\Mailer\Services\MailService;
-use Oforge\Engine\Modules\Session\Services\SessionManagementService;
 use PHPMailer\PHPMailer\Exception;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -52,7 +52,7 @@ class RegistrationController extends AbstractController {
      * @throws Exception
      */
     public function processAction(Request $request, Response $response) {
-        /** @var PasswordService $passwordService */ /** @var RegistrationService $registrationService */ /** @var SessionManagementService $sessionManagementService */ /** @var Router $router */
+        /** @var PasswordService $passwordService */ /** @var RegistrationService $registrationService */ /** @var \Oforge\Engine\Modules\Core\Services\Session\SessionManagementService $sessionManagementService */ /** @var Router $router */
         /** @var MailService $mailService */
         $passwordService          = null;
         $registrationService      = null;
@@ -162,16 +162,16 @@ class RegistrationController extends AbstractController {
         $mailService = Oforge()->Services()->get('mail');
 
         // TODO: add email snippets
-        $mailOptions = [
-            'to'      => [$user['email'] => $user['email']],
-            'subject' => 'Oforge | Your registration!',
+        $mailOptions  = [
+            'to'       => [$user['email'] => $user['email']],
+            'subject'  => 'Oforge | Your registration!',
             'template' => 'RegisterConfirmation.twig',
         ];
         $templateData = [
             'activationLink' => $activationLink,
         ];
 
-        $mailService->send($mailOptions ,$templateData);
+        $mailService->send($mailOptions, $templateData);
 
         $uri = $router->pathFor('frontend_login');
         Oforge()->View()->Flash()->addMessage('success', I18N::translate('registration_success_mail_send',
