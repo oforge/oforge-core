@@ -1,6 +1,6 @@
 <?php
 
-namespace Oforge\Engine\Modules\Core\Manager\SlimRoutes;
+namespace Oforge\Engine\Modules\Core\Manager\Slim;
 
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Psr\Http\Message\ResponseInterface;
@@ -10,7 +10,7 @@ use Slim\Http\Response;
 /**
  * Class RenderMiddleware
  *
- * @package Oforge\Engine\Modules\Core\Manager\Routes
+ * @package Oforge\Engine\Modules\Core\Manager\Slim
  */
 class RenderMiddleware {
 

@@ -6,14 +6,16 @@
  * Time: 11:12
  */
 
-namespace Oforge\Engine\Modules\Core\Manager\SlimRoutes;
+namespace Oforge\Engine\Modules\Core\Manager\Slim;
 
 use Oforge\Engine\Modules\Core\Models\Plugin\Middleware;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Class MiddlewarePluginManager
  *
- * @package Oforge\Engine\Modules\Core\Manager\SlimRoutes
+ * @package Oforge\Engine\Modules\Core\Manager\Slim
  */
 class MiddlewarePluginManager {
     /** @var Middleware[] $activeMiddlewares */
@@ -31,20 +33,20 @@ class MiddlewarePluginManager {
     /**
      * Add append and prepend middleware to Slim
      *
-     * @param \Psr\Http\Message\ServerRequestInterface $request PSR7 request
-     * @param \Psr\Http\Message\ResponseInterface $response PSR7 response
+     * @param ServerRequestInterface $request PSR7 request
+     * @param ResponseInterface $response PSR7 response
      * @param callable $next Next middleware
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return ResponseInterface
      */
     public function __invoke($request, $response, $next) {
         foreach ($this->activeMiddlewares as $middleware) {
             $className = $middleware->getClass();
 
             if (method_exists($className, 'prepend')) {
-                $newresponse = (new $className())->prepend($request, $response);
-                if (isset($newresponse)) {
-                    $response = $newresponse;
+                $newResponse = (new $className())->prepend($request, $response);
+                if (isset($newResponse)) {
+                    $response = $newResponse;
                 }
             }
         }
@@ -55,9 +57,9 @@ class MiddlewarePluginManager {
             $className = $middleware->getClass();
 
             if (method_exists($className, 'append')) {
-                $newresponse = (new $className())->append($request, $response);
-                if (isset($newresponse)) {
-                    $response = $newresponse;
+                $newResponse = (new $className())->append($request, $response);
+                if (isset($newResponse)) {
+                    $response = $newResponse;
                 }
             }
         }

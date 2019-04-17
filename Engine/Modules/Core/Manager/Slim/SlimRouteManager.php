@@ -1,6 +1,6 @@
 <?php
 
-namespace Oforge\Engine\Modules\Core\Manager\SlimRoutes;
+namespace Oforge\Engine\Modules\Core\Manager\Slim;
 
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
@@ -17,7 +17,7 @@ use Slim\Interfaces\RouteInterface;
 /**
  * Class RouteManager
  *
- * @package Oforge\Engine\Modules\Core\Manager\Routes
+ * @package Oforge\Engine\Modules\Core\Manager\Slim
  */
 class SlimRouteManager {
     /** @var SlimRouteManager $instance */
