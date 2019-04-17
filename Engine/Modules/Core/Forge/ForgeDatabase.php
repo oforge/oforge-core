@@ -66,16 +66,17 @@ class ForgeDatabase {
         if (empty($this->schemata)) {
             $this->loadLoadedModelSchemata();
         }
-        $changed = false;
+        $addedSchemata = [];
         foreach ($schemata as $schema) {
             if (!array_key_exists($schema, $this->loadedSchemata) || $forceInit) {
                 $this->addMetaData($schema);
                 $this->loadedSchemata[$schema] = 1;
-                $changed                       = true;
+
+                $addedSchemata[] = $schema;
             }
         }
-        if ($changed) {
-            $this->saveAddedModelSchemata();
+        if (!empty($addedSchemata)) {
+            $this->saveAddedModelSchemata($schema);
         }
     }
 
@@ -88,8 +89,9 @@ class ForgeDatabase {
         $this->settings = $settings;
         $isDevMode      = $settings['dev_mode'];
         $metadataDirs   = $settings['metadata_dirs'];
+        $cacheDir       = $settings['cache_dir'];
 
-        $filesystemCache  = new FilesystemCache($settings['cache_dir']);
+        $filesystemCache  = new FilesystemCache($cacheDir);
         $annotationReader = new AnnotationReader();
         $cachedReader     = new CachedReader($annotationReader, $filesystemCache, $isDevMode);
         $annotationDriver = new AnnotationDriver($cachedReader, $metadataDirs);
@@ -174,9 +176,11 @@ class ForgeDatabase {
 
     /**
      * Save model schema to chache file.
+     *
+     * @param string[] $schema
      */
-    private function saveAddedModelSchemata() {
-        $content = implode("\n", array_keys($this->loadedSchemata));
+    private function saveAddedModelSchemata($schema) {
+        $content = implode("\n", $schema);
         file_put_contents(self::PATH_CACHE_FILE, $content . "\n");
     }
 

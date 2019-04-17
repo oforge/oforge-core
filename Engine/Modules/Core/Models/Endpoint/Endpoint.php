@@ -25,7 +25,7 @@ class Endpoint extends AbstractModel {
     private $active = false;
     /**
      * @var string
-     * @ORM\Column(name="path_name", type="string", nullable=false)
+     * @ORM\Column(name="path_name", type="string", nullable=false, unique=true)
      */
     private $name;
     /**
@@ -45,9 +45,9 @@ class Endpoint extends AbstractModel {
     private $controllerMethod;
     /**
      * @var string
-     * @ORM\Column(name="http", type="string", nullable=false, options={"default":"any"})
+     * @ORM\Column(name="http", type="string", nullable=false, options={"default":EndpointMethod::ANY})
      */
-    private $httpMethod = 'any';
+    private $httpMethod = EndpointMethod::ANY;
     /**
      * @var string
      * @ORM\Column(name="asset_scope", type="string", nullable=true, options={"default":"frontend"})
