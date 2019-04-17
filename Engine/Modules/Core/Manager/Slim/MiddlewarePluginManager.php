@@ -9,8 +9,6 @@
 namespace Oforge\Engine\Modules\Core\Manager\Slim;
 
 use Oforge\Engine\Modules\Core\Models\Plugin\Middleware;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Class MiddlewarePluginManager
@@ -30,15 +28,7 @@ class MiddlewarePluginManager {
         $this->activeMiddlewares = $activeMiddlewares;
     }
 
-    /**
-     * Add append and prepend middleware to Slim
-     *
-     * @param ServerRequestInterface $request PSR7 request
-     * @param ResponseInterface $response PSR7 response
-     * @param callable $next Next middleware
-     *
-     * @return ResponseInterface
-     */
+    /** @inheritDoc */
     public function __invoke($request, $response, $next) {
         foreach ($this->activeMiddlewares as $middleware) {
             $className = $middleware->getClass();
