@@ -62,7 +62,7 @@ class PluginStateService extends AbstractDatabaseAccess {
                  * @var $endpointService EndpointService
                  */
                 $endpointService = Oforge()->Services()->get("endpoints");
-                $endpointService->register($endpoints);
+                $endpointService->install($endpoints);
             }
         }
     }

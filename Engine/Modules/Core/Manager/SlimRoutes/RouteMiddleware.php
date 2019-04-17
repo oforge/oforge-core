@@ -1,6 +1,6 @@
 <?php
 
-namespace Oforge\Engine\Modules\Core\Manager\Routes;
+namespace Oforge\Engine\Modules\Core\Manager\SlimRoutes;
 
 use Oforge\Engine\Modules\Core\Models\Endpoint\Endpoint;
 
