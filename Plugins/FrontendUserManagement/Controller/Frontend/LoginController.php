@@ -6,8 +6,8 @@ use FrontendUserManagement\Services\FrontendUserLoginService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Services\RedirectService;
+use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
-use Oforge\Engine\Modules\Session\Services\SessionManagementService;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
@@ -49,8 +49,8 @@ class LoginController extends AbstractController {
         $loginService = Oforge()->Services()->get('frontend.user.management.login');
 
         /**
-         * @var $router Router
-         */
+         * @var Router
+ $router         */
         $router = Oforge()->App()->getContainer()->get('router');
 
         /** @var RedirectService $redirectService */
@@ -115,9 +115,7 @@ class LoginController extends AbstractController {
             return $response->withRedirect($uri, 302);
         }
 
-        /**
-         * @var SessionManagementService $sessionManagement
-         */
+        /** @var SessionManagementService $sessionManagement */
         $sessionManagement = Oforge()->Services()->get('session.management');
         $sessionManagement->regenerateSession();
 

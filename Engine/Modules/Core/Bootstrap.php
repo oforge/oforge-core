@@ -19,6 +19,7 @@ use Oforge\Engine\Modules\Core\Services\PingService;
 use Oforge\Engine\Modules\Core\Services\PluginAccessService;
 use Oforge\Engine\Modules\Core\Services\PluginStateService;
 use Oforge\Engine\Modules\Core\Services\RedirectService;
+use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
 
 class Bootstrap extends AbstractBootstrap {
     public function __construct() {
@@ -33,14 +34,15 @@ class Bootstrap extends AbstractBootstrap {
         ];
 
         $this->services = [
-            'plugin.state'   => PluginStateService::class,
-            'plugin.access'  => PluginAccessService::class,
-            'endpoints'      => EndpointService::class,
-            'config'         => ConfigService::class,
-            'middleware'     => MiddlewareService::class,
-            'store.keyvalue' => KeyValueStoreService::class,
-            'ping'           => PingService::class,
-            'redirect'       => RedirectService::class,
+            'plugin.state'       => PluginStateService::class,
+            'plugin.access'      => PluginAccessService::class,
+            'endpoints'          => EndpointService::class,
+            'config'             => ConfigService::class,
+            'middleware'         => MiddlewareService::class,
+            'store.keyvalue'     => KeyValueStoreService::class,
+            'ping'               => PingService::class,
+            'redirect'           => RedirectService::class,
+            'session.management' => SessionManagementService::class,
         ];
 
         $this->endpoints = [

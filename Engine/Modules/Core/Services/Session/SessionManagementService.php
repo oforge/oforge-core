@@ -6,7 +6,7 @@
  * Time: 12:29
  */
 
-namespace Oforge\Engine\Modules\Session\Services;
+namespace Oforge\Engine\Modules\Core\Services\Session;
 
 /**
  * Service to create secure sessions
