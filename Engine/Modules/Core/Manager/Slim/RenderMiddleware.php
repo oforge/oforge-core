@@ -14,15 +14,7 @@ use Slim\Http\Response;
  */
 class RenderMiddleware {
 
-    /**
-     * Add a "Fetch Controller Data" Middleware function
-     *
-     * @param Request $request PSR7 request
-     * @param Response $response PSR7 response
-     * @param callable $next Next middleware
-     *
-     * @return ResponseInterface
-     */
+    /** @inheritDoc */
     public function __invoke($request, $response, $next) {
         $data = [];
 
