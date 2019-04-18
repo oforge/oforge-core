@@ -12,6 +12,8 @@ use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Models\UserAddress;
 use FrontendUserManagement\Models\UserDetail;
 use FrontendUserManagement\Services\AccountNavigationService;
+use Oforge\Engine\Modules\AdminBackend\Core\Models\DashboardWidget;
+use Oforge\Engine\Modules\AdminBackend\Core\Services\DashboardWidgetsService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
@@ -66,6 +68,19 @@ class Bootstrap extends AbstractBootstrap {
      * @throws ParentNotFoundException
      * @throws ServiceNotFoundException
      */
+    public function install() {
+
+    }
+
+
+    /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ConfigElementAlreadyExists
+     * @throws ConfigOptionKeyNotExists
+     * @throws ParentNotFoundException
+     * @throws ServiceNotFoundException
+     */
     public function activate() {
         /** @var AccountNavigationService $accountNavigationService */
         $accountNavigationService = Oforge()->Services()->get('frontend.user.management.account.navigation');
@@ -91,5 +106,34 @@ class Bootstrap extends AbstractBootstrap {
             "path" => "frontend_logout",
             "position" => "sidebar",
         ]);
+
+        /** @var DashboardWidgetsService $dashboardWidgetsService */
+        $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
+
+        $dashboardWidgetsService->register([
+            "position" => "top",
+            "action" => "",
+            "title" => "frontend_users_title",
+            "name" => "frontend_users",
+            "cssClass" =>  "bg-yellow",
+            "templateName" => "FrontendUsers"
+        ]);
     }
+
+    /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ConfigElementAlreadyExists
+     * @throws ConfigOptionKeyNotExists
+     * @throws ParentNotFoundException
+     * @throws ServiceNotFoundException
+     */
+    public function deactivate() {
+
+        /** @var DashboardWidgetsService $dashboardWidgetsService */
+        $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
+        $dashboardWidgetsService->unregister("frontend_users");
+    }
+
+
 }

@@ -24,6 +24,8 @@ class DashboardController extends SecureBackendController {
         $authService = Oforge()->Services()->get("auth");
         $user = $authService->decode($_SESSION["auth"]);
         $data["user"] = $user;
+
+
         
         Oforge()->View()->assign($data);
     }
@@ -38,15 +40,6 @@ class DashboardController extends SecureBackendController {
         Oforge()->Services()->get("assets.template")->build(Oforge()->View()->get("meta")["asset_scope"]);
     }
 
-    public function fontAwesomeAction(Request $request, Response $response) {
-    }
-
-    public function ioniconsAction(Request $request, Response $response) {
-    }
-
-    public function helpAction(Request $request, Response $response) {
-    }
-    
     /**
      * @param Request $request
      * @param Response $response
@@ -105,6 +98,7 @@ class DashboardController extends SecureBackendController {
      */
     public function initPermissions() {
         $this->ensurePermissions("indexAction", BackendUser::class, BackendUser::ROLE_MODERATOR);
-//        $this->ensurePermissions("indexAction", BackendUser::class, BackendUser::ROLE_MODERATOR);
+        $this->ensurePermissions("buildAction", BackendUser::class, BackendUser::ROLE_ADMINISTRATOR);
+        $this->ensurePermissions("testAction", BackendUser::class, BackendUser::ROLE_ADMINISTRATOR);
     }
 }
