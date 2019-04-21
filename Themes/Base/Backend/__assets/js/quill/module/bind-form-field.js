@@ -1,3 +1,4 @@
+/* Quill module: BindFormField */
 (function ($, Quill) {
     if (!Quill) {
         return;

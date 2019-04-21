@@ -1,3 +1,6 @@
+/*
+ * Oforge Quill wrapper.
+ */
 var OforgeQuill = (function ($) {
     const toolbarConfig = [
         [{header: [1, 2, 3, 4, 5, 6, false]}],
