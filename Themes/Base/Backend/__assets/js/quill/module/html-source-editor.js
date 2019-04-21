@@ -1,3 +1,4 @@
+/* Quill module: HtmlSourceEditor */
 (function ($, Quill) {
     if (!Quill) {
         return;
