@@ -76,7 +76,7 @@ class ForgeDatabase {
             }
         }
         if (!empty($addedSchemata)) {
-            $this->saveAddedModelSchemata($schema);
+            $this->saveAddedModelSchemata($addedSchemata);
         }
     }
 
@@ -181,7 +181,7 @@ class ForgeDatabase {
      */
     private function saveAddedModelSchemata($schema) {
         $content = implode("\n", $schema);
-        file_put_contents(self::PATH_CACHE_FILE, $content . "\n");
+        file_put_contents(self::PATH_CACHE_FILE, $content . "\n", FILE_APPEND);
     }
 
 }
