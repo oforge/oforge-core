@@ -5,6 +5,8 @@ namespace Oforge\Engine\Modules\AdminBackend\Core\Controller\Backend;
 use Exception;
 use Oforge\Engine\Modules\Auth\Services\BackendLoginService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
 use Slim\Http\Request;
@@ -15,13 +17,16 @@ use Slim\Router;
  * Class LoginController
  *
  * @package Oforge\Engine\Modules\AdminBackend\Core\Controller\Backend
+ * @EndpointClass(path="/backend/login", name="backend_login", assetScope="Backend")
  */
 class LoginController extends AbstractController {
+
     /**
      * @param Request $request
      * @param Response $response
      *
      * @throws Exception
+     * @EndpointAction()
      */
     public function indexAction(Request $request, Response $response) {
         // for creating a user if no user exists in dev environment:
@@ -36,10 +41,11 @@ class LoginController extends AbstractController {
      *
      * @return Response
      * @throws ServiceNotFoundException
+     * @EndpointAction()
      */
     public function processAction(Request $request, Response $response) {
         if (empty($_SESSION)) {
-            print_r("No session :/");
+            print_r('No session :/');
             die();
         }
         /** @var BackendLoginService $backendLoginService */
@@ -62,7 +68,7 @@ class LoginController extends AbstractController {
          * no token was sent
          */
         if (!isset($body['token']) || empty($body['token'])) {
-            Oforge()->Logger()->get()->addWarning("Someone tried to do a backend login with a form without csrf token! Redirecting to backend login.");
+            Oforge()->Logger()->get()->addWarning('Someone tried to do a backend login with a form without csrf token! Redirecting to backend login.');
 
             return $response->withRedirect($uri, 302);
         }
@@ -71,7 +77,7 @@ class LoginController extends AbstractController {
          * invalid token was sent
          */
         if (!hash_equals($_SESSION['token'], $body['token'])) {
-            Oforge()->Logger()->get()->addWarning("Someone tried a backend login without a valid form csrf token! Redirecting back to login.");
+            Oforge()->Logger()->get()->addWarning('Someone tried a backend login without a valid form csrf token! Redirecting back to login.');
 
             return $response->withRedirect($uri, 302);
         }
@@ -79,12 +85,11 @@ class LoginController extends AbstractController {
         /**
          * no email or password body was sent
          */
-        if (!array_key_exists("email", $body)
-            || !array_key_exists("password", $body)) {
-            return $response->withRedirect($router->pathFor("backend_login"), 302);
+        if (!isset($body['email']) || !isset($body['password'])) {
+            return $response->withRedirect($router->pathFor('backend_login'), 302);
         }
 
-        $jwt = $backendLoginService->login($body["email"], $body["password"]);
+        $jwt = $backendLoginService->login($body['email'], $body['password']);
 
         /**
          * $jwt is null if the login credentials are incorrect
@@ -99,7 +104,7 @@ class LoginController extends AbstractController {
 
         $_SESSION['auth'] = $jwt;
 
-        $uri = $router->pathFor("backend_dashboard");
+        $uri = $router->pathFor('backend_dashboard');
 
         return $response->withRedirect($uri, 302);
     }

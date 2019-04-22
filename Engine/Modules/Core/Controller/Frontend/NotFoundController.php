@@ -12,7 +12,7 @@ use Slim\Http\Response;
  * Class NotFoundController
  *
  * @package Oforge\Engine\Modules\Core\Controller\Frontend
- * @EndpointClass(path="/404")
+ * @EndpointClass(path="/404", name="not_found")
  */
 class NotFoundController extends AbstractController {
 
@@ -21,7 +21,7 @@ class NotFoundController extends AbstractController {
      * @param Response $response
      *
      * @return Response
-     * @EndpointAction(name="not_found")
+     * @EndpointAction()
      */
     public function indexAction(Request $request, Response $response) {
         return $response->withStatus(404);

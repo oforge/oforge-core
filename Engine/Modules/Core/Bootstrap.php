@@ -21,8 +21,18 @@ use Oforge\Engine\Modules\Core\Services\PluginStateService;
 use Oforge\Engine\Modules\Core\Services\RedirectService;
 use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
 
+/**
+ * Class Bootstrap
+ *
+ * @package Oforge\Engine\Modules\Core
+ */
 class Bootstrap extends AbstractBootstrap {
+
     public function __construct() {
+        $this->endpoints = [
+            NotFoundController::class,
+        ];
+
         $this->models = [
             Module::class,
             Element::class,
@@ -43,10 +53,6 @@ class Bootstrap extends AbstractBootstrap {
             'ping'               => PingService::class,
             'redirect'           => RedirectService::class,
             'session.management' => SessionManagementService::class,
-        ];
-
-        $this->endpoints = [
-            NotFoundController::class,
         ];
 
         $this->order = 0;

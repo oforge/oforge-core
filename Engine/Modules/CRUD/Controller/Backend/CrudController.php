@@ -9,8 +9,13 @@
 namespace Oforge\Engine\Modules\CRUD\Controller\Backend;
 
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
+use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
 use Oforge\Engine\Modules\CRUD\Services\GenericCrudService;
 use Oforge\Engine\Modules\I18n\Services\InternationalizationService;
 use Slim\Http\Request;
@@ -50,7 +55,16 @@ class CrudController extends SecureBackendController
         $this->i18nService = Oforge()->Services()->get("i18n");
     }
 
-
+    /**
+     * @param Request $request
+     * @param Response $response
+     *
+     * @throws ConfigOptionKeyNotExists
+     * @throws NotFoundException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @EndpointAction()
+     */
     public function indexAction(Request $request, Response $response)
     {
         if (isset($this->model)) {
@@ -79,6 +93,13 @@ class CrudController extends SecureBackendController
         Oforge()->View()->assign(["editInline" => $this->editLine]);
     }
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     public function delete(Request $request, Response $response)
     {
         if (isset($model)) {
@@ -95,6 +116,15 @@ class CrudController extends SecureBackendController
         }
     }
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ConfigOptionKeyNotExists
+     * @throws NotFoundException
+     */
     public function update(Request $request, Response $response)
     {
         if (isset($this->model)) {
@@ -109,7 +139,6 @@ class CrudController extends SecureBackendController
             ]]);
         }
     }
-
 
     public function create(Request $request, Response $response)
     {
@@ -132,6 +161,10 @@ class CrudController extends SecureBackendController
         Oforge()->View()->assign(["result" => $result, "header" => $this->header ?: $this->crudService->definition($this->model)]);
     }
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     */
     public function detailAction(Request $request, Response $response)
     {
         if (isset($this->model)) {
