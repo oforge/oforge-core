@@ -4,7 +4,7 @@
 The model **muss contains id property**.
 
 ## ViewController
-Create a ViewController class that inherits from **Oforge\Engine\Modules\CRUD\Controller\Backend\CrudController** and register it in Bootstrap.
+Create a ViewController class that inherits from **Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController** and register it in Bootstrap.
 
 Now the properties **model** and **modelProperties** of the class have to be overwritten:
 

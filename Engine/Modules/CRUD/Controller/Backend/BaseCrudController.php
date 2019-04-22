@@ -15,7 +15,7 @@ use Slim\Http\Response;
 use Slim\Router;
 
 /**
- * Class CrudController
+ * Class BaseCrudController
  *
  * @package Oforge\Engine\Modules\CRUD\Controller\Backend
  */
@@ -98,7 +98,7 @@ class BaseCrudController extends SecureBackendController {
     private $router;
 
     /**
-     * CrudController constructor.
+     * BaseCrudController constructor.
      *
      * @throws ServiceNotFoundException
      */
