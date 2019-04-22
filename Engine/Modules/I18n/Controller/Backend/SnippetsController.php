@@ -8,12 +8,18 @@
 
 namespace Oforge\Engine\Modules\I18n\Controller\Backend;
 
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\CrudController;
 use Oforge\Engine\Modules\I18n\Models\Snippet;
 use Oforge\Engine\Modules\I18n\Services\InternationalizationService;
 use Oforge\Engine\Modules\I18n\Services\LanguageService;
 
-
+/**
+ * Class SnippetsController
+ *
+ * @package Oforge\Engine\Modules\I18n\Controller\Backend
+ * @EndpointClass(path="/backend/i18n/snippets", name="backend_i18n_snippets", assetScope="Backend")
+ */
 class SnippetsController extends CrudController
 {
     protected $model = Snippet::class;

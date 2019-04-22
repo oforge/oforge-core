@@ -8,6 +8,8 @@ use FrontendUserManagement\Services\RegistrationService;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Auth\Services\PasswordService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
@@ -19,11 +21,15 @@ use PHPMailer\PHPMailer\Exception;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
+use Twig_Error_Loader;
+use Twig_Error_Runtime;
+use Twig_Error_Syntax;
 
 /**
  * Class RegistrationController
  *
  * @package FrontendUserManagement\Controller\Frontend
+ * @EndpointClass(path="/registration", name="frontend_registration", assetScope="Frontend")
  */
 class RegistrationController extends AbstractController {
 
@@ -32,6 +38,7 @@ class RegistrationController extends AbstractController {
      * @param Response $response
      *
      * @throws ServiceNotFoundException
+     * @EndpointAction()
      */
     public function indexAction(Request $request, Response $response) {
         /** @var RedirectService $redirectService */
@@ -44,16 +51,25 @@ class RegistrationController extends AbstractController {
      * @param Response $response
      *
      * @return Response
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @throws ConfigElementNotFoundException
      * @throws ConfigOptionKeyNotExists
-     * @throws ServiceNotFoundException
      * @throws Exception
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ServiceNotFoundException
+     * @throws Twig_Error_Loader
+     * @throws Twig_Error_Runtime
+     * @throws Twig_Error_Syntax
+     * @EndpointAction()
      */
     public function processAction(Request $request, Response $response) {
-        /** @var PasswordService $passwordService */ /** @var RegistrationService $registrationService */ /** @var \Oforge\Engine\Modules\Core\Services\Session\SessionManagementService $sessionManagementService */ /** @var Router $router */
-        /** @var MailService $mailService */
+        /**
+         * @var PasswordService $passwordService
+         * @var RegistrationService $registrationService
+         * @var SessionManagementService $sessionManagementService
+         * @var Router $router
+         * @var MailService $mailService
+         */
         $passwordService          = null;
         $registrationService      = null;
         $sessionManagementService = null;
@@ -187,6 +203,7 @@ class RegistrationController extends AbstractController {
      * @return Response
      * @throws ORMException
      * @throws ServiceNotFoundException
+     * @EndpointAction()
      */
     public function activateAction(Request $request, Response $response) {
         /** @var SessionManagementService $sessionManagementService */ /** @var RegistrationService $registrationService */

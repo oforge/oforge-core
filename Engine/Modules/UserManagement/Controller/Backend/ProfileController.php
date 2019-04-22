@@ -9,6 +9,8 @@
 namespace Oforge\Engine\Modules\UserManagement\Controller\Backend;
 
 use Oforge\Engine\Modules\Auth\Services\AuthService;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
@@ -21,6 +23,7 @@ use Slim\Router;
  * Class ProfileController
  *
  * @package Oforge\Engine\Modules\UserManagement\Controller\Backend
+ * @EndpointClass(path="/backend/profile", name="backend_profile", assetScope="Backend")
  */
 class ProfileController {
     /**
@@ -28,13 +31,14 @@ class ProfileController {
      * @param Response $response
      *
      * @throws ServiceNotFoundException
+     * @EndpointAction()
      */
     public function indexAction(Request $request, Response $response) {
         /** @var AuthService $authService */
-        $authService = Oforge()->Services()->get("auth");
-        $jwt         = $_SESSION["auth"];
+        $authService = Oforge()->Services()->get('auth');
+        $jwt         = $_SESSION['auth'];
         $user        = $authService->decode($jwt);
-        Oforge()->View()->assign(["user" => $user]);
+        Oforge()->View()->assign(['user' => $user]);
     }
 
     /**
@@ -48,23 +52,24 @@ class ProfileController {
      * @return Response
      * @throws NotFoundException
      * @throws ServiceNotFoundException
+     * @EndpointAction()
      */
     public function updateAction(Request $request, Response $response) {
         if ($request->isPost()) {
             /** @var BackendUsersCrudService $backendUserService */
-            $backendUserService = Oforge()->Services()->get("backend.users.crud");
+            $backendUserService = Oforge()->Services()->get('backend.users.crud');
             $user               = $request->getParsedBody();
 
-            if (key_exists("password", $user) && $user["password"] == "") {
-                unset($user["password"]);
+            if (isset($user['password']) && $user['password'] === '') {
+                unset($user['password']);
             }
 
             /** @var AuthService $authService */
-            $authService = Oforge()->Services()->get("auth");
-            $oldUser     = $authService->decode($_SESSION["auth"]);
+            $authService = Oforge()->Services()->get('auth');
+            $oldUser     = $authService->decode($_SESSION['auth']);
 
-            $user["type"] = $oldUser["type"];
-            $user["role"] = $oldUser["role"];
+            $user['type'] = $oldUser['type'];
+            $user['role'] = $oldUser['role'];
 
             $backendUserService->update($user);
 
@@ -72,13 +77,13 @@ class ProfileController {
             $sessionManagement = Oforge()->Services()->get('session.management');
             $sessionManagement->regenerateSession();
 
-            $_SESSION["auth"] = $authService->createJWT($user);
+            $_SESSION['auth'] = $authService->createJWT($user);
         }
 
         /** @var Router $router */
-        $router = Oforge()->App()->getContainer()->get("router");
+        $router = Oforge()->App()->getContainer()->get('router');
 
-        return $response->withRedirect($router->pathFor("backend_profile"), 302);
+        return $response->withRedirect($router->pathFor('backend_profile'), 302);
     }
 
 }

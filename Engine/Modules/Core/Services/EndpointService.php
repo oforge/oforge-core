@@ -187,10 +187,10 @@ class EndpointService extends AbstractDatabaseAccess {
             if (empty($endpointConfigsForClass)) {
                 Oforge()->Logger()->get()->addWarning("An endpoint was defined but the corresponding controller '$class' has no action methods.");
             } else {
-                $endpointConfigs += $endpointConfigsForClass;
+                $endpointConfigs = array_merge($endpointConfigs, $endpointConfigsForClass);
             }
         }
-        if (empty($endpointConfigs)) {
+        if (!empty($endpoints) && empty($endpointConfigs)) {
             Oforge()->Logger()->get()->addWarning('Endpoints were defined but the corresponding controllers has no action methods.', $endpoints);
         }
 
@@ -226,6 +226,7 @@ class EndpointService extends AbstractDatabaseAccess {
                 $classMethods = [];
             }
             foreach ($classMethods as $classMethod) {
+                //TODO non-strict-mode rework
                 if ($classAnnotation->isStrictActionSuffix() && substr($classMethod, -6) !== 'Action') {
                     continue;
                 }
