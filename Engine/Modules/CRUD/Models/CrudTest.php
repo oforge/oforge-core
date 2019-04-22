@@ -22,27 +22,32 @@ class CrudTest extends AbstractModel {
      */
     private $id;
     /**
-     * @var ?string $typeString
+     * @var string|null $typeString
      * @ORM\Column(name="var_string", type="string", nullable=true)
      */
     private $typeString;
     /**
-     * @var ?string $typeText
+     * @var string|null $typeText
      * @ORM\Column(name="var_text", type="text", nullable=true)
      */
     private $typeText;
     /**
-     * @var ?int $typeInteger
+     * @var string|null $typeHtml
+     * @ORM\Column(name="var_html", type="text", nullable=true)
+     */
+    private $typeHtml;
+    /**
+     * @var int|null $typeInteger
      * @ORM\Column(name="var_integer", type="integer", nullable=true)
      */
     private $typeInteger;
     /**
-     * @var ?int $typeSmallint
+     * @var int|null $typeSmallint
      * @ORM\Column(name="var_smallint", type="smallint", nullable=true)
      */
     private $typeSmallint;
     /**
-     * @var ?int $typeBigint
+     * @var int|null $typeBigint
      * @ORM\Column(name="var_bigint", type="bigint", nullable=true)
      */
     private $typeBigint;
@@ -52,47 +57,47 @@ class CrudTest extends AbstractModel {
      */
     private $typeBoolean = false;
     /**
-     * @var ?float $typeDecimal
+     * @var float|null $typeDecimal
      * @ORM\Column(name="var_decimal", type="decimal", nullable=true)
      */
     private $typeDecimal;
     /**
-     * @var ?float $typeFloat
+     * @var float|null $typeFloat
      * @ORM\Column(name="var_float", type="float", nullable=true, options={"precision":2})
      */
     private $typeFloat;
     /**
-     * @var ?\DateTime $typeDate
+     * @var DateTime|null $typeDate
      * @ORM\Column(name="var_date", type="date", nullable=true)
      */
     private $typeDate;
     /**
-     * @var ?\DateTime $typeTime
+     * @var DateTime|null $typeTime
      * @ORM\Column(name="var_time", type="time", nullable=true)
      */
     private $typeTime;
     /**
-     * @var ?\DateTime $typeDatetime
+     * @var DateTime|null $typeDatetime
      * @ORM\Column(name="var_datetime", type="datetime", nullable=true)
      */
     private $typeDatetime;
     /**
-     * @var ?object $typeObject
+     * @var object|null $typeObject
      * @ORM\Column(name="var_object", type="object", nullable=true)
      */
     private $typeObject;
     /**
-     * @var ?array $typeArray
+     * @var array|null $typeArray
      * @ORM\Column(name="var_array", type="array", nullable=true)
      */
     private $typeArray;
     /**
-     * @var ?string[] $typeSimpleArray
+     * @var string[]|null $typeSimpleArray
      * @ORM\Column(name="var_simple_array", type="simple_array", nullable=true)
      */
     private $typeSimpleArray;
     /**
-     * @var ?array $typeJsonArray
+     * @var array|null $typeJsonArray
      * @ORM\Column(name="var_json_array", type="json_array", nullable=true)
      */
     private $typeJsonArray;
@@ -105,90 +110,108 @@ class CrudTest extends AbstractModel {
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getTypeString() {
+    public function getTypeString() : ?string {
         return $this->typeString;
     }
 
     /**
-     * @param mixed $typeString
+     * @param string|null $typeString
      *
      * @return CrudTest
      */
-    protected function setTypeString($typeString) {
+    public function setTypeString(?string $typeString) : CrudTest {
         $this->typeString = $typeString;
 
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getTypeText() {
+    public function getTypeText() : ?string {
         return $this->typeText;
     }
 
     /**
-     * @param mixed $typeText
+     * @param string|null $typeText
      *
      * @return CrudTest
      */
-    protected function setTypeText($typeText) {
+    public function setTypeText(?string $typeText) : CrudTest {
         $this->typeText = $typeText;
 
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getTypeInteger() {
+    public function getTypeHtml() : ?string {
+        return $this->typeHtml;
+    }
+
+    /**
+     * @param string|null $typeHtml
+     *
+     * @return CrudTest
+     */
+    public function setTypeHtml(?string $typeHtml) : CrudTest {
+        $this->typeHtml = $typeHtml;
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getTypeInteger() : ?int {
         return $this->typeInteger;
     }
 
     /**
-     * @param mixed $typeInteger
+     * @param int|null $typeInteger
      *
      * @return CrudTest
      */
-    protected function setTypeInteger($typeInteger) {
+    public function setTypeInteger(?int $typeInteger) : CrudTest {
         $this->typeInteger = $typeInteger;
 
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return int|null
      */
-    public function getTypeSmallint() {
+    public function getTypeSmallint() : ?int {
         return $this->typeSmallint;
     }
 
     /**
-     * @param mixed $typeSmallint
+     * @param int|null $typeSmallint
      *
      * @return CrudTest
      */
-    protected function setTypeSmallint($typeSmallint) {
+    public function setTypeSmallint(?int $typeSmallint) : CrudTest {
         $this->typeSmallint = $typeSmallint;
 
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return int|null
      */
-    public function getTypeBigint() {
+    public function getTypeBigint() : ?int {
         return $this->typeBigint;
     }
 
     /**
-     * @param mixed $typeBigint
+     * @param int|null $typeBigint
      *
      * @return CrudTest
      */
-    protected function setTypeBigint($typeBigint) {
+    public function setTypeBigint(?int $typeBigint) : CrudTest {
         $this->typeBigint = $typeBigint;
 
         return $this;
@@ -206,169 +229,169 @@ class CrudTest extends AbstractModel {
      *
      * @return CrudTest
      */
-    protected function setTypeBoolean(bool $typeBoolean) : CrudTest {
+    public function setTypeBoolean(bool $typeBoolean) : CrudTest {
         $this->typeBoolean = $typeBoolean;
 
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return float|null
      */
-    public function getTypeDecimal() {
+    public function getTypeDecimal() : ?float {
         return $this->typeDecimal;
     }
 
     /**
-     * @param mixed $typeDecimal
+     * @param float|null $typeDecimal
      *
      * @return CrudTest
      */
-    protected function setTypeDecimal($typeDecimal) {
+    public function setTypeDecimal(?float $typeDecimal) : CrudTest {
         $this->typeDecimal = $typeDecimal;
 
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return float|null
      */
-    public function getTypeFloat() {
+    public function getTypeFloat() : ?float {
         return $this->typeFloat;
     }
 
     /**
-     * @param mixed $typeFloat
+     * @param float|null $typeFloat
      *
      * @return CrudTest
      */
-    protected function setTypeFloat($typeFloat) {
+    public function setTypeFloat(?float $typeFloat) : CrudTest {
         $this->typeFloat = $typeFloat;
 
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return DateTime|null
      */
-    public function getTypeDate() {
+    public function getTypeDate() : ?DateTime {
         return $this->typeDate;
     }
 
     /**
-     * @param mixed $typeDate
+     * @param DateTime|null $typeDate
      *
      * @return CrudTest
      */
-    protected function setTypeDate($typeDate) {
+    public function setTypeDate(?DateTime $typeDate) : CrudTest {
         $this->typeDate = $typeDate;
 
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return DateTime|null
      */
-    public function getTypeTime() {
+    public function getTypeTime() : ?DateTime {
         return $this->typeTime;
     }
 
     /**
-     * @param mixed $typeTime
+     * @param DateTime|null $typeTime
      *
      * @return CrudTest
      */
-    protected function setTypeTime($typeTime) {
+    public function setTypeTime(?DateTime $typeTime) : CrudTest {
         $this->typeTime = $typeTime;
 
         return $this;
     }
 
     /**
-     * @return DateTime
+     * @return DateTime|null
      */
     public function getTypeDatetime() : ?DateTime {
         return $this->typeDatetime;
     }
 
     /**
-     * @param DateTime $typeDatetime
+     * @param DateTime|null $typeDatetime
      *
      * @return CrudTest
      */
-    protected function setTypeDatetime(?DateTime $typeDatetime) : CrudTest {
+    public function setTypeDatetime(?DateTime $typeDatetime) : CrudTest {
         $this->typeDatetime = $typeDatetime;
 
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return object|null
      */
-    public function getTypeObject() {
+    public function getTypeObject() : ?object {
         return $this->typeObject;
     }
 
     /**
-     * @param mixed $typeObject
+     * @param object|null $typeObject
      *
      * @return CrudTest
      */
-    protected function setTypeObject($typeObject) {
+    public function setTypeObject(?object $typeObject) : CrudTest {
         $this->typeObject = $typeObject;
 
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return array|null
      */
-    public function getTypeArray() {
+    public function getTypeArray() : ?array {
         return $this->typeArray;
     }
 
     /**
-     * @param mixed $typeArray
+     * @param array|null $typeArray
      *
      * @return CrudTest
      */
-    protected function setTypeArray($typeArray) {
+    public function setTypeArray(?array $typeArray) : CrudTest {
         $this->typeArray = $typeArray;
 
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return string[]|null
      */
-    public function getTypeSimpleArray() {
+    public function getTypeSimpleArray() : ?array {
         return $this->typeSimpleArray;
     }
 
     /**
-     * @param mixed $typeSimpleArray
+     * @param string[]|null $typeSimpleArray
      *
      * @return CrudTest
      */
-    protected function setTypeSimpleArray($typeSimpleArray) {
+    public function setTypeSimpleArray(?array $typeSimpleArray) : CrudTest {
         $this->typeSimpleArray = $typeSimpleArray;
 
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return array|null
      */
-    public function getTypeJsonArray() {
+    public function getTypeJsonArray() : ?array {
         return $this->typeJsonArray;
     }
 
     /**
-     * @param mixed $typeJsonArray
+     * @param array|null $typeJsonArray
      *
      * @return CrudTest
      */
-    protected function setTypeJsonArray($typeJsonArray) {
+    public function setTypeJsonArray(?array $typeJsonArray) : CrudTest {
         $this->typeJsonArray = $typeJsonArray;
 
         return $this;

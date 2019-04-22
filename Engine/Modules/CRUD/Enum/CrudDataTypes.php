@@ -19,6 +19,11 @@ class CrudDataTypes {
      */
     public const TEXT = 'text';
     /**
+     * Renderer: Div.<br/>
+     * Editor: WYSIWYG editor.<br/>
+     */
+    public const HTML = 'html';
+    /**
      * Renderer: Icon.<br/>
      * Editor: Checkbox.<br/>
      */
