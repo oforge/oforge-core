@@ -70,5 +70,4 @@ class ImageCompressService {
 
         return false;
     }
-
 }
