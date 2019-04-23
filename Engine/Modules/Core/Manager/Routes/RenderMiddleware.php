@@ -2,29 +2,44 @@
 
 namespace Oforge\Engine\Modules\Core\Manager\Routes;
 
+use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
+use Psr\Http\Message\ResponseInterface;
+use Slim\Http\Request;
+use Slim\Http\Response;
+
+/**
+ * Class RenderMiddleware
+ *
+ * @package Oforge\Engine\Modules\Core\Manager\Routes
+ */
 class RenderMiddleware {
     /**
      * Add a "Fetch Controller Data" Middleware function
      *
-     * @param  \Psr\Http\Message\ServerRequestInterface $request PSR7 request
-     * @param  \Psr\Http\Message\ResponseInterface $response PSR7 response
-     * @param  callable $next Next middleware
+     * @param Request $request PSR7 request
+     * @param Response $response PSR7 response
+     * @param callable $next Next middleware
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return ResponseInterface
      */
-    public function __invoke( $request, $response, $next ) {
+    public function __invoke($request, $response, $next) {
         $data = [];
 
-        if (isset($_SESSION['flashMessage'])) {
-            $data['flashMessage'] = $_SESSION['flashMessage'];
-            unset($_SESSION['flashMessage']);
+        $twigFlash = Oforge()->View()->Flash();
+        if ($twigFlash->hasMessages()) {
+            $data['flashMessages'] = $twigFlash->getMessages();
+            $twigFlash->clearMessages();
         }
-        $response = $next( $request, $response );
+        $response = $next($request, $response);
         if (empty($data)) {
             $data = Oforge()->View()->fetch();
         } else {
-            $data = array_merge($data, Oforge()->View()->fetch());
+            $fetcheData = Oforge()->View()->fetch();
+
+            $data = ArrayHelper::mergeRecursive($data, $fetcheData);
         }
-        return Oforge()->Templates()->render( $request, $response, $data );
+
+        return Oforge()->Templates()->render($request, $response, $data);
     }
+
 }

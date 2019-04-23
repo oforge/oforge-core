@@ -10,7 +10,10 @@ use Oforge\Engine\Modules\AdminBackend\Core\Controller\Backend\FavoritesControll
 use Oforge\Engine\Modules\AdminBackend\Core\Middleware\BackendSecureMiddleware;
 use Oforge\Engine\Modules\AdminBackend\Core\Models\BackendNavigation;
 use Oforge\Engine\Modules\AdminBackend\Core\Models\BackendUserFavorites;
+use Oforge\Engine\Modules\AdminBackend\Core\Models\DashboardWidget;
+use Oforge\Engine\Modules\AdminBackend\Core\Models\UserDashboardWidgets;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
+use Oforge\Engine\Modules\AdminBackend\Core\Services\DashboardWidgetsService;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\UserFavoritesService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
@@ -25,7 +28,8 @@ class Bootstrap extends AbstractBootstrap
     {
         $this->services = [
             "backend.navigation" => BackendNavigationService::class,
-            "backend.favorites" => UserFavoritesService::class
+            "backend.favorites" => UserFavoritesService::class,
+            "backend.dashboard.widgets" => DashboardWidgetsService::class
        ];
 
         $this->endpoints = [
@@ -42,7 +46,9 @@ class Bootstrap extends AbstractBootstrap
 
         $this->models = [
             BackendNavigation::class,
-            BackendUserFavorites::class
+            BackendUserFavorites::class,
+            DashboardWidget::class,
+            UserDashboardWidgets::class
         ];
 
         $this->order = 3;
