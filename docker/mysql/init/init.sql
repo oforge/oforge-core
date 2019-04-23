@@ -173,7 +173,11 @@ INSERT INTO `oforge_i18n_snippet` (`id`, `scope`, `snippet_name`, `value`) VALUE
 (100,	'de',	'cms_page_builder_select_language',	'Sprache wählen ...'),
 (101,	'en',	'cms_page_builder_select_language',	'Choose language ...'),
 (102,	'de',	'cms_page_builder_page_data_title',	'Seiten Daten editieren'),
-(103,	'en',	'cms_page_builder_page_data_title',	'Edit page data');
+(103,	'en',	'cms_page_builder_page_data_title',	'Edit page data'),
+(121,'en','mailer_templates_register_confirmation_title','Thank you for your Registration!'),
+(122,'de','mailer_templates_register_confirmation_title','Vielen Dank für Ihre Registrierung!'),
+(124,'en','mailer_templates_register_confirmation_body','Please click the button below to complete your registration.'),
+(125,'de','mailer_templates_register_confirmation_body','Bitte klicken sie auf den Button, um Ihre Registrierung abzuschließen.');
 
 DROP TABLE IF EXISTS `oforge_cms_content_type_group`;
 CREATE TABLE `oforge_cms_content_type_group` (

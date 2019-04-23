@@ -8,29 +8,86 @@
 
 namespace Oforge\Engine\Modules\TemplateEngine\Extensions\Twig;
 
-use Twig_Environment;
+use Slim\Router;
 use Twig_Extension;
 use Twig_Function;
-use Twig_TemplateWrapper;
 
-class SlimExtension extends Twig_Extension
-{
-    public function getFunctions()
-    {
-        return array(
-            new Twig_Function('url', array($this, 'getSlimUrl'), array('is_safe' => array('html')))
-        );
+/**
+ * Class SlimExtension
+ *
+ * @package Oforge\Engine\Modules\TemplateEngine\Extensions\Twig
+ */
+class SlimExtension extends Twig_Extension {
+    /** @var Router $router */
+    private $router;
+
+    /**
+     * @inheritDoc
+     */
+    public function getFunctions() {
+        return [
+            new Twig_Function('url', [$this, 'getSlimUrl'], ['is_safe' => ['html']]),
+        ];
     }
 
-    public function getSlimUrl(...$vars)
-    {
-        $result = "";
-        if (sizeof($vars) == 1) {
-            $result = Oforge()->App()->getContainer()->get('router')->pathFor($vars[0]);
-        } else if(sizeof($vars) == 2) {
-            $result = Oforge()->App()->getContainer()->get('router')->pathFor($vars[0], $vars[1]);
+    /**
+     * @inheritDoc
+     */
+    public function getTests() {
+        return [
+            new \Twig_Test('array', [$this, 'isArray']),
+            new \Twig_Test('string', [$this, 'isString']),
+        ];
+    }
+
+    /**
+     *
+     * @param mixed ...$vars
+     *
+     * @return string
+     */
+    public function getSlimUrl(...$vars) {
+        if (!isset($this->router)) {
+            $this->router = Oforge()->App()->getContainer()->get('router');
         }
+        switch (count($vars)) {
+            case 1:
+                $result = $this->router->pathFor($vars[0]);
+                break;
+            case 2:
+                $result = $this->router->pathFor($vars[0], $vars[1]);
+                break;
+            case 3:
+                $result = $this->router->pathFor($vars[0], $vars[1], $vars[2]);
+                break;
+            default:
+                $result = '';
+                break;
+        }
+
         return $result;
+    }
+
+    /**
+     * Slim test '... is array' to php is_array.
+     *
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    public function isArray($value) {
+        return is_array($value);
+    }
+
+    /**
+     * Slim test '... is string' to php is_string.
+     *
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    public function isString($value) {
+        return is_string($value);
     }
 
 }

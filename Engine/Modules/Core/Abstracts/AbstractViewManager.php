@@ -1,9 +1,9 @@
 <?php
 /*****************************************************
  *
- *     	OFORGE
+ *      OFORGE
  *      Copyright (c) 7P.konzepte GmbH
- *		License: MIT
+ *      License: MIT
  *
  *
  *                (                           (
@@ -31,13 +31,30 @@
  *
  *
  **********************************************************/
+
 namespace Oforge\Engine\Modules\Core\Abstracts;
 
+use Oforge\Engine\Modules\TemplateEngine\Core\Twig\TwigFlash;
+
+/**
+ * Class AbstractViewManager
+ *
+ * @package Oforge\Engine\Modules\Core\Abstracts
+ */
 abstract class AbstractViewManager {
+
+    /**
+     * Storage of messages and data for next request / redirect.
+     *
+     * @return TwigFlash
+     */
+    public abstract function Flash() : TwigFlash;
+
     /**
      * Assign Data from a Controller to a Template
      *
      * @param array $data
+     *
      * @return AbstractViewManager
      */
     public abstract function assign($data);
@@ -49,7 +66,7 @@ abstract class AbstractViewManager {
      * @return array
      */
     public abstract function fetch();
-    
+
     /**
      * Get a specific key value from the viewData
      *
@@ -68,12 +85,4 @@ abstract class AbstractViewManager {
      */
     public abstract function has(string $key);
 
-    /**
-     * Add a message for the next request / redirect
-     * @param string $type
-     * @param string $message
-     *
-     * @return mixed
-     */
-    public abstract function addFlashMessage(string $type, string $message);
 }

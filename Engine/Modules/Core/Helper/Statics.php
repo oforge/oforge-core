@@ -10,6 +10,7 @@ class Statics {
     public const VAR_DIR              = "var";
     public const ASSETS_DIR           = "__assets";
     public const PUBLIC_DIR           = DIRECTORY_SEPARATOR . Statics::VAR_DIR . DIRECTORY_SEPARATOR . "public";
+    public const IMAGES_DIR           = Statics::PUBLIC_DIR . DIRECTORY_SEPARATOR . "images";
     public const CACHE_DIR            = DIRECTORY_SEPARATOR . Statics::VAR_DIR . DIRECTORY_SEPARATOR . "cache";
     public const THEME_CACHE_DIR      = Statics::PUBLIC_DIR . DIRECTORY_SEPARATOR . "theme";
     public const DB_CACHE_DIR         = Statics::CACHE_DIR . DIRECTORY_SEPARATOR . "db";
@@ -21,6 +22,8 @@ class Statics {
     public const DB_CACHE_FILE        = Statics::DB_CACHE_DIR . DIRECTORY_SEPARATOR . "db.cache";
     public const IMPORTS_DIR          = DIRECTORY_SEPARATOR . Statics::VAR_DIR . DIRECTORY_SEPARATOR . "imports";
     public const DEFAULT_THEME        = "Base";
+    public const MAIL_TEMPLATE_DIR    = Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . Statics::DEFAULT_THEME . DIRECTORY_SEPARATOR . 'MailTemplates';
+    //public const MAIL_TEMP_CACHE_DIR  = Statics::CACHE_DIR . DIRECTORY_SEPARATOR . 'mail';
     /**
      * Relative path of logs folder.
      */
