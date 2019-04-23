@@ -68,6 +68,10 @@
         color: $text-light;
     }
 
+    &.form__input--textarea {
+        min-height: 15rem;
+    }
+
     &.button {
         font-weight: bold;
     }
