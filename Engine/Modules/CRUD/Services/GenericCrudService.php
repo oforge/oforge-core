@@ -8,6 +8,7 @@
 
 namespace Oforge\Engine\Modules\CRUD\Services;
 
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
@@ -28,23 +29,33 @@ class GenericCrudService extends AbstractDatabaseAccess {
     }
 
     /**
+     * @param string $class
+     *
+     * @return int
+     * @throws ORMException
+     * @throws NonUniqueResultException
+     */
+    public function count(string $class) : int {
+        return $this->getRepository($class)->createQueryBuilder('e')->select('count(e.id)')->getQuery()->getSingleScalarResult();
+    }
+
+    /**
      * Get list of entities (data by toArray). If $params not empty, find entities by $params.
      *
      * @param string $class
-     * @param array $params
+     * @param array $criteria
+     * @param array|null $orderBy
+     * @param int|null $offset
+     * @param int|null $limit
      *
      * @return array
      * @throws ORMException
      */
-    public function list(string $class, array $params = []) : array {
+    public function list(string $class, array $criteria = [], array $orderBy = null, $offset = null, $limit = null) : array {
         $repository = $this->getRepository($class);
         /** @var AbstractModel[] $entities */
-        if (empty($params)) {
-            $entities = $repository->findAll();
-        } else {
-            $entities = $repository->findBy($params);
-        }
-        $result = [];
+        $entities = $repository->findBy($criteria, $orderBy, $limit, $offset);
+        $result   = [];
         foreach ($entities as $item) {
             $result[] = $item->toArray();
         }

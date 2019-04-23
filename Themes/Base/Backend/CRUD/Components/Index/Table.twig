@@ -1,37 +1,16 @@
 <table id="crud_index_table" class="table table-bordered table-hover table-striped">
     <thead>
-    <tr>
-        {% if crud.hasRowActions %}
-            <th class="text-center">{{ i18n('backend_crud_table_column_rowactions', 'row actions') }}</th>
-        {% endif %}
-        {% for property in crud.properties if property.crud[crud.context] and property.crud[crud.context]|default('off') != 'off' %}
-            <th>
-                {% if property.label is defined %}
-                    {% if property.label is empty %}
-                        {% set fieldLabel = '-' %}
-                    {% elseif property.label is string %}
-                        {{ i18n(property.label) }}
-                    {% elseif property.label is array %}
-                        {{ i18n(property.label.key, property.label.default) }}
-                    {% endif %}
-                {% elseif property.name == 'id' %}
-                    {% set fieldLabel = i18n(('crud_' ~ crud.model ~ '_' ~ property.name)|lower, 'ID') %}
-                {% else %}
-                    {% set fieldLabel = i18n(('crud_' ~ crud.model ~ '_' ~ property.name)|lower, property.name|capitalize) %}
-                {% endif %}
-            </th>
-        {% endfor %}
-    </tr>
+    {% include 'Backend/CRUD/Components/Index/TableHeader.twig' with {crud: crud} only %}
     </thead>
     <tbody>
     {% for item in crud.items %}
         <tr>
-            {% if crud.hasRowActions %}
-                {% include 'Backend/CRUD/Components/Index/TableRowActions.twig' %}
-            {% endif %}
             {% for property in crud.properties if property.crud[crud.context] and property.crud[crud.context]|default('off') != 'off' %}
                 {% include 'Backend/CRUD/Components/Index/TableCell.twig' %}
             {% endfor %}
+            {% if crud.hasRowActions %}
+                {% include 'Backend/CRUD/Components/Index/TableRowActions.twig' %}
+            {% endif %}
         </tr>
     {% else %}
         <tr>
@@ -40,4 +19,7 @@
         </tr>
     {% endfor %}
     </tbody>
+    <tfoot>
+    {% include 'Backend/CRUD/Components/Index/TableHeader.twig' with {crud: crud} only %}
+    </tfoot>
 </table>

@@ -22,15 +22,21 @@
                         {% if crud.hasEditors %}
                         <form method="post">
                             {% endif %}
+{#                            {% include 'Backend/CRUD/Components/Index/PaginationRow.twig' with {pagination: crud.pagination, route: crud.route} only %}#}
                             <div class="row">
                                 <div class="col-xs-12 table-responsive">
                                     {% include 'Backend/CRUD/Components/Index/Table.twig' %}
                                 </div>
                             </div>
+                            {% include 'Backend/CRUD/Components/Index/PaginationRow.twig' with {pagination: crud.pagination, route: crud.route} only %}
                             {% if crud.hasEditors %}
-                            <input type="hidden" name="action" value="update" />
-                            <input type="submit" class="btn btn-primary"
-                                   value="{{ i18n('backend_crud_btn_update', 'update') }}">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <input type="hidden" name="action" value="update" />
+                                    <input type="submit" class="btn btn-primary"
+                                           value="{{ i18n('backend_crud_btn_update', 'update') }}">
+                                </div>
+                            </div>
                         </form>
                         {% endif %}
                     </div>
@@ -40,14 +46,4 @@
             </div>
         </div>
     </section>
-    {{ o_dump() }}
 {% endblock %}
-
-{#{% block scripts %}#}
-    {#{{ parent() }}#}
-    {#<script defer>#}
-        {#jQuery(document).ready(function () {#}
-            {#jQuery('#crud_index_table').DataTable();#}
-        {#});#}
-    {#</script>#}
-{#{% endblock scripts %}#}
