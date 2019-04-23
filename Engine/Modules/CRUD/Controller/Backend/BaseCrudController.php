@@ -2,6 +2,7 @@
 
 namespace Oforge\Engine\Modules\CRUD\Controller\Backend;
 
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Exception;
 use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
@@ -72,7 +73,7 @@ class BaseCrudController extends SecureBackendController {
      *      protected $crudActions = [
      *          'index'     => true, // enable view
      *          'create'    => true, // enable create button and view
-     *          'view'      => true, // enable update button and view
+     *          'view'      => true, // enable update button (visible if update false) and view
      *          'update'    => true, // enable update button and view
      *          'delete'    => true, // enable delete button and view
      *      ];
@@ -87,8 +88,39 @@ class BaseCrudController extends SecureBackendController {
         'delete' => true,
     ];
     /**
-     * @var int $crudPermission
+     * Configuration of the filters on the index view.
+     *      protected $indexFilter = [
+     *      ];
+     *
+     * @var array $indexFilter
      */
+    protected $indexFilter = [];
+    /**
+     * Configuration of the pagination on the index view. Disable with null or override with
+     *      protected $indexPagination = [
+     *          'default' => 25,
+     *          'buttons' => [25, 50, 75, 100, 250],
+     *      ];
+     *
+     * @var array $indexPagination
+     */
+    protected $indexPagination = [
+        'default' => 10,
+        'buttons' => [10, 25, 50, 75, 100, 250],
+    ];
+    /**
+     * Query parameter key for 'page'.
+     *
+     * @var string
+     */
+    protected $indexQueryParameterKeyPage = 'p';
+    /**
+     * Query parameter key for 'entities per page'.
+     *
+     * @var string
+     */
+    protected $indexQueryParameterKeyEntitiesPerPage = 'epp';
+    /** @var int $crudPermission */
     protected $crudPermission = BackendUser::ROLE_MODERATOR;
     /** @var GenericCrudService $crudService */
     protected $crudService;
@@ -159,8 +191,11 @@ class BaseCrudController extends SecureBackendController {
                 return $this->redirect($response, 'index');
             }
         }
-        $params   = $request->getQueryParams();
-        $entities = $this->crudService->list($this->model, $params);
+        $queryParams = $request->getQueryParams();
+        $pagination  = $this->prepareIndexPaginationData($queryParams);
+        $criteria    = $this->evaluateIndexFilter($queryParams);
+
+        $entities = $this->crudService->list($this->model, $criteria, null/*TODO FEATURE orderBy*/, $pagination['offset'], $pagination['limit']);
         if (Oforge()->View()->Flash()->hasData($this->moduleModelName)) {
             $postData = Oforge()->View()->Flash()->getData($this->moduleModelName);
             Oforge()->View()->Flash()->clearData($this->moduleModelName);
@@ -197,6 +232,15 @@ class BaseCrudController extends SecureBackendController {
                 'hasEditors'    => $hasEditors,
                 'hasRowActions' => $hasRowActions,
                 'items'         => $entities,
+                'pagination'    => $pagination,
+                'route'   => [
+                    'base'  => static::$baseEndpointName,
+                    'query' => $queryParams,
+                    'key'   => [
+                        'p'   => $this->indexQueryParameterKeyPage,
+                        'epp' => $this->indexQueryParameterKeyEntitiesPerPage,
+                    ],
+                ],
             ],
         ]);
 
@@ -474,6 +518,71 @@ class BaseCrudController extends SecureBackendController {
         $uri = $this->router->pathFor($endpointName, $urlParams, $queryParams);
 
         return $response->withRedirect($uri, 303);
+    }
+
+    /**
+     * Prepare data for index pagination.
+     *
+     * @param array $queryParams
+     *
+     * @return  array
+     * @throws NonUniqueResultException
+     * @throws ORMException
+     */
+    private function prepareIndexPaginationData(array $queryParams) : array {
+        $queryParameterKeyPage            = $this->indexQueryParameterKeyPage;
+        $queryParameterKeyEntitiesPerPage = $this->indexQueryParameterKeyEntitiesPerPage;
+
+        $itemsCount       = $this->crudService->count($this->model);
+        $offset           = null;
+        $entitiesPerPage  = null;
+        $buttons          = null;
+        $paginatorCurrent = null;
+        $paginatorMax     = null;
+
+        if (isset($this->indexPagination)) {
+            $buttons = $this->indexPagination['buttons'];
+            if (isset($queryParams[$queryParameterKeyEntitiesPerPage])) {
+                $entitiesPerPage = $queryParams[$queryParameterKeyEntitiesPerPage];
+            } else {
+                $entitiesPerPage = $this->indexPagination['default'];
+            }
+            $paginatorMax = ceil($itemsCount / $entitiesPerPage);
+            if (isset($queryParams[$queryParameterKeyPage])) {
+                $paginatorCurrent = $queryParams[$queryParameterKeyPage];
+            } else {
+                $paginatorCurrent = 1;
+            }
+            if ($paginatorCurrent > 1) {
+                $offset = ($paginatorCurrent - 1) * $entitiesPerPage;
+            }
+        }
+
+        return [
+            'offset'  => $offset,
+            'limit'   => $entitiesPerPage,
+            'total'   => $itemsCount,
+            'page'    => [
+                'current' => $paginatorCurrent,
+                'max'     => $paginatorMax,
+            ],
+            'buttons' => [
+                'values'  => $buttons,
+                'current' => $entitiesPerPage,
+            ],
+        ];
+    }
+
+    /**
+     * Evaluates query filter params.
+     *
+     * @param array $queryParams
+     *
+     * @return array
+     */
+    private function evaluateIndexFilter(array $queryParams) : array {
+        //TODO
+        return [];
     }
 
 }
