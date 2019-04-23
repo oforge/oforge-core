@@ -225,28 +225,23 @@ class BlackSmith {
         $this->forgeSlimApp = ForgeSlimApp::getInstance();
         $this->container    = $this->App()->getContainer();
 
-        $this->Logger()->get()->addInfo("Step 4 " . (         microtime(true)* 1000- $startTime));
         /*
         * Init and load modules
         */
         $modules = ModuleManager::getInstance();
         $modules->init();
 
-        $this->Logger()->get()->addInfo("Step 5 " . (         microtime(true)* 1000- $startTime));
         /*
         * Init and load plugins
         */
         $this->pluginManager = PluginManager::getInstance();
         $this->pluginManager->init();
-
-        $this->Logger()->get()->addInfo("Step 6 " . (         microtime(true)* 1000- $startTime));
         /*
          * Init route manager
          */
         $this->slimRouteManagager = SlimRouteManager::getInstance();
         $this->slimRouteManagager->init();
 
-        $this->Logger()->get()->addInfo("Step 7 " . (   microtime(true)* 1000 - $startTime));
         /*
          * Let the Blacksmith forge all the things \°/
          */
