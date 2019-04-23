@@ -2,11 +2,16 @@
 
 namespace Oforge\Engine\Modules\I18n;
 
-use Oforge\Engine\Modules\AdminBackend\Services\BackendNavigationService;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
-use Oforge\Engine\Modules\Core\Services\ConfigService;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
+use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\I18n\Controller\Backend\LanguageController;
-use Oforge\Engine\Modules\I18n\Controller\Backend\MediaDummyController;
+use Oforge\Engine\Modules\I18n\Controller\Backend\SnippetsController;
 use Oforge\Engine\Modules\I18n\Models\Language;
 use Oforge\Engine\Modules\I18n\Models\Snippet;
 use Oforge\Engine\Modules\I18n\Services\InternationalizationService;
@@ -19,7 +24,7 @@ class Bootstrap extends AbstractBootstrap
     {
         $this->endpoints = [
             "/backend/i18n/languages" => ["controller" => LanguageController::class, "name" => "backend_i18n_languages", "asset_scope" => "Backend"],
-            "/backend/i18n/snippets" => ["controller" => MediaDummyController::class, "name" => "backend_i18n_snippets", "asset_scope" => "Backend"]
+            "/backend/i18n/snippets" => ["controller" => SnippetsController::class, "name" => "backend_i18n_snippets", "asset_scope" => "Backend"],
         ];
 
         $this->services = [
@@ -35,11 +40,12 @@ class Bootstrap extends AbstractBootstrap
     }
 
     /**
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ConfigElementAlreadyExists
+     * @throws ConfigOptionKeyNotExists
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ServiceNotFoundException
+     * @throws ParentNotFoundException
      */
 
 
