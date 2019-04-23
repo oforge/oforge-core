@@ -6,7 +6,7 @@ use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 // use Oforge\Engine\Modules\CRUD\Controller\Backend\CRUD\Test\ReadController;
 // use Oforge\Engine\Modules\CRUD\Controller\Backend\CRUD\Test\WriteController;
-use Oforge\Engine\Modules\CRUD\Models\CrudTest;
+// use Oforge\Engine\Modules\CRUD\Models\CrudTest;
 use Oforge\Engine\Modules\CRUD\Services\GenericCrudService;
 
 /**
@@ -25,7 +25,7 @@ class Bootstrap extends AbstractBootstrap {
             'crud' => GenericCrudService::class,
         ];
         $this->models    = [
-            CrudTest::class,
+            // CrudTest::class,
         ];
     }
 
