@@ -2,7 +2,9 @@
 
 namespace Helpdesk\Models;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 
 /**
@@ -54,7 +56,7 @@ class Ticket extends AbstractModel {
     private $message;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      * @ORM\Column(name="timestamp", type="datetime", nullable=false);
      */
     private $timestamp;
@@ -63,14 +65,14 @@ class Ticket extends AbstractModel {
      * Triggered on insert
      *
      * @ORM\PrePersist
-     * @throws \Exception
+     * @throws Exception
      */
     public function onPrePersist() {
-        $this->timestamp = new \DateTime("now");
+        $this->timestamp = new DateTime("now");
     }
 
     public function onPreUpdate() {
-        $this->timestamp = new \DateTime("now");
+        $this->timestamp = new DateTime("now");
     }
 
     /**
@@ -166,9 +168,9 @@ class Ticket extends AbstractModel {
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
-    public function getTimestamp() : \DateTime {
+    public function getTimestamp() : DateTime {
         return $this->timestamp;
     }
 }

@@ -2,9 +2,13 @@
 
 namespace Helpdesk\Services;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Helpdesk\Models\IssueTypes;
 use Helpdesk\Models\Ticket;
+use Messenger\Models\Conversation;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 
 class HelpdeskTicketService extends AbstractDatabaseAccess {
     public function __construct() {
@@ -20,8 +24,9 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
      * @param $title
      * @param $message
      *
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
-     * @throws \Doctrine\ORM\ORMException
+     * @return Conversation
+     * @throws ServiceNotFoundException
+     * @throws ORMException
      */
     public function createNewTicket($opener, $issueType, $title, $message) {
         $ticket = new Ticket();
@@ -44,6 +49,7 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
      * @param string $status
      *
      * @return array|null
+     * @throws ORMException
      */
     public function getTickets($status = "open") {
         return $this->repository()->findBy(['status' => $status]);
@@ -53,6 +59,7 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
      * @param $id
      *
      * @return Ticket|null
+     * @throws ORMException
      */
     public function getTicketById($id) {
         /** @var Ticket $ticket */
@@ -64,8 +71,8 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
      * @param $id
      * @param $status
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function changeStatus($id, $status) {
         $ticket = $this->getTicketById($id);
@@ -76,6 +83,12 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
         $this->entityManager()->flush();
     }
 
+    /**
+     * @param $issueName
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     public function createIssueType($issueName) {
         $issueType = new IssueTypes();
         $issueType->setIssueTypeName($issueName);
@@ -84,6 +97,10 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
         $this->entityManager()->flush();
     }
 
+    /**
+     * @return array
+     * @throws ORMException
+     */
     public function getIssueTypes() {
         return $this->repository('IssueTypes')->findAll();
     }

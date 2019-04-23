@@ -1,0 +1,24 @@
+{# block account__content #}
+{% block account_content %}
+    <div class="account__content flex flex--row flex--wrap">
+        {% block helpdesk_title %}
+            <h3 class="form__title">{{ i18n('support', 'Support') }}</h3>
+        {% endblock helpdesk_title %}
+
+        {% block helpdesk_description %}
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                Aliquam, at blanditiis commodi deserunt, eligendi fuga illum, iure libero nam nisi odio quibusdam quidem quod recusandae repellat sapiente
+                sit voluptate voluptatibus! <a href="#">Lorem ipsum</a> dolor sit amet, consectetur adipisicing elit. Facilis maxime molestias officia sed. Accusantium aliquam animi dignissimos illo incidunt modi nesciunt odit vel?
+                Enim eum fugit necessitatibus recusandae voluptatibus? Inventore.</p>
+        {% endblock helpdesk_description %}
+
+        {% block helpdesk__form %}
+            {% include 'Plugins/Helpdesk/Frontend/Components/Forms/HelpdeskForm.twig' %}
+        {% endblock helpdesk__form %}
+
+        {% block helpdesk__support_tickets %}
+        {% endblock helpdesk__support_tickets %}
+
+
+    </div>
+{% endblock account_content %}
