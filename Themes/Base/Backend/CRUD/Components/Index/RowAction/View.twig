@@ -1,0 +1,7 @@
+{% if not crud.actions.update %}
+    <a class="btn btn-info {% if not crud.actions.view %}disabled{% endif %}"
+       href="{{ url(meta.route.name  ~ "_view") ~ '?id=' ~ item.id }}"
+       title="{{ i18n('backend_crud_btn_view', 'view') }}">
+        <i class="fa fa-chevron-right"></i>
+    </a>
+{% endif %}
