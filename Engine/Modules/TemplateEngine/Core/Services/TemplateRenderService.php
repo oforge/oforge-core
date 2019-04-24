@@ -201,9 +201,11 @@ class TemplateRenderService {
 
             if ($debug) {
                 $this->view->getEnvironment()->enableDebug();
-                $this->view->getEnvironment()->addExtension(new Twig_Extension_Debug());
-                $this->view->getEnvironment()->addExtension(new TwigOforgeDebugExtension());
             }
+
+
+            $this->view->getEnvironment()->addExtension(new Twig_Extension_Debug());
+            $this->view->getEnvironment()->addExtension(new TwigOforgeDebugExtension());
         }
 
         return $this->view;
