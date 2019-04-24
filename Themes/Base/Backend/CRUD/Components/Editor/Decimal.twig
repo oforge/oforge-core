@@ -1,0 +1,8 @@
+{% include 'Backend/CRUD/Components/Editor/Input.twig' with {
+    editor: {
+        type: 'number',
+        min: property.editor.min|default(''),
+        max: property.editor.max|default(''),
+        step: property.editor.step|default('0.01'),
+    }
+} %}

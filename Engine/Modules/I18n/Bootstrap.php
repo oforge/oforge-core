@@ -10,83 +10,83 @@ use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
 use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
-use Oforge\Engine\Modules\I18n\Controller\Backend\LanguageController;
-use Oforge\Engine\Modules\I18n\Controller\Backend\SnippetsController;
+use Oforge\Engine\Modules\I18n\Controller\Backend\I18n\LanguageController;
+use Oforge\Engine\Modules\I18n\Controller\Backend\I18n\SnippetsController;
 use Oforge\Engine\Modules\I18n\Models\Language;
 use Oforge\Engine\Modules\I18n\Models\Snippet;
 use Oforge\Engine\Modules\I18n\Services\InternationalizationService;
-use Oforge\Engine\Modules\I18n\Services\LanguageIdentificationService;
 use Oforge\Engine\Modules\I18n\Services\LanguageService;
 
-class Bootstrap extends AbstractBootstrap
-{
-    public function __construct()
-    {
+/**
+ * Class Bootstrap
+ *
+ * @package Oforge\Engine\Modules\I18n
+ */
+class Bootstrap extends AbstractBootstrap {
+
+    public function __construct() {
         $this->endpoints = [
-            "/backend/i18n/languages" => ["controller" => LanguageController::class, "name" => "backend_i18n_languages", "asset_scope" => "Backend"],
-            "/backend/i18n/snippets" => ["controller" => SnippetsController::class, "name" => "backend_i18n_snippets", "asset_scope" => "Backend"],
+            '/backend/i18n/languages' => LanguageController::getBootstrapEndpointsArray(),
+            '/backend/i18n/snippets'  => SnippetsController::getBootstrapEndpointsArray(),
         ];
 
         $this->services = [
-            "i18n" => InternationalizationService::class,
-            "languages" => LanguageService::class,
-            "language.identifier" => LanguageIdentificationService::class
+            'i18n'          => InternationalizationService::class,
+            'i18n.language' => LanguageService::class,
         ];
 
         $this->models = [
             Language::class,
-            Snippet::class
+            Snippet::class,
         ];
     }
 
     /**
-     * @throws ConfigElementAlreadyExists
-     * @throws ConfigOptionKeyNotExists
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws ServiceNotFoundException
+     * @throws ConfigElementAlreadyExists
+     * @throws ConfigOptionKeyNotExists
      * @throws ParentNotFoundException
+     * @throws ServiceNotFoundException
      */
-
-
-    public function install()
-    {
-        /**
-         * @var $sidebarNavigation BackendNavigationService
-         */
-        $sidebarNavigation = Oforge()->Services()->get("backend.navigation");
-
-        $sidebarNavigation->put([
-            "name" => "admin",
-            "order" => 100,
-            "position" => "sidebar",
+    public function install() {
+        /** @var LanguageService $languageService */
+        $languageService = Oforge()->Services()->get('i18n.language');
+        $languageService->create([
+            'iso'  => 'en',
+            'name' => 'English',
         ]);
 
+        /** @var BackendNavigationService $sidebarNavigation */
+        $sidebarNavigation = Oforge()->Services()->get('backend.navigation');
         $sidebarNavigation->put([
-            "name" => "backend_i18n",
-            "order" => 100,
-            "parent" => "admin",
-            "icon" => "glyphicon glyphicon-globe",
-            "position" => "sidebar",
+            'name'     => 'admin',
+            'order'    => 100,
+            'position' => 'sidebar',
         ]);
-
         $sidebarNavigation->put([
-            "name" => "backend_i18n_language",
-            "order" => 1,
-            "parent" => "backend_i18n",
-            "icon" => "fa fa-language",
-            "path" => "backend_i18n_languages",
-            "position" => "sidebar",
+            'name'     => 'backend_i18n',
+            'order'    => 100,
+            'parent'   => 'admin',
+            'icon'     => 'glyphicon glyphicon-globe',
+            'position' => 'sidebar',
         ]);
-
         $sidebarNavigation->put([
-            "name" => "backend_i18n_snippets",
-            "order" => 2,
-            "parent" => "backend_i18n",
-            "icon" => "fa fa-file-text-o",
-            "path" => "backend_i18n_snippets",
-            "position" => "sidebar",
+            'name'     => 'backend_i18n_language',
+            'order'    => 1,
+            'parent'   => 'backend_i18n',
+            'icon'     => 'fa fa-language',
+            'path'     => 'backend_i18n_languages',
+            'position' => 'sidebar',
         ]);
-
+        $sidebarNavigation->put([
+            'name'     => 'backend_i18n_snippets',
+            'order'    => 2,
+            'parent'   => 'backend_i18n',
+            'icon'     => 'fa fa-file-text-o',
+            'path'     => 'backend_i18n_snippets',
+            'position' => 'sidebar',
+        ]);
     }
+
 }
