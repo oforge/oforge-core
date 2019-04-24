@@ -21,11 +21,13 @@ class FrontendHelpdeskController extends SecureFrontendController {
      * @throws ServiceNotFoundException
      */
     public function indexAction(Request $request, Response $response) {
+        $user = Oforge()->View()->get('user');
 
         /** @var HelpdeskTicketService $helpdeskTicketService */
         $helpdeskTicketService = Oforge()->Services()->get('helpdesk.ticket');
         $issueTypes = $helpdeskTicketService->getIssueTypes();
-        Oforge()->View()->assign(['issueTypes' => $issueTypes]);
+        $tickets = $helpdeskTicketService->getTicketsByOpener($user['id']);
+        Oforge()->View()->assign(['issueTypes' => $issueTypes, 'tickets' => $tickets]);
     }
     /**
      * @param Request $request
@@ -36,7 +38,6 @@ class FrontendHelpdeskController extends SecureFrontendController {
      * @throws ORMException
      */
     public function submitAction(Request $request, Response $response) {
-        #createNewTicket($opener, $issueType, $title, $message)
         /** @var Router $router */
         $router = Oforge()->App()->getContainer()->get('router');
         $uri = $router->pathFor('frontend_account_support');

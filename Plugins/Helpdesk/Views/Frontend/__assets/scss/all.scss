@@ -1,7 +1,47 @@
+.ticket-list {
+    width: 100%;
+}
+
+.ticket + .ticket {
+    margin-top: $size-large;
+}
+
+.ticket__link + .ticket__link {
+    margin-left: $size-large;
+}
+
+.ticket__created {
+    font-size: 1.2rem;
+    margin-left: auto;
+}
+
 .form__title--helpdesk {
     background: $color-secondary-light;
     color: $color-light;
     font-weight: bold;
     margin: $size-large 0;
     padding: $size-medium $size-medium $size-medium $size-large;
+}
+
+@media screen and (min-width: $screen-medium) {
+    .ticket {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+    .ticket__link {
+        margin-left: $size-large;
+    }
+
+    .ticket__title {
+        max-width: 50%;
+        &-text {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+    }
+    .ticket + .ticket {
+        margin-top: 0;
+    }
 }

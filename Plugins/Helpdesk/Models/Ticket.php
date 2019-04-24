@@ -38,7 +38,7 @@ class Ticket extends AbstractModel {
      *
      * @ORM\OneToOne(targetEntity="IssueTypes")
      * @ORM\JoinColumn(name="issue_type_id", referencedColumnName="id", nullable=false)
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", name="issue_type")
      */
     private $issueType;
 
@@ -57,9 +57,9 @@ class Ticket extends AbstractModel {
 
     /**
      * @var DateTime
-     * @ORM\Column(name="timestamp", type="datetime", nullable=false);
+     * @ORM\Column(name="created_at", type="datetime", nullable=false);
      */
-    private $timestamp;
+    private $created;
 
     /**
      * Triggered on insert
@@ -68,11 +68,11 @@ class Ticket extends AbstractModel {
      * @throws Exception
      */
     public function onPrePersist() {
-        $this->timestamp = new DateTime("now");
+        $this->created = new DateTime("now");
     }
 
     public function onPreUpdate() {
-        $this->timestamp = new DateTime("now");
+        $this->created = new DateTime("now");
     }
 
     /**
@@ -170,7 +170,7 @@ class Ticket extends AbstractModel {
     /**
      * @return DateTime
      */
-    public function getTimestamp() : DateTime {
-        return $this->timestamp;
+    public function getCreated() : DateTime {
+        return $this->created;
     }
 }
