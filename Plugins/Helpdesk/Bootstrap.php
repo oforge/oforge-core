@@ -12,7 +12,9 @@ use Helpdesk\Controller\Frontend\FrontendHelpdeskTicketController;
 use Helpdesk\Models\Ticket;
 use Helpdesk\Services\HelpdeskMessengerService;
 use Helpdesk\Services\HelpdeskTicketService;
+use Helpdesk\Widgets\HelpdeskWidgetHandler;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
+use Oforge\Engine\Modules\AdminBackend\Core\Services\DashboardWidgetsService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistsException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
@@ -86,5 +88,17 @@ class Bootstrap extends AbstractBootstrap {
                 "path" => "frontend_account_support",
                 "position" => "sidebar",
             ]);
+
+        /** @var DashboardWidgetsService $dashboardWidgetsService */
+        $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
+
+        $dashboardWidgetsService->register([
+            "position" => "left",
+            "action" => HelpdeskWidgetHandler::class,
+            "title" => "frontend_widget_helpdesk_title",
+            "name" => "frontend_widget_helpdesk",
+            "cssClass" =>  "box-success",
+            "templateName" => "Helpdesk"
+        ]);
     }
 }
