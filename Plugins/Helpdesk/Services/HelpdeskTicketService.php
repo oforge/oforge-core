@@ -32,7 +32,7 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
         $ticket = new Ticket();
         $ticket->setIssueType($issueType);
         $ticket->setOpener($opener);
-        $ticket->setStatus("open");
+        $ticket->setStatus('open');
         $ticket->setTitle($title);
         $ticket->setMessage($message);
 
@@ -40,7 +40,7 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
         $this->entityManager()->flush();
 
         /** @var HelpdeskMessengerService $helpdeskMessengerService */
-        $helpdeskMessengerService = Oforge()->Services()->get("helpdesk.messenger");
+        $helpdeskMessengerService = Oforge()->Services()->get('helpdesk.messenger');
 
         return $helpdeskMessengerService->createNewConversation($opener, 'helpdesk', 'helpdesk_inquiry', $ticket->getId(), $title, $message);
     }
@@ -51,8 +51,33 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
      * @return array|null
      * @throws ORMException
      */
-    public function getTickets($status = "open") {
+    public function getTickets($status = 'open') {
         return $this->repository()->findBy(['status' => $status]);
+    }
+
+    /**
+     * @param int $opener
+     * @param string $status
+     *
+     * @return array
+     * @throws ORMException
+     */
+    public function getTicketsByOpener(int $opener, $status = 'open') {
+        $tickets = $this->repository()->findBy(['opener' => $opener, 'status' => $status]);
+        $result = [];
+
+        /** @var Ticket $ticket */
+        foreach ($tickets as $ticket) {
+            array_push($result, [
+                    'id' => $ticket->getId(),
+                    'issueType' => $this->repository('IssueTypes')->find($ticket->getIssueType())->getIssueTypeName(),
+                    'title' => $ticket->getTitle(),
+                    'created' => $ticket->getCreated()->format('Y-m-d H:i:s')
+                ]
+            );
+        }
+
+        return $result;
     }
 
     /**

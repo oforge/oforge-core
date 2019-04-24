@@ -1,0 +1,41 @@
+{# block helpdesk__support_tickets #}
+{% block support_tickets %}
+    <div class="ticket-list">
+        {% block support_tickets_title %}
+            <h3 class="form__title form__title--helpdesk">{{ i18n('your-tickets', 'Your support tickets') }}</h3>
+        {% endblock support_tickets_title %}
+
+        {% block ticket_list %}
+            <div class="tickets">
+
+            {% for key, ticket in tickets %}
+                <div class="ticket">
+                    <div class="ticket__title">
+                        <p class="ticket__title-text"><strong>{{ ticket.issueType }}:</strong> {{ ticket.title }}</p>
+                    </div>
+                    <div class="ticket__created">
+                        {{ i18n('created', 'Created at') }} {{ ticket.created }}
+                    </div>
+                    <div class="ticket__buttons flex flex--row flex--center">
+                        <div class="ticket__link ticket__view">
+                            <a href="#">
+                                <div class="icon icon--secondary">
+                                </div>
+                            </a>
+
+                        </div>
+                        <div class="ticket__link ticket__delete">
+                            <a href="#">
+                                <div class="icon icon--secondary">
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            {% endfor %}
+            </div>
+
+        {% endblock ticket_list %}
+    </div>
+{% endblock support_tickets %}
