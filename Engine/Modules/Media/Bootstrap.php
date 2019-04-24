@@ -4,7 +4,6 @@ namespace Oforge\Engine\Modules\Media;
 
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 
-use Oforge\Engine\Modules\Media\Controller\Backend\MediaDummyController;
 use Oforge\Engine\Modules\Media\Models\Media;
 use Oforge\Engine\Modules\Media\Services\ImageCompressService;
 use Oforge\Engine\Modules\Media\Services\MediaService;

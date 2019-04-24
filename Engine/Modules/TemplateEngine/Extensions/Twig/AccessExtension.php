@@ -60,7 +60,6 @@ class AccessExtension extends Twig_Extension implements Twig_ExtensionInterface 
      * @param mixed ...$vars
      *
      * @return string
-     * @throws ServiceNotFoundException
      */
     public function getInternationalization($context, ...$vars) {
         $result = "";
