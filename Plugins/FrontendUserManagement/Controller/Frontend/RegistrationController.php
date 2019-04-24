@@ -9,7 +9,7 @@ use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Auth\Services\PasswordService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Services\RedirectService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
@@ -19,6 +19,9 @@ use PHPMailer\PHPMailer\Exception;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
+use Twig_Error_Loader;
+use Twig_Error_Runtime;
+use Twig_Error_Syntax;
 
 /**
  * Class RegistrationController
@@ -44,12 +47,15 @@ class RegistrationController extends AbstractController {
      * @param Response $response
      *
      * @return Response
+     * @throws ConfigElementNotFoundException
+     * @throws ConfigOptionKeyNotExistsException
+     * @throws Exception
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws ConfigElementNotFoundException
-     * @throws ConfigOptionKeyNotExists
      * @throws ServiceNotFoundException
-     * @throws Exception
+     * @throws Twig_Error_Loader
+     * @throws Twig_Error_Runtime
+     * @throws Twig_Error_Syntax
      */
     public function processAction(Request $request, Response $response) {
         /** @var PasswordService $passwordService */ /** @var RegistrationService $registrationService */ /** @var SessionManagementService $sessionManagementService */ /** @var Router $router */

@@ -14,8 +14,8 @@ use Helpdesk\Services\HelpdeskMessengerService;
 use Helpdesk\Services\HelpdeskTicketService;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistsException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
 use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 
@@ -59,8 +59,8 @@ class Bootstrap extends AbstractBootstrap {
     /**
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws ConfigElementAlreadyExists
-     * @throws ConfigOptionKeyNotExists
+     * @throws ConfigElementAlreadyExistsException
+     * @throws ConfigOptionKeyNotExistsException
      * @throws ParentNotFoundException
      * @throws ServiceNotFoundException
      */

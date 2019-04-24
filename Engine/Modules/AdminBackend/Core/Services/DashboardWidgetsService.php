@@ -2,15 +2,13 @@
 
 namespace Oforge\Engine\Modules\AdminBackend\Core\Services;
 
-use Oforge\Engine\Modules\AdminBackend\Core\Models\BackendUserFavorites;
-use Oforge\Engine\Modules\AdminBackend\Core\Models\BackendNavigation;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use InvalidArgumentException;
 use Oforge\Engine\Modules\AdminBackend\Core\Models\DashboardWidget;
 use Oforge\Engine\Modules\AdminBackend\Core\Models\UserDashboardWidgets;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
-use Oforge\Engine\Modules\Core\Models\Endpoints\Endpoint;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
-use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
 
 class DashboardWidgetsService extends AbstractDatabaseAccess {
 
@@ -24,8 +22,8 @@ class DashboardWidgetsService extends AbstractDatabaseAccess {
     /**
      * @param $widget
      *
-     * @throws ConfigOptionKeyNotExists
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ConfigOptionKeyNotExistsException
+     * @throws ORMException
      */
     public function register($widget) {
         if ($this->isValid($widget)) {
@@ -43,7 +41,14 @@ class DashboardWidgetsService extends AbstractDatabaseAccess {
        //TODO
     }
 
+    /**
+     * @param $userId
+     *
+     * @return array
+     * @throws ORMException
+     */
     public function getUserWidgets($userId) : array {
+        /** @var null|UserDashboardWidgets[] $result */
         $result = $this->repository("users")->findBy(["userId" => $userId], ['order' => 'ASC']);
 
         if (!isset($result) || sizeof($result) == 0) {
@@ -53,6 +58,7 @@ class DashboardWidgetsService extends AbstractDatabaseAccess {
 
         $columns = [];
         if (isset($result)) {
+            /** @var DashboardWidget[] $widgets */
             $widgets    = $this->repository()->findAll();
             $widgetsMap = [];
 
@@ -76,6 +82,12 @@ class DashboardWidgetsService extends AbstractDatabaseAccess {
         return $columns;
     }
 
+    /**
+     * @param $userId
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     public function initUserWidgets($userId) {
         $widgets = $this->repository()->findAll();
 
@@ -92,14 +104,15 @@ class DashboardWidgetsService extends AbstractDatabaseAccess {
      * @param $options
      *
      * @return bool
-     * @throws ConfigOptionKeyNotExists
+     * @throws ConfigOptionKeyNotExistsException
+     * @throws ORMException
      */
     private function isValid($options) {
         // Check if required keys are within the options
         $keys = ["name", "action"];
         foreach ($keys as $key) {
             if (!array_key_exists($key, $options)) {
-                throw new ConfigOptionKeyNotExists($key);
+                throw new ConfigOptionKeyNotExistsException($key);
             }
         }
 
@@ -113,7 +126,7 @@ class DashboardWidgetsService extends AbstractDatabaseAccess {
         $keys = ["title", "icon", "action", "name"];
         foreach ($keys as $key) {
             if (isset($options[$key]) && !is_string($options[$key])) {
-                throw new \InvalidArgumentException("$key value should be of type string.");
+                throw new InvalidArgumentException("$key value should be of type string.");
             }
         }
 
