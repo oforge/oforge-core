@@ -1,0 +1,13 @@
+{% if not property.list %}
+    <div class="alert alert-danger" role="alert">
+        Missing select list
+    </div>
+{% elseif not property.list[item[property.name]] %}
+    <div>
+        <i class="fa fa-exclamation-triangle" title="Value not in select list"></i>
+        {{ item[property.name] }}
+    </div>
+{% else %}
+    {% set value = property.list[item[property.name]] %}
+    {% if property.listI18nLabel is defined and property.listI18nLabel %}{{ i18n(value) }}{% else %}{{ value }}{% endif %}
+{% endif %}
