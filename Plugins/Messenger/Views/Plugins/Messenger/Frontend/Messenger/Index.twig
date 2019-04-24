@@ -1,0 +1,13 @@
+<div class="conversation">
+    <pre>
+        {{ conversation.id }}
+        {{ conversation.requester }}
+        {{ conversation.requested }}
+        {{ conversation.state }}
+        {{ conversation.type }}
+        {{ conversation.title }}
+        {{ conversation.targetId }}
+        {{ conversation.lastMessage }}
+        {{ conversation.lastMessageTimestamp.date|date('Y-m-d H:i:s') }}
+    </pre>
+</div>
