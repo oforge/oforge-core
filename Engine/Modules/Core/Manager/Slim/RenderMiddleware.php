@@ -23,6 +23,7 @@ class RenderMiddleware {
             $data['flashMessages'] = $twigFlash->getMessages();
             $twigFlash->clearMessages();
         }
+
         $response = $next($request, $response);
         if (empty($data)) {
             $data = Oforge()->View()->fetch();
