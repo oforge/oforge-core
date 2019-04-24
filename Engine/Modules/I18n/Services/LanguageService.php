@@ -6,8 +6,8 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use InvalidArgumentException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistsException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
 use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
 use Oforge\Engine\Modules\I18n\Models\Language;
 use ReflectionException;
@@ -92,8 +92,8 @@ class LanguageService extends AbstractDatabaseAccess {
     /**
      * @param array $options
      *
-     * @throws ConfigElementAlreadyExists
-     * @throws ConfigOptionKeyNotExists
+     * @throws ConfigElementAlreadyExistsException
+     * @throws ConfigOptionKeyNotExistsException
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -108,8 +108,7 @@ class LanguageService extends AbstractDatabaseAccess {
     /**
      * @param array $options
      *
-     * @throws ConfigElementAlreadyExists
-     * @throws ConfigOptionKeyNotExists
+     * @throws ConfigOptionKeyNotExistsException
      * @throws NotFoundException
      * @throws ORMException
      * @throws OptimisticLockException
@@ -152,8 +151,7 @@ class LanguageService extends AbstractDatabaseAccess {
      * @param bool $checkExisting
      *
      * @return bool
-     * @throws ConfigElementAlreadyExists
-     * @throws ConfigOptionKeyNotExists
+     * @throws ConfigOptionKeyNotExistsException
      * @throws ORMException
      */
     protected function isValid($options, $checkExisting) {
@@ -161,14 +159,16 @@ class LanguageService extends AbstractDatabaseAccess {
         $keys = ['iso', 'name'];
         foreach ($keys as $key) {
             if (!array_key_exists($key, $options)) {
-                throw new ConfigOptionKeyNotExists($key);
+                throw new ConfigOptionKeyNotExistsException($key);
             }
         }
         if ($checkExisting) {
             // Check if the entity is already within the system
             $entity = $this->repository()->findOneBy(['iso' => strtolower($options['iso'])]);
             if (isset($entity)) {
-                throw new ConfigElementAlreadyExists(strtolower($options['iso']));
+                // TODO: refactor this.
+                // throw new ConfigElementAlreadyExistsException(strtolower($options['iso']));
+                return false;
             }
         }
         // Check if correct type are set

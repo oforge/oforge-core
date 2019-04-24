@@ -11,7 +11,7 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Services\RedirectService;
 use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
@@ -52,7 +52,7 @@ class RegistrationController extends AbstractController {
      *
      * @return Response
      * @throws ConfigElementNotFoundException
-     * @throws ConfigOptionKeyNotExists
+     * @throws ConfigOptionKeyNotExistsException
      * @throws Exception
      * @throws ORMException
      * @throws OptimisticLockException

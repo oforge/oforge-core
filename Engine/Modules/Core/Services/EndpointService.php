@@ -9,7 +9,7 @@ use Doctrine\Common\Annotations\Reader;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
-use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction as EndpointAction;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\Core\Helper\StringHelper;
@@ -156,7 +156,7 @@ class EndpointService extends AbstractDatabaseAccess {
 
         foreach ($endpoints as $class) {
             if (!is_string($class)) {
-                continue;//TODO remove after replacing all endpoints by annotation
+                continue;
             }
             $fileName = $class;
             if (StringHelper::startsWith($fileName, 'Oforge\Engine\Modules')) {

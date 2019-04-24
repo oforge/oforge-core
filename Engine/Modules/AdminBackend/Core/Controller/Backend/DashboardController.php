@@ -10,8 +10,8 @@ use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistsException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
 use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Slim\Http\Request;
@@ -43,7 +43,7 @@ class DashboardController extends SecureBackendController {
         $authService  = Oforge()->Services()->get('auth');
         $user         = $authService->decode($_SESSION['auth']);
         $data['user'] = $user;
-        
+
         Oforge()->View()->assign($data);
     }
 
@@ -88,8 +88,8 @@ class DashboardController extends SecureBackendController {
      *
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws ConfigElementAlreadyExists
-     * @throws ConfigOptionKeyNotExists
+     * @throws ConfigElementAlreadyExistsException
+     * @throws ConfigOptionKeyNotExistsException
      * @throws ParentNotFoundException
      * @throws ServiceNotFoundException
      * @EndpointAction()

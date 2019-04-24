@@ -2,11 +2,15 @@
 
 namespace Oforge\Engine\Modules\Cronjob\Services;
 
-use Doctrine\ORM\EntityRepository;
+use DateInterval;
+use DateTimeImmutable;
+use Doctrine\ORM\ORMException;
+use Exception;
+use InvalidArgumentException;
 use Monolog\Handler\RotatingFileHandler;
 use Oforge\Engine\Modules\Console\Services\ConsoleService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
 use Oforge\Engine\Modules\Core\Exceptions\InvalidClassException;
 use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
@@ -34,8 +38,9 @@ class CronjobService extends AbstractDatabaseAccess {
      *
      * @param array $options
      *
-     * @throws ConfigOptionKeyNotExists
+     * @throws ConfigOptionKeyNotExistsException
      * @throws InvalidClassException
+     * @throws ORMException
      */
     public function addCronjob(array $options) {
         if ($this->isValid($options)) {
@@ -51,6 +56,8 @@ class CronjobService extends AbstractDatabaseAccess {
      * Add cronjobs.
      *
      * @param AbstractCronjob|AbstractCronjob[] $cronjobs
+     *
+     * @throws ORMException
      */
     public function addCronjobInstances($cronjobs) {
         if (!is_array($cronjobs)) {
@@ -62,7 +69,7 @@ class CronjobService extends AbstractDatabaseAccess {
             if (!isset($element)) {
                 try {
                     $this->entityManager()->persist($cronjob);
-                } catch (\Exception $exception) {
+                } catch (Exception $exception) {
                     Oforge()->Logger()->get()->error($exception->getMessage(), $exception->getTrace());
                 }
             }
@@ -70,7 +77,7 @@ class CronjobService extends AbstractDatabaseAccess {
         try {
             $this->entityManager()->flush();
             $this->repository()->clear();
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             Oforge()->Logger()->get()->error($exception->getMessage(), $exception->getTrace());
         }
     }
@@ -82,12 +89,14 @@ class CronjobService extends AbstractDatabaseAccess {
      *
      * @return AbstractCronjob
      * @throws NotFoundException
+     * @throws ORMException
      */
     public function getCronjob(string $name) : AbstractCronjob {
         $name = trim($name);
         if (empty($name)) {
             throw new NotFoundException("Cronjob with name '$name' not found");
         }
+        /** @var null|AbstractCronjob $cronjob */
         $cronjob = $this->repository()->findOneBy([
             'name' => $name,
         ]);
@@ -107,6 +116,7 @@ class CronjobService extends AbstractDatabaseAccess {
      * @param int|null $offset
      *
      * @return AbstractCronjob[]
+     * @throws ORMException
      */
     public function getCronjobs(array $criteria = [], ?array $orderBy = null, ?int $limit = null, ?int $offset = null) {
         return $this->repository()->findBy($criteria, $orderBy, $limit, $offset);
@@ -127,7 +137,7 @@ class CronjobService extends AbstractDatabaseAccess {
             $this->repository()->clear();
 
             return $this->runCronjob($cronjob);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             Oforge()->Logger()->get()->error($exception->getMessage(), $exception->getTrace());
         }
 
@@ -136,6 +146,8 @@ class CronjobService extends AbstractDatabaseAccess {
 
     /**
      * Run all cronjobs with next execution time before now.
+     *
+     * @throws ORMException
      */
     public function runAll() {
         $query = $this->repository()->createQueryBuilder('c')#
@@ -153,17 +165,17 @@ class CronjobService extends AbstractDatabaseAccess {
             try {
                 if ($this->runCronjob($cronjob)) {
                     $executionInterval = $cronjob->getExecutionInterval();
-                    $lastExecutionTime = $cronjob->getNextExecutionTime() ?? new \DateTimeImmutable();
-                    $nextExecutionTime = $lastExecutionTime->add(new \DateInterval('PT' . $executionInterval . 'S'));
+                    $lastExecutionTime = $cronjob->getNextExecutionTime() ?? new DateTimeImmutable();
+                    $nextExecutionTime = $lastExecutionTime->add(new DateInterval('PT' . $executionInterval . 'S'));
                     $cronjob->setNextExecutionTime($nextExecutionTime);
                 }
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 Oforge()->Logger()->get()->error($exception->getMessage(), $exception->getTrace());
             }
         }
         try {
-            $this->entityManager->flush();
-        } catch (\Exception $exception) {
+            $this->entityManager()->flush();
+        } catch (Exception $exception) {
             Oforge()->Logger()->get()->error($exception->getMessage(), $exception->getTrace());
         }
         $this->repository()->clear();
@@ -175,16 +187,16 @@ class CronjobService extends AbstractDatabaseAccess {
      * @param array $options
      *
      * @return bool
-     * @throws ConfigOptionKeyNotExists
+     * @throws ConfigOptionKeyNotExistsException
      * @throws InvalidClassException
      */
     protected function isValid(array $options) : bool {
         if (!isset($options['type'])) {
-            throw new ConfigOptionKeyNotExists('type');
+            throw new ConfigOptionKeyNotExistsException('type');
         }
         if (!in_array($options['type'], [CommandCronjob::class, CustomCronjob::class])) {
             $type = $options['type'];
-            throw new \InvalidArgumentException("Option type '$type' is not valid.");
+            throw new InvalidArgumentException("Option type '$type' is not valid.");
         }
         $type = $options['type'];
         /**
@@ -198,7 +210,7 @@ class CronjobService extends AbstractDatabaseAccess {
         }
         foreach ($requiredKeys as $dataKey) {
             if (!isset($options[$dataKey]) || empty($options[$dataKey])) {
-                throw new ConfigOptionKeyNotExists($dataKey);
+                throw new ConfigOptionKeyNotExistsException($dataKey);
             }
         }
         /**
@@ -212,9 +224,9 @@ class CronjobService extends AbstractDatabaseAccess {
             'title'                => 'string',
             'description'          => 'bool',
             'executionInterval'    => 'int',
-            'lastExecutionTime'    => \DateTimeImmutable::class,
+            'lastExecutionTime'    => DateTimeImmutable::class,
             'lastExecutionSuccess' => 'bool',
-            'nextExecutionTime'    => \DateTimeImmutable::class,
+            'nextExecutionTime'    => DateTimeImmutable::class,
             'type'                 => 'string',
             'order'                => 'int',
         ];
@@ -235,22 +247,22 @@ class CronjobService extends AbstractDatabaseAccess {
             switch ($dataType) {
                 case 'bool':
                     if (!is_bool($options[$dataKey])) {
-                        throw new \InvalidArgumentException("Option '$dataKey' should be of type string.");
+                        throw new InvalidArgumentException("Option '$dataKey' should be of type string.");
                     }
                     break;
                 case 'int':
                     if (!is_int($options[$dataKey])) {
-                        throw new \InvalidArgumentException("Option '$dataKey' should be of type string.");
+                        throw new InvalidArgumentException("Option '$dataKey' should be of type string.");
                     }
                     break;
                 case 'string':
                     if (!is_string($options[$dataKey])) {
-                        throw new \InvalidArgumentException("Option '$dataKey' should be of type string.");
+                        throw new InvalidArgumentException("Option '$dataKey' should be of type string.");
                     }
                     break;
                 default:
                     if (!is_a($options[$dataKey], $dataType)) {
-                        throw new \InvalidArgumentException("Option '$dataKey' should be of type $dataType.");
+                        throw new InvalidArgumentException("Option '$dataKey' should be of type $dataType.");
                     }
                     break;
             }
@@ -271,13 +283,13 @@ class CronjobService extends AbstractDatabaseAccess {
      * @param AbstractCronjob $cronjob
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     protected function runCronjob(AbstractCronjob $cronjob) {
         $success = false;
         /** @var ConfigService $configService */
         $configService = Oforge()->Services()->get('config');
-        $startTime     = new \DateTimeImmutable();
+        $startTime     = new DateTimeImmutable();
 
         if ($cronjob instanceof CommandCronjob) {
             try {
@@ -293,7 +305,7 @@ class CronjobService extends AbstractDatabaseAccess {
                     $commandArgs = $cronjob->getCommandArgs();
                     $consoleService->runCommand($command, $commandArgs);
                     $success = true;
-                } catch (\Exception $exception) {
+                } catch (Exception $exception) {
                 }
                 $consoleService->removeOutputLoggerHandler($fileHandler);
             } catch (ServiceNotFoundException $exception) {
@@ -322,14 +334,14 @@ class CronjobService extends AbstractDatabaseAccess {
                 } else {
                     $logger->err('Cronjob handler class does not exist.');
                 }
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 Oforge()->Logger()->get()->error($exception->getMessage(), $exception->getTrace());
             }
         }
         $updateData = [
             'lastExecutionSuccess'  => $success,
-            'lastExecutionTime'     => new \DateTimeImmutable(),
-            'lastExecutionDuration' => $startTime->diff(new \DateTimeImmutable()),
+            'lastExecutionTime'     => new DateTimeImmutable(),
+            'lastExecutionDuration' => $startTime->diff(new DateTimeImmutable()),
         ];
         if (!$success) {
             $updateData['active'] = false;

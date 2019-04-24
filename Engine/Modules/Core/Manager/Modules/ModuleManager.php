@@ -9,7 +9,8 @@ use Doctrine\ORM\ORMException;
 use Noodlehaus\Exception;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Bootstrap;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistsException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
 use Oforge\Engine\Modules\Core\Exceptions\CouldNotInstallModuleException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceAlreadyDefinedException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
@@ -56,8 +57,9 @@ class ModuleManager {
      * @throws CouldNotInstallModuleException
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws ServiceNotFoundException
      * @throws ServiceAlreadyDefinedException
+     * @throws ServiceNotFoundException
+     * @throws ConfigOptionKeyNotExistsException
      */
     public function init() {
         $startTime = microtime(true) * 1000;
@@ -185,7 +187,7 @@ class ModuleManager {
             if (isset($entry) && !$entry->getInstalled()) {
                 try {
                     $instance->install();
-                } catch (ConfigElementAlreadyExists $e) {
+                } catch (ConfigElementAlreadyExistsException $e) {
                 }
                 $this->entityManger()->persist($entry->setInstalled(true));
                 $needFlush = true;
@@ -193,7 +195,7 @@ class ModuleManager {
                 $this->register($className);
                 try {
                     $instance->install();
-                } catch (ConfigElementAlreadyExists $e) {
+                } catch (ConfigElementAlreadyExistsException $e) {
                 }
                 $entry = $this->moduleRepository()->findOneBy(["name" => $className]);
                 $this->entityManger()->persist($entry->setInstalled(true));
@@ -242,7 +244,7 @@ class ModuleManager {
      * @throws OptimisticLockException
      * @throws ServiceAlreadyDefinedException
      * @throws ServiceNotFoundException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists
+     * @throws ConfigOptionKeyNotExistsException
      */
     protected function initModule($className) {
         if (is_subclass_of($className, AbstractBootstrap::class)) {
@@ -273,7 +275,7 @@ class ModuleManager {
             if (isset($entry) && !$entry->getInstalled()) {
                 try {
                     $instance->install();
-                } catch (ConfigElementAlreadyExists $e) {
+                } catch (ConfigElementAlreadyExistsException $e) {
                 }
                 $this->entityManger()->persist($entry->setInstalled(true));
             }
