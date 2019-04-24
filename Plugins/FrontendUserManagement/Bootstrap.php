@@ -12,6 +12,7 @@ use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Models\UserAddress;
 use FrontendUserManagement\Models\UserDetail;
 use FrontendUserManagement\Services\AccountNavigationService;
+use FrontendUserManagement\Widgets\DashboardWidgetHandler;
 use Oforge\Engine\Modules\AdminBackend\Core\Models\DashboardWidget;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\DashboardWidgetsService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
@@ -61,12 +62,6 @@ class Bootstrap extends AbstractBootstrap {
     }
 
     /**
-     * @throws ORMException
-     * @throws OptimisticLockException
-     * @throws ConfigElementAlreadyExistsException
-     * @throws ConfigOptionKeyNotExistsException
-     * @throws ParentNotFoundException
-     * @throws ServiceNotFoundException
      */
     public function install() {
 
@@ -112,7 +107,7 @@ class Bootstrap extends AbstractBootstrap {
 
         $dashboardWidgetsService->register([
             "position" => "top",
-            "action" => "",
+            "action" => DashboardWidgetHandler::class,
             "title" => "frontend_users_title",
             "name" => "frontend_users",
             "cssClass" =>  "bg-yellow",

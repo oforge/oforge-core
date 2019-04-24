@@ -35,10 +35,9 @@ class DashboardWidgetsService extends AbstractDatabaseAccess {
 
     /**
      * @param $widgetName
-     *
      */
     public function unregister($widgetName) {
-       //TODO
+        //TODO
     }
 
     /**
@@ -93,11 +92,30 @@ class DashboardWidgetsService extends AbstractDatabaseAccess {
 
         $position = 0;
         foreach ($widgets as $widget) {
-            $userWidget = UserDashboardWidgets::create(["userId" => $userId, "widgetId" => $widget->getId(), "order" => $position++, "position" => $widget->getPosition()]);
+            $userWidget = UserDashboardWidgets::create(["userId"   => $userId,
+                                                        "widgetId" => $widget->getId(),
+                                                        "order"    => $position++,
+                                                        "position" => $widget->getPosition(),
+            ]);
             $this->entityManager()->persist($userWidget);
         }
 
         $this->entityManager()->flush();
+    }
+
+    public function getWidgetsData($name) {
+        // Check if the element is already within the system
+        $element = $this->repository()->findOneBy(["name" => strtolower($name)]);
+
+        if (isset($element)) {
+            $className = $element->getAction();
+            if (method_exists($className, "getData")) {
+                return (new $className())->getData();
+
+            }
+        }
+
+        return [];
     }
 
     /**

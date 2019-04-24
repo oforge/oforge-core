@@ -1,3 +1,4 @@
 <div class="{{ item.cssClass }}" >
-    {% include 'Backend/Widgets/' ~ item.templateName ~ '.twig' with {'data': item} %}
+    {%  set content = backend_widget_data(item.name) %}
+    {% include 'Backend/Widgets/' ~ item.templateName ~ '.twig' with {'data': item, 'content': content} %}
 </div>
