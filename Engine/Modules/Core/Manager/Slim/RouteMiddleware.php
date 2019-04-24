@@ -3,6 +3,8 @@
 namespace Oforge\Engine\Modules\Core\Manager\Slim;
 
 use Oforge\Engine\Modules\Core\Models\Endpoint\Endpoint;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 /**
  * Class RouteMiddleware
@@ -23,16 +25,12 @@ class RouteMiddleware {
     }
 
     /** @inheritDoc */
-    public function __invoke($request, $response, $next) {
+    public function __invoke(Request $request, Response $response, $next) {
         Oforge()->View()->assign([
             'meta' => [
-                'route'       => $this->endpoint->toArray(),
-                'controller'  => [
-                    'class'  => $this->endpoint->getControllerClass(),
-                    'method' => $this->endpoint->getControllerMethod(),
-                ],
-                'asset_scope' => $this->endpoint->getAssetScope(),
-                'order'       => $this->endpoint->getOrder(),
+                'route' => array_merge($this->endpoint->toArray(), [
+                    'query' => $request->getQueryParams(),
+                ]),
             ],
         ]);
 

@@ -2,6 +2,7 @@
 
 namespace Oforge\Engine\Modules\I18n\Controller\Backend\I18n;
 
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
 use Oforge\Engine\Modules\I18n\Models\Language;
@@ -10,10 +11,9 @@ use Oforge\Engine\Modules\I18n\Models\Language;
  * Class LanguageController
  *
  * @package Oforge\Engine\Modules\I18n\Controller\Backend
+ * @EndpointClass(path="/backend/i18n/languages", name="backend_i18n_languages", assetScope="Backend")
  */
 class LanguageController extends BaseCrudController {
-    /** @var string $baseEndpointName */
-    protected static $baseEndpointName = 'backend_i18n_languages';
     /** @var string $model */
     protected $model = Language::class;
     /** @var array $modelProperties */

@@ -4,10 +4,16 @@ namespace Oforge\Engine\Modules\Auth\Middleware;
 
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Auth\Services\PermissionService;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
 
+/**
+ * Class SecureMiddleware
+ *
+ * @package Oforge\Engine\Modules\Auth\Middleware
+ */
 class SecureMiddleware {
 
     /** @var string $urlPathName The named path for redirects */
@@ -20,13 +26,12 @@ class SecureMiddleware {
      * @param Response $response
      *
      * @return Response|null
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ServiceNotFoundException
      */
-    public function prepend($request, $response) : ?Response
-    {
-        $controller       = Oforge()->View()->get('meta')['controller'];
-        $controllerClass  = $controller['class'];
-        $controllerMethod = $controller['method'];
+    public function prepend($request, $response) : ?Response {
+        $routeController  = Oforge()->View()->get('meta')['route'];
+        $controllerClass  = $routeController['controllerClass'];
+        $controllerMethod = $routeController['controllerMethod'];
 
         /**
          * @var $permissionService PermissionService
@@ -34,27 +39,25 @@ class SecureMiddleware {
         $permissionService = Oforge()->Services()->get('permissions');
 
         $permissions = $permissionService->get($controllerClass, $controllerMethod);
-        $auth = null;
+        $auth        = null;
 
         if (isset($_SESSION['auth'])) {
             $auth = $_SESSION['auth'];
         }
 
         if (isset($permissions)) {
-            
             /**
              * @var $authService AuthService
              */
             $authService = Oforge()->Services()->get("auth");
-            $user = $authService->decode($auth);
+            $user        = $authService->decode($auth);
 
             if ($this->isUserValid($user, $permissions)) {
                 Oforge()->View()->assign([
-                    'user' => $user
+                    'user' => $user,
                 ]);
                 //nothing to do. proceed
             } else {
-
                 /*
                 TODO: If there is a secured area, there should be either a message when redirecting
                       or a 401 status code.
@@ -66,11 +69,14 @@ class SecureMiddleware {
                 $router = Oforge()->App()->getContainer()->get("router");
                 if (!empty($this->urlPathName)) {
                     $uri = $router->pathFor($this->urlPathName);
+
                     return $response = $response->withRedirect($uri, 302);
                 }
+
                 return $response = $response->withRedirect('/', 302);
             }
         }
+
         return $response;
     }
 
@@ -81,8 +87,10 @@ class SecureMiddleware {
      * @return bool
      */
     protected function isUserValid($user, $permissions) {
-        return (!is_null($user) &&
-            isset($user["role"]) && $user["role"] <= $permissions["role"] &&
-            isset($user["type"]) && $user["type"] == $permissions["type"]);
+        return (!is_null($user)
+                && isset($user["role"])
+                && $user["role"] <= $permissions["role"]
+                && isset($user["type"])
+                && $user["type"] == $permissions["type"]);
     }
 }
