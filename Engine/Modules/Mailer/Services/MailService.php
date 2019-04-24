@@ -2,32 +2,36 @@
 
 namespace Oforge\Engine\Modules\Mailer\Services;
 
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
+use InvalidArgumentException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\TemplateEngine\Core\Twig\CustomTwig;
 use Oforge\Engine\Modules\TemplateEngine\Extensions\Twig\AccessExtension;
+use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
-
+use Twig_Error_Loader;
+use Twig_Error_Runtime;
+use Twig_Error_Syntax;
 
 class MailService {
 
     /**
      * Initialises PHP Mailer Instance with specified Mailer Settings, Options and TemplateData.
-     *
      * Options = ['to' => [], 'cc' => [], 'bcc' => [], 'replyTo' => [], 'attachment' => [], "subject" => string "html" => bool
      *
      * @param array $options
      * @param array $templateData Associative Array
      *
-     * @throws ConfigOptionKeyNotExists
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
-     * @throws \PHPMailer\PHPMailer\Exception
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws ConfigElementNotFoundException
+     * @throws ConfigOptionKeyNotExistsException
+     * @throws ServiceNotFoundException
+     * @throws Twig_Error_Loader
+     * @throws Twig_Error_Runtime
+     * @throws Twig_Error_Syntax
      */
     public function send(array $options, array $templateData = []) {
         if ($this->isValid($options)) {
@@ -96,14 +100,14 @@ class MailService {
      * @param array $options
      *
      * @return bool
-     * @throws ConfigOptionKeyNotExists
+     * @throws ConfigOptionKeyNotExistsException
      */
     private function isValid(array $options) : bool {
 
         $keys = ["to", "subject", "template"];
         foreach ($keys as $key) {
             if (!array_key_exists($key, $options)) {
-                throw new ConfigOptionKeyNotExists($key);
+                throw new ConfigOptionKeyNotExistsException($key);
             }
         }
 
@@ -114,12 +118,12 @@ class MailService {
                 if (is_array($options[$key])) {
                     foreach ($options[$key] as $email => $name) {
                         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                            throw new \InvalidArgumentException("$email is not a valid email.");
+                            throw new InvalidArgumentException("$email is not a valid email.");
                         }
                     }
                 } else {
                     // Argument is not an Array
-                    throw new \InvalidArgumentException("Expected array for $key but get " . gettype($options[$key]));
+                    throw new InvalidArgumentException("Expected array for $key but get " . gettype($options[$key]));
                 }
             }
         }
@@ -133,9 +137,9 @@ class MailService {
      * @param array $templateData
      *
      * @return string
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws Twig_Error_Loader
+     * @throws Twig_Error_Runtime
+     * @throws Twig_Error_Syntax
      */
     public function renderMail(array $options, array $templateData) {
 

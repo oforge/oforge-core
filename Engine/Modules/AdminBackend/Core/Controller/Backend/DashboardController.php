@@ -1,10 +1,16 @@
 <?php
 namespace Oforge\Engine\Modules\AdminBackend\Core\Controller\Backend;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistsException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
+use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -14,7 +20,7 @@ class DashboardController extends SecureBackendController {
      * @param Request $request
      * @param Response $response
      *
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ServiceNotFoundException
      */
     public function indexAction(Request $request, Response $response) {
         $data = ['page_header' => 'Willkommen auf dem Dashboard', 'page_header_description' => "Hier finden Sie alle relevanten Informationen übersichtlich dargestellt."];
@@ -34,7 +40,7 @@ class DashboardController extends SecureBackendController {
      * @param Request $request
      * @param Response $response
      *
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ServiceNotFoundException
      */
     public function buildAction(Request $request, Response $response) {
         Oforge()->Services()->get("assets.template")->build(Oforge()->View()->get("meta")["asset_scope"]);
@@ -44,12 +50,12 @@ class DashboardController extends SecureBackendController {
      * @param Request $request
      * @param Response $response
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ConfigElementAlreadyExistsException
+     * @throws ConfigOptionKeyNotExistsException
+     * @throws ParentNotFoundException
+     * @throws ServiceNotFoundException
      */
     public function testAction(Request $request, Response $response) {
         /**
@@ -94,7 +100,7 @@ class DashboardController extends SecureBackendController {
     }
 
     /**
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ServiceNotFoundException
      */
     public function initPermissions() {
         $this->ensurePermissions("indexAction", BackendUser::class, BackendUser::ROLE_MODERATOR);

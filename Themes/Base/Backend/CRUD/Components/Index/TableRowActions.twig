@@ -1,0 +1,14 @@
+<td class="table_row_actions text-center">
+    <div class="container-fluid">
+        <div class="btn-group">
+            {% set tableRowActions = tableRowActions|default([
+                'Backend/CRUD/Components/Index/RowAction/View.twig',
+                'Backend/CRUD/Components/Index/RowAction/Update.twig',
+                'Backend/CRUD/Components/Index/RowAction/Delete.twig',
+            ]) %}
+            {% for tableRowAction in tableRowActions %}
+                {% include tableRowAction %}
+            {% endfor %}
+        </div>
+    </div>
+</td>
