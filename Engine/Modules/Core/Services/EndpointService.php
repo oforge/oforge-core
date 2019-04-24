@@ -11,7 +11,6 @@ use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction as EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\Core\Helper\StringHelper;
 use Oforge\Engine\Modules\Core\Models\Endpoint\Endpoint as EndpointModel;
@@ -37,7 +36,6 @@ class EndpointService extends AbstractDatabaseAccess {
      * Store endpoints in a database table
      *
      * @param array $endpoints
-     * @param bool $activate
      *
      * @throws AnnotationException
      * @throws ORMException
@@ -73,7 +71,7 @@ class EndpointService extends AbstractDatabaseAccess {
      * @throws OptimisticLockException
      */
     public function activate(array $endpoints) {//TODO ungetestet
-        $this->iterateEndpointModells($endpoints, function (EndpointModel $endpoint) {
+        $this->iterateEndpointModels($endpoints, function (EndpointModel $endpoint) {
             $endpoint->setActive(true);
         });
     }
@@ -88,7 +86,7 @@ class EndpointService extends AbstractDatabaseAccess {
      * @throws OptimisticLockException
      */
     public function deactivate(array $endpoints) {//TODO ungetestet
-        $this->iterateEndpointModells($endpoints, function (EndpointModel $endpoint) {
+        $this->iterateEndpointModels($endpoints, function (EndpointModel $endpoint) {
             $endpoint->setActive(false);
         });
     }
@@ -103,7 +101,7 @@ class EndpointService extends AbstractDatabaseAccess {
      * @throws OptimisticLockException
      */
     public function deinstall(array $endpoints) {//TODO ungetestet
-        $this->iterateEndpointModells($endpoints, function (EndpointModel $endpoint) {
+        $this->iterateEndpointModels($endpoints, function (EndpointModel $endpoint) {
             $this->entityManager()->remove($endpoint);
 
             return true;
@@ -118,7 +116,7 @@ class EndpointService extends AbstractDatabaseAccess {
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    protected function iterateEndpointModells(array $endpoints, callable $callable) {
+    protected function iterateEndpointModels(array $endpoints, callable $callable) {
         $endpointConfigs = $this->prepareEndpointConfigs($endpoints);
 
         foreach ($endpointConfigs as $endpointConfig) {
@@ -226,14 +224,18 @@ class EndpointService extends AbstractDatabaseAccess {
                 $classMethods = [];
             }
             foreach ($classMethods as $classMethod) {
-                //TODO non-strict-mode rework
-                if ($classAnnotation->isStrictActionSuffix() && substr($classMethod, -6) !== 'Action') {
+                $isMethodActionPrefix = StringHelper::endsWith($classMethod, 'Action');
+                if ($classAnnotation->isStrictActionSuffix() && !$isMethodActionPrefix) {
                     continue;
                 }
                 $reflectionMethod = new ReflectionMethod($class, $classMethod);
                 /** @var EndpointAction $methodAnnotation */
                 $methodAnnotation = $reader->getMethodAnnotation($reflectionMethod, EndpointAction::class);
-                $endpointConfig   = $this->buildEndpointConfig($class, $classMethod, $classAnnotation, $methodAnnotation);
+                if (!$classAnnotation->isStrictActionSuffix() && is_null($methodAnnotation)) {
+                    // skipping of methods without endpoint action annotation in disabled strict mode
+                    continue;
+                }
+                $endpointConfig = $this->buildEndpointConfig($class, $classMethod, $isMethodActionPrefix, $classAnnotation, $methodAnnotation);
                 if (!empty($endpointConfig)) {
                     $endpointConfigs[] = $endpointConfig;
                 }
@@ -248,6 +250,7 @@ class EndpointService extends AbstractDatabaseAccess {
     /**
      * @param string $class
      * @param string $classMethod
+     * @param bool $isMethodActionPrefix
      * @param EndpointClass $classAnnotation
      * @param EndpointAction $methodAnnotation
      *
@@ -256,6 +259,7 @@ class EndpointService extends AbstractDatabaseAccess {
     protected function buildEndpointConfig(
         string $class,
         string $classMethod,
+        bool $isMethodActionPrefix,
         EndpointClass $classAnnotation,
         ?EndpointAction $methodAnnotation
     ) : array {
@@ -266,7 +270,7 @@ class EndpointService extends AbstractDatabaseAccess {
         $httpMethod = EndpointMethod::ANY;
 
         $actionName = $classMethod;
-        if (StringHelper::endsWith($actionName, 'Action')) {
+        if ($isMethodActionPrefix) {
             $actionName = explode('Action', $actionName)[0];
         }
         $isIndexAction = $actionName === 'index';
@@ -304,24 +308,6 @@ class EndpointService extends AbstractDatabaseAccess {
             'order'            => $order,
             // 'controllerAction' => $actionName ?? '-',
         ];
-    }
-
-    /**
-     * @param array $options
-     *
-     * @return bool
-     * @throws ConfigOptionKeyNotExists
-     */
-    private function isValid(array $options) {
-        // Check if required keys are within the options
-        $keys = ['controller', 'name'];
-        foreach ($keys as $key) {
-            if (!array_key_exists($key, $options)) {
-                throw new ConfigOptionKeyNotExists($key);
-            }
-        }
-
-        return true;
     }
 
 }
