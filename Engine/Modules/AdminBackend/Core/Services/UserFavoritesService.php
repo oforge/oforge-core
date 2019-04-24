@@ -2,12 +2,14 @@
 
 namespace Oforge\Engine\Modules\AdminBackend\Core\Services;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\AdminBackend\Core\Models\BackendUserFavorites;
 use Oforge\Engine\Modules\AdminBackend\Core\Models\BackendNavigation;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Models\Endpoints\Endpoint;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistsException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
 use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
 
 class UserFavoritesService extends AbstractDatabaseAccess {
@@ -19,19 +21,27 @@ class UserFavoritesService extends AbstractDatabaseAccess {
         ]);
     }
 
+    /**
+     * @param $userId
+     * @param $routeName
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     public function toggle($userId, $routeName) {
-        $instance = $this->repository()->findBy(["name" => $routeName, "userId" => $userId]);
-        /** @var null|BackendNavigation $entry */
-        $entry = $this->repository("navigation")->findOneBy(["name" => $routeName]);
+        /** @var BackendUserFavorites[]|null $backendUserFavourites */
+        $backendUserFavourites = $this->repository()->findBy(["name" => $routeName, "userId" => $userId]);
+        /** @var null|BackendNavigation $backendNavigation */
+        $backendNavigation = $this->repository("navigation")->findOneBy(["name" => $routeName]);
 
-        if (isset($instance) && sizeof($instance) > 0) {
-            $instance[0]->setActive(!$instance[0]->isActive());
+        if (isset($backendUserFavourites) && sizeof($backendUserFavourites) > 0) {
+            $backendUserFavourites[0]->setActive(!$backendUserFavourites[0]->isActive());
         } else {
-            $instance = BackendUserFavorites::create(["name" => $routeName, "userId" => $userId, "active" => true]);
-            $this->entityManager()->persist($instance);
+            $backendUserFavourites = BackendUserFavorites::create(["name" => $routeName, "userId" => $userId, "active" => true]);
+            $this->entityManager()->persist($backendUserFavourites);
 
-            if (isset($entry)) {
-                $instance->setIcon($entry->getIcon());
+            if (isset($backendNavigation)) {
+                $backendUserFavourites->setIcon($backendNavigation->getIcon());
             }
 
             //TODO error handling
@@ -41,12 +51,25 @@ class UserFavoritesService extends AbstractDatabaseAccess {
         $this->entityManager()->flush();
     }
 
+    /**
+     * @param $userId
+     * @param $routeName
+     *
+     * @return bool
+     * @throws ORMException
+     */
     public function isFavorite($userId, $routeName) : bool {
-        $instance = $this->repository()->findBy(["name" => $routeName, "userId" => $userId, "active" => true]);
+        $backendUserFavourites = $this->repository()->findBy(["name" => $routeName, "userId" => $userId, "active" => true]);
 
-        return isset($instance) && sizeof($instance) > 0;
+        return isset($backendUserFavourites) && sizeof($backendUserFavourites) > 0;
     }
 
+    /**
+     * @param $userId
+     *
+     * @return array
+     * @throws ORMException
+     */
     public function getAll($userId) : array {
         return $this->repository()->findBy(["userId" => $userId, "active" => true]);
     }

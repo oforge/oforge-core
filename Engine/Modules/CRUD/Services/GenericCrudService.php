@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Alexander Wegner
- * Date: 06.12.2018
- * Time: 11:11
- */
-
 namespace Oforge\Engine\Modules\CRUD\Services;
 
 use Doctrine\ORM\NonUniqueResultException;
@@ -13,7 +6,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistsException;
 use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
 use ReflectionException;
 
@@ -86,12 +79,12 @@ class GenericCrudService extends AbstractDatabaseAccess {
 
     /**
      * Create entity if not exist yet.
-     * If options contains a key <b>id</b> and an entity with the id exists, an ConfigElementAlreadyExists is thrown.
+     * If options contains a key <b>id</b> and an entity with the id exists, an ConfigElementAlreadyExistsException is thrown.
      *
      * @param string $class
      * @param array $options
      *
-     * @throws ConfigElementAlreadyExists
+     * @throws ConfigElementAlreadyExistsException
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws ReflectionException
@@ -105,7 +98,7 @@ class GenericCrudService extends AbstractDatabaseAccess {
                 'id' => $id,
             ]);
             if (isset($entity)) {
-                throw new ConfigElementAlreadyExists("Entity with id '$id' already exists!");
+                throw new ConfigElementAlreadyExistsException("Entity with id '$id' already exists!");
             }
         }
         /** @var AbstractModel $instance */
