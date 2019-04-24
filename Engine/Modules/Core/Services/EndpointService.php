@@ -2,8 +2,10 @@
 
 namespace Oforge\Engine\Modules\Core\Services;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Core\Models\Endpoints\Endpoint;
 
@@ -20,9 +22,9 @@ class EndpointService extends AbstractDatabaseAccess {
      *
      * @param array $endpoints
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws ConfigOptionKeyNotExists
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ConfigOptionKeyNotExistsException
      */
     public function register(array $endpoints) {
         $endpointConfigs = $this->prepareEndpointConfigs($endpoints);
@@ -52,8 +54,8 @@ class EndpointService extends AbstractDatabaseAccess {
      *
      * @param array $endpoints
      *
-     * @throws ConfigOptionKeyNotExists
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ConfigOptionKeyNotExistsException
+     * @throws ORMException
      */
     public function unregister(array $endpoints) {//TODO ungetestet
         $endpointConfigs = $this->prepareEndpointConfigs($endpoints);
@@ -77,7 +79,7 @@ class EndpointService extends AbstractDatabaseAccess {
      * @param array $options
      *
      * @return bool
-     * @throws ConfigOptionKeyNotExists
+     * @throws ConfigOptionKeyNotExistsException
      */
     private function isValid(array $options) {
         /**
@@ -86,7 +88,7 @@ class EndpointService extends AbstractDatabaseAccess {
         $keys = ['controller', 'name'];
         foreach ($keys as $key) {
             if (!array_key_exists($key, $options)) {
-                throw new ConfigOptionKeyNotExists($key);
+                throw new ConfigOptionKeyNotExistsException($key);
             }
         }
 
@@ -97,7 +99,7 @@ class EndpointService extends AbstractDatabaseAccess {
      * @param array $endpoints
      *
      * @return array
-     * @throws ConfigOptionKeyNotExists
+     * @throws ConfigOptionKeyNotExistsException
      */
     protected function prepareEndpointConfigs(array $endpoints) : array {
         $endpointConfigs = [];

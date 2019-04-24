@@ -4,8 +4,8 @@ namespace FrontendUserManagement\Services;
 
 use FrontendUserManagement\Models\AccountNavigation;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistsException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
 use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
 
 class AccountNavigationService extends AbstractDatabaseAccess {
@@ -17,8 +17,8 @@ class AccountNavigationService extends AbstractDatabaseAccess {
     /**
      * @param array $options
      *
-     * @throws ConfigElementAlreadyExists
-     * @throws ConfigOptionKeyNotExists
+     * @throws ConfigElementAlreadyExistsException
+     * @throws ConfigOptionKeyNotExistsException
      * @throws ParentNotFoundException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
@@ -52,8 +52,8 @@ class AccountNavigationService extends AbstractDatabaseAccess {
      * @param array $options
      *
      * @return bool
-     * @throws ConfigElementAlreadyExists
-     * @throws ConfigOptionKeyNotExists
+     * @throws ConfigElementAlreadyExistsException
+     * @throws ConfigOptionKeyNotExistsException
      * @throws ParentNotFoundException
      */
     private function isValid($options) {
@@ -61,14 +61,14 @@ class AccountNavigationService extends AbstractDatabaseAccess {
         $keys = ["name"];
         foreach ($keys as $key) {
             if (!array_key_exists($key, $options)) {
-                throw new ConfigOptionKeyNotExists($key);
+                throw new ConfigOptionKeyNotExistsException($key);
             }
         }
 
         // Check if the element is already within the system
         $element = $this->repository()->findOneBy(["name" => strtolower($options["name"])]);
         if (isset($element)) {
-            throw new ConfigElementAlreadyExists(strtolower($options["name"]));
+            throw new ConfigElementAlreadyExistsException(strtolower($options["name"]));
         }
 
         if (key_exists("parent", $options)) {
