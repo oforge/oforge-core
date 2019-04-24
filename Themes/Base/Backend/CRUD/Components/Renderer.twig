@@ -1,0 +1,12 @@
+{% if property.type == 'custom' or property.renderer.custom %}
+    {% set rendererTemplate = [
+        property.renderer.custom,
+        'Backend/CRUD/Components/Renderer/FallbackCustom.twig',
+    ] %}
+{% else %}
+    {% set rendererTemplate = [
+        'Backend/CRUD/Components/Renderer/' ~ property.type|capitalize ~'.twig',
+        'Backend/CRUD/Components/Renderer/FallbackRaw.twig',
+    ] %}
+{% endif %}
+{% include rendererTemplate %}
