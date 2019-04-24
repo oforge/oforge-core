@@ -8,7 +8,7 @@
 
 namespace Oforge\Engine\Modules\Core\Exceptions;
 
-class ConfigElementAlreadyExists extends \Exception {
+class ConfigElementAlreadyExistsException extends \Exception {
     /**
      * ServiceNotFoundException constructor.
      *

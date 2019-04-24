@@ -5,7 +5,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
 use Oforge\Engine\Modules\Core\Exceptions\CouldNotActivatePluginException;
 use Oforge\Engine\Modules\Core\Exceptions\CouldNotDeactivatePluginException;
 use Oforge\Engine\Modules\Core\Exceptions\InvalidClassException;
@@ -42,7 +42,7 @@ class PluginStateService extends AbstractDatabaseAccess {
      * @throws InvalidClassException
      * @throws ServiceAlreadyDefinedException
      * @throws ServiceNotFoundException
-     * @throws ConfigOptionKeyNotExists
+     * @throws ConfigOptionKeyNotExistsException
      */
     public function initPlugin($pluginName) {
         /**
@@ -73,7 +73,7 @@ class PluginStateService extends AbstractDatabaseAccess {
      *
      * @param $pluginName
      *
-     * @throws ConfigOptionKeyNotExists
+     * @throws ConfigOptionKeyNotExistsException
      * @throws InvalidClassException
      * @throws ORMException
      * @throws OptimisticLockException

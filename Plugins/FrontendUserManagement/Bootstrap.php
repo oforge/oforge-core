@@ -12,10 +12,11 @@ use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Models\UserAddress;
 use FrontendUserManagement\Models\UserDetail;
 use FrontendUserManagement\Services\AccountNavigationService;
+use FrontendUserManagement\Widgets\DashboardWidgetHandler;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\DashboardWidgetsService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistsException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
 use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 
@@ -68,8 +69,8 @@ class Bootstrap extends AbstractBootstrap {
     /**
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws ConfigElementAlreadyExists
-     * @throws ConfigOptionKeyNotExists
+     * @throws ConfigElementAlreadyExistsException
+     * @throws ConfigOptionKeyNotExistsException
      * @throws ParentNotFoundException
      * @throws ServiceNotFoundException
      */
@@ -102,21 +103,16 @@ class Bootstrap extends AbstractBootstrap {
         /** @var DashboardWidgetsService $dashboardWidgetsService */
         $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
         $dashboardWidgetsService->register([
-            'position'      => 'top',
-            'action'        => '',
-            'title'         => 'frontend_users_title',
-            'name'          => 'frontend_users',
-            'cssClass'      =>  'bg-yellow',
-            'templateName'  => 'FrontendUsers',
+            'position'     => 'top',
+            'action'       => DashboardWidgetHandler::class,
+            'title'        => 'frontend_users_title',
+            'name'         => 'frontend_users',
+            'cssClass'     => 'bg-yellow',
+            'templateName' => 'FrontendUsers',
         ]);
     }
 
     /**
-     * @throws ORMException
-     * @throws OptimisticLockException
-     * @throws ConfigElementAlreadyExists
-     * @throws ConfigOptionKeyNotExists
-     * @throws ParentNotFoundException
      * @throws ServiceNotFoundException
      */
     public function deactivate() {

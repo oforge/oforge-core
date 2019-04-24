@@ -5,7 +5,7 @@ namespace Oforge\Engine\Modules\Core\Manager\Plugins;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
 use Oforge\Engine\Modules\Core\Exceptions\CouldNotInstallPluginException;
 use Oforge\Engine\Modules\Core\Exceptions\InvalidClassException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceAlreadyDefinedException;
@@ -32,7 +32,7 @@ class PluginManager extends AbstractDatabaseAccess {
      * @throws CouldNotInstallPluginException
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws ConfigOptionKeyNotExists
+     * @throws ConfigOptionKeyNotExistsException
      * @throws InvalidClassException
      * @throws ServiceAlreadyDefinedException
      * @throws ServiceNotFoundException

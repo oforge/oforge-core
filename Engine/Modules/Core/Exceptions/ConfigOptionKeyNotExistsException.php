@@ -8,7 +8,7 @@
 
 namespace Oforge\Engine\Modules\Core\Exceptions;
 
-class ConfigOptionKeyNotExists extends \Exception
+class ConfigOptionKeyNotExistsException extends \Exception
 {
     /**
      * ServiceNotFoundException constructor.
