@@ -69,7 +69,7 @@ class LanguageService extends AbstractDatabaseAccess {
         }
         if (isset($context['meta']['route']['languageId'])
             && isset($context['meta']['route']['assetScope'])
-            && strtolower($context['meta']['route']['assetScope']) !== 'backend') {
+            && strtolower($context['meta']['route']['assetScope']) !== 'Backend') {
             $this->currentLanguageIso = $context['meta']['route']['languageId'];
         } elseif (isset($_SESSION['config']['language'])) {
             $this->currentLanguageIso = $_SESSION['config']['language'];

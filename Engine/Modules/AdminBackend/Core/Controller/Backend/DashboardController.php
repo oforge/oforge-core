@@ -55,7 +55,7 @@ class DashboardController extends SecureBackendController {
      * @EndpointAction()
      */
     public function buildAction(Request $request, Response $response) {
-        Oforge()->Services()->get('assets.template')->build(Oforge()->View()->get('meta')['asset_scope']);
+        Oforge()->Services()->get('assets.template')->build(Oforge()->View()->get('meta')['route']['assetScope']);
     }
 
     /**

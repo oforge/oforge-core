@@ -7,8 +7,10 @@ use Doctrine\ORM\ORMException;
 use Exception;
 use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
+use Oforge\Engine\Modules\Core\Helper\StringHelper;
 use Oforge\Engine\Modules\CRUD\Services\GenericCrudService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Slim\Http\Request;
@@ -21,8 +23,6 @@ use Slim\Router;
  * @package Oforge\Engine\Modules\CRUD\Controller\Backend
  */
 class BaseCrudController extends SecureBackendController {
-    /** @var string $baseEndpointName */
-    protected static $baseEndpointName = null;
     /** @var string $model */
     protected $model = null;
     /**
@@ -100,26 +100,22 @@ class BaseCrudController extends SecureBackendController {
      *      protected $indexPagination = [
      *          'default' => 25,
      *          'buttons' => [25, 50, 75, 100, 250],
+     *         'queryKeys' => [
+     *              'page'            => 'p',
+     *              'entitiesPerPage' => 'epp',
+     *          ],
      *      ];
      *
      * @var array $indexPagination
      */
     protected $indexPagination = [
-        'default' => 10,
-        'buttons' => [10, 25, 50, 75, 100, 250],
+        'default'   => 10,
+        'buttons'   => [10, 25, 50, 75, 100, 250],
+        'queryKeys' => [
+            'page'            => 'p',
+            'entitiesPerPage' => 'epp',
+        ],
     ];
-    /**
-     * Query parameter key for 'page'.
-     *
-     * @var string
-     */
-    protected $indexQueryParameterKeyPage = 'p';
-    /**
-     * Query parameter key for 'entities per page'.
-     *
-     * @var string
-     */
-    protected $indexQueryParameterKeyEntitiesPerPage = 'epp';
     /** @var int $crudPermission */
     protected $crudPermission = BackendUser::ROLE_MODERATOR;
     /** @var GenericCrudService $crudService */
@@ -152,32 +148,12 @@ class BaseCrudController extends SecureBackendController {
     }
 
     /**
-     * Endpoints config for Bootstrap class.
-     *
-     * @param array $config
-     *
-     * @return array
-     */
-    public static function getBootstrapEndpointsArray($config = []) : array {
-        if (is_null(static::$baseEndpointName)) {
-            echo 'Properties "$baseEndpointName" must be override!';
-            die();
-        }
-        $endpointsConfig = array_merge([
-            'controller'  => static::class,
-            'name'        => static::$baseEndpointName,
-            'asset_scope' => 'Backend',
-        ], $config);
-
-        return $endpointsConfig;
-    }
-
-    /**
      * @param Request $request
      * @param Response $response
      *
      * @return Response
      * @throws ORMException
+     * @EndpointAction()
      */
     public function indexAction(Request $request, Response $response) {
         $params = $request->getParams();
@@ -233,14 +209,7 @@ class BaseCrudController extends SecureBackendController {
                 'hasRowActions' => $hasRowActions,
                 'items'         => $entities,
                 'pagination'    => $pagination,
-                'route'   => [
-                    'base'  => static::$baseEndpointName,
-                    'query' => $queryParams,
-                    'key'   => [
-                        'p'   => $this->indexQueryParameterKeyPage,
-                        'epp' => $this->indexQueryParameterKeyEntitiesPerPage,
-                    ],
-                ],
+                'queryKeys'     => $this->indexPagination['queryKeys'],
             ],
         ]);
 
@@ -252,6 +221,7 @@ class BaseCrudController extends SecureBackendController {
      * @param Response $response
      *
      * @return Response
+     * @EndpointAction()
      */
     public function createAction(Request $request, Response $response) {
         $params = $request->getParams();
@@ -292,14 +262,14 @@ class BaseCrudController extends SecureBackendController {
     /**
      * @param Request $request
      * @param Response $response
+     * @param array $args
      *
      * @return Response
      * @throws ORMException
+     * @EndpointAction(path="/view/{id:\d+}")
      */
-    public function viewAction(Request $request, Response $response) {
-        $params = $request->getParams();
-
-        $entity = $this->crudService->getById($this->model, $params['id']);
+    public function viewAction(Request $request, Response $response, array $args) {
+        $entity = $this->crudService->getById($this->model, $args['id']);
         if (!empty($entity)) {
             $entity = $this->prepareItemData($entity, 'view');
         }
@@ -320,26 +290,28 @@ class BaseCrudController extends SecureBackendController {
     /**
      * @param Request $request
      * @param Response $response
+     * @param array $args
      *
      * @return Response
      * @throws ORMException
+     * @EndpointAction(path="/update/{id:\d+}")
      */
-    public function updateAction(Request $request, Response $response) {
-        $params = $request->getParams();
-        if ($request->isPost() && !empty($params)) {
+    public function updateAction(Request $request, Response $response, array $args) {
+        $postData = $request->getParsedBody();
+        if ($request->isPost() && !empty($postData)) {
             try {
-                $data = $this->convertData($params['data']);
+                $data = $this->convertData($postData['data']);
                 $this->crudService->update($this->model, $data);
                 Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_update_success', 'Entity successfully updated.'));
             } catch (Exception $exception) {
                 Oforge()->View()->Flash()
                         ->addExceptionMessage('danger', I18N::translate('backend_crud_msg_update_failed', 'Entity update failed.'), $exception);
-                Oforge()->View()->Flash()->setData($this->moduleModelName, $params['data']);
+                Oforge()->View()->Flash()->setData($this->moduleModelName, $postData['data']);
             }
 
-            return $this->redirect($response, 'update', [], ['id' => $params['id']]);
+            return $this->redirect($response, 'update', [], ['id' => $args['id']]);
         }
-        $entity = $this->crudService->getById($this->model, $params['id']);
+        $entity = $this->crudService->getById($this->model, $args['id']);
         if (!empty($entity)) {
             $entity = $this->prepareItemData($entity, 'update');
         }
@@ -365,15 +337,17 @@ class BaseCrudController extends SecureBackendController {
     /**
      * @param Request $request
      * @param Response $response
+     * @param array $args
      *
      * @return Response
      * @throws ORMException
+     * @EndpointAction(path="/delete/{id:\d+}")
      */
-    public function deleteAction(Request $request, Response $response) {
-        $params = $request->getParams();
-        if ($request->isPost() && !empty($params)) {
+    public function deleteAction(Request $request, Response $response, array $args) {
+        $postData = $request->getParsedBody();
+        if ($request->isPost() && !empty($postData)) {
             try {
-                $this->crudService->delete($this->model, $params['id']);
+                $this->crudService->delete($this->model, $args['id']);
                 Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_delete_success', 'Entity successfully delete.'));
 
                 return $this->redirect($response, 'index');
@@ -381,10 +355,10 @@ class BaseCrudController extends SecureBackendController {
                 Oforge()->View()->Flash()
                         ->addExceptionMessage('danger', I18N::translate('backend_crud_msg_delete_failed', 'Entity delete failed.'), $exception);
 
-                return $this->redirect($response, 'delete', [], ['id' => $params['id']]);
+                return $this->redirect($response, 'delete', [], ['id' => $args['id']]);
             }
         }
-        $entity = $this->crudService->getById($this->model, $params['id']);
+        $entity = $this->crudService->getById($this->model, $args['id']);
         if (!empty($entity)) {
             $entity = $this->prepareItemData($entity, 'delete');
         }
@@ -511,13 +485,20 @@ class BaseCrudController extends SecureBackendController {
         if (!isset($this->router)) {
             $this->router = Oforge()->App()->getContainer()->get('router');;
         }
-        $endpointName = static::$baseEndpointName;
-        if ($crudAction !== 'index') {
-            $endpointName .= '_' . $crudAction;
+        $routeName  = Oforge()->View()->get('meta')['route']['name'];
+        $actionKeys = ['view', 'update', 'delete'];
+        foreach ($actionKeys as $actionKey) {
+            if (StringHelper::endsWith($routeName, '_' . $actionKey)) {
+                $routeName = substr($routeName, 0, -(strlen($actionKey) + 1));
+                break;
+            }
         }
-        $uri = $this->router->pathFor($endpointName, $urlParams, $queryParams);
+        if ($crudAction !== 'index') {
+            $routeName .= '_' . $crudAction;
+        }
+        $uri = $this->router->pathFor($routeName, $urlParams, $queryParams);
 
-        return $response->withRedirect($uri, 303);
+        return $response->withRedirect($uri, 302);
     }
 
     /**
@@ -530,8 +511,9 @@ class BaseCrudController extends SecureBackendController {
      * @throws ORMException
      */
     private function prepareIndexPaginationData(array $queryParams) : array {
-        $queryParameterKeyPage            = $this->indexQueryParameterKeyPage;
-        $queryParameterKeyEntitiesPerPage = $this->indexQueryParameterKeyEntitiesPerPage;
+        $queryKeys               = $this->indexPagination['queryKeys'];
+        $queryKeyPage            = $queryKeys['page'];
+        $queryKeyEntitiesPerPage = $queryKeys['entitiesPerPage'];
 
         $itemsCount       = $this->crudService->count($this->model);
         $offset           = null;
@@ -542,14 +524,14 @@ class BaseCrudController extends SecureBackendController {
 
         if (isset($this->indexPagination)) {
             $buttons = $this->indexPagination['buttons'];
-            if (isset($queryParams[$queryParameterKeyEntitiesPerPage])) {
-                $entitiesPerPage = $queryParams[$queryParameterKeyEntitiesPerPage];
+            if (isset($queryParams[$queryKeyEntitiesPerPage])) {
+                $entitiesPerPage = $queryParams[$queryKeyEntitiesPerPage];
             } else {
                 $entitiesPerPage = $this->indexPagination['default'];
             }
             $paginatorMax = ceil($itemsCount / $entitiesPerPage);
-            if (isset($queryParams[$queryParameterKeyPage])) {
-                $paginatorCurrent = $queryParams[$queryParameterKeyPage];
+            if (isset($queryParams[$queryKeyPage])) {
+                $paginatorCurrent = $queryParams[$queryKeyPage];
             } else {
                 $paginatorCurrent = 1;
             }

@@ -28,8 +28,6 @@ class Bootstrap extends AbstractBootstrap {
         $this->endpoints = [
             LanguageController::class,
             SnippetsController::class,
-            // '/backend/i18n/languages' => \Oforge\Engine\Modules\I18n\Controller\Backend\I18n\LanguageController::getBootstrapEndpointsArray(),
-            // '/backend/i18n/snippets'  => \Oforge\Engine\Modules\I18n\Controller\Backend\I18n\SnippetsController::getBootstrapEndpointsArray(),
         ];
 
         $this->models = [
