@@ -30,7 +30,7 @@ class Bootstrap extends AbstractBootstrap {
                 'name'        => 'backend_helpdesk',
                 'asset_scope' => 'Backend',
             ],
-            '/backend/helpdesk/messenger/{id}' => [
+            '/backend/helpdesk/messenger[/{id:.*}]' => [
                 'controller'  => BackendHelpdeskMessengerController::class,
                 'name'        => 'backend_helpdesk_messenger',
                 'asset_scope' => 'Backend',

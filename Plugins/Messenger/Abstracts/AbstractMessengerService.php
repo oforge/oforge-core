@@ -41,7 +41,7 @@ abstract class AbstractMessengerService extends AbstractDatabaseAccess {
      * @throws ORMException
      */
     public function getMessagesOfConversation($conversationId) {
-        return $this->repository('message')->findBy(['conversationId' => $conversationId]);
+        return $this->repository('message')->findBy(['conversationId' => $conversationId], ['timestamp' => 'ASC']);
     }
 
     /**

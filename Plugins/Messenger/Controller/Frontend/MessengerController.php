@@ -38,13 +38,13 @@ class MessengerController extends SecureFrontendController {
                 return $response;
             }
 
-            $conversation = $frontendMessengerService->getConversationById($args['id']);
+            $conversation = $frontendMessengerService->getConversation($args['id'], $user['id']);
             Oforge()->View()->assign(['conversation' => $conversation]);
         } else {
             if (sizeof($conversationList) > 0) {
                 /** @var Router $router */
                 $router = Oforge()->App()->getContainer()->get('router');
-                $uri = $router->pathFor('frontend_account_messages') . '/' . $conversationList[0]->getId();
+                $uri = $router->pathFor('frontend_account_messages') . '/' . $conversationList[0]['id'];
                 return $response->withRedirect($uri, 302);
             }
         }
