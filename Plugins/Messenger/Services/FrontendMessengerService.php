@@ -39,29 +39,43 @@ class FrontendMessengerService extends AbstractMessengerService {
     /**
      * @param $userId
      *
-     * @return Collection
+     * @return Collection|array
      * @throws ORMException
      */
     public function getConversationList($userId) {
         $queryBuilder = $this->entityManager()->createQueryBuilder();
         $query        = $queryBuilder
-            ->select(array('conversations'))
-            ->from(Conversation::class, 'conversations')
+            ->select('c')
+            ->from(Conversation::class, 'c')
             ->where(
                 $queryBuilder->expr()->andX(
-                    $queryBuilder->expr()->eq('requester', $userId),
-                    $queryBuilder->expr()->eq('type', 'classified_advert')))
+                    $queryBuilder->expr()->eq('c.requester', $userId),
+                    $queryBuilder->expr()->eq('c.type', '?1')))
             ->orWhere(
                 $queryBuilder->expr()->andX(
-                    $queryBuilder->expr()->eq('requested', $userId),
-                    $queryBuilder->expr()->eq('type', 'classified_advert')))
+                    $queryBuilder->expr()->eq('c.requested', $userId),
+                    $queryBuilder->expr()->eq('c.type', '?2')))
             ->orWhere(
                 $queryBuilder->expr()->andX(
-                    $queryBuilder->expr()->eq('requester', $userId),
-                    $queryBuilder->expr()->eq('type', 'helpdesk_inquiry')))
+                    $queryBuilder->expr()->eq('c.requester', $userId),
+                    $queryBuilder->expr()->eq('c.type', '?3')))
+            ->setParameters([1 => 'classified_advert', 2 => 'classified_advert', 3 => 'helpdesk_inquiry'])
             ->getQuery();
+        /** @var Conversation[] $conversations */
+        $conversations = $query->execute();
+        $result = [];
 
-        return $query->execute();
+        foreach($conversations as $conversation) {
+            $conversation = $conversation->toArray();
+            if ($conversation['requested'] == $userId) {
+                $conversation['chatPartner'] = $conversation['requester'];
+            } else {
+                $conversation['chatPartner'] = $conversation['requested'];
+            }
+            array_push($result, $conversation);
+        }
+
+        return $result;
     }
 
     public function getConversationById($conversationId) {

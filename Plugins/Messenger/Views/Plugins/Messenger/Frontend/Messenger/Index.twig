@@ -1,13 +1,18 @@
-<div class="conversation">
-    <pre>
-        {{ conversation.id }}
-        {{ conversation.requester }}
-        {{ conversation.requested }}
-        {{ conversation.state }}
-        {{ conversation.type }}
-        {{ conversation.title }}
-        {{ conversation.targetId }}
-        {{ conversation.lastMessage }}
-        {{ conversation.lastMessageTimestamp.date|date('Y-m-d H:i:s') }}
-    </pre>
-</div>
+{% extends "@parent/Frontend/Layout.twig" %}
+{% block content %}
+    {% include 'Plugins/FrontendUserManagement/Frontend/Components/AccountNavBar.twig' with { content_title: i18n('support', 'Support') } %}
+
+    <div class="account content">
+        {% block account %}
+            <div class="panel panel--account flex">
+                {% block account__sidebar %}
+                    {% include 'Plugins/FrontendUserManagement/Frontend/Components/Sidebar.twig' %}
+                {% endblock account__sidebar %}
+
+                {% block account__content %}
+                    {% include 'Plugins/Messenger/Frontend/Components/Content/Messenger.twig' %}
+                {% endblock account__content %}
+            </div>
+        {% endblock account %}
+    </div>
+{% endblock content %}

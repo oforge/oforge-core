@@ -1,0 +1,37 @@
+{# block account__content #}
+{% block account_content %}
+<div class="account__content flex flex--wrap">
+    <div class="messenger flex flex--row">
+        <div class="messenger__sidebar">
+            <div class="header header--sidebar">
+                <h3 class="title title--sidebar">Meine Chats</h3>
+            </div>
+            <ul class="chat-list">
+                {% for conversation in conversationList %}
+                    <li class="chat">
+                        <a href="{{ url('frontend_account_messages', {id: conversation.id}) }}" class="chat__link">{{ conversation.requester }} - {{ conversation.requested }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="messenger__chat">
+            <div class="header header--chat flex flex--row flex--center flex--between">
+                <span class="icon"></span><h3 class="title title--chat">Rachel.Müller</h3><a href="#"><span class="icon"></span></a>
+            </div>
+            <div class="messages">
+                <pre>
+                    {{ conversation.id }}
+                    {{ conversation.requester }}
+                    {{ conversation.requested }}
+                    {{ conversation.state }}
+                    {{ conversation.type }}
+                    {{ conversation.title }}
+                    {{ conversation.targetId }}
+                    {{ conversation.lastMessage }}
+                    {{ conversation.lastMessageTimestamp.date|date('Y-m-d H:i:s') }}
+                </pre>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock account_content %}

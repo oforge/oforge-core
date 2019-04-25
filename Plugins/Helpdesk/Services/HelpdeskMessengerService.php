@@ -19,6 +19,7 @@ class HelpdeskMessengerService extends AbstractMessengerService {
      * @param $title
      * @param $firstMessage
      *
+     * @return Conversation
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -48,18 +49,20 @@ class HelpdeskMessengerService extends AbstractMessengerService {
     public function getConversationList($userId) {
         $queryBuilder = $this->entityManager()->createQueryBuilder();
         $query        = $queryBuilder
-            ->select(['conversations'])
-            ->from(Conversation::class, 'conversations')
+            ->select('c')
+            ->from(Conversation::class, 'c')
             ->where(
                 $queryBuilder->expr()->andX(
-                    $queryBuilder->expr()->eq('requested',null),
-                    $queryBuilder->expr()->eq('type','helpdesk_inquiry')))
+                    $queryBuilder->expr()->eq('c.requested',null),
+                    $queryBuilder->expr()->eq('c.type','?1')))
             ->orWhere(
                 $queryBuilder->expr()->andX(
-                    $queryBuilder->expr()->eq('requested', $userId),
-                    $queryBuilder->expr()->eq('type', 'helpdesk_inquiry')))
+                    $queryBuilder->expr()->eq('c.requested', $userId),
+                    $queryBuilder->expr()->eq('c.type', '?1')))
+            ->setParameters([1 => 'helpdesk_inquiry'])
             ->getQuery();
+        $result = $query->execute();
 
-        return $query->execute();
+        return $result;
     }
 }
