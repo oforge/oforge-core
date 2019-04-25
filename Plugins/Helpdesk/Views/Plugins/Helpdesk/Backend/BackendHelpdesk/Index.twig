@@ -3,36 +3,36 @@
 {% block pagecontent %}
     <section class="content">
         <div class="row">
-            <!-- /.col -->
             <div class="col-md-12">
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Helpdesk</h3>
-                        <!-- /.box-tools -->
+                        <h3 class="box-title">{{ i18n('backend_helpdesk', 'Helpdesk') }}</h3>
                     </div>
-                    <!-- /.box-header -->
                     <div class="box-body no-padding">
                         <div class="mailbox-controls">
-                            <!-- Check all button -->
-                            <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i
-                                        class="fa fa-square-o"></i>
+                            <button type="button" class="btn btn-default btn-sm checkbox-toggle">
+                                <i class="fa fa-square-o"></i>
                             </button>
                             <div class="btn-group">
-                                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i>
+                                <button type="button" class="btn btn-default btn-sm">
+                                    <i class="fa fa-trash-o"></i>
                                 </button>
-                                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-reply"></i>
+                                <button type="button" class="btn btn-default btn-sm">
+                                    <i class="fa fa-reply"></i>
                                 </button>
-                                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-share"></i>
+                                <button type="button" class="btn btn-default btn-sm">
+                                    <i class="fa fa-share"></i>
                                 </button>
                             </div>
-                            <!-- /.btn-group -->
-                            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button>
-                            <!-- /.pull-right -->
+                            <button type="button" class="btn btn-default btn-sm">
+                                <i class="fa fa-refresh"></i>
+                            </button>
                         </div>
 
                         {% if tickets|length < 1 %}
-                            <p class="text-center">Keine offenen Tickets</p>
-
+                            <p class="text-center">
+                                {{ i18n('backend_helpdesk_no_tickets', 'No open Tickets avaiable') }}
+                            </p>
                         {% else %}
                             <div class="table-responsive mailbox-messages">
                                 <table class="table table-hover table-striped">
@@ -42,29 +42,45 @@
                                             <td>
                                                 <div class="icheckbox_flat-blue" aria-checked="false"
                                                      aria-disabled="false"
-                                                     style="position: relative;"><input type="checkbox"
-                                                                                        style="position: absolute; opacity: 0;">
+                                                     style="position: relative;">
+                                                    <input type="checkbox" style="position: absolute; opacity: 0;">
                                                     <ins class="iCheck-helper"
-                                                         style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
+                                                         style="position: absolute;
+                                                                top: 0;
+                                                                left: 0;
+                                                                display: block;
+                                                                width: 100%;
+                                                                height: 100%;
+                                                                margin: 0;
+                                                                padding: 0;
+                                                                background: rgb(255, 255, 255);
+                                                                border: 0;
+                                                                opacity: 0;">
+                                                    </ins>
                                                 </div>
                                             </td>
-                                            <td class="mailbox-name"><a
-                                                        href="/backend/helpdesk/messenger/{{ ticket.id }}">{{ ticket.opener }}</a>
+                                            <td class="mailbox-name">
+                                                <a href="{{ url('backend_helpdesk_messenger', {'id': ticket.id}) }}">
+                                                    {{ ticket.email }}
+                                                </a>
                                             </td>
-                                            <td class="mailbox-subject"><b>{{ ticket.issueType }}</b>
-                                                - {{ ticket.title }}
+                                            <td class="mailbox-subject">
+                                                <b>{{ ticket.issueType }}</b> - {{ ticket.title }}
                                             </td>
                                             <td class="mailbox-attachment"></td>
                                             <td class="mailbox-star">
                                                 <a href="#">
                                                     <i class="fa fa-circle
-                                            {% if ticket.status is same as("closed") %}
-                                                text-red
-                                            {% elseif ticket.status is same as("waiting") %}
-                                                text-yellow
-                                            {% elseif ticket.status is same as("open") %}
-                                                text-green
-                                            {% endif %}">{{ ticket.status }}</i></a>
+                                                        {% if ticket.status is same as("closed") %}
+                                                            text-green
+                                                        {% elseif ticket.status is same as("waiting") %}
+                                                            text-yellow
+                                                        {% elseif ticket.status is same as("open") %}
+                                                            text-red
+                                                        {% endif %}">
+                                                        {{ ticket.status }}
+                                                    </i>
+                                                </a>
                                             </td>
                                             <td class="mailbox-date">{{ ticket.timestamp|date }}</td>
                                         </tr>
@@ -75,9 +91,8 @@
                         {% endif %}
                         <div class="box-footer no-padding">
                             <div class="mailbox-controls">
-                                <!-- Check all button -->
-                                <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i
-                                            class="fa fa-square-o"></i>
+                                <button type="button" class="btn btn-default btn-sm checkbox-toggle">
+                                    <i class="fa fa-square-o"></i>
                                 </button>
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i>
@@ -87,7 +102,8 @@
                                     <button type="button" class="btn btn-default btn-sm"><i class="fa fa-share"></i>
                                     </button>
                                 </div>
-                                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i>
+                                <button type="button" class="btn btn-default btn-sm">
+                                    <i class="fa fa-refresh"></i>
                                 </button>
                             </div>
                         </div>
