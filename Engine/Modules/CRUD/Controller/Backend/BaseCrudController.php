@@ -233,7 +233,7 @@ class BaseCrudController extends SecureBackendController {
                 'hasRowActions' => $hasRowActions,
                 'items'         => $entities,
                 'pagination'    => $pagination,
-                'route'   => [
+                'route'         => [
                     'base'  => static::$baseEndpointName,
                     'query' => $queryParams,
                     'key'   => [
@@ -581,8 +581,11 @@ class BaseCrudController extends SecureBackendController {
      * @return array
      */
     private function evaluateIndexFilter(array $queryParams) : array {
+        unset($queryParams[$this->indexQueryParameterKeyPage]);
+        unset($queryParams[$this->indexQueryParameterKeyEntitiesPerPage]);
+
         //TODO
-        return [];
+        return $queryParams;
     }
 
 }
