@@ -2,7 +2,10 @@
 
 namespace Oforge\Engine\Modules\Core\Abstracts;
 
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\PersistentCollection;
+use ReflectionException;
+use ReflectionMethod;
 
 /**
  * Class AbstractModel
@@ -35,7 +38,8 @@ abstract class AbstractModel {
      * @param array $fillable
      *
      * @return $this
-     * @throws \ReflectionException
+     * @throws ORMException
+     * @throws ReflectionException
      */
     public function fromArray(array $array = [], array $fillable = []) {
         foreach ($array as $key => $value) {
@@ -50,7 +54,7 @@ abstract class AbstractModel {
             }
 
             if (method_exists($this, $method)) {
-                $r = new \ReflectionMethod(static::class, $method);
+                $r = new ReflectionMethod(static::class, $method);
                 $params = $r->getParameters();
 
                 if (sizeof($params) == 1) {
@@ -90,7 +94,7 @@ abstract class AbstractModel {
             }
 
             if (isset($name)) {
-                $r = new \ReflectionMethod(static::class, $method);
+                $r = new ReflectionMethod(static::class, $method);
 
                 $type = $r->getReturnType();
 

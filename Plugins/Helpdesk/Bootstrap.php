@@ -8,7 +8,7 @@ use FrontendUserManagement\Services\AccountNavigationService;
 use Helpdesk\Controller\Backend\BackendHelpdeskController;
 use Helpdesk\Controller\Backend\BackendHelpdeskMessengerController;
 use Helpdesk\Controller\Frontend\FrontendHelpdeskController;
-use Helpdesk\Controller\Frontend\FrontendHelpdeskTicketController;
+use Helpdesk\Models\IssueTypes;
 use Helpdesk\Models\Ticket;
 use Helpdesk\Services\HelpdeskMessengerService;
 use Helpdesk\Services\HelpdeskTicketService;
@@ -32,7 +32,7 @@ class Bootstrap extends AbstractBootstrap {
                 'name'        => 'backend_helpdesk',
                 'asset_scope' => 'Backend',
             ],
-            '/backend/helpdesk/messenger/{id}' => [
+            '/backend/helpdesk/messenger[/{id:.*}]' => [
                 'controller'  => BackendHelpdeskMessengerController::class,
                 'name'        => 'backend_helpdesk_messenger',
                 'asset_scope' => 'Backend',
@@ -51,11 +51,20 @@ class Bootstrap extends AbstractBootstrap {
 
         $this->models = [
             Ticket::class,
+            IssueTypes::class,
         ];
 
         $this->dependencies = [
             \FrontendUserManagement\Bootstrap::class,
+            \Messenger\Bootstrap::class,
         ];
+    }
+
+    public function install() {
+        /** @var $helpdeskTicketService HelpdeskTicketService */
+        $helpdeskTicketService = Oforge()->Services()->get('helpdesk.ticket');
+        $helpdeskTicketService->createIssueType('99 Problems');
+        $helpdeskTicketService->createIssueType('but the horse ain\'t one');
     }
 
     /**

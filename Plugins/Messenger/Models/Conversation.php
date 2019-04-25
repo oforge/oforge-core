@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 
 /**
- * @ORM\Table(name="oforge_massenger_conversation")
+ * @ORM\Table(name="oforge_messenger_conversation")
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
  */
