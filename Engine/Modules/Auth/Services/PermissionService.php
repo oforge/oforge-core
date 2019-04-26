@@ -17,7 +17,7 @@ class PermissionService {
      * @param string $userType
      * @param int $role
      */
-    public function put(string $class, string $method, string $userType, int $role = 0) {
+    public function put(string $class, string $method, string $userType, ?int $role = null) {
         $key = $class . ':' . $method;
 
         $this->methods[$key] = ["class" => $class, "method" => $method, "type" => $userType, "role" => $role];

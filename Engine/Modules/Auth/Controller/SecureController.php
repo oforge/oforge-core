@@ -23,7 +23,7 @@ class SecureController extends AbstractController {
      *
      * @throws ServiceNotFoundException
      */
-    protected function ensurePermissions(string $method, string $userType, int $role = null) {
+    protected function ensurePermissions(string $method, string $userType, ?int $role = null) {
         /** @var PermissionService $permissionService */
         $permissionService = Oforge()->Services()->get('permissions');
         $permissionService->put(get_called_class(), $method, $userType, $role);
