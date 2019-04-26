@@ -15,8 +15,9 @@ class MediaService extends AbstractDatabaseAccess {
     public function add($file) : ?Media {
         if (isset($file["error"]) && $file["error"] == 0 && isset($file["size"]) && $file["size"] > 0) {
 
-            $relative = Statics::IMAGES_DIR . DIRECTORY_SEPARATOR . basename($file['name']);
-            @mkdir(dirname(ROOT_PATH . $relative));
+            $relative = Statics::IMAGES_DIR . DIRECTORY_SEPARATOR . substr(md5(rand()), 0, 2) . DIRECTORY_SEPARATOR . substr(md5(rand()), 0, 2).  DIRECTORY_SEPARATOR . basename($file['name']);
+
+            @mkdir(dirname(ROOT_PATH . $relative), 0777, true);
 
             if (move_uploaded_file($file['tmp_name'], ROOT_PATH . $relative)) {
 
