@@ -27,7 +27,7 @@ class Bootstrap extends AbstractBootstrap {
      */
     public function __construct() {
         $this->endpoints = [
-            '/backend/helpdesk'                => [
+            '/backend/helpdesk'                     => [
                 'controller'  => BackendHelpdeskController::class,
                 'name'        => 'backend_helpdesk',
                 'asset_scope' => 'Backend',
@@ -37,11 +37,11 @@ class Bootstrap extends AbstractBootstrap {
                 'name'        => 'backend_helpdesk_messenger',
                 'asset_scope' => 'Backend',
             ],
-            '/account/support' => [
+            '/account/support'                      => [
                 'controller'  => FrontendHelpdeskController::class,
                 'name'        => 'frontend_account_support',
                 'asset_scope' => 'Frontend',
-            ]
+            ],
         ];
 
         $this->services = [
@@ -60,11 +60,22 @@ class Bootstrap extends AbstractBootstrap {
         ];
     }
 
+    /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ServiceNotFoundException
+     */
     public function install() {
         /** @var $helpdeskTicketService HelpdeskTicketService */
         $helpdeskTicketService = Oforge()->Services()->get('helpdesk.ticket');
         $helpdeskTicketService->createIssueType('99 Problems');
         $helpdeskTicketService->createIssueType('but the horse ain\'t one');
+
+        $helpdeskTicketService->createNewTicket(1, 1, 'but the horse ain\'t one',
+            'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.');
+
+        $helpdeskTicketService->createNewTicket(1, 1, 'but the horse ain\'t two',
+            'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.');
     }
 
     /**
@@ -91,23 +102,23 @@ class Bootstrap extends AbstractBootstrap {
         ]);
 
         $accountNavigation->put([
-                "name" => "frontend_account_support",
-                "order" => 1,
-                "icon" => "whatsapp",
-                "path" => "frontend_account_support",
-                "position" => "sidebar",
-            ]);
+            "name"     => "frontend_account_support",
+            "order"    => 1,
+            "icon"     => "whatsapp",
+            "path"     => "frontend_account_support",
+            "position" => "sidebar",
+        ]);
 
         /** @var DashboardWidgetsService $dashboardWidgetsService */
         $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
 
         $dashboardWidgetsService->register([
-            "position" => "left",
-            "action" => HelpdeskWidgetHandler::class,
-            "title" => "frontend_widget_helpdesk_title",
-            "name" => "frontend_widget_helpdesk",
-            "cssClass" =>  "box-success",
-            "templateName" => "Helpdesk"
+            "position"     => "left",
+            "action"       => HelpdeskWidgetHandler::class,
+            "title"        => "frontend_widget_helpdesk_title",
+            "name"         => "frontend_widget_helpdesk",
+            "cssClass"     => "box-success",
+            "templateName" => "Helpdesk",
         ]);
     }
 }
