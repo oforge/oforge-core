@@ -5,6 +5,8 @@ namespace FrontendUserManagement\Controller\Frontend;
 use FrontendUserManagement\Abstracts\SecureFrontendController;
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\UserDetailsService;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Slim\Http\Request;
@@ -15,6 +17,7 @@ use Slim\Router;
  * Class UserDetailsController
  *
  * @package FrontendUserManagement\Controller\Frontend
+ * @EndpointClass(path="/account/details", name="frontend_account_details", assetScope="Frontend")
  */
 class UserDetailsController extends SecureFrontendController {
 
@@ -23,6 +26,7 @@ class UserDetailsController extends SecureFrontendController {
      * @param Response $response
      *
      * @throws ServiceNotFoundException
+     * @EndpointAction()
      */
     public function indexAction(Request $request, Response $response) {
         $userId = Oforge()->View()->get('user')['id'];
@@ -40,10 +44,13 @@ class UserDetailsController extends SecureFrontendController {
      *
      * @return Response
      * @throws ServiceNotFoundException
+     * @EndpointAction()
      */
     public function process_detailsAction(Request $request, Response $response) {
-        /** @var Router $router */
-        /** @var UserDetailsService $userDetailsService */
+        /**
+         * @var Router $router
+         * @var UserDetailsService $userDetailsService
+         */
         $userDetailsService = Oforge()->Services()->get('frontend.user.management.user.details');
         $router             = Oforge()->App()->getContainer()->get('router');
         $body               = $request->getParsedBody();
@@ -111,6 +118,7 @@ class UserDetailsController extends SecureFrontendController {
     /**
      * @param Request $request
      * @param Response $response
+     * @EndpointAction()
      */
     public function process_addressAction(Request $request, Response $response) {
         //
@@ -120,9 +128,9 @@ class UserDetailsController extends SecureFrontendController {
      * @throws ServiceNotFoundException
      */
     public function initPermissions() {
-        $this->ensurePermissions("indexAction", User::class);
-        $this->ensurePermissions("process_detailsAction", User::class);
-        $this->ensurePermissions("process_addressAction", User::class);
+        $this->ensurePermissions('indexAction', User::class);
+        $this->ensurePermissions('process_detailsAction', User::class);
+        $this->ensurePermissions('process_addressAction', User::class);
     }
 
 }

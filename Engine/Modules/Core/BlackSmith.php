@@ -2,17 +2,20 @@
 
 use Oforge\Engine\Modules\Core\Abstracts\AbstractTemplateManager;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractViewManager;
-use Oforge\Engine\Modules\Core\App;
-use Oforge\Engine\Modules\Core\ForgeSettings;
+use Oforge\Engine\Modules\Core\Forge\ForgeSettings;
+use Oforge\Engine\Modules\Core\Forge\ForgeSlimApp;
 use Oforge\Engine\Modules\Core\Manager\Logger\LoggerManager;
 use Oforge\Engine\Modules\Core\Manager\Modules\ModuleManager;
 use Oforge\Engine\Modules\Core\Manager\Plugins\PluginManager;
-use Oforge\Engine\Modules\Core\Manager\Routes\RouteManager;
+use Oforge\Engine\Modules\Core\Manager\Slim\SlimRouteManager;
 use Oforge\Engine\Modules\Core\Manager\Services\ServiceManager;
-use Oforge\Engine\Modules\Core\Models\ForgeDataBase;
+use Oforge\Engine\Modules\Core\Forge\ForgeDatabase;
 
 // TODO: find a better way to use a TemplateEngine Module
 
+/**
+ * Class BlackSmith
+ */
 class BlackSmith {
     /**
      * The main instance to start the whole application.
@@ -23,9 +26,9 @@ class BlackSmith {
     /**
      * App
      *
-     * @var App $app
+     * @var ForgeSlimApp $forgeSlimApp
      */
-    private $app = null;
+    private $forgeSlimApp = null;
     /**
      * Container
      *
@@ -35,15 +38,15 @@ class BlackSmith {
     /**
      *  DataBase
      *
-     * @var ForgeDataBase $db
+     * @var ForgeDatabase $db
      */
     private $db = null;
     /**
      *  RouteManager
      *
-     * @var RouteManager $router
+     * @var SlimRouteManager $slimRouteManagager
      */
-    private $router = null;
+    private $slimRouteManagager = null;
     /**
      * LogManager
      *
@@ -101,15 +104,15 @@ class BlackSmith {
         Oforge( $this );
     }
     
-    public function App(): App {
-        if ( ! isset( $this->app ) ) {
+    public function App(): ForgeSlimApp {
+        if ( ! isset( $this->forgeSlimApp ) ) {
             throw new \RuntimeException( 'Oforge fire does not burn. Ask the blacksmith to start forging.' );
         }
         
-        return $this->app;
+        return $this->forgeSlimApp;
     }
     
-    public function DB(): ForgeDataBase {
+    public function DB(): ForgeDatabase {
         if ( ! isset( $this->db ) ) {
             throw new \RuntimeException( 'Oforge fire does not burn. Ask the blacksmith to start forging.' );
         }
@@ -117,12 +120,12 @@ class BlackSmith {
         return $this->db;
     }
     
-    public function Router(): RouteManager {
-        if ( ! isset( $this->router ) ) {
+    public function SlimRouteManager(): SlimRouteManager {
+        if ( ! isset( $this->slimRouteManagager ) ) {
             throw new \RuntimeException( 'Oforge fire does not burn. Ask the blacksmith to start forging.' );
         }
         
-        return $this->router;
+        return $this->slimRouteManagager;
     }
     
     public function Container(): \Slim\Container {
@@ -208,7 +211,7 @@ class BlackSmith {
         /**
          * Connect to database
          */
-        $this->db = ForgeDataBase::getInstance();
+        $this->db = ForgeDatabase::getInstance();
         $this->db->init( $this->settings->get( "db" ) );
 
         /**
@@ -219,8 +222,8 @@ class BlackSmith {
         /*
         * Start slim application
         */
-        $this->app       = App::getInstance();
-        $this->container = $this->App()->getContainer();
+        $this->forgeSlimApp = ForgeSlimApp::getInstance();
+        $this->container    = $this->App()->getContainer();
 
         /*
         * Init and load modules
@@ -236,14 +239,14 @@ class BlackSmith {
         /*
          * Init route manager
          */
-        $this->router = RouteManager::getInstance();
-        $this->router->init();
+        $this->slimRouteManagager = SlimRouteManager::getInstance();
+        $this->slimRouteManagager->init();
 
         /*
          * Let the Blacksmith forge all the things \°/
          */
         if ( $start ) {
-            $this->app->run();
+            $this->forgeSlimApp->run();
         }
     }
     

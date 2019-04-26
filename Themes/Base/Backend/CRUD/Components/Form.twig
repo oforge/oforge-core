@@ -49,13 +49,13 @@
                     </a>
                     {% if crud.context == 'view' %}
                         {% if crud.actions['update'] %}
-                            <a href="{{ url(crud.baseRouteName ~ '_update') ~ '?id=' ~ crud.item.id }}"
+                            <a href="{{ url(crud.baseRouteName ~ '_update', {id: crud.item.id}) }}"
                                class="btn btn-primary">
                                 {{ i18n('backend_crud_btn_update', 'update') }}
                             </a>
                         {% endif %}
                         {% if crud.actions['delete'] %}
-                            <a href="{{ url(crud.baseRouteName ~ '_delete') ~ '?id=' ~ crud.item.id }}"
+                            <a href="{{ url(crud.baseRouteName ~ '_delete', {id: crud.item.id}) }}"
                                class="btn btn-danger">
                                 {{ i18n('backend_crud_btn_delete', 'delete') }}
                             </a>

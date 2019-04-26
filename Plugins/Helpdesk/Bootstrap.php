@@ -21,32 +21,25 @@ use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
 use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 
+/**
+ * Class Bootstrap
+ *
+ * @package Helpdesk
+ */
 class Bootstrap extends AbstractBootstrap {
+
     /**
      * Bootstrap constructor.
      */
     public function __construct() {
-        $this->endpoints = [
-            '/backend/helpdesk'                => [
-                'controller'  => BackendHelpdeskController::class,
-                'name'        => 'backend_helpdesk',
-                'asset_scope' => 'Backend',
-            ],
-            '/backend/helpdesk/messenger[/{id:.*}]' => [
-                'controller'  => BackendHelpdeskMessengerController::class,
-                'name'        => 'backend_helpdesk_messenger',
-                'asset_scope' => 'Backend',
-            ],
-            '/account/support' => [
-                'controller'  => FrontendHelpdeskController::class,
-                'name'        => 'frontend_account_support',
-                'asset_scope' => 'Frontend',
-            ]
+        $this->dependencies = [
+            \FrontendUserManagement\Bootstrap::class,
         ];
 
-        $this->services = [
-            'helpdesk.messenger' => HelpdeskMessengerService::class,
-            'helpdesk.ticket'    => HelpdeskTicketService::class,
+        $this->endpoints = [
+            BackendHelpdeskController::class,
+            BackendHelpdeskMessengerController::class,
+            FrontendHelpdeskController::class,
         ];
 
         $this->models = [
@@ -54,14 +47,19 @@ class Bootstrap extends AbstractBootstrap {
             IssueTypes::class,
         ];
 
-        $this->dependencies = [
-            \FrontendUserManagement\Bootstrap::class,
-            \Messenger\Bootstrap::class,
+        $this->services = [
+            'helpdesk.messenger' => HelpdeskMessengerService::class,
+            'helpdesk.ticket'    => HelpdeskTicketService::class,
         ];
     }
 
+    /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ServiceNotFoundException
+     */
     public function install() {
-        /** @var $helpdeskTicketService HelpdeskTicketService */
+        /** @var HelpdeskTicketService $helpdeskTicketService */
         $helpdeskTicketService = Oforge()->Services()->get('helpdesk.ticket');
         $helpdeskTicketService->createIssueType('99 Problems');
         $helpdeskTicketService->createIssueType('but the horse ain\'t one');
@@ -76,38 +74,38 @@ class Bootstrap extends AbstractBootstrap {
      * @throws ServiceNotFoundException
      */
     public function activate() {
-        /** @var $sidebarNavigation BackendNavigationService */
-        /** @var AccountNavigationService $accountNavigation */
-        $accountNavigation = Oforge()->Services()->get('frontend.user.management.account.navigation');
-        $sidebarNavigation = Oforge()->Services()->get("backend.navigation");
+        /**
+         * @var AccountNavigationService $accountNavigation
+         * @var DashboardWidgetsService $dashboardWidgetsService
+         * @var BackendNavigationService $sidebarNavigation
+         */
+        $accountNavigation       = Oforge()->Services()->get('frontend.user.management.account.navigation');
+        $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
+        $sidebarNavigation       = Oforge()->Services()->get('backend.navigation');
 
         $sidebarNavigation->put([
-            "name"     => "backend_helpdesk",
-            "order"    => 4,
-            "parent"   => "backend_content",
-            "icon"     => "fa fa-support",
-            "path"     => "backend_helpdesk",
-            "position" => "sidebar",
+            'name'     => 'backend_helpdesk',
+            'order'    => 4,
+            'parent'   => 'backend_content',
+            'icon'     => 'fa fa-support',
+            'path'     => 'backend_helpdesk',
+            'position' => 'sidebar',
         ]);
-
         $accountNavigation->put([
-                "name" => "frontend_account_support",
-                "order" => 1,
-                "icon" => "whatsapp",
-                "path" => "frontend_account_support",
-                "position" => "sidebar",
-            ]);
-
-        /** @var DashboardWidgetsService $dashboardWidgetsService */
-        $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
-
+            'name'     => 'frontend_account_support',
+            'order'    => 1,
+            'icon'     => 'whatsapp',
+            'path'     => 'frontend_account_support',
+            'position' => 'sidebar',
+        ]);
         $dashboardWidgetsService->register([
-            "position" => "left",
-            "action" => HelpdeskWidgetHandler::class,
-            "title" => "frontend_widget_helpdesk_title",
-            "name" => "frontend_widget_helpdesk",
-            "cssClass" =>  "box-success",
-            "templateName" => "Helpdesk"
+            'position'     => 'left',
+            'action'       => HelpdeskWidgetHandler::class,
+            'title'        => 'frontend_widget_helpdesk_title',
+            'name'         => 'frontend_widget_helpdesk',
+            'cssClass'     => 'box-success',
+            'templateName' => 'Helpdesk',
         ]);
     }
+
 }

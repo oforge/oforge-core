@@ -1,6 +1,6 @@
 <?php
 
-namespace Oforge\Engine\Modules\Core\Manager\Routes;
+namespace Oforge\Engine\Modules\Core\Manager\Slim;
 
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Psr\Http\Message\ResponseInterface;
@@ -10,18 +10,11 @@ use Slim\Http\Response;
 /**
  * Class RenderMiddleware
  *
- * @package Oforge\Engine\Modules\Core\Manager\Routes
+ * @package Oforge\Engine\Modules\Core\Manager\Slim
  */
 class RenderMiddleware {
-    /**
-     * Add a "Fetch Controller Data" Middleware function
-     *
-     * @param Request $request PSR7 request
-     * @param Response $response PSR7 response
-     * @param callable $next Next middleware
-     *
-     * @return ResponseInterface
-     */
+
+    /** @inheritDoc */
     public function __invoke($request, $response, $next) {
         $data = [];
 

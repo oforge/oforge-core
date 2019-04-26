@@ -26,18 +26,18 @@ class Bootstrap extends AbstractBootstrap {
 
     public function __construct() {
         $this->endpoints = [
-            '/backend/i18n/languages' => LanguageController::getBootstrapEndpointsArray(),
-            '/backend/i18n/snippets'  => SnippetsController::getBootstrapEndpointsArray(),
-        ];
-
-        $this->services = [
-            'i18n'          => InternationalizationService::class,
-            'i18n.language' => LanguageService::class,
+            LanguageController::class,
+            SnippetsController::class,
         ];
 
         $this->models = [
             Language::class,
             Snippet::class,
+        ];
+
+        $this->services = [
+            'i18n'          => InternationalizationService::class,
+            'i18n.language' => LanguageService::class,
         ];
     }
 
