@@ -31,9 +31,9 @@ final class BackendLoginServiceTest extends TestCase
      */
     public function getConnection()
     {
-        $this->em = Oforge()->DB()->getManager();
+        $this->em = Oforge()->DB()->getEnityManager();
         Oforge()->DB()->getSchemaTool()->dropSchema([$this->em->getClassMetadata(BackendUser::class)]);
-        Oforge()->DB()->initSchema([BackendUser::class], true);
+        Oforge()->DB()->initModelSchema([BackendUser::class], true);
 
         $testData = [
             "email" => "testuser@oforge.com",

@@ -5,6 +5,7 @@ namespace Oforge\Engine\Modules\I18n\Controller\Backend\I18n;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
 use Oforge\Engine\Modules\I18n\Models\Language;
@@ -14,10 +15,9 @@ use Oforge\Engine\Modules\I18n\Models\Snippet;
  * Class LanguageController
  *
  * @package Oforge\Engine\Modules\I18n\Controller\Backend
+ * @EndpointClass(path="/backend/i18n/languages", name="backend_i18n_languages", assetScope="Backend")
  */
 class LanguageController extends BaseCrudController {
-    /** @var string $baseEndpointName */
-    protected static $baseEndpointName = 'backend_i18n_languages';
     /** @var string $model */
     protected $model = Language::class;
     /** @var array $modelProperties */
@@ -88,7 +88,7 @@ class LanguageController extends BaseCrudController {
             $this->snippets = [];
             try {
                 /* @var EntityManager $entityManager */
-                $entityManager = Oforge()->DB()->getManager();
+                $entityManager = Oforge()->DB()->getEnityManager();
                 $queryBuilder  = $entityManager->getRepository(Snippet::class)->createQueryBuilder('s');
                 $entries       = $queryBuilder->select('s.scope, COUNT(s) as value')->groupBy('s.scope')->getQuery()->getArrayResult();
                 foreach ($entries as $entry) {
