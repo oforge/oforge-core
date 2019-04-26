@@ -41,7 +41,7 @@ class BackendHelpdeskController extends SecureBackendController {
             array_push($tickets, $ticket);
         }
 
-        Oforge()->View()->assign(["tickets" => $tickets]);
+        Oforge()->View()->assign([ "content" => ["ticketData" => $tickets]]);
     }
 
     /**
