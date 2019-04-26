@@ -1,15 +1,15 @@
 {% extends 'Backend/Master/Index.twig' %}
-{% set meta = meta|merge({
+{% set meta = meta|default({})|merge({
     page: meta.page|default({})|merge({
         favoriteButton: false,
     })
 }) %}
-{% set crud = crud|merge({
+{% set crud = crud|default({})|merge({
     baseRouteName: meta.route.name|split('_')|slice(0, -1)|join('_')
 }) %}
-{% set breadcrumbs = backend_breadcrumbs(crud.baseRouteName) %}
-{% set breadcrumbs = breadcrumbs|merge([{
+{% set breadcrumbs = backend_breadcrumbs(crud.baseRouteName)|default({})|merge([{
     path: meta.route.name,
+    pathArgs: {id: crud.item.id},
     visible: true,
     name: i18n('backend_crud_btn_' ~ crud.context, crud.context),
 }]) %}
