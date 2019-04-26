@@ -41,17 +41,47 @@ abstract class AbstractMessengerService extends AbstractDatabaseAccess {
      * @throws ORMException
      */
     public function getMessagesOfConversation($conversationId) {
-        return $this->repository('message')->findBy(['conversationId' => $conversationId]);
+        return $this->repository('message')->findBy(['conversationId' => $conversationId], ['timestamp' => 'ASC']);
     }
 
     /**
      * @param $targetId
+     * @param $userId
      *
-     * @return Conversation|object
+     * @return array
      * @throws ORMException
      */
-    public function getConversationByTarget($targetId) {
-        return $this->repository('conversation')->findOneBy(['targetId' => $targetId]);
+    public function getConversationsByTarget($targetId, $userId) {
+
+        $queryBuilder = $this->entityManager()->createQueryBuilder();
+        $query        = $queryBuilder
+            ->select('c')
+            ->from(Conversation::class, 'c')
+            ->where(
+                $queryBuilder->expr()->andX(
+                    $queryBuilder->expr()->eq('c.requester', '?1'),
+                    $queryBuilder->expr()->eq('c.targetId', $targetId)))
+            ->orWhere(
+                $queryBuilder->expr()->andX(
+                    $queryBuilder->expr()->eq('c.requested', '?1'),
+                    $queryBuilder->expr()->eq('c.targetId', $targetId)))
+            ->setParameters([1 => $userId])
+            ->getQuery();
+        /** @var Conversation[] $conversations */
+        $conversations = $query->execute();
+        $result = [];
+
+        foreach($conversations as $conversation) {
+            $conversation = $conversation->toArray();
+            if ($conversation['requested'] == $userId) {
+                $conversation['chatPartner'] = $conversation['requester'];
+            } else {
+                $conversation['chatPartner'] = $conversation['requested'];
+            }
+            array_push($result, $conversation);
+        }
+
+        return $result;
     }
 
     /**

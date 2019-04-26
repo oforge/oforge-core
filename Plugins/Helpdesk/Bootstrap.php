@@ -8,10 +8,13 @@ use FrontendUserManagement\Services\AccountNavigationService;
 use Helpdesk\Controller\Backend\BackendHelpdeskController;
 use Helpdesk\Controller\Backend\BackendHelpdeskMessengerController;
 use Helpdesk\Controller\Frontend\FrontendHelpdeskController;
+use Helpdesk\Models\IssueTypes;
 use Helpdesk\Models\Ticket;
 use Helpdesk\Services\HelpdeskMessengerService;
 use Helpdesk\Services\HelpdeskTicketService;
+use Helpdesk\Widgets\HelpdeskWidgetHandler;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
+use Oforge\Engine\Modules\AdminBackend\Core\Services\DashboardWidgetsService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistsException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
@@ -41,6 +44,7 @@ class Bootstrap extends AbstractBootstrap {
 
         $this->models = [
             Ticket::class,
+            IssueTypes::class,
         ];
 
         $this->services = [
@@ -52,16 +56,32 @@ class Bootstrap extends AbstractBootstrap {
     /**
      * @throws ORMException
      * @throws OptimisticLockException
+     * @throws ServiceNotFoundException
+     */
+    public function install() {
+        /** @var HelpdeskTicketService $helpdeskTicketService */
+        $helpdeskTicketService = Oforge()->Services()->get('helpdesk.ticket');
+        $helpdeskTicketService->createIssueType('99 Problems');
+        $helpdeskTicketService->createIssueType('but the horse ain\'t one');
+    }
+
+    /**
+     * @throws ORMException
+     * @throws OptimisticLockException
      * @throws ConfigElementAlreadyExistsException
      * @throws ConfigOptionKeyNotExistsException
      * @throws ParentNotFoundException
      * @throws ServiceNotFoundException
      */
     public function activate() {
-        /** @var BackendNavigationService $sidebarNavigation */
-        /** @var AccountNavigationService $accountNavigation */
-        $accountNavigation = Oforge()->Services()->get('frontend.user.management.account.navigation');
-        $sidebarNavigation = Oforge()->Services()->get('backend.navigation');
+        /**
+         * @var AccountNavigationService $accountNavigation
+         * @var DashboardWidgetsService $dashboardWidgetsService
+         * @var BackendNavigationService $sidebarNavigation
+         */
+        $accountNavigation       = Oforge()->Services()->get('frontend.user.management.account.navigation');
+        $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
+        $sidebarNavigation       = Oforge()->Services()->get('backend.navigation');
 
         $sidebarNavigation->put([
             'name'     => 'backend_helpdesk',
@@ -77,6 +97,14 @@ class Bootstrap extends AbstractBootstrap {
             'icon'     => 'whatsapp',
             'path'     => 'frontend_account_support',
             'position' => 'sidebar',
+        ]);
+        $dashboardWidgetsService->register([
+            'position'     => 'left',
+            'action'       => HelpdeskWidgetHandler::class,
+            'title'        => 'frontend_widget_helpdesk_title',
+            'name'         => 'frontend_widget_helpdesk',
+            'cssClass'     => 'box-success',
+            'templateName' => 'Helpdesk',
         ]);
     }
 

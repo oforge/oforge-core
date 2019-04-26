@@ -563,8 +563,13 @@ class BaseCrudController extends SecureBackendController {
      * @return array
      */
     private function evaluateIndexFilter(array $queryParams) : array {
+        $queryKeys               = $this->indexPagination['queryKeys'];
+        $queryKeyPage            = $queryKeys['page'];
+        $queryKeyEntitiesPerPage = $queryKeys['entitiesPerPage'];
+        unset($queryParams[$queryKeyPage], $queryParams[$queryKeyEntitiesPerPage]);
+
         //TODO
-        return [];
+        return $queryParams;
     }
 
 }
