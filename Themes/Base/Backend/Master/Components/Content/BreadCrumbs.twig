@@ -1,7 +1,6 @@
-{% set breadcrumbs = backend_breadcrumbs(meta.route.name) %}
 {% if breadcrumbs %}
     <ol class="breadcrumb">
-        <li><a href="{{ url("backend_dashboard") }}"><i class="fa fa-dashboard"></i>{{  i18n('dashboard') }}</a></li>
+        <li><a href="{{ url("backend_dashboard") }}"><i class="fa fa-dashboard"></i>{{ i18n('dashboard') }}</a></li>
         {% for item in breadcrumbs %}
             <li class="{% if item.path == meta.route.path %}active{% endif %}">
                 {% if item.path and item.visible %}
