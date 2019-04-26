@@ -186,9 +186,9 @@ class ModuleManager {
             $needFlush = false;
             if (isset($entry) && !$entry->getInstalled()) {
                 try {
-                    $instance->install();
-                } catch (ConfigElementAlreadyExistsException $e) {
-                }
+                $instance->install();
+            } catch (ConfigElementAlreadyExistsException $e) {
+            }
                 $this->entityManger()->persist($entry->setInstalled(true));
                 $needFlush = true;
             } elseif (!isset($entry)) {
@@ -231,6 +231,7 @@ class ModuleManager {
             } else { // if not put the data into the database
                 $newEntry = Module::create(["name" => get_class($instance), "order" => $instance->getOrder(), "active" => 1, "installed" => 0]);
                 $this->entityManger()->persist($newEntry);
+                $this->entityManger()->flush();
             }
         }
     }
