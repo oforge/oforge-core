@@ -309,7 +309,7 @@ class BaseCrudController extends SecureBackendController {
                 Oforge()->View()->Flash()->setData($this->moduleModelName, $postData['data']);
             }
 
-            return $this->redirect($response, 'update', [], ['id' => $args['id']]);
+            return $this->redirect($response, 'update', ['id' => $args['id']]);
         }
         $entity = $this->crudService->getById($this->model, $args['id']);
         if (!empty($entity)) {
@@ -355,7 +355,7 @@ class BaseCrudController extends SecureBackendController {
                 Oforge()->View()->Flash()
                         ->addExceptionMessage('danger', I18N::translate('backend_crud_msg_delete_failed', 'Entity delete failed.'), $exception);
 
-                return $this->redirect($response, 'delete', [], ['id' => $args['id']]);
+                return $this->redirect($response, 'delete', ['id' => $args['id']]);
             }
         }
         $entity = $this->crudService->getById($this->model, $args['id']);
@@ -481,7 +481,7 @@ class BaseCrudController extends SecureBackendController {
      *
      * @return Response
      */
-    protected function redirect(Response $response, string $crudAction, $urlParams = [], $queryParams = []) {
+    protected function redirect(Response $response, string $crudAction, array $urlParams = [], array $queryParams = []) {
         if (!isset($this->router)) {
             $this->router = Oforge()->App()->getContainer()->get('router');;
         }
