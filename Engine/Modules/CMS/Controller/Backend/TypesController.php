@@ -8,21 +8,30 @@
 
 namespace Oforge\Engine\Modules\CMS\Controller\Backend;
 
-use Oforge\Engine\Modules\CMS\Services\PageService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
+/**
+ * Class TypesController
+ *
+ * @package Oforge\Engine\Modules\CMS\Controller\Backend
+ * @EndpointClass(path="/backend/content/types", name="backend_content_types", assetScope="Backend")
+ */
 class TypesController extends AbstractController {
-    
+
     /**
      * @param Request $request
      * @param Response $response
      *
      * @return Response
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ServiceNotFoundException
+     * @EndpointAction()
      */
     public function indexAction(Request $request, Response $response) {
-
     }
+
 }

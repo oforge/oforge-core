@@ -17,8 +17,8 @@ class Bootstrap extends AbstractBootstrap {
     /**
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistsException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
     public function install() {

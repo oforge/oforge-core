@@ -2,8 +2,7 @@
 
 namespace Oforge\Engine\Modules\Core\Helper;
 
-class StringHelper
-{
+class StringHelper {
     /**
      * Check if a string starts with a given value
      *
@@ -12,12 +11,12 @@ class StringHelper
      *
      * @return bool
      */
-    public static function startsWith(string $haystack, string $needle)
-    {
+    public static function startsWith(string $haystack, string $needle) {
         $length = strlen($needle);
+
         return (substr($haystack, 0, $length) === $needle);
     }
-    
+
     /**
      * Check if a string ends with a given value
      *
@@ -26,8 +25,7 @@ class StringHelper
      *
      * @return bool
      */
-    public static function endsWith(string $haystack, string $needle)
-    {
+    public static function endsWith(string $haystack, string $needle) {
         $length = strlen($needle);
         if ($length == 0) {
             return true;
@@ -35,7 +33,7 @@ class StringHelper
 
         return (substr($haystack, -$length) === $needle);
     }
-    
+
     /**
      * Check if a given value is inside a String
      *
@@ -44,11 +42,10 @@ class StringHelper
      *
      * @return bool
      */
-    public static function contains(string $haystack, string $needle)
-    {
+    public static function contains(string $haystack, string $needle) {
         return (strpos($haystack, $needle) !== false);
     }
-    
+
     /**
      * Check if a value is found before a given string / character.
      * If found, return that value.
@@ -59,8 +56,7 @@ class StringHelper
      *
      * @return mixed
      */
-    public static function substringBefore(string $haystack, string $needle)
-    {
+    public static function substringBefore(string $haystack, string $needle) {
         if (StringHelper::contains($haystack, $needle)) {
             return explode($needle, $haystack)[0];
         }
@@ -69,4 +65,21 @@ class StringHelper
         // TODO: Y U NO RETURN NULL °// ?
         return $haystack;
     }
+
+    /**
+     * If the string does not begin with prefix, the string is ​​prefixed.
+     *
+     * @param string $string
+     * @param string $prefix
+     *
+     * @return string
+     */
+    public static function leading(string $string, string $prefix) : string {
+        if (strpos($string, $prefix) !== 0) {
+            $string = $prefix . $string;
+        }
+
+        return $string;
+    }
+
 }

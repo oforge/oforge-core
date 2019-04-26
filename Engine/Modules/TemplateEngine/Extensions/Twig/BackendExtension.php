@@ -22,6 +22,7 @@ class BackendExtension extends Twig_Extension implements \Twig_ExtensionInterfac
             new Twig_Function('backend_notifications', [$this, 'get_backend_notifications']),
             new Twig_Function('backend_favorites', [$this, 'get_favorites']),
             new Twig_Function('backend_widgets', [$this, 'get_widgets']),
+            new Twig_Function('backend_widget_data', [$this, 'get_widgets_data']),
             new Twig_Function('isFavorite', [$this, 'is_favorite']),
         ];
     }
@@ -200,6 +201,25 @@ class BackendExtension extends Twig_Extension implements \Twig_ExtensionInterfac
             $widgetService = Oforge()->Services()->get("backend.dashboard.widgets");
 
             return $widgetService->getUserWidgets($user['id']);
+        }
+
+        return [];
+    }
+
+
+    /**
+     * @return array|object[]
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     */
+    public function get_widgets_data(...$vars) {
+        /** @var $authService AuthService */
+        $authService = Oforge()->Services()->get("auth");
+        $user        = $authService->decode($_SESSION["auth"]);
+        if (isset($user) && isset($user['id']) && isset($vars) && sizeof($vars) > 0) {
+            /** @var DashboardWidgetsService $widgetService */
+            $widgetService = Oforge()->Services()->get("backend.dashboard.widgets");
+
+            return $widgetService->getWidgetsData($vars[0]);
         }
 
         return [];

@@ -1,0 +1,21 @@
+{% if property.list %}
+    <select class="form-control" {% if fieldID %}id="{{ fieldID }}"{% endif %}
+            {% if property.crud[crud.context] == 'editable' %}name="data[{% if crud.context == 'index' %}{{ item.id }}][{% endif %}{{ property.name }}]"
+            {% else %}readonly{% endif %}
+            {% if property.editor.multiple %}multiple{% endif %}
+            {% if property.editor.size %}size="{{ property.editor.size }}"{% endif %}
+    >
+        {% for value,title in property.list %}
+            {#<option value="" selected>{{ i18n("backend_crud_select_empty") }}</option>#}
+            <option {% if value == item[property.name] or value == property.editor.default %}selected{% endif %}
+                    value="{{ value }}">
+                {{ property.listI18nLabel}}
+                {% if property.listI18nLabel is defined and property.listI18nLabel %}{{ i18n(title) }}{% else %}{{ title }}{% endif %}
+            </option>
+        {% endfor %}
+    </select>
+{% else %}
+    <div class="alert alert-danger" role="alert">
+        Missing select options list
+    </div>
+{% endif %}
