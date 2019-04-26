@@ -8,13 +8,15 @@ use FrontendUserManagement\Services\RegistrationService;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Auth\Services\PasswordService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Services\RedirectService;
+use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\Mailer\Services\MailService;
-use Oforge\Engine\Modules\Session\Services\SessionManagementService;
 use PHPMailer\PHPMailer\Exception;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -27,6 +29,7 @@ use Twig_Error_Syntax;
  * Class RegistrationController
  *
  * @package FrontendUserManagement\Controller\Frontend
+ * @EndpointClass(path="/registration", name="frontend_registration", assetScope="Frontend")
  */
 class RegistrationController extends AbstractController {
 
@@ -35,6 +38,7 @@ class RegistrationController extends AbstractController {
      * @param Response $response
      *
      * @throws ServiceNotFoundException
+     * @EndpointAction()
      */
     public function indexAction(Request $request, Response $response) {
         /** @var RedirectService $redirectService */
@@ -56,10 +60,16 @@ class RegistrationController extends AbstractController {
      * @throws Twig_Error_Loader
      * @throws Twig_Error_Runtime
      * @throws Twig_Error_Syntax
+     * @EndpointAction()
      */
     public function processAction(Request $request, Response $response) {
-        /** @var PasswordService $passwordService */ /** @var RegistrationService $registrationService */ /** @var SessionManagementService $sessionManagementService */ /** @var Router $router */
-        /** @var MailService $mailService */
+        /**
+         * @var PasswordService $passwordService
+         * @var RegistrationService $registrationService
+         * @var SessionManagementService $sessionManagementService
+         * @var Router $router
+         * @var MailService $mailService
+         */
         $passwordService          = null;
         $registrationService      = null;
         $sessionManagementService = null;
@@ -168,16 +178,16 @@ class RegistrationController extends AbstractController {
         $mailService = Oforge()->Services()->get('mail');
 
         // TODO: add email snippets
-        $mailOptions = [
-            'to'      => [$user['email'] => $user['email']],
-            'subject' => 'Oforge | Your registration!',
+        $mailOptions  = [
+            'to'       => [$user['email'] => $user['email']],
+            'subject'  => 'Oforge | Your registration!',
             'template' => 'RegisterConfirmation.twig',
         ];
         $templateData = [
             'activationLink' => $activationLink,
         ];
 
-        $mailService->send($mailOptions ,$templateData);
+        $mailService->send($mailOptions, $templateData);
 
         $uri = $router->pathFor('frontend_login');
         Oforge()->View()->Flash()->addMessage('success', I18N::translate('registration_success_mail_send',
@@ -193,6 +203,7 @@ class RegistrationController extends AbstractController {
      * @return Response
      * @throws ORMException
      * @throws ServiceNotFoundException
+     * @EndpointAction()
      */
     public function activateAction(Request $request, Response $response) {
         /** @var SessionManagementService $sessionManagementService */ /** @var RegistrationService $registrationService */

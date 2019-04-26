@@ -37,7 +37,7 @@ class ModuleManager {
 
     public function entityManger() : EntityManager {
         if (!isset($this->entityManger)) {
-            $this->entityManger = Oforge()->DB()->getManager();
+            $this->entityManger = Oforge()->DB()->getEnityManager();
         }
 
         return $this->entityManger;
@@ -169,13 +169,14 @@ class ModuleManager {
              */
             $instance = new $className();
 
-            Oforge()->DB()->initSchema($instance->getModels());
+            Oforge()->DB()->initModelSchema($instance->getModels());
 
             $services = $instance->getServices();
             Oforge()->Services()->register($services);
 
             $endpoints = $instance->getEndpoints();
-            Oforge()->Services()->get("endpoints")->register($endpoints);
+            Oforge()->Services()->get('endpoints')->install($endpoints);
+            Oforge()->Services()->get('endpoints')->activate($endpoints);
 
             /**
              * @var $entry Module
@@ -252,13 +253,14 @@ class ModuleManager {
              */
             $instance = new $className();
 
-            Oforge()->DB()->initSchema($instance->getModels());
+            Oforge()->DB()->initModelSchema($instance->getModels());
 
             $services = $instance->getServices();
             Oforge()->Services()->register($services);
 
             $endpoints = $instance->getEndpoints();
-            Oforge()->Services()->get("endpoints")->register($endpoints);
+            Oforge()->Services()->get('endpoints')->install($endpoints);
+            Oforge()->Services()->get('endpoints')->activate($endpoints);
 
             $middlewares = $instance->getMiddlewares();
             /** @var MiddlewareService $middlewareService */
