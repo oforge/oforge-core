@@ -5,7 +5,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
 use Oforge\Engine\Modules\Core\Exceptions\CouldNotActivatePluginException;
 use Oforge\Engine\Modules\Core\Exceptions\CouldNotDeactivatePluginException;
 use Oforge\Engine\Modules\Core\Exceptions\InvalidClassException;
@@ -42,7 +42,7 @@ class PluginStateService extends AbstractDatabaseAccess {
      * @throws InvalidClassException
      * @throws ServiceAlreadyDefinedException
      * @throws ServiceNotFoundException
-     * @throws ConfigOptionKeyNotExists
+     * @throws ConfigOptionKeyNotExistsException
      */
     public function initPlugin($pluginName) {
         /**
@@ -53,7 +53,7 @@ class PluginStateService extends AbstractDatabaseAccess {
         if (isset($plugin) && $plugin->getActive()) {
             $instance = Helper::getBootstrapInstance($pluginName);
             if (isset($instance)) {
-                Oforge()->DB()->initSchema($instance->getModels());
+                Oforge()->DB()->initModelSchema($instance->getModels());
                 $services = $instance->getServices();
                 Oforge()->Services()->register($services);
                 $endpoints = $instance->getEndpoints();
@@ -62,7 +62,8 @@ class PluginStateService extends AbstractDatabaseAccess {
                  * @var $endpointService EndpointService
                  */
                 $endpointService = Oforge()->Services()->get("endpoints");
-                $endpointService->register($endpoints);
+                $endpointService->install($endpoints);
+                $endpointService->activate($endpoints);
             }
         }
     }
@@ -73,7 +74,7 @@ class PluginStateService extends AbstractDatabaseAccess {
      *
      * @param $pluginName
      *
-     * @throws ConfigOptionKeyNotExists
+     * @throws ConfigOptionKeyNotExistsException
      * @throws InvalidClassException
      * @throws ORMException
      * @throws OptimisticLockException
@@ -136,7 +137,7 @@ class PluginStateService extends AbstractDatabaseAccess {
         if (isset($instance)) {
             $models = $instance->getModels();
             if (sizeof($models) > 0) {
-                Oforge()->DB()->initSchema($models);
+                Oforge()->DB()->initModelSchema($models);
             }
             if ($plugin->getInstalled() === false) {
                 $services = $instance->getServices();

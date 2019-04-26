@@ -12,3 +12,6 @@
 
 * [Cronjob](./cronjob.md)
   
+* [Backend crud management of model](./backend_crud_model.md)
+  
+* [Quill - HTML-Editor](./quill.md)

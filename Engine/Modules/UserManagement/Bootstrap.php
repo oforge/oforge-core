@@ -5,62 +5,69 @@
  * Date: 17.12.2018
  * Time: 09:54
  */
+
 namespace Oforge\Engine\Modules\UserManagement;
 
-use Oforge\Engine\Modules\AdminBackend\Services\BackendNavigationService;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
+use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\UserManagement\Controller\Backend\ProfileController;
 use Oforge\Engine\Modules\UserManagement\Controller\Backend\UserManagementController;
 use Oforge\Engine\Modules\UserManagement\Services\BackendUsersCrudService;
 
+/**
+ * Class Bootstrap
+ *
+ * @package Oforge\Engine\Modules\UserManagement
+ */
 class Bootstrap extends AbstractBootstrap {
+
     public function __construct() {
-        $this->endpoints = [
-            "/backend/users" => [
-                "controller" => UserManagementController::class,
-                "name" => "backend_users",
-                "asset_scope" => "Backend"
-            ],
-            "/backend/profile" => [
-                "controller" => ProfileController::class,
-                "name" => "backend_profile",
-                "asset_scope" => "Backend"
-            ]
-        ];
-        
         $this->dependencies = [
             \Oforge\Engine\Modules\CRUD\Bootstrap::class,
-            \Oforge\Engine\Modules\Auth\Bootstrap::class
+            \Oforge\Engine\Modules\Auth\Bootstrap::class,
         ];
-        
+
+        $this->endpoints = [
+            UserManagementController::class,
+            ProfileController::class,
+        ];
+
         $this->services = [
-            "backend.users.crud" => BackendUsersCrudService::class
+            'backend.users.crud' => BackendUsersCrudService::class,
         ];
     }
 
     /**
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ConfigElementAlreadyExists
+     * @throws ConfigOptionKeyNotExists
+     * @throws ParentNotFoundException
+     * @throws ServiceNotFoundException
      */
     public function install() {
-        /**
-         * @var $backendNavigation BackendNavigationService
-         */
-        $backendNavigation = Oforge()->Services()->get("backend.navigation");
-        
-        $backendNavigation->put([
-            "name" => "admin",
-            "order" => 100,
-            "position" => "sidebar",
-        ]);
-    
-        $backendNavigation->put([
-            "name" => "user_management",
-            "order" => 100,
-            "parent" => "admin",
-            "icon" => "fa fa-user",
-            "path" => "backend_users",
-            "position" => "sidebar",
-        ]);
+        /** @var BackendNavigationService $backendNavigation */
+        $backendNavigation = Oforge()->Services()->get('backend.navigation');
 
+        $backendNavigation->put([
+            'name'     => 'admin',
+            'order'    => 100,
+            'position' => 'sidebar',
+        ]);
+        $backendNavigation->put([
+            'name'     => 'user_management',
+            'order'    => 100,
+            'parent'   => 'admin',
+            'icon'     => 'fa fa-user',
+            'path'     => 'backend_users',
+            'position' => 'sidebar',
+        ]);
     }
+
 }

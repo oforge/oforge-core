@@ -6,7 +6,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use InvalidArgumentException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
 use Oforge\Engine\Modules\Core\Models\Plugin\Middleware;
 
 class MiddlewareService extends AbstractDatabaseAccess {
@@ -69,7 +69,7 @@ class MiddlewareService extends AbstractDatabaseAccess {
      * @param bool $activate
      *
      * @return Middleware[]
-     * @throws ConfigOptionKeyNotExists
+     * @throws ConfigOptionKeyNotExistsException
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -107,7 +107,7 @@ class MiddlewareService extends AbstractDatabaseAccess {
      * @param bool $activate
      *
      * @return object|Middleware|null
-     * @throws ConfigOptionKeyNotExists
+     * @throws ConfigOptionKeyNotExistsException
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -135,7 +135,7 @@ class MiddlewareService extends AbstractDatabaseAccess {
      * @param array $options
      *
      * @return bool
-     * @throws ConfigOptionKeyNotExists
+     * @throws ConfigOptionKeyNotExistsException
      */
     private function isValid(Array $options)
     {
@@ -144,7 +144,7 @@ class MiddlewareService extends AbstractDatabaseAccess {
          */
         $keys = ["class"];
         foreach ($keys as $key) {
-            if (!array_key_exists($key, $options)) throw new ConfigOptionKeyNotExists($key);
+            if (!array_key_exists($key, $options)) throw new ConfigOptionKeyNotExistsException($key);
         }
 
         /*

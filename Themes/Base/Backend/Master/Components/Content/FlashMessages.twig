@@ -9,7 +9,7 @@
             {% if flashMessageIcon %}
                 <i class="icon fa {{ flashMessageIcon }}"></i>
             {% endif %}
-            {{ flashMessage.message }}
+            {{ flashMessage.message|raw }}
         </div>
     {% endfor %}
 </section>

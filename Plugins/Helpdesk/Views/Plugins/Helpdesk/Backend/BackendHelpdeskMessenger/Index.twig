@@ -3,52 +3,50 @@
 {% block pagecontent %}
     <section class="content">
         <div class="row">
-            <!-- /.col -->
             <div class="col-md-12">
                 <div class="box box-success direct-chat direct-chat-success">
                     <div class="box-header with-border">
                         <h3 class="box-title"><strong>{{ ticket.issueType }}</strong> - {{ ticket.title }}</h3>
-
                         <div class="box-tools pull-right">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-warning" data-toggle="modal"
                                         data-target="#modal-warning">
-                                    Ticket schließen
+                                    {{ i18n('backend_helpdesk_close_ticket', 'Close Ticket') }}
                                 </button>
-                                <a href="/backend/helpdesk" class="btn btn-default"><i class="fa fa-mail-reply"></i></a>
+                                <a href="{{ url('backend_helpdesk') }}" class="btn btn-default">
+                                    <i class="fa fa-mail-reply"></i>
+                                </a>
                             </div>
                         </div>
 
-                        <div class="modal modal-warning fade in" id="modal-warning" style="display: none; padding-right: 15px;">
+                        <div class="modal modal-warning fade in" id="modal-warning"
+                             style="display: none; padding-right: 15px;">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">×</span></button>
-                                        <h4 class="modal-title">Warnung</h4>
+                                        <h4 class="modal-title">{{ i18n('warning', 'Warning') }}</h4>
                                     </div>
                                     <div class="modal-body">
-                                        Sind Sie sicher das Sie dieses Ticket schließen wollen?
+                                        {{ i18n('backend_helpdesk_close_ticket_warning', 'Are you sure you want to close this Ticket?') }}
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Abbrechen</button>
-                                        <form method="POST" action="/backend/helpdesk/closeTicket">
+                                        <button type="button" class="btn btn-outline pull-left"
+                                                data-dismiss="modal">{{ i18n('abort', 'Abort') }}</button>
+                                        <form method="POST" action="{{ url('backend_helpdesk') }}/closeTicket">
                                             <input type="hidden" name="ticketId" value="{{ ticket.id }}">
-                                            <button class="btn btn-outline" type="submit">
-                                                Ticket schließen
+                                            <button class="btn btn-outline btn-warning" type="submit">
+                                                {{ i18n('backend_helpdesk_close_ticket', 'Close Ticket') }}
                                             </button>
                                         </form>
                                     </div>
                                 </div>
-                                <!-- /.modal-content -->
                             </div>
-                            <!-- /.modal-dialog -->
                         </div>
-
                     </div>
+
                     <div class="box-body">
-
-
                         <div class="direct-chat-messages">
                             {% for message in messages %}
                                 <div class="direct-chat-msg {% if 'helpdesk' in message.sender %}right{% endif %}">
@@ -76,20 +74,19 @@
                             {% endfor %}
                         </div>
 
-
                         <div class="box-footer">
-                            <form action="/backend/helpdesk/messenger/1" method="post">
+                            <form action="{{ url('backend_helpdesk_messenger', {'id': ticket.id}) }}" method="post">
                                 <div class="input-group">
                                     <input type="hidden" name="sender" content="helpdesk_1">
-                                    <input type="text" name="message" placeholder="Type Message ..."
+                                    <input type="text" name="message" placeholder="{{ i18n('type_message', 'Type Message ...') }}"
                                            class="form-control">
                                     <span class="input-group-btn">
-                                        <button type="submit" class="btn btn-success btn-flat">Send</button>
+                                        <button type="submit"
+                                                class="btn btn-success btn-flat">{{ i18n('send', 'Send') }}</button>
                                     </span>
                                 </div>
                             </form>
                         </div>
-                        <!-- /.box-footer-->
                     </div>
                 </div>
             </div>

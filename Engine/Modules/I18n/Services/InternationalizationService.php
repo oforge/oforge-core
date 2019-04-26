@@ -1,44 +1,54 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Alexander Wegner
- * Date: 06.12.2018
- * Time: 11:11
- */
 
 namespace Oforge\Engine\Modules\I18n\Services;
 
-use Monolog\Logger;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\I18n\Models\Snippet;
 
-
 /**
  * Class InternationalizationService
+ *
  * @package Oforge\Engine\Modules\I18n\Services
  */
 class InternationalizationService extends AbstractDatabaseAccess {
+    /** @var array $cache */
+    private $cache;
 
     public function __construct() {
-        parent::__construct(["default" => Snippet::class]);
+        parent::__construct(Snippet::class);
     }
 
-
-    public function get($key, $language, $defaultValue = null)
-    {
-        /**
-         * @var $element Snippet
-         */
-        $element = $this->repository()->findOneBy(["scope" => $language, "name" => $key]);
-        if (isset($element)) {
-            return $element->getValue();
+    /**
+     * @param string $key
+     * @param string $language
+     * @param string|null $defaultValue
+     *
+     * @return string
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function get(string $key, string $language, ?string $defaultValue = null) : string {
+        if (!isset($this->cache[$key])) {
+            /** @var Snippet $snippet */
+            $snippet = $this->repository()->findOneBy([
+                'name'  => $key,
+                'scope' => $language,
+            ]);
+            if (!isset($snippet)) {
+                $snippet = Snippet::create([
+                    'name'  => $key,
+                    'scope' => $language,
+                    'value' => isset($defaultValue) ? $defaultValue : $key,
+                ]);
+                $this->entityManager()->persist($snippet);
+                $this->entityManager()->flush($snippet);
+            }
+            $this->cache[$key] = $snippet->getValue();
         }
 
-        $element = Snippet::create(["scope" => $language, "name" => $key, "value" => $defaultValue ?: $key]);
-
-        $this->entityManager()->persist($element);
-        $this->entityManager()->flush();
-
-        return $element->getValue();
+        return $this->cache[$key];
     }
+
 }

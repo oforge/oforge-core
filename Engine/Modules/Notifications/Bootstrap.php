@@ -2,48 +2,57 @@
 
 namespace Oforge\Engine\Modules\Notifications;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
-use Oforge\Engine\Modules\Notifications\Models\BackendNotification;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistsException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
+use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Notifications\Controller\BackendNotificationController;
+use Oforge\Engine\Modules\Notifications\Models\BackendNotification;
 use Oforge\Engine\Modules\Notifications\Services\BackendNotificationService;
 
+/**
+ * Class Bootstrap
+ *
+ * @package Oforge\Engine\Modules\Notifications
+ */
 class Bootstrap extends AbstractBootstrap {
     /**
      * Bootstrap constructor.
      */
     public function __construct() {
         $this->endpoints = [
-            '/backend/notifications/{id}' => [
-                'controller'   => BackendNotificationController::class,
-                'name'         => 'backend_notifications',
-            ],
-        ];
-
-        $this->services = [
-            'backend.notifications' => BackendNotificationService::class,
+            BackendNotificationController::class,
         ];
 
         $this->models = [
             BackendNotification::class,
         ];
+
+        $this->services = [
+            'backend.notifications' => BackendNotificationService::class,
+        ];
     }
 
     /**
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ServiceNotFoundException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ConfigElementAlreadyExistsException
+     * @throws ConfigOptionKeyNotExistsException
+     * @throws ParentNotFoundException
      */
     public function activate() {
-        /** @var $navigationService BackendNavigationService */
+        /** @var BackendNavigationService $navigationService */
         $navigationService = Oforge()->Services()->get('backend.navigation');
         $navigationService->put([
-            "name" => "notifications",
-            "order" => 1,
-            "position" => "topbar",
+            'name'     => 'notifications',
+            'order'    => 1,
+            'position' => 'topbar',
         ]);
     }
+
 }
