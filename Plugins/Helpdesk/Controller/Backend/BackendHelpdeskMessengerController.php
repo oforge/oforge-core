@@ -45,9 +45,13 @@ class BackendHelpdeskMessengerController extends SecureBackendController{
                 /** @var HelpdeskMessengerService $helpdeskMessengerService */
                 $helpdeskMessengerService = Oforge()->Services()->get('helpdesk.messenger');
 
-                $conversation = $helpdeskMessengerService->getConversationByTarget($targetId);
+                $conversation = $helpdeskMessengerService->getConversationsByTarget($targetId, $senderId);
 
-                $helpdeskMessengerService->sendMessage($conversation->getId(), 'helpdesk', $senderId, $message);
+                if (sizeof($conversation) > 0) {
+                    $conversation = $conversation[0];
+                }
+
+                $helpdeskMessengerService->sendMessage($conversation['id'], 'helpdesk', $senderId, $message);
 
                 $uri = $router->pathFor('backend_helpdesk_messenger');
                 return $response->withRedirect($uri . '/' . $args['id'], 302);
@@ -61,9 +65,13 @@ class BackendHelpdeskMessengerController extends SecureBackendController{
             /** @var HelpdeskMessengerService $helpdeskMessengerService */
             $helpdeskMessengerService = Oforge()->Services()->get('helpdesk.messenger');
 
-            $conversation = $helpdeskMessengerService->getConversationByTarget($ticketId);
+            $conversation = $helpdeskMessengerService->getConversationsByTarget($ticketId, 'helpdesk');
 
-            $messages = $helpdeskMessengerService->getMessagesOfConversation($conversation->getId());
+            if (sizeof($conversation) > 0) {
+                $conversation = $conversation[0];
+            }
+
+            $messages = $helpdeskMessengerService->getMessagesOfConversation($conversation['id']);
             if (!isset($messages[0])) {
                 return $response->withRedirect($uri, 302);
             }

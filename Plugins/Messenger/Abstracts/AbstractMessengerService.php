@@ -59,12 +59,13 @@ abstract class AbstractMessengerService extends AbstractDatabaseAccess {
             ->from(Conversation::class, 'c')
             ->where(
                 $queryBuilder->expr()->andX(
-                    $queryBuilder->expr()->eq('c.requester', $userId),
+                    $queryBuilder->expr()->eq('c.requester', '?1'),
                     $queryBuilder->expr()->eq('c.targetId', $targetId)))
             ->orWhere(
                 $queryBuilder->expr()->andX(
-                    $queryBuilder->expr()->eq('c.requested', $userId),
+                    $queryBuilder->expr()->eq('c.requested', '?1'),
                     $queryBuilder->expr()->eq('c.targetId', $targetId)))
+            ->setParameters([1 => $userId])
             ->getQuery();
         /** @var Conversation[] $conversations */
         $conversations = $query->execute();
