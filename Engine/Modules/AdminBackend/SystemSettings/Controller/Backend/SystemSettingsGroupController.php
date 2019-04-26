@@ -25,14 +25,14 @@ class SystemSettingsGroupController extends SecureBackendController {
     /**
      * @param Request $request
      * @param Response $response
-     * @param $args
+     * @param array $args
      *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws ConfigElementNotFoundException
      * @EndpointAction()
      */
-    public function indexAction(Request $request, Response $response, $args) {
+    public function indexAction(Request $request, Response $response, array $args) {
         try {
             /** @var ConfigService $configService */
             $configService = Oforge()->Services()->get('config');
@@ -53,6 +53,9 @@ class SystemSettingsGroupController extends SecureBackendController {
         }
     }
 
+    /**
+     * @throws ServiceNotFoundException
+     */
     public function initPermissions() {
         $this->ensurePermissions('indexAction', BackendUser::class, BackendUser::ROLE_ADMINISTRATOR);
     }

@@ -1,0 +1,79 @@
+{# block account__content #}
+{% block account_content %}
+<div class="account__content flex flex--wrap">
+    <div class="messenger flex flex--row">
+        <div class="messenger__sidebar">
+            <div class="header header--sidebar">
+                <h3 class="title title--sidebar">Meine Chats</h3>
+            </div>
+            <ul class="chat-list">
+                {% for conversation in conversationList %}
+                    <li class="chat">
+                        <a href="{{ url('frontend_account_messages', {id: conversation.id}) }}" class="chat__link">{{ conversation.chatPartner }} - {{ conversation.targetId }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="messenger__chat">
+            <div class="header header--chat flex flex--row flex--center flex--between">
+                <span class="icon"></span><h3 class="title title--chat">{{ conversation.chatPartner }}</h3><a href="{{ url('frontend_account_messages', {id: conversation.id}) }}"><span class="icon"></span></a>
+            </div>
+            <div class="messages">
+                <style>
+                    .messenger__chat {
+                        width: 100%;
+                    }
+                    .messages {
+                        width: 100%;
+                    }
+                    .message {
+                        border: 2px solid lime;
+                        width: 80%;
+                        margin-left: auto;
+                        border-radius: .6rem;
+                        padding: .4rem;
+                        position: relative;
+                    }
+                    .message:after {
+                        content: '';
+                        position: absolute;
+                        left: 0;
+                        top: 50%;
+                        width: 0;
+                        height: 0;
+                        border: 21px solid transparent;
+                        border-right-color: lime;
+                        border-left: 0;
+                        border-bottom: 0;
+                        margin-top: -10.5px;
+                        margin-left: -21px;
+                    }
+                    .message.partner {
+                        border: 2px solid rebeccapurple;
+                        margin-left: 0;
+                    }
+                    .message.partner:after {
+                        content: '';
+                        left: auto;
+                        right: 0;
+                        border-right-color: transparent;
+                        border-left-color: rebeccapurple;
+                        border-right: 0;
+                        border-bottom: 0;
+                        margin-top: -10.5px;
+                        margin-right: -21px;
+                    }
+                </style>
+                {% for message in conversation.messages %}
+                    {% set sender = message.sender|split('_')[1] %}
+                    <div class="message {{ sender == user.id ? '' : 'partner'}}">
+                        <p>{{ sender }}</p>
+                        <p>{{ message.message }}</p>
+                        <p>{{ message.timestamp.date|date('Y-m-d H:i:s') }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock account_content %}

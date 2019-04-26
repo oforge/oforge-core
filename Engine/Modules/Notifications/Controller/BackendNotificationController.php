@@ -25,7 +25,7 @@ class BackendNotificationController extends SecureBackendController {
     /**
      * @param Request $request
      * @param Response $response
-     * @param $args
+     * @param array $args
      *
      * @return Response
      * @throws ORMException
@@ -33,7 +33,7 @@ class BackendNotificationController extends SecureBackendController {
      * @throws ServiceNotFoundException
      * @EndpointAction(path="/{id}")
      */
-    public function indexAction(Request $request, Response $response, $args) {
+    public function indexAction(Request $request, Response $response, array $args) {
         if (isset($args['id'])) {
             /** @var BackendNotificationService $backendNotificationService */
             $backendNotificationService = Oforge()->Services()->get('backend.notifications');
@@ -52,6 +52,9 @@ class BackendNotificationController extends SecureBackendController {
         return $response;
     }
 
+    /**
+     * @throws ServiceNotFoundException
+     */
     public function initPermissions() {
         $this->ensurePermissions('indexAction', BackendUser::class, BackendUser::ROLE_MODERATOR);
     }

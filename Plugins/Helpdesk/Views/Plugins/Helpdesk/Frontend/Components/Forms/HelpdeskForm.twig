@@ -1,0 +1,60 @@
+{# block helpdesk__form #}
+{% block helpdesk_form %}
+    <form class="form form--helpdesk"
+          action="{{ url('frontend_account_support_submit') }}"
+          method="post">
+        <h3 class="form__title form__title--helpdesk">{{ i18n('support-ticket', 'Support Ticket') }}</h3>
+        <div class="form-controls">
+            <div class="form__control">
+                {% block helpdesk_label_request %}
+                    <label for="helpdesk_request"
+                           class="form__label">
+                        {{ i18n('request', 'Request') }}
+                    </label>
+                {% endblock helpdesk_label_request %}
+
+                <select id="helpdesk_request"
+                        name="helpdesk_request"
+                        class="form__input form__input--select"
+                        required>
+                    {% for issueType in issueTypes %}
+                        <option value="{{ issueType.id }}">{{ issueType.issueTypeName }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form__control">
+                {% block helpdesk_label_request_title %}
+                    <label for="helpdesk_request_title"
+                           class="form__label">
+                        {{ i18n('request_title', 'Your request:') }}
+                    </label>
+                {% endblock helpdesk_label_request_title %}
+                <input id="helpdesk_request_title"
+                       name="helpdesk_request_title"
+                       type="text"
+                       class="form__input"
+                       placeholder="{{ i18n('request_title') }}"
+                       required>
+            </div>
+            <div class="form__control">
+                {% block helpdesk_label_request_description %}
+                    <label for="helpdesk_request_description"
+                           class="form__label">
+                        {{ i18n('request_description', 'Please make a short description of your request:') }}
+                    </label>
+                {% endblock helpdesk_label_request_description %}
+                <textarea id="helpdesk_request_description"
+                          name="helpdesk_request_description"
+                          class="form__input form__input--textarea"
+                          required></textarea>
+            </div>
+            <div class="form__control">
+                <input type="hidden" name="token" value="{{ token() }}">
+                <input type="submit"
+                       value="{{ i18n('submit_ticket', 'Submit ticket') }}"
+                       class="form__input form__input--submit button">
+            </div>
+        </div>
+    </form>
+
+{% endblock helpdesk_form %}

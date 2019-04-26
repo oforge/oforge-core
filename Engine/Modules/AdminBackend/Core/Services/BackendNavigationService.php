@@ -167,5 +167,4 @@ class BackendNavigationService extends AbstractDatabaseAccess {
             $this->findParents($entry, $breadcrumbs);
         }
     }
-
 }
