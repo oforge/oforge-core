@@ -83,3 +83,16 @@
         padding: $size-large $size-large * 2;
     }
 }
+
+.sender {
+    margin-bottom: $size-medium;
+    font-size: 1.2rem;
+}
+.message-text {
+    margin-bottom: $size-medium;
+}
+.message-date {
+    font-size: 1.2rem;
+    text-align: right;
+    color: #777;
+}

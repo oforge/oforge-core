@@ -37,9 +37,9 @@
                 {% for message in conversation.messages %}
                     {% set sender = message.sender|split('_')[1] %}
                     <div class="message {{ sender == user.id ? '' : 'partner'}}">
-                        <p>{{ sender }}</p>
-                        <p>{{ message.message }}</p>
-                        <p>{{ message.timestamp.date|date('Y-m-d H:i:s') }}</p>
+                        <p class="sender">{{ sender }}</p>
+                        <p class="message-text">{{ message.message }}</p>
+                        <p class="message-date">{{ message.timestamp.date|date('Y-m-d H:i:s') }}</p>
                     </div>
                 {% endfor %}
             </div>
