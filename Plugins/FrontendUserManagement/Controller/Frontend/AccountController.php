@@ -10,9 +10,11 @@ use FrontendUserManagement\Services\AccountNavigationService;
 use FrontendUserManagement\Services\PasswordResetService;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Auth\Services\PasswordService;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
-use Oforge\Engine\Modules\Session\Services\SessionManagementService;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
@@ -21,6 +23,7 @@ use Slim\Router;
  * Class AccountController
  *
  * @package FrontendUserManagement\Controller\Frontend
+ * @EndpointClass(path="/account", name="frontend_account", assetScope="Frontend")
  */
 class AccountController extends SecureFrontendController {
 
@@ -29,6 +32,7 @@ class AccountController extends SecureFrontendController {
      * @param Response $response
      *
      * @return Response
+     * @EndpointAction()
      */
     public function indexAction(Request $request, Response $response) {
         /** @var Router $router */
@@ -51,6 +55,7 @@ class AccountController extends SecureFrontendController {
      * @param Response $response
      *
      * @throws ServiceNotFoundException
+     * @EndpointAction()
      */
     public function dashboardAction(Request $request, Response $response) {
         /** @var AccountNavigationService $accountNavigationService */
@@ -63,6 +68,7 @@ class AccountController extends SecureFrontendController {
     /**
      * @param Request $request
      * @param Response $response
+     * @EndpointAction()
      */
     public function editAction(Request $request, Response $response) {
         //
@@ -76,10 +82,15 @@ class AccountController extends SecureFrontendController {
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws ServiceNotFoundException
+     * @EndpointAction()
      */
     public function edit_processAction(Request $request, Response $response) {
-        /** @var SessionManagementService $sessionManagementService */ /** @var PasswordResetService $passwordResetService */ /** @var AuthService $authService */
-        /** @var PasswordService $passwordService */
+        /**
+         * @var SessionManagementService $sessionManagementService
+         * @var PasswordResetService $passwordResetService
+         * @var AuthService $authService
+         * @var PasswordService $passwordService
+         */
         $sessionManagementService = Oforge()->Services()->get('session.management');
         $passwordResetService     = Oforge()->Services()->get('password.reset');
         $authService              = Oforge()->Services()->get('auth');
@@ -129,7 +140,7 @@ class AccountController extends SecureFrontendController {
 
         $guid = $user['guid'];
 
-        $entityManager = Oforge()->DB()->getManager();
+        $entityManager = Oforge()->DB()->getEnityManager();
         $repository    = $entityManager->getRepository(User::class);
         $dbPassword    = $repository->find($user['id'])->getPassword();
 
@@ -184,6 +195,7 @@ class AccountController extends SecureFrontendController {
     /**
      * @param Request $request
      * @param Response $response
+     * @EndpointAction()
      */
     public function deleteAction(Request $request, Response $response) {
         //
@@ -192,6 +204,7 @@ class AccountController extends SecureFrontendController {
     /**
      * @param Request $request
      * @param Response $response
+     * @EndpointAction()
      */
     public function delete_processAction(Request $request, Response $response) {
         //
@@ -201,12 +214,12 @@ class AccountController extends SecureFrontendController {
      * @throws ServiceNotFoundException
      */
     public function initPermissions() {
-        $this->ensurePermissions("indexAction", User::class);
-        $this->ensurePermissions("dashboardAction", User::class);
-        $this->ensurePermissions("editAction", User::class);
-        $this->ensurePermissions("edit_processAction", User::class);
-        $this->ensurePermissions("deleteAction", User::class);
-        $this->ensurePermissions("delete_processAction", User::class);
+        $this->ensurePermissions('indexAction', User::class);
+        $this->ensurePermissions('dashboardAction', User::class);
+        $this->ensurePermissions('editAction', User::class);
+        $this->ensurePermissions('edit_processAction', User::class);
+        $this->ensurePermissions('deleteAction', User::class);
+        $this->ensurePermissions('delete_processAction', User::class);
     }
 
 }

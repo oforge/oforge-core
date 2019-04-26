@@ -5,6 +5,8 @@ namespace Mailchimp\Controller\Frontend;
 use Interop\Container\Exception\ContainerException;
 use Mailchimp\Services\MailchimpNewsletterService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Slim\Http\Request;
@@ -14,12 +16,14 @@ use Slim\Http\Response;
  * Class NewsletterSubscriptionController
  *
  * @package Mailchimp\Controller\Frontend
+ * @EndpointClass(path="/newsletter", name="frontend_newsletter_subscription", assetScope="Frontend")
  */
 class NewsletterSubscriptionController extends AbstractController {
 
     /**
      * @param Request $request
      * @param Response $response
+     * @EndpointAction()
      */
     public function indexAction(Request $request, Response $response) {
         // show the email form for requesting a reset link
@@ -32,6 +36,7 @@ class NewsletterSubscriptionController extends AbstractController {
      * @return Response
      * @throws ContainerException
      * @throws ServiceNotFoundException
+     * @EndpointAction()
      */
     public function subscribeAction(Request $request, Response $response) {
         /** @var MailchimpNewsletterService $mailchimpNewsletterService */

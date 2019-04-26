@@ -8,22 +8,32 @@ use FrontendUserManagement\Models\User;
 use Helpdesk\Services\HelpdeskMessengerService;
 use Messenger\Models\Conversation;
 use Messenger\Services\FrontendMessengerService;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
 
+/**
+ * Class MessengerController
+ *
+ * @package Messenger\Controller\Frontend
+ * @EndpointClass(path="/account/messages", name="frontend_account", assetScope="Frontend")
+ */
 class MessengerController extends SecureFrontendController {
+
     /**
      * @param Request $request
      * @param Response $response
-     * @param $args
+     * @param array $args
      *
      * @return Response
      * @throws ServiceNotFoundException
      * @throws ORMException
+     * @EndpointAction(path="[/{id:.*}]", name="messages")
      */
-    public function indexAction(Request $request, Response $response, $args) {
+    public function indexAction(Request $request, Response $response, array $args) {
         /** @var FrontendMessengerService $frontendMessengerService */
         $frontendMessengerService = Oforge()->Services()->get('frontend.messenger');
         $user = Oforge()->View()->get('user');
@@ -75,4 +85,5 @@ class MessengerController extends SecureFrontendController {
     public function initPermissions() {
         $this->ensurePermissions("indexAction", User::class);
     }
+
 }

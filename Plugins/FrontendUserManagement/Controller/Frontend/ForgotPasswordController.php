@@ -15,9 +15,11 @@ use Interop\Container\Exception\ContainerException;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Auth\Services\PasswordService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
-use Oforge\Engine\Modules\Session\Services\SessionManagementService;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
@@ -26,12 +28,14 @@ use Slim\Router;
  * Class ForgotPasswordController
  *
  * @package FrontendUserManagement\Controller\Frontend
+ * @EndpointClass(path="/forgot-password", name="frontend_forgot_password", assetScope="Frontend")
  */
 class ForgotPasswordController extends AbstractController {
 
     /**
      * @param Request $request
      * @param Response $response
+     * @EndpointAction()
      */
     public function indexAction(Request $request, Response $response) {
         // show the email form for requesting a reset link
@@ -46,15 +50,17 @@ class ForgotPasswordController extends AbstractController {
      * @throws OptimisticLockException
      * @throws ContainerException
      * @throws ServiceNotFoundException
+     * @EndpointAction()
      */
     public function processAction(Request $request, Response $response) {
-        /** @var PasswordResetService $passwordResetService */
-        /** @var Router $router */
+        /**
+         * @var PasswordResetService $passwordResetService
+         * @var Router $router
+         */
         $passwordResetService = Oforge()->Services()->get('password.reset');
         $router               = Oforge()->Container()->get('router');
         $body                 = $request->getParsedBody();
         $email                = $body['forgot-password__email'];
-        $token                = $body['token'];
         $uri                  = $router->pathFor('frontend_forgot_password');
 
         /**
@@ -100,12 +106,12 @@ class ForgotPasswordController extends AbstractController {
         $mailService = Oforge()->Services()->get('mail');
 
         // TODO: add email snippets
-        $mailOptions = [
-            'to'      => [$email => $email],
-            'subject' => 'Oforge | Your password reset!',
+        $mailOptions  = [
+            'to'       => [$email => $email],
+            'subject'  => 'Oforge | Your password reset!',
             'template' => 'ResetPassword.twig',
         ];
-        $templateData = ['passwordResetLink'  => $passwordResetLink];
+        $templateData = ['passwordResetLink' => $passwordResetLink];
 
         $mailService->send($mailOptions, $templateData);
 
@@ -123,12 +129,14 @@ class ForgotPasswordController extends AbstractController {
      * @return Response
      * @throws ServiceNotFoundException
      * @throws ContainerException
+     * @EndpointAction()
      */
     public function resetAction(Request $request, Response $response) {
         // show the reset password form
-
-        /** @var PasswordResetService $passwordResetService */
-        /** @var Router $router */
+        /**
+         * @var PasswordResetService $passwordResetService
+         * @var Router $router
+         */
         $passwordResetService = Oforge()->Services()->get('password.reset');
         $router               = Oforge()->Container()->get('router');
         $guid                 = $request->getParam('reset');
@@ -165,10 +173,15 @@ class ForgotPasswordController extends AbstractController {
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws ServiceNotFoundException
+     * @EndpointAction()
      */
     public function changeAction(Request $request, Response $response) {
-        /** @var SessionManagementService $sessionManagementService */ /** @var PasswordResetService $passwordResetService */ /** @var AuthService $authService */
-        /** @var PasswordService $passwordService */
+        /**
+         * @var SessionManagementService $sessionManagementService
+         * @var PasswordResetService $passwordResetService
+         * @var AuthService $authService
+         * @var PasswordService $passwordService
+         */
         $sessionManagementService = Oforge()->Services()->get('session.management');
         $passwordResetService     = Oforge()->Services()->get('password.reset');
         $authService              = Oforge()->Services()->get('auth');
