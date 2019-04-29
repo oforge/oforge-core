@@ -9,8 +9,8 @@
  		<input id="cms_page_delete_content_with_id" name="cms_page_delete_content_with_id" type="hidden">
  		<input id="cms_page_delete_content_at_order_index" name="cms_page_delete_content_at_order_index" type="hidden">
  		<input id="cms_page_selected_action" name="cms_page_selected_action" type="hidden" value="edit">
-        {% if contents.form %}
-            {% include contents.form with {'data': contents} only %}
+        {% if contents.form and contentElementData %}
+            {% include contents.form with {'data': contentElementData} only %}
         {% endif %}
  	</form>
 {% endblock cms_page_builder_form %}

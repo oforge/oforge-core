@@ -4,10 +4,12 @@ namespace FrontendUserManagement\Controller\Frontend;
 
 use FrontendUserManagement\Services\FrontendUserLoginService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Services\RedirectService;
+use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
-use Oforge\Engine\Modules\Session\Services\SessionManagementService;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
@@ -16,6 +18,7 @@ use Slim\Router;
  * Class LoginController
  *
  * @package FrontendUserManagement\Controller\Frontend
+ * @EndpointClass(path="/login", name="frontend_login", assetScope="Frontend")
  */
 class LoginController extends AbstractController {
 
@@ -24,6 +27,7 @@ class LoginController extends AbstractController {
      * @param Response $response
      *
      * @throws ServiceNotFoundException
+     * @EndpointAction()
      */
     public function indexAction(Request $request, Response $response) {
         /** @var RedirectService $redirectService */
@@ -37,6 +41,7 @@ class LoginController extends AbstractController {
      *
      * @return Response
      * @throws ServiceNotFoundException
+     * @EndpointAction()
      */
     public function processAction(Request $request, Response $response) {
         if (empty($_SESSION)) {
@@ -46,14 +51,10 @@ class LoginController extends AbstractController {
         }
 
         /** @var FrontendUserLoginService $loginService */
-        $loginService = Oforge()->Services()->get('frontend.user.management.login');
-
-        /**
-         * @var $router Router
-         */
-        $router = Oforge()->App()->getContainer()->get('router');
-
+        /** @var Router $router */
         /** @var RedirectService $redirectService */
+        $loginService    = Oforge()->Services()->get('frontend.user.management.login');
+        $router          = Oforge()->App()->getContainer()->get('router');
         $redirectService = Oforge()->Services()->get('redirect');
         $redirectUrlName = 'frontend_login';
         if ($redirectService->hasRedirectUrlName()) {
@@ -115,9 +116,7 @@ class LoginController extends AbstractController {
             return $response->withRedirect($uri, 302);
         }
 
-        /**
-         * @var SessionManagementService $sessionManagement
-         */
+        /** @var SessionManagementService $sessionManagement */
         $sessionManagement = Oforge()->Services()->get('session.management');
         $sessionManagement->regenerateSession();
 

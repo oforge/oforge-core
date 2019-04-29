@@ -53,7 +53,7 @@ class PluginStateService extends AbstractDatabaseAccess {
         if (isset($plugin) && $plugin->getActive()) {
             $instance = Helper::getBootstrapInstance($pluginName);
             if (isset($instance)) {
-                Oforge()->DB()->initSchema($instance->getModels());
+                Oforge()->DB()->initModelSchema($instance->getModels());
                 $services = $instance->getServices();
                 Oforge()->Services()->register($services);
                 $endpoints = $instance->getEndpoints();
@@ -62,7 +62,8 @@ class PluginStateService extends AbstractDatabaseAccess {
                  * @var $endpointService EndpointService
                  */
                 $endpointService = Oforge()->Services()->get("endpoints");
-                $endpointService->register($endpoints);
+                $endpointService->install($endpoints);
+                $endpointService->activate($endpoints);
             }
         }
     }
@@ -136,7 +137,7 @@ class PluginStateService extends AbstractDatabaseAccess {
         if (isset($instance)) {
             $models = $instance->getModels();
             if (sizeof($models) > 0) {
-                Oforge()->DB()->initSchema($models);
+                Oforge()->DB()->initModelSchema($models);
             }
             if ($plugin->getInstalled() === false) {
                 $services = $instance->getServices();

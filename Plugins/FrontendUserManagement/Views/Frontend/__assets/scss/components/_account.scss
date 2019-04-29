@@ -19,6 +19,10 @@
         z-index: 2;
         position: relative;
     }
+
+    &__title {
+        display: none;
+    }
 }
 .nav-bar {
     &__title {
@@ -31,24 +35,30 @@
     }
 }
 
-.account-nav__link {
-    color: $text-dark;
-    text-decoration: none;
-    padding: 1rem 0;
-    border-bottom: 2px solid $color-primary;
-
-    &:active,
-    &:hover {
+.account-nav {
+    &__link {
         color: $text-dark;
         text-decoration: none;
+        padding: 1rem 0;
+        border-bottom: 2px solid $color-primary;
 
-        border-bottom: 2px solid $color-secondary;
+        &:active,
+        &:hover {
+            color: $text-dark;
+            text-decoration: none;
+
+            border-bottom: 2px solid $color-secondary;
+        }
+    }
+
+    &__text {
+        word-break: break-all;
     }
 }
+
 .account-nav__link + .account-nav__link {
     margin-top: 1rem;
 }
-
 
 @media screen and (min-width: $screen-large) {
     .panel--account {
@@ -59,16 +69,26 @@
     .account {
         &__sidebar {
             display: block;
-            width: 24rem;
+            width: 30rem;
+            padding: 3rem;
         }
+
         &__content {
-            width: calc(100% - 24rem);
-            margin-left: 3rem;
+            width: calc(100% - 30rem);
             border-left: 1px solid $color-primary;
-            padding-left: 3rem;
+            padding: 3rem;
         }
+
         &__nav-bar {
             display: none;
         }
+
+        &__title {
+            color: $color-primary;
+            display: block;
+            flex: 1 0 100%;
+            margin-bottom: $size-large;
+        }
     }
 }
+

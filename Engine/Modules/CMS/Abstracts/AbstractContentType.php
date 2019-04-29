@@ -38,7 +38,7 @@ abstract class AbstractContentType extends AbstractDatabaseAccess
     {
         parent::__construct(['contentType' => ContentType::class, 'content' => Content::class]);
         
-        $this->entityManager = Oforge()->DB()->getManager();
+        $this->entityManager = Oforge()->DB()->getEnityManager();
         
         $this->contentTypeEntity = $this->repository('contentType')->findOneBy(["classPath" => get_class($this)]);
         
