@@ -22,7 +22,7 @@ abstract class AbstractBootstrap {
      */
     protected $dependencies = [];
     /**
-     * @var array $endpoints
+     * @var string[] $endpoints
      */
     protected $endpoints = [];
     /**

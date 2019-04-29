@@ -7,11 +7,12 @@ use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\AdminBackend\Core\Models\BackendUserFavorites;
 use Oforge\Engine\Modules\AdminBackend\Core\Models\BackendNavigation;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
-use Oforge\Engine\Modules\Core\Models\Endpoints\Endpoint;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistsException;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
-use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
 
+/**
+ * Class UserFavoritesService
+ *
+ * @package Oforge\Engine\Modules\AdminBackend\Core\Services
+ */
 class UserFavoritesService extends AbstractDatabaseAccess {
 
     public function __construct() {
@@ -73,4 +74,5 @@ class UserFavoritesService extends AbstractDatabaseAccess {
     public function getAll($userId) : array {
         return $this->repository()->findBy(["userId" => $userId, "active" => true]);
     }
+
 }

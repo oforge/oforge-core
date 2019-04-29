@@ -110,7 +110,7 @@ class PageBuilderService extends AbstractDatabaseAccess
      *
      * @return array|NULL Array filled with available content data
      */
-    private function getContentArray(?Content $contentEntity)
+    public function getContentArray(?Content $contentEntity)
     {
         if (!$contentEntity)
         {

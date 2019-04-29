@@ -121,22 +121,12 @@ class PageTreeService extends AbstractDatabaseAccess
         {
             $jsTreePages[] = [
                 "id"     => $page["id"],
+                "icon"   => "jstree-file",
                 "parent" => $page["parent"] ? $page["parent"] : "#",
                 "text"   => $page["name"]
             ];
         }
         
-        $jsTreeJSON = [
-            "core" => [
-                "multiple"       => FALSE,
-                "animation"      => 0,
-                "check_callback" => TRUE,
-                "force_text"     => TRUE,
-                "themes"         => ["stripes" => FALSE],
-                "data"           => $jsTreePages
-            ]
-        ];
-        
-        return $jsTreeJSON;
+        return $jsTreePages;
     }
 }

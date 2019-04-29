@@ -116,11 +116,13 @@
 }
 
 .content-type-edit-form-image {
-	display: flex;
-	flex-direction: row;
-	flex-wrap: nowrap;
 	justify-content: space-evenly;
 	margin: 50px 0;
+	
+	.spacer {
+		height: 2rem; 
+		line-height: 2rem; 
+	}
 	
 	input[type="text"] {
 		width: 40rem;
@@ -153,11 +155,13 @@
 }
 
 .content-type-edit-form-row {
-	display: flex;
-	flex-direction: row;
-	flex-wrap: nowrap;
 	justify-content: space-evenly;
 	margin: 50px 0;
+	
+	.spacer {
+		height: 2rem; 
+		line-height: 2rem; 
+	}
 	
 	input[type="text"] {
 		width: 40rem;

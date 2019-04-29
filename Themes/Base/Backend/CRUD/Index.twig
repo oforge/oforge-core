@@ -22,19 +22,27 @@
                         {% if crud.hasEditors %}
                         <form method="post">
                             {% endif %}
-{#                            {% include 'Backend/CRUD/Components/Index/PaginationRow.twig' with {pagination: crud.pagination, route: crud.route} only %}#}
+                            {#{% include 'Backend/CRUD/Components/Index/PaginationRow.twig' with {#}
+                            {#    pagination: crud.pagination,#}
+                            {#    queryKeys: crud.queryKeys,#}
+                            {#    route: meta.route#}
+                            {#} only %}#}
                             <div class="row">
                                 <div class="col-xs-12 table-responsive">
                                     {% include 'Backend/CRUD/Components/Index/Table.twig' %}
                                 </div>
                             </div>
-                            {% include 'Backend/CRUD/Components/Index/PaginationRow.twig' with {pagination: crud.pagination, route: crud.route} only %}
+                            {% include 'Backend/CRUD/Components/Index/PaginationRow.twig' with {
+                                pagination: crud.pagination,
+                                queryKeys: crud.queryKeys,
+                                route: meta.route
+                            } only %}
                             {% if crud.hasEditors %}
                             <div class="row">
                                 <div class="col-xs-12">
                                     <input type="hidden" name="action" value="update" />
                                     <input type="submit" class="btn btn-primary"
-                                           value="{{ i18n('backend_crud_btn_update', 'update') }}">
+                                           value="{{ i18n('backend_crud_btn_update', 'update') }}" title="{{ i18n('backend_crud_btn_update', 'update') }}">
                                 </div>
                             </div>
                         </form>

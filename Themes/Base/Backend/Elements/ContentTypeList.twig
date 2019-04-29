@@ -1,0 +1,28 @@
+{% block cms_content_type_list %}
+	<div class="col-xs-2 cms-content-type-list-container" id="cms_content_type_list_container">
+		<div>
+			<div class="cms-page-builder-headline">{{ i18n('cms_page_builder_content_types_title') }}</div>
+	    	<div class="cms-content-type-list" id="cms_content_type_list">
+                <div class="container-fluid">
+                {% for contentTypeGroup in contentTypeGroups %}
+                	<div class="row">
+                    	<div class="col-xs-12 content-type-group-header">{{ contentTypeGroup.description }}</div>
+                    	{% if loop.index0 % 2 == 0 %}
+                    	<div class="row">
+                    	{% endif %}
+                        {% for type in contentTypeGroup.types %}
+                        	<div class="col-xs-5 content-type-selector jstree_draggable" draggable="true" ondragstart="dragContentType(event)" data-ct-id="{{ type.id }}">
+                            	<div draggable="false"><img class="content-type-icon" src="{{ type.icon }}" draggable="false"></div>
+                            	<div class="content-type-description" draggable="false">{{ type.description }}</div>
+                        	</div>
+                        {% endfor %}	    	
+                    	{% if loop.index0 % 2 == 0 %}
+                    	</div>
+                    	{% endif %}
+                	</div>
+                {% endfor %}
+                </div>    	
+	    	</div>
+		</div>
+	</div>
+{% endblock cms_content_type_list %}

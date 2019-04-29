@@ -1,6 +1,6 @@
 <?php
 
-namespace Oforge\Engine\Modules\Core;
+namespace Oforge\Engine\Modules\Core\Forge;
 
 /**
  * Class ForgeSettings

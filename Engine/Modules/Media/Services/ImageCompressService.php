@@ -53,14 +53,14 @@ class ImageCompressService {
     public function compress(Media $media, int $width, string $cacheUrl) : bool {
         try {
             if (extension_loaded('imagick')) {
-                $image = new \Imagick($media->getPath());
+                $image = new \Imagick(ROOT_PATH . $media->getPath());
 
                 $widthCurrent  = $image->getImageWidth();
                 $heightCurrent = $image->getImageHeight();
 
                 $image->scaleImage($width, (int) (1.0 * $width / $widthCurrent * $heightCurrent));
 
-                $image->writeImage($cacheUrl);
+                $image->writeImage(ROOT_PATH . $cacheUrl);
 
                 return true;
             }

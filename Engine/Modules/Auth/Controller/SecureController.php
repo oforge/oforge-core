@@ -2,23 +2,31 @@
 
 namespace Oforge\Engine\Modules\Auth\Controller;
 
-use Oforge\Engine\Modules\Auth\Services\Permissions;
+use Oforge\Engine\Modules\Auth\Services\PermissionService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 
+/**
+ * Class SecureController
+ *
+ * @package Oforge\Engine\Modules\Auth\Controller
+ */
 class SecureController extends AbstractController {
+
+    public function initPermissions() {
+    }
+
     /**
-     * @param $method
-     * @param $userType
+     * @param string $method
+     * @param string $userType
      * @param int|null $role
      *
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ServiceNotFoundException
      */
-    protected function ensurePermissions($method, $userType, $role = null)
-    {
-        /** @var Permissions $permissions */
-        $permissions = Oforge()->Services()->get("permissions");
-        $permissions->put(get_called_class() . ":" . $method, $userType, $role);
+    protected function ensurePermissions(string $method, string $userType, ?int $role = null) {
+        /** @var PermissionService $permissionService */
+        $permissionService = Oforge()->Services()->get('permissions');
+        $permissionService->put(get_called_class(), $method, $userType, $role);
     }
-    
-    public function initPermissions() {}
+
 }
