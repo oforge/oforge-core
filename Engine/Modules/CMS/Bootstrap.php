@@ -14,6 +14,7 @@ use Oforge\Engine\Modules\CMS\Controller\Backend\PagesController;
 use Oforge\Engine\Modules\CMS\Controller\Backend\TypesController;
 use Oforge\Engine\Modules\CMS\Controller\Frontend\PageController;
 use Oforge\Engine\Modules\CMS\Models\Content\Content;
+use Oforge\Engine\Modules\CMS\Models\Content\ContentParent;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentTypeGroup;
 use Oforge\Engine\Modules\CMS\Models\ContentTypes\Row;
@@ -29,6 +30,8 @@ use Oforge\Engine\Modules\CMS\Services\PageBuilderService;
 use Oforge\Engine\Modules\CMS\Services\PagesControllerService;
 use Oforge\Engine\Modules\CMS\Services\PageService;
 use Oforge\Engine\Modules\CMS\Services\PageTreeService;
+use Oforge\Engine\Modules\CMS\Services\ElementsControllerService;
+use Oforge\Engine\Modules\CMS\Services\ElementTreeService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 
 /**
@@ -56,6 +59,7 @@ class Bootstrap extends AbstractBootstrap {
             Slot::class,
             ContentTypeGroup::class,
             ContentType::class,
+            ContentParent::class,
             Content::class,
             Row::class,
             Page::class,
@@ -64,12 +68,14 @@ class Bootstrap extends AbstractBootstrap {
         ];
 
         $this->services = [
-            'dummy.page.generator'     => DummyPageGenerator::class,
-            'page.path'                => PageService::class,
-            'pages.controller.service' => PagesControllerService::class,
-            'page.tree.service'        => PageTreeService::class,
-            'page.builder.service'     => PageBuilderService::class,
-            'content.type.service'     => ContentTypeService::class,
+            "dummy.page.generator" => DummyPageGenerator::class,
+            "page.path" => PageService::class,
+            "pages.controller.service" => PagesControllerService::class,
+            "page.tree.service" => PageTreeService::class,
+            "page.builder.service" => PageBuilderService::class,
+            "content.type.service" => ContentTypeService::class,
+            "elements.controller.service" => ElementsControllerService::class,
+            "element.tree.service" => ElementTreeService::class
         ];
     }
 

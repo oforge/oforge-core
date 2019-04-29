@@ -1,5 +1,8 @@
 <input type="hidden" id="cms_page_richtext_text" name="text">
 <div class="content-type-edit-form-richtext">
+    <div><label>Content Name</label></div>
+    <div><input type="text" name="name" value="{{ data.name }}"></div>
+    <div class="spacer">&nbsp;</div>
     <div><label>Text Editor</label></div>
     <div class="editor" id="cms_page_richtext_editor">{{ data.text|raw }}</div>
 
