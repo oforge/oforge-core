@@ -50,9 +50,9 @@ class PagesControllerService extends AbstractDatabaseAccess {
         foreach ($languageEntities as $languageEntity)
         {
             $language = [];
-            $language["id"] = $languageEntity->getId();
-            $language["iso"] = $languageEntity->getIso();
-            $language["name"] = $languageEntity->getName();
+            $language["id"]     = $languageEntity->getId();
+            $language["iso"]    = $languageEntity->getIso();
+            $language["name"]   = $languageEntity->getName();
             $language["active"] = $languageEntity->isActive();
             
             $languages[] = $language;
@@ -163,7 +163,7 @@ class PagesControllerService extends AbstractDatabaseAccess {
         }
         
         $data = [
-            "js"   => ["cms_page_controller_jstree_config" => $pageTreeService->generateJsTreeConfigJSON()],
+            "js"   => ["cms_pages_controller_jstree_config" => $pageTreeService->generateJsTreeConfigJSON()],
             "post" => $post
         ];
         
@@ -209,7 +209,7 @@ class PagesControllerService extends AbstractDatabaseAccess {
         }
         
         $data = [
-            "js"                      => ["cms_page_controller_jstree_config" => $pageTreeService->generateJsTreeConfigJSON()],
+            "js"                      => ["cms_pages_controller_jstree_config" => $pageTreeService->generateJsTreeConfigJSON()],
             "languages"               => $this->getAvailableLanguages(),
             "cms_page_builder_action" => "edit_page_path",
             "post"                    => $post
@@ -275,7 +275,7 @@ class PagesControllerService extends AbstractDatabaseAccess {
         {
             $contentEntity =  new Content;
             $contentEntity->setType($contentTypeEntity);
-            $contentEntity->setParent(0);
+            $contentEntity->setParent(NULL);
             $contentEntity->setName(uniqid());
             $contentEntity->setCssClass('');
             
@@ -442,7 +442,7 @@ class PagesControllerService extends AbstractDatabaseAccess {
         $selectedAction            = isset($post["cms_page_selected_action"])               && !empty($post["cms_page_selected_action"])                ? $post["cms_page_selected_action"]               : 'edit';
         
         $data = [
-            "js"                => ["cms_page_controller_jstree_config" => $pageTreeService->generateJsTreeConfigJSON()],
+            "js"                => ["cms_pages_controller_jstree_config" => $pageTreeService->generateJsTreeConfigJSON()],
             "languages"         => $this->getAvailableLanguages(),
             "pages"             => $pageTreeService->getPageArray(),
             "contentTypeGroups" => $contentTypeService->getContentTypeGroupArray(),

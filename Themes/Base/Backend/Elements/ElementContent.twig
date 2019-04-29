@@ -1,0 +1,31 @@
+{% block cms_page_builder_content %}
+	{% if contents.type %}
+	<div class="col-xs-8 cms-page-builder-container" id="cms_page_builder_container">
+		<div>
+			<div class="cms-page-builder-headline">{{ i18n('cms_page_builder_edit_content_types_title') }}</div>
+	    	<div class="cms-page-builder-content" id="cms_page_builder_content">
+				<div class="cms-content-type-editor-wrapper" id="cms_content_type_editor_wrapper">
+    				<div class="cms-content-type-editor-container">
+						{% include contents.type with {'data': contents} only %}
+    				</div>
+                    {% include 'Backend/Elements/ElementEditorForm.twig' %}
+        			<div class="cms-cancel-submit-row">
+        				<div><button class="cms-cancel-button" id="cms-page-builder-cancel" data-pb-se="{{ post.cms_page_selected_element }}">{{ i18n('cancel') }}</button></div>
+        				<div><button class="cms-submit-button" id="cms-page-builder-submit" data-pb-se="{{ post.cms_page_selected_element }}">{{ i18n('backend_crud_save') }}</button></div>
+        			</div>
+    			</div>
+	    	</div>
+		</div>
+	</div>
+	{% else %}
+	<div class="col-xs-8">
+		<div>
+			<div class="cms-page-builder-headline">{{ i18n('cms_page_builder_content_title') }}</div>
+	    	<div class="cms-page-builder-content" id="cms_page_builder_content">
+	    		<div>{{ i18n('cms_page_builder_content_no_page_selected') }}</div>
+			</div>
+		</div>
+	</div>
+    {% include 'Backend/Pages/PageBuilderForm.twig' %}
+	{% endif %}
+{% endblock cms_page_builder_content %}

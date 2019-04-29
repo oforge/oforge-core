@@ -162,7 +162,7 @@ class ConfigService
      * @throws ConfigElementNotFoundException
      * @throws ORMException
      */
-    public function get(string $key, int $scope = null)
+    public function get(string $key, ?integer $scope = null)
     {
         $em = Oforge()->DB()->getEnityManager();
         $repo = $em->getRepository(Element::class);
