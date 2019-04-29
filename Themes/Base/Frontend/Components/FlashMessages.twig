@@ -1,0 +1,13 @@
+{% block flash_message %}
+    {% if (flashMessages) %}
+        <div class="content">
+            {% for flashMessage in flashMessages %}
+                <div class="flash flash--{{ flashMessage.type }}">
+                    <p class="flash__message">
+                        {{ flashMessage.message|raw }}
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock flash_message %}

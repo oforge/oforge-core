@@ -106,7 +106,7 @@ var Oforge = (function() {
 /**
  * After all Dom content is loaded, initialize all registered modules.
  */
-document.addEventListener('DOMContentLoaded', function (event) {
+$(document).ready(function() {
     if (typeof Oforge !== 'undefined') {
         Oforge.registeredModules.forEach(function (elem, index) {
             elem.init();

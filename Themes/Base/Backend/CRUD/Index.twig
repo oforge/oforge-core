@@ -1,52 +1,56 @@
-{% extends "Backend/Master/Index.twig" %}
+{% extends 'Backend/Master/Index.twig' %}
 
 {% block pagecontent %}
     <section class="content">
         <div class="row">
             <div class="col-xs-12">
-                <a href="" class="btn btn-primary">{{ i18n('crud_add_new') }}</a>
-            </div>
-            <div class="col-xs-12">
-
-                <div class="box">
-                    <div class="box-body table-responsive no-padding">
-                        {% if editInline %}
+                <div class="box box-primary">
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <p class="btn-group" role="group">
+                                    {% block crud_actions_group %}
+                                        <a href="{{ url(meta.route.name  ~ '_create') }}"
+                                           title="{{ i18n('backend_crud_btn_create', 'create') }}"
+                                           class="btn btn-primary {% if not crud.actions.create %}disabled{% endif %}">
+                                            <i class="fa fa-plus"></i>
+                                        </a>
+                                    {% endblock crud_actions_group %}
+                                </p>
+                            </div>
+                        </div>
+                        {% if crud.hasEditors %}
                         <form method="post">
                             {% endif %}
-                            <table class="table table-hover">
-                                <thead>
-                                <tr>
-                                    {% for head in header %}
-                                        <th>{{ i18n('backend_crud_header_' ~ head.name ) }}</th>
-                                    {% endfor %}
-                                </tr>
-                                </thead>
-
-                                <tbody>
-                                {% for item in result %}
-                                    <tr>
-                                        {% for head in header %}
-                                            <td>
-                                                {% if editInline %}
-                                                    {% include 'Backend/CRUD/Components/Inline.twig' with  {'item':item, 'column': head } %}
-                                                {% else %}
-                                                    <a href="{{ url(meta.route.name  ~ "_detail") ~ "?id=" ~ item.id }}">{{ item[head.name] }}</a>
-                                                {% endif %}
-                                            </td>
-                                        {% endfor %}
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                            {% if editInline %}
-                            <input type="hidden" name="type" value="update" />
-                            <input type="submit" class="btn btn-primary" value="{{ i18n('backend_crud_save') }}">
+                            {#{% include 'Backend/CRUD/Components/Index/PaginationRow.twig' with {#}
+                            {#    pagination: crud.pagination,#}
+                            {#    queryKeys: crud.queryKeys,#}
+                            {#    route: meta.route#}
+                            {#} only %}#}
+                            <div class="row">
+                                <div class="col-xs-12 table-responsive">
+                                    {% include 'Backend/CRUD/Components/Index/Table.twig' %}
+                                </div>
+                            </div>
+                            {% include 'Backend/CRUD/Components/Index/PaginationRow.twig' with {
+                                pagination: crud.pagination,
+                                queryKeys: crud.queryKeys,
+                                route: meta.route
+                            } only %}
+                            {% if crud.hasEditors %}
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <input type="hidden" name="action" value="update" />
+                                    <input type="submit" class="btn btn-primary"
+                                           value="{{ i18n('backend_crud_btn_update', 'update') }}" title="{{ i18n('backend_crud_btn_update', 'update') }}">
+                                </div>
+                            </div>
                         </form>
                         {% endif %}
                     </div>
-                    <!-- /.box-body -->
+                    {# /.box-body #}
                 </div>
-                <!-- /.box -->
+                {# /.box #}
             </div>
         </div>
     </section>

@@ -2,9 +2,12 @@
 
 namespace Oforge\Engine\Modules\CMS\ContentTypes;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\CMS\Abstracts\AbstractContentType;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
 use Oforge\Engine\Modules\CMS\Models\Content\Content;
+use Oforge\Engine\Modules\CMS\Models\ContentTypes\Row as RowModel;
 
 class Row extends AbstractContentType
 {
@@ -14,9 +17,9 @@ class Row extends AbstractContentType
      *
      * @return Row[]|NULL
      */
-    private function getRowEntities(int $rowId)
+    private function getRowEntities(?int $rowId)
     {
-        $rowEntities = $this->entityManager->getRepository('Oforge\Engine\Modules\CMS\Models\ContentTypes\Row')->findBy(["row" => $rowId], ["order" => "ASC"]);
+        $rowEntities = $this->entityManager->getRepository(RowModel::class)->findBy(["row" => $rowId], ["order" => "ASC"]);
         
         if ($rowEntities)
         {
@@ -43,6 +46,7 @@ class Row extends AbstractContentType
      */
     public function getEditData()
     {
+        /** @var RowModel[] $rowEntities */
         $rowEntities = $this->getRowEntities($this->getContentId());
         
         $rowColumns = [];
@@ -62,22 +66,24 @@ class Row extends AbstractContentType
         $data = [];
         $data["id"]      = $this->getContentId();
         $data["type"]    = $this->getId();
-        $data["parent"]  = $this->getContentParentId();
         $data["name"]    = $this->getContentName();
         $data["css"]     = $this->getContentCssClass();
         $data["columns"] = $rowColumns;
         
         return $data;
     }
-    
+
     /**
      * Set edit data for page builder of content type
      * @param mixed $data
      *
-     * @return ContentType $this
+     * @return Row $this
      */
     public function setEditData($data)
     {
+        $this->setContentName($data['name']);
+        $this->setContentCssClass($data['css']);
+        
         return $this;
     }
     
@@ -97,16 +103,19 @@ class Row extends AbstractContentType
         
         return $data;
     }
-    
+
     /**
      * Create a child of given content type
      * @param Content $contentEntity
      * @param int $order
      *
-     * @return ContentType $this
+     * @return Row $this
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function createChild($contentEntity, $order)
     {
+        /** @var RowModel[] $rowEntities */
         $rowEntities = $this->getRowEntities($this->getContentId());
         
         if ($rowEntities)
@@ -146,7 +155,7 @@ class Row extends AbstractContentType
             $order = 1;
         }
 
-        $rowEntity =  new \Oforge\Engine\Modules\CMS\Models\ContentTypes\Row;
+        $rowEntity = new RowModel;
         $rowEntity->setRow($this->getContentId());
         $rowEntity->setContent($contentEntity);
         $rowEntity->setOrder($order);
@@ -156,17 +165,18 @@ class Row extends AbstractContentType
         
         return $this;
     }
-    
+
     /**
      * Delete a child
-     * @param Content $contentEntity
-     * @param int $order
-     *
-     * @return ContentType $this
+     * @param $contentElementId
+     * @param $contentElementAtOrderIndex
+     * @return Row $this
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function deleteChild($contentElementId, $contentElementAtOrderIndex)
     {
-        $rowEntity = $this->entityManager->getRepository('Oforge\Engine\Modules\CMS\Models\ContentTypes\Row')->findOneBy(["row" => $this->getContentId(), "content" => $contentElementId, "order" => $contentElementAtOrderIndex]);
+        $rowEntity = $this->entityManager->getRepository(RowModel::class)->findOneBy(["row" => $this->getContentId(), "content" => $contentElementId, "order" => $contentElementAtOrderIndex]);
         
         if ($rowEntity)
         {
@@ -184,6 +194,7 @@ class Row extends AbstractContentType
      */
     public function getChildData()
     {
+        /** @var RowModel[] $rowEntities */
         $rowEntities = $this->getRowEntities($this->getContentId());
         
         if (!$rowEntities)
@@ -203,23 +214,5 @@ class Row extends AbstractContentType
         }
         
         return $rowColumnContents;
-    }
-
-    public function load(int $id) {
-        $rows = $this->entityManager->getRepository('Oforge\Engine\Modules\CMS\Models\ContentTypes\Row')->findBy(['row' => $id],['order' => 'ASC']);
-        $result = [];
-        if (isset($rows)) {
-            foreach ($rows as $row) {
-                /** @var \Oforge\Engine\Modules\CMS\Models\ContentTypes\Row $row */
-                $data = $row->getContent()->getData();
-                if (!$data) {
-                    $data = $this->load($row->getContent()->getId());
-                }
-                array_push($result, ['type' => $row->getContent()->getType()->getName(), 'path' => $row->getContent()->getType()->getPath(), 'data' => $data]);
-            }
-
-            return $result;
-        }
-        return null;
     }
 }

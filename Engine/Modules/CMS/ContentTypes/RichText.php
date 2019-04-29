@@ -17,43 +17,42 @@ class RichText extends AbstractContentType
     {
         return false;
     }
-    
+
     /**
      * Return edit data for page builder of content type
      *
-     * @return string
+     * @return array
      */
     public function getEditData()
     {
         $data = [];
         $data["id"]     = $this->getContentId();
         $data["type"]   = $this->getId();
-        $data["parent"] = $this->getContentParentId();
         $data["name"]   = $this->getContentName();
         $data["css"]    = $this->getContentCssClass();
         $data["text"]   = $this->getContentData();
         
         return $data;
     }
-    
+
     /**
      * Set edit data for page builder of content type
-     * @param string $richText
-     *
-     * @return ContentType $this
+     * @param $data
+     * @return RichText $this
      */
     public function setEditData($data)
     {
+        $this->setContentName($data['name']);
         $this->setContentCssClass($data['css']);
         $this->setContentData($data['text']);
         
         return $this;
     }
-    
+
     /**
      * Return data for page rendering of content type
      *
-     * @return string
+     * @return array
      */
     public function getRenderData()
     {
@@ -67,25 +66,25 @@ class RichText extends AbstractContentType
         
         return $data;
     }
-    
+
     /**
      * Create a child of given content type
      * @param Content $contentEntity
      * @param int $order
      *
-     * @return ContentType $this
+     * @return RichText $this
      */
     public function createChild($contentEntity, $order)
     {
         return $this;
     }
-    
+
     /**
      * Delete a child
      * @param Content $contentEntity
      * @param int $order
      *
-     * @return ContentType $this
+     * @return RichText $this
      */
     public function deleteChild($contentEntity, $order)
     {

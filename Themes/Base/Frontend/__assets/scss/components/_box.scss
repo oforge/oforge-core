@@ -32,6 +32,7 @@
     &__text {
         color: $color-light;
         word-break: break-all;
+        font-size: $font-size-6;
     }
 
     &:nth-child(n + 3) {
@@ -86,6 +87,10 @@
         &:nth-child(4n + 2),
         &:nth-child(4n + 3) {
             margin-left: $size-large;
+        }
+
+        &__text {
+            font-size: $font-size-5;
         }
     }
 }

@@ -2,19 +2,23 @@
 
 namespace Mailchimp;
 
-use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Mailchimp\Controller\Frontend\NewsletterSubscriptionController;
 use Mailchimp\Services\MailchimpNewsletterService;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 
-class Bootstrap extends AbstractBootstrap
-{
-    public function __construct()
-    {
+/**
+ * Class Bootstrap
+ *
+ * @package Mailchimp
+ */
+class Bootstrap extends AbstractBootstrap {
+
+    public function __construct() {
         $this->endpoints = [
-            "/newsletter" => ["controller" => NewsletterSubscriptionController::class,
-                "name" => "frontend_newsletter_subscription"]
+            NewsletterSubscriptionController::class,
         ];
+
         $this->services = [
             'mailchimp.newsletter' => MailchimpNewsletterService::class,
         ];

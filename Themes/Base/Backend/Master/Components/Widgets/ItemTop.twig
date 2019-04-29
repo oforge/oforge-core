@@ -1,0 +1,7 @@
+<div class="col-lg-3 col-xs-6">
+    {%  set content = backend_widget_data(item.name) %}
+    <!-- small box -->
+    <div class="small-box {{ item.cssClass }}" >
+        {% include 'Backend/Widgets/' ~ item.templateName ~ '.twig' with {'data': item, 'content': content} %}
+    </div>
+</div>

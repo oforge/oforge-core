@@ -1,0 +1,7 @@
+{% include 'Backend/CRUD/Components/Editor/Input.twig' with {
+    editor: {
+        type: 'text',
+        pattern: property.editor.pattern|default(''),
+        maxlength: property.editor.maxlength|default(''),
+    }
+} %}

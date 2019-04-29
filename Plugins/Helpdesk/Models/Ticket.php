@@ -2,7 +2,9 @@
 
 namespace Helpdesk\Models;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 
 /**
@@ -32,8 +34,11 @@ class Ticket extends AbstractModel {
     private $status;
 
     /**
-     * @var string
-     * @ORM\Column(name="ticket_issue_type", type="string", nullable=false)
+     * @var int
+     *
+     * @ORM\OneToOne(targetEntity="IssueTypes")
+     * @ORM\JoinColumn(name="issue_type_id", referencedColumnName="id", nullable=false)
+     * @ORM\Column(type="integer", name="issue_type")
      */
     private $issueType;
 
@@ -51,10 +56,24 @@ class Ticket extends AbstractModel {
     private $message;
 
     /**
-     * @var \DateTime
-     * @ORM\Column(name="timestamp", type="datetime", nullable=false);
+     * @var DateTime
+     * @ORM\Column(name="created_at", type="datetime", nullable=false);
      */
-    private $timestamp;
+    private $created;
+
+    /**
+     * Triggered on insert
+     *
+     * @ORM\PrePersist
+     * @throws Exception
+     */
+    public function onPrePersist() {
+        $this->created = new DateTime("now");
+    }
+
+    public function onPreUpdate() {
+        $this->created = new DateTime("now");
+    }
 
     /**
      * @return int
@@ -98,19 +117,19 @@ class Ticket extends AbstractModel {
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getIssueType() : string {
+    public function getIssueType() : int {
         return $this->issueType;
     }
 
     /**
-     * @param string $issue
+     * @param int $issueType
      *
      * @return Ticket
      */
-    public function setIssueType(string $issueType) : Ticket {
-        $this->issue = $issueType;
+    public function setIssueType(int $issueType) : Ticket {
+        $this->issueType = $issueType;
         return $this;
     }
 
@@ -149,9 +168,9 @@ class Ticket extends AbstractModel {
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
-    public function getTimestamp() : \DateTime {
-        return $this->timestamp;
+    public function getCreated() : DateTime {
+        return $this->created;
     }
 }

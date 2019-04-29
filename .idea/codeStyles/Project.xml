@@ -91,7 +91,6 @@
       </indentOptions>
     </codeStyleSettings>
     <codeStyleSettings language="SCSS">
-      <option name="KEEP_BLANK_LINES_IN_CODE" value="1" />
       <indentOptions>
         <option name="INDENT_SIZE" value="4" />
       </indentOptions>

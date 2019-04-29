@@ -1,0 +1,7 @@
+<div>
+    {% include 'Backend/Components/Form/Switch.twig' with {
+        id: fieldID,
+        disabled: true,
+        checked: item[property.name],
+    } only %}
+</div>
