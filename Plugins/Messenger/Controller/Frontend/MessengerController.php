@@ -85,5 +85,4 @@ class MessengerController extends SecureFrontendController {
     public function initPermissions() {
         $this->ensurePermissions("indexAction", User::class);
     }
-
 }

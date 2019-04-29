@@ -41,7 +41,11 @@ class MiddlewarePluginManager {
             }
         }
 
-        $response = $next($request, $response);
+        $stopNext = Oforge()->View()->get('stopNext');
+
+        if (!isset($stopNext)) {
+            $response = $next($request, $response);
+        }
 
         foreach ($this->activeMiddlewares as $middleware) {
             $className = $middleware->getClass();
