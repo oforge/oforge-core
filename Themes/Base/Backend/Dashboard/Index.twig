@@ -1,7 +1,32 @@
 {% extends "Backend/Master/Index.twig" %}
 
 {% block pagecontent %}
-    TBD
+    {% set widgets = backend_widgets() %}
+    {{ o_dump(widgets) }}
+    {% if widgets.top %}
+        <div class="row">
+            {% for widget in widgets.top %}
+                {% include 'Backend/Master/Components/Widgets/ItemTop.twig' with {'item': widget} %}
+            {% endfor %}
+        </div>
+    {% endif %}
+    <div class="row">
+        {% if widgets.left %}
+            <section class="{% if widgets.right %}col-lg-7{% else %}col-lg-12{% endif %} connectedSortable ui-sortable">
+                {% for widget in widgets.left %}
+                    {% include 'Backend/Master/Components/Widgets/Item.twig' with {'item': widget} %}
+                {% endfor %}
+            </section>
+        {% endif %}
+        {% if widgets.right %}
+            <section class="{% if widgets.left %}col-lg-5{% else %}col-lg-12{% endif %} connectedSortable ui-sortable">
+
+                {% for widget in widgets.right %}
+                    {% include 'Backend/Master/Components/Widgets/Item.twig' with {'item': widget} %}
+                {% endfor %}
+            </section>
+        {% endif %}
+    </div>
 
     <br />
     <ul>

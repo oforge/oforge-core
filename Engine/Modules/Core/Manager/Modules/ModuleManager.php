@@ -4,14 +4,20 @@ namespace Oforge\Engine\Modules\Core\Manager\Modules;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Noodlehaus\Exception;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Bootstrap;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistsException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
 use Oforge\Engine\Modules\Core\Exceptions\CouldNotInstallModuleException;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceAlreadyDefinedException;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\Helper;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\Core\Models\Module\Module;
+use Oforge\Engine\Modules\Core\Services\MiddlewareService;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
@@ -31,7 +37,7 @@ class ModuleManager {
 
     public function entityManger() : EntityManager {
         if (!isset($this->entityManger)) {
-            $this->entityManger = Oforge()->DB()->getManager();
+            $this->entityManger = Oforge()->DB()->getEnityManager();
         }
 
         return $this->entityManger;
@@ -49,10 +55,11 @@ class ModuleManager {
      * Initialize all modules
      *
      * @throws CouldNotInstallModuleException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceAlreadyDefinedException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ServiceAlreadyDefinedException
+     * @throws ServiceNotFoundException
+     * @throws ConfigOptionKeyNotExistsException
      */
     public function init() {
         $startTime = microtime(true) * 1000;
@@ -148,10 +155,10 @@ class ModuleManager {
      *
      * @param $className
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceAlreadyDefinedException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ServiceAlreadyDefinedException
+     * @throws ServiceNotFoundException
      */
     private function initCoreModule($className) {
         $startTime = microtime(true) * 1000;
@@ -162,13 +169,14 @@ class ModuleManager {
              */
             $instance = new $className();
 
-            Oforge()->DB()->initSchema($instance->getModels());
+            Oforge()->DB()->initModelSchema($instance->getModels());
 
             $services = $instance->getServices();
             Oforge()->Services()->register($services);
 
             $endpoints = $instance->getEndpoints();
-            Oforge()->Services()->get("endpoints")->register($endpoints);
+            Oforge()->Services()->get('endpoints')->install($endpoints);
+            Oforge()->Services()->get('endpoints')->activate($endpoints);
 
             /**
              * @var $entry Module
@@ -178,16 +186,16 @@ class ModuleManager {
             $needFlush = false;
             if (isset($entry) && !$entry->getInstalled()) {
                 try {
-                    $instance->install();
-                } catch (ConfigElementAlreadyExists $e) {
-                }
+                $instance->install();
+            } catch (ConfigElementAlreadyExistsException $e) {
+            }
                 $this->entityManger()->persist($entry->setInstalled(true));
                 $needFlush = true;
             } elseif (!isset($entry)) {
                 $this->register($className);
                 try {
                     $instance->install();
-                } catch (ConfigElementAlreadyExists $e) {
+                } catch (ConfigElementAlreadyExistsException $e) {
                 }
                 $entry = $this->moduleRepository()->findOneBy(["name" => $className]);
                 $this->entityManger()->persist($entry->setInstalled(true));
@@ -208,7 +216,7 @@ class ModuleManager {
      *
      * @param $className
      *
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      */
     protected function register($className) {
         if (is_subclass_of($className, AbstractBootstrap::class)) {
@@ -223,6 +231,7 @@ class ModuleManager {
             } else { // if not put the data into the database
                 $newEntry = Module::create(["name" => get_class($instance), "order" => $instance->getOrder(), "active" => 1, "installed" => 0]);
                 $this->entityManger()->persist($newEntry);
+                $this->entityManger()->flush();
             }
         }
     }
@@ -232,10 +241,11 @@ class ModuleManager {
      *
      * @param $className
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceAlreadyDefinedException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ServiceAlreadyDefinedException
+     * @throws ServiceNotFoundException
+     * @throws ConfigOptionKeyNotExistsException
      */
     protected function initModule($className) {
         if (is_subclass_of($className, AbstractBootstrap::class)) {
@@ -244,16 +254,19 @@ class ModuleManager {
              */
             $instance = new $className();
 
-            Oforge()->DB()->initSchema($instance->getModels());
+            Oforge()->DB()->initModelSchema($instance->getModels());
 
             $services = $instance->getServices();
             Oforge()->Services()->register($services);
 
             $endpoints = $instance->getEndpoints();
-            Oforge()->Services()->get("endpoints")->register($endpoints);
+            Oforge()->Services()->get('endpoints')->install($endpoints);
+            Oforge()->Services()->get('endpoints')->activate($endpoints);
 
-            $middleware = $instance->getMiddleware();
-            Oforge()->Services()->get("middleware")->register($middleware, null, true);
+            $middlewares = $instance->getMiddlewares();
+            /** @var MiddlewareService $middlewareService */
+            $middlewareService = Oforge()->Services()->get("middleware");
+            $middlewareService->register($middlewares, true);
 
             /**
              * @var $entry Module
@@ -263,7 +276,7 @@ class ModuleManager {
             if (isset($entry) && !$entry->getInstalled()) {
                 try {
                     $instance->install();
-                } catch (ConfigElementAlreadyExists $e) {
+                } catch (ConfigElementAlreadyExistsException $e) {
                 }
                 $this->entityManger()->persist($entry->setInstalled(true));
             }

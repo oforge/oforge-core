@@ -37,6 +37,10 @@
     width: calc(100% - 4rem);
 }
 
+.forgot-password {
+    color: $color-primary;
+}
+
 @media screen and (min-width: $screen-medium) {
     .panel--login-registration {
         max-width: 80%;

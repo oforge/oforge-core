@@ -1,0 +1,9 @@
+<label class="oforge-switch" {% if label %}title="{{ label }}"{% endif %}>
+    {% if not disabled %}
+        <input type="hidden" name="{{ name }}" value="0" />
+    {% endif %}
+    <input type="checkbox" value="1"
+           {% if not disabled %}name="{{ name }}"{% endif %} {% if id %}id="{{ id }}"{% endif %}
+            {% if checked %}checked{% endif %} {% if disabled %}disabled{% endif %} />
+    <span class="oforge-switch-slider"></span>
+</label>

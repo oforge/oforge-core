@@ -2,10 +2,13 @@
 
 namespace Oforge\Engine\Modules\AdminBackend\Core\Services;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use InvalidArgumentException;
 use Oforge\Engine\Modules\AdminBackend\Core\Models\BackendNavigation;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistsException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
 use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
 
 class BackendNavigationService extends AbstractDatabaseAccess {
@@ -17,11 +20,11 @@ class BackendNavigationService extends AbstractDatabaseAccess {
     /**
      * @param array $options
      *
-     * @throws ConfigElementAlreadyExists
-     * @throws ConfigOptionKeyNotExists
+     * @throws ConfigElementAlreadyExistsException
+     * @throws ConfigOptionKeyNotExistsException
      * @throws ParentNotFoundException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function put(array $options) : void {
         $element = $this->repository()->findOneBy(["name" => strtolower($options["name"])]);
@@ -38,6 +41,7 @@ class BackendNavigationService extends AbstractDatabaseAccess {
      * @param $position
      *
      * @return array Tree of SidebarNavigation data
+     * @throws ORMException
      */
     public function get($position) {
         //find all plugins order by "order"
@@ -53,8 +57,9 @@ class BackendNavigationService extends AbstractDatabaseAccess {
      * @param array $options
      *
      * @return bool
-     * @throws ConfigElementAlreadyExists
-     * @throws ConfigOptionKeyNotExists
+     * @throws ConfigElementAlreadyExistsException
+     * @throws ConfigOptionKeyNotExistsException
+     * @throws ORMException
      * @throws ParentNotFoundException
      */
     private function isValid($options) {
@@ -62,14 +67,14 @@ class BackendNavigationService extends AbstractDatabaseAccess {
         $keys = ["name"];
         foreach ($keys as $key) {
             if (!array_key_exists($key, $options)) {
-                throw new ConfigOptionKeyNotExists($key);
+                throw new ConfigOptionKeyNotExistsException($key);
             }
         }
 
         // Check if the element is already within the system
         $element = $this->repository()->findOneBy(["name" => strtolower($options["name"])]);
         if (isset($element)) {
-            throw new ConfigElementAlreadyExists(strtolower($options["name"]));
+            throw new ConfigElementAlreadyExistsException(strtolower($options["name"]));
         }
 
         if (key_exists("parent", $options)) {
@@ -81,19 +86,19 @@ class BackendNavigationService extends AbstractDatabaseAccess {
 
         // Check if correct type are set
         if (isset($options["order"]) && !is_integer($options["order"])) {
-            throw new \InvalidArgumentException("Required value should be of type integer. ");
+            throw new InvalidArgumentException("Required value should be of type integer. ");
         }
 
         // Check if correct type are set
         if (isset($options["position"]) && !is_string($options["position"])) {
-            throw new \InvalidArgumentException("Required value should be of type string. ");
+            throw new InvalidArgumentException("Required value should be of type string. ");
         }
 
         //Check if correct type are set
         $keys = ["title", "icon", "path"];
         foreach ($keys as $key) {
             if (isset($options[$key]) && !is_string($options[$key])) {
-                throw new \InvalidArgumentException("$key value should be of type string.");
+                throw new InvalidArgumentException("$key value should be of type string.");
             }
         }
 
@@ -104,6 +109,7 @@ class BackendNavigationService extends AbstractDatabaseAccess {
      * @param BackendNavigation[] $entries
      *
      * @return array
+     * @throws ORMException
      */
     private function fill($entries) {
         $result = [];
@@ -126,6 +132,7 @@ class BackendNavigationService extends AbstractDatabaseAccess {
      * @param string $activePath
      *
      * @return array
+     * @throws ORMException
      */
     public function breadcrumbs($activePath) {
         $breadcrumbs = [];
@@ -146,6 +153,8 @@ class BackendNavigationService extends AbstractDatabaseAccess {
     /**
      * @param BackendNavigation $entry
      * @param array $breadcrumbs
+     *
+     * @throws ORMException
      */
     private function findParents($entry, &$breadcrumbs) {
         /** @var null|BackendNavigation $entry */
@@ -158,5 +167,4 @@ class BackendNavigationService extends AbstractDatabaseAccess {
             $this->findParents($entry, $breadcrumbs);
         }
     }
-
 }

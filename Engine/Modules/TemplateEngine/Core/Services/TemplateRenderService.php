@@ -49,7 +49,8 @@ class TemplateRenderService {
         if (isset($data["json"]) && is_array($data["json"])) {
             return $this->renderJson($request, $response, $data["json"]);
         } else {
-            $namespace = explode("\\", Oforge()->View()->get('meta')['controller_method']);
+            $routeController = Oforge()->View()->get('meta')['route'];
+            $namespace  = explode("\\", $routeController['controllerClass']);
 
             $foundController = false;
             $index           = 0;
@@ -73,7 +74,7 @@ class TemplateRenderService {
 
 
             $controllerName = explode("Controller", explode(":", $namespace[sizeof($namespace) - 1])[0])[0];
-            $fileName       = explode("Action", explode(":", $namespace[sizeof($namespace) - 1])[1])[0];
+            $fileName       = explode("Action", $routeController['controllerMethod'])[0];
 
             $templatePath .= DIRECTORY_SEPARATOR . $controllerName . DIRECTORY_SEPARATOR . ucwords($fileName) . ".twig";
 
@@ -201,9 +202,11 @@ class TemplateRenderService {
 
             if ($debug) {
                 $this->view->getEnvironment()->enableDebug();
-                $this->view->getEnvironment()->addExtension(new Twig_Extension_Debug());
-                $this->view->getEnvironment()->addExtension(new TwigOforgeDebugExtension());
             }
+
+
+            $this->view->getEnvironment()->addExtension(new Twig_Extension_Debug());
+            $this->view->getEnvironment()->addExtension(new TwigOforgeDebugExtension());
         }
 
         return $this->view;

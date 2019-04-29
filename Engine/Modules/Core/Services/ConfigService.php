@@ -2,10 +2,13 @@
 
 namespace Oforge\Engine\Modules\Core\Services;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use InvalidArgumentException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistsException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
 use Oforge\Engine\Modules\Core\Models\Config\Element;
 use Oforge\Engine\Modules\Core\Models\Config\Value;
 
@@ -24,17 +27,17 @@ class ConfigService
      *
      * @param array $options
      *
-     * @throws ConfigElementAlreadyExists
-     * @throws ConfigOptionKeyNotExists
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ConfigElementAlreadyExistsException
+     * @throws ConfigOptionKeyNotExistsException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function add(Array $options)
     {
         if ($this->isValid($options)) {
 
             $element = Element::create($options);
-            $em = Oforge()->DB()->getManager();
+            $em = Oforge()->DB()->getEnityManager();
 
             $em->persist($element);
             $em->flush();
@@ -55,10 +58,10 @@ class ConfigService
      *
      * @param array $options
      *
-     * @throws ConfigElementAlreadyExists
-     * @throws ConfigOptionKeyNotExists
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ConfigElementAlreadyExistsException
+     * @throws ConfigOptionKeyNotExistsException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function update(Array $options)
     {
@@ -66,7 +69,7 @@ class ConfigService
          * Check if the element is already within the system
          */
 
-        $em = Oforge()->DB()->getManager();
+        $em = Oforge()->DB()->getEnityManager();
         $repo = $em->getRepository(Element::class);
 
         $element = $repo->findOneBy(["name" => strtolower($options["name"])]);
@@ -94,8 +97,9 @@ class ConfigService
      * @param array $options
      *
      * @return bool
-     * @throws ConfigElementAlreadyExists
-     * @throws ConfigOptionKeyNotExists
+     * @throws ConfigElementAlreadyExistsException
+     * @throws ConfigOptionKeyNotExistsException
+     * @throws ORMException
      */
     private function isValid(Array $options)
     {
@@ -104,37 +108,37 @@ class ConfigService
          */
         $keys = ["name", "label", "type", "group"];
         foreach ($keys as $key) {
-            if (!array_key_exists($key, $options)) throw new ConfigOptionKeyNotExists($key);
+            if (!array_key_exists($key, $options)) throw new ConfigOptionKeyNotExistsException($key);
         }
 
         /**
          * Check if the element is already within the system
          */
-        $repo = Oforge()->DB()->getManager()->getRepository(Element::class);
+        $repo = Oforge()->DB()->getEnityManager()->getRepository(Element::class);
 
         $element = $repo->findOneBy(["name" => strtolower($options["name"])]);
-        if (isset($element)) throw new ConfigElementAlreadyExists(strtolower($options["name"]));
+        if (isset($element)) throw new ConfigElementAlreadyExistsException(strtolower($options["name"]));
 
         /**
          * Check if required keys are within the options
          */
         $types = ["boolean", "string", "number", "integer", "select"];
 
-        if (!in_array($options["type"], $types)) throw new \InvalidArgumentException("Type " . $options['type'] . " is not a valid type.");
+        if (!in_array($options["type"], $types)) throw new InvalidArgumentException("Type " . $options['type'] . " is not a valid type.");
 
         /**
          * Check if correct type are set
          */
-        if (isset($options["required"]) && !is_bool($options["required"])) throw new \InvalidArgumentException("Required value should be of type bool. ");
-        if (isset($options["options"]) && !is_array($options["options"])) throw new \InvalidArgumentException("Options value should be of type array. ");
-        if (isset($options["position"]) && !is_integer($options["position"])) throw new \InvalidArgumentException("Position value should be of type integer. ");
+        if (isset($options["required"]) && !is_bool($options["required"])) throw new InvalidArgumentException("Required value should be of type bool. ");
+        if (isset($options["options"]) && !is_array($options["options"])) throw new InvalidArgumentException("Options value should be of type array. ");
+        if (isset($options["position"]) && !is_integer($options["position"])) throw new InvalidArgumentException("Position value should be of type integer. ");
 
         /**
          * Check if correct type are set
          */
         $keys = ["name", "label", "description", "group"];
         foreach ($keys as $key) {
-            if (isset($options[$key]) && !is_string($options[$key])) throw new \InvalidArgumentException("$key value should be of type string.");
+            if (isset($options[$key]) && !is_string($options[$key])) throw new InvalidArgumentException("$key value should be of type string.");
         }
 
         return true;
@@ -152,20 +156,22 @@ class ConfigService
      * Get a specific configuration value
      *
      * @param string $key
-     * @param integer|null $scope
+     * @param integer $scope
      *
      * @return mixed
      * @throws ConfigElementNotFoundException
+     * @throws ORMException
      */
-    public function get(string $key, integer $scope = null)
+    public function get(string $key, ?integer $scope = null)
     {
-        $em = Oforge()->DB()->getManager();
+        $em = Oforge()->DB()->getEnityManager();
         $repo = $em->getRepository(Element::class);
         $element = $repo->findBy(["name" => $key]);
 
         if (!isset($element) || sizeof($element) == 0) throw new ConfigElementNotFoundException($key, $scope);
 
         foreach ($element[0]->getValues() as $value) {
+            /** @var Value $value */
             if ($value->getScope() == $scope) {
                 return $value->getValue();
             }
@@ -183,18 +189,19 @@ class ConfigService
      *
      * @return bool
      * @throws ConfigElementNotFoundException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function set(string $key, $configvalue, int $scope = null)
     {
-        $em = Oforge()->DB()->getManager();
+        $em = Oforge()->DB()->getEnityManager();
         $repo = $em->getRepository(Element::class);
         $element = $repo->findBy(["name" => $key]);
 
         if (!isset($element)) throw new ConfigElementNotFoundException($key, $scope);
 
         foreach ($element[0]->getValues() as $value) {
+            /** @var Value $value */
             if ($value->getScope() == $scope) {
                 $value->setValue($configvalue);
 
@@ -207,9 +214,12 @@ class ConfigService
         throw new ConfigElementNotFoundException($key, $scope);
     }
 
-
+    /**
+     * @return array
+     * @throws ORMException
+     */
     public function groups() {
-        $em = Oforge()->DB()->getManager();
+        $em = Oforge()->DB()->getEnityManager();
         $query = $em->createQueryBuilder()
             ->select("e.group")
             ->from(Element::class, "e")
@@ -217,8 +227,14 @@ class ConfigService
         return $query->getQuery()->getArrayResult();
     }
 
+    /**
+     * @param $groupName
+     *
+     * @return array|object[]
+     * @throws ORMException
+     */
     public function list($groupName) {
-        $em = Oforge()->DB()->getManager();
+        $em = Oforge()->DB()->getEnityManager();
         $elements = $em->getRepository(Element::class)->findBy(array('group' => $groupName));
         return $elements;
     }

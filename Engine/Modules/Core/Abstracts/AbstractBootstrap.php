@@ -22,13 +22,13 @@ abstract class AbstractBootstrap {
      */
     protected $dependencies = [];
     /**
-     * @var array $endpoints
+     * @var string[] $endpoints
      */
     protected $endpoints = [];
     /**
-     * @var array $middleware
+     * @var array $middlewares
      */
-    protected $middleware = [];
+    protected $middlewares = [];
     /**
      * @var string[] $models
      */
@@ -91,8 +91,8 @@ abstract class AbstractBootstrap {
     /**
      * @return array
      */
-    public function getMiddleware() : array {
-        return $this->middleware;
+    public function getMiddlewares() : array {
+        return $this->middlewares;
     }
 
     /**
