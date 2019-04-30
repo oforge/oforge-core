@@ -1,70 +1,9 @@
 // CMS Elements Controller Module
 // will be initialized on load of elements/index.twig
 var cmsElementsControllerModule = (function() {
-	// status variable to check if foreign object was dragged to jsTree
-	var isForeignDND = false;
-
-	// variable that holds the selected parent for content type dragged to jsTree
-	var contentTypeParentForeignDND = false;
-
 	// bind functions to window resize event
 	$(window).resize(function() {
 		cecm.resizeContentEditor();
-	});
-
-	// drag 'n drop event listeners for jsTree foreign objects
-	$(document).bind("dnd_start.vakata", function(event, data) {
-		console.log("jsTree - Start dnd");
-		console.log("Data:");
-		console.log(jsonStringify(data.data.jstree));
-		console.log(jsonStringify(data.data.obj));
-		console.log(jsonStringify(data.data.nodes));
-		console.log("------------------");
-	})
-	.bind("dnd_stop.vakata", function(event, data) {
-		console.log("jsTree - Stop dnd");
-		console.log("Data:");
-		console.log(jsonStringify(data.data.jstree));
-		console.log(jsonStringify(data.data.obj));
-		console.log(jsonStringify(data.data.nodes));
-		console.log("this was a foreign operation: " + isForeignDND);
-		console.log("------------------");
-
-		var dndData = data.data;
-
-		if (isForeignDND && contentTypeParentForeignDND) {
-			if (data && data.data && data.data.nodes &&  data.data.nodes.length > 0) {
-				var node = data.data.nodes[0];
-		
-				if (node && node.data_ct_id) {
-					$('#cms_edit_element_id').val(node.data_ct_id);
-					$('#cms_edit_element_parent_id').val(contentTypeParentForeignDND);
-					$('#cms_edit_element_action').val('dnd');
-					$('#cms_element_jstree_form').submit();
-				}
-			}
-		}
-	});
-
-	// make foreign objects draggable to jsTree
-	$('.jstree_draggable').on('mousedown', function (event) {
-		$(this).wrap( "<div id='jstree-drag-element'></div>" );
-		var dragHelper = '<div id="jstree-dnd" class="jstree-default"><i class="jstree-icon jstree-er"></i>' + $('#jstree-drag-element').html() + '<ins class="jstree-copy" style="display:none;">+</ins></div>';
-		$(this).unwrap();
-
-		return $.vakata.dnd.start(
-			event,
-			{
-				'jstree' : true,
-				'obj' 	 : $(this),
-				'nodes'  : [{
-					'icon'		 : 'jstree-file',
-					'text'		 : 'New Content Element',
-					'data_ct_id' : $(this).attr('data-ct-id')
-				}]
-			},
-			dragHelper
-		);
 	});
 
 	// jsTree callback functions
@@ -149,7 +88,7 @@ var cmsElementsControllerModule = (function() {
 		var node = data.node;
 		var parent = data.parent;
 
-		if (isForeignDND === false && node && node.id) {
+		if (pbIsForeignDND === false && node && node.id) {
 			if (node.id.startsWith("_parent#")) {
 				if (parent && (parent === ("#") || parent.startsWith("_parent#"))) {
 					$('#cms_edit_element_id').val(node.id);
@@ -179,8 +118,8 @@ var cmsElementsControllerModule = (function() {
 					console.log("-----------------------");
 
 					// by default assume that this is not a foreign dnd operation
-					isForeignDND = false;
-					contentTypeParentForeignDND = false;
+					pbIsForeignDND = false;
+					pbContentTypeParentForeignDND = false;
 
 					// check if this is a context menu operation and if yes permit it
 					if (op === "create_node" || op === "rename_node" || op === "delete_node" || op === "edit") {
@@ -190,8 +129,8 @@ var cmsElementsControllerModule = (function() {
 					// check if this is a foreign dnd operation and if yes allow it
 					if (op === "move_node" && !node && more.dnd === true && more.is_foreign === true) {
 						if (par && par.id && !par.id.startsWith("_element#")) {
-							isForeignDND = true;
-							contentTypeParentForeignDND = par.id;
+							pbIsForeignDND = true;
+							pbContentTypeParentForeignDND = par.id;
 							return true;
 						} else {
 							return false;
@@ -320,6 +259,8 @@ if (typeof Oforge !== 'undefined') {
         selector: '#element_editor_container_wrapper',
         init: function () {
 			window.cecm = cmsElementsControllerModule();
+			window.dndhdlr = window.cecm;
+			
 			cecm.resizeContentEditor();
         }
     });

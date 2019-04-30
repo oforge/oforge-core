@@ -255,7 +255,7 @@ class ElementsControllerService extends AbstractDatabaseAccess {
         ];
 
         // TODO: call with selected content element id to display edit mode
-        //$data = array_merge($data, $this->getPageContentArrayForContentElement(17));
+        $data = array_merge($data, $this->getPageContentArrayForContentElement(17));
         
         return $data;
     }
