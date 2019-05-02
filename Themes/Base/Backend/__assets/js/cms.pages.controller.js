@@ -100,56 +100,13 @@ var cmsPagesControllerModule = (function() {
 		}
 	);
 
-	// on edit cancel button event
-	$('#cms-page-builder-cancel').click(
-		function() {
-			var lastElementIdPosition = $(this).attr('data-pb-se').lastIndexOf('-');
-			var newSelectedElementId = '';
-
-			if (lastElementIdPosition > 0) {
-				newSelectedElementId = $(this).attr('data-pb-se').substring(0, lastElementIdPosition);
-			}
-
-			$('#cms_page_selected_element').val(newSelectedElementId);
-			$('#cms_page_builder_form').submit();
-		}
-	);
-
-	// on edit submit button event
-	$('#cms-page-builder-submit').click(
-		function() {
-			var lastElementIdPosition = $(this).attr('data-pb-se').lastIndexOf('-');
-			var newSelectedElementId = '';
-
-			if (lastElementIdPosition > 0) {
-				newSelectedElementId = $(this).attr('data-pb-se').substring(0, lastElementIdPosition);
-			}
-
-			$('#cms_page_selected_action').val('submit');
-			$('#cms_page_builder_form').submit();
-		}
-	);
-
     $('#cms_page_builder_language_selector').change(
     	function() {
     		$('#cms_page_selected_language').val($('#cms_page_builder_language_selector option:selected').val());
     		$('#cms_page_builder_form').submit();
     	}
-    );
-    
-    // TODO: move to own function that is triggered after document loaded by RichText-PageBuilderForm.twig
-    if ($('#cms_page_builder_form').length && $('#cms_page_richtext_editor').length) {
-    	$('#cms_page_builder_form').submit(
-	        function() {
-	            $('#cms_page_richtext_text').val(quill.root.innerHTML);
-	        }
-		);
-    	
-    	const quill = new Quill('#cms_page_richtext_editor', {
-			theme: 'snow'
-		});
-	}
-
+	);
+	
 	if (typeof cms_pages_controller_jstree_config !== typeof undefined && cms_pages_controller_jstree_config) {
 		// create jstree configs
 		var jsTreeConfig = {
