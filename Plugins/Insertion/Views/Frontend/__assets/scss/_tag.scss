@@ -1,0 +1,45 @@
+.tag-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+.tag {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $color-secondary;
+    color: $color-light;
+    border-radius: $size-medium;
+    padding: $size-small $size-medium;
+    margin: $size-medium $size-medium 0 0;
+
+    &__text {
+        font-size: $font-size-6;
+    }
+}
+.close {
+    position: relative;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 100%;
+    border: 1px solid $color-primary;
+    background: $color-light;
+    margin: 0 $size-medium 0 0;
+
+    &:after {
+        position: absolute;
+        display: flex;
+        content: '×';
+        width: 2rem;
+        height: 2rem;
+        color: $color-primary;
+        font-size: 1.6rem;
+        top: 50%;
+        left: 50%;
+        transform: translate3d(-50%,-50%,0);
+        align-items: center;
+        justify-content: center;
+    }
+}
