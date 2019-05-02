@@ -13,9 +13,17 @@ var cmsElementsControllerModule = (function() {
 
 	$('#cms_elements_controller_jstree').on('select_node.jstree', function (event, data) {
 		// switch element on element select
-		$('#cms_element_jstree_selected_element').val($('#cms_elements_controller_jstree').jstree('get_selected'));
-		$('#cms_element_selected_element').val('');
-		$('#cms_element_editor_form').submit();
+		var element = String($('#cms_elements_controller_jstree').jstree('get_selected'));
+
+		console.log("Selected element: " + element);
+
+		if (element.startsWith("_element#")) {
+			var elementId = element.replace('_element#', '');
+
+			$('#cms_edit_element_id').val(elementId);
+			$('#cms_edit_element_action').val('edit');
+			$('#cms_element_jstree_form').submit();
+		}
 	});
 	
 	// called after creating the node in jsTree. afterwards "rename_node.jstree"-callback
@@ -60,7 +68,7 @@ var cmsElementsControllerModule = (function() {
 			var tree = $('#cms_elements_controller_jstree').jstree(true);
 			var node = tree.get_node("#");
 	
-			if (node.id === "#" || node.id.startsWith("_parent")) {
+			if (node.id === "#" || node.id.startsWith("_parent#")) {
 				node = tree.create_node(node, {"type":"folder"});
 				tree.edit(node);
 			} else {

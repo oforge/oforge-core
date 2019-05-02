@@ -53,6 +53,17 @@ class ElementsController extends AbstractController {
                 }
                 break;
             case "cms_page_builder_form":
+                switch ($_POST["cms_page_selected_action"])
+                {
+                    case "submit":
+                        $data = $elementsControllerService->editElementData($_POST);
+                        break;
+                    default:
+                        $data = $elementsControllerService->getElementData($_POST);
+                        break;
+                }
+                break;
+            default:
                 $data = $elementsControllerService->getElementData($_POST);
                 break;
         }
