@@ -1,0 +1,45 @@
+{% block product_list %}
+    <div class="product-list">
+        {% for i in range(0, 12) %}
+            <div class="product">
+                <div class="product__image">
+                    <img src="https://placeponi.es/300/300" alt="ponie" class="image">
+                    <div class="badge badge--image badge--top-left"></div>
+                    <div class="label label--image label--top-right"></div>
+                </div>
+                <div class="product__content">
+                    <h3 class="product__title">Some good stuff you can buy</h3>
+                    <div class="product__attributes">
+                        <div class="product__attribute">
+                            <span class="product__label">Attribute</span>
+                            <span class="product__value">Value</span>
+                        </div>
+                        <div class="product__attribute">
+                            <span class="product__label">Attribute</span>
+                            <span class="product__value">Value</span>
+                        </div>
+                        <div class="product__attribute">
+                            <span class="product__label">Attribute</span>
+                            <span class="product__value">Value</span>
+                        </div>
+                        <div class="product__attribute">
+                            <span class="product__label">Attribute</span>
+                            <span class="product__value">Value</span>
+                        </div>
+                        <div class="product__attribute">
+                            <span class="product__label">Attribute</span>
+                            <span class="product__value">Value</span>
+                        </div>
+                    </div>
+                    <div class="product__meta">
+                        <span class="product__number">PR-123456</span>
+                        <div class="product__pricing">
+                            <span class="product__label">price</span>
+                            <span class="product__value">9999 €</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock product_list %}

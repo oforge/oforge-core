@@ -1,0 +1,18 @@
+{% block cms_element_jstree %}
+    {% block cms_element_jstree_form %}
+    	<form id="cms_element_jstree_form" action={{ url('backend_content_elements') }} method="post">
+ 			<input name="cms_form" type="hidden" value="cms_element_jstree_form">
+     		<input id="cms_edit_element_id" name="cms_edit_element_id" type="hidden">
+     		<input id="cms_edit_element_parent_id" name="cms_edit_element_parent_id" type="hidden">
+     		<input id="cms_edit_element_description" name="cms_edit_element_description" type="hidden">
+     		<input id="cms_edit_element_action" name="cms_edit_element_action" type="hidden">
+     	</form>
+    {% endblock cms_element_jstree_form %}
+	<div class="col-xs-2 cms-element-jstree-container" id="cms_element_jstree_container">
+		<div class="cms-element-editor-headline">{{ i18n('cms_element_editor_element_tree_title') }}</div>
+		<div class="cms-element-jstree-wrapper">
+	    	<div class="cms-element-editor-create-new-root-element" id="cms-element-editor-create-new-root-element">{{ i18n('cms_element_editor_create_new_root_folder') }}</div>
+	    	<div class="cms-elements-controller-jstree" id="cms_elements_controller_jstree"></div>
+		</div>
+	</div>
+{% endblock cms_element_jstree %}

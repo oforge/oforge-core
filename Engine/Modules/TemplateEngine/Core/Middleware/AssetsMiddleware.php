@@ -8,25 +8,32 @@
 
 namespace Oforge\Engine\Modules\TemplateEngine\Core\Middleware;
 
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
+/**
+ * Class AssetsMiddleware
+ *
+ * @package Oforge\Engine\Modules\TemplateEngine\Core\Middleware
+ */
 class AssetsMiddleware {
+
     /**
      * Middleware call before the controller call
      *
      * @param Request $request
      * @param Response $response
      *
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ServiceNotFoundException
      */
     public function prepend($request, $response) {
-        $meta = Oforge()->View()->get("meta");
+        $assetScope = Oforge()->View()->get('meta')['route']['assetScope'];
 
         $data = [
-            "assets" => [
-                "js"  => Oforge()->Services()->get("assets.js")->getUrl($meta["asset_scope"]),
-                "css" => Oforge()->Services()->get("assets.css")->getUrl($meta["asset_scope"]),
+            'assets' => [
+                'js'  => Oforge()->Services()->get('assets.js')->getUrl($assetScope),
+                'css' => Oforge()->Services()->get('assets.css')->getUrl($assetScope),
             ],
         ];
 

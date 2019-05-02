@@ -27,7 +27,7 @@ class ImportService {
     }
     
     private function initialize() {
-        $this->metaData = Oforge()->DB()->getManager()->getMetadataFactory()->getAllMetadata();
+        $this->metaData = Oforge()->DB()->getEnityManager()->getMetadataFactory()->getAllMetadata();
         $this->mapping  = [];
         
         foreach ( $this->metaData as $data ) {
@@ -89,13 +89,13 @@ class ImportService {
                             
                             $element = $model::create( $data );
                             
-                            Oforge()->DB()->getManager()->persist( $element );
+                            Oforge()->DB()->getEnityManager()->persist( $element );
                             $count ++;
                         }
                     }
                 }
                 
-                Oforge()->DB()->getManager()->flush();
+                Oforge()->DB()->getEnityManager()->flush();
                 if ( $echo ) {
                     echo "Included " . $count . " elements. Finish processing!\n\nTo Renaming file to avoid further imports. New filename . _" . $name . ".csv\n\n";
                 }

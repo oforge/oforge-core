@@ -8,23 +8,33 @@ use Helpdesk\Services\HelpdeskMessengerService;
 use Helpdesk\Services\HelpdeskTicketService;
 use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
 
-class BackendHelpdeskMessengerController extends SecureBackendController{
+/**
+ * Class BackendHelpdeskMessengerController
+ *
+ * @package Helpdesk\Controller\Backend
+ * @EndpointClass(path="/backend/helpdesk/messenger[/{id:.*}]", name="backend_helpdesk_messenger", assetScope="Backend")
+ */
+class BackendHelpdeskMessengerController extends SecureBackendController {
+
     /**
      * @param Request $request
      * @param Response $response
-     * @param $args
+     * @param array $args
      *
      * @return Response
      * @throws ORMException
-     * @throws ServiceNotFoundException
      * @throws OptimisticLockException
+     * @throws ServiceNotFoundException
+     * @EndpointAction()
      */
-    public function indexAction(Request $request, Response $response, $args) {
+    public function indexAction(Request $request, Response $response, array $args) {
         /** @var Router $router */
         $router = Oforge()->App()->getContainer()->get('router');
         $uri = $router->pathFor('backend_helpdesk');
@@ -76,12 +86,13 @@ class BackendHelpdeskMessengerController extends SecureBackendController{
                 return $response->withRedirect($uri, 302);
             }
 
-            Oforge()->View()->assign(['messages' => $messages]);
-            Oforge()->View()->assign(['ticket' => $ticketData]);
+            Oforge()->View()->assign([
+                'messages' => $messages,
+                'ticket'   => $ticketData,
+            ]);
         } else {
             return $response->withRedirect($uri, 302);
         }
-
     }
 
     /**
@@ -90,4 +101,5 @@ class BackendHelpdeskMessengerController extends SecureBackendController{
     public function initPermissions() {
         $this->ensurePermissions('indexAction', BackendUser::class, BackendUser::ROLE_MODERATOR);
     }
+
 }
