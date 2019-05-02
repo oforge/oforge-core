@@ -15,27 +15,31 @@ use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
 use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 
+/**
+ * Class Bootstrap
+ *
+ * @package Messenger
+ */
 class Bootstrap extends AbstractBootstrap {
+
     /**
      * Bootstrap constructor.
      */
     public function __construct() {
-        $this->services = [
-            'frontend.messenger' => FrontendMessengerService::class,
+        $this->endpoints = [
+            MessengerController::class,
         ];
 
         $this->models = [
             Conversation::class,
             Message::class,
         ];
-        $this->endpoints = [
-            '/account/messages[/{id:.*}]' => [
-                'controller'  => MessengerController::class,
-                'name'        => 'frontend_account_messages',
-                'asset_scope' => 'Frontend',
-            ],
+
+        $this->services = [
+            'frontend.messenger' => FrontendMessengerService::class,
         ];
     }
+
 
     /**
      * @throws ORMException
@@ -50,11 +54,12 @@ class Bootstrap extends AbstractBootstrap {
         $accountNavigationService = Oforge()->Services()->get('frontend.user.management.account.navigation');
 
         $accountNavigationService->put([
-            "name" => "frontend_account_messages",
-            "order" => 1,
-            "icon" => "postfach",
-            "path" => "frontend_account_messages",
-            "position" => "sidebar",
+            'name'     => 'frontend_account_messages',
+            'order'    => 1,
+            'icon'     => 'postfach',
+            'path'     => 'frontend_account_messages',
+            'position' => 'sidebar',
         ]);
     }
+
 }

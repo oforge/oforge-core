@@ -36,8 +36,22 @@ namespace Oforge\Engine\Modules\Core\Abstracts;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
+/**
+ * Class AbstractTemplateManager
+ *
+ * @package Oforge\Engine\Modules\Core\Abstracts
+ */
 abstract class AbstractTemplateManager extends AbstractInitializer {
-    public abstract function render(Request $request, Response $response, $data);
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $data
+     *
+     * @return Response
+     */
+    public abstract function render(Request $request, Response $response, array $data);
+
 }
 
 

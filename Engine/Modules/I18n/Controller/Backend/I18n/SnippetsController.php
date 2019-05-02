@@ -3,6 +3,7 @@
 namespace Oforge\Engine\Modules\I18n\Controller\Backend\I18n;
 
 use Doctrine\ORM\ORMException;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
@@ -14,10 +15,9 @@ use Oforge\Engine\Modules\I18n\Services\LanguageService;
  * Class SnippetsController
  *
  * @package Oforge\Engine\Modules\I18n\Controller\Backend
+ * @EndpointClass(path="/backend/i18n/snippets", name="backend_i18n_snippets", assetScope="Backend")
  */
 class SnippetsController extends BaseCrudController {
-    /** @var string $baseEndpointName */
-    protected static $baseEndpointName = 'backend_i18n_snippets';
     /** @var string $model */
     protected $model = Snippet::class;
     /** @var array $modelProperties */
