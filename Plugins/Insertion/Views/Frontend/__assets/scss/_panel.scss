@@ -1,4 +1,10 @@
-.panel.panel--insertion {
-    background: none;
-    padding: 0;
+.panel {
+    &.panel--product {
+        padding: 0;
+        margin-top: $size-large;
+    }
+    &.panel--filter {
+        width: 100%;
+    }
 }
+

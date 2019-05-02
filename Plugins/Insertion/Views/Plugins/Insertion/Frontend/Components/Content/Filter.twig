@@ -1,0 +1,12 @@
+{% block product_filter %}
+    <div class="panel panel--filter filter filter--product">
+        <div class="tag-list">
+            {% for i in range(0, 12) %}
+                <div class="tag">
+                    <a href="#" class="close"></a>
+                    <span class="tag__text">{{ i }} Lorem</span>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock product_filter %}

@@ -2,8 +2,8 @@
 {% block content %}
     {% include '@parent/Frontend/Components/MobileNavBar.twig' with { back_link : true, nav_title: i18n('insertion', 'Insertion')} %}
     <div class="content content--insertion">
-        {% block insertion %}
-            <div class="panel panel--insertion flex">
+        {% block insertions %}
+            <div class="flex insertions">
                 {% block insertion__search %}
                     {% include 'Plugins/Insertion/Frontend/Components/Content/Search.twig' %}
                 {% endblock insertion__search %}
@@ -12,6 +12,6 @@
                     {% include 'Plugins/Insertion/Frontend/Components/Content/ProductList.twig' %}
                 {% endblock insertion__content %}
             </div>
-        {% endblock insertion %}
+        {% endblock insertions %}
     </div>
 {% endblock content %}
