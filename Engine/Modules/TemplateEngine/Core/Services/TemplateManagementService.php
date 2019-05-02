@@ -8,10 +8,14 @@
 
 namespace Oforge\Engine\Modules\TemplateEngine\Core\Services;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\TemplateNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\TemplateEngine\Core\Abstracts\AbstractTemplate;
+use Oforge\Engine\Modules\TemplateEngine\Core\Exceptions\InvalidScssVariableException;
 use Oforge\Engine\Modules\TemplateEngine\Core\Models\Template\Template;
 
 class TemplateManagementService extends AbstractDatabaseAccess {
@@ -24,7 +28,7 @@ class TemplateManagementService extends AbstractDatabaseAccess {
      * @param $name
      *
      * @throws TemplateNotFoundException
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      */
     public function activate($name) {
         /** @var $templateToActivate Template */
@@ -50,10 +54,10 @@ class TemplateManagementService extends AbstractDatabaseAccess {
     /**
      * @param $name
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
-     * @throws \Oforge\Engine\Modules\TemplateEngine\Core\Exceptions\InvalidScssVariableException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ServiceNotFoundException
+     * @throws InvalidScssVariableException
      */
     public function register($name) {
         $template = $this->repository()->findOneBy(["name" => $name]);
@@ -103,10 +107,10 @@ class TemplateManagementService extends AbstractDatabaseAccess {
     /**
      * Get the active theme, delete old cached assets, build new assets
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
-     * @throws \Oforge\Engine\Modules\TemplateEngine\Core\Exceptions\InvalidScssVariableException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ServiceNotFoundException
+     * @throws InvalidScssVariableException
      * @throws TemplateNotFoundException
      * @throws TemplateNotFoundException
      */
@@ -131,9 +135,39 @@ class TemplateManagementService extends AbstractDatabaseAccess {
     }
 
     /**
+     * Build Backend and Frontend
+     *
+     * @throws InvalidScssVariableException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ServiceNotFoundException
+     * @throws TemplateNotFoundException
+     */
+    public function buildAll() {
+        /** @var Template $template */
+        $template = $this->getActiveTemplate();
+        if ($template) {
+            /** @var TemplateAssetService $templateAssetService */
+            $templateAssetService = Oforge()->Services()->get('assets.template');
+            $templateAssetService->clear();
+
+            $className = Statics::TEMPLATE_DIR . "\\" . $template->getName() . "\\Template";
+
+            if (is_subclass_of($className, AbstractTemplate::class)) {
+                /** @var $instance AbstractTemplate */
+                $instance = new $className();
+                $instance->registerTemplateVariables();
+            }
+
+            $templateAssetService->build($template->getName(), 'Frontend');
+            $templateAssetService->build($template->getName(), 'Backend');
+        }
+    }
+
+    /**
      * @return Template
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      * @throws TemplateNotFoundException
      */
     public function getActiveTemplate() {

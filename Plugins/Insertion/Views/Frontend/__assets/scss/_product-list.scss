@@ -1,0 +1,120 @@
+.product {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    &__image {
+        flex: 1 0 60%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        .image {
+            width: 100%;
+            height: auto;
+        }
+    }
+
+    &__content {
+        flex: 1 0 100%;
+        padding: $size-large $size-medium;
+    }
+
+    &__title {
+        color: $color-primary;
+    }
+
+    &__attributes {
+        margin: $size-large 0 0;
+        padding: 0 0 $size-large 0;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+
+        &.product__attributes--main {
+            flex: 1 0 40%;
+            margin: 0;
+            padding: 0 0 0 2rem;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: space-around;
+        }
+
+        &.product__attributes--top {
+            display: none;
+        }
+
+        &.product__attributes--bottom {
+            border-bottom: 2px solid $color-secondary;
+            margin: $size-large 0;
+        }
+    }
+
+    &__attribute {
+        margin-top: $size-large;
+        min-width: 33.3333333333%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__label {
+        font-size: $font-size-6;
+        color: $color-secondary;
+    }
+
+    &__value {
+        font-size: $font-size-4;
+    }
+
+    &__meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+
+    &__number {
+        font-size: $font-size-6;
+    }
+
+    &__pricing {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+@media (min-width: 640px) {
+    .product {
+        &__image {
+            flex: 0 0 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+
+            .image {
+                max-width: 300px;
+            }
+        }
+
+        &__content {
+            display: flex;
+            flex-direction: column;
+            flex: 1 0 auto;
+            justify-content: center;
+            padding: 0 $size-large;
+        }
+
+        &__attributes {
+            &.product__attributes--main {
+                display: none;
+            }
+
+            &.product__attributes--top {
+                display: flex;
+                border-top: 2px solid $color-secondary;
+            }
+        }
+    }
+}

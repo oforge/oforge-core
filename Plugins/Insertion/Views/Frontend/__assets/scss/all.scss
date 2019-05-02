@@ -1,0 +1,29 @@
+.flex.insertions {
+    flex-direction: column-reverse;
+    flex-wrap: wrap;
+}
+
+@media (min-width: $screen-large) {
+    .flex.insertions {
+        flex-direction: row;
+        flex-wrap: nowrap;
+    }
+    .insertion {
+        &__sidebar {
+            background: $color-light;
+            width: 30rem;
+            padding: $size-medium;
+        }
+        &__content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-left: $size-large;
+            width: calc(100% - 30rem - #{$size-large});
+        }
+    }
+}
+
+@import "panel.scss";
+@import "product-list";
+@import "tag";
