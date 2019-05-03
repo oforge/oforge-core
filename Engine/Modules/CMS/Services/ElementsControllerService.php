@@ -46,6 +46,79 @@ class ElementsControllerService extends AbstractDatabaseAccess {
         return NULL;
     }
 
+    public function editPageBuilderData($post)
+    {
+        $contentTypeService     = OForge()->Services()->get("content.type.service");
+        $pageBuilderService     = OForge()->Services()->get("page.builder.service");
+        $pagesControllerService = OForge()->Services()->get("pages.controller.service");
+
+        $selectedElementId         = isset($post["cms_page_selected_element"])              && !empty($post["cms_page_selected_element"])               ? $post["cms_page_selected_element"] : false;
+        $createContentWithTypeId   = isset($post["cms_page_create_content_with_type_id"])   && $post["cms_page_create_content_with_type_id"] > 0        ? $post["cms_page_create_content_with_type_id"]   : 0;
+        $createContentAtOrderIndex = isset($post["cms_page_create_content_at_order_index"]) && $post["cms_page_create_content_at_order_index"] > 0      ? $post["cms_page_create_content_at_order_index"] : 0;
+        $deleteContentWithId       = isset($post["cms_page_delete_content_with_id"])        && !empty($post["cms_page_delete_content_with_id"])         ? $post["cms_page_delete_content_with_id"]        : 0;
+        $deleteContentAtOrderIndex = isset($post["cms_page_delete_content_at_order_index"]) && !empty($post["cms_page_delete_content_at_order_index"])  ? $post["cms_page_delete_content_at_order_index"] : 0;
+        $selectedAction            = isset($post["cms_page_selected_action"])               && !empty($post["cms_page_selected_action"])                ? $post["cms_page_selected_action"]  : false;
+
+        $data = [];
+        $data["__selectedElementId"] = $selectedElementId; // TODO: just used as development info
+        $data["__createContentWithTypeId"] = $createContentWithTypeId; // TODO: just used as development info
+        $data["__createContentAtOrderIndex"] = $createContentAtOrderIndex; // TODO: just used as development info
+        $data["__deleteContentWithId"] = $deleteContentWithId; // TODO: just used as development info
+        $data["__deleteContentAtOrderIndex"] = $deleteContentAtOrderIndex; // TODO: just used as development info
+        $data["__selectedAction"] = $selectedAction; // TODO: just used as development info
+
+        switch ($selectedAction) {
+            case "create":
+                // create new content type in selected container
+                $newContentId = $pagesControllerService->createContentElement(false, $selectedElementId, $createContentWithTypeId, $createContentAtOrderIndex);
+
+                // reload content data from database
+                $post = [];
+                $post["cms_edit_element_action"] = "edit";
+                $post["cms_edit_element_id"] = $newContentId;
+                $post["cms_form"] = "cms_element_jstree_form";
+
+                return $this->editElementData($post);
+            case "delete":
+                // delete content in selected container
+                $pagesControllerService->deleteContentElement(false, $selectedElementId, $deleteContentWithId, $deleteContentAtOrderIndex);
+
+                // reload content data from database
+                $post = [];
+                $post["cms_edit_element_action"] = "edit";
+                $post["cms_edit_element_id"] = $selectedElementId;
+                $post["cms_form"] = "cms_element_jstree_form";
+
+                return $this->editElementData($post);
+            case "submit":
+                $selectedElementId = isset($post["cms_page_selected_element"]) && !empty($post["cms_page_selected_element"]) ? $post["cms_page_selected_element"] : false;
+
+                if ($selectedElementId > 0) {
+                    $contentEntity = $this->repository('content')->findOneBy(["id" => $selectedElementId]);
+
+                    $selectedElementTypeId = false;
+    
+                    if ($contentEntity) {
+                        $selectedElementTypeId = $contentEntity->getType()->getId();
+                    }
+    
+                    if ($selectedElementTypeId) {
+                        // persist new content element data to database
+                        $contentTypeService->setContentDataArray($selectedElementId, $selectedElementTypeId, $post);
+
+                        // reload content data from database
+                        $post = [];
+                        $post["cms_edit_element_action"] = "edit";
+                        $post["cms_edit_element_id"] = $selectedElementId;
+                        $post["cms_form"] = "cms_element_jstree_form";
+        
+                        return $this->editElementData($post);
+                    }
+                }
+                break;
+        }
+    }
+
     private function resetContentElementContentParent($contentParentEntity)
     {
         $contentEntities = $this->repository('content')->findBy(["parent" => $contentParentEntity]);
@@ -175,7 +248,9 @@ class ElementsControllerService extends AbstractDatabaseAccess {
             $contentId = $contentEntity->getId();
         }
 
-        return $this->getElementData($post);
+        unset($post);
+
+        return $this->editElementData($post);
     }
 
     public function moveElementData($post)
@@ -190,35 +265,27 @@ class ElementsControllerService extends AbstractDatabaseAccess {
             $this->moveContentElement($selectedElementId, $selectedElementParentId);
         }
 
-        return $this->getElementData($post);
+        unset($post);
+
+        return $this->editElementData($post);
     }
 
     public function editElementData($post)
     {
-        switch ($post["cms_form"])
-        {
-            case "cms_element_jstree_form":
-                $selectedElementId          = isset($post["cms_edit_element_id"])          && !empty($post["cms_edit_element_id"])          ? $post["cms_edit_element_id"]          : false;
-                $selectedElementParentId    = isset($post["cms_edit_element_parent_id"])   && !empty($post["cms_edit_element_parent_id"])   ? $post["cms_edit_element_parent_id"]   : false;
-                $selectedElementDescription = isset($post["cms_edit_element_description"]) && !empty($post["cms_edit_element_description"]) ? $post["cms_edit_element_description"] : false;
-                $selectedAction             = isset($post["cms_edit_element_action"])      && !empty($post["cms_edit_element_action"])      ? $post["cms_edit_element_action"]      : false;
+        $elementTreeService = OForge()->Services()->get("element.tree.service");
+        $contentTypeService = OForge()->Services()->get("content.type.service");
 
-                if ($selectedAction === "edit" && $selectedElementId > 0)
-                {
-                    $post["cms_page_selected_element"] = $selectedElementId;
-                }
-                break;
-            case "cms_page_builder_form":
-                $selectedElementId          = isset($post["cms_page_selected_element"]) && !empty($post["cms_page_selected_element"]) ? $post["cms_page_selected_element"] : false;
-                $selectedAction             = isset($post["cms_page_selected_action"])  && !empty($post["cms_page_selected_action"])  ? $post["cms_page_selected_action"]  : false;
-                break;
+        $selectedElementId          = isset($post["cms_edit_element_id"])          && !empty($post["cms_edit_element_id"])          ? $post["cms_edit_element_id"]          : false;
+        $selectedElementParentId    = isset($post["cms_edit_element_parent_id"])   && !empty($post["cms_edit_element_parent_id"])   ? $post["cms_edit_element_parent_id"]   : false;
+        $selectedElementDescription = isset($post["cms_edit_element_description"]) && !empty($post["cms_edit_element_description"]) ? $post["cms_edit_element_description"] : false;
+        $selectedAction             = isset($post["cms_edit_element_action"])      && !empty($post["cms_edit_element_action"])      ? $post["cms_edit_element_action"]      : false;
+
+        if ($selectedAction === "edit" && $selectedElementId > 0)
+        {
+            $post["cms_page_selected_element"] = $selectedElementId;
         }
 
         $data = [];
-        $data["__selectedElementId"] = $selectedElementId; // TODO: just used as development info
-        $data["__selectedElementParentId"] = $selectedElementParentId; // TODO: just used as development info
-        $data["__selectedElementDescription"] = $selectedElementDescription; // TODO: just used as development info
-        $data["__selectedAction"] = $selectedAction; // TODO: just used as development info
 
         switch($selectedAction)
         {
@@ -278,57 +345,19 @@ class ElementsControllerService extends AbstractDatabaseAccess {
                 }
                 break;
             case 'edit':
-                $data = array_merge($data, $this->getPageContentArrayForContentElement($selectedElementId));
-                break;
-            case "submit":
-                $contentTypeService = OForge()->Services()->get("content.type.service");
-                $pageBuilderService = OForge()->Services()->get("page.builder.service");
-                
-                $selectedElementId = isset($post["cms_page_selected_element"]) && !empty($post["cms_page_selected_element"]) ? $post["cms_page_selected_element"] : false;
-
-                if ($selectedElementId > 0) {
-                    $contentEntity = $this->repository('content')->findOneBy(["id" => $selectedElementId]);
-
-                    $selectedElementTypeId = false;
-    
-                    if ($contentEntity) {
-                        $selectedElementTypeId = $contentEntity->getType()->getId();
-                    }
-    
-                    if ($selectedElementTypeId) {
-                        // persist new content element data to database
-                        $contentTypeService->setContentDataArray($selectedElementId, $selectedElementTypeId, $post);
-
-                        // reload content data from database
-                        $post = [];
-                        $post["cms_edit_element_action"] = "edit";
-                        $post["cms_edit_element_id"] = $selectedElementId;
-                        $post["cms_form"] = "cms_element_jstree_form";
-        
-                        return $this->editElementData($post);
-                    }
-                }
+                $data = $this->getPageContentArrayForContentElement($selectedElementId);
                 break;
         }
 
-        $data = array_merge($data, $this->getElementData($post));
+        $data["post"] = $post; // TODO: just used as development info
+        $data["__selectedElementId"] = $selectedElementId; // TODO: just used as development info
+        $data["__selectedElementParentId"] = $selectedElementParentId; // TODO: just used as development info
+        $data["__selectedElementDescription"] = $selectedElementDescription; // TODO: just used as development info
+        $data["__selectedAction"] = $selectedAction; // TODO: just used as development info
 
-        //return $this->getElementData();
-        return $data;
-    }
+        $data["js"]                = ["cms_elements_controller_jstree_config" => $elementTreeService->generateJsTreeConfigJSON()];
+        $data["contentTypeGroups"] = $contentTypeService->getContentTypeGroupArray();
 
-    public function getElementData($post)
-    {
-        $elementTreeService = OForge()->Services()->get("element.tree.service");
-        $contentTypeService = OForge()->Services()->get("content.type.service");
-        
-        $data = [
-            "js"                => ["cms_elements_controller_jstree_config" => $elementTreeService->generateJsTreeConfigJSON()],
-            "contentTypeGroups" => $contentTypeService->getContentTypeGroupArray(),
-            "post"              => $post,
-            "activatePageBuilder" => true
-        ];
-        
         return $data;
     }
 }
