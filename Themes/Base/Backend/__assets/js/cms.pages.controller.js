@@ -177,18 +177,6 @@ var cmsPagesControllerModule = (function() {
 					$('#cms_content_type_editor_wrapper').height(calculatedHeight - $('#cms_content_type_editor_wrapper').position().top);
 				}
 			}
-		},
-		deleteContentType : function (event, element) {
-			if (event.stopPropagation) {
-				event.stopPropagation();
-			} else {
-				event.cancelBubble = true;
-			}
-		
-			$('#cms_page_delete_content_with_id').val($(element).parent().attr('data-pb-id'));
-			$('#cms_page_delete_content_at_order_index').val($(element).parent().attr('data-pb-order'));
-			$('#cms_page_selected_action').val('delete');
-			$('#cms_page_builder_form').submit();
 		}
 	}
 });

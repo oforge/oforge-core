@@ -6,6 +6,46 @@ var cmsElementsControllerModule = (function() {
 		cecm.resizeContentEditor();
 	});
 
+	// mark and select selectable elements in page builder
+	$('[data-pb-id]').each(
+		function() {
+			var selectedElement = '^(' + $(this).attr('data-pb-se') + '\-)';
+			var regularExpression = new RegExp(selectedElement);
+			
+			if (
+				$(this).attr('data-pb-id') != $(this).attr('data-pb-se')
+				&& $(this).attr('data-pb-id').startsWith($(this).attr('data-pb-se'))
+				&& $(this).attr('data-pb-id').replace(regularExpression, '').indexOf('-') === -1
+			) {
+				// add delete button to element
+				$(this).append('<div class="content-type-delete-button" onclick="deleteContentType(event, this)"><img src="/Themes/Base/Backend/__assets/img/pagebuilder/delete.svg"></div>');
+
+				// mark selectable elements in page builder on mouse hover
+				$(this).hover(
+					function() {
+						$(this).addClass("cms-page-builder-selected-element");
+					},
+					function() {
+						$(this).removeClass("cms-page-builder-selected-element");
+					}		
+				);
+						
+				// select element in page builder on mouse click
+				$(this).click(
+					function() {
+						var contentElements = $(this).attr('data-pb-id').split('-');
+
+						if (contentElements && contentElements.length > 0) {
+							$('#cms_edit_element_id').val(contentElements[contentElements.length - 1]);
+							$('#cms_edit_element_action').val('edit');
+							$('#cms_element_jstree_form').submit();
+						}
+					}
+				);
+			}
+		}
+	);
+	
 	// jsTree callback functions
 	$('#cms_elements_controller_jstree').on('loaded.jstree', function (event, data) {
 		$('#cms_elements_controller_jstree').jstree('open_all');
