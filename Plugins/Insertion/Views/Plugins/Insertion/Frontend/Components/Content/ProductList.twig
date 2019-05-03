@@ -3,6 +3,10 @@
         {% block product_list__filter %}
             {% include 'Plugins/Insertion/Frontend/Components/Content/Filter.twig' %}
         {% endblock product_list__filter %}
+
+        {% block product_list__sort %}
+            {% include 'Plugins/Insertion/Frontend/Components/Content/Sort.twig' %}
+        {% endblock product_list__sort %}
         <div class="product-list">
             {% for i in range(0, 12) %}
                 <div class="panel panel--product product">
