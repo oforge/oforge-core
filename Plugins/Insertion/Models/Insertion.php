@@ -24,6 +24,7 @@ class Insertion extends AbstractModel {
      *
      * @var int
      * @ORM\Column(name="insertion_type_id", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="InsertionsType")
      */
     private $insertion_type_id;
 

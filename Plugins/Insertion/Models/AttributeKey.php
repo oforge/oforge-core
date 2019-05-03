@@ -10,7 +10,7 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
  * @ORM\Table(name="oforge_attribute_key")
  * @ORM\Entity
  */
-class Attribute_Key extends AbstractModel {
+class AttributeKey extends AbstractModel {
     /**
      * @var int
      * @ORM\Column(name="id", type="integer", nullable=false)
@@ -30,7 +30,6 @@ class Attribute_Key extends AbstractModel {
      * @ORM\Column(name="attribute_key_type", type="string", nullable=false)
      */
     private $type;
-
 
     /**
      * @ORM\ManyToMany(targetEntity="Attribute_Value")

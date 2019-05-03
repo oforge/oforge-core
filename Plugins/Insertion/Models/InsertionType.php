@@ -10,7 +10,7 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
  * @ORM\Table(name="oforge_insertion_type")
  * @ORM\Entity
  */
-class Insertion_Type extends AbstractModel {
+class InsertionType extends AbstractModel {
     /**
      * @var int
      * @ORM\Column(name="id", type="integer", nullable=false)
@@ -26,17 +26,13 @@ class Insertion_Type extends AbstractModel {
     private $name;
 
     /**
-     * @ORM\OneToOne(targetEntity="Insertion_Type")
+     * @ORM\OneToOne(targetEntity="InsertionType")
      * @ORM\JoinColumn(name="insertion_parent_id", referencedColumnName="id", nullable=true)
      */
     private $parent;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Attribute_Key")
-     * @ORM\JoinTable(name="oforge_insertion_type_attribute",
-     *                joinColumns={@ORM\JoinColumn(name="insertion_type_id", referencedColumnName="id")},
-     *                inverseJoinColumns={@ORM\JoinColumn(name="attribute_key_id", referencedColumnName="id")}
-     * )
+     * @ORM\OneToMany(targetEntity="InsertionTypeAttribute", mappedBy="$insertionTypeId")
      */
     private $attributes;
 
@@ -92,7 +88,4 @@ class Insertion_Type extends AbstractModel {
     public function setAttributes($attributes) : void {
         $this->attributes = $attributes;
     }
-
-
-
 }
