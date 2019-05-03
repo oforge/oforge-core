@@ -2,7 +2,7 @@
 
 namespace Insertion;
 
-use Insertion\Controller\TestController;
+use Insertion\Controller\Frontend\InsertionController;
 use Insertion\Models\Attribute_Key;
 use Insertion\Models\Attribute_Value;
 use Insertion\Models\Insertion;
@@ -13,6 +13,8 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 class Bootstrap extends AbstractBootstrap {
 
     public function __construct() {
+        $this->endpoints = [
+            InsertionController::class
+        ];
     }
-
 }
