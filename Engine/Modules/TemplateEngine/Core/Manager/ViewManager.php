@@ -51,6 +51,7 @@ class ViewManager extends AbstractViewManager {
      * @return ViewManager
      */
     public function assign($data) {
+        $data           = ArrayHelper::dotToNested($data);
         $this->viewData = ArrayHelper::mergeRecursive($this->viewData, $data);
 
         return $this;
@@ -67,22 +68,26 @@ class ViewManager extends AbstractViewManager {
     }
 
     /**
-     * Get a specific key value from the viewData
+     * Get a specific key value from the viewData or $default if data with key does not exist.
      *
      * @param string $key
+     * @param mixed $default
      *
-     * @return int
+     * @return mixed|null
      */
-    public function get(string $key) {
-        return key_exists($key, $this->viewData) ? $this->viewData[$key] : null;
+    public function get(string $key, $default = null) {
+        return ArrayHelper::dotGet($this->viewData, $key, $default);
     }
 
     /**
+     * Exist non empty value with key?
+     *
      * @param string $key
      *
      * @return bool
      */
-    public function has(string $key) {
+    public function has(string $key) : bool {
         return isset($this->viewData[$key]) && !empty($this->viewData[$key]);
     }
+
 }
