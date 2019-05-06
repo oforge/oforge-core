@@ -2,6 +2,13 @@
     flex-direction: column-reverse;
     flex-wrap: wrap;
 }
+
+.insertion__sidebar {
+    background: $color-light;
+    padding: $size-medium;
+    margin-top: $size-large;
+}
+
 .insertion__content {
     width: 100%;
 }
@@ -13,9 +20,8 @@
     }
     .insertion {
         &__sidebar {
-            background: $color-light;
+            margin-top: 0;
             width: 30rem;
-            padding: $size-medium;
         }
         &__content {
             display: flex;
@@ -27,6 +33,6 @@
     }
 }
 
-@import "panel.scss";
+@import "panel";
 @import "product-list";
 @import "tag";

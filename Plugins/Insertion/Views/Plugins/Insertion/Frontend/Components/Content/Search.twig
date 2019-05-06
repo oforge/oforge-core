@@ -1,5 +1,58 @@
 {% block insertion_search %}
     <div class="insertion__sidebar">
-        <h1>sidebar</h1>
+        <form class="form form--search-filter"
+              action="#"
+              method="post">
+            <h3 class="form__title">{{ i18n('adjust_search', 'Adjust your search') }}</h3>
+            <div class="form-controls">
+                <div class="form__control">
+                        <label for="search_key1"
+                               class="form__label">Key1
+                        </label>
+                    <select name="search_key1"
+                            id="search_key1"
+                            class="form__input form__input--select">
+                        <option value="#">Value</option>
+                    </select>
+                </div>
+
+                <div class="form__control">
+                    <label for="search_key2"
+                           class="form__label">Key2
+                    </label>
+                    <select name="search_key2"
+                            id="search_key2"
+                            class="form__input form__input--select">
+                        <option value="#">Value</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-controls">
+                <div class="form__control">
+                    <label for="search_key3" class="form__label">
+                        Key3
+                    </label>
+                    <div class="range-slider">
+                        <input id="search_key3"
+                               name="search_key3"
+                               type="range"
+                               multiple
+                               value="10,80" />
+                    </div>
+                </div>
+
+                <div class="form__control flex flex--row flex--center flex--between">
+                    <input type="text"
+                           class="form__input form__input--with-label"
+                           id="range-from"
+                           name="range-from">
+                    <input type="text"
+                           class="form__input form__input--with-label"
+                           id="range-from"
+                           name="range-from">
+                </div>
+            </div>
+        </form>
     </div>
 {% endblock insertion_search %}
