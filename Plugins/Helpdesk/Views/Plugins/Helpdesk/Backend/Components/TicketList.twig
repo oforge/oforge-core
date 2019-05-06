@@ -1,0 +1,63 @@
+{% block helpdesk_list %}
+    {% if content.ticketData|length < 1 %}
+        <p class="text-center">
+            {{ i18n('backend_helpdesk_no_tickets', 'No open Tickets avaiable') }}
+        </p>
+    {% else %}
+        <div class="table-responsive mailbox-messages">
+            <table class="table table-hover table-striped">
+                <thead>
+                <tr>
+                    <td>
+                        {{ i18n('user', 'User') }}
+                    </td>
+                    <td>
+                        {{ i18n('backend_helpdesk_issue', 'Issue') }}
+                    </td>
+                    <td>
+                        {{ i18n('backend_helpdesk_status', 'Status') }}
+                    </td>
+                    <td>
+                        {{ i18n('backend_helpdesk_ticket_time', 'Created at') }}
+                    </td>
+                </tr>
+                </thead>
+                <tbody>
+                {% for ticket in content.ticketData %}
+                    <tr>
+                        <td class="mailbox-name">
+                            <a href="{{ url('backend_helpdesk_messenger', {'id': ticket.id}) }}">
+                                {{ ticket.email }}
+                            </a>
+                        </td>
+                        <td class="mailbox-subject">
+                            <a href="{{ url('backend_helpdesk_messenger', {'id': ticket.id}) }}">
+                                <b>{{ ticket.issueType }}</b> - {{ ticket.title }}
+                            </a>
+                        </td>
+                        <td class="mailbox-star">
+                            <a href="{{ url('backend_helpdesk_messenger', {'id': ticket.id}) }}">
+                                <i class="fa fa-circle
+                            {% if ticket.status is same as("closed") %}
+                                text-green
+                            {% elseif ticket.status is same as("waiting") %}
+                                text-yellow
+                            {% elseif ticket.status is same as("open") %}
+                                text-red
+                            {% endif %}">
+                                    {{ ticket.status }}
+                                </i>
+                            </a>
+                        </td>
+                        <td class="mailbox-date">
+                            <a href="{{ url('backend_helpdesk_messenger', {'id': ticket.id}) }}">
+                            {{ ticket.timestamp|date }}
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+{% endblock helpdesk_list %}
