@@ -22,6 +22,13 @@ class InsertionController extends SecureFrontendController {
      * @EndpointAction()
      */
     public function indexAction(Request $request, Response $response) {
+    }
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @EndpointAction()
+     */
+    public function viewAction(Request $request, Response $response) {
     }
 }
