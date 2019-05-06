@@ -2,6 +2,9 @@
     flex-direction: column-reverse;
     flex-wrap: wrap;
 }
+.insertion__content {
+    width: 100%;
+}
 
 @media (min-width: $screen-large) {
     .flex.insertions {
