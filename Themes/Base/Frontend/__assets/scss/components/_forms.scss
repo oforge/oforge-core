@@ -27,6 +27,9 @@
 .form__control + .form__control {
     margin-top: $size-large;
 }
+.flex--row > .form__control + .form__control {
+    margin-top: 0;
+}
 
 .form__label {
     cursor: pointer;
@@ -34,6 +37,31 @@
 
     &.form__label--checkbox {
         max-width: calc(100% - 4rem);
+    }
+
+    &.form__label--surround {
+
+        background: $color-light;
+        border: 1px solid $color-primary;
+        border-radius: $size-medium;
+        padding: $size-medium;
+        height: 3.6rem;
+        font-size: $font-size-6;
+        width: 100%;
+        cursor: pointer;
+        color: $color-primary;
+        display: inline-flex;
+        align-items: center;
+
+        .form__input {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            border: none;
+            border-radius: 0;
+            height: auto;
+            margin: 0 0 0 $size-large;
+        }
     }
 }
 
@@ -135,7 +163,7 @@
         border: none;
         background: $color-primary;
         height: .6rem;
-        border-top: 1px solid $color-primary;
+        border-top: 2px solid $color-primary;
     }
 
     input[type="range"].multirange.ghost {
