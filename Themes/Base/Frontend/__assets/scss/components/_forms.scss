@@ -14,13 +14,31 @@
 
 .form-controls + .form-controls {
     margin-top: $size-large;
+
+    &.form-controls--with-separator {
+        margin-top: $size-large;
+        padding-top: $size-large;
+        border-top: 2px solid $color-secondary;
+    }
 }
 
 .form__control {
     display: block;
+    width: 100%;
 
     &.flex {
         display: flex;
+    }
+
+    &.half {
+        margin-top: $size-large;
+        width: calc(50% - #{$size-large});
+    }
+
+    &.form__input {
+        .form__label {
+            font-size: $font-size-6;
+        }
     }
 }
 
@@ -29,6 +47,10 @@
 }
 .flex--row > .form__control + .form__control {
     margin-top: 0;
+
+    &.space-up {
+        margin-top: $size-large;
+    }
 }
 
 .form__label {
@@ -37,31 +59,6 @@
 
     &.form__label--checkbox {
         max-width: calc(100% - 4rem);
-    }
-
-    &.form__label--surround {
-
-        background: $color-light;
-        border: 1px solid $color-primary;
-        border-radius: $size-medium;
-        padding: $size-medium;
-        height: 3.6rem;
-        font-size: $font-size-6;
-        width: 100%;
-        cursor: pointer;
-        color: $color-primary;
-        display: inline-flex;
-        align-items: center;
-
-        .form__input {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            border: none;
-            border-radius: 0;
-            height: auto;
-            margin: 0 0 0 $size-large;
-        }
     }
 }
 
@@ -74,6 +71,8 @@
     width: 100%;
     cursor: pointer;
     color: $color-primary;
+    -webkit-appearance: none;
+    -moz-appearance: none;
 
     &::placeholder {
         color: $color-primary;
@@ -81,13 +80,20 @@
 
     &.form__input--checkbox {
         width: 3.6rem;
-        -webkit-appearance: none;
-        -moz-appearance: none;
 
         &:checked {
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%233c3c3b' viewBox='0 0 24 24'%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-size: contain;
+        }
+    }
+
+    &.form__input--checkbox-small {
+        width: 2rem;
+        height: 2rem;
+
+        & + label {
+            font-size: $font-size-6;
         }
     }
 
@@ -114,6 +120,40 @@
             border-radius: 50%;
             background: $color-light;
             border-radius: 1px solid $color-primary;
+        }
+    }
+
+    &.form__input--no-input {
+        border: none;
+        height: 100%;
+        text-align: right;
+    }
+
+    &.form__input--select {
+        position: relative;
+        padding: 0;
+
+        &:after {
+            content: ' ';
+            position: absolute;
+            display: block;
+            width: 1.2rem;
+            height: .8rem;
+
+            border-style: solid;
+            border-width: .8rem .6rem 0 .6rem;
+            border-color: $color-primary transparent transparent transparent;
+            right: $size-small;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 0;
+        }
+        select {
+            background: transparent;
+            padding: $size-small;
+            position: relative;
+            text-align: left;
+            z-index: 1;
         }
     }
 
