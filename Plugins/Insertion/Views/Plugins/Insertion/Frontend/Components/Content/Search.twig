@@ -4,31 +4,42 @@
               action="#"
               method="post">
             <h3 class="form__title">{{ i18n('adjust_search', 'Adjust your search') }}</h3>
+
             <div class="form-controls">
                 <div class="form__control">
-                        <label for="search_key1"
-                               class="form__label">Key1
-                        </label>
-                    <select name="search_key1"
-                            id="search_key1"
-                            class="form__input form__input--select">
-                        <option value="#">Value</option>
-                    </select>
+                    <label for="search_key1"
+                           class="form__label">Key1
+                    </label>
+                    <div class="form__input form__input--select">
+                        <select name="search_key1"
+                                id="search_key1"
+                                class="form__input form__input--no-input">
+                            <option value="#">Foo</option>
+                            <option value="#">Bar</option>
+                            <option value="#">Crux</option>
+                            <option value="#">Blub</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="form__control">
                     <label for="search_key2"
                            class="form__label">Key2
                     </label>
-                    <select name="search_key2"
-                            id="search_key2"
-                            class="form__input form__input--select">
-                        <option value="#">Value</option>
-                    </select>
+                    <div class="form__input form__input--select">
+                        <select name="search_key2"
+                                id="search_key2"
+                                class="form__input form__input--no-input">
+                            <option value="#">Foo</option>
+                            <option value="#">Bar</option>
+                            <option value="#">Crux</option>
+                            <option value="#">Blub</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
-            <div class="form-controls">
+            <div class="form-controls form-controls--with-separator flex flex--row flex--wrap flex--center flex--between">
                 <div class="form__control">
                     <label for="search_key3" class="form__label">
                         Key3
@@ -42,26 +53,39 @@
                     </div>
                 </div>
 
-                <div class="flex flex--row flex--center flex--between">
-                    <div class="form__control">
-                        <label for="range-from" class="form__label form__label--surround">
-                            From
-                            <input type="text"
-                                   class="form__input form__input--with-label"
-                                   id="range-from"
-                                   name="range-from">
-                        </label>
-                    </div>
-                    <div class="form__control">
-                        <label for="range-to" class="form__label form__label--surround">
-                            From
-                            <input type="text"
-                                   class="form__input form__input--with-label"
-                                   id="range-to"
-                                   name="range-to">
-                        </label>
-                    </div>
+                <div class="form__control form__input half flex flex--row flex--center space-up">
+                    <label for="range-from" class="form__label">
+                        From
+                    </label>
+                    <input type="text"
+                           class="form__input form__input--no-input"
+                           id="range-from"
+                           name="range-from"
+                           size="1">
                 </div>
+
+                <div class="form__control form__input half flex flex--row flex--center space-up">
+                    <label for="range-to" class="form__label">
+                        To
+                    </label>
+                    <input type="text"
+                           class="form__input form__input--no-input"
+                           id="range-to"
+                           name="range-to"
+                           size="1">
+                </div>
+
+                <div class="form__control flex flex--row flex--center space-up">
+                    <input type="checkbox"
+                           id="key4"
+                           name="key4"
+                           class="form__input form__input--checkbox form__input--checkbox-small">
+                    <label for="key4" class="space-left">Key4</label>
+                </div>
+            </div>
+
+            <div class="form-controls">
+
             </div>
         </form>
     </div>
