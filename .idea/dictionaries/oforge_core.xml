@@ -1,9 +1,10 @@
 <component name="ProjectDictionaryState">
-    <dictionary name="oforge-core">
-        <words>
-            <w>cronjob</w>
-            <w>cronjobs</w>
-            <w>oforge</w>
-        </words>
-    </dictionary>
+  <dictionary name="oforge-core">
+    <words>
+      <w>cronjob</w>
+      <w>cronjobs</w>
+      <w>helpdesk</w>
+      <w>oforge</w>
+    </words>
+  </dictionary>
 </component>
