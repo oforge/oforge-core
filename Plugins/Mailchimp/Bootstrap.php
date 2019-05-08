@@ -2,8 +2,17 @@
 
 namespace Mailchimp;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use FrontendUserManagement\Services\AccountNavigationService;
 use Mailchimp\Controller\Frontend\NewsletterSubscriptionController;
+use Mailchimp\Controller\Frontend\AccountNewsletterController;
 use Mailchimp\Services\MailchimpNewsletterService;
+use Mailchimp\Views\Plugins\Mailchimp\Models\UserNewsletter;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistsException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
+use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 
@@ -12,24 +21,35 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
  *
  * @package Mailchimp
  */
-class Bootstrap extends AbstractBootstrap {
+class Bootstrap extends AbstractBootstrap
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->endpoints = [
             NewsletterSubscriptionController::class,
+            AccountNewsletterController::class,
         ];
 
         $this->services = [
             'mailchimp.newsletter' => MailchimpNewsletterService::class,
         ];
+
+        $this->dependencies = [
+            \FrontendUserManagement\Bootstrap::class,
+        ];
+
+        $this->models = [
+            UserNewsletter::class,
+        ];
     }
 
     /**
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ConfigElementAlreadyExistsException
+     * @throws ConfigOptionKeyNotExistsException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ServiceNotFoundException
      */
     public function install()
     {
@@ -45,7 +65,7 @@ class Bootstrap extends AbstractBootstrap {
             "type" => "string",
             "required" => false,
             "default" => "https://{dc}.api.mailchimp.com/3.0",
-            "group" => "mailchimp"
+            "group" => "Mailchimp"
         ]);
         $configService->update([
             "name" => "mailchimp_username",
@@ -53,7 +73,7 @@ class Bootstrap extends AbstractBootstrap {
             "type" => "string",
             "required" => false,
             "default" => "",
-            "group" => "mailchimp"
+            "group" => "Mailchimp"
         ]);
         $configService->update([
             "name" => "mailchimp_api_key",
@@ -61,7 +81,7 @@ class Bootstrap extends AbstractBootstrap {
             "type" => "string",
             "required" => true,
             "default" => "",
-            "group" => "mailchimp"
+            "group" => "Mailchimp"
         ]);
 
         $configService->update([
@@ -70,7 +90,7 @@ class Bootstrap extends AbstractBootstrap {
             "type" => "string",
             "required" => true,
             "default" => "",
-            "group" => "mailchimp"
+            "group" => "Mailchimp"
         ]);
         $configService->update([
             "name" => "mailchimp_list_id",
@@ -78,7 +98,29 @@ class Bootstrap extends AbstractBootstrap {
             "type" => "string",
             "required" => true,
             "default" => "",
-            "group" => "mailchimp"
+            "group" => "Mailchimp"
+        ]);
+    }
+
+    /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ConfigElementAlreadyExistsException
+     * @throws ConfigOptionKeyNotExistsException
+     * @throws ParentNotFoundException
+     * @throws ServiceNotFoundException
+     */
+    public function activate()
+    {
+        /** @var AccountNavigationService $accountNavigationService */
+        $accountNavigationService = Oforge()->Services()->get('frontend.user.management.account.navigation');
+
+        $accountNavigationService->put([
+            'name' => 'frontend_account_newsletter',
+            'order' => 1,
+            'icon' => 'postfach',
+            'path' => 'frontend_account_newsletter',
+            'position' => 'sidebar',
         ]);
     }
 }

@@ -2,9 +2,12 @@
 
 namespace Mailchimp\Services;
 
-use FrontendUserManagement\Models\User;
+use Mailchimp\Views\Plugins\Mailchimp\Models\UserNewsletter;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\I18n\Helper\I18N;
+use Doctrine\ORM\ORMException;
+use Doctrine\ORM\OptimisticLockException;
 
 class MailchimpNewsletterService extends AbstractDatabaseAccess
 {
@@ -28,7 +31,7 @@ class MailchimpNewsletterService extends AbstractDatabaseAccess
      */
     public function __construct()
     {
-        parent::__construct(['default' => User::class]);
+        parent::__construct(['default' => UserNewsletter::class]);
 
         $this->configService = $configService = Oforge()->Services()->get("config");
         $this->apiraven = Oforge()->Services()->get('apiraven');
@@ -36,12 +39,16 @@ class MailchimpNewsletterService extends AbstractDatabaseAccess
 
     /**
      * @param string $email_address
-     * @throws ServiceNotFoundException
+     * @param int|null $userId
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function addListMember(string $email_address)
+    public function addListMember(string $email_address, int $userId = null)
     {
         $this->updateParams();
-        $mailchimpUri = $this->mailchimpUri . '/lists/' . $this->listId;
+        $emailMd5 = md5(strtolower($email_address));
+
+        $mailchimpUri = $this->mailchimpUri . '/lists/' . $this->listId . '/members';
 
         $this->apiraven->setApi($mailchimpUri, $this->userName, $this->apiKey);
 
@@ -50,19 +57,25 @@ class MailchimpNewsletterService extends AbstractDatabaseAccess
             'status' => 'pending',
         ];
 
-        $result = $this->apiraven->post('members', $data);
+        $result = $this->apiraven->put($emailMd5, $data);
 
         if ($result != false) {
-            Oforge()->View()->addFlashMessage('success', 'You are subscribed successfully!');
+            if ($userId != null) {
+                $this->updateSubscriberStatus($userId, true);
+            }
+            Oforge()->View()->Flash()->addMessage('success', I18N::translate('subscribe_success', 'Du wurdest erfolgreich zum Newsletter angemeldet!'));
         } else {
-            Oforge()->View()->addFlashMessage('warning', 'Something went wrong...');
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('subscribe_failure', 'Ups, da ist wohl was schief gelaufen...'));
         }
     }
 
     /**
      * @param string $email_address
+     * @param int|null $userId
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function removeListMember(string $email_address)
+    public function removeListMember(string $email_address, int $userId = null)
     {
         $this->updateParams();
         $emailMd5 = md5(strtolower($email_address));
@@ -77,11 +90,32 @@ class MailchimpNewsletterService extends AbstractDatabaseAccess
         ];
 
         $result = $this->apiraven->put($emailMd5, $data);
-        if ($result != '200') {
-            Oforge()->View()->addFlashMessage('success', 'If your email was known to us you are now unsubscribed successfully!');
+        if ($result != false) {
+            if ($userId != null) {
+                $this->updateSubscriberStatus($userId, false);
+            }
+            Oforge()->View()->Flash()->addMessage('success', I18N::translate('unsubscribe_success', 'Du wurdest erfolgreich vom Newsletter abgemeldet!'));
         } else if ($result == false) {
-            Oforge()->View()->addFlashMessage('warning', 'Something went wrong...');
+            Oforge()->View()->Flash()->addMessage('warning', 'unsubscribe_failure', 'Ups, da ist wohl was schief gelaufen...');
         }
+    }
+
+
+    /**
+     * @param int $user_id
+     * @return boolean isSubscribed
+     * @throws ORMException
+     */
+    public function isSubscribed(int $user_id)
+    {
+        /** @var UserNewsletter $user */
+        $repository = $this->repository();
+        $user = $repository->findOneBy(['userId' => $user_id]);
+        if ($user === null) {
+            $this->updateSubscriberStatus($user_id, false);
+        }
+        $user = $repository->findOneBy(['userId' => $user_id]);
+        return $user->isSubscribed();
     }
 
     protected function updateParams()
@@ -97,13 +131,31 @@ class MailchimpNewsletterService extends AbstractDatabaseAccess
     /**
      * @param string $api_key
      * @param string $dataCenter
-     * @return string
+     * @return string $mailChimpUrl
      */
     protected function constructMailchimpUri(string $api_key, string $dataCenter)
     {
         $mailchimpUri = str_replace("{dc}", $dataCenter, $this->mailchimpUri);
         return $mailchimpUri;
     }
+
+    /**
+     * @param int $user_id
+     * @param bool $subscribed
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    protected function updateSubscriberStatus(int $user_id, bool $subscribed)
+    {
+        $repository = $this->repository();
+        $user = $repository->findOneBy(['userId' => $user_id]);
+        if ($user === null) {
+            $user = new UserNewsletter();
+        }
+
+        $user->setUserId($user_id);
+        $user->setSubscribed($subscribed);
+        $this->entityManager()->persist($user);
+        $this->entityManager()->flush();
+    }
 }
-
-
