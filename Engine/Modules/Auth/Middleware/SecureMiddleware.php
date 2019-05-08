@@ -63,6 +63,8 @@ class SecureMiddleware {
                       or a 401 status code.
                 */
 
+                Oforge()->View()->assign(['stopNext' => true]);
+
                 /**
                  * @var Router $router
                  */
