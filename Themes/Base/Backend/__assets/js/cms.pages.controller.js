@@ -100,56 +100,13 @@ var cmsPagesControllerModule = (function() {
 		}
 	);
 
-	// on edit cancel button event
-	$('#cms-page-builder-cancel').click(
-		function() {
-			var lastElementIdPosition = $(this).attr('data-pb-se').lastIndexOf('-');
-			var newSelectedElementId = '';
-
-			if (lastElementIdPosition > 0) {
-				newSelectedElementId = $(this).attr('data-pb-se').substring(0, lastElementIdPosition);
-			}
-
-			$('#cms_page_selected_element').val(newSelectedElementId);
-			$('#cms_page_builder_form').submit();
-		}
-	);
-
-	// on edit submit button event
-	$('#cms-page-builder-submit').click(
-		function() {
-			var lastElementIdPosition = $(this).attr('data-pb-se').lastIndexOf('-');
-			var newSelectedElementId = '';
-
-			if (lastElementIdPosition > 0) {
-				newSelectedElementId = $(this).attr('data-pb-se').substring(0, lastElementIdPosition);
-			}
-
-			$('#cms_page_selected_action').val('submit');
-			$('#cms_page_builder_form').submit();
-		}
-	);
-
     $('#cms_page_builder_language_selector').change(
     	function() {
     		$('#cms_page_selected_language').val($('#cms_page_builder_language_selector option:selected').val());
     		$('#cms_page_builder_form').submit();
     	}
-    );
-    
-    // TODO: move to own function that is triggered after document loaded by RichText-PageBuilderForm.twig
-    if ($('#cms_page_builder_form').length && $('#cms_page_richtext_editor').length) {
-    	$('#cms_page_builder_form').submit(
-	        function() {
-	            $('#cms_page_richtext_text').val(quill.root.innerHTML);
-	        }
-		);
-    	
-    	const quill = new Quill('#cms_page_richtext_editor', {
-			theme: 'snow'
-		});
-	}
-
+	);
+	
 	if (typeof cms_pages_controller_jstree_config !== typeof undefined && cms_pages_controller_jstree_config) {
 		// create jstree configs
 		var jsTreeConfig = {
@@ -220,45 +177,6 @@ var cmsPagesControllerModule = (function() {
 					$('#cms_content_type_editor_wrapper').height(calculatedHeight - $('#cms_content_type_editor_wrapper').position().top);
 				}
 			}
-		},
-		// content type drag 'n drop functionality
-		dragContentType : function (event) {
-			console.log("Dragging content type id: " + $(event.target).attr('data-ct-id'));
-			event.dataTransfer.setData('text', $(event.target).attr('data-ct-id'));
-		},
-		dragOverPlaceholder : function (event) {
-			event.preventDefault();
-			console.log("Dragged over placeholder with order: " + $(event.target).attr('data-pb-order'));
-			$(event.target).addClass("content-type-edit-placeholder-drag-over");
-		},
-		dragLeavePlaceholder : function (event) {
-			event.preventDefault();
-			console.log("Drag leaving placeholder with order: " + $(event.target).attr('data-pb-order'));
-			$(event.target).removeClass("content-type-edit-placeholder-drag-over");
-		},
-		dropOverPlaceholder : function (event) {
-			event.preventDefault();
-			console.log("Dropped on placeholder with order: " + $(event.target).attr('data-pb-order'));
-			$(event.target).removeClass("content-type-edit-placeholder-drag-over");
-			
-			var data = event.dataTransfer.getData("text");
-			
-			$('#cms_page_create_content_with_type_id').val(data);
-			$('#cms_page_create_content_at_order_index').val($(event.target).attr('data-pb-order'));
-			$('#cms_page_selected_action').val('create');
-			$('#cms_page_builder_form').submit();
-		},
-		deleteContentType : function (event, element) {
-			if (event.stopPropagation) {
-				event.stopPropagation();
-			} else {
-				event.cancelBubble = true;
-			}
-		
-			$('#cms_page_delete_content_with_id').val($(element).parent().attr('data-pb-id'));
-			$('#cms_page_delete_content_at_order_index').val($(element).parent().attr('data-pb-order'));
-			$('#cms_page_selected_action').val('delete');
-			$('#cms_page_builder_form').submit();
 		}
 	}
 });
@@ -276,6 +194,7 @@ if (typeof Oforge !== 'undefined') {
         selector: '#page_builder_container_wrapper',
         init: function () {
 			window.cpcm = cmsPagesControllerModule();
+
 			cpcm.resizePageBuilder();
         }
     });
