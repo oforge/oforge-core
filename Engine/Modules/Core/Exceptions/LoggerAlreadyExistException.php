@@ -2,14 +2,20 @@
 
 namespace Oforge\Engine\Modules\Core\Exceptions;
 
+/**
+ * Class LoggerAlreadyExistException
+ *
+ * @package Oforge\Engine\Modules\Core\Exceptions
+ */
 class LoggerAlreadyExistException extends \Exception {
+
 	/**
 	 * LoggerAlreadyExistException constructor.
 	 *
-	 * @param $key
+     * @param string $loggerName
 	 */
-	public function __construct( $key ) {
-		parent::__construct( "Logger with name '$key' already exists" );
+	public function __construct( string $loggerName ) {
+		parent::__construct( "Logger with name '$loggerName' already exists" );
 	}
 
 }

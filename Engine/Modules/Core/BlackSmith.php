@@ -2,6 +2,7 @@
 
 use Oforge\Engine\Modules\Core\Abstracts\AbstractTemplateManager;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractViewManager;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Forge\ForgeSettings;
 use Oforge\Engine\Modules\Core\Forge\ForgeSlimApp;
 use Oforge\Engine\Modules\Core\Manager\Logger\LoggerManager;
@@ -10,6 +11,9 @@ use Oforge\Engine\Modules\Core\Manager\Plugins\PluginManager;
 use Oforge\Engine\Modules\Core\Manager\Slim\SlimRouteManager;
 use Oforge\Engine\Modules\Core\Manager\Services\ServiceManager;
 use Oforge\Engine\Modules\Core\Forge\ForgeDatabase;
+use Slim\Container;
+use Slim\Exception\MethodNotAllowedException;
+use Slim\Exception\NotFoundException;
 
 // TODO: find a better way to use a TemplateEngine Module
 
@@ -32,7 +36,7 @@ class BlackSmith {
     /**
      * Container
      *
-     * @var \Slim\Container $container
+     * @var Container $container
      */
     private $container = null;
     /**
@@ -106,7 +110,7 @@ class BlackSmith {
     
     public function App(): ForgeSlimApp {
         if ( ! isset( $this->forgeSlimApp ) ) {
-            throw new \RuntimeException( 'Oforge fire does not burn. Ask the blacksmith to start forging.' );
+            throw new RuntimeException( 'Oforge fire does not burn. Ask the blacksmith to start forging.' );
         }
         
         return $this->forgeSlimApp;
@@ -114,7 +118,7 @@ class BlackSmith {
     
     public function DB(): ForgeDatabase {
         if ( ! isset( $this->db ) ) {
-            throw new \RuntimeException( 'Oforge fire does not burn. Ask the blacksmith to start forging.' );
+            throw new RuntimeException( 'Oforge fire does not burn. Ask the blacksmith to start forging.' );
         }
         
         return $this->db;
@@ -122,15 +126,15 @@ class BlackSmith {
     
     public function SlimRouteManager(): SlimRouteManager {
         if ( ! isset( $this->slimRouteManagager ) ) {
-            throw new \RuntimeException( 'Oforge fire does not burn. Ask the blacksmith to start forging.' );
+            throw new RuntimeException( 'Oforge fire does not burn. Ask the blacksmith to start forging.' );
         }
         
         return $this->slimRouteManagager;
     }
     
-    public function Container(): \Slim\Container {
+    public function Container(): Container {
         if ( ! isset( $this->container ) ) {
-            throw new \RuntimeException( 'Oforge fire does not burn. Ask the blacksmith to start forging.' );
+            throw new RuntimeException( 'Oforge fire does not burn. Ask the blacksmith to start forging.' );
         }
         
         return $this->container;
@@ -138,7 +142,7 @@ class BlackSmith {
     
     public function Logger(): LoggerManager {
         if ( ! isset( $this->logger ) ) {
-            throw new \RuntimeException( 'Oforge fire does not burn. Ask the blacksmith to start forging.' );
+            throw new RuntimeException( 'Oforge fire does not burn. Ask the blacksmith to start forging.' );
         }
         
         return $this->logger;
@@ -146,7 +150,7 @@ class BlackSmith {
     
     public function Settings(): ForgeSettings {
         if ( ! isset( $this->settings ) ) {
-            throw new \RuntimeException( 'Oforge fire does not burn. Ask the blacksmith to start forging.' );
+            throw new RuntimeException( 'Oforge fire does not burn. Ask the blacksmith to start forging.' );
         }
         
         return $this->settings;
@@ -154,7 +158,7 @@ class BlackSmith {
     
     public function Services(): ServiceManager {
         if ( ! isset( $this->services ) ) {
-            throw new \RuntimeException( 'Oforge fire does not burn. Ask the blacksmith to start forging.' );
+            throw new RuntimeException( 'Oforge fire does not burn. Ask the blacksmith to start forging.' );
         }
         
         return $this->services;
@@ -189,9 +193,9 @@ class BlackSmith {
      * @param bool $start defines if slim should be started or not
      * @param bool $test defines if test environment should be used
      *
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
-     * @throws \Slim\Exception\MethodNotAllowedException
-     * @throws \Slim\Exception\NotFoundException
+     * @throws ServiceNotFoundException
+     * @throws MethodNotAllowedException
+     * @throws NotFoundException
      * @throws Exception
      */
     public function forge( $start = true, $test = false ) {

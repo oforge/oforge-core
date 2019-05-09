@@ -20,7 +20,7 @@ abstract class AbstractBootstrap {
      */
     protected $cronjobs = [];
     /**
-     * @var array $dependencies
+     * @var string[] $dependencies
      */
     protected $dependencies = [];
     /**
@@ -77,9 +77,9 @@ abstract class AbstractBootstrap {
     }
 
     /**
-     * @return array
+     * @return string[]
      */
-    public function getDependencies() : array {
+    public function getDependencies() {
         return $this->dependencies;
     }
 

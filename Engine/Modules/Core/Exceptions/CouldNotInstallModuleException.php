@@ -1,21 +1,23 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Matthaeus.Schmedding
- * Date: 22.11.2018
- * Time: 11:53
- */
 
 namespace Oforge\Engine\Modules\Core\Exceptions;
 
-class CouldNotInstallModuleException extends \Exception
-{
+use Exception;
+
+/**
+ * Class CouldNotInstallModuleException
+ *
+ * @package Oforge\Engine\Modules\Core\Exceptions\Plugin
+ */
+class CouldNotInstallModuleException extends Exception {
+
     /**
      * CouldNotInstallModuleException constructor.
-     * @param string $classname
+     *
+     * @param string $moduleName
      */
-    public function __construct($classname, $dependencies)
-    {
-        parent::__construct("The module $classname could not be started due to missing dependencies. Missing modules: " . implode(", ", $dependencies));
+    public function __construct(string $moduleName, $dependencies) {
+        parent::__construct("The module '$moduleName' could not be started due to missing dependencies. Missing modules: " . implode(', ', $dependencies));
     }
+
 }

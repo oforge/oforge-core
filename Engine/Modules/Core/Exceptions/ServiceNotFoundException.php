@@ -1,21 +1,21 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Matthaeus.Schmedding
- * Date: 11.10.2018
- * Time: 09:17
- */
 
 namespace Oforge\Engine\Modules\Core\Exceptions;
 
-class ServiceNotFoundException extends \Exception
-{
+/**
+ * Class ServiceNotFoundException
+ *
+ * @package Oforge\Engine\Modules\Core\Exceptions
+ */
+class ServiceNotFoundException extends NamedObjectNotFoundException {
+
     /**
      * ServiceNotFoundException constructor.
-     * @param $name
+     *
+     * @param string $serviceName
      */
-    public function __construct($name)
+    public function __construct(string $serviceName)
     {
-        parent::__construct("Service with name $name not found");
+        parent::__construct("Service with name '$serviceName' not found!");
     }
 }
