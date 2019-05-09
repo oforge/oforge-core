@@ -193,8 +193,8 @@ class ModuleManager {
             Oforge()->Services()->register($services);
 
             $endpoints = $instance->getEndpoints();
-            Oforge()->Services()->get('endpoints')->install($endpoints);
-            Oforge()->Services()->get('endpoints')->activate($endpoints);
+            Oforge()->Services()->get('endpoint')->install($endpoints);
+            Oforge()->Services()->get('endpoint')->activate($endpoints);
 
             $middlewares = $instance->getMiddlewares();
             /** @var MiddlewareService $middlewareService */
@@ -245,8 +245,8 @@ class ModuleManager {
             Oforge()->Services()->register($services);
 
             $endpoints = $instance->getEndpoints();
-            Oforge()->Services()->get('endpoints')->install($endpoints);
-            Oforge()->Services()->get('endpoints')->activate($endpoints);
+            Oforge()->Services()->get('endpoint')->install($endpoints);
+            Oforge()->Services()->get('endpoint')->activate($endpoints);
 
             /**
              * @var $entry Module
