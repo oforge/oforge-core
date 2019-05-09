@@ -30,7 +30,7 @@ use Oforge\Engine\Modules\Cronjob\Models\CustomCronjob;
 class CronjobService extends AbstractDatabaseAccess {
 
     public function __construct() {
-        parent::__construct(["default" => AbstractCronjob::class]);
+        parent::__construct(AbstractCronjob::class);
     }
 
     /**
