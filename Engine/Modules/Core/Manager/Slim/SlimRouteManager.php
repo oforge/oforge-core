@@ -41,7 +41,7 @@ class SlimRouteManager {
      * @throws ORMException
      */
     public function init() {
-        $entityManager      = Oforge()->DB()->getEnityManager();
+        $entityManager      = Oforge()->DB()->getEntityManager();
         $endpointRepository = $entityManager->getRepository(Endpoint::class);
 
         /** @var ForgeSlimApp $forgeSlimApp */

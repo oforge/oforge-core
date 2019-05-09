@@ -37,7 +37,7 @@ class ModuleManager {
 
     public function entityManger() : EntityManager {
         if (!isset($this->entityManger)) {
-            $this->entityManger = Oforge()->DB()->getEnityManager();
+            $this->entityManger = Oforge()->DB()->getEntityManager();
         }
 
         return $this->entityManger;

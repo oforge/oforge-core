@@ -88,7 +88,7 @@ class LanguageController extends BaseCrudController {
             $this->snippets = [];
             try {
                 /* @var EntityManager $entityManager */
-                $entityManager = Oforge()->DB()->getEnityManager();
+                $entityManager = Oforge()->DB()->getEntityManager();
                 $queryBuilder  = $entityManager->getRepository(Snippet::class)->createQueryBuilder('s');
                 $entries       = $queryBuilder->select('s.scope, COUNT(s) as value')->groupBy('s.scope')->getQuery()->getArrayResult();
                 foreach ($entries as $entry) {
