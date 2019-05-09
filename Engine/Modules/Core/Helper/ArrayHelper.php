@@ -75,27 +75,102 @@ class ArrayHelper {
      *
      * @return array
      */
-    public static function mergeRecursive(array &$array1, array &$array2) {
-        $merged = $array1;
-
+    public static function mergeRecursive(array $array1, array $array2) {
         foreach ($array2 as $key => &$value) {
-            if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
+            if (is_array($value) && isset($array1[$key]) && is_array($array1[$key])) {
                 if (is_string($key)) {
-                    $merged[$key] = is_array($merged[$key]) ? self::mergeRecursive($merged[$key], $value) : $value;
+                    $array1[$key] = is_array($array1[$key]) ? self::mergeRecursive($array1[$key], $value) : $value;
                 } else {
-                    $merged[] = $value;
+                    $array1[] = $value;
                 }
             } elseif (is_numeric($key)) {
-                if (!in_array($value, $merged)) {
-                    $merged[] = $value;
+                if (!in_array($value, $array1)) {
+                    $array1[] = $value;
                 }
             } else {
-                $merged[$key] = $value;
+                $array1[$key] = $value;
             }
         }
         unset($value);
 
-        return $merged;
+        return $array1;
+    }
+
+    /**
+     * Get value by key in dot notation or $default if not exist.
+     *
+     * @param array $array
+     * @param string $key
+     * @param mixed $default
+     *
+     * @return mixed
+     */
+    public static function dotGet(array $array, string $key, $default = null) {
+        if (empty($key) || empty($array)) {
+            return $default;
+        }
+        if (strpos($key, '.') !== false) {
+            $keys = explode('.', $key);
+            $tmp  = $array;
+            foreach ($keys as $key) {
+                if (!isset($tmp[$key])) {
+                    return $default;
+                }
+
+                $tmp = $tmp[$key];
+            }
+
+            return $tmp;
+        }
+
+        return isset($array[$key]) ? $array[$key] : $default;
+    }
+
+    /**
+     * Set value in array by key in dot notation (e.g. meta.rout.name).
+     *
+     * @param array $array
+     * @param string $key
+     * @param mixed $value
+     *
+     * @return array
+     */
+    public static function dotSet(array $array, string $key, $value) {
+        if (strpos($key, '.') !== false) {
+            $tmp  = &$array;
+            $keys = explode('.', $key);
+            foreach ($keys as $key) {
+                if (!isset($tmp[$key])) {
+                    $tmp[$key] = [];
+                } elseif (!is_array($tmp[$key])) {
+                    $tmp[$key] = [$tmp[$key]];
+                }
+                $tmp = &$tmp[$key];
+            }
+            $tmp = $value;
+        }
+
+        return $array;
+    }
+
+    /**
+     * Convert keys in dot notation to nested array.
+     *
+     * @param array $array
+     *
+     * @return array
+     */
+    public static function dotToNested(array $array) : array {
+        $result = [];
+        foreach ($array as $key => $value) {
+            if (is_array($value)) {
+                $value = self::dotToNested($value);
+            }
+            $tmp    = (strpos($key, '.') === false ? [$key => $value] : self::dotSet([], $key, $value));
+            $result = self::mergeRecursive($result, $tmp);
+        }
+
+        return $result;
     }
 
 }
