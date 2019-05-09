@@ -49,6 +49,8 @@ class Bootstrap extends AbstractBootstrap {
     }
 
     public function deactivate() {
+        $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
+        $dashboardWidgetsService->unregister('google_analytics');
     }
 
 }
