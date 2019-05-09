@@ -11,14 +11,14 @@ namespace Oforge\Engine\Modules\TemplateEngine\Core\Services;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
-use Oforge\Engine\Modules\Core\Exceptions\TemplateNotFoundException;
+use Oforge\Engine\Modules\Core\Exceptions\Template\TemplateNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 
 class StaticAssetService extends BaseAssetService {
 
     /**
-     * @param string $scope
      * @param string $context
+     * @param string $scope
      *
      * @return string
      * @throws ORMException

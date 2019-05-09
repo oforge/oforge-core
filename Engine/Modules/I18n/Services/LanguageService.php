@@ -6,8 +6,8 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use InvalidArgumentException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistsException;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
 use Oforge\Engine\Modules\I18n\Models\Language;
 use ReflectionException;
@@ -92,8 +92,8 @@ class LanguageService extends AbstractDatabaseAccess {
     /**
      * @param array $options
      *
-     * @throws ConfigElementAlreadyExistsException
-     * @throws ConfigOptionKeyNotExistsException
+     * @throws ConfigElementAlreadyExistException
+     * @throws ConfigOptionKeyNotExistException
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -108,7 +108,7 @@ class LanguageService extends AbstractDatabaseAccess {
     /**
      * @param array $options
      *
-     * @throws ConfigOptionKeyNotExistsException
+     * @throws ConfigOptionKeyNotExistException
      * @throws NotFoundException
      * @throws ORMException
      * @throws OptimisticLockException
@@ -151,7 +151,7 @@ class LanguageService extends AbstractDatabaseAccess {
      * @param bool $checkExisting
      *
      * @return bool
-     * @throws ConfigOptionKeyNotExistsException
+     * @throws ConfigOptionKeyNotExistException
      * @throws ORMException
      */
     protected function isValid($options, $checkExisting) {
@@ -159,7 +159,7 @@ class LanguageService extends AbstractDatabaseAccess {
         $keys = ['iso', 'name'];
         foreach ($keys as $key) {
             if (!array_key_exists($key, $options)) {
-                throw new ConfigOptionKeyNotExistsException($key);
+                throw new ConfigOptionKeyNotExistException($key);
             }
         }
         if ($checkExisting) {

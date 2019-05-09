@@ -5,16 +5,16 @@ namespace Mailchimp;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Services\AccountNavigationService;
-use Mailchimp\Controller\Frontend\NewsletterSubscriptionController;
 use Mailchimp\Controller\Frontend\AccountNewsletterController;
+use Mailchimp\Controller\Frontend\NewsletterSubscriptionController;
 use Mailchimp\Services\MailchimpNewsletterService;
 use Mailchimp\Views\Plugins\Mailchimp\Models\UserNewsletter;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistsException;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
-use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 
 /**
  * Class Bootstrap
@@ -45,8 +45,8 @@ class Bootstrap extends AbstractBootstrap
     }
 
     /**
-     * @throws ConfigElementAlreadyExistsException
-     * @throws ConfigOptionKeyNotExistsException
+     * @throws ConfigElementAlreadyExistException
+     * @throws ConfigOptionKeyNotExistException
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws ServiceNotFoundException
@@ -105,8 +105,8 @@ class Bootstrap extends AbstractBootstrap
     /**
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws ConfigElementAlreadyExistsException
-     * @throws ConfigOptionKeyNotExistsException
+     * @throws ConfigElementAlreadyExistException
+     * @throws ConfigOptionKeyNotExistException
      * @throws ParentNotFoundException
      * @throws ServiceNotFoundException
      */

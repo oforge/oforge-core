@@ -6,9 +6,9 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use InvalidArgumentException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistsException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Models\Config\Element;
 use Oforge\Engine\Modules\Core\Models\Config\Value;
 
@@ -16,7 +16,6 @@ class ConfigService
 {
     /**
      * Insert a Config Entry into the database
-     *
      * "name" => "",
      * "label" => "",
      * "type" => "boolean" | "string" | "number" | "integer" | "select",
@@ -24,11 +23,10 @@ class ConfigService
      * "options" => ["", ...],
      * "default" => ""
      *
-     *
      * @param array $options
      *
-     * @throws ConfigElementAlreadyExistsException
-     * @throws ConfigOptionKeyNotExistsException
+     * @throws ConfigElementAlreadyExistException
+     * @throws ConfigOptionKeyNotExistException
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -58,8 +56,8 @@ class ConfigService
      *
      * @param array $options
      *
-     * @throws ConfigElementAlreadyExistsException
-     * @throws ConfigOptionKeyNotExistsException
+     * @throws ConfigElementAlreadyExistException
+     * @throws ConfigOptionKeyNotExistException
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -97,8 +95,8 @@ class ConfigService
      * @param array $options
      *
      * @return bool
-     * @throws ConfigElementAlreadyExistsException
-     * @throws ConfigOptionKeyNotExistsException
+     * @throws ConfigElementAlreadyExistException
+     * @throws ConfigOptionKeyNotExistException
      * @throws ORMException
      */
     private function isValid(Array $options)
@@ -108,7 +106,7 @@ class ConfigService
          */
         $keys = ["name", "label", "type", "group"];
         foreach ($keys as $key) {
-            if (!array_key_exists($key, $options)) throw new ConfigOptionKeyNotExistsException($key);
+            if (!array_key_exists($key, $options)) throw new ConfigOptionKeyNotExistException($key);
         }
 
         /**
@@ -117,7 +115,7 @@ class ConfigService
         $repo = Oforge()->DB()->getEntityManager()->getRepository(Element::class);
 
         $element = $repo->findOneBy(["name" => strtolower($options["name"])]);
-        if (isset($element)) throw new ConfigElementAlreadyExistsException(strtolower($options["name"]));
+        if (isset($element)) throw new ConfigElementAlreadyExistException(strtolower($options["name"]));
 
         /**
          * Check if required keys are within the options

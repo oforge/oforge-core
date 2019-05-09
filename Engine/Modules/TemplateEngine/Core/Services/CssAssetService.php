@@ -7,7 +7,7 @@ use Doctrine\ORM\ORMException;
 use Leafo\ScssPhp\Compiler;
 use MatthiasMullie\Minify\CSS;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
-use Oforge\Engine\Modules\Core\Exceptions\TemplateNotFoundException;
+use Oforge\Engine\Modules\Core\Exceptions\Template\TemplateNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\TemplateEngine\Core\Models\ScssVariable;
 
@@ -23,8 +23,8 @@ class CssAssetService extends BaseAssetService {
     }
 
     /**
+     * @param string $context
      * @param string $scope
-     * @param $context
      *
      * @return string
      * @throws ORMException
