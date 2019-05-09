@@ -1,18 +1,32 @@
 (function() {
     "use strict";
 
-    var rangeSlider = document.querySelector('#search_key3.original');
-    var rangeSliderGhost = document.querySelector('#search_key3.ghost');
-    var rangeLow = document.querySelector('[data-range-slider="search_key3"][data-range-value="low"]');
-    var rangeHigh = document.querySelector('[data-range-slider="search_key3"][data-range-value="high"]');
+    if (typeof Oforge !== 'undefined') {
 
-    console.log(rangeSlider, rangeLow, rangeHigh);
+        Oforge.register({
+            name: 'rangeSlider',
+            selector: '[data-range-slider]:not(.ghost)',
+            init: function () {
+                let self = this;
+                const rangeSliderList = document.querySelectorAll(self.selector);
 
-    rangeSlider.onchange = function (e) {
-        rangeLow.value = rangeSlider.valueLow;
-    };
+                rangeSliderList.forEach(function (rangeSlider, index) {
+                    const rangeSliderGhost = document.querySelector('#' + rangeSlider.id + '.ghost');
+                    const rangeLow = document.querySelector('[data-range-slider-name="' + rangeSlider.id + '"][data-range-value="low"]');
+                    const rangeHigh = document.querySelector('[data-range-slider-name="' + rangeSlider.id + '"][data-range-value="high"]');
 
-    rangeSliderGhost.onchange = function (e) {
-        rangeHigh.value = rangeSlider.valueHigh;
+                    rangeLow.value = rangeSlider.valueLow;
+                    rangeHigh.value = rangeSlider.valueHigh;
+
+                    rangeSlider.onchange = function (e) {
+                        rangeLow.value = rangeSlider.valueLow;
+                    };
+
+                    rangeSliderGhost.onchange = function (e) {
+                        rangeHigh.value = rangeSlider.valueHigh;
+                    }
+                });
+            }
+        });
     }
 })();
