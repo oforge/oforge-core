@@ -35,7 +35,7 @@ abstract class AbstractDatabaseAccess {
      */
     public function entityManager() : EntityManager {
         if (!isset($this->entityManger)) {
-            $this->entityManger = Oforge()->DB()->getEnityManager();
+            $this->entityManger = Oforge()->DB()->getEntityManager();
         }
 
         return $this->entityManger;

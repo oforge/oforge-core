@@ -16,7 +16,7 @@ class TestService {
      * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function addTestData() {
-        $em = Oforge()->DB()->getEnityManager();
+        $em = Oforge()->DB()->getEntityManager();
         $repo = $em->getRepository(Test::class);
         $testData = $repo->findOneBy(["name" => "Test"]);
         

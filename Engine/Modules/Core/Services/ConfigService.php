@@ -37,7 +37,7 @@ class ConfigService
         if ($this->isValid($options)) {
 
             $element = Element::create($options);
-            $em = Oforge()->DB()->getEnityManager();
+            $em = Oforge()->DB()->getEntityManager();
 
             $em->persist($element);
             $em->flush();
@@ -69,7 +69,7 @@ class ConfigService
          * Check if the element is already within the system
          */
 
-        $em = Oforge()->DB()->getEnityManager();
+        $em = Oforge()->DB()->getEntityManager();
         $repo = $em->getRepository(Element::class);
 
         $element = $repo->findOneBy(["name" => strtolower($options["name"])]);
@@ -114,7 +114,7 @@ class ConfigService
         /**
          * Check if the element is already within the system
          */
-        $repo = Oforge()->DB()->getEnityManager()->getRepository(Element::class);
+        $repo = Oforge()->DB()->getEntityManager()->getRepository(Element::class);
 
         $element = $repo->findOneBy(["name" => strtolower($options["name"])]);
         if (isset($element)) throw new ConfigElementAlreadyExistsException(strtolower($options["name"]));
@@ -164,7 +164,7 @@ class ConfigService
      */
     public function get(string $key, ?integer $scope = null)
     {
-        $em = Oforge()->DB()->getEnityManager();
+        $em = Oforge()->DB()->getEntityManager();
         $repo = $em->getRepository(Element::class);
         $element = $repo->findBy(["name" => $key]);
 
@@ -194,7 +194,7 @@ class ConfigService
      */
     public function set(string $key, $configvalue, int $scope = null)
     {
-        $em = Oforge()->DB()->getEnityManager();
+        $em = Oforge()->DB()->getEntityManager();
         $repo = $em->getRepository(Element::class);
         $element = $repo->findBy(["name" => $key]);
 
@@ -219,7 +219,7 @@ class ConfigService
      * @throws ORMException
      */
     public function groups() {
-        $em = Oforge()->DB()->getEnityManager();
+        $em = Oforge()->DB()->getEntityManager();
         $query = $em->createQueryBuilder()
             ->select("e.group")
             ->from(Element::class, "e")
@@ -234,7 +234,7 @@ class ConfigService
      * @throws ORMException
      */
     public function list($groupName) {
-        $em = Oforge()->DB()->getEnityManager();
+        $em = Oforge()->DB()->getEntityManager();
         $elements = $em->getRepository(Element::class)->findBy(array('group' => $groupName));
         return $elements;
     }
