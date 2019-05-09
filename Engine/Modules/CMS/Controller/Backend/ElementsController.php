@@ -34,8 +34,6 @@ class ElementsController extends AbstractController {
     public function indexAction(Request $request, Response $response) {
         $elementsControllerService = OForge()->Services()->get("elements.controller.service");
 
-        $data = $elementsControllerService->getElementData($_POST);
-        
         switch ($_POST["cms_form"])
         {
             case "cms_element_jstree_form":
@@ -53,11 +51,16 @@ class ElementsController extends AbstractController {
                 }
                 break;
             case "cms_page_builder_form":
-                $data = $elementsControllerService->getElementData($_POST);
+                $data = $elementsControllerService->editPageBuilderData($_POST);
+                break;
+            default:
+                $data = $elementsControllerService->editElementData($_POST);
                 break;
         }
-        
+        // if no data is set, load the default view
+        if (!isset($data)) {
+            $data = $elementsControllerService->editElementData($_POST);
+        }
         Oforge()->View()->assign($data);
     }
-
 }

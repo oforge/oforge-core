@@ -1,0 +1,25 @@
+{% block newsletter_subscription_form %}
+    <form class="form form--newsletter"
+          action="{{ subscribeLink }}{% if isSubscribed == true %}/unsubscribe{% elseif isSubscribed == false %}/subscribe{% else %}{{ url('frontend_newsletter_subscription_subscribe') }}{% endif %}"
+          method="post">
+        <h3 class="form__title">{{ i18n('newsletter', 'Newsletter') }}</h3>
+        <p>{{ subscribeMessage }}</p>
+        <div class="form-controls">
+            <div class="form__control">
+                <input id="frontend_newsletter_email"
+                       name="frontend_newsletter_email"
+                       type="{% if isSubscribed is defined %}hidden{% else %}email{% endif %}"
+                       class="form__input form__input {% block newsletter_input_email_classes %}{% endblock newsletter_input_email_classes %}"
+                       placeholder="{{ i18n('email') }}"
+                       required
+                       {% if (user) %}value="{{ user.email }}"{% endif %}>
+            </div>
+            <div class="form__control">
+                <input type="hidden" name="token" value="{{ token() }}">
+                <input type="submit"
+                       value="{% if isSubscribed == true %}{{ i18n('unsubscribe') }}{% else %}{{ i18n('subscribe') }}{% endif %}"
+                       class="form__input form__input--submit button">
+            </div>
+        </div>
+    </form>
+{% endblock newsletter_subscription_form %}
