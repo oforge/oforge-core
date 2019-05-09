@@ -66,4 +66,5 @@ abstract class AbstractDatabaseAccess {
     protected function getRepository(string $class) : EntityRepository {
         return $this->entityManager()->getRepository($class);
     }
+
 }
