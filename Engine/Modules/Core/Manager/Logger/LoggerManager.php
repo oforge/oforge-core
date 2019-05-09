@@ -2,6 +2,8 @@
 
 namespace Oforge\Engine\Modules\Core\Manager\Logger;
 
+use Exception;
+use InvalidArgumentException;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -37,8 +39,8 @@ class LoggerManager {
      *
      * @param array $settings
      *
-     * @throws \InvalidArgumentException
-     * @throws \Exception
+     * @throws InvalidArgumentException
+     * @throws Exception
      */
     public function __construct(array $settings) {
         foreach ($settings as $setting) {
@@ -57,7 +59,7 @@ class LoggerManager {
      *
      * @param int $days
      */
-    public function cleanupLogfiles($days = self::DEFAULT_DAYS_LIMIT) {//TODO noch ungetestet
+    public function cleanupLogFiles($days = self::DEFAULT_DAYS_LIMIT) {//TODO noch ungetestet
         $logDir = ROOT_PATH . Statics::LOGS_DIR;
         if (file_exists($logDir)) {
             $now           = time();
@@ -96,7 +98,7 @@ class LoggerManager {
      *
      * @return Logger
      * @throws LoggerAlreadyExistException If Logger with name already exist.
-     * @throws \Exception
+     * @throws Exception
      */
     public function initLogger(string $name, array $config = []) {
         if (isset($this->logger[$name])) {
@@ -108,14 +110,16 @@ class LoggerManager {
         $type   = ArrayHelper::get($config, 'type', 'default');
         switch ($type) {
             case 'StreamHandler':
-                $path = ArrayHelper::get($config, 'path', ROOT_PATH . Statics::LOGS_DIR . DIRECTORY_SEPARATOR . $name . self::FILE_EXTENSION);
-                $logger->pushHandler(new StreamHandler($path, $level));
+                $path    = ArrayHelper::get($config, 'path', ROOT_PATH . Statics::LOGS_DIR . DIRECTORY_SEPARATOR . $name . self::FILE_EXTENSION);
+                $handler = new StreamHandler($path, $level);
+                $logger->pushHandler($handler);
                 break;
             case 'RotatingFileHandler':
             default:
                 $path     = ArrayHelper::get($config, 'path', ROOT_PATH . Statics::LOGS_DIR . DIRECTORY_SEPARATOR . $name . self::FILE_EXTENSION);
                 $maxFiles = ArrayHelper::get($config, 'max_files', self::DEFAULT_DAYS_LIMIT);
-                $logger->pushHandler(new RotatingFileHandler($path, $maxFiles, $level));
+                $handler  = new RotatingFileHandler($path, $maxFiles, $level);
+                $logger->pushHandler($handler);
                 break;
         }
         $this->logger[$name] = $logger;
@@ -136,6 +140,20 @@ class LoggerManager {
             throw new LoggerAlreadyExistException($name);
         }
         $this->logger[$name] = $logger;
+    }
+
+    /**
+     * Function for general exception logging.
+     *
+     * @param string $name
+     * @param Exception $exception
+     * @param int $logLevel
+     */
+    public function logException(string $name, Exception $exception, int $logLevel = Logger::ERROR) {
+        $this->get($name)->log($logLevel, $exception->getMessage(), [
+            'exception' => $exception,
+            'trace'     => $exception->getTrace(),
+        ]);
     }
 
 }
