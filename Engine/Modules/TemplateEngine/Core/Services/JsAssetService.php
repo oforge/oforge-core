@@ -8,14 +8,18 @@
 
 namespace Oforge\Engine\Modules\TemplateEngine\Core\Services;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use MatthiasMullie\Minify\JS;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Exceptions\TemplateNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 
 class JsAssetService extends BaseAssetService {
     /**
      * JsAssetService constructor.
      *
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ServiceNotFoundException
      */
     public function __construct() {
         parent::__construct();
@@ -27,10 +31,10 @@ class JsAssetService extends BaseAssetService {
      * @param string $context
      *
      * @return string
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\TemplateNotFoundException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ServiceNotFoundException
+     * @throws TemplateNotFoundException
      */
     public function build(string $context, string $scope = TemplateAssetService::DEFAULT_SCOPE) : string {
         parent::build($context);

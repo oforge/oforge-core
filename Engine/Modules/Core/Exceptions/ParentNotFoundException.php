@@ -1,21 +1,20 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Alexander Wegner
- * Date: 04.12.2018
- * Time: 14:24
- */
 
 namespace Oforge\Engine\Modules\Core\Exceptions;
 
-class ParentNotFoundException extends \Exception
-{
+/**
+ * Class ParentNotFoundException
+ *
+ * @package Oforge\Engine\Modules\Core\Exceptions
+ */
+class ParentNotFoundException extends \Exception {
     /**
      * ConfigElementNotFoundException constructor.
-     * @param $name
+     *
+     * @param string $parentName
      */
-    public function __construct(string $name)
+    public function __construct(string $parentName)
     {
-        parent::__construct("Parent element with name $name not found");
+        parent::__construct("Parent element with name '$parentName' not found");
     }
 }

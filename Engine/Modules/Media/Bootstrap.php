@@ -1,37 +1,40 @@
-<?php 
+<?php
 
 namespace Oforge\Engine\Modules\Media;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
-
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Exceptions\TemplateNotFoundException;
 use Oforge\Engine\Modules\Media\Models\Media;
 use Oforge\Engine\Modules\Media\Services\ImageCompressService;
 use Oforge\Engine\Modules\Media\Services\MediaService;
 use Oforge\Engine\Modules\Media\Twig\MediaExtension;
 use Oforge\Engine\Modules\TemplateEngine\Core\Services\TemplateRenderService;
+use Twig_Error_Loader;
 
 class Bootstrap extends AbstractBootstrap {
 
     public function __construct() {
         $this->models = [
-            Media::class
+            Media::class,
         ];
 
         $this->services = [
-            "media" => MediaService::class,
-            "image.compress" => ImageCompressService::class
+            "media"          => MediaService::class,
+            "image.compress" => ImageCompressService::class,
         ];
     }
 
     /**
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\TemplateNotFoundException
-     * @throws \Twig_Error_Loader
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ServiceNotFoundException
+     * @throws TemplateNotFoundException
+     * @throws Twig_Error_Loader
      */
-    public function activate()
-    {
+    public function activate() {
         /**
          * @var $templateRenderer TemplateRenderService
          */

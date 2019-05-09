@@ -6,7 +6,6 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Noodlehaus\Exception;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Bootstrap;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistsException;
@@ -18,11 +17,11 @@ use Oforge\Engine\Modules\Core\Helper\Helper;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\Core\Models\Module\Module;
 use Oforge\Engine\Modules\Core\Services\MiddlewareService;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
 
 class ModuleManager {
     protected static $instance = null;
+    private $entityManger = null;
+    private $moduleRepository = null;
 
     public static function getInstance() {
         if (null === self::$instance) {
@@ -31,9 +30,6 @@ class ModuleManager {
 
         return self::$instance;
     }
-
-    private $entityManger = null;
-    private $moduleRepository = null;
 
     public function entityManger() : EntityManager {
         if (!isset($this->entityManger)) {
@@ -71,7 +67,6 @@ class ModuleManager {
 
         // register all modules
         foreach ($files as $key => $dir) {
-
             // TODO: Check if suppressing error here is ok
             $fileMeta = @Helper::getFileMeta($dir);
             $this->register($fileMeta['namespace'] . "\\" . $fileMeta['class_name']);
@@ -109,9 +104,7 @@ class ModuleManager {
                  */
                 $instance = $bucket[$i];
 
-
                 $startTime = microtime(true) * 1000 ;
-
 
                 if (sizeof($instance->getDependencies()) > 0) {
                     $found = true;
@@ -147,66 +140,6 @@ class ModuleManager {
 
         if (sizeof($bucket) > 0) {
             throw new CouldNotInstallModuleException(get_class($bucket[0]), $bucket[0]->getDependencies());
-        }
-    }
-
-    /**
-     * Initialize the core module
-     *
-     * @param $className
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
-     * @throws ServiceAlreadyDefinedException
-     * @throws ServiceNotFoundException
-     */
-    private function initCoreModule($className) {
-        $startTime = microtime(true) * 1000;
-
-        if (is_subclass_of($className, AbstractBootstrap::class)) {
-            /**
-             * @var $instance AbstractBootstrap
-             */
-            $instance = new $className();
-
-            Oforge()->DB()->initModelSchema($instance->getModels());
-
-            $services = $instance->getServices();
-            Oforge()->Services()->register($services);
-
-            $endpoints = $instance->getEndpoints();
-            Oforge()->Services()->get('endpoints')->install($endpoints);
-            Oforge()->Services()->get('endpoints')->activate($endpoints);
-
-            /**
-             * @var $entry Module
-             */
-            $entry = $this->moduleRepository()->findOneBy(["name" => $className]);
-
-            $needFlush = false;
-            if (isset($entry) && !$entry->getInstalled()) {
-                try {
-                $instance->install();
-            } catch (ConfigElementAlreadyExistsException $e) {
-            }
-                $this->entityManger()->persist($entry->setInstalled(true));
-                $needFlush = true;
-            } elseif (!isset($entry)) {
-                $this->register($className);
-                try {
-                    $instance->install();
-                } catch (ConfigElementAlreadyExistsException $e) {
-                }
-                $entry = $this->moduleRepository()->findOneBy(["name" => $className]);
-                $this->entityManger()->persist($entry->setInstalled(true));
-                $needFlush = true;
-            }
-
-            $instance->activate();
-
-            if ($needFlush) {
-                $this->entityManger()->flush();
-            }
         }
     }
 
@@ -286,4 +219,64 @@ class ModuleManager {
             $this->entityManger()->flush();
         }
     }
+
+    /**
+     * Initialize the core module
+     *
+     * @param $className
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ServiceAlreadyExistException
+     * @throws ServiceNotFoundException
+     */
+    private function initCoreModule($className) {
+        $startTime = microtime(true) * 1000;
+
+        if (is_subclass_of($className, AbstractBootstrap::class)) {
+            /**
+             * @var $instance AbstractBootstrap
+             */
+            $instance = new $className();
+
+            Oforge()->DB()->initModelSchema($instance->getModels());
+
+            $services = $instance->getServices();
+            Oforge()->Services()->register($services);
+
+            $endpoints = $instance->getEndpoints();
+            Oforge()->Services()->get('endpoints')->install($endpoints);
+            Oforge()->Services()->get('endpoints')->activate($endpoints);
+
+            /**
+             * @var $entry Module
+             */
+            $entry = $this->moduleRepository()->findOneBy(["name" => $className]);
+
+            $needFlush = false;
+            if (isset($entry) && !$entry->getInstalled()) {
+                try {
+                    $instance->install();
+                } catch (ConfigElementAlreadyExistsException $e) {
+                }
+                $this->entityManger()->persist($entry->setInstalled(true));
+                $needFlush = true;
+            } elseif (!isset($entry)) {
+                $this->register($className);
+                try {
+                    $instance->install();
+                } catch (ConfigElementAlreadyExistsException $e) {
+                }
+                $entry = $this->moduleRepository()->findOneBy(["name" => $className]);
+                $this->entityManger()->persist($entry->setInstalled(true));
+                $needFlush = true;
+            }
+
+            $instance->activate();
+
+            if ($needFlush) {
+            $this->entityManger()->flush();
+        }
+    }
+}
 }

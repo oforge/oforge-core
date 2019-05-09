@@ -8,6 +8,10 @@
 
 namespace Oforge\Engine\Modules\TemplateEngine\Core\Services;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Exceptions\TemplateNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 
 class StaticAssetService extends BaseAssetService {
@@ -17,10 +21,10 @@ class StaticAssetService extends BaseAssetService {
      * @param string $context
      *
      * @return string
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\TemplateNotFoundException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ServiceNotFoundException
+     * @throws TemplateNotFoundException
      */
     public function build(string $context, string $scope = TemplateAssetService::DEFAULT_SCOPE) : string {
         $dirs = $this->getAssetsDirectories();
