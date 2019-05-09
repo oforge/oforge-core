@@ -57,7 +57,10 @@ class ElementsController extends AbstractController {
                 $data = $elementsControllerService->editElementData($_POST);
                 break;
         }
-        
+        // if no data is set, load the default view
+        if (!isset($data)) {
+            $data = $elementsControllerService->editElementData($_POST);
+        }
         Oforge()->View()->assign($data);
     }
 }
