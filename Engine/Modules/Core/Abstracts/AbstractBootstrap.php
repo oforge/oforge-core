@@ -2,6 +2,8 @@
 
 namespace Oforge\Engine\Modules\Core\Abstracts;
 
+use Oforge\Engine\Modules\Core\Helper\Statics;
+
 /**
  * Class AbstractBootstrap
  * Specific Bootstrap classes are needed to either autoload Modules or Plugins
@@ -40,7 +42,7 @@ abstract class AbstractBootstrap {
     /**
      * @var int $order
      */
-    protected $order = 1337;
+    protected $order = Statics::DEFAULT_ORDER;
 
     public function install() {
     }

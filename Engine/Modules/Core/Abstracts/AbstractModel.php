@@ -80,6 +80,7 @@ abstract class AbstractModel {
     }
 
 
+    /** @deprecated  */
     public static function definition()
     {
         $methods = get_class_methods(static::class);
@@ -117,7 +118,7 @@ abstract class AbstractModel {
      *
      * @return array
      */
-    public function toArray($maxDepth = 2) {
+    public function toArray($maxDepth = 2) : array {
         $result = [];
         foreach (get_class_methods($this) as $classMethod) {
             foreach (['get', 'is'] as $prefix) {
