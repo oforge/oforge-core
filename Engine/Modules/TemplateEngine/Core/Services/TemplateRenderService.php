@@ -11,7 +11,7 @@ namespace Oforge\Engine\Modules\TemplateEngine\Core\Services;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
-use Oforge\Engine\Modules\Core\Exceptions\TemplateNotFoundException;
+use Oforge\Engine\Modules\Core\Exceptions\Template\TemplateNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\Core\Models\Plugin\Plugin;
@@ -196,10 +196,10 @@ class TemplateRenderService {
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws ServiceNotFoundException
+     * @throws TemplateNotFoundException
      * @throws Twig_Error_Loader
      * @throws Twig_Error_Runtime
      * @throws Twig_Error_Syntax
-     * @throws TemplateNotFoundException
      */
     private function renderTemplate(Request $request, Response $response, string $template, array $data) {
         return $this->View()->render($response, $template, $data);
@@ -214,8 +214,8 @@ class TemplateRenderService {
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws ServiceNotFoundException
-     * @throws Twig_Error_Loader
      * @throws TemplateNotFoundException
+     * @throws Twig_Error_Loader
      */
     private function hasTemplate($template) : bool {
         return $this->View()->hasTemplate($template);

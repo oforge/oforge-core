@@ -18,8 +18,8 @@ use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\DashboardWidgetsService;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\UserFavoritesService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
@@ -51,7 +51,7 @@ class Bootstrap extends AbstractBootstrap {
             BackendNavigation::class,
             BackendUserFavorites::class,
             DashboardWidget::class,
-            UserDashboardWidgets::class
+            UserDashboardWidgets::class,
         ];
 
         $this->services = [
@@ -66,10 +66,10 @@ class Bootstrap extends AbstractBootstrap {
     /**
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws ConfigElementAlreadyExists
-     * @throws ConfigOptionKeyNotExists
      * @throws ParentNotFoundException
      * @throws ServiceNotFoundException
+     * @throws ConfigElementAlreadyExistException
+     * @throws ConfigOptionKeyNotExistException
      */
     public function install() {
         /** @var ConfigService $configService */

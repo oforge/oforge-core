@@ -10,7 +10,7 @@ use InvalidArgumentException;
 use Monolog\Handler\RotatingFileHandler;
 use Oforge\Engine\Modules\Console\Services\ConsoleService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\InvalidClassException;
 use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
@@ -38,7 +38,7 @@ class CronjobService extends AbstractDatabaseAccess {
      *
      * @param array $options
      *
-     * @throws ConfigOptionKeyNotExistsException
+     * @throws ConfigOptionKeyNotExistException
      * @throws InvalidClassException
      * @throws ORMException
      */
@@ -187,12 +187,12 @@ class CronjobService extends AbstractDatabaseAccess {
      * @param array $options
      *
      * @return bool
-     * @throws ConfigOptionKeyNotExistsException
+     * @throws ConfigOptionKeyNotExistException
      * @throws InvalidClassException
      */
     protected function isValid(array $options) : bool {
         if (!isset($options['type'])) {
-            throw new ConfigOptionKeyNotExistsException('type');
+            throw new ConfigOptionKeyNotExistException('type');
         }
         if (!in_array($options['type'], [CommandCronjob::class, CustomCronjob::class])) {
             $type = $options['type'];
@@ -210,7 +210,7 @@ class CronjobService extends AbstractDatabaseAccess {
         }
         foreach ($requiredKeys as $dataKey) {
             if (!isset($options[$dataKey]) || empty($options[$dataKey])) {
-                throw new ConfigOptionKeyNotExistsException($dataKey);
+                throw new ConfigOptionKeyNotExistException($dataKey);
             }
         }
         /**

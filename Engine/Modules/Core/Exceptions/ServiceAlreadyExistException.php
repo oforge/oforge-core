@@ -5,11 +5,11 @@ namespace Oforge\Engine\Modules\Core\Exceptions;
 use Exception;
 
 /**
- * Class ServiceNotFoundException
+ * Class ServiceAlreadyDefinedException
  *
  * @package Oforge\Engine\Modules\Core\Exceptions
  */
-class ServiceNotFoundException extends Exception {
+class ServiceAlreadyExistException extends Exception {
 
     /**
      * ServiceNotFoundException constructor.
@@ -17,7 +17,7 @@ class ServiceNotFoundException extends Exception {
      * @param string $serviceName
      */
     public function __construct(string $serviceName) {
-        parent::__construct("Service with name '$serviceName' not found!");
+        parent::__construct("A service with name '$serviceName' is already exist!");
     }
 
 }

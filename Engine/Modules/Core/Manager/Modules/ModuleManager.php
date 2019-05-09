@@ -8,10 +8,10 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Bootstrap;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistsException;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\CouldNotInstallModuleException;
-use Oforge\Engine\Modules\Core\Exceptions\ServiceAlreadyDefinedException;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceAlreadyExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\Helper;
 use Oforge\Engine\Modules\Core\Helper\Statics;
@@ -53,9 +53,9 @@ class ModuleManager {
      * @throws CouldNotInstallModuleException
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws ServiceAlreadyDefinedException
+     * @throws ServiceAlreadyExistException
      * @throws ServiceNotFoundException
-     * @throws ConfigOptionKeyNotExistsException
+     * @throws ConfigOptionKeyNotExistException
      */
     public function init() {
         $startTime = microtime(true) * 1000;
@@ -176,9 +176,9 @@ class ModuleManager {
      *
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws ServiceAlreadyDefinedException
+     * @throws ServiceAlreadyExistException
      * @throws ServiceNotFoundException
-     * @throws ConfigOptionKeyNotExistsException
+     * @throws ConfigOptionKeyNotExistException
      */
     protected function initModule($className) {
         if (is_subclass_of($className, AbstractBootstrap::class)) {
@@ -209,7 +209,7 @@ class ModuleManager {
             if (isset($entry) && !$entry->getInstalled()) {
                 try {
                     $instance->install();
-                } catch (ConfigElementAlreadyExistsException $e) {
+                } catch (ConfigElementAlreadyExistException $e) {
                 }
                 $this->entityManger()->persist($entry->setInstalled(true));
             }
@@ -257,7 +257,7 @@ class ModuleManager {
             if (isset($entry) && !$entry->getInstalled()) {
                 try {
                     $instance->install();
-                } catch (ConfigElementAlreadyExistsException $e) {
+                } catch (ConfigElementAlreadyExistException $e) {
                 }
                 $this->entityManger()->persist($entry->setInstalled(true));
                 $needFlush = true;
@@ -265,7 +265,7 @@ class ModuleManager {
                 $this->register($className);
                 try {
                     $instance->install();
-                } catch (ConfigElementAlreadyExistsException $e) {
+                } catch (ConfigElementAlreadyExistException $e) {
                 }
                 $entry = $this->moduleRepository()->findOneBy(["name" => $className]);
                 $this->entityManger()->persist($entry->setInstalled(true));
