@@ -2,7 +2,7 @@
 
 namespace Oforge\Engine\Modules\Core\Manager\Services;
 
-use Oforge\Engine\Modules\Core\Exceptions\ServiceAlreadyDefinedException;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceAlreadyExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 
 /**
@@ -64,7 +64,7 @@ class ServiceManager {
      *
      * @param array $services
      *
-     * @throws ServiceAlreadyDefinedException
+     * @throws ServiceAlreadyExistException
      */
     public function register(array $services) {
         foreach ($services as $name => $className) {
@@ -78,11 +78,11 @@ class ServiceManager {
      * @param string $name
      * @param string $className
      *
-     * @throws ServiceAlreadyDefinedException
+     * @throws ServiceAlreadyExistException
      */
     protected function registerService(string $name, string $className) {
         if (isset($this->services[$name])) {
-            throw new ServiceAlreadyDefinedException($name);
+            throw new ServiceAlreadyExistException($name);
         }
 
         $this->services[$name] = new $className();

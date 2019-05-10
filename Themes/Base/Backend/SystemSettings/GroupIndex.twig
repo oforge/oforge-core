@@ -1,0 +1,73 @@
+{% extends "Backend/Master/Index.twig" %}
+{% set meta = mergeRecursive(meta|default({}), dotToNested({
+    'page.favoriteButton': false,
+})) %}
+{% set breadcrumbs = backend_breadcrumbs(meta.route.name)|default({})|slice(0, -1)|merge([{
+    path: meta.route.name,
+    pathArgs: {group: groupname},
+    visible: true,
+    name: 'config_group_' ~ groupname,
+}]) %}
+
+{% block pagecontent %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-body">
+                    <form method="post">
+                        {% for element in config %}
+                            <div class="form-group">
+                                <label for="{{ element.name }}">
+                                    {{ i18n(element.label) }}
+                                    {% if element.required %}
+                                        <span title="{{ i18n('required', 'Required') }}">
+                                            <i class="fa fa-exclamation-triangle text-primary"></i>
+                                        </span>
+                                    {% endif %}
+                                </label>
+
+                                {% if element.type == "boolean" %}
+                                    <div>
+                                        {% include 'Backend/Components/Form/Switch.twig' with {
+                                            id: element.name,
+                                            name: element.name,
+                                            checked: element.values[0].value is same as("1"),
+                                        } only %}
+                                    </div>
+
+                                {% elseif element.type == "password" %}
+                                    <div class="input-group">
+                                        <input type="{{ element.type }}" class="form-control"
+                                               id="{{ element.name }}" name="{{ element.name }}"
+                                               value="{{ element.values[0].value }}"
+                                               {% if element.required %}required{% endif %} />
+                                        <span class="input-group-btn">
+                                        <button class="btn btn-default oforge-toggle-password-visibility" type="button"><i
+                                                class="fa fa-eye-slash"></i></button>
+                                    </span>
+                                    </div>
+
+                                {% elseif element.type == "string" %}
+                                    <input type="{{ element.type }}" class="form-control"
+                                           id="{{ element.name }}" name="{{ element.name }}"
+                                           value="{{ element.values[0].value }}"
+                                           {% if element.required %}required{% endif %} />
+
+                                {% elseif element.type == "integer" %}
+                                    <input type="number" class="form-control"
+                                           id="{{ element.name }}" name="{{ element.name }}"
+                                           value="{{ element.values[0].value }}"
+                                           {% if element.required %}required{% endif %} />
+                                {% else %}
+                                    <p>ERROR</p>
+
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-primary">{{ i18n("submit") }}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

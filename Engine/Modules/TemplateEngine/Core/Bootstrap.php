@@ -2,7 +2,11 @@
 
 namespace Oforge\Engine\Modules\TemplateEngine\Core;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Exceptions\Template\TemplateNotFoundException;
 use Oforge\Engine\Modules\TemplateEngine\Core\Manager\TemplateManager;
 use Oforge\Engine\Modules\TemplateEngine\Core\Manager\ViewManager;
 use Oforge\Engine\Modules\TemplateEngine\Core\Middleware\AssetsMiddleware;
@@ -47,10 +51,10 @@ class Bootstrap extends AbstractBootstrap {
     }
 
     /**
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\TemplateNotFoundException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ServiceNotFoundException
+     * @throws TemplateNotFoundException
      */
     public function activate() {
         Oforge()->Templates()->init();
