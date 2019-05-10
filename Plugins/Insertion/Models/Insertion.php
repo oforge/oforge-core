@@ -20,8 +20,6 @@ class Insertion extends AbstractModel {
     private $id;
 
     /**
-     * TODO: Relation mapping
-     *
      * @var int
      * @ORM\Column(name="insertion_type_id", type="integer", nullable=false)
      * @ORM\ManyToOne(targetEntity="InsertionsType")
@@ -35,15 +33,12 @@ class Insertion extends AbstractModel {
     private $title;
 
     /**
-     * TODO: Relation mapping
      * @var int
      * @ORM\Column(name="insertion_user", type="integer", nullable=false)
      */
     private $user;
 
     /**
-     * TODO: Mapping to content type rich text
-     *
      * @var string
      * @ORM\Column(name="attribute_key_name", type="text", nullable=false)
      */
@@ -91,9 +86,12 @@ class Insertion extends AbstractModel {
 
     /**
      * @param int $insertion_type_id
+     *
+     * @return Insertion
      */
-    public function setInsertionTypeId(int $insertion_type_id) : void {
+    public function setInsertionTypeId(int $insertion_type_id) : Insertion {
         $this->insertion_type_id = $insertion_type_id;
+        return $this;
     }
 
     /**
@@ -105,9 +103,12 @@ class Insertion extends AbstractModel {
 
     /**
      * @param string $title
+     *
+     * @return Insertion
      */
-    public function setTitle(string $title) : void {
+    public function setTitle(string $title) : Insertion {
         $this->title = $title;
+        return $this;
     }
 
     /**
@@ -119,9 +120,12 @@ class Insertion extends AbstractModel {
 
     /**
      * @param mixed $user
+     *
+     * @return Insertion
      */
-    public function setUser($user) : void {
+    public function setUser($user) : Insertion {
         $this->user = $user;
+        return $this;
     }
 
     /**
@@ -133,9 +137,12 @@ class Insertion extends AbstractModel {
 
     /**
      * @param string $description
+     *
+     * @return Insertion
      */
-    public function setDescription(string $description) : void {
+    public function setDescription(string $description) : Insertion {
         $this->description = $description;
+        return $this;
     }
 
     /**

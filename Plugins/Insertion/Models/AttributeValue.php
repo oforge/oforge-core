@@ -6,10 +6,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 
 /**
- * @ORM\Table(name="oforge_attribute_value")
+ * @ORM\Table(name="oforge_insertion_attribute_value")
  * @ORM\Entity
  */
-class Attribute_Value extends AbstractModel {
+class AttributeValue extends AbstractModel {
     /**
      * @var int
      * @ORM\Column(name="id", type="integer", nullable=false)
@@ -25,9 +25,14 @@ class Attribute_Value extends AbstractModel {
     private $value;
 
     /**
-     * TODO: Relation mapping
-     * @var int
-     * @ORM\Column(name="attribute_value_sub_attribute_key_id", type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity="AttributeKey", inversedBy="values", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="attribute_key_id", referencedColumnName="id")
+     */
+    private $attributeKeyId;
+
+    /**
+     * @ORM\OneToOne(targetEntity="AttributeKey", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="attribute_value_sub_attribute_key_id", referencedColumnName="id", nullable=true)
      */
     private $subAttributeKeyId;
 
@@ -48,29 +53,27 @@ class Attribute_Value extends AbstractModel {
     /**
      * @param string $value
      *
-     * @return Attribute_Value
+     * @return AttributeValue
      */
-    public function setValue(string $value) : Attribute_Value {
+    public function setValue(string $value) : AttributeValue {
         $this->value = $value;
-
         return $this;
     }
 
     /**
-     * @return int
+     * @return null|int
      */
-    public function getSubAttributeKeyId() : int {
+    public function getSubAttributeKeyId() : ?AttributeKey {
         return $this->subAttributeKeyId;
     }
 
     /**
-     * @param int $subAttributeKeyId
+     * @param AttributeKey $subAttributeKeyId
      *
-     * @return Attribute_Value
+     * @return AttributeValue
      */
-    public function setSubAttributeKeyId(int $subAttributeKeyId) : Attribute_Value {
+    public function setSubAttributeKeyId(AttributeKey $subAttributeKeyId) : AttributeValue {
         $this->subAttributeKeyId = $subAttributeKeyId;
-
         return $this;
     }
 }
