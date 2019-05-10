@@ -2,6 +2,10 @@
 
 namespace Oforge\Engine\Modules\TemplateEngine\Core\Abstracts;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\TemplateEngine\Core\Exceptions\InvalidScssVariableException;
 use Oforge\Engine\Modules\TemplateEngine\Core\Services\ScssVariableService;
 
 abstract class AbstractTemplate {
@@ -17,17 +21,10 @@ abstract class AbstractTemplate {
     }
 
     /**
-     * @param array $variables
-     */
-    protected function addTemplateVariables(array $variables) {
-        $this->templateVariables = array_merge($variables, $this->templateVariables);
-    }
-
-    /**
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
-     * @throws \Oforge\Engine\Modules\TemplateEngine\Core\Exceptions\InvalidScssVariableException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ServiceNotFoundException
+     * @throws InvalidScssVariableException
      */
     public function registerTemplateVariables() {
         /** @var ScssVariableService $scssVariables */
@@ -36,5 +33,12 @@ abstract class AbstractTemplate {
             $templateVariable['context'] = $this->context;
             $scssVariables->add($templateVariable);
         }
+    }
+
+    /**
+     * @param array $variables
+     */
+    protected function addTemplateVariables(array $variables) {
+        $this->templateVariables = array_merge($variables, $this->templateVariables);
     }
 }

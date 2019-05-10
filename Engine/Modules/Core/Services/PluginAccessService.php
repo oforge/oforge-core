@@ -1,15 +1,7 @@
 <?php
 namespace Oforge\Engine\Modules\Core\Services;
 
-use Doctrine\Common\Persistence\ObjectRepository;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
-use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
-use Oforge\Engine\Modules\Core\Exceptions\CouldNotActivatePluginException;
-use Oforge\Engine\Modules\Core\Exceptions\CouldNotDeactivatePluginException;
-use Oforge\Engine\Modules\Core\Exceptions\PluginNotFoundException;
-use Oforge\Engine\Modules\Core\Helper\Helper;
 use Oforge\Engine\Modules\Core\Models\Plugin\Plugin;
 
 class PluginAccessService extends AbstractDatabaseAccess {

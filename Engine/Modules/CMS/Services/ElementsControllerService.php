@@ -14,7 +14,7 @@ class ElementsControllerService extends AbstractDatabaseAccess {
     public function __construct() {
         parent::__construct(["contentTypeGroup" => ContentTypeGroup::class, "contentType" => ContentType::class, "contentParent" => ContentParent::class, "content" => Content::class]);
         
-        $this->entityManager = Oforge()->DB()->getEnityManager();
+        $this->entityManager = Oforge()->DB()->getEntityManager();
     }
 
     private function getPageContentArrayForContentElement($contentId)

@@ -34,7 +34,7 @@ class PagesControllerService extends AbstractDatabaseAccess {
             "contentType" => ContentType::class, 
             "content" => Content::class]);
         
-        $this->entityManager = Oforge()->DB()->getEnityManager();
+        $this->entityManager = Oforge()->DB()->getEntityManager();
     }
 
     /**

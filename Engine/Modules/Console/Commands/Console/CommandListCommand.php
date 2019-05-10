@@ -9,6 +9,7 @@ use Monolog\Logger;
 use Oforge\Engine\Modules\Console\Abstracts\AbstractCommand;
 use Oforge\Engine\Modules\Console\Lib\Input;
 use Oforge\Engine\Modules\Console\Services\ConsoleService;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 
 /**
  * Class CommandListCommand
@@ -43,7 +44,7 @@ class CommandListCommand extends AbstractCommand {
 
     /**
      * @inheritdoc
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ServiceNotFoundException
      */
     public function handle(Input $input, Logger $output) : void {
         $listType = self::TYPE_DEFAULT;

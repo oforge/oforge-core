@@ -10,14 +10,16 @@ declare(strict_types=1);
 
 namespace Tests\Auth\Services;
 
+use Exception;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Tests\TestCase;
 
 final class AuthServiceTest extends TestCase
 {
     /**
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
-     * @throws \Exception
+     * @throws ServiceNotFoundException
+     * @throws Exception
      */
     public function testCanCreateJsonWebToken(): void
     {
@@ -30,8 +32,8 @@ final class AuthServiceTest extends TestCase
     }
     
     /**
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
-     * @throws \Exception
+     * @throws ServiceNotFoundException
+     * @throws Exception
      */
     public function testCanDecodeJsonWebToken(): void {
         /**
@@ -44,8 +46,8 @@ final class AuthServiceTest extends TestCase
     }
     
     /**
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
-     * @throws \Exception
+     * @throws ServiceNotFoundException
+     * @throws Exception
      */
     public function testCanCheckIfTokenIsValid() {
         /**
@@ -58,8 +60,8 @@ final class AuthServiceTest extends TestCase
     }
     
     /**
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
-     * @throws \Exception
+     * @throws ServiceNotFoundException
+     * @throws Exception
      */
     public function testCanCheckIfTokenIsInvalid() {
         /**
