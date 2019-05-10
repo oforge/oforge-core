@@ -14,6 +14,7 @@ use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Models\Config\ConfigType;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 
 /**
@@ -21,84 +22,86 @@ use Oforge\Engine\Modules\Core\Services\ConfigService;
  *
  * @package Mailchimp
  */
-class Bootstrap extends AbstractBootstrap
-{
+class Bootstrap extends AbstractBootstrap {
 
-    public function __construct()
-    {
+    public function __construct() {
+        $this->dependencies = [
+            \FrontendUserManagement\Bootstrap::class,
+        ];
+
         $this->endpoints = [
             NewsletterSubscriptionController::class,
             AccountNewsletterController::class,
         ];
 
-        $this->services = [
-            'mailchimp.newsletter' => MailchimpNewsletterService::class,
-        ];
-
-        $this->dependencies = [
-            \FrontendUserManagement\Bootstrap::class,
-        ];
-
         $this->models = [
             UserNewsletter::class,
+        ];
+
+        $this->services = [
+            'mailchimp.newsletter' => MailchimpNewsletterService::class,
         ];
     }
 
     /**
-     * @throws ConfigElementAlreadyExistException
      * @throws ConfigOptionKeyNotExistException
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws ServiceNotFoundException
      */
-    public function install()
-    {
+    public function install() {
+        //TODO in import csv
+        // I18N::translate('config_mailchimp_uri', 'Mailchimp URI', 'en');
+        // I18N::translate('config_mailchimp_username', 'Username', 'en');
+        // I18N::translate('config_mailchimp_api_key', 'API Key', 'en');
+        // I18N::translate('config_mailchimp_data_center', 'Data Center', 'en');
+        // I18N::translate('config_mailchimp_list_id', 'List ID', 'en');
 
-        /**
-         * @var $configService ConfigService
-         */
-        $configService = Oforge()->Services()->get("config");
+        /** @var ConfigService $configService */
+        $configService = Oforge()->Services()->get('config');
 
-        $configService->update([
-            "name" => "mailchimp_uri",
-            "label" => "Mailchimp URI",
-            "type" => "string",
-            "required" => false,
-            "default" => "https://{dc}.api.mailchimp.com/3.0",
-            "group" => "Mailchimp"
+        $configService->add([
+            'name'    => 'mailchimp_uri',
+            'type'    => ConfigType::STRING,
+            'group'   => 'mailchimp',
+            'default' => 'https://{dc}.api.mailchimp.com/3.0',
+            'label'   => 'config_mailchimp_uri',
+            'order'   => 0,
         ]);
-        $configService->update([
-            "name" => "mailchimp_username",
-            "label" => "Username",
-            "type" => "string",
-            "required" => false,
-            "default" => "",
-            "group" => "Mailchimp"
+        $configService->add([
+            'name'    => 'mailchimp_username',
+            'type'    => ConfigType::STRING,
+            'group'   => 'mailchimp',
+            'default' => '',
+            'label'   => 'config_mailchimp_username',
+            'order'   => 1,
         ]);
-        $configService->update([
-            "name" => "mailchimp_api_key",
-            "label" => "API Key",
-            "type" => "string",
-            "required" => true,
-            "default" => "",
-            "group" => "Mailchimp"
+        $configService->add([
+            'name'     => 'mailchimp_api_key',
+            'type'     => ConfigType::STRING,
+            'group'    => 'mailchimp',
+            'default'  => '',
+            'label'    => 'config_mailchimp_api_key',
+            'required' => true,
+            'order'    => 2,
         ]);
-
-        $configService->update([
-            "name" => "mailchimp_data_center",
-            "label" => "Mailchimp Data Center",
-            "type" => "string",
-            "required" => true,
-            "default" => "",
-            "group" => "Mailchimp"
+        $configService->add([
+            'name'     => 'mailchimp_data_center',
+            'type'     => ConfigType::STRING,
+            'group'    => 'mailchimp',
+            'default'  => '',
+            'label'    => 'config_mailchimp_data_center',
+            'required' => true,
+            'order'    => 3,
         ]);
-        $configService->update([
-            "name" => "mailchimp_list_id",
-            "label" => "List ID",
-            "type" => "string",
-            "required" => true,
-            "default" => "",
-            "group" => "Mailchimp"
+        $configService->add([
+            'name'     => 'mailchimp_list_id',
+            'type'     => ConfigType::STRING,
+            'group'    => 'mailchimp',
+            'default'  => '',
+            'label'    => 'config_mailchimp_list_id',
+            'required' => true,
+            'order'    => 4,
         ]);
     }
 
@@ -110,16 +113,15 @@ class Bootstrap extends AbstractBootstrap
      * @throws ParentNotFoundException
      * @throws ServiceNotFoundException
      */
-    public function activate()
-    {
+    public function activate() {
         /** @var AccountNavigationService $accountNavigationService */
         $accountNavigationService = Oforge()->Services()->get('frontend.user.management.account.navigation');
 
         $accountNavigationService->put([
-            'name' => 'frontend_account_newsletter',
-            'order' => 1,
-            'icon' => 'postfach',
-            'path' => 'frontend_account_newsletter',
+            'name'     => 'frontend_account_newsletter',
+            'order'    => 1,
+            'icon'     => 'postfach',
+            'path'     => 'frontend_account_newsletter',
             'position' => 'sidebar',
         ]);
     }

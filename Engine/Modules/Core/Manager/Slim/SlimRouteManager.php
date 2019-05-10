@@ -23,9 +23,7 @@ class SlimRouteManager {
     /** @var SlimRouteManager $instance */
     protected static $instance = null;
 
-    /**
-     * @return SlimRouteManager
-     */
+    /** @return SlimRouteManager */
     public static function getInstance() : SlimRouteManager {
         if (!isset(self::$instance)) {
             self::$instance = new SlimRouteManager();

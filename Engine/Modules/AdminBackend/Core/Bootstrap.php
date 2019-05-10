@@ -22,6 +22,7 @@ use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Models\Config\ConfigType;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 
 /**
@@ -72,39 +73,44 @@ class Bootstrap extends AbstractBootstrap {
      * @throws ConfigOptionKeyNotExistException
      */
     public function install() {
+        //TODO in import csv
+        // I18N::translate('config_system_project_name', 'Project name', 'en');
+        // I18N::translate('config_system_project_short', 'Project short name', 'en');
+        // I18N::translate('config_backend_project_footer_text', 'Copyright', 'en');
+        // I18N::translate('config_backend_project_footer_text', 'Backend footer text', 'en');
         /** @var ConfigService $configService */
         $configService = Oforge()->Services()->get('config');
         $configService->add([
-            'name'     => 'backend_project_name',
-            'label'    => 'Projektname',
-            'type'     => 'string',
-            'required' => true,
+            'name'     => 'system_project_name',
+            'type'     => ConfigType::STRING,
+            'group'    => 'system',
             'default'  => 'Oforge',
-            'group'    => 'backend',
+            'label'    => 'config_system_project_name',
+            'required' => true,
         ]);
         $configService->add([
-            'name'     => 'backend_project_short',
-            'label'    => 'Projektkürzel',
-            'type'     => 'string',
-            'required' => true,
+            'name'     => 'system_project_short',
+            'type'     => ConfigType::STRING,
+            'group'    => 'system',
             'default'  => 'OF',
-            'group'    => 'backend',
+            'label'    => 'config_system_project_short',
+            'required' => true,
         ]);
         $configService->add([
-            'name'     => 'backend_project_copyright',
-            'label'    => 'Copyright',
-            'type'     => 'string',
-            'required' => true,
+            'name'     => 'system_project_copyright',
+            'type'     => ConfigType::STRING,
+            'group'    => 'system',
             'default'  => 'Oforge',
-            'group'    => 'backend',
+            'label'    => 'config_system_project_copyright',
+            'required' => true,
         ]);
         $configService->add([
             'name'     => 'backend_project_footer_text',
-            'label'    => 'Footer Text',
-            'type'     => 'string',
-            'required' => true,
-            'default'  => 'Oforge',
+            'type'     => ConfigType::STRING,
             'group'    => 'backend',
+            'default'  => 'Oforge',
+            'label'    => 'config_backend_project_footer_text',
+            'required' => true,
         ]);
 
         /** @var BackendNavigationService $sidebarNavigation */

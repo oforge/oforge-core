@@ -86,6 +86,7 @@ class LoggerManager {
         if (empty($name) || !isset($this->logger[$name])) {
             $name = $this->defaultLoggerName;
         }
+
         // TODO: Implement exception if no logger was found
         return $this->logger[$name];
     }
@@ -145,11 +146,11 @@ class LoggerManager {
     /**
      * Function for general exception logging.
      *
-     * @param string $name
      * @param Exception $exception
+     * @param string|null $name
      * @param int $logLevel
      */
-    public function logException(string $name, Exception $exception, int $logLevel = Logger::ERROR) {
+    public function logException(Exception $exception, ?string $name = null, int $logLevel = Logger::ERROR) {
         $this->get($name)->log($logLevel, $exception->getMessage(), [
             'exception' => $exception,
             'trace'     => $exception->getTrace(),
