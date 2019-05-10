@@ -152,7 +152,7 @@ class TemplateRenderService {
             }
 
             $paths['parent'][]                = $defaultThemePath;
-            $paths[self::TWIG_MAIN_NAMESPACE] = $defaultThemePath;
+            $paths[self::TWIG_MAIN_NAMESPACE][] = $defaultThemePath;
 
             $this->view = new CustomTwig($paths, [
                 'cache'       => ROOT_PATH . Statics::THEME_CACHE_DIR,
