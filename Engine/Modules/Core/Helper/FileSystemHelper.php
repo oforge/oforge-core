@@ -2,6 +2,9 @@
 
 namespace Oforge\Engine\Modules\Core\Helper;
 
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+
 /**
  * FileSystemHelper
  *
@@ -10,6 +13,12 @@ namespace Oforge\Engine\Modules\Core\Helper;
 class FileSystemHelper {
     public const OMIT        = ['.', '..'];
     public const OMIT_OFORGE = ['.', '..', 'var', 'vendor'];
+    /**
+     * Caching of findFiles results.
+     *
+     * @var array $findCache
+     */
+    private static $findCache = [];
 
     /**
      * Prevent instance.
@@ -18,7 +27,7 @@ class FileSystemHelper {
     }
 
     /**
-     * Deletes single file or directory.
+     * Delete single file or directory.
      * Directories can optionally be recursively deleted and empty directories will not be deleted.
      *
      * @param string $path Path to file or directory
@@ -59,17 +68,6 @@ class FileSystemHelper {
     }
 
     /**
-     * Get all template files inside a defined path
-     *
-     * @param string $path
-     *
-     * @return string[]
-     */
-    public static function findThemeBootstrapFiles(string $path) {
-        return self::findFiles($path, 'theme');
-    }
-
-    /**
      * Search recursive for for files with name inside a path.
      *
      * @param string $path string Directory or file path.
@@ -78,24 +76,37 @@ class FileSystemHelper {
      * @return string[] Array with full path to files.
      */
     public static function findFiles(string $path, string $searchFileName) {
+        $path   = realpath($path);
         $result = [];
-        if (is_dir($path)) {
-            $fileNames = scandir($path);
-            foreach ($fileNames as $fileName) {
-                if (in_array($fileName, self::OMIT_OFORGE)) {
-                    continue;
-                }
-                $filePath = $path . DIRECTORY_SEPARATOR . $fileName;
-                $result   = array_merge($result, self::findFiles($filePath, $searchFileName));
-            }
-        } else {
-            $fileName = pathinfo($path, PATHINFO_FILENAME);
-            if (!in_array($fileName, self::OMIT_OFORGE) && strtolower($fileName) === strtolower($searchFileName)) {
-                $result[] = $path;
+        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path)) as $f) {
+            if (strtolower($f->getFileName()) === $searchFileName) {
+                $result[] = $f->getPath() . DIRECTORY_SEPARATOR . $f->getFileName();
             }
         }
 
         return $result;
+    }
+
+    /**
+     * Get all Bootstrap.php files inside a defined path
+     *
+     * @param string $path
+     *
+     * @return string[]
+     */
+    public static function getBootstrapFiles(string $path) {
+        return self::getCachedOrFind($path, 'bootstrap.php');
+    }
+
+    /**
+     * Get all template files inside a defined path
+     *
+     * @param string $path
+     *
+     * @return string[]
+     */
+    public static function getThemeBootstrapFiles(string $path) {
+        return self::getCachedOrFind($path, 'template.php');
     }
 
     /**
@@ -120,6 +131,33 @@ class FileSystemHelper {
                 $result   = array_merge($result, self::getSubDirectories($filePath));
             }
         }
+
+        return $result;
+    }
+
+    /**
+     * Get cached data or find files with filename in path and cache it.
+     *
+     * @param string $context
+     * @param string $path
+     * @param string $filename
+     *
+     * @return mixed|string[]
+     */
+    private static function getCachedOrFind(string $path, string $filename) {
+        $context = basename($path);
+        if (isset(self::$findCache[$context])) {
+            return self::$findCache[$context];
+        }
+        $cacheFile = ROOT_PATH . Statics::CACHE_DIR . DIRECTORY_SEPARATOR . $context . '.cache.php';
+
+        if (file_exists($cacheFile) && Oforge()->Settings()->isProductionMode()) {
+            $result = ArrayPhpFileStorage::load($cacheFile);
+        } else {
+            $result = self::findFiles($path, $filename);
+            ArrayPhpFileStorage::write($cacheFile, $result);
+        }
+        self::$findCache[$filename] = $result;
 
         return $result;
     }

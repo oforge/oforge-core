@@ -1,6 +1,6 @@
 {% extends 'Backend/Master/Index.twig' %}
 {% set meta = mergeRecursive(meta|default({}), dotToNested({
-    'meta.page.favoriteButton': false,
+    'page.favoriteButton': false,
 })) %}
 {% set crud = crud|default({})|merge({
     baseRouteName: meta.route.name|split('_')|slice(0, -1)|join('_')
