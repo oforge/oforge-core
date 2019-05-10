@@ -3,17 +3,15 @@ use Monolog\Logger;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 
 return [
-    'mode' => "development", // production|development
+    'mode' => 'development', // production|development
     // Monolog settings
     'logger' => [
         [
             'name' => 'system',
-            'path' => ROOT_PATH . '/var/logs/system.log',
             'level' => Logger::DEBUG,
         ],
         [
             'name' => 'plugins',
-            'path' => ROOT_PATH . '/var/logs/plugins.log',
             'level' => Logger::DEBUG,
         ]
     ],
@@ -39,5 +37,10 @@ return [
             'charset' => 'utf8' // we expect to use utf8 charset everywhere (webserver, mysql, php, etc)
         ]
     ],
-    "jwt_salt" => "my awesome salt" // Change this salt for security
+    'jwt_salt' => 'my awesome salt', // Change this salt for security
+    // config for db value encrypt/decrypt
+    'encryption'            => [
+        // 'method' => 'aes-128-gcm', // Default: aes-128-gcm
+        'key' => 'my awesome salt',
+    ],
 ];
