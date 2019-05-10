@@ -1,5 +1,8 @@
 {# block header__main_nav #}
 {% block main_nav %}
+
+    {% set navigation = content('world_image_de') %}
+    {{ o_dump(navigation) }}
 <nav class="main-nav">
     <ul class="main-nav-list content content--no-pad">
         <li class="main-nav-list__item"><a href="#" class="main-nav-list__link">TODO Navigation</a></li>

@@ -26,13 +26,16 @@ use Oforge\Engine\Modules\CMS\Models\Page\PagePath;
 use Oforge\Engine\Modules\CMS\Models\Site\Site;
 use Oforge\Engine\Modules\CMS\Services\ContentTypeService;
 use Oforge\Engine\Modules\CMS\Services\DummyPageGenerator;
+use Oforge\Engine\Modules\CMS\Services\NamedContentService;
 use Oforge\Engine\Modules\CMS\Services\PageBuilderService;
 use Oforge\Engine\Modules\CMS\Services\PagesControllerService;
 use Oforge\Engine\Modules\CMS\Services\PageService;
 use Oforge\Engine\Modules\CMS\Services\PageTreeService;
 use Oforge\Engine\Modules\CMS\Services\ElementsControllerService;
 use Oforge\Engine\Modules\CMS\Services\ElementTreeService;
+use Oforge\Engine\Modules\CMS\Twig\AccessExtension;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
+use Oforge\Engine\Modules\TemplateEngine\Core\Services\TemplateRenderService;
 
 /**
  * Class Bootstrap
@@ -68,14 +71,16 @@ class Bootstrap extends AbstractBootstrap {
         ];
 
         $this->services = [
-            "dummy.page.generator" => DummyPageGenerator::class,
-            "page.path" => PageService::class,
-            "pages.controller.service" => PagesControllerService::class,
-            "page.tree.service" => PageTreeService::class,
-            "page.builder.service" => PageBuilderService::class,
-            "content.type.service" => ContentTypeService::class,
+
+            "dummy.page.generator"        => DummyPageGenerator::class,
+            "page.path"                   => PageService::class,
+            "pages.controller.service"    => PagesControllerService::class,
+            "page.tree.service"           => PageTreeService::class,
+            "page.builder.service"        => PageBuilderService::class,
+            "content.type.service"        => ContentTypeService::class,
             "elements.controller.service" => ElementsControllerService::class,
-            "element.tree.service" => ElementTreeService::class
+            "element.tree.service"        => ElementTreeService::class,
+            'named.content'               => NamedContentService::class,
         ];
     }
 
@@ -116,6 +121,13 @@ class Bootstrap extends AbstractBootstrap {
             'path'     => 'backend_content_types',
             'position' => 'sidebar',
         ]);
+
+        /**
+         * @var $templateRenderer TemplateRenderService
+         */
+        $templateRenderer = Oforge()->Services()->get("template.render");
+
+        $templateRenderer->View()->addExtension(new AccessExtension());
 
     }
 }
