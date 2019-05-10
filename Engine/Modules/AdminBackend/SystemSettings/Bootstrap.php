@@ -6,7 +6,6 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\AdminBackend\SystemSettings\Controller\Backend\SystemSettingsController;
-use Oforge\Engine\Modules\AdminBackend\SystemSettings\Controller\Backend\SystemSettingsGroupController;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
@@ -26,7 +25,6 @@ class Bootstrap extends AbstractBootstrap {
     public function __construct() {
         $this->endpoints = [
             SystemSettingsController::class,
-            SystemSettingsGroupController::class,
         ];
     }
 
