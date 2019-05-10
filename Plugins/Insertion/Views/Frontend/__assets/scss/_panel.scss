@@ -15,3 +15,9 @@
     }
 }
 
+.content--insertion {
+    .panel + .panel {
+        margin-top: $size-large;
+    }
+}
+
