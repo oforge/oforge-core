@@ -56,9 +56,12 @@ class InsertionType extends AbstractModel {
 
     /**
      * @param string $name
+     *
+     * @return InsertionType
      */
-    public function setName(string $name) : void {
+    public function setName(string $name) : InsertionType {
         $this->name = $name;
+        return $this;
     }
 
     /**
@@ -70,9 +73,12 @@ class InsertionType extends AbstractModel {
 
     /**
      * @param int $parent
+     *
+     * @return InsertionType
      */
-    public function setParent(int $parent) : void {
+    public function setParent(int $parent) : InsertionType {
         $this->parent = $parent;
+        return $this;
     }
 
     /**
@@ -84,8 +90,11 @@ class InsertionType extends AbstractModel {
 
     /**
      * @param mixed $attributes
+     *
+     * @return InsertionType
      */
-    public function setAttributes($attributes) : void {
+    public function setAttributes($attributes) : InsertionType {
         $this->attributes = $attributes;
+        return $this;
     }
 }

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 
 /**
- * @ORM\Table(name="oforge_attribute_key")
+ * @ORM\Table(name="oforge_insertion_attribute_key")
  * @ORM\Entity
  */
 class AttributeKey extends AbstractModel {
@@ -32,11 +32,16 @@ class AttributeKey extends AbstractModel {
     private $type;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Attribute_Value")
-     * @ORM\JoinTable(name="oforge_attribute_key_value",
-     *                joinColumns={@ORM\JoinColumn(name="attribute_key_id", referencedColumnName="id")},
-     *                inverseJoinColumns={@ORM\JoinColumn(name="attribute_value_id", referencedColumnName="id", unique=true)}
-     * )
+     * @var string
+     * @ORM\Column(name="attribute_key_filter_type", type="string", nullable=false)
+     */
+    private $filterType;
+
+    /**
+     *
+     * @ORM\OneToMany(targetEntity="AttributeValue", mappedBy="attributeKeyId", cascade={"all"}, fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="id", referencedColumnName="attribute_key_id")
+     *
      */
     private $values;
 
@@ -80,6 +85,24 @@ class AttributeKey extends AbstractModel {
     }
 
     /**
+     * @return string
+     */
+    public function getFilterType() : string {
+        return $this->filterType;
+    }
+
+    /**
+     * @param string $filterType
+     *
+     * @return AttributeKey
+     */
+    public function setFilterType(string $filterType) : AttributeKey {
+        $this->filterType = $filterType;
+
+        return $this;
+    }
+
+    /**
      * @return mixed
      */
     public function getValues() {
@@ -89,12 +112,10 @@ class AttributeKey extends AbstractModel {
     /**
      * @param mixed $values
      *
-     * @return Attribute_Key
+     * @return AttributeKey
      */
     public function setValues($values) {
         $this->values = $values;
-
         return $this;
     }
-
 }

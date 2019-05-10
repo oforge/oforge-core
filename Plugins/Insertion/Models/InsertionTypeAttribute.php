@@ -39,4 +39,22 @@ class InsertionTypeAttribute extends AbstractModel {
      * @ORM\Column(name="required", type="boolean", nullable=false)
      */
     private $required;
+
+    /**
+     * @return bool
+     */
+    public function isRequired() : bool {
+        return $this->required;
+    }
+
+    /**
+     * @param bool $required
+     *
+     * @return InsertionTypeAttribute
+     */
+    public function setRequired(bool $required) : InsertionTypeAttribute {
+        $this->required = $required;
+
+        return $this;
+    }
 }

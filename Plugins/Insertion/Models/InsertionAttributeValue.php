@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 
 /**
- * @ORM\Table(name="oforge_insertion_attribute_value")
+ * @ORM\Table(name="oforge_insertion_insertion_attribute_value")
  * @ORM\Entity
  */
 class InsertionAttributeValue extends AbstractModel {
@@ -40,4 +40,21 @@ class InsertionAttributeValue extends AbstractModel {
      * @ORM\Column(name="insertion_attribute_value", type="string", nullable=true)
      */
     private $value;
+
+    /**
+     * @return string
+     */
+    public function getValue() : string {
+        return $this->value;
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return InsertionAttributeValue
+     */
+    public function setValue(string $value) : InsertionAttributeValue {
+        $this->value = $value;
+        return $this;
+    }
 }
