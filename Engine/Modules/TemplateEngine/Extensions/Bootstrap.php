@@ -6,7 +6,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
-use Oforge\Engine\Modules\Core\Exceptions\TemplateNotFoundException;
+use Oforge\Engine\Modules\Core\Exceptions\Template\TemplateNotFoundException;
 use Oforge\Engine\Modules\TemplateEngine\Core\Services\TemplateRenderService;
 use Oforge\Engine\Modules\TemplateEngine\Extensions\Twig\AccessExtension;
 use Oforge\Engine\Modules\TemplateEngine\Extensions\Twig\BackendExtension;
