@@ -2,13 +2,11 @@
 
 namespace Oforge\Engine\Modules\AdminBackend\Plugins\Controller\Backend;
 
-use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
-use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
-use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
-use Slim\Http\Request;
-use Slim\Http\Response;
+use Oforge\Engine\Modules\Core\Models\Plugin\Plugin;
+use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
+use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
 
 /**
  * Class PluginController
@@ -16,20 +14,56 @@ use Slim\Http\Response;
  * @package Oforge\Engine\Modules\AdminBackend\Plugins\Controller\Backend
  * @EndpointClass(path="/backend/plugins", name="backend_plugins", assetScope="Backend")
  */
-class PluginController extends SecureBackendController {
+class PluginController extends BaseCrudController {
+    /** @var string $model */
+    protected $model = Plugin::class;
+    /** @var array $modelProperties */
+    protected $modelProperties = [
+        [
+            'name' => 'id',
+            'type' => CrudDataTypes::INT,
+            'crud' => [
+                'index' => 'readonly',
+            ],
+        ],
+        [
+            'name'  => 'name',
+            'type'  => CrudDataTypes::STRING,
+            'label' => ['key' => 'crud_plugin_name', 'default' => 'Plugin name'],
+            'crud'  => [
+                'index'  => 'readonly',
+            ],
+        ],
+        [
+            'name'  => 'action',
+            'type'     => CrudDataTypes::CUSTOM,
+            'label' => ['key' => 'crud_plugin_action', 'default' => 'Action'],
+            'crud'  => [
+                'index'  => 'readonly',
+            ],
+            'renderer' => [
+                'custom' => 'Backend/Plugin/Index/ActionColumn.twig',
+            ],
+        ],
+    ];
+    /** @var array $crudActions */
+    protected $crudActions = [
+        'index'  => true,
+        'create' => false,
+        'view'   => false,
+        'update' => false,
+        'delete' => false,
+    ];
 
-    /**
-     * @param Request $request
-     * @param Response $response
-     *
-     * @throws ServiceNotFoundException
-     * @EndpointAction()
-     */
-    public function indexAction(Request $request, Response $response) {
+    public function __construct() {
+        parent::__construct();
     }
 
-    public function initPermissions() {
-        $this->ensurePermissions('indexAction', BackendUser::class, BackendUser::ROLE_MODERATOR);
+    /**
+     * @EndpointAction(path="/{id:\d+}/activate")
+     */
+    public function activateAction() {
+
     }
 
 }
