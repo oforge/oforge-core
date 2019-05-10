@@ -11,6 +11,7 @@ use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Core\Helper\RedirectHelper;
+use Oforge\Engine\Modules\Core\Models\Config\Config;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Slim\Http\Request;
@@ -69,6 +70,10 @@ class SystemSettingsController extends SecureBackendController {
                 return RedirectHelper::redirect($response, null, ['group' => $args['group']]);
             }
             $groupConfigs = $configService->getGroupConfigs($args['group']);
+            $groupConfigs = array_map(function($config) {
+                /** @var Config $config */
+                return $config->toArray();
+            }, $groupConfigs);
 
             if (Oforge()->View()->Flash()->hasData(self::class)) {
                 $postData     = Oforge()->View()->Flash()->getData(self::class);
