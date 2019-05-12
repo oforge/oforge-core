@@ -15,6 +15,10 @@ namespace PHPSTORM_META {
             'session.management' => \Oforge\Engine\Modules\Core\Services\Session\SessionManagementService::class,
             'store.keyvalue'     => \Oforge\Engine\Modules\Core\Services\KeyValueStoreService::class,
         ]));
+
+        registerArgumentsSet('oforge_flash_message_types', 'success', 'error', 'warning', 'info');
+        expectedArguments(\Oforge\Engine\Modules\TemplateEngine\Core\Twig\TwigFlash::addMessage(), 0, argumentsSet('oforge_flash_message_types'));
+        expectedArguments(\Oforge\Engine\Modules\TemplateEngine\Core\Twig\TwigFlash::addExceptionMessage(), 0, argumentsSet('oforge_flash_message_types'));
     }
 
 }
