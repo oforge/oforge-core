@@ -11,7 +11,13 @@ class InvalidScssVariableException extends \Exception {
     /** @var null */
     private $invalidVariables;
 
-    public function __construct($missingOption, $invalidVariables = null) {
+    /**
+     * InvalidScssVariableException constructor.
+     *
+     * @param string $missingOption
+     * @param null $invalidVariables
+     */
+    public function __construct(string $missingOption, $invalidVariables = null) {
         parent::__construct("Invalid variable. Missing option $missingOption. " . implode(', ', $invalidVariables));
         $this->invalidVariables = $invalidVariables;
     }

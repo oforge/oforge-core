@@ -34,7 +34,7 @@ class TemplateSettingsController extends SecureBackendController {
      * @throws NotFoundException
      * @throws ServiceNotFoundException
      * @throws TemplateNotFoundException
-     * @throws \Oforge\Engine\Modules\TemplateEngine\Core\Exceptions\Template\InvalidScssVariableException
+     * @throws InvalidScssVariableException
      * @EndpointAction()
      */
     public function indexAction(Request $request, Response $response) {
