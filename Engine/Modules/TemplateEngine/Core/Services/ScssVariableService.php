@@ -6,7 +6,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
-use Oforge\Engine\Modules\TemplateEngine\Core\Exceptions\Template\InvalidScssVariableException;
+use Oforge\Engine\Modules\TemplateEngine\Core\Exceptions\InvalidScssVariableException;
 use Oforge\Engine\Modules\TemplateEngine\Core\Models\ScssVariable;
 use ReflectionException;
 
