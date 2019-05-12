@@ -110,7 +110,7 @@ class BaseCrudController extends SecureBackendController {
      */
     protected $indexPagination = [
         'default'   => 10,
-        'buttons'   => [10, 25, 50, 75, 100, 250],
+        'buttons'   => [10, 25, 50, 100, 250],
         'queryKeys' => [
             'page'            => 'p',
             'entitiesPerPage' => 'epp',

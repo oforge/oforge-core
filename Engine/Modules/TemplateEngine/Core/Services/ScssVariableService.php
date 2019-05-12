@@ -2,11 +2,13 @@
 
 namespace Oforge\Engine\Modules\TemplateEngine\Core\Services;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
 use Oforge\Engine\Modules\TemplateEngine\Core\Exceptions\Template\InvalidScssVariableException;
 use Oforge\Engine\Modules\TemplateEngine\Core\Models\ScssVariable;
-use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
+use ReflectionException;
 
 /**
  * Class ScssVariableService
@@ -38,8 +40,8 @@ class ScssVariableService extends AbstractDatabaseAccess {
      * @param $value
      *
      * @throws NotFoundException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function update($id, $value) {
         /** @var ScssVariable $element */
@@ -56,9 +58,10 @@ class ScssVariableService extends AbstractDatabaseAccess {
     /**
      * @param $templateVariable
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Oforge\Engine\Modules\TemplateEngine\Core\Exceptions\Template\InvalidScssVariableException
+     * @throws InvalidScssVariableException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ReflectionException
      */
     public function add($templateVariable) {
         if (!isset($templateVariable['scope'])) {

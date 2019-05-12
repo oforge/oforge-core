@@ -24,7 +24,7 @@ abstract class AbstractTemplate {
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws ServiceNotFoundException
-     * @throws \Oforge\Engine\Modules\TemplateEngine\Core\Exceptions\Template\InvalidScssVariableException
+     * @throws InvalidScssVariableException
      */
     public function registerTemplateVariables() {
         /** @var ScssVariableService $scssVariables */

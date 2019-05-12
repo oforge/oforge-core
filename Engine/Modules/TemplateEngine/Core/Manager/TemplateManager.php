@@ -47,7 +47,7 @@ class TemplateManager extends AbstractTemplateManager {
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws ServiceNotFoundException
-     * @throws \Oforge\Engine\Modules\TemplateEngine\Core\Exceptions\Template\InvalidScssVariableException
+     * @throws InvalidScssVariableException
      * @throws TemplateNotFoundException
      */
     public function init() {
