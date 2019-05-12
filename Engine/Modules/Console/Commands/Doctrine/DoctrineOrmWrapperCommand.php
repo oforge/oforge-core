@@ -28,7 +28,7 @@ class DoctrineOrmWrapperCommand extends AbstractCommand {
      * @inheritdoc
      */
     public function handle(Input $input, Logger $output) : void {
-        $entityManager = Oforge()->DB()->getEnityManager();
+        $entityManager = Oforge()->DB()->getEntityManager();
         $helperSet     = ConsoleRunner::createHelperSet($entityManager);
         $helperSet->set(new EntityManagerHelper($entityManager), 'em');
         $helperSet->set(new ConnectionHelper($entityManager->getConnection()), 'db');

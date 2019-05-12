@@ -5,6 +5,7 @@ namespace FrontendUserManagement\Models;
 use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Oforge\Engine\Modules\Core\Helper\Helper;
+use Oforge\Engine\Modules\Core\Helper\SessionHelper;
 
 /**
  * @ORM\Table(name="frontend_user_management_user")
@@ -83,7 +84,7 @@ class User extends AbstractModel
      * @ORM\PrePersist
      */
     public function updatedGuid(): void {
-        $newGuid = Helper::generateGuid();
+        $newGuid = SessionHelper::generateGuid();
         $this->setGuid($newGuid);
     }
     

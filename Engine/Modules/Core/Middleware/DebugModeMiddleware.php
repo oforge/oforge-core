@@ -15,10 +15,14 @@ class DebugModeMiddleware {
     public function __invoke($request, $response, $next) {
         /** @var ConfigService $configService */
         $configService = Oforge()->Services()->get('config');
-        $debugMode     = $configService->get('system_debug');
-
+        $debugMode     = $configService->get('debug_mode');
         if ($debugMode) {
-            Oforge()->View()->assign(['debug_mode' => true]);
+            $debugData    = [];
+            $debugConsole = $configService->get('debug_console');
+            if ($debugConsole) {
+                $debugData['console'] = true;
+            }
+            Oforge()->View()->assign(['debug' => $debugData]);
         }
 
         return $next($request, $response);

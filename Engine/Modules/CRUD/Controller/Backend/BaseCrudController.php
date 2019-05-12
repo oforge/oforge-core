@@ -10,12 +10,12 @@ use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
+use Oforge\Engine\Modules\Core\Helper\RedirectHelper;
 use Oforge\Engine\Modules\Core\Helper\StringHelper;
 use Oforge\Engine\Modules\CRUD\Services\GenericCrudService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Slim\Router;
 
 /**
  * Class BaseCrudController
@@ -122,8 +122,6 @@ class BaseCrudController extends SecureBackendController {
     protected $crudService;
     /** @var string $moduleModelName */
     private $moduleModelName;
-    /** @var Router $router */
-    private $router;
 
     /**
      * BaseCrudController constructor.
@@ -482,9 +480,6 @@ class BaseCrudController extends SecureBackendController {
      * @return Response
      */
     protected function redirect(Response $response, string $crudAction, array $urlParams = [], array $queryParams = []) {
-        if (!isset($this->router)) {
-            $this->router = Oforge()->App()->getContainer()->get('router');;
-        }
         $routeName  = Oforge()->View()->get('meta')['route']['name'];
         $actionKeys = ['view', 'update', 'delete'];
         foreach ($actionKeys as $actionKey) {
@@ -496,9 +491,8 @@ class BaseCrudController extends SecureBackendController {
         if ($crudAction !== 'index') {
             $routeName .= '_' . $crudAction;
         }
-        $uri = $this->router->pathFor($routeName, $urlParams, $queryParams);
 
-        return $response->withRedirect($uri, 302);
+        return RedirectHelper::redirect($response, $routeName, $urlParams, $queryParams);
     }
 
     /**
