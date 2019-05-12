@@ -5,17 +5,23 @@ namespace Oforge\Engine\Modules\AdminBackend\Plugins\Controller\Backend;
 use Exception;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
-use Oforge\Engine\Modules\Core\Exceptions\CouldNotActivatePluginException;
-use Oforge\Engine\Modules\Core\Exceptions\PluginAlreadyActivatedException;
-use Oforge\Engine\Modules\Core\Exceptions\PluginNotFoundException;
-use Oforge\Engine\Modules\Core\Exceptions\PluginNotInstalledException;
-use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
-use Oforge\Engine\Modules\Core\Exceptions\TemplateNotFoundException;
+use Oforge\Engine\Modules\Core\Exceptions\Plugin\CouldNotActivatePluginException;
+use Oforge\Engine\Modules\Core\Exceptions\Plugin\CouldNotDeactivatePluginException;
+use Oforge\Engine\Modules\Core\Exceptions\Plugin\CouldNotInstallPluginException;
+use Oforge\Engine\Modules\Core\Exceptions\Plugin\PluginAlreadyActivatedException;
+use Oforge\Engine\Modules\Core\Exceptions\Plugin\PluginAlreadyInstalledException;
+use Oforge\Engine\Modules\Core\Exceptions\Plugin\PluginNotActivatedException;
+use Oforge\Engine\Modules\Core\Exceptions\Plugin\PluginNotFoundException;
+use Oforge\Engine\Modules\Core\Exceptions\Plugin\PluginNotInstalledException;
+use Oforge\Engine\Modules\Core\Exceptions\Template\TemplateNotFoundException;
+use Oforge\Engine\Modules\Core\Helper\RedirectHelper;
 use Oforge\Engine\Modules\Core\Models\Plugin\Plugin;
 use Oforge\Engine\Modules\Core\Services\PluginStateService;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
+use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\TemplateEngine\Core\Exceptions\InvalidScssVariableException;
+use Oforge\Engine\Modules\TemplateEngine\Core\Twig\TwigFlash;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -40,7 +46,7 @@ class PluginController extends BaseCrudController {
         [
             'name'  => 'name',
             'type'  => CrudDataTypes::STRING,
-            'label' => ['key' => 'crud_plugin_name', 'default' => 'Plugin name'],
+            'label' => ['key' => 'backend_crud_plugin_property_name', 'default' => 'Plugin name'],
             'crud'  => [
                 'index' => 'readonly',
             ],
@@ -48,7 +54,7 @@ class PluginController extends BaseCrudController {
         [
             'name'     => 'action',
             'type'     => CrudDataTypes::CUSTOM,
-            'label'    => ['key' => 'crud_plugin_action', 'default' => 'Action'],
+            'label'    => ['key' => 'backend_crud_plugin_property_action', 'default' => 'Action'],
             'crud'     => [
                 'index' => 'readonly',
             ],
@@ -71,31 +77,17 @@ class PluginController extends BaseCrudController {
     }
 
     /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     *
+     * @return Response
      * @EndpointAction(path="/activate/{name}")
      */
-    public function activateAction(Request $request, Response $response, array $args) {
-        if (!isset($args['name'])) {
-            // return RedirectHelper::redirect($response, 'backend_plugins');
-        }
-        $pluginName = $args['name'];
-        /** @var PluginStateService $pluginStateService */
-        $pluginStateService = Oforge()->Services()->get('plugin.state');
+    public function activateAction(Request $request, Response $response, array $args) : ?Response {
+        $this->handleActivate($args);
 
-        try {
-            // $pluginStateService->activate($pluginName);
-        } catch (PluginNotFoundException $exception) {
-        } catch (PluginNotInstalledException $exception) {
-        } catch (CouldNotActivatePluginException $exception) {
-        } catch (PluginAlreadyActivatedException $exception) {
-        } catch (TemplateNotFoundException | InvalidScssVariableException $exception) {
-
-        } catch (Exception $exception) {
-        }
-
-        var_dump($pluginName);
-        die();
-        // Oforge()->View()->assign(['test' => $pluginID]);
-        // TODO
+        return RedirectHelper::redirect($response, 'backend_plugins');
     }
 
     /**
@@ -103,13 +95,13 @@ class PluginController extends BaseCrudController {
      * @param Response $response
      * @param array $args
      *
-     * @throws ServiceNotFoundException
+     * @return Response
      * @EndpointAction(path="/deactivate/{name}")
      */
-    public function deactivateAction(Request $request, Response $response, array $args) {
-        /** @var PluginStateService $pluginStateService */
-        $pluginStateService = Oforge()->Services()->get('plugin.state');
-        //TODO
+    public function deactivateAction(Request $request, Response $response, array $args) : ?Response {
+        $this->handleDeactivate($args);
+
+        return RedirectHelper::redirect($response, 'backend_plugins');
     }
 
     /**
@@ -117,27 +109,13 @@ class PluginController extends BaseCrudController {
      * @param Response $response
      * @param array $args
      *
-     * @throws ServiceNotFoundException
-     * @EndpointAction(path="/deinstall/{name}")
-     */
-    public function deinstallAction(Request $request, Response $response, array $args) {
-        /** @var PluginStateService $pluginStateService */
-        $pluginStateService = Oforge()->Services()->get('plugin.state');
-        //TODO
-    }
-
-    /**
-     * @param Request $request
-     * @param Response $response
-     * @param array $args
-     *
-     * @throws ServiceNotFoundException
+     * @return Response
      * @EndpointAction(path="/install/{name}")
      */
-    public function installAction(Request $request, Response $response, array $args) {
-        /** @var PluginStateService $pluginStateService */
-        $pluginStateService = Oforge()->Services()->get('plugin.state');
-        //TODO
+    public function installAction(Request $request, Response $response, array $args) : ?Response {
+        $this->handleInstall($args);
+
+        return RedirectHelper::redirect($response, 'backend_plugins');
     }
 
     /**
@@ -145,13 +123,15 @@ class PluginController extends BaseCrudController {
      * @param Response $response
      * @param array $args
      *
-     * @throws ServiceNotFoundException
+     * @return Response
      * @EndpointAction(path="/reinstall/{name}")
      */
-    public function reinstallAction(Request $request, Response $response, array $args) {
-        /** @var PluginStateService $pluginStateService */
-        $pluginStateService = Oforge()->Services()->get('plugin.state');
-        //TODO
+    public function reinstallAction(Request $request, Response $response, array $args) : ?Response {
+        if ($this->handleUninstall($args)) {
+            $this->handleUninstall($args);
+        }
+
+        return RedirectHelper::redirect($response, 'backend_plugins');
     }
 
     /**
@@ -159,13 +139,63 @@ class PluginController extends BaseCrudController {
      * @param Response $response
      * @param array $args
      *
-     * @throws ServiceNotFoundException
+     * @return Response
      * @EndpointAction(path="/reinstall-activate/{name}")
      */
-    public function reinstallActivateAction(Request $request, Response $response, array $args) {
-        /** @var PluginStateService $pluginStateService */
-        $pluginStateService = Oforge()->Services()->get('plugin.state');
-        //TODO
+    public function reinstallActivateAction(Request $request, Response $response, array $args) : ?Response {
+        if ($this->handleUninstall($args)) {
+            if ($this->handleUninstall($args)) {
+                $this->handleActivate($args);
+            }
+        }
+
+        return RedirectHelper::redirect($response, 'backend_plugins');
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     *
+     * @return Response
+     * @EndpointAction(path="/uninstall/{name}")
+     */
+    public function uninstallAction(Request $request, Response $response, array $args) : ?Response {
+        $this->handleUninstall($args);
+
+        return RedirectHelper::redirect($response, 'backend_plugins');
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     *
+     * @return Response
+     * @EndpointAction(path="/add")
+     */
+    public function addAction(Request $request, Response $response, array $args) : ?Response {
+        Oforge()->View()->Flash()->addMessage('info', 'Not implemented yet!');
+
+        //TODO Implementation of PluginController#addAction, later
+
+        return RedirectHelper::redirect($response, 'backend_plugins');
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     *
+     * @return Response
+     * @EndpointAction(path="/delete/{name}")
+     */
+    public function deleteAction(Request $request, Response $response, array $args) : ?Response {
+        Oforge()->View()->Flash()->addMessage('info', 'Not implemented yet!');
+
+        //TODO Implementation of PluginController#deleteAction
+
+        return RedirectHelper::redirect($response, 'backend_plugins');
     }
 
     /** @EndpointAction(create=false) */
@@ -180,9 +210,223 @@ class PluginController extends BaseCrudController {
     public function viewAction(Request $request, Response $response, array $args) {
     }
 
-    /** @EndpointAction(path="/delete/{name}") */
-    public function deleteAction(Request $request, Response $response, array $args) {
-        //TODO
+    /**
+     * @param array $args
+     *
+     * @return bool
+     */
+    protected function handleActivate(array $args) {
+        if (isset($args['name'])) {
+            $pluginName = $args['name'];
+            $twigFlash  = Oforge()->View()->Flash();
+            try {
+                /** @var PluginStateService $pluginStateService */
+                $pluginStateService = Oforge()->Services()->get('plugin.state');
+                $pluginStateService->activate($pluginName);
+                $twigFlash->addMessage('success', sprintf(#
+                    I18N::translate('crud_plugin_msg_activate_success', 'Plugin "%s" successfully activated.'),#
+                    $pluginName#
+                ));
+            } catch (PluginAlreadyActivatedException $exception) {
+                $twigFlash->addMessage('info', sprintf(#
+                    I18N::translate('crud_plugin_msg_already_activated', 'The plugin "%s" is already activated. You cannot activate it twice.'),#
+                    $pluginName#
+                ));
+            } catch (PluginNotFoundException $exception) {
+                $twigFlash->addMessage('error', sprintf(#
+                    I18N::translate('crud_plugin_msg_plugin_not_exist', 'Plugin "%s" does not exist.'),#
+                    $pluginName#
+                ));
+            } catch (PluginNotInstalledException $exception) {
+                $twigFlash->addMessage('error', sprintf(#
+                    I18N::translate('crud_plugin_msg_not_installed', 'The plugin "%s" is not installed. You have to install it first.'),#
+                    $pluginName#
+                ));
+            } catch (CouldNotActivatePluginException $exception) {
+                $message    = sprintf(#
+                    I18N::translate(#
+                        'crud_plugin_msg_activate_failed',#
+                        'Plugin "%s" could not be activated due to missing (not installed or activated) dependencies.'#
+                    ),#
+                    $pluginName#
+                );
+                $subMessage = I18N::translate('crud_plugin_msg_dependencies', 'Dependencies');
+                $this->appendTwigFlashDetailMessage($twigFlash, $message, $subMessage, $exception->getDependencies());
+            } catch (TemplateNotFoundException | InvalidScssVariableException $exception) {
+                Oforge()->Logger()->logException($exception);
+                $twigFlash->addExceptionMessage('error', I18N::translate('crud_plugin_msg_template_error', 'The template could not be rebuilt.'), $exception);
+            } catch (Exception $exception) {
+                Oforge()->Logger()->logException($exception);
+                $twigFlash->addExceptionMessage('error', I18N::translate('crud_plugin_msg_error', 'An error has occurred.'), $exception);
+            }
+        }
+    }
+
+    /**
+     * @param array $args
+     *
+     * @return bool
+     */
+    protected function handleDeactivate(array $args) : bool {
+        if (isset($args['name'])) {
+            $pluginName = $args['name'];
+            $twigFlash  = Oforge()->View()->Flash();
+            try {
+                /** @var PluginStateService $pluginStateService */
+                $pluginStateService = Oforge()->Services()->get('plugin.state');
+                $pluginStateService->deactivate($pluginName);
+                $twigFlash->addMessage('success', sprintf(#
+                    I18N::translate('crud_plugin_msg_deactivate_success', 'Plugin "%s" successfully deactivated.'),#
+                    $pluginName#
+                ));
+
+                return true;
+            } catch (PluginNotFoundException $exception) {
+                $twigFlash->addMessage('error', sprintf(#
+                    I18N::translate('crud_plugin_msg_plugin_not_exist', 'Plugin "%s" does not exist.'),#
+                    $pluginName#
+                ));
+            } catch (PluginNotInstalledException $exception) {
+                $twigFlash->addMessage('error', sprintf(#
+                    I18N::translate('crud_plugin_msg_not_installed', 'The plugin "%s" is not installed. You have to install it first.'),#
+                    $pluginName#
+                ));
+            } catch (PluginNotActivatedException $exception) {
+                $twigFlash->addMessage('success', sprintf(#
+                    I18N::translate('crud_plugin_msg_not_activated', 'Plugin "%s" is not activated.'),#
+                    $pluginName#
+                ));
+            } catch (CouldNotDeactivatePluginException $exception) {
+                $message    = sprintf(#
+                    I18N::translate(#
+                        'crud_plugin_msg_deactivate_failed',#
+                        'Plugin "%s" could not be deactivated because there are active plugins that depend on it.'#
+                    ),#
+                    $pluginName#
+                );
+                $subMessage = I18N::translate('crud_plugin_msg_dependents', 'Dependents');
+                $this->appendTwigFlashDetailMessage($twigFlash, $message, $subMessage, $exception->getDependents());
+            } catch (Exception $exception) {
+                Oforge()->Logger()->logException($exception);
+                $twigFlash->addExceptionMessage('error', I18N::translate('crud_plugin_msg_error', 'An error has occurred.'), $exception);
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param array $args
+     *
+     * @return bool
+     */
+    protected function handleInstall(array $args) : bool {
+        if (isset($args['name'])) {
+            $pluginName = $args['name'];
+            $twigFlash  = Oforge()->View()->Flash();
+            try {
+                /** @var PluginStateService $pluginStateService */
+                $pluginStateService = Oforge()->Services()->get('plugin.state');
+                $pluginStateService->install($pluginName);
+                $twigFlash->addMessage('success', sprintf(#
+                    I18N::translate('crud_plugin_msg_install_success', 'Plugin "%s" successfully installed.'),#
+                    $pluginName#
+                ));
+
+                return true;
+            } catch (PluginNotFoundException $exception) {
+                $twigFlash->addMessage('error', sprintf(#
+                    I18N::translate('crud_plugin_msg_plugin_not_exist', 'Plugin "%s" does not exist.'),#
+                    $pluginName#
+                ));
+            } catch (CouldNotInstallPluginException $exception) {
+                // $preContent = implode("\n", array_map(function ($item) {
+                //     return str_replace('\\', ' - ', StringHelper::leftTrim(StringHelper::rightTrim($item, '\\Bootstrap'), 'Oforge\\Engine\\'));
+                // }, $exception->getDependencies()));
+                $message    = sprintf(#
+                    I18N::translate(#
+                        'crud_plugin_msg_install_failed',#
+                        'Plugin "%s" could not be installed due to missing (not installed or activated) dependencies.'#
+                    ),#
+                    $pluginName#
+                );
+                $subMessage = I18N::translate('crud_plugin_msg_dependencies', 'Dependencies');
+                $this->appendTwigFlashDetailMessage($twigFlash, $message, $subMessage, $exception->getDependencies());
+            } catch (PluginAlreadyInstalledException $exception) {
+                $twigFlash->addMessage('info', sprintf(#
+                    I18N::translate('crud_plugin_msg_already_installed', 'The plugin "%s" is already installed. You cannot install it twice.'),#
+                    $pluginName#
+                ));
+            } catch (Exception $exception) {
+                Oforge()->Logger()->logException($exception);
+                $twigFlash->addExceptionMessage('error', I18N::translate('crud_plugin_msg_error', 'An error has occurred.'), $exception);
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param array $args
+     *
+     * @return bool
+     */
+    protected function handleUninstall(array $args) : bool {
+        if (isset($args['name'])) {
+            $pluginName = $args['name'];
+            $twigFlash  = Oforge()->View()->Flash();
+            try {
+                /** @var PluginStateService $pluginStateService */
+                $pluginStateService = Oforge()->Services()->get('plugin.state');
+                $pluginStateService->uninstall($pluginName);
+                $twigFlash->addMessage('success', sprintf(#
+                    I18N::translate('crud_plugin_msg_uninstall_success', 'Plugin "%s" successfully uninstalled.'),#
+                    $pluginName#
+                ));
+
+                return true;
+            } catch (PluginNotFoundException $exception) {
+                $twigFlash->addMessage('error', sprintf(#
+                    I18N::translate('crud_plugin_msg_plugin_not_exist', 'Plugin "%s" does not exist.'),#
+                    $pluginName#
+                ));
+            } catch (PluginNotInstalledException $exception) {
+                $twigFlash->addMessage('error', sprintf(#
+                    I18N::translate('crud_plugin_msg_uninstall_not_installed', 'The plugin "%s" is not installed.'),#
+                    $pluginName#
+                ));
+            } catch (PluginNotActivatedException $exception) {
+                $twigFlash->addMessage('success', sprintf(#
+                    I18N::translate('crud_plugin_msg_not_activated', 'Plugin "%s" is not activated.'),#
+                    $pluginName#
+                ));
+            } catch (CouldNotDeactivatePluginException $exception) {
+                $message    = sprintf(#
+                    I18N::translate(#
+                        'crud_plugin_msg_deactivate_failed',#
+                        'Plugin "%s" could not be deactivated because there are active plugins that depend on it.'#
+                    ),#
+                    $pluginName#
+                );
+                $subMessage = I18N::translate('crud_plugin_msg_dependents', 'Dependents');
+                $this->appendTwigFlashDetailMessage($twigFlash, $message, $subMessage, $exception->getDependents());
+            } catch (Exception $exception) {
+                $twigFlash->addExceptionMessage('error', I18N::translate('crud_plugin_msg_error', 'An error has occurred.'), $exception);
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param TwigFlash $twigFlash
+     * @param string $message
+     * @param array $preContentLines
+     */
+    protected function appendTwigFlashDetailMessage(TwigFlash $twigFlash, string $message, string $subMessage, array $preContentLines) {
+        $preContent = implode("\n", $preContentLines);
+        $message    = "<details><summary>$message</summary><div><p>$subMessage:</p><pre>$preContent</pre></div></details>";
+        $twigFlash->addMessage('error', $message);
     }
 
 }

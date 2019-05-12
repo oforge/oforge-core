@@ -11,6 +11,7 @@ use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\InvalidClassException;
 use Oforge\Engine\Modules\Core\Exceptions\Plugin\CouldNotActivatePluginException;
 use Oforge\Engine\Modules\Core\Exceptions\Plugin\CouldNotDeactivatePluginException;
+use Oforge\Engine\Modules\Core\Exceptions\Plugin\CouldNotInstallPluginException;
 use Oforge\Engine\Modules\Core\Exceptions\Plugin\PluginAlreadyActivatedException;
 use Oforge\Engine\Modules\Core\Exceptions\Plugin\PluginAlreadyInstalledException;
 use Oforge\Engine\Modules\Core\Exceptions\Plugin\PluginNotActivatedException;
@@ -54,7 +55,7 @@ class PluginStateService extends AbstractDatabaseAccess {
         /**
          * @var $plugin Plugin
          */
-        $plugin = $this->repository()->findOneBy(["name" => $pluginName]);
+        $plugin = $this->repository()->findOneBy(['name' => $pluginName]);
 
         if (isset($plugin) && $plugin->getActive()) {
             $instance = Helper::getBootstrapInstance($pluginName);
@@ -76,7 +77,7 @@ class PluginStateService extends AbstractDatabaseAccess {
 
     /**
      * Register the plugin in the core.
-     * The plugin gets stored in a database table but doesn't get activated or "installed"
+     * The plugin gets stored in a database table but doesn't get activated or 'installed'
      *
      * @param $pluginName
      *
@@ -90,13 +91,18 @@ class PluginStateService extends AbstractDatabaseAccess {
         /**
          * @var $plugin Plugin
          */
-        $plugin = $this->repository()->findOneBy(["name" => $pluginName]);
+        $plugin = $this->repository()->findOneBy(['name' => $pluginName]);
 
         if (!isset($plugin)) {
             $instance = Helper::getBootstrapInstance($pluginName);
             if (isset($instance)) {
                 $pluginMiddlewares = $instance->getMiddlewares();
-                $plugin            = Plugin::create(["name" => $pluginName, "active" => 0, "installed" => 0, "order" => $instance->getOrder()]);
+                $plugin            = Plugin::create([
+                    'name'      => $pluginName,
+                    'active'    => false,
+                    'installed' => false,
+                    'order'     => $instance->getOrder(),
+                ]);
 
                 $this->entityManager()->persist($plugin);
                 $this->entityManager()->flush();
@@ -118,16 +124,16 @@ class PluginStateService extends AbstractDatabaseAccess {
      * @param string $pluginName
      *
      * @throws PluginNotFoundException
+     * @throws PluginAlreadyInstalledException
+     * @throws CouldNotInstallPluginException
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws InvalidClassException
      * @throws ServiceAlreadyExistException
-     * @throws PluginAlreadyInstalledException
      */
     public function install(string $pluginName) {
-        /**
-         * @var $plugin Plugin
-         */
+        //TODO Alex: Dependencies evaluation, throwing of CouldNotInstallPluginException ???
+        /** @var Plugin $plugin */
         $plugin = $this->repository()->findOneBy(['name' => $pluginName]);
 
         if (!isset($plugin)) {
@@ -158,19 +164,17 @@ class PluginStateService extends AbstractDatabaseAccess {
     /**
      * @param string $pluginName
      *
+     * @throws PluginNotFoundException
+     * @throws PluginNotInstalledException
+     * @throws PluginNotActivatedException
      * @throws CouldNotDeactivatePluginException
      * @throws InvalidClassException
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws PluginNotActivatedException
-     * @throws PluginNotFoundException
-     * @throws PluginNotInstalledException
      * @throws ServiceNotFoundException
      */
     public function uninstall(string $pluginName) {
-        /**
-         * @var $plugin Plugin
-         */
+        /** @var Plugin $plugin */
         $plugin = $this->repository()->findOneBy(['name' => $pluginName]);
 
         if (!isset($plugin)) {
@@ -204,29 +208,26 @@ class PluginStateService extends AbstractDatabaseAccess {
      *
      * @param $pluginName
      *
+     * @throws PluginNotFoundException
+     * @throws PluginNotInstalledException
+     * @throws PluginAlreadyActivatedException
      * @throws CouldNotActivatePluginException
-     * @throws InvalidClassException
+     * @throws TemplateNotFoundException
      * @throws InvalidScssVariableException
+     * @throws InvalidClassException
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws PluginNotFoundException
      * @throws ReflectionException
      * @throws ServiceAlreadyExistException
      * @throws ServiceNotFoundException
-     * @throws TemplateNotFoundException
-     * @throws PluginNotInstalledException
-     * @throws PluginAlreadyActivatedException
      */
     public function activate($pluginName) {
-        /**
-         * @var $plugin Plugin
-         */
+        /** @var Plugin $plugin */
         $plugin = $this->repository()->findOneBy(['name' => $pluginName]);
 
         if (!isset($plugin)) {
             throw new PluginNotFoundException($pluginName);
         }
-
         if (!$plugin->getInstalled()) {
             throw new PluginNotInstalledException($pluginName);
         }
@@ -244,7 +245,7 @@ class PluginStateService extends AbstractDatabaseAccess {
             foreach ($instance->getDependencies() as $dependency) {
                 if (is_subclass_of($dependency, AbstractBootstrap::class)) {
                     $dependencyName               = (new ReflectionClass($dependency))->getNamespaceName();
-                    $dependencyActiveAndInstalled = $this->repository()->findOneBy(["name" => $dependencyName, "active" => 1, "installed" => 1]);
+                    $dependencyActiveAndInstalled = $this->repository()->findOneBy(['name' => $dependencyName, 'active' => 1, 'installed' => 1]);
 
                     if (!isset($dependencyActiveAndInstalled)) {
                         throw new CouldNotActivatePluginException($pluginName, [$dependencyName]);
@@ -274,7 +275,7 @@ class PluginStateService extends AbstractDatabaseAccess {
             $this->entityManager()->flush();
         }
         /** @var TemplateManagementService $templateManagementService */
-        $templateManagementService = Oforge()->Services()->get("template.management");
+        $templateManagementService = Oforge()->Services()->get('template.management');
         $templateManagementService->build();
     }
 
@@ -283,22 +284,27 @@ class PluginStateService extends AbstractDatabaseAccess {
      *
      * @param $pluginName
      *
-     * @throws CouldNotDeactivatePluginException
      * @throws PluginNotFoundException
+     * @throws PluginNotInstalledException
+     * @throws PluginNotActivatedException
+     * @throws CouldNotDeactivatePluginException
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws InvalidClassException
      * @throws ServiceNotFoundException
-     * @throws PluginNotActivatedException
      */
     public function deactivate($pluginName) {
         /**
          * @var $pluginToDeactivate Plugin
          */
-        $pluginToDeactivate = $this->repository()->findOneBy(["name" => $pluginName]);
+        $pluginToDeactivate = $this->repository()->findOneBy(['name' => $pluginName]);
 
         if (!isset($pluginToDeactivate)) {
             throw new PluginNotFoundException($pluginName);
+        }
+
+        if (!$pluginToDeactivate->getInstalled()) {
+            throw new PluginNotInstalledException($pluginName);
         }
 
         if (!$pluginToDeactivate->getActive()) {
@@ -308,7 +314,7 @@ class PluginStateService extends AbstractDatabaseAccess {
         /**
          * @var $plugins Plugin[]
          */
-        $plugins = $this->repository()->findBy(["active" => 1]);
+        $plugins = $this->repository()->findBy(['active' => 1]);
 
         $pluginToDeactivateInstance = Helper::getBootstrapInstance($pluginName);
 
@@ -316,7 +322,7 @@ class PluginStateService extends AbstractDatabaseAccess {
         foreach ($plugins as $plugin) {
             $instance = Helper::getBootstrapInstance($plugin->getName());
             if (isset($instance) && sizeof($instance->getDependencies()) > 0) {
-                if (in_array($pluginName . "\\Bootstrap", $instance->getDependencies())) {
+                if (in_array($pluginName . '\\Bootstrap', $instance->getDependencies())) {
                     array_push($dependants, $plugin->getName());
                 }
             }
@@ -347,13 +353,6 @@ class PluginStateService extends AbstractDatabaseAccess {
             $pluginToDeactivate->setActive(false);
             $this->entityManager()->flush();
         }
-    }
-
-    /**
-     * Update a plugin
-     */
-    public function update() {
-        //TODO implement update function ¯\_(ツ)_/¯
     }
 
     /**
