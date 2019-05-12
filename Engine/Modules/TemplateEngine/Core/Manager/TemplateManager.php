@@ -9,7 +9,7 @@ use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\Template\TemplateNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\Helper;
 use Oforge\Engine\Modules\Core\Helper\Statics;
-use Oforge\Engine\Modules\TemplateEngine\Core\Exceptions\InvalidScssVariableException;
+use Oforge\Engine\Modules\TemplateEngine\Core\Exceptions\Template\InvalidScssVariableException;
 use Oforge\Engine\Modules\TemplateEngine\Core\Services\TemplateManagementService;
 use Oforge\Engine\Modules\TemplateEngine\Core\Services\TemplateRenderService;
 use Psr\Http\Message\ResponseInterface;
@@ -47,7 +47,7 @@ class TemplateManager extends AbstractTemplateManager {
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws ServiceNotFoundException
-     * @throws InvalidScssVariableException
+     * @throws \Oforge\Engine\Modules\TemplateEngine\Core\Exceptions\Template\InvalidScssVariableException
      * @throws TemplateNotFoundException
      */
     public function init() {

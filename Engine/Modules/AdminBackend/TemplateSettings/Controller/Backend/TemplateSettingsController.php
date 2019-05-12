@@ -11,7 +11,7 @@ use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\Template\TemplateNotFoundException;
-use Oforge\Engine\Modules\TemplateEngine\Core\Exceptions\InvalidScssVariableException;
+use Oforge\Engine\Modules\TemplateEngine\Core\Exceptions\Template\InvalidScssVariableException;
 use Oforge\Engine\Modules\TemplateEngine\Core\Services\ScssVariableService;
 use Oforge\Engine\Modules\TemplateEngine\Core\Services\TemplateManagementService;
 use Slim\Http\Request;
@@ -34,7 +34,7 @@ class TemplateSettingsController extends SecureBackendController {
      * @throws NotFoundException
      * @throws ServiceNotFoundException
      * @throws TemplateNotFoundException
-     * @throws InvalidScssVariableException
+     * @throws \Oforge\Engine\Modules\TemplateEngine\Core\Exceptions\Template\InvalidScssVariableException
      * @EndpointAction()
      */
     public function indexAction(Request $request, Response $response) {
