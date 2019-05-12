@@ -231,15 +231,29 @@ class PluginController extends BaseCrudController {
         return RedirectHelper::redirect($response, 'backend_plugins');
     }
 
-    /** @EndpointAction(create=false) */
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @EndpointAction(create=false)
+     */
     public function updateAction(Request $request, Response $response, array $args) {
     }
 
-    /** @EndpointAction(create=false) */
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @EndpointAction(create=false)
+     */
     public function createAction(Request $request, Response $response) {
     }
 
-    /** @EndpointAction(create=false) */
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @EndpointAction(create=false)
+     */
     public function viewAction(Request $request, Response $response, array $args) {
     }
 
@@ -248,7 +262,7 @@ class PluginController extends BaseCrudController {
      *
      * @return bool
      */
-    protected function handleActivate(array $args) {
+    protected function handleActivate(array $args) : bool {
         if (isset($args['name'])) {
             $pluginName = $args['name'];
             $twigFlash  = Oforge()->View()->Flash();
@@ -260,6 +274,8 @@ class PluginController extends BaseCrudController {
                     I18N::translate('crud_plugin_msg_activate_success', 'Plugin "%s" successfully activated.'),#
                     $pluginName#
                 ));
+
+                return true;
             } catch (PluginAlreadyActivatedException $exception) {
                 $twigFlash->addMessage('info', sprintf(#
                     I18N::translate('crud_plugin_msg_already_activated', 'The plugin "%s" is already activated. You cannot activate it twice.'),#
@@ -293,6 +309,8 @@ class PluginController extends BaseCrudController {
                 $twigFlash->addExceptionMessage('error', I18N::translate('crud_plugin_msg_error', 'An error has occurred.'), $exception);
             }
         }
+
+        return false;
     }
 
     /**
@@ -455,6 +473,7 @@ class PluginController extends BaseCrudController {
     /**
      * @param TwigFlash $twigFlash
      * @param string $message
+     * @param string $subMessage
      * @param array $preContentLines
      */
     protected function appendTwigFlashDetailMessage(TwigFlash $twigFlash, string $message, string $subMessage, array $preContentLines) {
