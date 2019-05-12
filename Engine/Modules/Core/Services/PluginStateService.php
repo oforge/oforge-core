@@ -52,9 +52,7 @@ class PluginStateService extends AbstractDatabaseAccess {
      * @throws AnnotationException
      */
     public function initPlugin($pluginName) {
-        /**
-         * @var $plugin Plugin
-         */
+        /** @var Plugin $plugin */
         $plugin = $this->repository()->findOneBy(['name' => $pluginName]);
 
         if (isset($plugin) && $plugin->getActive()) {
@@ -65,12 +63,10 @@ class PluginStateService extends AbstractDatabaseAccess {
                 Oforge()->Services()->register($services);
                 $endpoints = $instance->getEndpoints();
 
-                /**
-                 * @var $endpointService EndpointService
-                 */
+                /** @var EndpointService $endpointService */
                 $endpointService = Oforge()->Services()->get('endpoint');
-                $endpointService->install($endpoints);
-                $endpointService->activate($endpoints);
+                $endpointService->install($endpoints);//TODO remove ?
+                $endpointService->activate($endpoints);//TODO remove ?
             }
         }
     }
@@ -88,9 +84,7 @@ class PluginStateService extends AbstractDatabaseAccess {
      * @throws ServiceNotFoundException
      */
     public function register($pluginName) {
-        /**
-         * @var $plugin Plugin
-         */
+        /** @var Plugin $plugin */
         $plugin = $this->repository()->findOneBy(['name' => $pluginName]);
 
         if (!isset($plugin)) {
@@ -108,7 +102,7 @@ class PluginStateService extends AbstractDatabaseAccess {
                 $this->entityManager()->flush();
 
                 if (isset($pluginMiddlewares) && is_array($pluginMiddlewares) && sizeof($pluginMiddlewares) > 0) {
-                    /** @var $middlewaresService MiddlewareService */
+                    /** @var MiddlewareService $middlewaresService */
                     $middlewaresService = Oforge()->Services()->get('middleware');
                     $middlewaresService->register($pluginMiddlewares, false);
                 }
@@ -173,7 +167,7 @@ class PluginStateService extends AbstractDatabaseAccess {
      * @throws OptimisticLockException
      * @throws ServiceNotFoundException
      */
-    public function uninstall(string $pluginName) {
+    public function uninstall(string $pluginName, bool $keepData) {
         /** @var Plugin $plugin */
         $plugin = $this->repository()->findOneBy(['name' => $pluginName]);
 
@@ -191,6 +185,10 @@ class PluginStateService extends AbstractDatabaseAccess {
         }
 
         $instance = Helper::getBootstrapInstance($pluginName);
+
+        if (!$keepData) {
+            //TODO remove Data (tables etc)
+        }
 
         if (isset($instance)) {
             $instance->uninstall();
@@ -294,9 +292,7 @@ class PluginStateService extends AbstractDatabaseAccess {
      * @throws ServiceNotFoundException
      */
     public function deactivate($pluginName) {
-        /**
-         * @var $pluginToDeactivate Plugin
-         */
+        /** @var Plugin $pluginToDeactivate */
         $pluginToDeactivate = $this->repository()->findOneBy(['name' => $pluginName]);
 
         if (!isset($pluginToDeactivate)) {
@@ -311,9 +307,7 @@ class PluginStateService extends AbstractDatabaseAccess {
             throw new PluginNotActivatedException($pluginName);
         }
 
-        /**
-         * @var $plugins Plugin[]
-         */
+        /** @var Plugin[] $plugins */
         $plugins = $this->repository()->findBy(['active' => 1]);
 
         $pluginToDeactivateInstance = Helper::getBootstrapInstance($pluginName);
