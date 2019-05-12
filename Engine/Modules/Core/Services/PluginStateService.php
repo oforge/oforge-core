@@ -1,6 +1,8 @@
 <?php
+
 namespace Oforge\Engine\Modules\Core\Services;
 
+use Doctrine\Common\Annotations\AnnotationException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
@@ -24,32 +26,35 @@ use Oforge\Engine\Modules\TemplateEngine\Core\Services\TemplateManagementService
 use ReflectionClass;
 use ReflectionException;
 
+/**
+ * Class PluginStateService
+ *
+ * @package Oforge\Engine\Modules\Core\Services
+ */
 class PluginStateService extends AbstractDatabaseAccess {
 
     public function __construct() {
         parent::__construct(["default" => Plugin::class]);
     }
 
-
-    
     /**
      * Initialize an active plugin
      *
      * @param $pluginName
      *
+     * @throws InvalidClassException
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws InvalidClassException
      * @throws ServiceAlreadyDefinedException
      * @throws ServiceNotFoundException
-     * @throws ConfigOptionKeyNotExistsException
+     * @throws AnnotationException
      */
     public function initPlugin($pluginName) {
         /**
          * @var $plugin Plugin
          */
         $plugin = $this->repository()->findOneBy(["name" => $pluginName]);
-        
+
         if (isset($plugin) && $plugin->getActive()) {
             $instance = Helper::getBootstrapInstance($pluginName);
             if (isset($instance)) {
@@ -57,7 +62,7 @@ class PluginStateService extends AbstractDatabaseAccess {
                 $services = $instance->getServices();
                 Oforge()->Services()->register($services);
                 $endpoints = $instance->getEndpoints();
-                
+
                 /**
                  * @var $endpointService EndpointService
                  */
@@ -90,12 +95,12 @@ class PluginStateService extends AbstractDatabaseAccess {
             $instance = Helper::getBootstrapInstance($pluginName);
             if (isset($instance)) {
                 $pluginMiddlewares = $instance->getMiddlewares();
-                $plugin = Plugin::create(array("name" => $pluginName, "active" => 0, "installed" => 0, "order" => $instance->getOrder()));
+                $plugin            = Plugin::create(["name" => $pluginName, "active" => 0, "installed" => 0, "order" => $instance->getOrder()]);
 
                 $this->entityManager()->persist($plugin);
                 $this->entityManager()->flush();
 
-                if(isset($pluginMiddlewares) && is_array($pluginMiddlewares) && sizeof($pluginMiddlewares) > 0) {
+                if (isset($pluginMiddlewares) && is_array($pluginMiddlewares) && sizeof($pluginMiddlewares) > 0) {
                     /** @var $middlewaresService MiddlewareService */
                     $middlewaresService = Oforge()->Services()->get('middleware');
                     $middlewaresService->register($pluginMiddlewares, false);
@@ -236,8 +241,8 @@ class PluginStateService extends AbstractDatabaseAccess {
 
         if (sizeof($instance->getDependencies()) > 0) {
             foreach ($instance->getDependencies() as $dependency) {
-                if (is_subclass_of($dependency, AbstractBootstrap::class )) {
-                    $dependencyName = (new ReflectionClass($dependency))->getNamespaceName();
+                if (is_subclass_of($dependency, AbstractBootstrap::class)) {
+                    $dependencyName               = (new ReflectionClass($dependency))->getNamespaceName();
                     $dependencyActiveAndInstalled = $this->repository()->findOneBy(["name" => $dependencyName, "active" => 1, "installed" => 1]);
 
                     if (!isset($dependencyActiveAndInstalled)) {
@@ -250,7 +255,7 @@ class PluginStateService extends AbstractDatabaseAccess {
         if (sizeof($instance->getMiddlewares()) > 0) {
             /** @var MiddlewareService $middlewareService */
             $middlewareService = Oforge()->Services()->get('middleware');
-            $middlewareNames = [];
+            $middlewareNames   = [];
             foreach ($instance->getMiddlewares() as $middleware) {
                 $middlewareNames = array_merge($middlewareNames, $this->getMiddlewareNames($middleware));
             }
@@ -290,7 +295,7 @@ class PluginStateService extends AbstractDatabaseAccess {
          * @var $pluginToDeactivate Plugin
          */
         $pluginToDeactivate = $this->repository()->findOneBy(["name" => $pluginName]);
-        
+
         if (!isset($pluginToDeactivate)) {
             throw new PluginNotFoundException($pluginName);
         }
@@ -307,11 +312,10 @@ class PluginStateService extends AbstractDatabaseAccess {
         $pluginToDeactivateInstance = Helper::getBootstrapInstance($pluginName);
 
         $dependants = [];
-        foreach($plugins as $plugin) {
+        foreach ($plugins as $plugin) {
             $instance = Helper::getBootstrapInstance($plugin->getName());
             if (isset($instance) && sizeof($instance->getDependencies()) > 0) {
-               
-                if(in_array($pluginName . "\\Bootstrap", $instance->getDependencies()))  {
+                if (in_array($pluginName . "\\Bootstrap", $instance->getDependencies())) {
                     array_push($dependants, $plugin->getName());
                 }
             }
@@ -324,7 +328,7 @@ class PluginStateService extends AbstractDatabaseAccess {
         if (sizeof($pluginToDeactivateInstance->getMiddlewares()) > 0) {
             /** @var MiddlewareService $middlewareService */
             $middlewareService = Oforge()->Services()->get('middleware');
-            $middlewareNames = [];
+            $middlewareNames   = [];
             foreach ($pluginToDeactivateInstance->getMiddlewares() as $middleware) {
                 $middlewareNames = array_merge($middlewareNames, $this->getMiddlewareNames($middleware));
             }
@@ -335,7 +339,6 @@ class PluginStateService extends AbstractDatabaseAccess {
         }
 
         if ($pluginToDeactivate->getActive() === true) {
-
             if (isset($pluginToDeactivateInstance)) {
                 $pluginToDeactivateInstance->deactivate();
             }
@@ -344,7 +347,7 @@ class PluginStateService extends AbstractDatabaseAccess {
             $this->entityManager()->flush();
         }
     }
-    
+
     /**
      * Update a plugin
      */
@@ -358,7 +361,6 @@ class PluginStateService extends AbstractDatabaseAccess {
      * @return array
      */
     private function getMiddlewareNames($middleware) {
-
         $middlewareNames = [];
 
         if (array_key_exists('class', $middleware)) {
@@ -370,6 +372,8 @@ class PluginStateService extends AbstractDatabaseAccess {
                 }
             }
         }
+
         return $middlewareNames;
     }
+
 }

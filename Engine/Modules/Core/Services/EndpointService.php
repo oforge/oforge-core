@@ -235,6 +235,9 @@ class EndpointService extends AbstractDatabaseAccess {
                     // skipping of methods without endpoint action annotation in disabled strict mode
                     continue;
                 }
+                if (isset($methodAnnotation) && !$methodAnnotation->isCreate()) {
+                    continue;
+                }
                 $endpointConfig = $this->buildEndpointConfig($class, $classMethod, $isMethodActionPrefix, $classAnnotation, $methodAnnotation);
                 if (!empty($endpointConfig)) {
                     $endpointConfigs[] = $endpointConfig;
