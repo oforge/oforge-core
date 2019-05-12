@@ -5,7 +5,7 @@ namespace Oforge\Engine\Modules\TemplateEngine\Core\Abstracts;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
-use Oforge\Engine\Modules\TemplateEngine\Core\Exceptions\Template\InvalidScssVariableException;
+use Oforge\Engine\Modules\TemplateEngine\Core\Exceptions\InvalidScssVariableException;
 use Oforge\Engine\Modules\TemplateEngine\Core\Services\ScssVariableService;
 
 abstract class AbstractTemplate {
