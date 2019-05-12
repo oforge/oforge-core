@@ -10,6 +10,8 @@ use Exception;
  * @package Oforge\Engine\Modules\Core\Exceptions
  */
 class CouldNotDeactivatePluginException extends Exception {
+    /** @var string[] $dependents */
+    private $dependents;
 
     /**
      * CouldNotDeactivatePluginException constructor.
@@ -20,6 +22,12 @@ class CouldNotDeactivatePluginException extends Exception {
     public function __construct(string $className, $dependents) {
         parent::__construct("The plugin '$className' could not be deactivated because there are active plugins that depend on it. Dependents: " . implode(', ',
                 $dependents));
+        $this->dependents = $dependents;
+    }
+
+    /** @return string[] */
+    public function getDependents() {
+        return $this->dependents;
     }
 
 }
