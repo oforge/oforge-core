@@ -81,10 +81,10 @@ class PluginController extends BaseCrudController {
      * @param Response $response
      * @param array $args
      *
-     * @return Response
+     * @return Response|void
      * @EndpointAction(path="/activate/{name}")
      */
-    public function activateAction(Request $request, Response $response, array $args) : ?Response {
+    public function activateAction(Request $request, Response $response, array $args) {
         $this->handleActivate($args);
 
         return RedirectHelper::redirect($response, 'backend_plugins');
@@ -95,10 +95,10 @@ class PluginController extends BaseCrudController {
      * @param Response $response
      * @param array $args
      *
-     * @return Response
+     * @return Response|void
      * @EndpointAction(path="/deactivate/{name}")
      */
-    public function deactivateAction(Request $request, Response $response, array $args) : ?Response {
+    public function deactivateAction(Request $request, Response $response, array $args) {
         $this->handleDeactivate($args);
 
         return RedirectHelper::redirect($response, 'backend_plugins');
@@ -109,10 +109,10 @@ class PluginController extends BaseCrudController {
      * @param Response $response
      * @param array $args
      *
-     * @return Response
+     * @return Response|void
      * @EndpointAction(path="/install/{name}")
      */
-    public function installAction(Request $request, Response $response, array $args) : ?Response {
+    public function installAction(Request $request, Response $response, array $args) {
         $this->handleInstall($args);
 
         return RedirectHelper::redirect($response, 'backend_plugins');
@@ -123,10 +123,10 @@ class PluginController extends BaseCrudController {
      * @param Response $response
      * @param array $args
      *
-     * @return Response
+     * @return Response|void
      * @EndpointAction(path="/reinstall/{name}")
      */
-    public function reinstallAction(Request $request, Response $response, array $args) : ?Response {
+    public function reinstallAction(Request $request, Response $response, array $args) {
         if ($this->handleUninstall($args)) {
             $this->handleUninstall($args);
         }
@@ -139,10 +139,10 @@ class PluginController extends BaseCrudController {
      * @param Response $response
      * @param array $args
      *
-     * @return Response
+     * @return Response|void
      * @EndpointAction(path="/reinstall-activate/{name}")
      */
-    public function reinstallActivateAction(Request $request, Response $response, array $args) : ?Response {
+    public function reinstallActivateAction(Request $request, Response $response, array $args) {
         if ($this->handleUninstall($args)) {
             if ($this->handleUninstall($args)) {
                 $this->handleActivate($args);
@@ -157,10 +157,10 @@ class PluginController extends BaseCrudController {
      * @param Response $response
      * @param array $args
      *
-     * @return Response
+     * @return Response|void
      * @EndpointAction(path="/uninstall/{name}")
      */
-    public function uninstallAction(Request $request, Response $response, array $args) : ?Response {
+    public function uninstallAction(Request $request, Response $response, array $args) {
         $this->handleUninstall($args);
 
         return RedirectHelper::redirect($response, 'backend_plugins');
@@ -171,10 +171,10 @@ class PluginController extends BaseCrudController {
      * @param Response $response
      * @param array $args
      *
-     * @return Response
+     * @return Response|void
      * @EndpointAction(path="/add")
      */
-    public function addAction(Request $request, Response $response, array $args) : ?Response {
+    public function addAction(Request $request, Response $response, array $args) {
         Oforge()->View()->Flash()->addMessage('info', 'Not implemented yet!');
 
         //TODO Implementation of PluginController#addAction, later
@@ -187,15 +187,15 @@ class PluginController extends BaseCrudController {
      * @param Response $response
      * @param array $args
      *
-     * @return Response
+     * @return Response|void
      * @EndpointAction(path="/delete/{name}")
      */
-    public function deleteAction(Request $request, Response $response, array $args) : ?Response {
-        Oforge()->View()->Flash()->addMessage('info', 'Not implemented yet!');
+    public function deleteAction(Request $request, Response $response, array $args) {
+        // Oforge()->View()->Flash()->addMessage('info', 'Not implemented yet!');
 
         //TODO Implementation of PluginController#deleteAction
 
-        return RedirectHelper::redirect($response, 'backend_plugins');
+        // return RedirectHelper::redirect($response, 'backend_plugins');
     }
 
     /** @EndpointAction(create=false) */
@@ -378,7 +378,7 @@ class PluginController extends BaseCrudController {
             try {
                 /** @var PluginStateService $pluginStateService */
                 $pluginStateService = Oforge()->Services()->get('plugin.state');
-                $pluginStateService->uninstall($pluginName);
+                $pluginStateService->uninstall($pluginName, true);
                 $twigFlash->addMessage('success', sprintf(#
                     I18N::translate('crud_plugin_msg_uninstall_success', 'Plugin "%s" successfully uninstalled.'),#
                     $pluginName#
