@@ -15,11 +15,10 @@ use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 class Bootstrap extends AbstractBootstrap {
     
     public function __construct() {
-
         $this->dependencies = [
         ];
+
         $this->endpoints = [
-            // '/' => ['controller' => \Test\Controller\Frontend\HomeController::class, 'name' => 'Blog']
         ];
         
         $this->middlewares = [

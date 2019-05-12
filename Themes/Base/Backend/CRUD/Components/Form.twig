@@ -28,9 +28,9 @@
                                     {% set fieldLabel = i18n(property.label.key, property.label.default) %}
                                 {% endif %}
                             {% elseif property.name == 'id' %}
-                                {% set fieldLabel = i18n(('crud_' ~ crud.model ~ '_' ~ property.name)|lower, 'ID') %}
+                                {% set fieldLabel = 'ID' %}
                             {% else %}
-                                {% set fieldLabel = i18n(('crud_' ~ crud.model ~ '_' ~ property.name)|lower, property.name|capitalize) %}
+                                {% set fieldLabel = i18n(('crud_property_' ~ crud.model ~ '_' ~ property.name)|lower, property.name|capitalize) %}
                             {% endif %}
                             {% set fieldID = ['form', crud.context, crud.model|lower, property.name]|join('_') %}
                             <label for="{{ fieldID }}">{{ fieldLabel }}</label>

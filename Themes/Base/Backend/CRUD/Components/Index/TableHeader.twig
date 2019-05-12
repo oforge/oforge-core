@@ -10,9 +10,9 @@
                     {{ i18n(property.label.key, property.label.default) }}
                 {% endif %}
             {% elseif property.name == 'id' %}
-                {{ i18n(('crud_' ~ crud.model ~ '_' ~ property.name)|lower, 'ID') }}
+                {{ 'ID' }}
             {% else %}
-                {{ i18n(('crud_' ~ crud.model ~ '_' ~ property.name)|lower, property.name|capitalize) }}
+                {{ i18n(('crud_property_' ~ crud.model ~ '_' ~ property.name)|lower, property.name|capitalize) }}
             {% endif %}
         </th>
     {% endfor %}
