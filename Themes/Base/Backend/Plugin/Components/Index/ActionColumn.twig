@@ -1,0 +1,24 @@
+<div class="btn-group">
+    {% if not item.installed %}
+        {% include 'Backend/Plugin/Components/Index/Install.twig' with {isButton: true} %}
+    {% elseif not item.active %}
+        {% include 'Backend/Plugin/Components/Index/Activate.twig' with {isButton: true} %}
+    {% else %}
+        {% include 'Backend/Plugin/Components/Index/Deactivate.twig' with {isButton: true} %}
+    {% endif %}
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
+        {{ i18n('backend_crud_plugin_others_dropdown', 'others') }}
+        &nbsp;
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+        {% if item.installed %}
+            <li>{% include 'Backend/Plugin/Components/Index/Reinstall.twig' %}</li>
+            <li>{% include 'Backend/Plugin/Components/Index/ReinstallActivate.twig' %}</li>
+            <li>{% include 'Backend/Plugin/Components/Index/Uninstall.twig' %}</li>
+        {% else %}
+            <li>{% include 'Backend/Plugin/Components/Index/Delete.twig' %}</li>
+        {% endif %}
+    </ul>
+</div>
