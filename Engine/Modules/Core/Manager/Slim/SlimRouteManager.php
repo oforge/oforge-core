@@ -23,9 +23,7 @@ class SlimRouteManager {
     /** @var SlimRouteManager $instance */
     protected static $instance = null;
 
-    /**
-     * @return SlimRouteManager
-     */
+    /** @return SlimRouteManager */
     public static function getInstance() : SlimRouteManager {
         if (!isset(self::$instance)) {
             self::$instance = new SlimRouteManager();
@@ -41,7 +39,7 @@ class SlimRouteManager {
      * @throws ORMException
      */
     public function init() {
-        $entityManager      = Oforge()->DB()->getEnityManager();
+        $entityManager      = Oforge()->DB()->getEntityManager();
         $endpointRepository = $entityManager->getRepository(Endpoint::class);
 
         /** @var ForgeSlimApp $forgeSlimApp */

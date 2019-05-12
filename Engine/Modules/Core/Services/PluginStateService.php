@@ -7,18 +7,18 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
-use Oforge\Engine\Modules\Core\Exceptions\CouldNotActivatePluginException;
-use Oforge\Engine\Modules\Core\Exceptions\CouldNotDeactivatePluginException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\InvalidClassException;
-use Oforge\Engine\Modules\Core\Exceptions\PluginAlreadyActivatedException;
-use Oforge\Engine\Modules\Core\Exceptions\PluginAlreadyInstalledException;
-use Oforge\Engine\Modules\Core\Exceptions\PluginNotActivatedException;
-use Oforge\Engine\Modules\Core\Exceptions\PluginNotFoundException;
-use Oforge\Engine\Modules\Core\Exceptions\PluginNotInstalledException;
-use Oforge\Engine\Modules\Core\Exceptions\ServiceAlreadyDefinedException;
+use Oforge\Engine\Modules\Core\Exceptions\Plugin\CouldNotActivatePluginException;
+use Oforge\Engine\Modules\Core\Exceptions\Plugin\CouldNotDeactivatePluginException;
+use Oforge\Engine\Modules\Core\Exceptions\Plugin\PluginAlreadyActivatedException;
+use Oforge\Engine\Modules\Core\Exceptions\Plugin\PluginAlreadyInstalledException;
+use Oforge\Engine\Modules\Core\Exceptions\Plugin\PluginNotActivatedException;
+use Oforge\Engine\Modules\Core\Exceptions\Plugin\PluginNotFoundException;
+use Oforge\Engine\Modules\Core\Exceptions\Plugin\PluginNotInstalledException;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceAlreadyExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
-use Oforge\Engine\Modules\Core\Exceptions\TemplateNotFoundException;
+use Oforge\Engine\Modules\Core\Exceptions\Template\TemplateNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\Helper;
 use Oforge\Engine\Modules\Core\Models\Plugin\Plugin;
 use Oforge\Engine\Modules\TemplateEngine\Core\Exceptions\InvalidScssVariableException;
@@ -34,7 +34,7 @@ use ReflectionException;
 class PluginStateService extends AbstractDatabaseAccess {
 
     public function __construct() {
-        parent::__construct(["default" => Plugin::class]);
+        parent::__construct(Plugin::class);
     }
 
     /**
@@ -45,7 +45,8 @@ class PluginStateService extends AbstractDatabaseAccess {
      * @throws InvalidClassException
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws ServiceAlreadyDefinedException
+     * @throws InvalidClassException
+     * @throws ServiceAlreadyExistException
      * @throws ServiceNotFoundException
      * @throws AnnotationException
      */
@@ -66,7 +67,7 @@ class PluginStateService extends AbstractDatabaseAccess {
                 /**
                  * @var $endpointService EndpointService
                  */
-                $endpointService = Oforge()->Services()->get("endpoints");
+                $endpointService = Oforge()->Services()->get('endpoint');
                 $endpointService->install($endpoints);
                 $endpointService->activate($endpoints);
             }
@@ -79,7 +80,7 @@ class PluginStateService extends AbstractDatabaseAccess {
      *
      * @param $pluginName
      *
-     * @throws ConfigOptionKeyNotExistsException
+     * @throws ConfigOptionKeyNotExistException
      * @throws InvalidClassException
      * @throws ORMException
      * @throws OptimisticLockException
@@ -120,7 +121,7 @@ class PluginStateService extends AbstractDatabaseAccess {
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws InvalidClassException
-     * @throws ServiceAlreadyDefinedException
+     * @throws ServiceAlreadyExistException
      * @throws PluginAlreadyInstalledException
      */
     public function install(string $pluginName) {
@@ -210,7 +211,7 @@ class PluginStateService extends AbstractDatabaseAccess {
      * @throws OptimisticLockException
      * @throws PluginNotFoundException
      * @throws ReflectionException
-     * @throws ServiceAlreadyDefinedException
+     * @throws ServiceAlreadyExistException
      * @throws ServiceNotFoundException
      * @throws TemplateNotFoundException
      * @throws PluginNotInstalledException

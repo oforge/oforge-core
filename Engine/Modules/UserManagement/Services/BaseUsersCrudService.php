@@ -8,8 +8,11 @@
 
 namespace Oforge\Engine\Modules\UserManagement\Services;
 
+use Exception;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Auth\Services\PasswordService;
+use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\CRUD\Services\GenericCrudService;
 
 class BaseUsersCrudService {
@@ -32,7 +35,7 @@ class BaseUsersCrudService {
     /**
      * UserCrudService constructor.
      *
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ServiceNotFoundException
      */
     public function __construct() {
         $this->passwordService = Oforge()->Services()->get("password");
@@ -49,7 +52,7 @@ class BaseUsersCrudService {
             $userData["password"] = $this->passwordService->hash($userData["password"]);
             try {
                 $this->crudService->create($this->userModel, $userData);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $msg = $e->getPrevious();
                 if (isset($msg)) {
                     $msg = $msg->getMessage();
@@ -71,7 +74,7 @@ class BaseUsersCrudService {
      * @param $userData array
      *
      * @return bool
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\NotFoundException
+     * @throws NotFoundException
      */
     public function update($userData) {
         if (key_exists("password", $userData)) {
