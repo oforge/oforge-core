@@ -3,7 +3,8 @@
 namespace Oforge\Engine\Modules\TemplateEngine\Core\Services;
 
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
-use Oforge\Engine\Modules\TemplateEngine\Core\Exceptions\InvalidScssVariableException;
+use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
+use Oforge\Engine\Modules\TemplateEngine\Core\Exceptions\Template\InvalidScssVariableException;
 use Oforge\Engine\Modules\TemplateEngine\Core\Models\ScssVariable;
 use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
 
@@ -57,7 +58,7 @@ class ScssVariableService extends AbstractDatabaseAccess {
      *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws InvalidScssVariableException
+     * @throws \Oforge\Engine\Modules\TemplateEngine\Core\Exceptions\Template\InvalidScssVariableException
      */
     public function add($templateVariable) {
         if (!isset($templateVariable['scope'])) {
