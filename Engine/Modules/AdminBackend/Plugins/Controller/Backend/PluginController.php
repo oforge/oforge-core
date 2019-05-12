@@ -59,7 +59,7 @@ class PluginController extends BaseCrudController {
                 'index' => 'readonly',
             ],
             'renderer' => [
-                'custom' => 'Backend/Plugin/Index/ActionColumn.twig',
+                'custom' => 'Backend/Plugin/Components/Index/ActionColumn.twig',
             ],
         ],
     ];
@@ -124,14 +124,50 @@ class PluginController extends BaseCrudController {
      * @param array $args
      *
      * @return Response|void
+     * @EndpointAction(path="/uninstall/{name}")
+     */
+    public function uninstallAction(Request $request, Response $response, array $args) {
+        $postData = $request->getParsedBody();
+        if ($request->isPost() && !empty($postData) && isset($postData['keep_data'])) {
+            $keepData = (bool) $postData['keep_data'];
+            $this->handleUninstall($args, $keepData);
+
+            return RedirectHelper::redirect($response, 'backend_plugins');
+        }
+        Oforge()->View()->assign([
+            'crud' => [
+                'context'      => 'uninstall',
+                'contextLabel' => 'uninstall',
+                'pluginName'   => $args['name'],
+            ],
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     *
+     * @return Response|void
      * @EndpointAction(path="/reinstall/{name}")
      */
     public function reinstallAction(Request $request, Response $response, array $args) {
-        if ($this->handleUninstall($args)) {
-            $this->handleUninstall($args);
-        }
+        $postData = $request->getParsedBody();
+        if ($request->isPost() && !empty($postData) && isset($postData['keep_data'])) {
+            $keepData = (bool) $postData['keep_data'];
+            if ($this->handleUninstall($args, $keepData)) {
+                $this->handleInstall($args);
+            }
 
-        return RedirectHelper::redirect($response, 'backend_plugins');
+            return RedirectHelper::redirect($response, 'backend_plugins');
+        }
+        Oforge()->View()->assign([
+            'crud' => [
+                'context'      => 'reinstall',
+                'contextLabel' => 'reinstall',
+                'pluginName'   => $args['name'],
+            ],
+        ]);
     }
 
     /**
@@ -143,27 +179,24 @@ class PluginController extends BaseCrudController {
      * @EndpointAction(path="/reinstall-activate/{name}")
      */
     public function reinstallActivateAction(Request $request, Response $response, array $args) {
-        if ($this->handleUninstall($args)) {
-            if ($this->handleUninstall($args)) {
-                $this->handleActivate($args);
+        $postData = $request->getParsedBody();
+        if ($request->isPost() && !empty($postData) && isset($postData['keep_data'])) {
+            $keepData = (bool) $postData['keep_data'];
+            if ($this->handleUninstall($args, $keepData)) {
+                if ($this->handleInstall($args)) {
+                    $this->handleActivate($args);
+                }
             }
+
+            return RedirectHelper::redirect($response, 'backend_plugins');
         }
-
-        return RedirectHelper::redirect($response, 'backend_plugins');
-    }
-
-    /**
-     * @param Request $request
-     * @param Response $response
-     * @param array $args
-     *
-     * @return Response|void
-     * @EndpointAction(path="/uninstall/{name}")
-     */
-    public function uninstallAction(Request $request, Response $response, array $args) {
-        $this->handleUninstall($args);
-
-        return RedirectHelper::redirect($response, 'backend_plugins');
+        Oforge()->View()->assign([
+            'crud' => [
+                'context'      => 'reinstall_activate',
+                'contextLabel' => 'reinstall & activate',
+                'pluginName'   => $args['name'],
+            ],
+        ]);
     }
 
     /**
@@ -191,11 +224,11 @@ class PluginController extends BaseCrudController {
      * @EndpointAction(path="/delete/{name}")
      */
     public function deleteAction(Request $request, Response $response, array $args) {
-        // Oforge()->View()->Flash()->addMessage('info', 'Not implemented yet!');
+        Oforge()->View()->Flash()->addMessage('info', 'Not implemented yet!');
 
         //TODO Implementation of PluginController#deleteAction
 
-        // return RedirectHelper::redirect($response, 'backend_plugins');
+        return RedirectHelper::redirect($response, 'backend_plugins');
     }
 
     /** @EndpointAction(create=false) */
@@ -368,17 +401,18 @@ class PluginController extends BaseCrudController {
 
     /**
      * @param array $args
+     * @param bool $keepData
      *
      * @return bool
      */
-    protected function handleUninstall(array $args) : bool {
+    protected function handleUninstall(array $args, bool $keepData) : bool {
         if (isset($args['name'])) {
             $pluginName = $args['name'];
             $twigFlash  = Oforge()->View()->Flash();
             try {
                 /** @var PluginStateService $pluginStateService */
                 $pluginStateService = Oforge()->Services()->get('plugin.state');
-                $pluginStateService->uninstall($pluginName, true);
+                $pluginStateService->uninstall($pluginName, $keepData);
                 $twigFlash->addMessage('success', sprintf(#
                     I18N::translate('crud_plugin_msg_uninstall_success', 'Plugin "%s" successfully uninstalled.'),#
                     $pluginName#
