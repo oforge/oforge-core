@@ -32,7 +32,7 @@ class InsertionType extends AbstractModel {
     private $parent;
 
     /**
-     * @ORM\OneToMany(targetEntity="InsertionTypeAttribute", mappedBy="$insertionTypeId")
+     * @ORM\OneToMany(targetEntity="InsertionTypeAttribute", mappedBy="insertionTypeId")
      */
     private $attributes;
 
@@ -65,9 +65,9 @@ class InsertionType extends AbstractModel {
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getParent() : int {
+    public function getParent() : ?int {
         return $this->parent;
     }
 

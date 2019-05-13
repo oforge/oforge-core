@@ -6,9 +6,10 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Insertion\Models\AttributeKey;
 use Insertion\Models\AttributeValue;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\CRUD\Services\GenericCrudService;
 
-class AttributeService extends GenericCrudService {
+class AttributeService extends AbstractDatabaseAccess {
 
     public function __construct() {
         parent::__construct([

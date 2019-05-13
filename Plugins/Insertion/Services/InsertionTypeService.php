@@ -5,9 +5,10 @@ namespace Insertion\Services;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Insertion\Models\InsertionType;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\CRUD\Services\GenericCrudService;
 
-class InsertionTypeService extends GenericCrudService {
+class InsertionTypeService extends AbstractDatabaseAccess {
     public function __construct() {
         parent::__construct(['default' => InsertionType::class]);
     }
