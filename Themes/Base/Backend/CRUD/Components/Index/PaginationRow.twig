@@ -10,7 +10,8 @@
             </a>
         {% endfor %}
     </div>
-    <div class="col-xs-12 col-md-6 col-md-offset-4">
+    <div class="col-xs-12 col-md-4"></div>
+    <div class="col-xs-12 col-md-4">
         {% set hrefFirst = url(route.name, [], route.query|merge({(queryKeys.page): 1})) %}
         {% set hrefPrev = url(route.name, [], route.query|merge({(queryKeys.page): pagination.page.current - 1})) %}
         {% set hrefNext = url(route.name, [], route.query|merge({(queryKeys.page): pagination.page.current + 1})) %}
