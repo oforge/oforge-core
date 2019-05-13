@@ -45,11 +45,14 @@ class PluginController extends BaseCrudController {
             ],
         ],
         [
-            'name'  => 'name',
-            'type'  => CrudDataTypes::STRING,
-            'label' => ['key' => 'backend_crud_plugin_property_name', 'default' => 'Plugin name'],
-            'crud'  => [
+            'name'     => 'name',
+            'type'     => CrudDataTypes::CUSTOM,
+            'label'    => ['key' => 'backend_crud_plugin_property_name', 'default' => 'Plugin name'],
+            'crud'     => [
                 'index' => 'readonly',
+            ],
+            'renderer' => [
+                'custom' => 'Backend/Plugin/Components/Index/NameColumn.twig',
             ],
         ],
         [
@@ -523,6 +526,12 @@ class PluginController extends BaseCrudController {
         $preContent = implode("\n", $preContentLines);
         $message    = "<details><summary>$message</summary><div><p>$subMessage:</p><pre>$preContent</pre></div></details>";
         $twigFlash->addMessage('error', $message);
+    }
+
+    /** @inheritDoc */
+    protected function prepareItemData(array $data, string $crudAction) : array {
+        // TODO include data version, description.long & description.short
+        return $data;
     }
 
 }
