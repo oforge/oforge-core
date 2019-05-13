@@ -40,6 +40,28 @@
                 </div>
             </div>
 
+            {% if extended %}
+                <div class="panel panel--product-attributes attributes--extended">
+                    <h3 class="title title--attributes">Details</h3>
+                    <div class="attribute">
+                        <span class="attribute-label">Label</span>
+                        <span class="attribute-value">Value</span>
+                    </div>
+                    <div class="attribute">
+                        <span class="attribute-label">Label</span>
+                        <span class="attribute-value">Value</span>
+                    </div>
+                    <div class="attribute">
+                        <span class="attribute-label">Label</span>
+                        <span class="attribute-value">Value</span>
+                    </div>
+                    <div class="attribute">
+                        <span class="attribute-label">Label</span>
+                        <span class="attribute-value">Value</span>
+                    </div>
+                </div>
+            {% endif %}
+
             <div class="panel panel--product-description description">
                 <div class="description__head">
                     <h4 class="title">Description</h4>
@@ -58,6 +80,13 @@
         </div>
 
         <div class="sidebar sidebar--insertion">
+
+            {% if extended %}
+                <div class="panel panel--provider">
+
+                </div>
+            {% endif %}
+
             <div class="panel panel--contact contact">
                 <div class="contact__name">Rachel Müller</div>
                 <div class="contact__address">12345 Velgast</div>

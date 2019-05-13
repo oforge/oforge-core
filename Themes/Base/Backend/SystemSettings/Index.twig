@@ -13,7 +13,7 @@
                         {% for configKey in config %}
                             <tr>
                                 <td>
-                                    <a class="" href="/backend/settings/{{ configKey.group }}">{{ i18n(configKey.group) }}</a>
+                                    <a class="" href="/backend/settings/{{ configKey.group }}">{{ i18n('config_group_' ~ configKey.group, configKey.group|capitalize) }}</a>
                                 </td>
                             </tr>
                         {% endfor %}
