@@ -7,8 +7,8 @@ use Doctrine\ORM\ORMException;
 use InvalidArgumentException;
 use Oforge\Engine\Modules\AdminBackend\Core\Models\BackendNavigation;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistsException;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
 
 class BackendNavigationService extends AbstractDatabaseAccess {
@@ -20,8 +20,8 @@ class BackendNavigationService extends AbstractDatabaseAccess {
     /**
      * @param array $options
      *
-     * @throws ConfigElementAlreadyExistsException
-     * @throws ConfigOptionKeyNotExistsException
+     * @throws ConfigElementAlreadyExistException
+     * @throws ConfigOptionKeyNotExistException
      * @throws ParentNotFoundException
      * @throws ORMException
      * @throws OptimisticLockException
@@ -54,11 +54,33 @@ class BackendNavigationService extends AbstractDatabaseAccess {
     }
 
     /**
+     * @param string $activePath
+     *
+     * @return array
+     * @throws ORMException
+     */
+    public function breadcrumbs($activePath) {
+        $breadcrumbs = [];
+        /** @var null|BackendNavigation $entry */
+        $entry = $this->repository()->findOneBy(["path" => $activePath], ['order' => 'ASC']);
+
+        if (isset($entry)) {
+            array_push($breadcrumbs, $entry->toArray());
+
+            if ($entry->getParent() != "0") {
+                $this->findParents($entry, $breadcrumbs);
+            }
+        }
+
+        return array_reverse($breadcrumbs);
+    }
+
+    /**
      * @param array $options
      *
      * @return bool
-     * @throws ConfigElementAlreadyExistsException
-     * @throws ConfigOptionKeyNotExistsException
+     * @throws ConfigElementAlreadyExistException
+     * @throws ConfigOptionKeyNotExistException
      * @throws ORMException
      * @throws ParentNotFoundException
      */
@@ -67,14 +89,14 @@ class BackendNavigationService extends AbstractDatabaseAccess {
         $keys = ["name"];
         foreach ($keys as $key) {
             if (!array_key_exists($key, $options)) {
-                throw new ConfigOptionKeyNotExistsException($key);
+                throw new ConfigOptionKeyNotExistException($key);
             }
         }
 
         // Check if the element is already within the system
         $element = $this->repository()->findOneBy(["name" => strtolower($options["name"])]);
         if (isset($element)) {
-            throw new ConfigElementAlreadyExistsException(strtolower($options["name"]));
+            throw new ConfigElementAlreadyExistException(strtolower($options["name"]));
         }
 
         if (key_exists("parent", $options)) {
@@ -126,28 +148,6 @@ class BackendNavigationService extends AbstractDatabaseAccess {
         }
 
         return $result;
-    }
-
-    /**
-     * @param string $activePath
-     *
-     * @return array
-     * @throws ORMException
-     */
-    public function breadcrumbs($activePath) {
-        $breadcrumbs = [];
-        /** @var null|BackendNavigation $entry */
-        $entry = $this->repository()->findOneBy(["path" => $activePath], ['order' => 'ASC']);
-
-        if (isset($entry)) {
-            array_push($breadcrumbs, $entry->toArray());
-
-            if ($entry->getParent() != "0") {
-                $this->findParents($entry, $breadcrumbs);
-            }
-        }
-
-        return array_reverse($breadcrumbs);
     }
 
     /**

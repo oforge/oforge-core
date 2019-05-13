@@ -8,7 +8,7 @@ use InvalidArgumentException;
 use Oforge\Engine\Modules\AdminBackend\Core\Models\DashboardWidget;
 use Oforge\Engine\Modules\AdminBackend\Core\Models\UserDashboardWidgets;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 
 class DashboardWidgetsService extends AbstractDatabaseAccess {
 
@@ -22,7 +22,7 @@ class DashboardWidgetsService extends AbstractDatabaseAccess {
     /**
      * @param $widget
      *
-     * @throws ConfigOptionKeyNotExistsException
+     * @throws ConfigOptionKeyNotExistException
      * @throws ORMException
      */
     public function register($widget) {
@@ -122,7 +122,7 @@ class DashboardWidgetsService extends AbstractDatabaseAccess {
      * @param $options
      *
      * @return bool
-     * @throws ConfigOptionKeyNotExistsException
+     * @throws ConfigOptionKeyNotExistException
      * @throws ORMException
      */
     private function isValid($options) {
@@ -130,7 +130,7 @@ class DashboardWidgetsService extends AbstractDatabaseAccess {
         $keys = ["name", "action"];
         foreach ($keys as $key) {
             if (!array_key_exists($key, $options)) {
-                throw new ConfigOptionKeyNotExistsException($key);
+                throw new ConfigOptionKeyNotExistException($key);
             }
         }
 

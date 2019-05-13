@@ -8,7 +8,7 @@
 <body class="hold-transition skin-oforge sidebar-mini">
 <div class="wrapper">
 
-    {% if debug_mode is same as(true) %}
+    {% if debug.console %}
         {{ o_dump() }}
     {% endif %}
 
@@ -62,7 +62,7 @@
 {% endblock %}
 
 {% block meta %}
-    {% if session %}
+    {% if debug.session %}
         <style>
             .meta {
                 background: #d87a68;
@@ -76,7 +76,7 @@
             }
         </style>
         <div class="meta">
-            {% for key, val in session %}
+            {% for key, val in debug.session %}
                 <p>{{ key }} : {{ val }}</p>
             {% endfor %}
         </div>

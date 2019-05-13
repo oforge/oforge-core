@@ -2,9 +2,12 @@
 
 namespace Oforge\Engine\Modules\Core;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Controller\Frontend\NotFoundController;
-use Oforge\Engine\Modules\Core\Models\Config\Element;
+use Oforge\Engine\Modules\Core\Models\Config\Config;
+use Oforge\Engine\Modules\Core\Models\Config\ConfigType;
 use Oforge\Engine\Modules\Core\Models\Config\Value;
 use Oforge\Engine\Modules\Core\Models\Endpoint\Endpoint;
 use Oforge\Engine\Modules\Core\Models\Module\Module;
@@ -12,6 +15,7 @@ use Oforge\Engine\Modules\Core\Models\Plugin\Middleware;
 use Oforge\Engine\Modules\Core\Models\Plugin\Plugin;
 use Oforge\Engine\Modules\Core\Models\Store\KeyValue;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
+use Oforge\Engine\Modules\Core\Services\EncryptionService;
 use Oforge\Engine\Modules\Core\Services\EndpointService;
 use Oforge\Engine\Modules\Core\Services\KeyValueStoreService;
 use Oforge\Engine\Modules\Core\Services\MiddlewareService;
@@ -22,7 +26,7 @@ use Oforge\Engine\Modules\Core\Services\RedirectService;
 use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
 
 /**
- * Class Bootstrap
+ * Class Core-Bootstrap
  *
  * @package Oforge\Engine\Modules\Core
  */
@@ -34,37 +38,66 @@ class Bootstrap extends AbstractBootstrap {
         ];
 
         $this->models = [
-            Module::class,
-            Element::class,
-            Value::class,
-            Plugin::class,
-            Middleware::class,
+            Config::class,
             Endpoint::class,
             KeyValue::class,
+            Middleware::class,
+            Module::class,
+            Plugin::class,
+            Value::class,
         ];
 
         $this->services = [
-            'plugin.state'       => PluginStateService::class,
-            'plugin.access'      => PluginAccessService::class,
-            'endpoints'          => EndpointService::class,
             'config'             => ConfigService::class,
+            'encryption'         => EncryptionService::class,
+            'endpoint'           => EndpointService::class,
             'middleware'         => MiddlewareService::class,
-            'store.keyvalue'     => KeyValueStoreService::class,
             'ping'               => PingService::class,
+            'plugin.access'      => PluginAccessService::class,
+            'plugin.state'       => PluginStateService::class,
             'redirect'           => RedirectService::class,
             'session.management' => SessionManagementService::class,
+            'store.keyvalue'     => KeyValueStoreService::class,
         ];
 
         $this->order = 0;
     }
 
     /**
-     *
+     * @throws Exceptions\ConfigElementAlreadyExistException
+     * @throws Exceptions\ConfigOptionKeyNotExistException
+     * @throws Exceptions\ServiceNotFoundException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function install() {
+        //TODO in import csv
+        // I18N::translate('config_debug_mode', 'Debug mode', 'en');
+        // I18N::translate('debug_console', 'Console output', 'en');
+        // I18N::translate('debug_session', 'Include session data', 'en');
         /** @var ConfigService $configService */
         $configService = Oforge()->Services()->get('config');
-        $configService->update(['name' => 'system_debug', 'label' => 'Debug aktivieren', 'type' => 'boolean', 'default' => true, 'group' => 'system']);
-        $configService->update(['name' => 'session_debug', 'label' => 'session_debug', 'type' => 'boolean', 'default' => false, 'group' => 'system']);
+        $configService->add([
+            'name'    => 'debug_mode',
+            'type'    => ConfigType::BOOLEAN,
+            'group'   => 'debug',
+            'default' => false,
+            'label'   => 'config_debug_mode',
+        ]);
+        $configService->add([
+            'name'    => 'debug_console',
+            'type'    => ConfigType::BOOLEAN,
+            'group'   => 'debug',
+            'default' => true,
+            'label'   => 'debug_console',
+        ]);
+        $configService->add([
+            'name'    => 'debug_session',
+            'type'    => ConfigType::BOOLEAN,
+            'group'   => 'debug',
+            'default' => true,
+            'label'   => 'config_debug_session',
+        ]);
     }
+
 }
