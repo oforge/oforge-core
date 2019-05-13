@@ -7,31 +7,14 @@ use Oforge\Engine\Modules\Core\Exceptions\InvalidClassException;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
+/**
+ * Class Helper
+ *
+ * @package Oforge\Engine\Modules\Core\Helper
+ * @deprecated
+ */
 class Helper {
     protected static $omitFolders = [".", "..", "vendor", "var"];
-
-    /**
-     * Get all directories recursive based on the defined path, except the folders to omit
-     *
-     * @param string $path
-     *
-     * @return array
-     */
-    public static function getAllDirs(string $path) {
-        $result = [];
-        $tmp    = scandir($path);
-
-        foreach ($tmp as $dir) {
-            $v = $path . DIRECTORY_SEPARATOR . $dir;
-
-            if (is_dir($v) && !in_array($dir, self::$omitFolders)) {
-                array_push($result, $v);
-                $result = array_merge($result, Helper::getAllDirs($v));
-            }
-        }
-
-        return $result;
-    }
 
     /**
      * get all Bootstrap.php files inside a defined path
@@ -119,21 +102,6 @@ class Helper {
     }
 
     /**
-     * @return string
-     */
-    public static function generateGuid() {
-        return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X',
-            mt_rand(0, 65535),
-            mt_rand(0, 65535),
-            mt_rand(0, 65535),
-            mt_rand(16384, 20479),
-            mt_rand(32768, 49151),
-            mt_rand(0, 65535),
-            mt_rand(0, 65535),
-            mt_rand(0, 65535));
-    }
-
-    /**
      * Get some metadata from a file.
      * If the file is a psr4 conform class, the function finds the namespace and classname and returns them as an array.
      * Otherwise null.
@@ -143,7 +111,6 @@ class Helper {
      * @return array|null
      */
     public static function getFileMeta(string $fileName) {
-
         $file = fopen($fileName, 'r');
         $class = '';
         $namespace = '';
@@ -152,12 +119,16 @@ class Helper {
         $fileMeta = [];
 
         while (!$class) {
-            if (feof($file)) break;
+            if (feof($file)) {
+                break;
+            }
 
             $buffer .= fread($file, 512);
             $tokens = token_get_all($buffer);
 
-            if (strpos($buffer, '{') === false) continue;
+            if (strpos($buffer, '{') === false) {
+                continue;
+            }
 
             for (;$i < count($tokens); $i++) {
                 if ($tokens[$i][0] === T_NAMESPACE) {
@@ -198,4 +169,5 @@ class Helper {
 
         return $fileMeta;
     }
+
 }

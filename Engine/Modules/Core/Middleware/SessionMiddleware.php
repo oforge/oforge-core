@@ -15,6 +15,7 @@ use Psr\Http\Message\ServerRequestInterface;
  * @package Oforge\Engine\Modules\Core\Middleware
  */
 class SessionMiddleware {
+
     /**
      * @param ServerRequestInterface $request PSR7 request
      * @param ResponseInterface $response PSR7 response
@@ -30,11 +31,14 @@ class SessionMiddleware {
         $sessionManager->sessionStart();
         /** @var ConfigService $configService */
         $configService = Oforge()->Services()->get('config');
-        $sessionDebug  = $configService->get('session_debug');
+        $debugMode     = $configService->get('debug_mode');
 
-        /** for debugging purposes */
-        if ($sessionDebug) {
-            Oforge()->View()->assign(['session' => $_SESSION]);
+        if ($debugMode) {
+            /** for debugging purposes */
+            $debugSession  = $configService->get('debug_session');
+            if ($debugSession) {
+                Oforge()->View()->assign(['debug.session' => $_SESSION]);
+            }
         }
 
         return $next($request, $response);
