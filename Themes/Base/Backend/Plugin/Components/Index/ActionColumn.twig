@@ -1,10 +1,10 @@
 <div class="btn-group">
     {% if not item.installed %}
-        {% include 'Backend/Plugin/Components/Index/Install.twig' with {isButton: true} %}
+        {% include 'Backend/Plugin/Components/Index/Action/Install.twig' with {isButton: true} %}
     {% elseif not item.active %}
-        {% include 'Backend/Plugin/Components/Index/Activate.twig' with {isButton: true} %}
+        {% include 'Backend/Plugin/Components/Index/Action/Activate.twig' with {isButton: true} %}
     {% else %}
-        {% include 'Backend/Plugin/Components/Index/Deactivate.twig' with {isButton: true} %}
+        {% include 'Backend/Plugin/Components/Index/Action/Deactivate.twig' with {isButton: true} %}
     {% endif %}
     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
             aria-expanded="false">
@@ -14,11 +14,17 @@
     </button>
     <ul class="dropdown-menu">
         {% if item.installed %}
-            <li>{% include 'Backend/Plugin/Components/Index/Reinstall.twig' %}</li>
-            <li>{% include 'Backend/Plugin/Components/Index/ReinstallActivate.twig' %}</li>
-            <li>{% include 'Backend/Plugin/Components/Index/Uninstall.twig' %}</li>
+            {% if item.active %}
+                <li>{% include 'Backend/Plugin/Components/Index/Action/Rebuild.twig' %}</li>
+                <li role="separator" class="divider"></li>
+                <li>{% include 'Backend/Plugin/Components/Index/Action/Reactivate.twig' %}</li>
+            {% endif %}
+            <li>{% include 'Backend/Plugin/Components/Index/Action/Reinstall.twig' %}</li>
+            <li>{% include 'Backend/Plugin/Components/Index/Action/ReinstallActivate.twig' %}</li>
+            <li role="separator" class="divider"></li>
+            <li>{% include 'Backend/Plugin/Components/Index/Action/Uninstall.twig' %}</li>
         {% else %}
-            <li>{% include 'Backend/Plugin/Components/Index/Delete.twig' %}</li>
+            <li>{% include 'Backend/Plugin/Components/Index/Action/Delete.twig' %}</li>
         {% endif %}
     </ul>
 </div>

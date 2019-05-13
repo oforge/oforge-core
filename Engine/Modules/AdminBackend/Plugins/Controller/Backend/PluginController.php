@@ -21,6 +21,7 @@ use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\TemplateEngine\Core\Exceptions\InvalidScssVariableException;
+use Oforge\Engine\Modules\TemplateEngine\Core\Services\TemplateManagementService;
 use Oforge\Engine\Modules\TemplateEngine\Core\Twig\TwigFlash;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -82,6 +83,22 @@ class PluginController extends BaseCrudController {
      * @param array $args
      *
      * @return Response|void
+     * @EndpointAction(path="/add")
+     */
+    public function addAction(Request $request, Response $response, array $args) {
+        Oforge()->View()->Flash()->addMessage('info', 'Not implemented yet!');
+
+        //TODO Implementation of PluginController#addAction, later
+
+        return RedirectHelper::redirect($response, 'backend_plugins');
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     *
+     * @return Response|void
      * @EndpointAction(path="/activate/{name}")
      */
     public function activateAction(Request $request, Response $response, array $args) {
@@ -110,6 +127,22 @@ class PluginController extends BaseCrudController {
      * @param array $args
      *
      * @return Response|void
+     * @EndpointAction(path="/delete/{name}")
+     */
+    public function deleteAction(Request $request, Response $response, array $args) {
+        Oforge()->View()->Flash()->addMessage('info', 'Not implemented yet!');
+
+        //TODO Implementation of PluginController#deleteAction
+
+        return RedirectHelper::redirect($response, 'backend_plugins');
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     *
+     * @return Response|void
      * @EndpointAction(path="/install/{name}")
      */
     public function installAction(Request $request, Response $response, array $args) {
@@ -124,23 +157,40 @@ class PluginController extends BaseCrudController {
      * @param array $args
      *
      * @return Response|void
-     * @EndpointAction(path="/uninstall/{name}")
+     * @EndpointAction(path="/reactivate/{name}")
      */
-    public function uninstallAction(Request $request, Response $response, array $args) {
-        $postData = $request->getParsedBody();
-        if ($request->isPost() && !empty($postData) && isset($postData['keep_data'])) {
-            $keepData = (bool) $postData['keep_data'];
-            $this->handleUninstall($args, $keepData);
-
-            return RedirectHelper::redirect($response, 'backend_plugins');
+    public function reactivateAction(Request $request, Response $response, array $args) {
+        if ($this->handleDeactivate($args)) {
+            $this->handleActivate($args);
         }
-        Oforge()->View()->assign([
-            'crud' => [
-                'context'      => 'uninstall',
-                'contextLabel' => 'uninstall',
-                'pluginName'   => $args['name'],
-            ],
-        ]);
+
+        return RedirectHelper::redirect($response, 'backend_plugins');
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     *
+     * @return Response|void
+     * @EndpointAction(path="/rebuild/{name}")
+     */
+    public function rebuildAction(Request $request, Response $response, array $args) {
+        $twigFlash = Oforge()->View()->Flash();
+        try {
+            /** @var TemplateManagementService $templateManagementService */
+            $templateManagementService = Oforge()->Services()->get('template.management');
+            $templateManagementService->build();
+            $twigFlash->addMessage('success', I18N::translate('crud_plugin_msg_rebuild_template_success', 'The template successfully rebuilt.'));
+        } catch (TemplateNotFoundException | InvalidScssVariableException $exception) {
+            Oforge()->Logger()->logException($exception);
+            $twigFlash->addExceptionMessage('error', I18N::translate('crud_plugin_msg_template_error', 'The template could not be rebuilt.'), $exception);
+        } catch (Exception $exception) {
+            Oforge()->Logger()->logException($exception);
+            $twigFlash->addExceptionMessage('error', I18N::translate('crud_plugin_msg_error', 'An error has occurred.'), $exception);
+        }
+
+        return RedirectHelper::redirect($response, 'backend_plugins');
     }
 
     /**
@@ -205,30 +255,23 @@ class PluginController extends BaseCrudController {
      * @param array $args
      *
      * @return Response|void
-     * @EndpointAction(path="/add")
+     * @EndpointAction(path="/uninstall/{name}")
      */
-    public function addAction(Request $request, Response $response, array $args) {
-        Oforge()->View()->Flash()->addMessage('info', 'Not implemented yet!');
+    public function uninstallAction(Request $request, Response $response, array $args) {
+        $postData = $request->getParsedBody();
+        if ($request->isPost() && !empty($postData) && isset($postData['keep_data'])) {
+            $keepData = (bool) $postData['keep_data'];
+            $this->handleUninstall($args, $keepData);
 
-        //TODO Implementation of PluginController#addAction, later
-
-        return RedirectHelper::redirect($response, 'backend_plugins');
-    }
-
-    /**
-     * @param Request $request
-     * @param Response $response
-     * @param array $args
-     *
-     * @return Response|void
-     * @EndpointAction(path="/delete/{name}")
-     */
-    public function deleteAction(Request $request, Response $response, array $args) {
-        Oforge()->View()->Flash()->addMessage('info', 'Not implemented yet!');
-
-        //TODO Implementation of PluginController#deleteAction
-
-        return RedirectHelper::redirect($response, 'backend_plugins');
+            return RedirectHelper::redirect($response, 'backend_plugins');
+        }
+        Oforge()->View()->assign([
+            'crud' => [
+                'context'      => 'uninstall',
+                'contextLabel' => 'uninstall',
+                'pluginName'   => $args['name'],
+            ],
+        ]);
     }
 
     /**
