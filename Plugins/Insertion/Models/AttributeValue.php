@@ -26,15 +26,15 @@ class AttributeValue extends AbstractModel {
 
     /**
      * @ORM\ManyToOne(targetEntity="AttributeKey", inversedBy="values", fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="attribute_key_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="attribute_key", referencedColumnName="id")
      */
-    private $attributeKeyId;
+    private $attributeKey;
 
     /**
      * @ORM\OneToOne(targetEntity="AttributeKey", fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="attribute_value_sub_attribute_key_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="attribute_value_sub_attribute_key", referencedColumnName="id", nullable=true)
      */
-    private $subAttributeKeyId;
+    private $subAttributeKey;
 
     /**
      * @return int
@@ -61,19 +61,38 @@ class AttributeValue extends AbstractModel {
     }
 
     /**
-     * @return null|int
+     * @return mixed
      */
-    public function getSubAttributeKeyId() : ?AttributeKey {
-        return $this->subAttributeKeyId;
+    public function getAttributeKey() {
+        return $this->attributeKey;
     }
 
     /**
-     * @param AttributeKey $subAttributeKeyId
+     * @param mixed $attributeKey
      *
      * @return AttributeValue
      */
-    public function setSubAttributeKeyId(AttributeKey $subAttributeKeyId) : AttributeValue {
-        $this->subAttributeKeyId = $subAttributeKeyId;
+    public function setAttributeKey($attributeKey) {
+        $this->attributeKey = $attributeKey;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSubAttributeKey() {
+        return $this->subAttributeKey;
+    }
+
+    /**
+     * @param mixed $subAttributeKey
+     *
+     * @return AttributeValue
+     */
+    public function setSubAttributeKey($subAttributeKey) {
+        $this->subAttributeKey = $subAttributeKey;
+
         return $this;
     }
 }

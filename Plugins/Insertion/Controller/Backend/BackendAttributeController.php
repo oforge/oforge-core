@@ -4,6 +4,7 @@ namespace Insertion\Controller\Backend;
 
 use Doctrine\ORM\ORMException;
 use Insertion\Services\AttributeService;
+use Insertion\Services\InsertionMockService;
 use Insertion\Services\InsertionTypeService;
 use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
@@ -27,11 +28,9 @@ class BackendAttributeController extends SecureBackendController {
      * @throws ServiceNotFoundException
      */
     public function indexAction(Request $request, Response $response) {
-        /** @var InsertionTypeService $insertionTypeService */
-        $insertionTypeService = Oforge()->Services()->get('insertion.type');
-        $aList = $insertionTypeService->getInsertionTypeList()[0]->toArray();
-        print_r($aList);
-        die;
+        /** @var InsertionMockService $insertionMockService */
+        $insertionMockService = Oforge()->Services()->get('insertion.mock');
+        $insertionMockService->createAttributes();
     }
 
     /**
@@ -41,6 +40,7 @@ class BackendAttributeController extends SecureBackendController {
      */
     public function createAction(Request $request, Response $response) {
 
+        //if ($request->isPost()) {}
     }
 
     public function initPermissions() {

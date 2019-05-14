@@ -36,7 +36,7 @@ class InsertionTypeAttribute extends AbstractModel {
      * @var boolean
      * @ORM\Column(name="required", type="boolean", nullable=false)
      */
-    private $required;
+    private $required = false;
 
     /**
      * @return int

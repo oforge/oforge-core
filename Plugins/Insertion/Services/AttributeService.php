@@ -20,31 +20,38 @@ class AttributeService extends AbstractDatabaseAccess {
 
     /**
      * @param $name
-     * @param $type
+     * @param $inputType
+     * @param $filterType
      *
+     * @return AttributeKey
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function createNewAttributeKey($name, $type) {
+    public function createNewAttributeKey($name, $inputType, $filterType) {
         $attributeKey = new AttributeKey();
         $attributeKey->setName($name);
-        $attributeKey->setType($type);
+        $attributeKey->setType($inputType);
+        $attributeKey->setFilterType($filterType);
 
         $this->entityManager()->persist($attributeKey);
         $this->entityManager()->flush();
+
+        return $attributeKey;
     }
 
     /**
      * @param $value
+     * @param mixed $attributeKey
      * @param null $subAttributeKey
      *
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function createNewAttributeValue($value, $subAttributeKey = null) {
+    public function createNewAttributeValue($value, $attributeKey, $subAttributeKey = null) {
         $attributeValue = new AttributeValue();
+        $attributeValue->setAttributeKey($attributeKey);
         $attributeValue->setValue($value);
-        $attributeValue->setSubAttributeKeyId($subAttributeKey);
+        $attributeValue->setSubAttributeKey($subAttributeKey);
 
         $this->entityManager()->persist($attributeValue);
         $this->entityManager()->flush();
@@ -73,7 +80,7 @@ class AttributeService extends AbstractDatabaseAccess {
         /** @var AttributeValue $attributeValue */
         $attributeValue = $this->repository('attributeValue')->find($id);
         $attributeValue->setValue($values['value']);
-        $attributeValue->setSubAttributeKeyId($values['subAttributeKey']);
+        $attributeValue->setSubAttributeKey($values['subAttributeKey']);
 
         $this->entityManager()->persist($attributeValue);
         $this->entityManager()->flush();
