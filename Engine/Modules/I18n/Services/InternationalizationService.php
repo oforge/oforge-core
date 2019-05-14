@@ -39,7 +39,7 @@ class InternationalizationService extends AbstractDatabaseAccess {
             if (!isset($snippet)) {
                 $snippet = Snippet::create([
                     'name'  => $key,
-                    'scope' => $language,
+                    'scope' => 'en',
                     'value' => isset($defaultValue) ? $defaultValue : $key,
                 ]);
                 $this->entityManager()->persist($snippet);

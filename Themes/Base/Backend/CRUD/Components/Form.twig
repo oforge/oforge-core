@@ -28,9 +28,9 @@
                                     {% set fieldLabel = i18n(property.label.key, property.label.default) %}
                                 {% endif %}
                             {% elseif property.name == 'id' %}
-                                {% set fieldLabel = i18n(('crud_' ~ crud.model ~ '_' ~ property.name)|lower, 'ID') %}
+                                {% set fieldLabel = 'ID' %}
                             {% else %}
-                                {% set fieldLabel = i18n(('crud_' ~ crud.model ~ '_' ~ property.name)|lower, property.name|capitalize) %}
+                                {% set fieldLabel = i18n(('crud_property_' ~ crud.model ~ '_' ~ property.name)|lower, property.name|capitalize) %}
                             {% endif %}
                             {% set fieldID = ['form', crud.context, crud.model|lower, property.name]|join('_') %}
                             <label for="{{ fieldID }}">{{ fieldLabel }}</label>
@@ -71,9 +71,7 @@
                         {{ i18n('backend_crud_action_disabled', 'Action %s is disabled.')|format(crud.context) }}
                     </div>
                 {% endif %}
-            </div>
-            {# /.box-body #}
-        </div>
-        {# /.box #}
-    </div>
-</div>
+            </div>{# end .box-body #}
+        </div>{# end .box #}
+    </div>{# end .col #}
+</div>{# end .row #}
