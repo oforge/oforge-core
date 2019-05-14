@@ -11,6 +11,7 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
  * @ORM\Entity
  */
 class AttributeKey extends AbstractModel {
+
     /**
      * @var int
      * @ORM\Column(name="id", type="integer", nullable=false)

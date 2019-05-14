@@ -13,6 +13,7 @@ use Insertion\Models\InsertionAttributeValue;
 use Insertion\Models\InsertionType;
 use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Services\AttributeService;
+use Insertion\Services\InsertionMockService;
 use Insertion\Services\InsertionService;
 use Insertion\Services\InsertionTypeService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
@@ -28,9 +29,10 @@ class Bootstrap extends AbstractBootstrap {
         ];
 
         $this->services = [
-            'insertion' => InsertionService::class,
-            'insertion.type' => InsertionTypeService::class,
+            'insertion'           => InsertionService::class,
+            'insertion.type'      => InsertionTypeService::class,
             'insertion.attribute' => AttributeService::class,
+            'insertion.mock'      => InsertionMockService::class,
         ];
 
         $this->models = [
@@ -43,7 +45,7 @@ class Bootstrap extends AbstractBootstrap {
         ];
 
         $this->dependencies = [
-            \FrontendUserManagement\Bootstrap::class
+            \FrontendUserManagement\Bootstrap::class,
         ];
     }
 }

@@ -4,6 +4,7 @@ namespace Insertion\Services;
 
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Insertion\Models\AttributeKey;
 use Insertion\Models\InsertionType;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\CRUD\Services\GenericCrudService;
@@ -17,6 +18,7 @@ class InsertionTypeService extends AbstractDatabaseAccess {
      * @param $name
      * @param null $parent
      *
+     * @return InsertionType
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -28,6 +30,8 @@ class InsertionTypeService extends AbstractDatabaseAccess {
 
         $this->entityManager()->persist($insertionType);
         $this->entityManager()->flush();
+
+        return $insertionType;
     }
 
     /**
@@ -58,8 +62,12 @@ class InsertionTypeService extends AbstractDatabaseAccess {
         return $this->repository()->findAll();
     }
 
-    public function addAttributeToInsertionType($attributes) {
-        // TODO
+    /**
+     * @param AttributeKey $attributeKey
+     * @param bool $required
+     */
+    public function addAttributeToInsertionType($attributeKey, $required = false) {
+
     }
 
     public function removeAttributeFromInsertionType($attributeId) {

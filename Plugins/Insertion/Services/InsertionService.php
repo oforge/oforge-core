@@ -4,15 +4,38 @@ namespace Insertion\Services;
 
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use FrontendUserManagement\Services\UserService;
 use Insertion\Models\Insertion;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 
 class InsertionService extends AbstractDatabaseAccess {
     public function __construct() {
         parent::__construct(['default' => Insertion::class]);
     }
 
-    public function createNewInsertion() {
+    /**
+     * @param $insertionType
+     * @param $title
+     * @param $user
+     * @param $description
+     *
+     * @throws ORMException
+     * @throws ServiceNotFoundException
+     */
+    public function createNewInsertion($insertionType, $title, $user, $description) {
+        $insertion = new Insertion();
+
+        /** @var UserService $userService */
+        $userService = Oforge()->Services()->get('frontend.user.management.user');
+        $user = $userService->getUserById(1);
+        $insertion->setInsertionType($insertionType);
+        $insertion->setTitle($title);
+        $insertion->setUser($user);
+        $insertion->setDescription($description);
+
+        $this->entityManager()->persist($insertion);
+        $this->entityManager()->flush($insertion);
     }
 
     /**

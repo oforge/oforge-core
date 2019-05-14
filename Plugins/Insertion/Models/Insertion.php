@@ -20,11 +20,10 @@ class Insertion extends AbstractModel {
     private $id;
 
     /**
-     * @var int
-     * @ORM\Column(name="insertion_type_id", type="integer", nullable=false)
-     * @ORM\ManyToOne(targetEntity="InsertionsType")
+     * @ORM\ManyToOne(targetEntity="InsertionType", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="insertion_type_id", referencedColumnName="id")
      */
-    private $insertion_type_id;
+    private $insertionType;
 
     /**
      * @var string
@@ -78,19 +77,20 @@ class Insertion extends AbstractModel {
     }
 
     /**
-     * @return int
+     * @return mixed
      */
-    public function getInsertionTypeId() : int {
-        return $this->insertion_type_id;
+    public function getInsertionType() {
+        return $this->insertionType;
     }
 
     /**
-     * @param int $insertion_type_id
+     * @param mixed $insertionType
      *
      * @return Insertion
      */
-    public function setInsertionTypeId(int $insertion_type_id) : Insertion {
-        $this->insertion_type_id = $insertion_type_id;
+    public function setInsertionType($insertionType) {
+        $this->insertionType = $insertionType;
+
         return $this;
     }
 
