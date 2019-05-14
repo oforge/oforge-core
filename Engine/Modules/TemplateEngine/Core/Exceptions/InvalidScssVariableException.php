@@ -1,15 +1,32 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Alexander Wegner
- * Date: 28.01.2019
- * Time: 10:36
- */
 
 namespace Oforge\Engine\Modules\TemplateEngine\Core\Exceptions;
 
+/**
+ * Class InvalidScssVariableException
+ *
+ * @package Oforge\Engine\Modules\Core\Exceptions\Template
+ */
 class InvalidScssVariableException extends \Exception {
-    public function __construct($missingOption, $invalidVariables = null) {
-        parent::__construct("Invalid variable. Missing option $missingOption. " . implode(", ", $invalidVariables));
+    /** @var null */
+    private $invalidVariables;
+
+    /**
+     * InvalidScssVariableException constructor.
+     *
+     * @param string $missingOption
+     * @param null $invalidVariables
+     */
+    public function __construct(string $missingOption, $invalidVariables = null) {
+        parent::__construct("Invalid variable. Missing option $missingOption. " . implode(', ', $invalidVariables));
+        $this->invalidVariables = $invalidVariables;
     }
+
+    /**
+     * @return null
+     */
+    public function getInvalidVariables() {
+        return $this->invalidVariables;
+    }
+
 }
