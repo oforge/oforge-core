@@ -110,7 +110,7 @@ class BaseCrudController extends SecureBackendController {
      */
     protected $indexPagination = [
         'default'   => 10,
-        'buttons'   => [10, 25, 50, 75, 100, 250],
+        'buttons'   => [10, 25, 50, 100, 250],
         'queryKeys' => [
             'page'            => 'p',
             'entitiesPerPage' => 'epp',
@@ -140,6 +140,9 @@ class BaseCrudController extends SecureBackendController {
             if (count($parts) === 2) {
                 $module                = substr($parts[0], 1 + strrpos($parts[0], '\\'));
                 $modelName             = $parts[1];
+                if (strpos($modelName, '\\')) {
+                    $modelName = substr($modelName, 1 + strrpos($modelName, '\\'));
+                }
                 $this->moduleModelName = $module . '_' . $modelName;
             }
         }
