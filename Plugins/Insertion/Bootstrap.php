@@ -5,7 +5,7 @@ namespace Insertion;
 use Insertion\Controller\Backend\BackendAttributeController;
 use Insertion\Controller\Backend\BackendInsertionController;
 use Insertion\Controller\Backend\BackendInsertionTypeController;
-use Insertion\Controller\Frontend\InsertionController;
+use Insertion\Controller\Frontend\FrontendInsertionController;
 use Insertion\Models\AttributeKey;
 use Insertion\Models\AttributeValue;
 use Insertion\Models\Insertion;
@@ -21,7 +21,7 @@ class Bootstrap extends AbstractBootstrap {
 
     public function __construct() {
         $this->endpoints = [
-            InsertionController::class,
+            FrontendInsertionController::class,
             BackendAttributeController::class,
             BackendInsertionController::class,
             BackendInsertionTypeController::class,

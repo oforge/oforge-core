@@ -14,7 +14,7 @@ use Slim\Http\Response;
  * @package Messenger\Controller\Frontend
  * @EndpointClass(path="/insertions", name="insertions", assetScope="Frontend")
  */
-class InsertionController extends SecureFrontendController {
+class FrontendInsertionController extends SecureFrontendController {
 
     /**
      * @param Request $request
@@ -22,6 +22,15 @@ class InsertionController extends SecureFrontendController {
      * @EndpointAction()
      */
     public function indexAction(Request $request, Response $response) {
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @EndpointAction(path="/create")
+     */
+    public function createAction(Request $request, Response $response) {
+
     }
 
     /**
