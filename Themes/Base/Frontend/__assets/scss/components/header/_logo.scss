@@ -1,6 +1,9 @@
 .logo {
     margin-right: auto;
 
+    &__img {
+        max-height: 80px;
+    }
     &__link {
         display: flex;
         align-items: center;
