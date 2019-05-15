@@ -17,17 +17,20 @@ class InsertionService extends AbstractDatabaseAccess {
     /**
      * @param $insertionType
      * @param $title
-     * @param $user
      * @param $description
      *
+     * @return Insertion|null
      * @throws ORMException
      * @throws ServiceNotFoundException
      */
-    public function createNewInsertion($insertionType, $title, $user, $description) {
+    public function createNewInsertion($insertionType, $title, $description) {
         $insertion = new Insertion();
 
         /** @var UserService $userService */
         $userService = Oforge()->Services()->get('frontend.user.management.user');
+        if (!isset($userService)) {
+            return null;
+        }
         $user = $userService->getUserById(1);
         $insertion->setInsertionType($insertionType);
         $insertion->setTitle($title);
@@ -36,6 +39,8 @@ class InsertionService extends AbstractDatabaseAccess {
 
         $this->entityManager()->persist($insertion);
         $this->entityManager()->flush($insertion);
+
+        return $insertion;
     }
 
     /**
@@ -96,6 +101,10 @@ class InsertionService extends AbstractDatabaseAccess {
         $insertion = $this->repository()->find($id);
         $this->entityManager()->remove($insertion);
         $this->entityManager()->flush();
+    }
+
+    public function addAttributeValueToInsertion($insertionId, $attributeId) {
+
     }
 
 }

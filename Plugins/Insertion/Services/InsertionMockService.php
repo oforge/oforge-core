@@ -6,6 +6,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Insertion\Enums\AttributeType;
 use Insertion\Models\AttributeKey;
+use Insertion\Models\Insertion;
 use Insertion\Models\InsertionType;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
@@ -50,12 +51,13 @@ class InsertionMockService {
     /**
      * @param AttributeKey[] $attributes
      *
-     * @return InsertionType
+     * @return InsertionType[]
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws ServiceNotFoundException
      */
     public static function createInsertionTypes($attributes) {
+        $insertionTypes = [];
         /** @var InsertionTypeService $insertionTypeService */
         $insertionTypeService = Oforge()->Services()->get('insertion.type');
         $insertionType = $insertionTypeService->createNewInsertionType('eSports');
@@ -63,13 +65,41 @@ class InsertionMockService {
         foreach ($attributes as $attribute) {
             $insertionTypeService->addAttributeToInsertionType($attribute);
         }
-
-        return $insertionType;
+        array_push($insertionTypes, $insertionType);
+        return $insertionTypes;
     }
-    public static function createInsertions() {
+
+    /**
+     * @param InsertionType $insertionType
+     *
+     * @return Insertion[]
+     * @throws ORMException
+     * @throws ServiceNotFoundException
+     */
+    public static function createInsertions($insertionType) {
+
+        $insertions = [];
+
         /** @var InsertionService $insertionService */
         $insertionService = Oforge()->Services()->get('insertion');
-        $insertionService->createNewInsertion();
+        $insertion = $insertionService->createNewInsertion($insertionType, 'Some fancy Product Title', 'This is a good product.');
+
+        array_push($insertions, $insertion);
+
+        $insertion = $insertionService->createNewInsertion($insertionType, 'Some other cool product stuff', 'This is a good product too. Dont buy it');
+        array_push($insertions, $insertion);
+
+        return $insertions;
     }
-    public static function createInsertionAttributeValues() {}
+
+    /**
+     * @param $insertion
+     * @param $attributeKey
+     *
+     * @throws ServiceNotFoundException
+     */
+    public static function createInsertionAttributeValues($insertion, $attributeKey) {
+        /** @var InsertionService $insertionService */
+        $insertionService = Oforge()->Services()->get('insertion');
+    }
 }
