@@ -47,21 +47,26 @@ class Comment extends AbstractModel {
      */
     private $author;
     /**
+     * @var string $title
+     * @ORM\Column(name="title", type="string", nullable=false, options={"default":""})
+     */
+    private $title = '';
+    /**
      * @var string $content
      * @ORM\Column(name="content", type="text", nullable=false, options={"default":""})
      */
     private $content = '';
 
-    /** @ORM\PrePersist */
-    public function onPrePersist() {
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function updateTimestamps() {
         $now           = new DateTimeImmutable('now');
-        $this->created = $now;
         $this->updated = $now;
-    }
-
-    /** @ORM\PreUpdate */
-    public function onPreUpdate() {
-        $this->updated = new DateTimeImmutable('now');
+        if (!isset($this->created)) {
+            $this->created = $now;
+        }
     }
 
     /**
@@ -117,6 +122,24 @@ class Comment extends AbstractModel {
      */
     protected function setAuthor(User $author) : Comment {
         $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle() : string {
+        return $this->title;
+    }
+
+    /**
+     * @param string $title
+     *
+     * @return Comment
+     */
+    public function setTitle(string $title) : Comment {
+        $this->title = $title;
 
         return $this;
     }
