@@ -12,7 +12,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
-use Oforge\Engine\Modules\Core\Exceptions\TemplateNotFoundException;
+use Oforge\Engine\Modules\Core\Exceptions\Template\TemplateNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\TemplateEngine\Core\Abstracts\AbstractTemplate;
 use Oforge\Engine\Modules\TemplateEngine\Core\Exceptions\InvalidScssVariableException;
@@ -111,7 +111,6 @@ class TemplateManagementService extends AbstractDatabaseAccess {
      * @throws OptimisticLockException
      * @throws ServiceNotFoundException
      * @throws InvalidScssVariableException
-     * @throws TemplateNotFoundException
      * @throws TemplateNotFoundException
      */
     public function build() {

@@ -8,6 +8,10 @@
 
 namespace Oforge\Engine\Modules\TemplateEngine\Core\Services;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Exceptions\Template\TemplateNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\Core\Helper\StringHelper;
 use Oforge\Engine\Modules\Core\Models\Plugin\Plugin;
@@ -24,7 +28,7 @@ class BaseAssetService {
     /**
      * BaseAssetService constructor.
      *
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ServiceNotFoundException
      */
     public function __construct() {
         $this->store = Oforge()->Services()->get("store.keyvalue");
@@ -50,8 +54,8 @@ class BaseAssetService {
     /**
      * @param string $scope
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function clear(string $scope = TemplateAssetService::DEFAULT_SCOPE) {
         $this->store->set($this->getAccessKey($scope), "");
@@ -74,6 +78,17 @@ class BaseAssetService {
     /**
      * @param string $scope
      *
+     * @return bool
+     */
+    public function isBuild(string $scope = TemplateAssetService::DEFAULT_SCOPE) {
+        $value = $this->store->get($this->getAccessKey($scope));
+
+        return isset($value);
+    }
+
+    /**
+     * @param string $scope
+     *
      * @return string
      */
     protected function getAccessKey(string $scope = TemplateAssetService::DEFAULT_SCOPE) : string {
@@ -82,10 +97,10 @@ class BaseAssetService {
 
     /**
      * @return array
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\TemplateNotFoundException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ServiceNotFoundException
+     * @throws TemplateNotFoundException
      */
     protected function getAssetsDirectories() {
         /** @var TemplateManagementService $templateManagementService */
@@ -133,16 +148,5 @@ class BaseAssetService {
                 unlink($folder . DIRECTORY_SEPARATOR . $file);
             }
         }
-    }
-
-    /**
-     * @param string $scope
-     *
-     * @return bool
-     */
-    public function isBuild(string $scope = TemplateAssetService::DEFAULT_SCOPE) {
-        $value = $this->store->get($this->getAccessKey($scope));
-
-        return isset($value);
     }
 }

@@ -33,23 +33,33 @@ class PagesController extends AbstractController {
         /** @var PagesControllerService $pagesControllerService */
         $pagesControllerService = OForge()->Services()->get('pages.controller.service');
 
-        switch ($_POST['cms_form']) {
-            case 'cms_page_jstree_form':
-                $data = $pagesControllerService->editPageData($_POST);
-                break;
-            case 'cms_page_data_form':
-                $data = $pagesControllerService->updatePagePathData($_POST);
-            // DO NOT INSERT A BREAK HERE SO THAT EDIT MODE IS ACTIVATED
-            // AFTER UPDATING PAGE DATA
-            case 'cms_page_builder_form':
-            default:
-                if ($pagesControllerService->checkForValidPagePath($_POST)) {
-                    $data = $pagesControllerService->editContentData($_POST);
-                } else {
-                    $data = $pagesControllerService->editPagePathData($_POST);
-                }
-                break;
+
+
+        $data = [];
+        if (isset($_POST['cms_form'])) {
+            switch ($_POST['cms_form']) {
+                case 'cms_page_jstree_form':
+                    $data = $pagesControllerService->editPageData($_POST);
+                    break;
+                case 'cms_page_data_form':
+                    $data = $pagesControllerService->updatePagePathData($_POST);
+                // DO NOT INSERT A BREAK HERE SO THAT EDIT MODE IS ACTIVATED
+                // AFTER UPDATING PAGE DATA
+                case 'cms_page_builder_form':
+                default:
+                    if ($pagesControllerService->checkForValidPagePath($_POST)) {
+                        $data = $pagesControllerService->editContentData($_POST);
+                    } else {
+                        $data = $pagesControllerService->editPagePathData($_POST);
+                    }
+                    break;
+            }
         }
+
+        if(empty($data)) {
+            $data = $pagesControllerService->editPagePathData($_POST);
+        }
+
 
         Oforge()->View()->assign($data);
     }

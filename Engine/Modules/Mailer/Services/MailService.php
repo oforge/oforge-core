@@ -4,7 +4,7 @@ namespace Oforge\Engine\Modules\Mailer\Services;
 
 use InvalidArgumentException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Core\Helper\Statics;
@@ -27,7 +27,7 @@ class MailService {
      * @param array $templateData Associative Array
      *
      * @throws ConfigElementNotFoundException
-     * @throws ConfigOptionKeyNotExistsException
+     * @throws ConfigOptionKeyNotExistException
      * @throws ServiceNotFoundException
      * @throws Twig_Error_Loader
      * @throws Twig_Error_Runtime
@@ -101,14 +101,14 @@ class MailService {
      * @param array $options
      *
      * @return bool
-     * @throws ConfigOptionKeyNotExistsException
+     * @throws ConfigOptionKeyNotExistException
      */
     private function isValid(array $options) : bool {
 
         $keys = ["to", "subject", "template"];
         foreach ($keys as $key) {
             if (!array_key_exists($key, $options)) {
-                throw new ConfigOptionKeyNotExistsException($key);
+                throw new ConfigOptionKeyNotExistException($key);
             }
         }
 

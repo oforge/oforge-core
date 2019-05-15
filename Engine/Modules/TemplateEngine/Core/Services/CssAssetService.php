@@ -2,8 +2,12 @@
 
 namespace Oforge\Engine\Modules\TemplateEngine\Core\Services;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Leafo\ScssPhp\Compiler;
 use MatthiasMullie\Minify\CSS;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Exceptions\Template\TemplateNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\TemplateEngine\Core\Models\ScssVariable;
 
@@ -11,7 +15,7 @@ class CssAssetService extends BaseAssetService {
     /**
      * CssAssetService constructor.
      *
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ServiceNotFoundException
      */
     public function __construct() {
         parent::__construct();
@@ -19,14 +23,14 @@ class CssAssetService extends BaseAssetService {
     }
 
     /**
+     * @param string $context
      * @param string $scope
-     * @param $context
      *
      * @return string
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\TemplateNotFoundException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ServiceNotFoundException
+     * @throws TemplateNotFoundException
      */
     public function build(string $context, string $scope = TemplateAssetService::DEFAULT_SCOPE) : string {
         parent::build($context);

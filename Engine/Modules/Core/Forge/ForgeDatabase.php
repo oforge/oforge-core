@@ -103,7 +103,7 @@ class ForgeDatabase {
     /**
      * @return EntityManager
      */
-    public function getEnityManager() : EntityManager {
+    public function getEntityManager() : EntityManager {
         if (!isset($this->entityManager)) {
             $this->entityManager = EntityManager::create($this->settings['connection'], $this->configuration);
 
@@ -118,7 +118,7 @@ class ForgeDatabase {
      */
     public function getSchemaValidator() : SchemaValidator {
         if (!isset($this->schemaValidator)) {
-            $this->schemaValidator = new SchemaValidator($this->getEnityManager());
+            $this->schemaValidator = new SchemaValidator($this->getEntityManager());
         }
 
         return $this->schemaValidator;
@@ -129,7 +129,7 @@ class ForgeDatabase {
      */
     public function getSchemaTool() : SchemaTool {
         if (!isset($this->schemaTool)) {
-            $this->schemaTool = new SchemaTool($this->getEnityManager());
+            $this->schemaTool = new SchemaTool($this->getEntityManager());
         }
 
         return $this->schemaTool;
@@ -147,7 +147,7 @@ class ForgeDatabase {
      * @param string $schema
      */
     protected function addMetaData(string $schema) {
-        $metaData                   = $this->getEnityManager()->getClassMetadata($schema);
+        $metaData                   = $this->getEntityManager()->getClassMetadata($schema);
         $this->metaDataCollection[] = $metaData;
 
         $inSync = $this->getSchemaValidator()->schemaInSyncWithMetadata();
