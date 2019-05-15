@@ -82,6 +82,9 @@ class ServiceManager {
      */
     protected function registerService(string $name, string $className) {
         if (isset($this->services[$name])) {
+            if (get_class($this->services[$name]) === $className) {
+                return;
+            }
             throw new ServiceAlreadyExistException($name);
         }
 
@@ -89,7 +92,6 @@ class ServiceManager {
     }
 
     protected function __clone() {
-
     }
 
 }

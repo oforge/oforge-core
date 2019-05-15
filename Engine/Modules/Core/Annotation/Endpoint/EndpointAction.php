@@ -42,6 +42,10 @@ class EndpointAction {
      * @var int|null $order Disable order with null.
      */
     private $order;
+    /**
+     * @var bool $create
+     */
+    private $create = true;
 
     /**
      * Endpoint constructor.
@@ -54,6 +58,7 @@ class EndpointAction {
         $this->name       = $config['name'] ?? '';
         $this->order      = $config['order'] ?? null;
         $this->path       = $config['path'] ?? '';
+        $this->create     = $config['create'] ?? true;
     }
 
     /**
@@ -89,6 +94,13 @@ class EndpointAction {
      */
     public function getOrder() : ?int {
         return $this->order;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCreate() : bool {
+        return $this->create;
     }
 
 }
