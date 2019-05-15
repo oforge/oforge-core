@@ -33,8 +33,9 @@ class PagesController extends AbstractController {
         /** @var PagesControllerService $pagesControllerService */
         $pagesControllerService = OForge()->Services()->get('pages.controller.service');
 
-        $data = $pagesControllerService->editPagePathData($_POST);
 
+
+        $data = [];
         if (isset($_POST['cms_form'])) {
             switch ($_POST['cms_form']) {
                 case 'cms_page_jstree_form':
@@ -48,10 +49,17 @@ class PagesController extends AbstractController {
                 default:
                     if ($pagesControllerService->checkForValidPagePath($_POST)) {
                         $data = $pagesControllerService->editContentData($_POST);
+                    } else {
+                        $data = $pagesControllerService->editPagePathData($_POST);
                     }
                     break;
             }
         }
+
+        if(empty($data)) {
+            $data = $pagesControllerService->editPagePathData($_POST);
+        }
+
 
         Oforge()->View()->assign($data);
     }
