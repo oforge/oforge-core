@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 
 /**
- * @ORM\Table(name="oforge_core_module")
+ * @ORM\Table(name="oforge_core_modules")
  * @ORM\Entity
  */
 class Module extends AbstractModel

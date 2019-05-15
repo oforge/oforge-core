@@ -8,6 +8,7 @@ namespace Oforge\Engine\Modules\Core\Helper;
  * @package Oforge\Engine\Modules\Core\Helper
  */
 class BinaryHelper {
+
     /**
      * Prevent instance.
      */

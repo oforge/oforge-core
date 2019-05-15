@@ -1,8 +1,13 @@
 {# block header__logo #}
 {% block logo %}
-<div class="logo">
-    <a href="/" class="logo__link">
-        <span class="logo__text">Your Logo <strong class="logo__text2">Here</strong></span>
-    </a>
-</div>
+    <div class="logo">
+        <a href="/" class="logo__link">
+            {% set logo = content('logo') %}
+            {% if logo.url is defined %}
+                <img class="logo__img" src="{{ media( logo.url, 300) }}" alt="{{ i18n('logo') }}" />
+            {% else %}
+                <span class="logo__text">Your Logo <strong class="logo__text2">Here</strong></span>
+            {% endif %}
+        </a>
+    </div>
 {% endblock logo %}

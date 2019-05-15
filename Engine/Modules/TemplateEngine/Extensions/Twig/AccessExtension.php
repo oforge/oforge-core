@@ -8,8 +8,10 @@
 
 namespace Oforge\Engine\Modules\TemplateEngine\Extensions\Twig;
 
+use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Twig_Extension;
@@ -28,12 +30,53 @@ class AccessExtension extends Twig_Extension implements Twig_ExtensionInterface 
      */
     public function getFunctions() {
         return [
-            new Twig_Function('config', [$this, 'getConfig'], ['is_safe' => ['html']]),
+            new Twig_Function('config', [$this, 'getConfig'], [
+                'is_safe' => ['html'],
+            ]),
             new Twig_Function('i18n', [$this, 'getInternationalization'], [
                 'is_safe'       => ['html'],
                 'needs_context' => true,
             ]),
+            new Twig_Function('dotToNested', [$this, 'dotToNested'], [
+                'is_safe' => ['html'],
+            ]),
+            new Twig_Function('mergeRecursive', [$this, 'mergeRecursive'], [
+                'is_safe' => ['html'],
+            ]),
         ];
+    }
+
+    /** @inheritDoc */
+    public function getTests() {
+        return [
+            new \Twig_Test('array', [$this, 'isArray']),
+            new \Twig_Test('string', [$this, 'isString']),
+        ];
+    }
+
+    /**
+     * Convert array with keys in dot notation to nested arrays.
+     *
+     * @param array $array
+     *
+     * @return array
+     * @see ArrayHelper::dotToNested()
+     */
+    public function dotToNested(array $array) : array {
+        return ArrayHelper::dotToNested($array);
+    }
+
+    /**
+     * Merge array recursive.
+     *
+     * @param array $array1
+     * @param array $array2
+     *
+     * @return array
+     * @see ArrayHelper::mergeRecursive()
+     */
+    public function mergeRecursive(array $array1, array $array2) : array {
+        return ArrayHelper::mergeRecursive($array1, $array2);
     }
 
     /**
@@ -42,6 +85,7 @@ class AccessExtension extends Twig_Extension implements Twig_ExtensionInterface 
      * @return mixed|string
      * @throws ConfigElementNotFoundException
      * @throws ServiceNotFoundException
+     * @throws ORMException
      */
     public function getConfig(...$vars) {
         $result = '';
@@ -70,6 +114,28 @@ class AccessExtension extends Twig_Extension implements Twig_ExtensionInterface 
         }
 
         return $result;
+    }
+
+    /**
+     * Twig test '... is array' to php is_array.
+     *
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    public function isArray($value) {
+        return is_array($value);
+    }
+
+    /**
+     * Twig test '... is string' to php is_string.
+     *
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    public function isString($value) {
+        return is_string($value);
     }
 
 }

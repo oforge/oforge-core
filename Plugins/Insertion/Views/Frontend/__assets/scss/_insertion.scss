@@ -1,0 +1,13 @@
+@media screen and (min-width: $screen-medium) {
+    .content--insertion {
+        flex-direction: row;
+        justify-content: space-between;
+
+        .main {
+            width: calc(100% - 30rem - #{$size-large});
+        }
+        .sidebar--insertion {
+            width: 30rem;
+        }
+    }
+}

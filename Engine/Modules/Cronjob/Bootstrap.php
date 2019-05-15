@@ -39,7 +39,7 @@ class Bootstrap extends AbstractBootstrap {
         $cronjobClassNames = [];
 
         // TODO refactor after boostrap refactoring
-        $entityManager    = Oforge()->DB()->getEnityManager();
+        $entityManager    = Oforge()->DB()->getEntityManager();
         $moduleRepository = $entityManager->getRepository(Module::class);
         $pluginRepository = $entityManager->getRepository(Plugin::class);
         /**

@@ -21,7 +21,7 @@
 </head>
 <body>
 
-{% if debug_mode %}
+{% if debug.console %}
     {{ o_dump() }}
 {% endif %}
 
@@ -38,7 +38,7 @@
 {% endblock svg_icons %}
 
 {% block master__meta %}
-    {% if session %}
+    {% if debug.session %}
         <style>
             .meta {
                 background: #d87a68;
@@ -52,7 +52,7 @@
             }
         </style>
         <div class="meta">
-            {% for key, val in session  %}
+            {% for key, val in debug.session  %}
                 <p>{{ key }} : {{ val }}</p>
             {% endfor %}
         </div>
