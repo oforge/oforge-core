@@ -1,11 +1,10 @@
-{% extends "Backend/Master/Index.twig" %}
+{% extends 'Backend/CRUD/Index.twig' %}
 
-{% block pagecontent %}
-    TBD
-
-    <ul>
-        <li>Plugins auflisten</li>
-        <li>Plugins aktivieren/installieren/deaktivieren/deinstallieren</li>
-    </ul>
-
-{% endblock %}
+{% block crud_actions_group %}
+    <a class="btn btn-primary disabled" href="{{ url('backend_plugins_add') }}"
+       title="{{ i18n('backend_crud_plugin_action_add', 'add plugin') }}">
+        <i class="fa fa-plus"></i>
+        &nbsp;
+        {{ i18n('backend_crud_plugin_action_add', 'add plugin') }}
+    </a>
+{% endblock crud_actions_group %}
