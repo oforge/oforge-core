@@ -46,7 +46,7 @@ class BaseCrudController extends SecureBackendController {
      *              'list'          => [ // If type = select. Name of a protected function to create a dynamic array (e.g. 'getListUsers', or a static array. (Required)
      *                  <value> => <option text or label e.g. 'backend_crud_property__<name>_<value>'>  // value => (text|(i18n-)label) pair
      *              ],
-     *                  'listI18nLabel' => true,    // If type = select. Is Select label i18n-label? (Optional)
+     *              'isI18nLabel' => true, # If type = select. Is Label i18n-key or array (key, default)? (Optional)
      *              'editor' => [       // Configuration for field editor.
      *                  'default'       => '',      // Default value. (Optional)
      *                  'custom'        => '...'    // If type = custom. Twig path for include.
@@ -92,9 +92,10 @@ class BaseCrudController extends SecureBackendController {
      * Configuration of the filters on the index view.
      *      protected $indexFilter = [
      *          'propertyName' => [
-     *              'type'    => CrudFilterType::...,
-     *              'compare' => 'equals|like|in'#Default = equals
-     *              'list'    => ''# Required list for type=select, array or protected function name.
+     *              'type'        => CrudFilterType::...,
+     *              'compare'     => 'equals|like|in'#Default = equals
+     *              'list'        => ''# Required list for type=select, array or protected function name.
+     *              'isI18nLabel' => true, # If type = select. Is Label i18n-key or array (key, default)? (Optional)
      *          ],
      *      ];
      *
@@ -545,7 +546,7 @@ class BaseCrudController extends SecureBackendController {
 
         if (!empty($this->indexFilter)) {
             foreach ($this->indexFilter as $propertyName => $filterConfig) {
-                if (isset($queryParams[$propertyName]) && !empty($queryParams[$propertyName])) {
+                if (isset($queryParams[$propertyName]) && $queryParams[$propertyName] !== '') {
                     $propertyNameValue = $queryParams[$propertyName];
                     //TODO Crud-Index - Extended filtering - evaluate & set filterConfig
                     $filter[$propertyName] = $propertyNameValue;
