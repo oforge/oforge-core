@@ -99,16 +99,16 @@ class Post extends AbstractModel {
         $this->comments = new ArrayCollection();
     }
 
-    /** @ORM\PrePersist */
-    public function onPrePersist() {
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function updateTimestamps() {
         $now           = new DateTimeImmutable('now');
-        $this->created = $now;
         $this->updated = $now;
-    }
-
-    /** @ORM\PreUpdate */
-    public function onPreUpdate() {
-        $this->updated = new DateTimeImmutable('now');
+        if (!isset($this->created)) {
+            $this->created = $now;
+        }
     }
 
     /**
