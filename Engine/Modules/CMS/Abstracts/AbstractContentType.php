@@ -269,12 +269,13 @@ abstract class AbstractContentType extends AbstractDatabaseAccess
         return $this->contentData;
     }
 
+    //TODO: Find out whether type string should be chosen
     /**
      * Set data of content
-     * @param string $contentData
+     * @param $contentData
      * @return AbstractContentType $this
      */
-    public function setContentData(string $contentData)
+    public function setContentData($contentData)
     {
         $this->contentData = $contentData;
         
