@@ -1,0 +1,25 @@
+<div class="form">
+    <div class="form-group">
+        <div><label>Content Name</label></div>
+        <div><input type="text" name="name" value="{{ data.name }}"></div>
+        <div class="spacer">&nbsp;</div>
+        <label>{{ i18n('type_image', 'Image') }}</label>
+        {% if data.url %}
+            <div class="preview-image">
+                <img src="{{ media(data.url, 200) }}" width="200" title="{{ data.url }}"/>
+            </div>
+        {% endif %}
+
+        <input class="form-control" name="icon" type="file" accept=".svg"/>
+
+        <div><label>Caption</label></div>
+        <div><input type="text" name="caption" value="{{ data.caption }}"></div>
+        <div><label>Background Color</label></div>
+        <div><input type="color" name="background-color" value={% if data.background-color %}{{ data.background-color }}{% else %}"#6f8e2b"{% endif %}></div>
+        <div><label>Icon Color</label></div>
+        <div><input type="color" name="icon-color" value={% if data.icon-color %}{{ data.icon-color }}{% else %}"#6f8e2b"{% endif %}></div>
+    </div>
+    <div class="form-group">
+        <label>CSS Class</label><input class="form-control" type="text" name="css" value="{{ data.css }}">
+    </div>
+</div>
