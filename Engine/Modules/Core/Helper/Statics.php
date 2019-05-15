@@ -2,7 +2,16 @@
 
 namespace Oforge\Engine\Modules\Core\Helper;
 
+/**
+ * Class Statics
+ *
+ * @package Oforge\Engine\Modules\Core
+ */
 class Statics {
+    /**
+     * Default order value for all order properties.
+     */
+    public const DEFAULT_ORDER = 1337;
     public const ENGINE_DIR         = "Engine";
     public const PLUGIN_DIR         = "Plugins";
     public const VIEW_DIR           = "Views";
@@ -29,10 +38,6 @@ class Statics {
      * Relative path of logs folder.
      */
     public const LOGS_DIR = DIRECTORY_SEPARATOR . Statics::VAR_DIR . DIRECTORY_SEPARATOR . 'logs';
-    /**
-     * Default order value for all order properties.
-     */
-    public const DEFAULT_ORDER = 1337;
     /**
      * TODO: Maybe find a better way to define global default scss variables
      */

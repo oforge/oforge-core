@@ -1,5 +1,134 @@
-{% block insertion %}
-    <div class="insertion">
+{% extends "@parent/Frontend/Layout.twig" %}
 
+{% block content %}
+    <div class="content content--insertion flex">
+        <div class="main">
+            <div class="panel panel--product-view">
+                <h3 class="title title--product">Some cool product</h3>
+
+                <div class="product-view__images">
+                    <div class="thumbnails thumbnails--product">
+                        <div class="thumbnail">
+                            <img src="https://placeponi.es/64/64" alt="" class="thumbnail__image">
+                            <img src="https://placeponi.es/64/64" alt="" class="thumbnail__image">
+                            <img src="https://placeponi.es/64/64" alt="" class="thumbnail__image">
+                            <img src="https://placeponi.es/64/64" alt="" class="thumbnail__image">
+                        </div>
+                        <div class="product-view__image">
+                            <img src="https://placeponi.es/400/300" alt="" class="image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel--product-attributes">
+                <div class="attribute">
+                    <span class="attribute-label">Label</span>
+                    <span class="attribute-value">Value</span>
+                </div>
+                <div class="attribute">
+                    <span class="attribute-label">Label</span>
+                    <span class="attribute-value">Value</span>
+                </div>
+                <div class="attribute">
+                    <span class="attribute-label">Label</span>
+                    <span class="attribute-value">Value</span>
+                </div>
+                <div class="attribute">
+                    <span class="attribute-label">Label</span>
+                    <span class="attribute-value">Value</span>
+                </div>
+            </div>
+
+            {% if extended %}
+                <div class="panel panel--product-attributes attributes--extended">
+                    <h3 class="title title--attributes">Details</h3>
+                    <div class="attribute">
+                        <span class="attribute-label">Label</span>
+                        <span class="attribute-value">Value</span>
+                    </div>
+                    <div class="attribute">
+                        <span class="attribute-label">Label</span>
+                        <span class="attribute-value">Value</span>
+                    </div>
+                    <div class="attribute">
+                        <span class="attribute-label">Label</span>
+                        <span class="attribute-value">Value</span>
+                    </div>
+                    <div class="attribute">
+                        <span class="attribute-label">Label</span>
+                        <span class="attribute-value">Value</span>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="panel panel--product-description description">
+                <div class="description__head">
+                    <h4 class="title">Description</h4>
+                    <div class="language-switch"></div>
+                </div>
+                <div class="description__body">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                        Aperiam architecto culpa fugit iure laborum nam, rem veritatis.
+                        A accusamus atque, ea est et facere iusto obcaecati officiis placeat quod, sequi.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus asperiores
+                        corporis culpa delectus distinctio dolor expedita,
+                        fugiat iste iure modi, molestias natus nobis non,
+                        quam quas recusandae rerum sequi temporibus.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar sidebar--insertion">
+
+            {% if extended %}
+                <div class="panel panel--provider">
+
+                </div>
+            {% endif %}
+
+            <div class="panel panel--contact contact">
+                <div class="contact__name">Rachel Müller</div>
+                <div class="contact__address">12345 Velgast</div>
+                <div class="contact__phone">Tel.: +49(0)231 1234567890</div>
+                <a href="#" class="button button--secondary">Contact me</a>
+                <a href="#" class="button button--secondary">Add to wishlist</a>
+            </div>
+
+            <div class="panel panel--map map">
+                <div class="map__address">
+                    12345 Velgast
+                </div>
+                <div class="map__view">
+
+                </div>
+            </div>
+
+            <div class="panel panel--cross-sell cross-sell">
+                <div class="cross-sell__title">Other insertions</div>
+                <div class="cross-sell__image">
+                    <img src="https://placeponi.es/300/300" alt="" class="image">
+                </div>
+                <div class="cross-sell__description">
+                    <div class="name">Some product</div>
+                    <div class="price">9.000.000 €</div>
+                    <div class="insertion-provider">from Superproducts</div>
+                </div>
+                <div class="buttton button--primary">To the insertion</div>
+            </div>
+
+            <div class="panel panel--cross-sell cross-sell">
+                <div class="cross-sell__title">Some new blog post</div>
+                <div class="cross-sell__image">
+                    <img src="https://placeponi.es/300/300" alt="" class="image">
+                </div>
+                <div class="cross-sell__description">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At eos ex omnis perferendis,
+                        quidem tempora unde. Accusantium autem commodi
+                        excepturi harum, officiis pariatur quasi quidem sint sunt tempora. Animi, non?</p>
+                </div>
+                <a href="#" class="button button--primary">To the blog post</a>
+            </div>
+        </div>
     </div>
-{% endblock insertion %}
+{% endblock content %}

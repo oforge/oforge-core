@@ -32,7 +32,7 @@ class SnippetsController extends BaseCrudController {
         [
             'name'          => 'scope',
             'type'          => CrudDataTypes::SELECT,
-            'label'         => ['key' => 'crud_i18n_snippet_scope', 'default' => 'Scope'],
+            'label'         => ['key' => 'backend_crud_i18n_snippet_scope', 'default' => 'Scope'],
             'crud'          => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
@@ -46,7 +46,7 @@ class SnippetsController extends BaseCrudController {
         [
             'name'  => 'name',
             'type'  => CrudDataTypes::STRING,
-            'label' => ['key' => 'crud_i18n_snippet_name', 'default' => 'Name'],
+            'label' => ['key' => 'backend_crud_i18n_snippet_name', 'default' => 'Name'],
             'crud'  => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
@@ -58,7 +58,7 @@ class SnippetsController extends BaseCrudController {
         [
             'name'  => 'value',
             'type'  => CrudDataTypes::STRING,
-            'label' => ['key' => 'crud_i18n_snippet_value', 'default' => 'Value'],
+            'label' => ['key' => 'backend_crud_i18n_snippet_value', 'default' => 'Value'],
             'crud'  => [
                 'index'  => 'editable',
                 'view'   => 'readonly',
