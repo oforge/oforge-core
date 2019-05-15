@@ -25,13 +25,13 @@ class AttributeValue extends AbstractModel {
     private $value;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AttributeKey", inversedBy="values", fetch="EXTRA_LAZY")
+     * @ORM\ManyToOne(targetEntity="Insertion\Models\AttributeKey", inversedBy="values")
      * @ORM\JoinColumn(name="attribute_key", referencedColumnName="id")
      */
     private $attributeKey;
 
     /**
-     * @ORM\OneToOne(targetEntity="AttributeKey", fetch="EXTRA_LAZY")
+     * @ORM\ManyToOne(targetEntity="AttributeKey")
      * @ORM\JoinColumn(name="attribute_value_sub_attribute_key", referencedColumnName="id", nullable=true)
      */
     private $subAttributeKey;
