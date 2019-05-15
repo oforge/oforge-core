@@ -33,6 +33,7 @@ class MailService {
      * @throws Twig_Error_Runtime
      * @throws Twig_Error_Syntax
      */
+
     public function send(array $options, array $templateData = []) {
         if ($this->isValid($options)) {
             try {
@@ -133,6 +134,7 @@ class MailService {
     /**
      * Loads minimal twig environments and returns rendered HTML
      *
+     *
      * @param array $options
      * @param array $templateData
      *
@@ -142,6 +144,7 @@ class MailService {
      * @throws Twig_Error_Syntax
      */
     public function renderMail(array $options, array $templateData) {
+
 
         $twig = new CustomTwig($path = Statics::MAIL_TEMPLATE_DIR);
         $twig->addExtension(new AccessExtension());
