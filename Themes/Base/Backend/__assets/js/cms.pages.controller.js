@@ -103,6 +103,7 @@ var cmsPagesControllerModule = (function() {
     $('#cms_page_builder_language_selector').change(
     	function() {
     		$('#cms_page_selected_language').val($('#cms_page_builder_language_selector option:selected').val());
+
     		$('#cms_page_builder_form').submit();
     	}
 	);
