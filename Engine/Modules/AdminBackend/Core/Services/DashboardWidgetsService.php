@@ -88,6 +88,7 @@ class DashboardWidgetsService extends AbstractDatabaseAccess {
      * @throws OptimisticLockException
      */
     public function initUserWidgets($userId) {
+        /** @var DashboardWidget[] $widgets */
         $widgets = $this->repository()->findAll();
 
         $position = 0;
@@ -100,9 +101,17 @@ class DashboardWidgetsService extends AbstractDatabaseAccess {
             $this->entityManager()->persist($userWidget);
         }
 
-        $this->entityManager()->flush();
+        if (sizeof($widgets) > 0) {
+            $this->entityManager()->flush();
+        }
     }
 
+    /**
+     * @param $name
+     *
+     * @return array
+     * @throws ORMException
+     */
     public function getWidgetsData($name) {
         // Check if the element is already within the system
         $element = $this->repository()->findOneBy(["name" => strtolower($name)]);
