@@ -8,6 +8,7 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 
 /**
  * @ORM\Table(name="oforge_insertion")
+ * @ORM\HasLifecycleCallbacks()
  * @ORM\Entity
  */
 class Insertion extends AbstractModel {
@@ -32,8 +33,8 @@ class Insertion extends AbstractModel {
     private $title;
 
     /**
-     * @var int
-     * @ORM\Column(name="insertion_user", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="FrontendUserManagement\Models\User", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="insertion_user", referencedColumnName="id")
      */
     private $user;
 
@@ -59,7 +60,9 @@ class Insertion extends AbstractModel {
      * @ORM\PrePersist
      */
     public function onPrePersist() {
-        $this->createdAt = new \DateTime("now");
+        $date = new \DateTime('now');
+        $this->createdAt = $date;
+        $this->updatedAt = $date;
     }
 
     /**

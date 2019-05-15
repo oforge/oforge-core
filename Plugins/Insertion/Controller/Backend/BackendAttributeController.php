@@ -28,9 +28,6 @@ class BackendAttributeController extends SecureBackendController {
      * @throws ServiceNotFoundException
      */
     public function indexAction(Request $request, Response $response) {
-        /** @var InsertionMockService $insertionMockService */
-        $insertionMockService = Oforge()->Services()->get('insertion.mock');
-        $insertionMockService->createAttributes();
     }
 
     /**

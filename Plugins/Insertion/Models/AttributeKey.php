@@ -39,15 +39,36 @@ class AttributeKey extends AbstractModel {
     private $filterType;
 
     /**
-     *
-     * @ORM\OneToMany(targetEntity="AttributeValue", mappedBy="attributeKeyId", cascade={"all"}, fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="id", referencedColumnName="attribute_key_id")
-     *
+     * @ORM\OneToMany(targetEntity="InsertionTypeAttribute", mappedBy="attributeKey")
+     * @ORM\JoinColumn(name="attribute_key", referencedColumnName="id")
+     */
+    private $insertionTypes;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Insertion\Models\AttributeValue", mappedBy="attributeKey")
      */
     private $values;
 
     public function __construct() {
         $this->values = new ArrayCollection();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInsertionTypes() {
+        return $this->insertionTypes;
+    }
+
+    /**
+     * @param mixed $insertionTypes
+     *
+     * @return AttributeKey
+     */
+    public function setInsertionTypes($insertionTypes) {
+        $this->insertionTypes = $insertionTypes;
+
+        return $this;
     }
 
     /**

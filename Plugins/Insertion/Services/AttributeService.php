@@ -2,6 +2,7 @@
 
 namespace Insertion\Services;
 
+use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Insertion\Models\AttributeKey;
@@ -26,6 +27,7 @@ class AttributeService extends AbstractDatabaseAccess {
      * @return AttributeKey
      * @throws ORMException
      * @throws OptimisticLockException
+     * @throws MappingException
      */
     public function createNewAttributeKey($name, $inputType, $filterType) {
         $attributeKey = new AttributeKey();
@@ -46,6 +48,7 @@ class AttributeService extends AbstractDatabaseAccess {
      *
      * @throws ORMException
      * @throws OptimisticLockException
+     * @throws MappingException
      */
     public function createNewAttributeValue($value, $attributeKey, $subAttributeKey = null) {
         $attributeValue = new AttributeValue();

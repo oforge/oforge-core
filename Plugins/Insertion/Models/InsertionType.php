@@ -26,13 +26,14 @@ class InsertionType extends AbstractModel {
     private $name;
 
     /**
-     * @ORM\OneToOne(targetEntity="InsertionType")
+     * @ORM\ManyToOne(targetEntity="InsertionType")
      * @ORM\JoinColumn(name="insertion_parent_id", referencedColumnName="id", nullable=true)
      */
     private $parent;
 
     /**
-     * @ORM\OneToMany(targetEntity="InsertionTypeAttribute", mappedBy="insertionTypeId")
+     * @ORM\OneToMany(targetEntity="InsertionTypeAttribute", mappedBy="insertionType")
+     * @ORM\JoinColumn(name="insertion_type", referencedColumnName="id")
      */
     private $attributes;
 
@@ -65,18 +66,18 @@ class InsertionType extends AbstractModel {
     }
 
     /**
-     * @return int|null
+     * @return mixed
      */
-    public function getParent() : ?int {
+    public function getParent() {
         return $this->parent;
     }
 
     /**
-     * @param int $parent
+     * @param mixed $parent
      *
      * @return InsertionType
      */
-    public function setParent(int $parent) : InsertionType {
+    public function setParent($parent) : InsertionType {
         $this->parent = $parent;
         return $this;
     }

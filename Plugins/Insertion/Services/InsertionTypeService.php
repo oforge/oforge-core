@@ -6,12 +6,18 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Insertion\Models\AttributeKey;
 use Insertion\Models\InsertionType;
+use Insertion\Models\InsertionTypeAttribute;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\CRUD\Services\GenericCrudService;
 
 class InsertionTypeService extends AbstractDatabaseAccess {
     public function __construct() {
-        parent::__construct(['default' => InsertionType::class]);
+        parent::__construct(
+            [
+                'default' => InsertionType::class,
+                'insertionTypeAttribute' => InsertionTypeAttribute::class,
+            ]
+        );
     }
 
     /**
@@ -63,11 +69,31 @@ class InsertionTypeService extends AbstractDatabaseAccess {
     }
 
     /**
+     * @param InsertionType $insertionType
      * @param AttributeKey $attributeKey
+     * @param $isTop
+     * @param string $attributeGroup
      * @param bool $required
+     *
+     * @throws ORMException
      */
-    public function addAttributeToInsertionType($attributeKey, $required = false) {
+    public function addAttributeToInsertionType($insertionType, $attributeKey, $isTop, $attributeGroup = 'main', $required = false) {
 
+
+        $insertionTypeAttribute = new InsertionTypeAttribute();
+        $insertionTypeAttribute
+            ->setInsertionType($insertionType)
+            ->setAttributeKey($attributeKey)
+            ->setIsTop($isTop)
+            ->setAttributeGroup($attributeGroup)
+            ->setRequired($required);
+
+        $this->entityManager()->persist($insertionTypeAttribute);
+        $this->entityManager()->flush($insertionTypeAttribute);
+
+
+        $insertionType->setAttributes([$attributeKey]);
+        // $insertionType->addAttribute()
     }
 
     public function removeAttributeFromInsertionType($attributeId) {

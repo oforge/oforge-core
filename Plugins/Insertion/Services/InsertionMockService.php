@@ -7,6 +7,7 @@ use Doctrine\ORM\ORMException;
 use Insertion\Enums\AttributeType;
 use Insertion\Models\AttributeKey;
 use Insertion\Models\Insertion;
+use Insertion\Models\InsertionAttributeValue;
 use Insertion\Models\InsertionType;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
@@ -14,8 +15,38 @@ use Oforge\Engine\Modules\CRUD\Services\GenericCrudService;
 
 class InsertionMockService {
 
+    /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ServiceNotFoundException
+     */
     public static function init() {
+        /** @var AttributeKey[] $attributes */
+        $attributes     = self::createAttributes();
+        foreach($attributes as $attribute) {
+            $id = $attribute->getId();
+            $values = $attribute->getValues();
+            $i = sizeof($values);
+        }
 
+
+        $insertionTypes = self::createInsertionTypes($attributes);
+        $insertions = [];
+        foreach ($insertionTypes as $insertionType) {
+            $insertions = array_merge($insertions, self::createInsertions($insertionType));
+        }
+        /** @var Insertion[] $insertions */
+        foreach ($insertions as $insertion) {
+            /** @var InsertionType $type */
+            $type = $insertion->getInsertionType();
+            /** @var AttributeKey[] $attributes */
+            $attributes = $type->getAttributes();
+
+            foreach($attributes as $attribute) {
+                self::createInsertionAttributeValues($insertion, $attribute, $attribute->getValues()->toArray()[0]);
+            }
+
+        }
     }
 
     /**
@@ -63,7 +94,7 @@ class InsertionMockService {
         $insertionType = $insertionTypeService->createNewInsertionType('eSports');
 
         foreach ($attributes as $attribute) {
-            $insertionTypeService->addAttributeToInsertionType($attribute);
+            $insertionTypeService->addAttributeToInsertionType($insertionType, $attribute, false);
         }
         array_push($insertionTypes, $insertionType);
         return $insertionTypes;
@@ -82,11 +113,11 @@ class InsertionMockService {
 
         /** @var InsertionService $insertionService */
         $insertionService = Oforge()->Services()->get('insertion');
-        $insertion = $insertionService->createNewInsertion($insertionType, 'Some fancy Product Title', 'This is a good product.');
+        $insertion = $insertionService->createNewInsertion($insertionType, 'thelegend', 'This is a good player.');
 
         array_push($insertions, $insertion);
 
-        $insertion = $insertionService->createNewInsertion($insertionType, 'Some other cool product stuff', 'This is a good product too. Dont buy it');
+        $insertion = $insertionService->createNewInsertion($insertionType, 'noobmaster69', 'This is a flamer.');
         array_push($insertions, $insertion);
 
         return $insertions;
@@ -95,11 +126,17 @@ class InsertionMockService {
     /**
      * @param $insertion
      * @param $attributeKey
+     * @param $value
      *
+     * @return InsertionAttributeValue
+     * @throws ORMException
+     * @throws OptimisticLockException
      * @throws ServiceNotFoundException
      */
-    public static function createInsertionAttributeValues($insertion, $attributeKey) {
+    public static function createInsertionAttributeValues($insertion, $attributeKey, $value) {
         /** @var InsertionService $insertionService */
         $insertionService = Oforge()->Services()->get('insertion');
+        $insertionAttributeValue = $insertionService->addAttributeValueToInsertion($insertion, $attributeKey, $value);
+        return $insertionAttributeValue;
     }
 }

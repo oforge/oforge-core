@@ -6,12 +6,16 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Services\UserService;
 use Insertion\Models\Insertion;
+use Insertion\Models\InsertionAttributeValue;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 
 class InsertionService extends AbstractDatabaseAccess {
     public function __construct() {
-        parent::__construct(['default' => Insertion::class]);
+        parent::__construct([
+            'default' => Insertion::class,
+            'insertionAttributeValue' => InsertionAttributeValue::class,
+        ]);
     }
 
     /**
@@ -103,8 +107,26 @@ class InsertionService extends AbstractDatabaseAccess {
         $this->entityManager()->flush();
     }
 
-    public function addAttributeValueToInsertion($insertionId, $attributeId) {
+    /**
+     * @param $insertion
+     * @param $attributeKey
+     * @param $value
+     *
+     * @return InsertionAttributeValue
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function addAttributeValueToInsertion($insertion, $attributeKey, $value) {
+        $insertionAttributeValue = new InsertionAttributeValue();
+        $insertionAttributeValue
+            ->setAttributeKey($attributeKey)
+            ->setInsertion($insertion)
+            ->setValue($value);
 
+        $this->entityManager()->persist($insertionAttributeValue);
+        $this->entityManager()->flush($insertionAttributeValue);
+
+        return $insertionAttributeValue;
     }
 
 }

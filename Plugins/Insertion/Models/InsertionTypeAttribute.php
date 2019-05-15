@@ -19,18 +19,28 @@ class InsertionTypeAttribute extends AbstractModel {
     private $id;
 
     /**
-     * @ORM\Column(name="attribute_key_id", nullable=false)
-     * @ORM\ManyToOne(targetEntity="AttributeKey")
-     * @ORM\JoinColumn(name="attribute_key_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="AttributeKey", inversedBy="insertionTypes")
+     * @ORM\JoinColumn(name="attribute_key", referencedColumnName="id", nullable=false)
      */
-    private $attributeKeyId;
+    private $attributeKey;
 
     /**
-     * @ORM\Column(name="insertion_type_id", nullable=false)
      * @ORM\ManyToOne(targetEntity="InsertionType", inversedBy="attributes")
-     * @ORM\JoinColumn(name="insertion_type_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="insertion_type", referencedColumnName="id", nullable=false)
      */
-    private $insertionTypeId;
+    private $insertionType;
+
+    /**
+     * @var boolean
+     * @ORM\Column(name="is_top", type="boolean")
+     */
+    private $isTop = false;
+
+    /**
+     * @var string
+     * @ORM\Column(name="attribute_group", type="string", nullable=true)
+     */
+    private $attributeGroup;
 
     /**
      * @var boolean
@@ -43,6 +53,78 @@ class InsertionTypeAttribute extends AbstractModel {
      */
     public function getId() : int {
         return $this->id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAttributeKey() {
+        return $this->attributeKey;
+    }
+
+    /**
+     * @param mixed $attributeKey
+     *
+     * @return InsertionTypeAttribute
+     */
+    public function setAttributeKey($attributeKey) {
+        $this->attributeKey = $attributeKey;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInsertionType() {
+        return $this->insertionType;
+    }
+
+    /**
+     * @param mixed $insertionType
+     *
+     * @return InsertionTypeAttribute
+     */
+    public function setInsertionType($insertionType) {
+        $this->insertionType = $insertionType;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTop() : bool {
+        return $this->isTop;
+    }
+
+    /**
+     * @param bool $isTop
+     *
+     * @return InsertionTypeAttribute
+     */
+    public function setIsTop(bool $isTop) : InsertionTypeAttribute {
+        $this->isTop = $isTop;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAttributeGroup() : string {
+        return $this->attributeGroup;
+    }
+
+    /**
+     * @param string $attributeGroup
+     *
+     * @return InsertionTypeAttribute
+     */
+    public function setAttributeGroup(string $attributeGroup) : InsertionTypeAttribute {
+        $this->attributeGroup = $attributeGroup;
+
+        return $this;
     }
 
     /**
@@ -62,41 +144,4 @@ class InsertionTypeAttribute extends AbstractModel {
 
         return $this;
     }
-
-    /**
-     * @param int $insertionTypeId
-     *
-     * @return InsertionTypeAttribute
-     */
-    public function setInsertionTypeId(int $insertionTypeId) : InsertionTypeAttribute {
-        $this->insertionTypeId = $insertionTypeId;
-
-        return $this;
-}
-
-    /**
-     * @return mixed
-     */
-    public function getInsertionTypeId() {
-        return $this->insertionTypeId;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAttributeKeyId() {
-        return $this->attributeKeyId;
-    }
-
-    /**
-     * @param int $attributeKeyId
-     *
-     * @return InsertionTypeAttribute
-     */
-    public function setAttributeKeyId(int $attributeKeyId) : InsertionTypeAttribute {
-        $this->attributeKeyId = $attributeKeyId;
-
-        return $this;
-    }
-
 }
