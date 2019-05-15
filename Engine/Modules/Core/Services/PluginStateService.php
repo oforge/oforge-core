@@ -124,9 +124,9 @@ class PluginStateService extends AbstractDatabaseAccess {
      * @throws OptimisticLockException
      * @throws InvalidClassException
      * @throws ServiceAlreadyExistException
+     * @throws ReflectionException
      */
     public function install(string $pluginName) {
-        //TODO Alex: Dependencies evaluation, throwing of CouldNotInstallPluginException ???
         /** @var Plugin $plugin */
         $plugin = $this->repository()->findOneBy(['name' => $pluginName]);
 
@@ -145,6 +145,20 @@ class PluginStateService extends AbstractDatabaseAccess {
             if (sizeof($models) > 0) {
                 Oforge()->DB()->initModelSchema($models);
             }
+
+            if (sizeof($instance->getDependencies()) > 0) {
+                foreach ($instance->getDependencies() as $dependency) {
+                    if (is_subclass_of($dependency, AbstractBootstrap::class)) {
+                        $dependencyName               = (new ReflectionClass($dependency))->getNamespaceName();
+                        $dependencyActiveAndInstalled = $this->repository()->findOneBy(['name' => $dependencyName, 'installed' => 1]);
+
+                        if (!isset($dependencyActiveAndInstalled)) {
+                            throw new CouldNotInstallPluginException($pluginName, [$dependencyName]);
+                        }
+                    }
+                }
+            }
+
             if ($plugin->getInstalled() === false) {
                 $services = $instance->getServices();
                 Oforge()->Services()->register($services);
