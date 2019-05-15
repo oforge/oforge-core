@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityRepository;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Auth\Models\User\User;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 
 /**
  * This Base class has the default methods for logging users in and validating passwords.
@@ -34,7 +35,7 @@ class BaseLoginService extends AbstractDatabaseAccess {
      * @param string $password
      *
      * @return string|null
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ServiceNotFoundException
      */
     public function login(string $email, string $password) {
         /**

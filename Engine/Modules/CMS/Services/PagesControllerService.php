@@ -34,7 +34,7 @@ class PagesControllerService extends AbstractDatabaseAccess {
             "contentType" => ContentType::class, 
             "content" => Content::class]);
         
-        $this->entityManager = Oforge()->DB()->getEnityManager();
+        $this->entityManager = Oforge()->DB()->getEntityManager();
     }
 
     /**
@@ -264,7 +264,7 @@ class PagesControllerService extends AbstractDatabaseAccess {
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    private function createContentElement($pagePathId, $selectedElementId, $createContentWithTypeId, $createContentAtOrderIndex)
+    public function createContentElement($pagePathId, $selectedElementId, $createContentWithTypeId, $createContentAtOrderIndex)
     {
         /** @var ContentType $contentTypeEntity */
         $contentTypeEntity = $this->repository('contentType')->findOneBy(["id" => $createContentWithTypeId]);
@@ -284,7 +284,7 @@ class PagesControllerService extends AbstractDatabaseAccess {
             
             $contentId = $contentEntity->getId();
             
-            if ($selectedElementId < 1)
+            if ($pagePathId !== false && $selectedElementId < 1)
             {
                 $pageContentEntities = $this->repository('pageContent')->findBy(["pagePath" => $pagePathId]);
                 
@@ -370,7 +370,7 @@ class PagesControllerService extends AbstractDatabaseAccess {
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    private function deleteContentElement($pagePathId, $selectedElementId, $deleteContentWithId, $deleteContentAtOrderIndex)
+    public function deleteContentElement($pagePathId, $selectedElementId, $deleteContentWithId, $deleteContentAtOrderIndex)
     {
         if ($selectedElementId)
         {
@@ -408,12 +408,15 @@ class PagesControllerService extends AbstractDatabaseAccess {
             }
             else
             {
-                $pageContentEntity = $this->repository('pageContent')->findOneBy(["pagePath" => $pagePathId, "content" => $contentElementId, "order" => $contentElementAtOrderIndex]);
-
-                if ($pageContentEntity)
+                if ($pagePathId !== false)
                 {
-                    $this->entityManager->remove($pageContentEntity);
-                    $this->entityManager->flush();
+                    $pageContentEntity = $this->repository('pageContent')->findOneBy(["pagePath" => $pagePathId, "content" => $contentElementId, "order" => $contentElementAtOrderIndex]);
+
+                    if ($pageContentEntity)
+                    {
+                        $this->entityManager->remove($pageContentEntity);
+                        $this->entityManager->flush();
+                    }
                 }
             }
         }

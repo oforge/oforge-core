@@ -34,30 +34,33 @@ class ElementsController extends AbstractController {
     public function indexAction(Request $request, Response $response) {
         $elementsControllerService = OForge()->Services()->get("elements.controller.service");
 
-        $data = $elementsControllerService->getElementData($_POST);
-        
-        switch ($_POST["cms_form"])
-        {
-            case "cms_element_jstree_form":
-                switch ($_POST["cms_edit_element_action"])
-                {
-                    case "dnd":
-                        $data = $elementsControllerService->createContentElement($_POST);
-                        break;
-                    case "move":
-                        $data = $elementsControllerService->moveElementData($_POST);
-                        break;
-                    default:
-                        $data = $elementsControllerService->editElementData($_POST);
-                        break;
-                }
-                break;
-            case "cms_page_builder_form":
-                $data = $elementsControllerService->getElementData($_POST);
-                break;
+        if (isset($_POST["cms_form"])) {
+            switch ($_POST["cms_form"]) {
+                case "cms_element_jstree_form":
+                    switch ($_POST["cms_edit_element_action"]) {
+                        case "dnd":
+                            $data = $elementsControllerService->createContentElement($_POST);
+                            break;
+                        case "move":
+                            $data = $elementsControllerService->moveElementData($_POST);
+                            break;
+                        default:
+                            $data = $elementsControllerService->editElementData($_POST);
+                            break;
+                    }
+                    break;
+                case "cms_page_builder_form":
+                    $data = $elementsControllerService->editPageBuilderData($_POST);
+                    break;
+                default:
+                    $data = $elementsControllerService->editElementData($_POST);
+                    break;
+            }
         }
-        
+        // if no data is set, load the default view
+        if (!isset($data)) {
+            $data = $elementsControllerService->editElementData($_POST);
+        }
         Oforge()->View()->assign($data);
     }
-
 }

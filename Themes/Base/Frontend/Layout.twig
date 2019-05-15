@@ -1,7 +1,7 @@
 {#
     This file is a helper file for extending the layout of a theme.
-    The variable template_layout can be changed in the admin backend and will be set to Default in the TemplateRenderService
+    The variable meta.template.layout can be changed in the admin backend and will be set to Default in the TemplateRenderService
     if no layout is defined. This helps template developers to easily extend the base theme.
     You just have to extend '@parent/Frontend/Layout.twig' and define the layout in the admin backend.
 #}
-{% extends 'Frontend/Layouts/' ~ template_layout ~ '.twig' %}
+{% extends 'Frontend/Layouts/' ~ meta.template.layout|default('Default') ~ '.twig' %}
