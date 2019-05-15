@@ -8,6 +8,6 @@ namespace Oforge\Engine\Modules\CRUD\Enum;
  * @package Oforge\Engine\Modules\CRUD\Enum
  */
 class CrudFilterType {
-    public const STRING = 'string';
+    public const TEXT = 'text';
     public const SELECT = 'select';
 }
