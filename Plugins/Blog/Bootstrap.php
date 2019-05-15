@@ -53,6 +53,22 @@ class Bootstrap extends AbstractBootstrap {
         /** @var ConfigService $configService */
         $configService = Oforge()->Services()->get('config');
         $configService->add([
+            'name'     => 'blog_epp_posts',
+            'type'     => ConfigType::INTEGER,
+            'group'    => 'blog',
+            'default'  => 6,
+            'label'    => 'config_blog_epp_posts',
+            'required' => true,
+        ]);
+        $configService->add([
+            'name'     => 'blog_epp_comments',
+            'type'     => ConfigType::INTEGER,
+            'group'    => 'blog',
+            'default'  => 5,
+            'label'    => 'config_blog_epp_comments',
+            'required' => true,
+        ]);
+        $configService->add([
             'name'     => 'blog_recommend_posts_number',
             'type'     => ConfigType::INTEGER,
             'group'    => 'blog',

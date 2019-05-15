@@ -119,6 +119,20 @@ class Post extends AbstractModel {
     }
 
     /**
+     * @return DateTimeImmutable
+     */
+    public function getCreated() : DateTimeImmutable {
+        return $this->created;
+    }
+
+    /**
+     * @return DateTimeImmutable
+     */
+    public function getUpdated() : DateTimeImmutable {
+        return $this->updated;
+    }
+
+    /**
      * @return string
      */
     public function getLanguage() : string {
@@ -285,6 +299,13 @@ class Post extends AbstractModel {
      */
     public function getComments() : ArrayCollection {
         return $this->comments;
+    }
+
+    /**
+     * @return Rating[]
+     */
+    public function getRatings() : array {
+        return $this->ratings;
     }
 
 }
