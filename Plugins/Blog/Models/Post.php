@@ -46,7 +46,7 @@ class Post extends AbstractModel {
     private $seoUrlPath;
     /**
      * @var BackendUser $author
-     * @ORM\OneToOne(targetEntity="\Oforge\Engine\Modules\Auth\Models\User\BackendUser")
+     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\Auth\Models\User\BackendUser")
      * @ORM\JoinColumn(name="author_id", referencedColumnName="id")
      */
     private $author;
@@ -77,13 +77,13 @@ class Post extends AbstractModel {
     private $content = '';
     /**
      * @var Category $category
-     * @ORM\ManyToOne(targetEntity="Category", inversedBy="posts", fetch="EXTRA_LAZY")
+     * @ORM\ManyToOne(targetEntity="Category", inversedBy="posts" fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="category_id", referencedColumnName="id")
      */
     private $category;
     /**
-     * @var Rating[] $ratings
-     * @ORM\OneToMany(targetEntity="Rating", mappedBy="post", fetch="EXTRA_LAZY")
+     * @var ArrayCollection $ratings
+     * @ORM\OneToMany(targetEntity="Rating", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="id", referencedColumnName="post_id")
      */
     private $ratings;
@@ -302,9 +302,9 @@ class Post extends AbstractModel {
     }
 
     /**
-     * @return Rating[]
+     * @return ArrayCollection
      */
-    public function getRatings() : array {
+    public function getRatings() : ArrayCollection {
         return $this->ratings;
     }
 

@@ -35,18 +35,6 @@ class Comment extends AbstractModel {
      */
     private $updated;
     /**
-     * @var Post $post
-     * @ORM\ManyToOne(targetEntity="Post", inversedBy="comments", fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="post_id", referencedColumnName="id")
-     */
-    private $post;
-    /**
-     * @var User $author
-     * @ORM\ManyToOne(targetEntity="\FrontendUserManagement\Models\User", fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="author_id", referencedColumnName="id")
-     */
-    private $author;
-    /**
      * @var string $title
      * @ORM\Column(name="title", type="string", nullable=false, options={"default":""})
      */
@@ -56,6 +44,18 @@ class Comment extends AbstractModel {
      * @ORM\Column(name="content", type="text", nullable=false, options={"default":""})
      */
     private $content = '';
+    /**
+     * @var Post $post
+     * @ORM\ManyToOne(targetEntity="Post", inversedBy="comments", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="post_id", referencedColumnName="id")
+     */
+    private $post;
+    /**
+     * @var User $author
+     * @ORM\ManyToOne(targetEntity="FrontendUserManagement\Models\User", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="author_id", referencedColumnName="id")
+     */
+    private $author;
 
     /**
      * @ORM\PrePersist
@@ -91,42 +91,6 @@ class Comment extends AbstractModel {
     }
 
     /**
-     * @return Post
-     */
-    public function getPost() : Post {
-        return $this->post;
-    }
-
-    /**
-     * @param Post $post
-     *
-     * @return Comment
-     */
-    protected function setPost(Post $post) : Comment {
-        $this->post = $post;
-
-        return $this;
-    }
-
-    /**
-     * @return User
-     */
-    public function getAuthor() : User {
-        return $this->author;
-    }
-
-    /**
-     * @param User $author
-     *
-     * @return Comment
-     */
-    protected function setAuthor(User $author) : Comment {
-        $this->author = $author;
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getTitle() : string {
@@ -158,6 +122,42 @@ class Comment extends AbstractModel {
      */
     public function setContent(string $content) : Comment {
         $this->content = $content;
+
+        return $this;
+    }
+
+    /**
+     * @return User
+     */
+    public function getAuthor() : User {
+        return $this->author;
+    }
+
+    /**
+     * @param User $author
+     *
+     * @return Comment
+     */
+    protected function setAuthor(User $author) : Comment {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * @return Post
+     */
+    public function getPost() : Post {
+        return $this->post;
+    }
+
+    /**
+     * @param Post $post
+     *
+     * @return Comment
+     */
+    protected function setPost(Post $post) : Comment {
+        $this->post = $post;
 
         return $this;
     }
