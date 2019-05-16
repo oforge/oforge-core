@@ -138,8 +138,9 @@ class BaseCrudController extends SecureBackendController {
         if (isset($this->model)) {
             $parts = explode('\\Models\\', $this->model, 2);
             if (count($parts) === 2) {
-                $module                = substr($parts[0], 1 + strrpos($parts[0], '\\'));
-                $modelName             = $parts[1];
+                $module    = substr($parts[0], strrpos($parts[0], '\\'));
+                $module    = StringHelper::leftTrim($module, '\\');
+                $modelName = $parts[1];
                 if (strpos($modelName, '\\')) {
                     $modelName = substr($modelName, 1 + strrpos($modelName, '\\'));
                 }
