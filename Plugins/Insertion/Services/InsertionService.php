@@ -5,6 +5,8 @@ namespace Insertion\Services;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Services\UserService;
+use Insertion\Models\AttributeKey;
+use Insertion\Models\AttributeValue;
 use Insertion\Models\Insertion;
 use Insertion\Models\InsertionAttributeValue;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
@@ -108,9 +110,9 @@ class InsertionService extends AbstractDatabaseAccess {
     }
 
     /**
-     * @param $insertion
-     * @param $attributeKey
-     * @param $value
+     * @param Insertion $insertion
+     * @param AttributeKey $attributeKey
+     * @param AttributeValue $value
      *
      * @return InsertionAttributeValue
      * @throws ORMException
@@ -121,7 +123,7 @@ class InsertionService extends AbstractDatabaseAccess {
         $insertionAttributeValue
             ->setAttributeKey($attributeKey)
             ->setInsertion($insertion)
-            ->setValue($value);
+            ->setValue($value->getValue());
 
         $this->entityManager()->persist($insertionAttributeValue);
         $this->entityManager()->flush($insertionAttributeValue);

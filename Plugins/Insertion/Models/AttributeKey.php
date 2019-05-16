@@ -45,7 +45,8 @@ class AttributeKey extends AbstractModel {
     private $insertionTypes;
 
     /**
-     * @ORM\OneToMany(targetEntity="Insertion\Models\AttributeValue", mappedBy="attributeKey")
+     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="AttributeValue", mappedBy="attributeKey")
      */
     private $values;
 
@@ -125,19 +126,31 @@ class AttributeKey extends AbstractModel {
     }
 
     /**
-     * @return mixed
+     * @return ArrayCollection
      */
     public function getValues() {
         return $this->values;
     }
 
     /**
-     * @param mixed $values
+     * @param ArrayCollection $values
      *
      * @return AttributeKey
      */
     public function setValues($values) {
         $this->values = $values;
+        return $this;
+    }
+
+    /**
+     * @param AttributeValue $value
+     * @return AttributeKey
+     */
+    public function addValue($value) {
+        if (!$this->values->contains($value)) {
+            $this->values->add($value);
+        }
+
         return $this;
     }
 }

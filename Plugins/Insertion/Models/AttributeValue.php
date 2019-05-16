@@ -26,13 +26,13 @@ class AttributeValue extends AbstractModel {
 
     /**
      * @ORM\ManyToOne(targetEntity="Insertion\Models\AttributeKey", inversedBy="values")
-     * @ORM\JoinColumn(name="attribute_key", referencedColumnName="id")
+     * @ORM\JoinColumn(name="attribute_key_id", referencedColumnName="id")
      */
     private $attributeKey;
 
     /**
      * @ORM\ManyToOne(targetEntity="AttributeKey")
-     * @ORM\JoinColumn(name="attribute_value_sub_attribute_key", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="attribute_value_sub_attribute_key_id", referencedColumnName="id", nullable=true)
      */
     private $subAttributeKey;
 
@@ -68,12 +68,13 @@ class AttributeValue extends AbstractModel {
     }
 
     /**
-     * @param mixed $attributeKey
+     * @param AttributeKey $attributeKey
      *
      * @return AttributeValue
      */
     public function setAttributeKey($attributeKey) {
         $this->attributeKey = $attributeKey;
+        $this->attributeKey->addValue($this);
 
         return $this;
     }
