@@ -2,7 +2,8 @@
 
 namespace Blog;
 
-use Blog\Controller\Backend\Blog\CategoryController;
+use Blog\Controller\Backend\CommentController;
+use Blog\Controller\Backend\PostController;
 use Blog\Models\Category;
 use Blog\Models\Comment;
 use Blog\Models\Post;
@@ -12,6 +13,7 @@ use Blog\Services\CommentService;
 use Blog\Services\PostService;
 use Blog\Services\RatingService;
 use Blog\Widgets\BlogOverviewWidget;
+use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\DashboardWidgetsService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
@@ -32,10 +34,10 @@ class Bootstrap extends AbstractBootstrap {
         ];
 
         $this->endpoints = [
-            // CategoryController::class,
-            // PostController::class,
-            // CommentController::class,
-            // BlogController::class,
+            Controller\Backend\CategoryController::class,
+            Controller\Backend\PostController::class,
+            CommentController::class,
+            BlogController::class,
         ];
 
         $this->models = [
@@ -89,6 +91,41 @@ class Bootstrap extends AbstractBootstrap {
             'name'         => 'plugin_blog_dashboard_widget_overview_name',
             'cssClass'     => 'bg-blue',
             'templateName' => 'BlogOverview',
+        ]);
+    }
+
+    public function activate() {
+
+        /** @var BackendNavigationService $sidebarNavigation */
+        $sidebarNavigation = Oforge()->Services()->get('backend.navigation');
+        // $sidebarNavigation->put([
+        //     'name'     => 'plugin_blog',
+        //     'order'    => 3,
+        //     'position' => 'sidebar',
+        // ]);
+        $sidebarNavigation->put([
+            'name'     => 'plugin_blog_categories',
+            'order'    => 1,
+            'parent'   => 'plugin_blog',
+            'icon'     => 'fa fa-folder',
+            'path'     => 'backed_blog_categories',
+            'position' => 'sidebar',
+        ]);
+        $sidebarNavigation->put([
+            'name'     => 'plugin_blog_posts',
+            'order'    => 2,
+            'parent'   => 'plugin_blog',
+            'icon'     => 'fa fa-sticky-note',
+            'path'     => 'backed_blog_posts',
+            'position' => 'sidebar',
+        ]);
+        $sidebarNavigation->put([
+            'name'     => 'plugin_blog_comments',
+            'order'    => 3,
+            'parent'   => 'plugin_blog',
+            'icon'     => 'fa fa-comment',
+            'path'     => 'backed_blog_comments',
+            'position' => 'sidebar',
         ]);
     }
 

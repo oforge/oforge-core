@@ -116,6 +116,11 @@ class Bootstrap extends AbstractBootstrap {
         /** @var BackendNavigationService $sidebarNavigation */
         $sidebarNavigation = Oforge()->Services()->get('backend.navigation');
         $sidebarNavigation->put([
+            'name'     => 'content',
+            'order'    => 1,
+            'position' => 'sidebar',
+        ]);
+        $sidebarNavigation->put([
             'name'     => 'admin',
             'order'    => 99,
             'position' => 'sidebar',
