@@ -22,11 +22,10 @@ class Rating extends AbstractModel {
      */
     private $id;
     /**
-     * @var Post $post
-     * @ORM\ManyToOne(targetEntity="Post", inversedBy="ratings", fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="post_id", referencedColumnName="id")
+     * @var int $postID
+     * @ORM\Column(name="post_id", type="integer", nullable=false)
      */
-    private $post;
+    private $postID;
     /**
      * @var int $userID
      * @ORM\Column(name="user_id", type="integer", nullable=false)
@@ -46,19 +45,19 @@ class Rating extends AbstractModel {
     }
 
     /**
-     * @return Post
+     * @return int
      */
-    public function getPost() : Post {
-        return $this->post;
+    public function getPostID() : int {
+        return $this->postID;
     }
 
     /**
-     * @param Post $post
+     * @param int $postID
      *
      * @return Rating
      */
-    protected function setPost(Post $post) : Rating {
-        $this->post = $post;
+    protected function setPostID(int $postID) : Rating {
+        $this->postID = $postID;
 
         return $this;
     }
@@ -75,7 +74,7 @@ class Rating extends AbstractModel {
      *
      * @return Rating
      */
-    public function setUserID(int $userID) : Rating {
+    protected function setUserID(int $userID) : Rating {
         if (!isset($this->userID)) {
             $this->userID = $userID;
         }

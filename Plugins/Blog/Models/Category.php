@@ -2,6 +2,7 @@
 
 namespace Blog\Models;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 
@@ -56,8 +57,8 @@ class Category extends AbstractModel {
      */
     private $headerImage = null;
     /**
-     * @var Post[] $posts
-     * @ORM\OneToMany(targetEntity="Post", mappedBy="category", fetch="EXTRA_LAZY")
+     * @var ArrayCollection $posts
+     * @ORM\OneToMany(targetEntity="Post", mappedBy="category" fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="id", referencedColumnName="category_id")
      */
     private $posts;
@@ -195,8 +196,8 @@ class Category extends AbstractModel {
         return $this;
     }
 
-    /** @return Post[] */
-    public function getPosts() {
+    /** @return ArrayCollection */
+    public function getPosts() : ArrayCollection {
         return $this->posts;
     }
 
