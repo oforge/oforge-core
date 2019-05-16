@@ -12,6 +12,7 @@ use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Core\Helper\RedirectHelper;
 use Oforge\Engine\Modules\Core\Helper\StringHelper;
+use Oforge\Engine\Modules\CRUD\Enum\CrudGroubByOrder;
 use Oforge\Engine\Modules\CRUD\Services\GenericCrudService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Slim\Http\Request;
@@ -45,7 +46,7 @@ class BaseCrudController extends SecureBackendController {
      *              'list'          => [ // If type = select. Name of a protected function to create a dynamic array (e.g. 'getListUsers', or a static array. (Required)
      *                  <value> => <option text or label e.g. 'backend_crud_property__<name>_<value>'>  // value => (text|(i18n-)label) pair
      *              ],
-     *                  'listI18nLabel' => true,    // If type = select. Is Select label i18n-label? (Optional)
+     *              'isI18nLabel' => true, # If type = select. Is Label i18n-key or array (key, default)? (Optional)
      *              'editor' => [       // Configuration for field editor.
      *                  'default'       => '',      // Default value. (Optional)
      *                  'custom'        => '...'    // If type = custom. Twig path for include.
@@ -90,11 +91,43 @@ class BaseCrudController extends SecureBackendController {
     /**
      * Configuration of the filters on the index view.
      *      protected $indexFilter = [
+     *          'propertyName' => [
+     *              'type'        => CrudFilterType::...,
+     *              'compare'     => 'equals|like|in'#Default = equals
+     *              'list'        => ''# Required list for type=select, array or protected function name.
+     *              'isI18nLabel' => true, # If type = select. Is Label i18n-key or array (key, default)? (Optional)
+     *          ],
      *      ];
      *
      * @var array $indexFilter
      */
     protected $indexFilter = [];
+    /**
+     * Configuration of the orderBy on the index view.
+     *      protected $indexOrderBy = [
+     *          'propertyName' => CrudGroubByOrder::ASC|DESC,
+     *      ];
+     *
+     * @var array $indexOrderBy
+     */
+    protected $indexOrderBy = [];
+    /**
+     * Configuration of the orderBy query keys on the index view.
+     *      protected $indexOrderByQueryKeys = [
+     *          'orderBy'         => 'orderBy',
+     *          'order'           => 'order',
+     *          'page'            => 'page',
+     *          'entitiesPerPage' => 'entitiesPerPage',
+     *      ];
+     *
+     * @var array $indexOrderBy
+     */
+    protected $indexReservedQueryKeys = [
+        'orderBy'         => 'orderBy',
+        'order'           => 'order',
+        'page'            => 'page',
+        'entitiesPerPage' => 'entitiesPerPage',
+    ];
     /**
      * Configuration of the pagination on the index view. Disable with null or override with
      *      protected $indexPagination = [
@@ -109,12 +142,8 @@ class BaseCrudController extends SecureBackendController {
      * @var array $indexPagination
      */
     protected $indexPagination = [
-        'default'   => 10,
-        'buttons'   => [10, 25, 50, 100, 250],
-        'queryKeys' => [
-            'page'            => 'p',
-            'entitiesPerPage' => 'epp',
-        ],
+        'default' => 10,
+        'buttons' => [10, 25, 50, 100, 250],
     ];
     /** @var int $crudPermission */
     protected $crudPermission = BackendUser::ROLE_MODERATOR;
@@ -138,8 +167,8 @@ class BaseCrudController extends SecureBackendController {
         if (isset($this->model)) {
             $parts = explode('\\Models\\', $this->model, 2);
             if (count($parts) === 2) {
-                $module                = substr($parts[0], 1 + strrpos($parts[0], '\\'));
-                $modelName             = $parts[1];
+                $module    = substr($parts[0], 1 + strrpos($parts[0], '\\'));
+                $modelName = $parts[1];
                 if (strpos($modelName, '\\')) {
                     $modelName = substr($modelName, 1 + strrpos($modelName, '\\'));
                 }
@@ -170,9 +199,10 @@ class BaseCrudController extends SecureBackendController {
         }
         $queryParams = $request->getQueryParams();
         $pagination  = $this->prepareIndexPaginationData($queryParams);
+        $orderBy     = $this->evaluateIndexOrder($queryParams);
         $criteria    = $this->evaluateIndexFilter($queryParams);
 
-        $entities = $this->crudService->list($this->model, $criteria, null/*TODO FEATURE orderBy*/, $pagination['offset'], $pagination['limit']);
+        $entities = $this->crudService->list($this->model, $criteria, $orderBy, $pagination['offset'], $pagination['limit']);
         if (Oforge()->View()->Flash()->hasData($this->moduleModelName)) {
             $postData = Oforge()->View()->Flash()->getData($this->moduleModelName);
             Oforge()->View()->Flash()->clearData($this->moduleModelName);
@@ -210,7 +240,8 @@ class BaseCrudController extends SecureBackendController {
                 'hasRowActions' => $hasRowActions,
                 'items'         => $entities,
                 'pagination'    => $pagination,
-                'queryKeys'     => $this->indexPagination['queryKeys'],
+                'queryKeys'     => $this->indexReservedQueryKeys,
+                'filter'        => $this->indexFilter,
             ],
         ]);
 
@@ -499,6 +530,75 @@ class BaseCrudController extends SecureBackendController {
     }
 
     /**
+     * Evaluates query filter params.
+     *
+     * @param array $queryParams
+     *
+     * @return array
+     */
+    protected function evaluateIndexFilter(array $queryParams) : array {
+        $queryKeys               = $this->indexReservedQueryKeys;
+        $queryKeyPage            = $queryKeys['page'];
+        $queryKeyEntitiesPerPage = $queryKeys['entitiesPerPage'];
+        unset($queryParams[$queryKeyPage], $queryParams[$queryKeyEntitiesPerPage]);
+
+        $filter = [];
+
+        if (!empty($this->indexFilter)) {
+            foreach ($this->indexFilter as $propertyName => $filterConfig) {
+                if (isset($queryParams[$propertyName]) && $queryParams[$propertyName] !== '') {
+                    $propertyNameValue = $queryParams[$propertyName];
+                    //TODO Crud-Index - Extended filtering - evaluate & set filterConfig
+                    $filter[$propertyName] = $propertyNameValue;
+                }
+            }
+        }
+
+        return $filter;
+    }
+
+    /**
+     * Evaluates query orderBy params.
+     *
+     * @param array|null $queryParams Return null if no ordering.
+     *
+     * @return array
+     */
+    protected function evaluateIndexOrder(array &$queryParams) : ?array {
+        $queryKeys       = $this->indexReservedQueryKeys;
+        $queryKeyOrderBy = $queryKeys['orderBy'];
+        $queryKeyOrder   = $queryKeys['order'];
+        $orderBy         = null;
+
+        $propertyName = ArrayHelper::get($queryParams, $queryKeyOrderBy);
+        $order        = ArrayHelper::get($queryParams, $queryKeyOrder);
+        unset($queryParams[$queryKeyOrderBy], $queryParams[$queryKeyOrder]);
+        if (isset($propertyName)) {
+            if (isset($order)) {
+                if ($order !== CrudGroubByOrder::ASC && $order !== CrudGroubByOrder::DESC) {
+                    $order = CrudGroubByOrder::ASC;
+                }
+            }
+            $orderBy = [
+                $propertyName => $order,
+            ];
+        } elseif (!empty($this->indexOrderBy)) {
+            $orderBy = [];
+            foreach ($this->indexOrderBy as $propertyName => $order) {
+                if ($order !== CrudGroubByOrder::ASC && $order !== CrudGroubByOrder::DESC) {
+                    $order = CrudGroubByOrder::ASC;
+                }
+                $orderBy[$propertyName] = $order;
+            }
+            if (!empty($tmpOrderBy)) {
+                $orderBy = $tmpOrderBy;
+            }
+        }
+
+        return $orderBy;
+    }
+
+    /**
      * Prepare data for index pagination.
      *
      * @param array $queryParams
@@ -508,7 +608,7 @@ class BaseCrudController extends SecureBackendController {
      * @throws ORMException
      */
     private function prepareIndexPaginationData(array $queryParams) : array {
-        $queryKeys               = $this->indexPagination['queryKeys'];
+        $queryKeys = $this->indexReservedQueryKeys;;
         $queryKeyPage            = $queryKeys['page'];
         $queryKeyEntitiesPerPage = $queryKeys['entitiesPerPage'];
 
@@ -550,23 +650,6 @@ class BaseCrudController extends SecureBackendController {
                 'current' => $entitiesPerPage,
             ],
         ];
-    }
-
-    /**
-     * Evaluates query filter params.
-     *
-     * @param array $queryParams
-     *
-     * @return array
-     */
-    private function evaluateIndexFilter(array $queryParams) : array {
-        $queryKeys               = $this->indexPagination['queryKeys'];
-        $queryKeyPage            = $queryKeys['page'];
-        $queryKeyEntitiesPerPage = $queryKeys['entitiesPerPage'];
-        unset($queryParams[$queryKeyPage], $queryParams[$queryKeyEntitiesPerPage]);
-
-        //TODO
-        return $queryParams;
     }
 
 }
