@@ -8,6 +8,7 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 
 /**
  * @ORM\Table(name="oforge_insertion")
+ * @ORM\HasLifecycleCallbacks()
  * @ORM\Entity
  */
 class Insertion extends AbstractModel {
@@ -20,12 +21,10 @@ class Insertion extends AbstractModel {
     private $id;
 
     /**
-     * TODO: Relation mapping
-     *
-     * @var int
-     * @ORM\Column(name="insertion_type_id", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="InsertionType", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="insertion_type_id", referencedColumnName="id")
      */
-    private $insertion_type_id;
+    private $insertionType;
 
     /**
      * @var string
@@ -34,15 +33,12 @@ class Insertion extends AbstractModel {
     private $title;
 
     /**
-     * TODO: Relation mapping
-     * @var int
-     * @ORM\Column(name="insertion_user", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="FrontendUserManagement\Models\User", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="insertion_user", referencedColumnName="id")
      */
     private $user;
 
     /**
-     * TODO: Mapping to content type rich text
-     *
      * @var string
      * @ORM\Column(name="attribute_key_name", type="text", nullable=false)
      */
@@ -64,7 +60,9 @@ class Insertion extends AbstractModel {
      * @ORM\PrePersist
      */
     public function onPrePersist() {
-        $this->createdAt = new \DateTime("now");
+        $date = new \DateTime('now');
+        $this->createdAt = $date;
+        $this->updatedAt = $date;
     }
 
     /**
@@ -82,17 +80,21 @@ class Insertion extends AbstractModel {
     }
 
     /**
-     * @return int
+     * @return mixed
      */
-    public function getInsertionTypeId() : int {
-        return $this->insertion_type_id;
+    public function getInsertionType() {
+        return $this->insertionType;
     }
 
     /**
-     * @param int $insertion_type_id
+     * @param mixed $insertionType
+     *
+     * @return Insertion
      */
-    public function setInsertionTypeId(int $insertion_type_id) : void {
-        $this->insertion_type_id = $insertion_type_id;
+    public function setInsertionType($insertionType) {
+        $this->insertionType = $insertionType;
+
+        return $this;
     }
 
     /**
@@ -104,9 +106,12 @@ class Insertion extends AbstractModel {
 
     /**
      * @param string $title
+     *
+     * @return Insertion
      */
-    public function setTitle(string $title) : void {
+    public function setTitle(string $title) : Insertion {
         $this->title = $title;
+        return $this;
     }
 
     /**
@@ -118,9 +123,12 @@ class Insertion extends AbstractModel {
 
     /**
      * @param mixed $user
+     *
+     * @return Insertion
      */
-    public function setUser($user) : void {
+    public function setUser($user) : Insertion {
         $this->user = $user;
+        return $this;
     }
 
     /**
@@ -132,9 +140,12 @@ class Insertion extends AbstractModel {
 
     /**
      * @param string $description
+     *
+     * @return Insertion
      */
-    public function setDescription(string $description) : void {
+    public function setDescription(string $description) : Insertion {
         $this->description = $description;
+        return $this;
     }
 
     /**
