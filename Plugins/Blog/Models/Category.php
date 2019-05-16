@@ -58,7 +58,7 @@ class Category extends AbstractModel {
     private $headerImage = null;
     /**
      * @var ArrayCollection $posts
-     * @ORM\OneToMany(targetEntity="Post", mappedBy="category" fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="Post", mappedBy="category", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="id", referencedColumnName="category_id")
      */
     private $posts;

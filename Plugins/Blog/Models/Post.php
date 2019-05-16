@@ -77,13 +77,13 @@ class Post extends AbstractModel {
     private $content = '';
     /**
      * @var Category $category
-     * @ORM\ManyToOne(targetEntity="Category", inversedBy="posts" fetch="EXTRA_LAZY")
+     * @ORM\ManyToOne(targetEntity="Category", inversedBy="posts", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="category_id", referencedColumnName="id")
      */
     private $category;
     /**
      * @var ArrayCollection $ratings
-     * @ORM\OneToMany(targetEntity="Rating", fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="Rating", mappedBy="post", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="id", referencedColumnName="post_id")
      */
     private $ratings;
