@@ -10,7 +10,7 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
  * @ORM\Table(name="oforge_insertion_type")
  * @ORM\Entity
  */
-class Insertion_Type extends AbstractModel {
+class InsertionType extends AbstractModel {
     /**
      * @var int
      * @ORM\Column(name="id", type="integer", nullable=false)
@@ -26,17 +26,14 @@ class Insertion_Type extends AbstractModel {
     private $name;
 
     /**
-     * @ORM\OneToOne(targetEntity="Insertion_Type")
+     * @ORM\ManyToOne(targetEntity="InsertionType")
      * @ORM\JoinColumn(name="insertion_parent_id", referencedColumnName="id", nullable=true)
      */
     private $parent;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Attribute_Key")
-     * @ORM\JoinTable(name="oforge_insertion_type_attribute",
-     *                joinColumns={@ORM\JoinColumn(name="insertion_type_id", referencedColumnName="id")},
-     *                inverseJoinColumns={@ORM\JoinColumn(name="attribute_key_id", referencedColumnName="id")}
-     * )
+     * @ORM\OneToMany(targetEntity="InsertionTypeAttribute", mappedBy="insertionType")
+     * @ORM\JoinColumn(name="insertion_type", referencedColumnName="id")
      */
     private $attributes;
 
@@ -60,23 +57,29 @@ class Insertion_Type extends AbstractModel {
 
     /**
      * @param string $name
+     *
+     * @return InsertionType
      */
-    public function setName(string $name) : void {
+    public function setName(string $name) : InsertionType {
         $this->name = $name;
+        return $this;
     }
 
     /**
-     * @return int
+     * @return mixed
      */
-    public function getParent() : int {
+    public function getParent() {
         return $this->parent;
     }
 
     /**
-     * @param int $parent
+     * @param mixed $parent
+     *
+     * @return InsertionType
      */
-    public function setParent(int $parent) : void {
+    public function setParent($parent) : InsertionType {
         $this->parent = $parent;
+        return $this;
     }
 
     /**
@@ -88,11 +91,11 @@ class Insertion_Type extends AbstractModel {
 
     /**
      * @param mixed $attributes
+     *
+     * @return InsertionType
      */
-    public function setAttributes($attributes) : void {
+    public function setAttributes($attributes) : InsertionType {
         $this->attributes = $attributes;
+        return $this;
     }
-
-
-
 }
