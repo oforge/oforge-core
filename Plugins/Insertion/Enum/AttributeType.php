@@ -1,6 +1,6 @@
 <?php
 
-namespace Insertion\Enums;
+namespace Insertion\Enum;
 
 abstract class AttributeType {
     const MULTI     = 'multi';
