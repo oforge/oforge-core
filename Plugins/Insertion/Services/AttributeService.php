@@ -2,13 +2,11 @@
 
 namespace Insertion\Services;
 
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Insertion\Models\AttributeKey;
 use Insertion\Models\AttributeValue;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
-use Oforge\Engine\Modules\CRUD\Services\GenericCrudService;
 
 class AttributeService extends AbstractDatabaseAccess {
 
@@ -27,7 +25,6 @@ class AttributeService extends AbstractDatabaseAccess {
      * @return AttributeKey
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws MappingException
      */
     public function createNewAttributeKey($name, $inputType, $filterType) {
         $attributeKey = new AttributeKey();
@@ -43,12 +40,11 @@ class AttributeService extends AbstractDatabaseAccess {
 
     /**
      * @param $value
-     * @param mixed $attributeKey
+     * @param AttributeKey $attributeKey
      * @param null $subAttributeKey
      *
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws MappingException
      */
     public function createNewAttributeValue($value, $attributeKey, $subAttributeKey = null) {
         $attributeValue = new AttributeValue();

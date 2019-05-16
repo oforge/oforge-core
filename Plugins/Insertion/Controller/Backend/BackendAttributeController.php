@@ -36,7 +36,6 @@ class BackendAttributeController extends SecureBackendController {
      * @EndpointAction(path="/create")
      */
     public function createAction(Request $request, Response $response) {
-
         //if ($request->isPost()) {}
     }
 
