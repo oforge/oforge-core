@@ -46,6 +46,7 @@ class GenericCrudService extends AbstractDatabaseAccess {
      */
     public function list(string $class, array $criteria = [], array $orderBy = null, $offset = null, $limit = null) : array {
         $repository = $this->getRepository($class);
+        //TODO Crud-Index - Extended filtering - $criteria to complex where clauses
         /** @var AbstractModel[] $entities */
         $entities = $repository->findBy($criteria, $orderBy, $limit, $offset);
         $result   = [];
