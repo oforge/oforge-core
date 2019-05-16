@@ -41,7 +41,7 @@ class SnippetsController extends BaseCrudController {
                 'delete' => 'readonly',
             ],
             'list'          => 'getSelectLanguages',
-            'listI18nLabel' => false,
+            'isI18nLabel' => false,
         ],
         [
             'name'  => 'name',

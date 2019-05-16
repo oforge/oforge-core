@@ -1,0 +1,18 @@
+<select name="{{ propertyName }}" class="form-control" title="{{ propertyName|capitalize }}">
+    <option {% if route.query[propertyName] is not defined %}selected{% endif %} value="">
+        {{ propertyName }}
+    </option>
+    {% for value, label in filterConfig.list %}
+        {% set selected = route.query[propertyName] is defined and route.query[propertyName] == value %}
+        {% if filterConfig.isI18nLabel is defined and filterConfig.isI18nLabel %}
+            {% if label is array %}
+                {% set label = i18n(label.key, label.default) %}
+            {% else %}
+                {% set label = i18n(label) %}
+            {% endif %}
+        {% endif %}
+        <option {% if selected %}selected{% endif %} value="{{ value }}">
+            {{ label }}
+        </option>
+    {% endfor %}
+</select>
