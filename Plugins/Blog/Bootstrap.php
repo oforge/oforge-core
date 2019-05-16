@@ -2,6 +2,7 @@
 
 namespace Blog;
 
+use Blog\Controller\Backend\Blog\CategoryController;
 use Blog\Models\Category;
 use Blog\Models\Comment;
 use Blog\Models\Post;
@@ -10,7 +11,10 @@ use Blog\Services\CategoryService;
 use Blog\Services\CommentService;
 use Blog\Services\PostService;
 use Blog\Services\RatingService;
+use Blog\Widgets\BlogOverviewWidget;
+use Oforge\Engine\Modules\AdminBackend\Core\Services\DashboardWidgetsService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Models\Config\ConfigType;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 
@@ -76,6 +80,25 @@ class Bootstrap extends AbstractBootstrap {
             'label'    => 'config_blog_recommend_posts_number',
             'required' => true,
         ]);
+        /** @var DashboardWidgetsService $dashboardWidgetsService */
+        $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
+        $dashboardWidgetsService->register([
+            'position'     => 'top',
+            'action'       => BlogOverviewWidget::class,
+            'title'        => 'plugin_blog_dashboard_widget_overview_title',
+            'name'         => 'plugin_blog_dashboard_widget_overview_name',
+            'cssClass'     => 'bg-blue',
+            'templateName' => 'BlogOverview',
+        ]);
+    }
+
+    /**
+     * @throws ServiceNotFoundException
+     */
+    public function uninstall() {
+        /** @var DashboardWidgetsService $dashboardWidgetsService */
+        $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
+        $dashboardWidgetsService->unregister('blog_overview');
     }
 
 }
