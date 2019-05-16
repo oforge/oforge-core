@@ -15,7 +15,7 @@
     {% else %}
         <tr>
             {% set width = crud.hasRowActions + crud.properties|default([])|length %}
-            <td colspan="{{ width }}">{{ i18n('backend_crud_table_empty', 'No entities yet.') }}</td>
+            <td colspan="{{ width }}">{{ i18n('backend_crud_table_empty', 'no entities') }}</td>
         </tr>
     {% endfor %}
     </tbody>
