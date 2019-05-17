@@ -106,11 +106,21 @@ class AccessExtension extends Twig_Extension implements Twig_ExtensionInterface 
      * @return string
      */
     public function getInternationalization($context, ...$vars) {
-        $result = "";
-        if (count($vars) > 0 && isset($vars[0])) {
+        $result     = '';
+        $varsLength = count($vars);
+        if ($varsLength > 0 && isset($vars[0])) {
+            $key          = $vars[0];
             $defaultValue = count($vars) > 1 ? $vars[1] : null;
+            if (is_array($key)) {
+                if (isset($key['key']) && isset($key['default'])) {
+                    $defaultValue = $key['default'];
+                    $key          = $key['key'];
+                } else {
+                    return $result;
+                }
+            }
 
-            $result = I18N::twigTranslate($context, $vars[0], $defaultValue);
+            $result = I18N::twigTranslate($context, $key, $defaultValue);
         }
 
         return $result;
