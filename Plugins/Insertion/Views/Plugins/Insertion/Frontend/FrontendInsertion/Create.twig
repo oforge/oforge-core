@@ -1,0 +1,22 @@
+{% extends "@parent/Frontend/Layout.twig" %}
+{% block content %}
+
+    <div class="content content--insertion">
+        {% block insertions %}
+            <div class="flex insertions">
+                {% for type in types %}
+                    <a href="{% if type.children is defined %}{{ url('insertions_createType', { type : type.id}) }}{% else %}{{  url('insertions_createSteps', { type : type.id, page: 1}) }}{% endif %}">
+                        <span>{{ type.name }}</span>
+                        <ul>
+                            {% for child in type.children %}
+                                <li>
+                                    {{ child.name }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </a>
+                {% endfor %}
+            </div>
+        {% endblock insertions %}
+    </div>
+{% endblock content %}

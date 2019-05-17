@@ -9,5 +9,13 @@
     </div>
 {% else %}
     {% set value = property.list[item[property.name]] %}
-    {% if property.listI18nLabel is defined and property.listI18nLabel %}{{ i18n(value) }}{% else %}{{ value }}{% endif %}
+    {% if property.isI18nLabel is defined and property.isI18nLabel %}
+        {% if value is array %}
+            {{ i18n(value.key, value.default) }}
+        {% else %}
+            {{ i18n(value.key) }}
+        {% endif %}
+    {% else %}
+        {{ value }}
+    {% endif %}
 {% endif %}

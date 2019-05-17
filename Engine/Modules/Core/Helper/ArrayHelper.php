@@ -84,8 +84,10 @@ class ArrayHelper {
                     $array1[] = $value;
                 }
             } elseif (is_numeric($key)) {
-                if (!in_array($value, $array1)) {
+                if (isset($array1[$key])) {
                     $array1[] = $value;
+                } else {
+                    $array1[$key] = $value;
                 }
             } else {
                 $array1[$key] = $value;
