@@ -1,18 +1,39 @@
-<select name="{{ propertyName }}" class="form-control" title="{{ propertyName|capitalize }}">
-    <option {% if route.query[propertyName] is not defined %}selected{% endif %} value="">
-        {{ propertyName }}
-    </option>
-    {% for value, label in filterConfig.list %}
-        {% set selected = route.query[propertyName] is defined and route.query[propertyName] == value %}
-        {% if filterConfig.isI18nLabel is defined and filterConfig.isI18nLabel %}
-            {% if label is array %}
-                {% set label = i18n(label.key, label.default) %}
-            {% else %}
-                {% set label = i18n(label) %}
-            {% endif %}
-        {% endif %}
-        <option {% if selected %}selected{% endif %} value="{{ value }}">
-            {{ label }}
+{% if filterConfig.list is defined %}
+    <select name="{{ propertyName }}" class="form-control" title="{{ propertyName|capitalize }}">
+        <option {% if route.query[propertyName] is not defined %}selected{% endif %} value="">
+            {{ propertyName|capitalize }}
         </option>
-    {% endfor %}
-</select>
+        {% for value, label in filterConfig.list %}
+            {% if label is array %}
+                {% if filterConfig.isI18nLabel is defined and filterConfig.isI18nLabel %}
+                    {% set optgroupLabel = i18n(label.label) %}
+                {% else %}
+                    {% set optgroupLabel = label.label %}
+                {% endif %}
+                <optgroup label="{{ optgroupLabel }}">
+                    {% for value,label in label.options %}
+                        {% set selected = route.query[propertyName] is defined and route.query[propertyName] is same as(value) %}
+                        {% if filterConfig.isI18nLabel is defined and filterConfig.isI18nLabel %}
+                            {% set label = i18n(label) %}
+                        {% endif %}
+                        <option {% if selected %}selected{% endif %} value="{{ value }}">
+                            {{ label }}
+                        </option>
+                    {% endfor %}
+                </optgroup>
+            {% else %}
+                {% set selected = route.query[propertyName] is defined and route.query[propertyName] is same as(value) %}
+                {% if filterConfig.isI18nLabel is defined and filterConfig.isI18nLabel %}
+                    {% set label = i18n(label) %}
+                {% endif %}
+                <option {% if selected %}selected{% endif %} value="{{ value }}">
+                    {{ label }}
+                </option>
+            {% endif %}
+        {% endfor %}
+    </select>
+{% else %}
+    <div class="alert alert-danger" role="alert">
+        Missing select options list configuration for "{{ propertyName }}"
+    </div>
+{% endif %}

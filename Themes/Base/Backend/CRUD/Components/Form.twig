@@ -22,10 +22,8 @@
                             {% if property.label is defined %}
                                 {% if property.label is empty %}
                                     {% set fieldLabel = '-' %}
-                                {% elseif property.label is string %}
+                                {% else %}
                                     {% set fieldLabel = i18n(property.label) %}
-                                {% elseif property.label is array %}
-                                    {% set fieldLabel = i18n(property.label.key, property.label.default) %}
                                 {% endif %}
                             {% elseif property.name == 'id' %}
                                 {% set fieldLabel = 'ID' %}

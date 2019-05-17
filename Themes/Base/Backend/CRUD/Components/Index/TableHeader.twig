@@ -4,10 +4,8 @@
             {% if property.label is defined %}
                 {% if property.label is empty %}
                     {{ '-' }}
-                {% elseif property.label is string %}
+                {% else %}
                     {{ i18n(property.label) }}
-                {% elseif property.label is array %}
-                    {{ i18n(property.label.key, property.label.default) }}
                 {% endif %}
             {% elseif property.name == 'id' %}
                 {{ 'ID' }}
