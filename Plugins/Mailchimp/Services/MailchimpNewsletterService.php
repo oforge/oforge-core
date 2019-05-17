@@ -2,7 +2,7 @@
 
 namespace Mailchimp\Services;
 
-use Mailchimp\Views\Plugins\Mailchimp\Models\UserNewsletter;
+use Mailchimp\Models\UserNewsletter;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\I18n\Helper\I18N;

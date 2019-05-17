@@ -32,11 +32,43 @@ class Bootstrap extends AbstractBootstrap
         /** @var RegisterContentTypeService $registerContentTypeService */
         $registerContentTypeService = Oforge()->Services()->get("frontpage.content.types.register.contenttype");
 
-        $registerContentTypeService->registerContentType('basic',
+        $registerContentTypeService->registerContentType('tiles',
             'icontilebasic',
             'IconTileBasic',
             '/Themes/Base/ContentTypes/__assets/img/icontilebasic.jpg',
             'Icon Tile Basic',
             'FrontpageContentTypes\\ContentTypes\\IconTileBasic');
+
+        $registerContentTypeService->registerContentType('tiles',
+            'icontiletext',
+            'IconTileText',
+            '/Themes/Base/ContentTypes/__assets/img/icontiletext.jpg',
+            'Icon Tile Text',
+            'FrontpageContentTypes\\ContentTypes\\IconTileText');
+
+        $registerContentTypeService->registerContentType('tiles',
+            'imagetilesmall',
+            'ImageTileSmall',
+            '/Themes/Base/ContentTypes/__assets/img/imagetilesmall.jpeg',
+            'Image Tile Small',
+            'FrontpageContentTypes\\ContentTypes\\ImageTileSmall');
+
+        $registerContentTypeService->registerContentType('tiles',
+            'imagetilemedium',
+            'ImageTileMedium',
+            '/Themes/Base/ContentTypes/__assets/img/imagetilemedium.jpg',
+            'Image Tile Medium',
+            'FrontpageContentTypes\\ContentTypes\\ImageTileMedium');
+        $registerContentTypeService->registerContentType('tiles',
+            'imagetilelarge',
+            'ImageTileLarge',
+            '/Themes/Base/ContentTypes/__assets/img/imagetilelarge.jpeg',
+            'Image Tile Large',
+            'FrontpageContentTypes\\ContentTypes\\ImageTileLarge');
+    }
+
+    public function uninstall()
+    {
+        parent::uninstall();
     }
 }
