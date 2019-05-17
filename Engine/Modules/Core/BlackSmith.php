@@ -277,6 +277,7 @@ class BlackSmith {
         // Let the Blacksmith forge all the things \°/
         if ($start) {
             $this->slimRouteManagager->init();
+            $this->pluginManager->load();
             $this->forgeSlimApp->run();
         }
     }

@@ -1,0 +1,6 @@
+<div class="form__control">
+    <label for="insertion_text[{{ item.id }}]"
+           class="form__label">{{ i18n(item.name) }}</label>
+
+    <input type="text"  name="insertion_text[{{ item.id }}]"  value="{{ data[page]['insertion_text'][item.id] }}"  class="form__input form__input" />
+</div>

@@ -58,10 +58,11 @@ class FrontendInsertionController extends SecureFrontendController {
         /**
          * @var $service InsertionTypeService
          */
-        $service        = Oforge()->Services()->get("insertion.type");
-        $type           = $service->getInsertionTypeById($typeId);
-        $result["type"] = $type;
-
+        $service              = Oforge()->Services()->get("insertion.type");
+        $type                 = $service->getInsertionTypeById($typeId);
+        $result["type"]       = $type->toArray();
+        $typeAttributes       = $service->getInsertionTypeAttributeTree($typeId);
+        $result["attributes"] = $typeAttributes;
         /**
          * @var $createService InsertionCreatorService
          */

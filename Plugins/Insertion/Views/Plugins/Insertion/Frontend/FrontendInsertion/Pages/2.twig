@@ -1,14 +1,17 @@
-{% block step_content %}
-    {% include "Plugins/Insertion/Frontend/FrontendInsertion/Pages/Header.twig" %}
+{% extends "Plugins/Insertion/Frontend/FrontendInsertion/Pages/PageBase.twig" %}
 
-    <form class="form form--insertion"
-          action="{{  url('insertions_createSteps', { type : type.id, page: page + 1}) }}"
-          method="post">
-        <div class="form-controls">
-      {{ page }}
-            {{ o_dump() }}
-        </div>
-    </form>
-
-
-{% endblock step_content %}
+{% block page_content %}
+    {# Main attributes #}
+    {% for attributeGroup in attributes %}
+        {% if attributeGroup.items|length > 0 and not  (attributeGroup.name == 'main' or attributeGroup.name == 'contact') %}
+            <div class="attribute-group">
+                <h2>{{ i18n(attributeGroup.name) }}</h2>
+                <div>
+                    {% for attribute in attributeGroup.items %}
+                        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'item': attribute.attributeKey } %}
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endblock page_content %}

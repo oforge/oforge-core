@@ -1,13 +1,6 @@
-{% block step_content %}
-    {% include "Plugins/Insertion/Frontend/FrontendInsertion/Pages/Header.twig" %}
+{% extends "Plugins/Insertion/Frontend/FrontendInsertion/Pages/PageBase.twig" %}
 
-    <form class="form form--insertion"
-          action="{{  url('insertions_createSteps', { type : type.id, page: page + 1}) }}"
-          method="post">
-        <div class="form-controls">
-      {{ page }}
-        </div>
-    </form>
-
-
-{% endblock step_content %}
+{% block page_content %}
+    {# summary #}
+    summary && login
+{% endblock page_content %}
