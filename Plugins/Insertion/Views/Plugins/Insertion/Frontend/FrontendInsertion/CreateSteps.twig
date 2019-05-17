@@ -1,0 +1,9 @@
+{% extends "@parent/Frontend/Layout.twig" %}
+{% block content %}
+
+    <div class="content content--insertion">
+        {% block insertions %}
+            {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Pages/' ~ page ~ '.twig'  %}
+        {% endblock insertions %}
+    </div>
+{% endblock content %}

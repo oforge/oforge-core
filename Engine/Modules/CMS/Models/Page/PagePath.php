@@ -45,7 +45,15 @@ class PagePath extends AbstractModel
      * @ORM\Column(name="path", type="string", nullable=false)
      */
     private $path;
-    
+
+
+    /**
+     * @var string
+     * @ORM\Column(name="title", type="string", nullable=true)
+     */
+    private $title;
+
+
     /**
      * @var PageContent[]
      * @ORM\OneToMany(targetEntity="Oforge\Engine\Modules\CMS\Models\Page\PageContent", mappedBy="pagePath", cascade={"all"}, fetch="EXTRA_LAZY")
@@ -134,6 +142,23 @@ class PagePath extends AbstractModel
     public function setPageContent(array $pageContent): PagePath
     {
         $this->pageContent = $pageContent;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle() : string {
+        return $this->title;
+    }
+
+    /**
+     * @param string $title
+     *
+     * @return PagePath
+     */
+    public function setTitle(string $title) : PagePath {
+        $this->title = $title;
         return $this;
     }
 }
