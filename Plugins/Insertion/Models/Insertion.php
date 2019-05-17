@@ -57,6 +57,21 @@ class Insertion extends AbstractModel {
     private $updatedAt;
 
     /**
+     * @var InsertionMedia[]
+     * @ORM\OneToMany(targetEntity="InsertionMedia", mappedBy="insertion", cascade={"all"}, fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="id", referencedColumnName="insertion_id")
+     */
+    private $media;
+
+    /**
+     * @var InsertionContent[]
+     * @ORM\OneToMany(targetEntity="InsertionContent", mappedBy="insertion", cascade={"all"}, fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="id", referencedColumnName="insertion_id")
+     */
+    private $content;
+
+
+    /**
      * @ORM\PrePersist
      */
     public function onPrePersist() {
@@ -160,5 +175,33 @@ class Insertion extends AbstractModel {
      */
     public function getUpdatedAt() : DateTime {
         return $this->updatedAt;
+    }
+
+    /**
+     * @return InsertionMedia[]
+     */
+    public function getMedia() : array {
+        return $this->media;
+    }
+
+    /**
+     * @param InsertionMedia[] $media
+     */
+    public function setMedia(array $media) : void {
+        $this->media = $media;
+    }
+
+    /**
+     * @return InsertionContent[]
+     */
+    public function getContent() : array {
+        return $this->content;
+    }
+
+    /**
+     * @param InsertionContent[] $content
+     */
+    public function setContent(array $content) : void {
+        $this->content = $content;
     }
 }
