@@ -112,4 +112,18 @@ class PluginManager extends AbstractDatabaseAccess {
             }
         }
     }
+
+    public function load() {
+        //find all plugins order by "order"
+        $plugins = $this->repository()->findBy(["active" => 1], ['order' => 'ASC']);
+        /**
+         * @var $plugins Plugin[]
+         */
+        foreach ($plugins as $plugin) {
+            $classname = $plugin->getName() . "\\Bootstrap";
+
+            $instance = new $classname();
+            $instance->load();
+        }
+    }
 }

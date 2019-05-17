@@ -9,4 +9,5 @@ abstract class AttributeType {
     const BOOLEAN   = 'boolean';
     const NUMBER    = 'number';
     const TEXT      = 'text';
+    const CONTAINER   = 'container';
 }

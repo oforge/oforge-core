@@ -35,9 +35,23 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
                 /** @var MediaService $configService */
                 $mediaService = Oforge()->Services()->get('media');
 
-                if(!isset($_SESSION['insertion' . $typeId][$currentPage]["images"])) {
+                if (!isset($_SESSION['insertion' . $typeId][$currentPage]["images"])) {
                     $_SESSION['insertion' . $typeId][$currentPage]["images"] = [];
                 }
+
+                $imgs = [];
+
+                foreach ($_SESSION['insertion' . $typeId][$currentPage]["images"] as $image) {
+                    if (isset($_POST["images_interactions"])) {
+                        if(isset($image["id"]) && isset($_POST["images_interactions"][$image["id"]]) && $_POST["images_interactions"][$image["id"]] == "delete") {
+                            $mediaService->delete($image["id"]);
+                        } else {
+                            array_push($imgs, $image);
+                        }
+                    }
+                }
+
+                $_SESSION['insertion' . $typeId][$currentPage]["images"] = $imgs;
 
                 foreach ($_FILES["images"]["error"] as $key => $error) {
                     if ($error == UPLOAD_ERR_OK) {
@@ -47,7 +61,7 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
                             $file[$k] = $_FILES["images"][$k][$key];
                         }
 
-                        $media = $mediaService->add($file);
+                        $media                                                     = $mediaService->add($file);
                         $_SESSION['insertion' . $typeId][$currentPage]["images"][] = $media->toArray();
                     }
                 }

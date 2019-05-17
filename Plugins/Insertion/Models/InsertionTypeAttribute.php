@@ -37,8 +37,9 @@ class InsertionTypeAttribute extends AbstractModel {
     private $isTop = false;
 
     /**
-     * @var string
-     * @ORM\Column(name="attribute_group", type="string", nullable=true)
+     * @var InsertionTypeGroup
+     * @ORM\ManyToOne(targetEntity="InsertionTypeGroup", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="attribute_group", referencedColumnName="id")
      */
     private $attributeGroup;
 
@@ -110,24 +111,6 @@ class InsertionTypeAttribute extends AbstractModel {
     }
 
     /**
-     * @return string
-     */
-    public function getAttributeGroup() : string {
-        return $this->attributeGroup;
-    }
-
-    /**
-     * @param string $attributeGroup
-     *
-     * @return InsertionTypeAttribute
-     */
-    public function setAttributeGroup(string $attributeGroup) : InsertionTypeAttribute {
-        $this->attributeGroup = $attributeGroup;
-
-        return $this;
-    }
-
-    /**
      * @return bool
      */
     public function isRequired() : bool {
@@ -141,6 +124,23 @@ class InsertionTypeAttribute extends AbstractModel {
      */
     public function setRequired(bool $required) : InsertionTypeAttribute {
         $this->required = $required;
+
+        return $this;
+    }
+
+    /**
+     * @return InsertionTypeGroup
+     */
+    public function getAttributeGroup() : InsertionTypeGroup {
+        return $this->attributeGroup;
+    }
+
+    /**
+     * @param InsertionTypeGroup $attributeGroup
+     * @return InsertionTypeAttribute
+     */
+    public function setAttributeGroup(InsertionTypeGroup $attributeGroup) : InsertionTypeAttribute {
+        $this->attributeGroup = $attributeGroup;
 
         return $this;
     }
