@@ -49,10 +49,9 @@ class SlimExtension extends Twig_Extension {
         try {
             $result = $this->router->pathFor($name, $namedParams, $queryParams);
         } catch (Exception $e) {
-            $result = '';
+            $result = $name;
         }
 
         return $result;
     }
-
 }

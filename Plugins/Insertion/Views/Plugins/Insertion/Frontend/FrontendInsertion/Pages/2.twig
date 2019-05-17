@@ -1,0 +1,14 @@
+{% block step_content %}
+    {% include "Plugins/Insertion/Frontend/FrontendInsertion/Pages/Header.twig" %}
+
+    <form class="form form--insertion"
+          action="{{  url('insertions_createSteps', { type : type.id, page: page + 1}) }}"
+          method="post">
+        <div class="form-controls">
+      {{ page }}
+            {{ o_dump() }}
+        </div>
+    </form>
+
+
+{% endblock step_content %}
