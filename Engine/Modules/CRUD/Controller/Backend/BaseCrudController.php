@@ -7,6 +7,7 @@ use Doctrine\ORM\ORMException;
 use Exception;
 use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
@@ -43,9 +44,27 @@ class BaseCrudController extends SecureBackendController {
      *                  'update'    => 'off|readonly|editable',
      *                  'delete'    => 'off|readonly|editable',
      *              ],
+     * //opsolete//TODO remoce old list
+     *
      *              'list'          => [ // If type = select. Name of a protected function to create a dynamic array (e.g. 'getListUsers', or a static array. (Required)
      *                  <value> => <option text or label e.g. 'backend_crud_property__<name>_<value>'>  // value => (text|(i18n-)label) pair
      *              ],
+     *              'list' => [
+     *                  'isI18nLabel => true, # If type = select. Is Label i18n-key or array (key, default)? (Optional)
+     *                  'data' => [# Select with optgroups, key will be ignored in renderer
+     *                      'key'   => [
+     *                          'label'     => 'i18nLabel' | ['key' => 'i18nLabel', 'default' => 'DefaultText'],
+     *                          'options'   => [
+     *                              'value' => => 'i18nLabel' | ['key' => 'i18nLabel', 'default' => 'DefaultText'],
+     *                          ]
+     *                      ],
+     *                  ],
+     *                  'data' => [# Simple select
+     *                      'value' => 'i18nLabel' | ['key' => 'i18nLabel', 'default' => 'DefaultText'], # Simple select
+     *                  ],
+     *              ],
+     * //opsolete//TODO remoce old isI18nLabel
+     *
      *              'isI18nLabel' => true, # If type = select. Is Label i18n-key or array (key, default)? (Optional)
      *              'editor' => [       // Configuration for field editor.
      *                  'default'       => '',      // Default value. (Optional)
@@ -93,9 +112,8 @@ class BaseCrudController extends SecureBackendController {
      *      protected $indexFilter = [
      *          'propertyName' => [
      *              'type'        => CrudFilterType::...,
-     *              'compare'     => 'equals|like|in'#Default = equals
+     *              'compare'     => CrudFilterComparator::#Default = equals
      *              'list'        => ''# Required list for type=select, array or protected function name.
-     *              'isI18nLabel' => true, # If type = select. Is Label i18n-key or array (key, default)? (Optional)
      *          ],
      *      ];
      *
@@ -169,7 +187,7 @@ class BaseCrudController extends SecureBackendController {
             if (count($parts) === 2) {
                 $module    = substr($parts[0], strrpos($parts[0], '\\'));
                 $module    = StringHelper::leftTrim($module, '\\');
-                $modelName             = $parts[1];
+                $modelName = $parts[1];
                 if (strpos($modelName, '\\')) {
                     $modelName = substr($modelName, 1 + strrpos($modelName, '\\'));
                 }
@@ -210,13 +228,11 @@ class BaseCrudController extends SecureBackendController {
         }
         if (!empty($entities)) {
             foreach ($entities as $index => $entity) {
-                if (!empty($entity)) {
-                    $entity = $this->prepareItemData($entity, 'index');
-                    if (isset($postData[$index])) {
-                        $entity = ArrayHelper::mergeRecursive($entity, $postData[$index]);
-                    }
-                    $entities[$index] = $entity;
+                $entity = $this->prepareItemDataArray($entity, 'index');
+                if (isset($postData[$index])) {
+                    $entity = ArrayHelper::mergeRecursive($entity, $postData[$index]);
                 }
+                $entities[$index] = $entity;
             }
         }
         list($properties, $hasEditors) = $this->filterPropertiesFor('index');
@@ -228,6 +244,12 @@ class BaseCrudController extends SecureBackendController {
                     $hasRowActions = true;
                     break;
                 }
+            }
+        }
+        $filter = $this->indexFilter;
+        foreach ($filter as $index => $entry) {
+            if (isset($entry['list']) && is_string($entry['list']) && method_exists($this, $entry['list'])) {
+                $filter[$index]['list'] = $this->{$entry['list']}();
             }
         }
 
@@ -242,7 +264,7 @@ class BaseCrudController extends SecureBackendController {
                 'items'         => $entities,
                 'pagination'    => $pagination,
                 'queryKeys'     => $this->indexReservedQueryKeys,
-                'filter'        => $this->indexFilter,
+                'filter'        => $filter,
             ],
         ]);
 
@@ -260,7 +282,8 @@ class BaseCrudController extends SecureBackendController {
         $params = $request->getParams();
         if ($request->isPost() && !empty($params)) {
             try {
-                $this->crudService->create($this->model, $params['data']);
+                $data = $this->convertData($params['data'], 'create');
+                $this->crudService->create($this->model, $data);
                 Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_create_success', 'Entity successfully created.'));
 
                 return $this->redirect($response, 'index');
@@ -272,7 +295,7 @@ class BaseCrudController extends SecureBackendController {
                 return $this->redirect($response, 'create');
             }
         }
-        $entity = $this->prepareItemData([], 'create');
+        $entity = $this->prepareItemDataArray(null, 'create');
         if (Oforge()->View()->Flash()->hasData($this->moduleModelName)) {
             $postData = Oforge()->View()->Flash()->getData($this->moduleModelName);
             $entity   = ArrayHelper::mergeRecursive($entity, $postData);
@@ -303,9 +326,7 @@ class BaseCrudController extends SecureBackendController {
      */
     public function viewAction(Request $request, Response $response, array $args) {
         $entity = $this->crudService->getById($this->model, $args['id']);
-        if (!empty($entity)) {
-            $entity = $this->prepareItemData($entity, 'view');
-        }
+        $entity = $this->prepareItemDataArray($entity, 'view');
         list($properties, $hasEditors) = $this->filterPropertiesFor('view');
         Oforge()->View()->assign([
             'crud' => [
@@ -333,7 +354,7 @@ class BaseCrudController extends SecureBackendController {
         $postData = $request->getParsedBody();
         if ($request->isPost() && !empty($postData)) {
             try {
-                $data = $this->convertData($postData['data']);
+                $data = $this->convertData($postData['data'], 'update');
                 $this->crudService->update($this->model, $data);
                 Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_update_success', 'Entity successfully updated.'));
             } catch (Exception $exception) {
@@ -345,9 +366,7 @@ class BaseCrudController extends SecureBackendController {
             return $this->redirect($response, 'update', ['id' => $args['id']]);
         }
         $entity = $this->crudService->getById($this->model, $args['id']);
-        if (!empty($entity)) {
-            $entity = $this->prepareItemData($entity, 'update');
-        }
+        $entity = $this->prepareItemDataArray($entity, 'update');
         if (Oforge()->View()->Flash()->hasData($this->moduleModelName)) {
             $postData = Oforge()->View()->Flash()->getData($this->moduleModelName);
             $entity   = ArrayHelper::mergeRecursive($entity, $postData);
@@ -392,9 +411,7 @@ class BaseCrudController extends SecureBackendController {
             }
         }
         $entity = $this->crudService->getById($this->model, $args['id']);
-        if (!empty($entity)) {
-            $entity = $this->prepareItemData($entity, 'delete');
-        }
+        $entity = $this->prepareItemDataArray($entity, 'delete');
         list($properties, $hasEditors) = $this->filterPropertiesFor('delete');
         Oforge()->View()->assign([
             'crud' => [
@@ -435,23 +452,24 @@ class BaseCrudController extends SecureBackendController {
      * Convert form data to model data, e.g. string to DateTime.
      *
      * @param array $data
+     * @param string $crudAction
      *
      * @return array
      */
-    protected function convertData(array $data) : array {
+    protected function convertData(array $data, string $crudAction) : array {
         return $data;
     }
 
     /**
      * Prepare Item data for view, e.G. DateTime to string or custom column data.
      *
-     * @param array $data
+     * @param AbstractModel $entity
      * @param string $crudAction
      *
      * @return array
      */
-    protected function prepareItemData(array $data, string $crudAction) : array {
-        return $data;
+    protected function prepareItemDataArray(?AbstractModel $entity, string $crudAction) : array {
+        return isset($entity) ? $entity->toArray() : [];
     }
 
     /**
@@ -462,7 +480,7 @@ class BaseCrudController extends SecureBackendController {
     protected function handleIndexUpdate(array $params) {
         $list = $params['data'];
         foreach ($list as $index => $data) {
-            $list[$index] = $this->convertData($data);
+            $list[$index] = $this->convertData($data, 'update');
         }
         $params['data'] = $list;
         try {

@@ -1,4 +1,5 @@
 <?php
+
 namespace Oforge\Engine\Modules\CRUD\Services;
 
 use Doctrine\ORM\NonUniqueResultException;
@@ -41,7 +42,7 @@ class GenericCrudService extends AbstractDatabaseAccess {
      * @param int|null $offset
      * @param int|null $limit
      *
-     * @return array
+     * @return AbstractModel[]
      * @throws ORMException
      */
     public function list(string $class, array $criteria = [], array $orderBy = null, $offset = null, $limit = null) : array {
@@ -49,12 +50,8 @@ class GenericCrudService extends AbstractDatabaseAccess {
         //TODO Crud-Index - Extended filtering - $criteria to complex where clauses
         /** @var AbstractModel[] $entities */
         $entities = $repository->findBy($criteria, $orderBy, $limit, $offset);
-        $result   = [];
-        foreach ($entities as $item) {
-            $result[] = $item->toArray();
-        }
 
-        return $result;
+        return $entities;
     }
 
     /**
@@ -63,19 +60,17 @@ class GenericCrudService extends AbstractDatabaseAccess {
      * @param string $class
      * @param int $id
      *
-     * @return array|null
+     * @return AbstractModel|null
      * @throws ORMException
      */
     public function getById(string $class, int $id) {
-        $repo   = $this->getRepository($class);
-        $result = $repo->findOneBy([
+        $repo = $this->getRepository($class);
+        /** @var AbstractModel|null $entity */
+        $entity = $repo->findOneBy([
             'id' => $id,
         ]);
-        if (isset($result)) {
-            $result = $result->toArray();
-        }
 
-        return $result;
+        return $entity;
     }
 
     /**

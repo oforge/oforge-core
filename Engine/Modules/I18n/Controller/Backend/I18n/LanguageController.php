@@ -4,8 +4,9 @@ namespace Oforge\Engine\Modules\I18n\Controller\Backend\I18n;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
-use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
+use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
 use Oforge\Engine\Modules\I18n\Models\Language;
@@ -83,7 +84,8 @@ class LanguageController extends BaseCrudController {
     }
 
     /** @inheritDoc */
-    protected function prepareItemData(array $data, string $crudAction) : array {
+    protected function prepareItemDataArray(?AbstractModel $entity, string $crudAction) : array {
+        $data = parent::prepareItemDataArray($entity, $crudAction);
         if (!isset($this->snippets)) {
             $this->snippets = [];
             try {
