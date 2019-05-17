@@ -3,15 +3,13 @@
 
 namespace FrontpageContentTypes\ContentTypes;
 
+
 use Oforge\Engine\Modules\CMS\Abstracts\AbstractContentType;
-use Oforge\Engine\Modules\CMS\ContentTypes\Image;
-use Oforge\Engine\Modules\CMS\ContentTypes\RichText;
-use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
 use Oforge\Engine\Modules\CMS\Models\Content\Content;
+use Oforge\Engine\Modules\Media\Models\Media;
 use Oforge\Engine\Modules\Media\Services\MediaService;
 
-
-class IconTileBasic extends AbstractContentType
+class IconTileText extends AbstractContentType
 {
     /**
      * Return whether or not content type is a container type like a row
@@ -33,15 +31,16 @@ class IconTileBasic extends AbstractContentType
         $contentData = $this->getContentData();
 
         $data = [
-            'id' => $this->getContentId(),
-            'type' => $this->getId(),
-            'name' => $this->getContentName(),
-            'css' => $this->getContentCssClass(),
-            'url' => $contentData['url'],
-            'caption' => $contentData['caption'],
-            'link' => $contentData['link'],
-            'backgroundcolor' => $contentData['backgroundcolor'],
-            'fontcolor' => $contentData['fontcolor']
+            'id'                => $this->getContentId(),
+            'type'              => $this->getId(),
+            'name'              => $this->getContentName(),
+            'css'               => $this->getContentCssClass(),
+            'url'               => $contentData['url'],
+            'caption'           => $contentData['caption'],
+            'text'              => $contentData['text'],
+            'link'              => $contentData['link'],
+            'backgroundcolor'   => $contentData['backgroundcolor'],
+            'fontcolor'         => $contentData['fontcolor']
         ];
 
         return $data;
@@ -50,22 +49,25 @@ class IconTileBasic extends AbstractContentType
     /**
      * Set edit data for page builder of content type
      * @param $data
-     * @return IconTileBasic $this
+     * @return IconTileText $this
      */
     public function setEditData($data)
     {
         $contentData = [
-            'url' => $this->getContentData()['url'],
-            'caption' => $data['caption'],
-            'link' => $data['link'],
-            'backgroundcolor' => $data['backgroundcolor'],
-            'fontcolor' => $data['fontcolor']
+            'url'               => $this->getContentData()['url'],
+            'caption'           => $data['caption'],
+            'text'              => $data['text'],
+            'link'              => $data['link'],
+            'backgroundcolor'   => $data['backgroundcolor'],
+            'fontcolor'         => $data['fontcolor']
         ];
 
         if (isset($_FILES["icon"])) {
 
             /** @var MediaService $configService */
             $mediaService = Oforge()->Services()->get('media');
+
+            /** @var Media $media */
             $media = $mediaService->add($_FILES["icon"]);
             if (isset($media)) {
                 $contentData['url'] = $media->getPath();
@@ -98,6 +100,7 @@ class IconTileBasic extends AbstractContentType
             'css' => $contentData['css'],
             'url' => $contentData['url'],
             'caption' => $contentData['caption'],
+            'text'              => $contentData['text'],
             'link' => $contentData['link'],
             'backgroundcolor' => $contentData['backgroundcolor'],
             'fontcolor' => $contentData['fontcolor']
@@ -111,7 +114,7 @@ class IconTileBasic extends AbstractContentType
      * @param Content $contentEntity
      * @param int $order
      *
-     * @return IconTileBasic $this
+     * @return IconTileText $this
      */
     public function createChild($contentEntity, $order)
     {
@@ -123,7 +126,7 @@ class IconTileBasic extends AbstractContentType
      * @param Content $contentEntity
      * @param int $order
      *
-     * @return IconTileBasic $this
+     * @return IconTileText $this
      */
     public function deleteChild($contentEntity, $order)
     {

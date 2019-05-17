@@ -7,7 +7,7 @@ namespace FrontpageContentTypes\Services;
 use Doctrine\ORM\Query\Expr\GroupBy;
 use FrontpageContentTypes\ContentTypes\IconTileBasic;
 
-use Mailchimp\Views\Plugins\Mailchimp\Models\UserNewsletter;
+use Mailchimp\Models\UserNewsletter;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentTypeGroup;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
@@ -39,7 +39,36 @@ class RegisterContentTypeService extends AbstractDatabaseAccess
         }
 
         /** @var ContentTypeGroup $group */
+
         $group = $this->repository('group')->findOneBy(['name' => $contentTypeGroup]);
+        /**
+        if ($group === null) {
+            $group = new ContentTypeGroup();
+            $id = $this->entityManager()
+                ->createQueryBuilder()
+                ->select('MAX(gruop.id)')
+                ->from($this->repository('group'), 'group')
+                ->getQuery()
+                ->getSingleScalarResult();
+
+            $group->setName('contentTypeGroup')->setDescription('');
+            $this->entityManager()->persist($group);
+        }**/
+
+        $contentType->setGroup($group)
+            ->setName($contentTypeName)
+            ->setPath($contentTypePath)
+            ->setIcon($contentTypeIcon)
+            ->setDescription($description)
+            ->setClassPath($classPath);
+
+        $this->entityManager()->persist($contentType);
+        $this->entityManager()->flush();
+    }
+
+    /**
+    public function registerContentGroup(string $groupName, string $description) {
+        $group = $this->repository('group')->findOneBy(['name' => $groupName]);
         if ($group === null) {
             $group = new ContentTypeGroup();
             $id = $this->entityManager()
@@ -52,15 +81,6 @@ class RegisterContentTypeService extends AbstractDatabaseAccess
             $group->setName('contentTypeGroup')->setDescription('');
             $this->entityManager()->persist($group);
         }
-
-        $contentType->setGroup($group)
-            ->setName($contentTypeName)
-            ->setPath($contentTypePath)
-            ->setIcon($contentTypeIcon)
-            ->setDescription($description)
-            ->setClassPath($classPath);
-
-        $this->entityManager()->persist($contentType);
-        $this->entityManager()->flush();
     }
+     **/
 }
