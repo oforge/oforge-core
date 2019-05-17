@@ -82,7 +82,9 @@ class MailService {
                 }
 
                 /** Render HTML */
+
                 $renderedTemplate = $this->renderMail($options,$templateData);
+
 
                 /** Add Content */
                 $mail->isHTML(ArrayHelper::get($options, 'html', true));
@@ -132,21 +134,29 @@ class MailService {
     }
 
     /**
-     * Loads minimal twig environments and returns rendered HTML
-     *
+     * Loads minimal Twig Environment and returns rendered Template from active Theme.
+     * If specified Template does not exists in active Theme -> Fallback to Base Theme
      *
      * @param array $options
      * @param array $templateData
      *
      * @return string
+     * @throws ServiceNotFoundException
      * @throws Twig_Error_Loader
      * @throws Twig_Error_Runtime
      * @throws Twig_Error_Syntax
      */
     public function renderMail(array $options, array $templateData) {
 
+        $templateManagementService = Oforge()->Services()->get("template.management");
+        $templateName = $templateManagementService->getActiveTemplate()->getName();
+        $templatePath = Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . $templateName . DIRECTORY_SEPARATOR . 'MailTemplates';
 
-        $twig = new CustomTwig($path = Statics::MAIL_TEMPLATE_DIR);
+        if(!file_exists($templatePath . DIRECTORY_SEPARATOR . $options['template'])) {
+            $templatePath = Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . Statics::DEFAULT_THEME . DIRECTORY_SEPARATOR . 'MailTemplates';
+        }
+
+        $twig = new CustomTwig($path = $templatePath);
         $twig->addExtension(new AccessExtension());
 
         return $twig->fetch($template = $options['template'], $data = $templateData);
