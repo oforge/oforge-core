@@ -105,7 +105,11 @@ class PluginManager extends AbstractDatabaseAccess {
         } while (sizeof($bucket) > 0);  // do it until everything is installed
 
         if (sizeof($bucket) > 0) {
-            throw new CouldNotInstallPluginException(get_class($bucket[0]), $bucket[0]->getDependencies());
+            $dependencies = $bucket[0]["instance"]->getDependencies();
+
+            foreach ($dependencies as $dependency) {
+                throw new CouldNotInstallPluginException(get_class($bucket[0]["instance"]), $dependency);
+            }
         }
     }
 }
