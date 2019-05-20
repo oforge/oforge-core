@@ -63,6 +63,7 @@ class Bootstrap extends AbstractBootstrap {
             'frontend.user.management.account.navigation' => Services\AccountNavigationService::class,
             'frontend.user.management.user'               => Services\UserService::class,
             'frontend.user.management.user.details'       => Services\UserDetailsService::class,
+            "frontend.user"                               => Services\FrontendUserService::class,
             'password.reset'                              => Services\PasswordResetService::class,
         ];
     }

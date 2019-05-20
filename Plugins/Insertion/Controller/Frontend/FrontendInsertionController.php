@@ -3,12 +3,14 @@
 namespace Insertion\Controller\Frontend;
 
 use FrontendUserManagement\Abstracts\SecureFrontendController;
+use FrontendUserManagement\Services\FrontendUserService;
 use Insertion\Services\InsertionCreatorService;
 use Insertion\Services\InsertionTypeService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Slim\Router;
 
 /**
  * Class MessengerController
@@ -94,6 +96,40 @@ class FrontendInsertionController extends SecureFrontendController {
         $result["types"] = $types;
 
         Oforge()->View()->assign($result);
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @EndpointAction(path="/process/{type}")
+     */
+    public function processStepsAction(Request $request, Response $response, $args) {
+        $typeId = $args["type"];
+        /**
+         * @var $userService FrontendUserService
+         */
+        $userService = Oforge()->Services()->get("frontend.user");
+        $user        = $userService->getUser();
+
+        if (isset($user)) {
+            /**
+             * @var $createService InsertionCreatorService
+             */
+            $createService = Oforge()->Services()->get("insertion.creator");
+
+            if ($request->isPost()) {
+                $data = $createService->processPostData($typeId);
+                $createService->create($data);
+            }
+
+        } else {
+            Oforge()->View()->Flash()->addMessage("error", "missing_user");
+            /** @var Router $router */
+            $router = Oforge()->App()->getContainer()->get('router');
+            $uri    = $router->pathFor('insertions_createSteps', ["type" => $typeId, "page" => "5"]);
+
+            return $response->withRedirect($uri, 301);
+        }
     }
 
     /**
