@@ -44,28 +44,20 @@ class BaseCrudController extends SecureBackendController {
      *                  'update'    => 'off|readonly|editable',
      *                  'delete'    => 'off|readonly|editable',
      *              ],
-     * //opsolete//TODO remoce old list
-     *
-     *              'list'          => [ // If type = select. Name of a protected function to create a dynamic array (e.g. 'getListUsers', or a static array. (Required)
-     *                  <value> => <option text or label e.g. 'backend_crud_property__<name>_<value>'>  // value => (text|(i18n-)label) pair
-     *              ],
      *              'list' => [
-     *                  'isI18nLabel => true, # If type = select. Is Label i18n-key or array (key, default)? (Optional)
+     *                  'isI18nLabel => false, # If type = select. Is Label i18n-key or array (key, default)? (Optional)
      *                  'data' => [# Select with optgroups, key will be ignored in renderer
      *                      'key'   => [
      *                          'label'     => 'i18nLabel' | ['key' => 'i18nLabel', 'default' => 'DefaultText'],
      *                          'options'   => [
-     *                              'value' => => 'i18nLabel' | ['key' => 'i18nLabel', 'default' => 'DefaultText'],
+     *                              'value' => => 'Text' | 'i18nLabel' | ['key' => 'i18nLabel', 'default' => 'DefaultText'],
      *                          ]
      *                      ],
      *                  ],
      *                  'data' => [# Simple select
-     *                      'value' => 'i18nLabel' | ['key' => 'i18nLabel', 'default' => 'DefaultText'], # Simple select
+     *                      'value' => 'Text' | 'i18nLabel' | ['key' => 'i18nLabel', 'default' => 'DefaultText'], # Simple select
      *                  ],
      *              ],
-     * //opsolete//TODO remoce old isI18nLabel
-     *
-     *              'isI18nLabel' => true, # If type = select. Is Label i18n-key or array (key, default)? (Optional)
      *              'editor' => [       // Configuration for field editor.
      *                  'default'       => '',      // Default value. (Optional)
      *                  'custom'        => '...'    // If type = custom. Twig path for include.
@@ -514,12 +506,23 @@ class BaseCrudController extends SecureBackendController {
                     if (isset($property['list']) && is_string($property['list']) && method_exists($this, $property['list'])) {
                         $property['list'] = $this->{$property['list']}();
                     }
-                    $properties[] = $property;
+                    $properties[] = $this->modifyPropertyConfig($property);
                 }
             }
         }
 
         return [$properties, $hasEditors];
+    }
+
+    /**
+     * Modifying of property config at runtime, e.g. for adding options by configs.
+     *
+     * @param array $config
+     *
+     * @return array
+     */
+    protected function modifyPropertyConfig(array $config) {
+        return $config;
     }
 
     /**
@@ -534,7 +537,7 @@ class BaseCrudController extends SecureBackendController {
      */
     protected function redirect(Response $response, string $crudAction, array $urlParams = [], array $queryParams = []) {
         $routeName  = Oforge()->View()->get('meta')['route']['name'];
-        $actionKeys = ['view', 'update', 'delete'];
+        $actionKeys = ['view', 'create', 'delete', 'update'];
         foreach ($actionKeys as $actionKey) {
             if (StringHelper::endsWith($routeName, '_' . $actionKey)) {
                 $routeName = substr($routeName, 0, -(strlen($actionKey) + 1));
