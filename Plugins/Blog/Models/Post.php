@@ -97,6 +97,7 @@ class Post extends AbstractModel {
 
     public function __construct() {
         $this->comments = new ArrayCollection();
+        $this->ratings = new ArrayCollection();
     }
 
     /**
@@ -297,14 +298,14 @@ class Post extends AbstractModel {
     /**
      * @return ArrayCollection
      */
-    public function getComments() : ArrayCollection {
+    public function getComments() {
         return $this->comments;
     }
 
     /**
      * @return ArrayCollection
      */
-    public function getRatings() : ArrayCollection {
+    public function getRatings() {
         return $this->ratings;
     }
 

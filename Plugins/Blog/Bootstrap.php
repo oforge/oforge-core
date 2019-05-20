@@ -3,7 +3,6 @@
 namespace Blog;
 
 use Blog\Controller\Backend\CommentController;
-use Blog\Controller\Backend\PostController;
 use Blog\Models\Category;
 use Blog\Models\Comment;
 use Blog\Models\Post;
@@ -37,7 +36,7 @@ class Bootstrap extends AbstractBootstrap {
             Controller\Backend\CategoryController::class,
             Controller\Backend\PostController::class,
             CommentController::class,
-            BlogController::class,
+            // BlogController::class,
         ];
 
         $this->models = [
@@ -59,19 +58,19 @@ class Bootstrap extends AbstractBootstrap {
         /** @var ConfigService $configService */
         $configService = Oforge()->Services()->get('config');
         $configService->add([
-            'name'     => 'blog_epp_posts',
+            'name'     => 'blog_load_more_epp_posts',
             'type'     => ConfigType::INTEGER,
             'group'    => 'blog',
             'default'  => 6,
-            'label'    => 'config_blog_epp_posts',
+            'label'    => 'config_blog_load_more_epp_posts',
             'required' => true,
         ]);
         $configService->add([
-            'name'     => 'blog_epp_comments',
+            'name'     => 'blog_load_more_epp_comments',
             'type'     => ConfigType::INTEGER,
             'group'    => 'blog',
             'default'  => 5,
-            'label'    => 'config_blog_epp_comments',
+            'label'    => 'config_blog_load_more_epp_comments',
             'required' => true,
         ]);
         $configService->add([
@@ -82,6 +81,21 @@ class Bootstrap extends AbstractBootstrap {
             'label'    => 'config_blog_recommend_posts_number',
             'required' => true,
         ]);
+        $configService->add([
+            'name'    => 'blog_category_maxlength_name',
+            'type'    => ConfigType::INTEGER,
+            'group'   => 'blog',
+            'default' => 0,
+            'label'   => 'config_blog_category_maxlength_name',
+        ]);
+        $configService->add([
+            'name'    => 'blog_post_maxlength_header_title',
+            'type'    => ConfigType::INTEGER,
+            'group'   => 'blog',
+            'default' => 0,
+            'label'   => 'config_blog_post_maxlength_header_title',
+        ]);
+
         /** @var DashboardWidgetsService $dashboardWidgetsService */
         $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
         $dashboardWidgetsService->register([
@@ -92,23 +106,23 @@ class Bootstrap extends AbstractBootstrap {
             'cssClass'     => 'bg-blue',
             'templateName' => 'BlogOverview',
         ]);
+
     }
 
     public function activate() {
-
         /** @var BackendNavigationService $sidebarNavigation */
         $sidebarNavigation = Oforge()->Services()->get('backend.navigation');
-        // $sidebarNavigation->put([
-        //     'name'     => 'plugin_blog',
-        //     'order'    => 3,
-        //     'position' => 'sidebar',
-        // ]);
+        $sidebarNavigation->put([
+            'name'     => 'plugin_blog',
+            'order'    => 3,
+            'position' => 'sidebar',
+        ]);
         $sidebarNavigation->put([
             'name'     => 'plugin_blog_categories',
             'order'    => 1,
             'parent'   => 'plugin_blog',
             'icon'     => 'fa fa-folder',
-            'path'     => 'backed_blog_categories',
+            'path'     => 'backend_blog_categories',
             'position' => 'sidebar',
         ]);
         $sidebarNavigation->put([
@@ -116,7 +130,7 @@ class Bootstrap extends AbstractBootstrap {
             'order'    => 2,
             'parent'   => 'plugin_blog',
             'icon'     => 'fa fa-sticky-note',
-            'path'     => 'backed_blog_posts',
+            'path'     => 'backend_blog_posts',
             'position' => 'sidebar',
         ]);
         $sidebarNavigation->put([
@@ -124,7 +138,7 @@ class Bootstrap extends AbstractBootstrap {
             'order'    => 3,
             'parent'   => 'plugin_blog',
             'icon'     => 'fa fa-comment',
-            'path'     => 'backed_blog_comments',
+            'path'     => 'backend_blog_comments',
             'position' => 'sidebar',
         ]);
     }
