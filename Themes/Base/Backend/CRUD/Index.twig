@@ -20,7 +20,7 @@
                             </div>
                         </div>
                         {% include 'Backend/CRUD/Components/Index/Filter.twig' with {
-                            filter: crud.filter,
+                            crud: crud,
                             route: meta.route
                         } only %}
                         {% if crud.hasEditors %}

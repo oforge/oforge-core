@@ -1,7 +1,8 @@
 {% if filterConfig.list is defined %}
-    <select name="{{ propertyName }}" class="form-control" title="{{ propertyName|capitalize }}">
+    {% set filterTitle = i18n('backend_crud_btn_filter_prefix_select', 'Select') ~ ': ' ~ filterTitle %}
+    <select name="{{ propertyName }}" class="form-control" title="{{ filterTitle }}">
         <option {% if route.query[propertyName] is not defined %}selected{% endif %} value="">
-            {{ propertyName|capitalize }}
+            {{ filterTitle }}
         </option>
         {% for value, label in filterConfig.list %}
             {% if label is array %}
@@ -12,7 +13,7 @@
                 {% endif %}
                 <optgroup label="{{ optgroupLabel }}">
                     {% for value,label in label.options %}
-                        {% set selected = route.query[propertyName] is defined and route.query[propertyName] is same as(value) %}
+                        {% set selected = route.query[propertyName] is defined and (route.query[propertyName] == value or route.query[propertyName] is same as(value)) %}
                         {% if filterConfig.isI18nLabel is defined and filterConfig.isI18nLabel %}
                             {% set label = i18n(label) %}
                         {% endif %}
@@ -22,7 +23,7 @@
                     {% endfor %}
                 </optgroup>
             {% else %}
-                {% set selected = route.query[propertyName] is defined and route.query[propertyName] is same as(value) %}
+                {% set selected = route.query[propertyName] is defined and (route.query[propertyName] == value or route.query[propertyName] is same as(value)) %}
                 {% if filterConfig.isI18nLabel is defined and filterConfig.isI18nLabel %}
                     {% set label = i18n(label) %}
                 {% endif %}
