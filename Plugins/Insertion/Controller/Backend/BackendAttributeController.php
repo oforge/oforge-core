@@ -2,10 +2,10 @@
 
 namespace Insertion\Controller\Backend;
 
+use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Insertion\Services\AttributeService;
 use Insertion\Services\InsertionMockService;
-use Insertion\Services\InsertionTypeService;
 use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
@@ -24,19 +24,60 @@ class BackendAttributeController extends SecureBackendController {
      * @param Request $request
      * @param Response $response
      *
-     * @throws ORMException
      * @throws ServiceNotFoundException
+     * @throws ORMException
      */
     public function indexAction(Request $request, Response $response) {
+        /** @var AttributeService $attributeService */
+        $attributeService = Oforge()->Services()->get('insertion.attribute');
+        $attributes       = $attributeService->getAttributeList(20, 0);
+        $data             = [];
+
+        foreach ($attributes as $attribute) {
+            $data[] = $attribute->toArray();
+        }
+
+        Oforge()->View()->assign([
+            'content' => [
+                'attributes' => $data,
+            ],
+        ]);
     }
 
     /**
      * @param Request $request
      * @param Response $response
-     * @EndpointAction(path="/create")
+     * @EndpointAction(path="/edit")
+     *
+     * @throws ORMException
+     * @throws ServiceNotFoundException
      */
-    public function createAction(Request $request, Response $response) {
-        //if ($request->isPost()) {}
+    public function editAction(Request $request, Response $response) {
+        /** @var AttributeService $attributeService */
+        $attributeService = Oforge()->Services()->get('insertion.attribute');
+        if (isset($request->getQueryParams()['id'])) {
+            $attributeId = $request->getQueryParams()['id'];
+            $attribute = $attributeService->getAttribute($attributeId);
+            Oforge()->View()->assign([
+                'content' => [
+                    'attribute' => $attribute->toArray(3),
+                ],
+            ]);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     *
+     * @throws ORMException
+     * @throws ServiceNotFoundException
+     * @throws OptimisticLockException
+     * @EndpointAction(path="/mock")
+     */
+    public function mockAction(Request $request, Response $response) {
+        /** @var InsertionMockService $mockService */
+        InsertionMockService::init();
     }
 
     public function initPermissions() {

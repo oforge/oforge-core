@@ -26,6 +26,12 @@ class InsertionType extends AbstractModel {
     private $name;
 
     /**
+     * TODO: Media
+     * @var string
+     * @ORM\Column(name="insertion_type_icon", type="string", nullable=true)
+     */
+
+    /**
      * @ORM\ManyToOne(targetEntity="InsertionType")
      * @ORM\JoinColumn(name="insertion_parent_id", referencedColumnName="id", nullable=true)
      */

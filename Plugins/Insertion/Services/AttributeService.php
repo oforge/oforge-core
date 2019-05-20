@@ -12,7 +12,7 @@ class AttributeService extends AbstractDatabaseAccess {
 
     public function __construct() {
         parent::__construct([
-            'attributeKey' => AttributeKey::class,
+            'attributeKey'   => AttributeKey::class,
             'attributeValue' => AttributeValue::class,
         ]);
     }
@@ -96,11 +96,14 @@ class AttributeService extends AbstractDatabaseAccess {
     }
 
     /**
+     * @param null $offset
+     * @param null $limit
+     *
      * @return array
      * @throws ORMException
      */
-    public function getAttributeList() {
-        return $this->repository('attributeKey')->findAll();
+    public function getAttributeList($limit = null, $offset = null) {
+        return $this->repository('attributeKey')->findBy([], null, $limit, $offset);
     }
 
     /**
@@ -113,6 +116,7 @@ class AttributeService extends AbstractDatabaseAccess {
         $attributeKey = $this->repository('attributeKey')->find($id);
         $this->entityManager()->remove($attributeKey);
         $this->entityManager()->flush();
+        $this->repository('attributeKey')->clear();
     }
 
     /**
@@ -125,5 +129,6 @@ class AttributeService extends AbstractDatabaseAccess {
         $attributeValue = $this->repository('attributeValue')->find($id);
         $this->entityManager()->remove($attributeValue);
         $this->entityManager()->flush();
+        $this->repository('attributeValue')->clear();
     }
 }
