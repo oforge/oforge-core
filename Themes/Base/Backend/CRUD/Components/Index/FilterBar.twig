@@ -4,13 +4,18 @@
             <form method="GET" class="form-inline">
                 {% for propertyName, filterConfig in crud.filter if filterConfig.type != 'hidden' %}
                     {% if filterConfig.label is defined %}
-                        {% set filterTitle = i18n(filterConfig.label) %}
+                        {% if filterConfig.label is array %}
+                            {% set filterTitle = i18n(filterConfig.label) %}
+                        {% else %}
+                            {% set filterTitle = filterConfig.label %}
+                        {% endif %}
                     {% else %}
                         {% set filterTitle = propertyName|capitalize %}
                     {% endif %}
                     {% include 'Backend/CRUD/Components/Index/FilterType/' ~ filterConfig.type|capitalize ~ '.twig' ignore missing %}
                 {% endfor %}
-                <button class="btn btn-default" type="submit">{{ i18n('backend_crud_btn_filter_submit', 'Filter') }}</button>
+                <button class="btn btn-default"
+                        type="submit">{{ i18n('backend_crud_btn_filter_submit', 'Filter') }}</button>
             </form>
         </div>
     </div>

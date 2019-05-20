@@ -1,22 +1,15 @@
 {% if filterConfig.list is defined %}
-    {% set filterTitle = i18n('backend_crud_btn_filter_prefix_select', 'Select') ~ ': ' ~ filterTitle %}
-    <select name="{{ propertyName }}" class="form-control" title="{{ filterTitle }}">
+    <select name="{{ propertyName }}" class="form-control" title="{{ filterTitle }}"
+            data-placeholder="{{ filterTitle }}">
         <option {% if route.query[propertyName] is not defined %}selected{% endif %} value="">
             {{ filterTitle }}
         </option>
         {% for value, label in filterConfig.list %}
-            {% if label is array %}
-                {% if filterConfig.isI18nLabel is defined and filterConfig.isI18nLabel %}
-                    {% set optgroupLabel = i18n(label.label) %}
-                {% else %}
-                    {% set optgroupLabel = label.label %}
-                {% endif %}
+            {% if label.options is defined %}
+                {% set optgroupLabel = label.label %}
                 <optgroup label="{{ optgroupLabel }}">
                     {% for value,label in label.options %}
                         {% set selected = route.query[propertyName] is defined and (route.query[propertyName] == value or route.query[propertyName] is same as(value)) %}
-                        {% if filterConfig.isI18nLabel is defined and filterConfig.isI18nLabel %}
-                            {% set label = i18n(label) %}
-                        {% endif %}
                         <option {% if selected %}selected{% endif %} value="{{ value }}">
                             {{ label }}
                         </option>
@@ -24,9 +17,6 @@
                 </optgroup>
             {% else %}
                 {% set selected = route.query[propertyName] is defined and (route.query[propertyName] == value or route.query[propertyName] is same as(value)) %}
-                {% if filterConfig.isI18nLabel is defined and filterConfig.isI18nLabel %}
-                    {% set label = i18n(label) %}
-                {% endif %}
                 <option {% if selected %}selected{% endif %} value="{{ value }}">
                     {{ label }}
                 </option>

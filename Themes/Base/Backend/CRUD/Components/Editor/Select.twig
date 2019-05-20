@@ -7,18 +7,10 @@
     >
         {% for value,label in property.list %}
             {#<option value="" selected>{{ i18n("backend_crud_select_empty") }}</option>#}
-            {% if label is array %}
-                {% if property.list.isI18nLabel is defined and property.list.isI18nLabel %}
-                    {% set optgroupLabel = i18n(label.label) %}
-                {% else %}
-                    {% set optgroupLabel = label.label %}
-                {% endif %}
-                <optgroup label="{{ optgroupLabel }}">
+            {% if label.options is defined %}
+                <optgroup label="{{ label.label }}">
                     {% for value,label in label.options %}
                         {% set selected = route.query[propertyName] is defined and (route.query[propertyName] == value or route.query[propertyName] is same as(value)) %}
-                        {% if property.list.isI18nLabel is defined and property.list.isI18nLabel %}
-                            {% set label = i18n(label) %}
-                        {% endif %}
                         <option {% if selected %}selected{% endif %} value="{{ value }}">
                             {{ label }}
                         </option>
@@ -27,11 +19,7 @@
             {% else %}
                 <option {% if value == item[property.name] or value == property.editor.default %}selected{% endif %}
                         value="{{ value }}">
-                    {% if property.isI18nLabel is defined and property.isI18nLabel %}
-                        {{ i18n(label) }}
-                    {% else %}
-                        {{ label }}
-                    {% endif %}
+                    {{ label }}
                 </option>
             {% endif %}
         {% endfor %}

@@ -2,15 +2,15 @@
     {% for property in crud.properties if property.crud[crud.context] and property.crud[crud.context]|default('off') != 'off' %}
         <th class="crud-table-header-{{ property.name }}">
             {% if property.label is defined %}
-                {% if property.label is empty %}
-                    {{ '-' }}
-                {% else %}
+                {% if property.label is array %}
                     {{ i18n(property.label) }}
+                {% else %}
+                    {{ property.label }}
                 {% endif %}
             {% elseif property.name == 'id' %}
                 {{ 'ID' }}
             {% else %}
-                {{ i18n(('crud_property_' ~ crud.model ~ '_' ~ property.name)|lower, property.name|capitalize) }}
+                {{ property.name|capitalize }}
             {% endif %}
         </th>
     {% endfor %}

@@ -33,7 +33,7 @@ class LanguageController extends BaseCrudController {
         [
             'name'  => 'iso',
             'type'  => CrudDataTypes::STRING,
-            'label' => ['key' => 'backend_crud_i18n_language_iso', 'default' => 'ISO'],
+            'label' => ['key' => 'module_i18n_language_iso', 'default' => 'ISO'],
             'crud'  => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
@@ -45,7 +45,7 @@ class LanguageController extends BaseCrudController {
         [
             'name'  => 'name',
             'type'  => CrudDataTypes::STRING,
-            'label' => ['key' => 'backend_crud_i18n_language_name', 'default' => 'Name'],
+            'label' => ['key' => 'module_i18n_language_name', 'default' => 'Name'],
             'crud'  => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
@@ -57,7 +57,7 @@ class LanguageController extends BaseCrudController {
         [
             'name'  => 'active',
             'type'  => CrudDataTypes::BOOL,
-            'label' => ['key' => 'backend_crud_i18n_language_active', 'default' => 'Active'],
+            'label' => ['key' => 'module_i18n_language_active', 'default' => 'Active'],
             'crud'  => [
                 'index'  => 'editable',
                 'view'   => 'editable',

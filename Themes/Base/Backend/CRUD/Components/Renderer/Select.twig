@@ -9,11 +9,7 @@
     {% for group in property.list %}
         {% if group.options[item[property.name]] is defined %}
             {% set found = true %}
-            {% if property.isI18nLabel is defined and property.isI18nLabel %}
-                {{ i18n(group.options[item[property.name]]) }}
-            {% else %}
-                {{ group.options[item[property.name]] }}
-            {% endif %}
+            {{ group.options[item[property.name]] }}
         {% endif %}
     {% endfor %}
     {% if not found %}
@@ -30,10 +26,5 @@
         {{ item[property.name] }}
     </div>
 {% else %}
-    {% set value = property.list[item[property.name]] %}
-    {% if property.isI18nLabel is defined and property.isI18nLabel %}
-        {{ i18n(value) }}
-    {% else %}
-        {{ value }}
-    {% endif %}
+    {{ property.list[item[property.name]] }}
 {% endif %}

@@ -14,6 +14,7 @@ use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
+use Oforge\Engine\Modules\CRUD\Enum\CrudFilterComparator;
 use Oforge\Engine\Modules\CRUD\Enum\CrudFilterType;
 use Oforge\Engine\Modules\CRUD\Enum\CrudGroubByOrder;
 use Oforge\Engine\Modules\I18n\Models\Language;
@@ -153,13 +154,13 @@ class CategoryController extends BaseCrudController {
     protected $indexFilter = [
         'language' => [
             'type'  => CrudFilterType::SELECT,
-            'label' => ['key' => 'plugin_blog_property_category_language', 'default' => 'Language'],
+            'label' => ['key' => 'plugin_blog_filter_category_language', 'default' => 'Select language'],
             'list'  => 'getSelectLanguages',
         ],
         'name'     => [
             'type'    => CrudFilterType::TEXT,
-            'label'   => ['key' => 'plugin_blog_property_category_name', 'default' => 'Name'],
-            'compare' => 'like',
+            'label'   => ['key' => 'plugin_blog_filter_category_name', 'default' => 'Search in name'],
+            'compare' => CrudFilterComparator::LIKE,
         ],
     ];
     /** @var array $indexOrderBy */

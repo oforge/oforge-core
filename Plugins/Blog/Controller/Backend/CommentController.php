@@ -113,17 +113,17 @@ class CommentController extends BaseCrudController {
     protected $indexFilter = [
         'post'    => [
             'type'  => CrudFilterType::SELECT,
-            'label' => ['key' => 'plugin_blog_property_comment_post', 'default' => 'Post'],
+            'label' => ['key' => 'plugin_blog_filter_comment_post', 'default' => 'Select post'],
             'list'  => 'getSelectPosts',
         ],
         'author'  => [
             'type'  => CrudFilterType::SELECT,
-            'label' => ['key' => 'plugin_blog_property_comment_author', 'default' => 'Author'],
+            'label' => ['key' => 'plugin_blog_filter_comment_author', 'default' => 'Select author'],
             'list'  => 'getSelectCommentUsers',
         ],
         'content' => [
             'type'    => CrudFilterType::TEXT,
-            'label'   => ['key' => 'plugin_blog_property_comment_content', 'default' => 'Content'],
+            'label'   => ['key' => 'plugin_blog_filter_comment_content', 'default' => 'Search in content'],
             'compare' => CrudFilterComparator::LIKE,
         ],
     ];
@@ -178,19 +178,22 @@ class CommentController extends BaseCrudController {
             foreach ($entities as $entity) {
                 $languages[$entity->getIso()] = $entity->getName();
             }
-
-            $criteria = [];
-            if (isset($_GET['author']) && $_GET['author'] !== '') {
-                $criteria['author'] = $_GET['author'];
+            $queryBuilder = $entityManager->getRepository(Post::class)->createQueryBuilder('p')#
+                                          ->select('p')#
+                                          ->leftJoin('p.comments', 'c')#
+                                          ->groupBy('p.id')#
+                                          ->distinct();
+            if (ArrayHelper::issetNotEmpty($_GET, 'author')) {
+                $queryBuilder = $queryBuilder->where('c.author = ?1')->setParameter(1, $_GET['author']);
             }
-
             /** @var Post[] $entities */
-            $entities = $entityManager->getRepository(Post::class)->findBy($criteria);
-            $posts    = [];
+            $entities = $queryBuilder->getQuery()->getResult();
+
+            $posts = [];
             foreach ($entities as $entity) {
                 $language     = $entity->getLanguage();
                 $languageName = ArrayHelper::get($languages, $entity->getLanguage(), $entity->getLanguage());
-                if (!isset($postGroups[$language])) {
+                if (!isset($posts[$language])) {
                     $posts[$language] = [
                         'label'   => $languageName,
                         'options' => [],
@@ -222,7 +225,7 @@ class CommentController extends BaseCrudController {
                                           ->leftJoin(UserDetail::class, 'ud', 'WITH', 'ud.userId = u.id')#
                                           ->groupBy('ud.id')#
                                           ->distinct();
-            if (isset($_GET['post']) && $_GET['post'] !== '') {
+            if (ArrayHelper::issetNotEmpty($_GET, 'post')) {
                 $queryBuilder = $queryBuilder->where('c.post = ?1')->setParameter(1, $_GET['post']);
             }
             /** @var UserDetail[] $userDetails */
