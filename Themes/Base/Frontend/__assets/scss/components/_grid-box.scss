@@ -1,0 +1,20 @@
+@mixin createGridColumns($columns: 1, $gap: $size-medium) {
+    display: grid;
+    grid-template-columns: repeat($columns, 1fr);
+    grid-gap: $gap;
+}
+.grid-boxes {
+    @include createGridColumns();
+    &.grid-boxes--2 {
+        @include createGridColumns(2);
+    }
+}
+
+.grid-box {
+    padding: $size-large;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: $color-secondary;
+}
