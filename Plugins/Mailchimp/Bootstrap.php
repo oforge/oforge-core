@@ -8,7 +8,7 @@ use FrontendUserManagement\Services\AccountNavigationService;
 use Mailchimp\Controller\Frontend\AccountNewsletterController;
 use Mailchimp\Controller\Frontend\NewsletterSubscriptionController;
 use Mailchimp\Services\MailchimpNewsletterService;
-use Mailchimp\Views\Plugins\Mailchimp\Models\UserNewsletter;
+use Mailchimp\Models\UserNewsletter;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;

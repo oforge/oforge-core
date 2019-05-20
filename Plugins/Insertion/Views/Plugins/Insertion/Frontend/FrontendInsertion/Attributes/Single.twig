@@ -1,0 +1,12 @@
+<div class="form__control">
+    <label for="insertion_single[{{ item.id }}]"
+           class="form__label">{{ i18n(item.name) }}</label>
+
+    <select  name="insertion_single[{{ item.id }}]" >
+        {% for value in item.values %}
+            <option value="{{ value.id }}" {% if value.id == data[page]['insertion_single'][item.id] %}selected="selected"{% endif %}>
+                {{ i18n(value.value) }}
+            </option>
+        {% endfor %}
+    </select>
+</div>

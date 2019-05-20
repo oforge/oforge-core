@@ -1,0 +1,12 @@
+<div class="form__control">
+{    <label for="insertion_multi[{{ item.id }}][]"
+           class="form__label">{{ i18n(item.name) }}</label>
+
+    <select  name="insertion_multi[{{ item.id }}][]" multiple>
+        {% for value in item.values %}
+            <option value="{{ value.id }}" {% if value.id in data[page]['insertion_multi'][item.id] %}selected="selected"{% endif %}>
+                {{ i18n(value.value) }}
+            </option>
+        {% endfor %}
+    </select>
+</div>

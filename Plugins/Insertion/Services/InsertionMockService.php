@@ -82,10 +82,22 @@ class InsertionMockService {
         $insertionTypes = [];
         /** @var InsertionTypeService $insertionTypeService */
         $insertionTypeService = Oforge()->Services()->get('insertion.type');
-        $insertionType        = $insertionTypeService->createNewInsertionType('eSports');
+
+        $rootType = $insertionTypeService->createNewInsertionType('Gaming');
+        $rootType2 = $insertionTypeService->createNewInsertionType('Non Gaming');
+        array_push($insertionTypes, $rootType);
+        array_push($insertionTypes, $rootType2);
+
+
+        $insertionType2 = $insertionTypeService->createNewInsertionType('Basketball', $rootType2);
+        array_push($insertionTypes, $insertionType2);
+
+
+        $insertionType = $insertionTypeService->createNewInsertionType('eSports', $rootType);
 
         foreach ($attributes as $attribute) {
             $insertionTypeService->addAttributeToInsertionType($insertionType, $attribute, false);
+            $insertionTypeService->addAttributeToInsertionType($insertionType2, $attribute, false);
         }
         array_push($insertionTypes, $insertionType);
 
