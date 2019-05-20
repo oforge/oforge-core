@@ -1,0 +1,12 @@
+.select2-container {
+    width: auto!important;
+
+    .select2-selection__clear {
+        margin-left: .8rem;
+        margin-right: -.5rem;
+    }
+    .select2-selection .select2-selection__rendered {
+        margin-top: -.6rem;
+        margin-left: -.6rem;
+    }
+}
