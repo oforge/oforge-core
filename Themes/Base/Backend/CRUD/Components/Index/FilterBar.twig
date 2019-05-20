@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-xs-12">
             <form method="GET" class="form-inline">
-                {% for propertyName, filterConfig in crud.filter %}
+                {% for propertyName, filterConfig in crud.filter if filterConfig.type !== 'hidden' %}
                     {% if filterConfig.label is defined %}
                         {% set filterTitle = i18n(filterConfig.label) %}
                     {% else %}
