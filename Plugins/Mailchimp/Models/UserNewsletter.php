@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Mailchimp\Views\Plugins\Mailchimp\Models;
+namespace Mailchimp\Models;
 
 use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
