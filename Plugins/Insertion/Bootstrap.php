@@ -10,6 +10,7 @@ use Insertion\Models\AttributeKey;
 use Insertion\Models\AttributeValue;
 use Insertion\Models\Insertion;
 use Insertion\Models\InsertionAttributeValue;
+use Insertion\Models\InsertionContact;
 use Insertion\Models\InsertionContent;
 use Insertion\Models\InsertionMedia;
 use Insertion\Models\InsertionType;
@@ -48,6 +49,7 @@ class Bootstrap extends AbstractBootstrap {
         $this->models = [
             AttributeKey::class,
             AttributeValue::class,
+            InsertionContact::class,
             Insertion::class,
             InsertionAttributeValue::class,
             InsertionType::class,

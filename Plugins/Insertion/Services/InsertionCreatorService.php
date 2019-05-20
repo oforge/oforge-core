@@ -21,7 +21,7 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
         ]);
     }
 
-    public function processPostData($typeId) {
+    public function processPostData($typeId) : ?array {
         if (!isset($_SESSION['insertion' . $typeId])) {
             $_SESSION['insertion' . $typeId] = [];
         }
@@ -43,7 +43,8 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
 
                 foreach ($_SESSION['insertion' . $typeId][$currentPage]["images"] as $image) {
                     if (isset($_POST["images_interactions"])) {
-                        if(isset($image["id"]) && isset($_POST["images_interactions"][$image["id"]]) && $_POST["images_interactions"][$image["id"]] == "delete") {
+                        if (isset($image["id"]) && isset($_POST["images_interactions"][$image["id"]])
+                            && $_POST["images_interactions"][$image["id"]] == "delete") {
                             $mediaService->delete($image["id"]);
                         } else {
                             array_push($imgs, $image);
@@ -67,6 +68,8 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
                 }
             }
         }
+
+        return $_SESSION['insertion' . $typeId];
     }
 
     public function clearProcessedData($typeId) {
@@ -75,6 +78,10 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
 
     public function getProcessedData($typeId) {
         return $_SESSION['insertion' . $typeId];
+    }
+
+    public function create(?array $data) {
+
     }
 }
 
