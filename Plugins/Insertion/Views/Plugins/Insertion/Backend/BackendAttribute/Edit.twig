@@ -5,7 +5,51 @@
         <div class="box">
             <!-- /.box-header -->
             <div class="box-body">
-                
+                <form action="">
+                    <div>
+
+                        <h2>TODO: Attribute Form here</h2>
+
+                    </div>
+
+                    <div data-editable-table class="table-editable">
+                        <span data-table-add class="table-add glyphicon glyphicon-plus"></span>
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>{{ i18n("value", "Value") }}</th>
+                                <th>{{ i18n("sub_attribute", "Sub Attribute") }}</th>
+                                <th><i class="fa fa-user-times"></i> {{ i18n("delete") }}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for value in content.attribute.values %}
+                                <tr>
+                                    <td contenteditable="true">{{ value.value }}</td>
+                                    <td contenteditable="true">{{ value.subAttribute }}</td>
+                                    <td><span class="table-remove glyphicon glyphicon-remove" data-table-remove></span>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            <tr class="hide">
+                                <td contenteditable="true">{{ i18n("undefined", "undefined") }}</td>
+                                <td contenteditable="true">{{ i18n("undefined", "undefined") }}</td>
+                                <td>
+                                    <span class="table-remove glyphicon glyphicon-remove"></span>
+                                </td>
+                                <td>
+                                    <span class="table-up glyphicon glyphicon-arrow-up"></span>
+                                    <span class="table-down glyphicon glyphicon-arrow-down"></span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                            </tbody>
+                        </table>
+                    </div>
+                    <input type="hidden" data-export>
+                    <button data-export-button>{{ i18n("submit") }}</button>
+                </form>
             </div>
             <!-- /.box-body -->
         </div>
