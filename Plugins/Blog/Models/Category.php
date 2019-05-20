@@ -22,15 +22,15 @@ class Category extends AbstractModel {
      */
     private $id;
     /**
-     * @var string $language
-     * @ORM\Column(name="language", type="string", nullable=false)
-     */
-    private $language;
-    /**
      * @var string $name
      * @ORM\Column(name="name", type="string", nullable=false)
      */
     private $name;
+    /**
+     * @var string $language
+     * @ORM\Column(name="language", type="string", nullable=false)
+     */
+    private $language;
     /**
      * @var string $seoUrlPath
      * @ORM\Column(name="seo_url_path", type="string", nullable=false)
@@ -62,6 +62,10 @@ class Category extends AbstractModel {
      * @ORM\JoinColumn(name="id", referencedColumnName="category_id")
      */
     private $posts;
+
+    public function __construct() {
+        $this->posts = new ArrayCollection();
+    }
 
     /**
      * @return int
@@ -197,7 +201,7 @@ class Category extends AbstractModel {
     }
 
     /** @return ArrayCollection */
-    public function getPosts() : ArrayCollection {
+    public function getPosts() {
         return $this->posts;
     }
 
