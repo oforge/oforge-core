@@ -13,6 +13,7 @@ use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Core\Helper\RedirectHelper;
 use Oforge\Engine\Modules\Core\Helper\StringHelper;
+use Oforge\Engine\Modules\CRUD\Enum\CrudFilterComparator;
 use Oforge\Engine\Modules\CRUD\Enum\CrudGroubByOrder;
 use Oforge\Engine\Modules\CRUD\Services\GenericCrudService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
@@ -32,7 +33,7 @@ class BaseCrudController extends SecureBackendController {
      *      protected $modelProperties = [
      *          [
      *              // Property name. Required
-     *              'name'      => 'id',
+     *              'name'      => 'propertyName',
      *               // Custom i18n key for label of form field, default('crud_<Module>_<ModelName>_<propertyName>' with name as default, or 'ID' default if name = id).
      *               // String key or array with key and default value.
      *              'label'     => 'label_id' | ['key' => 'label_id', 'default' => 'ID'],
@@ -103,9 +104,10 @@ class BaseCrudController extends SecureBackendController {
      * Configuration of the filters on the index view.
      *      protected $indexFilter = [
      *          'propertyName' => [
-     *              'type'        => CrudFilterType::...,
-     *              'compare'     => CrudFilterComparator::#Default = equals
-     *              'list'        => ''# Required list for type=select, array or protected function name.
+     *              'type'      => CrudFilterType::...,
+     *              'label'     => 'i18nLabel' | ['key' => 'i18nLabel', 'default' => 'DefaultText'],
+     *              'compare'   => CrudFilterComparator::#Default = equals
+     *              'list'      => ''# Required list for type=select, array or protected function name.
      *          ],
      *      ];
      *
@@ -506,7 +508,9 @@ class BaseCrudController extends SecureBackendController {
                     if (isset($property['list']) && is_string($property['list']) && method_exists($this, $property['list'])) {
                         $property['list'] = $this->{$property['list']}();
                     }
-                    $properties[] = $this->modifyPropertyConfig($property);
+                    $propertyName = $property['name'];
+
+                    $properties[$propertyName] = $this->modifyPropertyConfig($property);
                 }
             }
         }
@@ -570,6 +574,7 @@ class BaseCrudController extends SecureBackendController {
             foreach ($this->indexFilter as $propertyName => $filterConfig) {
                 if (isset($queryParams[$propertyName]) && $queryParams[$propertyName] !== '') {
                     $propertyNameValue = $queryParams[$propertyName];
+                    $compare = ArrayHelper::get($filterConfig, 'compare', CrudFilterComparator::EQUALS);
                     //TODO Crud-Index - Extended filtering - evaluate & set filterConfig
                     $filter[$propertyName] = $propertyNameValue;
                 }

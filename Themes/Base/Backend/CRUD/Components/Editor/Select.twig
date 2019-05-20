@@ -1,4 +1,4 @@
-{% if property.list %}
+{% if property.list is defined %}
     <select class="form-control" {% if fieldID %}id="{{ fieldID }}"{% endif %}
         {% if property.crud[crud.context] == 'editable' %}name="data[{% if crud.context == 'index' %}{{ item.id }}][{% endif %}{{ property.name }}]"
             {% else %}readonly{% endif %}
@@ -15,7 +15,7 @@
                 {% endif %}
                 <optgroup label="{{ optgroupLabel }}">
                     {% for value,label in label.options %}
-                        {% set selected = route.query[propertyName] is defined and route.query[propertyName] is same as(value) %}
+                        {% set selected = route.query[propertyName] is defined and (route.query[propertyName] == value or route.query[propertyName] is same as(value)) %}
                         {% if property.list.isI18nLabel is defined and property.list.isI18nLabel %}
                             {% set label = i18n(label) %}
                         {% endif %}

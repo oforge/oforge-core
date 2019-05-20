@@ -2,11 +2,12 @@
 
 namespace Oforge\Engine\Modules\I18n\Controller\Backend\I18n;
 
-use Doctrine\ORM\ORMException;
+use Exception;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
-use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
+use Oforge\Engine\Modules\CRUD\Enum\CrudFilterComparator;
+use Oforge\Engine\Modules\CRUD\Enum\CrudFilterType;
 use Oforge\Engine\Modules\I18n\Models\Language;
 use Oforge\Engine\Modules\I18n\Models\Snippet;
 use Oforge\Engine\Modules\I18n\Services\LanguageService;
@@ -30,18 +31,17 @@ class SnippetsController extends BaseCrudController {
             ],
         ],
         [
-            'name'          => 'scope',
-            'type'          => CrudDataTypes::SELECT,
-            'label'         => ['key' => 'backend_crud_i18n_snippet_scope', 'default' => 'Scope'],
-            'crud'          => [
+            'name'  => 'scope',
+            'type'  => CrudDataTypes::SELECT,
+            'label' => ['key' => 'backend_crud_i18n_snippet_scope', 'default' => 'Scope'],
+            'crud'  => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
                 'create' => 'editable',
                 'update' => 'editable',
                 'delete' => 'readonly',
             ],
-            'list'          => 'getSelectLanguages',
-            'isI18nLabel' => false,
+            'list'  => 'getSelectLanguages',
         ],
         [
             'name'  => 'name',
@@ -68,6 +68,21 @@ class SnippetsController extends BaseCrudController {
             ],
         ],
     ];
+    /** @var array $indexFilter */
+    protected $indexFilter = [
+        'scope' => [
+            'type'  => CrudFilterType::SELECT,
+            'label' => ['key' => 'backend_crud_i18n_snippet_scope', 'default' => 'Scope'],
+            'list'  => 'getSelectLanguages',
+        ],
+        'name'  => [
+            'type'    => CrudFilterType::TEXT,
+            'label'   => ['key' => 'backend_crud_i18n_snippet_name', 'default' => 'Name'],
+            'compare' => CrudFilterComparator::LIKE,
+        ],
+    ];
+    /** @var array $selectLanguages */
+    private $selectLanguages;
 
     public function __construct() {
         parent::__construct();
@@ -77,22 +92,21 @@ class SnippetsController extends BaseCrudController {
      * Get languages for select field.
      *
      * @return array
-     * @throws ORMException
+     * @throws Exception
      */
     protected function getSelectLanguages() {
-        $result = [];
-        try {
+        if (!isset($this->selectLanguages)) {
+            $this->selectLanguages = [];
             /** @var LanguageService $languageService */
             $languageService = Oforge()->Services()->get('i18n.language');
             /** @var Language[] $entities */
             $entities = $languageService->list();
             foreach ($entities as $entity) {
-                $result[$entity->getIso()] = $entity->getName();
+                $this->selectLanguages[$entity->getIso()] = $entity->getName();
             }
-        } catch (ServiceNotFoundException $e) {
         }
 
-        return $result;
+        return $this->selectLanguages;
     }
 
 }
