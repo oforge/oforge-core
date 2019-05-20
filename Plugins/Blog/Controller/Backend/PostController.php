@@ -224,27 +224,27 @@ class PostController extends BaseCrudController {
     protected $indexFilter = [
         'language'    => [
             'type'  => CrudFilterType::SELECT,
-            'label' => ['key' => 'plugin_blog_property_post_language', 'default' => 'Language'],
+            'label' => ['key' => 'plugin_blog_filter_post_language', 'default' => 'Select language'],
             'list'  => 'getSelectLanguages',
         ],
         'category'    => [
             'type'  => CrudFilterType::SELECT,
-            'label' => ['key' => 'plugin_blog_property_post_category', 'default' => 'Category'],
+            'label' => ['key' => 'plugin_blog_filter_post_category', 'default' => 'Select category'],
             'list'  => 'getSelectCategories',
         ],
         'author'      => [
             'type'  => CrudFilterType::SELECT,
-            'label' => ['key' => 'plugin_blog_property_post_author', 'default' => 'Author'],
+            'label' => ['key' => 'plugin_blog_filter_post_author', 'default' => 'Select author'],
             'list'  => 'getSelectBackendUsers',
         ],
         'headerTitle' => [
             'type'    => CrudFilterType::TEXT,
-            'label'   => ['key' => 'plugin_blog_property_post_headerTitle', 'default' => 'Header title'],
+            'label'   => ['key' => 'plugin_blog_filter_post_headerTitle', 'default' => 'Search in header title'],
             'compare' => CrudFilterComparator::LIKE,
         ],
         'content'     => [
             'type'    => CrudFilterType::TEXT,
-            'label'   => ['key' => 'plugin_blog_property_post_content', 'default' => 'Content'],
+            'label'   => ['key' => 'plugin_blog_filter_post_content', 'default' => 'Search in content'],
             'compare' => CrudFilterComparator::LIKE,
         ],
     ];
@@ -392,7 +392,7 @@ class PostController extends BaseCrudController {
             $entityManager      = Oforge()->DB()->getEntityManager();
             $criteria           = [];
             $filteredByLanguage = false;
-            if (isset($_GET['language']) && $_GET['language'] !== '') {
+            if (ArrayHelper::issetNotEmpty($_GET, 'language')) {
                 $criteria['language'] = $_GET['language'];
                 $filteredByLanguage   = true;
             }

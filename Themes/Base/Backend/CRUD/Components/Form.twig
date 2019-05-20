@@ -20,15 +20,15 @@
                     {% for property in crud.properties if property.crud[crud.context] and property.crud[crud.context]|default('off') != 'off' and property.name != 'id' %}
                         <div class="form-group crud-datatype-{{ property.type }} crud-property-{{ property.name }}">
                             {% if property.label is defined %}
-                                {% if property.label is empty %}
-                                    {% set fieldLabel = '-' %}
-                                {% else %}
+                                {% if property.label is array %}
                                     {% set fieldLabel = i18n(property.label) %}
+                                {% else %}
+                                    {% set fieldLabel = property.label %}
                                 {% endif %}
                             {% elseif property.name == 'id' %}
                                 {% set fieldLabel = 'ID' %}
                             {% else %}
-                                {% set fieldLabel = i18n(('crud_property_' ~ crud.model ~ '_' ~ property.name)|lower, property.name|capitalize) %}
+                                {% set fieldLabel = property.name|capitalize %}
                             {% endif %}
                             {% set fieldID = ['form', crud.context, crud.model|lower, property.name]|join('_') %}
                             <label for="{{ fieldID }}">{{ fieldLabel }}</label>

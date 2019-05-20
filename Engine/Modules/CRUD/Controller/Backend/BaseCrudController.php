@@ -34,9 +34,8 @@ class BaseCrudController extends SecureBackendController {
      *          [
      *              // Property name. Required
      *              'name'      => 'propertyName',
-     *               // Custom i18n key for label of form field, default('crud_<Module>_<ModelName>_<propertyName>' with name as default, or 'ID' default if name = id).
-     *               // String key or array with key and default value.
-     *              'label'     => 'label_id' | ['key' => 'label_id', 'default' => 'ID'],
+     *               // Text label or i18n array with key and default value.
+     *              'label'     => 'Text' | ['key' => 'label_id', 'default' => 'ID'],
      *              'type'      => CrudDataTypes::..., // Required
      *              'crud'      => [    // default = off (not rendered). (Required)
      *                  'index'     => 'off|readonly|editable',
@@ -45,19 +44,18 @@ class BaseCrudController extends SecureBackendController {
      *                  'update'    => 'off|readonly|editable',
      *                  'delete'    => 'off|readonly|editable',
      *              ],
-     *              'list' => [
-     *                  'isI18nLabel => false, # If type = select. Is Label i18n-key or array (key, default)? (Optional)
-     *                  'data' => [# Select with optgroups, key will be ignored in renderer
-     *                      'key'   => [
-     *                          'label'     => 'i18nLabel' | ['key' => 'i18nLabel', 'default' => 'DefaultText'],
-     *                          'options'   => [
-     *                              'value' => => 'Text' | 'i18nLabel' | ['key' => 'i18nLabel', 'default' => 'DefaultText'],
-     *                          ]
-     *                      ],
+     *              // Select with optgroups, key will be ignored in renderer
+     *              'list' => 'functionName' | [
+     *                  'key'   => [
+     *                      'label'     => 'Text' | ['key' => 'i18nLabel', 'default' => 'DefaultText'],
+     *                      'options'   => [
+     *                          'value' => => 'Text' | ['key' => 'i18nLabel', 'default' => 'DefaultText'],
+     *                      ]
      *                  ],
-     *                  'data' => [# Simple select
-     *                      'value' => 'Text' | 'i18nLabel' | ['key' => 'i18nLabel', 'default' => 'DefaultText'], # Simple select
-     *                  ],
+     *              ],
+     *              // Simple select
+     *              'list' => 'functionName' | [
+     *                  'value' => 'Text' | ['key' => 'i18nLabel', 'default' => 'DefaultText'], # Simple select
      *              ],
      *              'editor' => [       // Configuration for field editor.
      *                  'default'       => '',      // Default value. (Optional)
@@ -105,7 +103,7 @@ class BaseCrudController extends SecureBackendController {
      *      protected $indexFilter = [
      *          'propertyName' => [
      *              'type'      => CrudFilterType::...,
-     *              'label'     => 'i18nLabel' | ['key' => 'i18nLabel', 'default' => 'DefaultText'],
+     *              'label'     => 'Text' | ['key' => 'i18nLabel', 'default' => 'DefaultText'],
      *              'compare'   => CrudFilterComparator::#Default = equals
      *              'list'      => ''# Required list for type=select, array or protected function name.
      *          ],
@@ -240,10 +238,10 @@ class BaseCrudController extends SecureBackendController {
                 }
             }
         }
-        $filter = $this->indexFilter;
-        foreach ($filter as $index => $entry) {
-            if (isset($entry['list']) && is_string($entry['list']) && method_exists($this, $entry['list'])) {
-                $filter[$index]['list'] = $this->{$entry['list']}();
+        $filters = $this->indexFilter;
+        foreach ($filters as $index => $filter) {
+            if (isset($filter['list']) && is_string($filter['list']) && method_exists($this, $filter['list'])) {
+                $filters[$index]['list'] = $this->{$filter['list']}();
             }
         }
 
@@ -258,7 +256,7 @@ class BaseCrudController extends SecureBackendController {
                 'items'         => $entities,
                 'pagination'    => $pagination,
                 'queryKeys'     => $this->indexReservedQueryKeys,
-                'filter'        => $filter,
+                'filter'        => $filters,
             ],
         ]);
 
@@ -392,17 +390,7 @@ class BaseCrudController extends SecureBackendController {
     public function deleteAction(Request $request, Response $response, array $args) {
         $postData = $request->getParsedBody();
         if ($request->isPost() && !empty($postData)) {
-            try {
-                $this->crudService->delete($this->model, $args['id']);
-                Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_delete_success', 'Entity successfully delete.'));
-
-                return $this->redirect($response, 'index');
-            } catch (Exception $exception) {
-                Oforge()->View()->Flash()
-                        ->addExceptionMessage('danger', I18N::translate('backend_crud_msg_delete_failed', 'Entity delete failed.'), $exception);
-
-                return $this->redirect($response, 'delete', ['id' => $args['id']]);
-            }
+            $this->handleDeleteAction($response, $args['id']);
         }
         $entity = $this->crudService->getById($this->model, $args['id']);
         $entity = $this->prepareItemDataArray($entity, 'delete');
@@ -464,6 +452,25 @@ class BaseCrudController extends SecureBackendController {
      */
     protected function prepareItemDataArray(?AbstractModel $entity, string $crudAction) : array {
         return isset($entity) ? $entity->toArray() : [];
+    }
+
+    /**
+     * @param Response $response
+     * @param string $entityID
+     *
+     * @return Response
+     */
+    protected function handleDeleteAction(Response $response, string $entityID) {
+        try {
+            $this->crudService->delete($this->model, $entityID);
+            Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_delete_success', 'Entity successfully delete.'));
+
+            return $this->redirect($response, 'index');
+        } catch (Exception $exception) {
+            Oforge()->View()->Flash()->addExceptionMessage('danger', I18N::translate('backend_crud_msg_delete_failed', 'Entity delete failed.'), $exception);
+
+            return $this->redirect($response, 'delete', ['id' => $entityID]);
+        }
     }
 
     /**
@@ -574,7 +581,7 @@ class BaseCrudController extends SecureBackendController {
             foreach ($this->indexFilter as $propertyName => $filterConfig) {
                 if (isset($queryParams[$propertyName]) && $queryParams[$propertyName] !== '') {
                     $propertyNameValue = $queryParams[$propertyName];
-                    $compare = ArrayHelper::get($filterConfig, 'compare', CrudFilterComparator::EQUALS);
+                    $compare           = ArrayHelper::get($filterConfig, 'compare', CrudFilterComparator::EQUALS);
                     //TODO Crud-Index - Extended filtering - evaluate & set filterConfig
                     $filter[$propertyName] = $propertyNameValue;
                 }

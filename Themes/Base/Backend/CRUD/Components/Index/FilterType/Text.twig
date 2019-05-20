@@ -1,7 +1,2 @@
-{% if filterConfig.compare == 'like' %}
-    {% set filterTitle = i18n('backend_crud_btn_filter_prefix_text_like', 'Search in') ~ ': ' ~ filterTitle %}
-{% elseif filterConfig.compare|default('equals') == 'equals' %}
-    {% set filterTitle = i18n('backend_crud_btn_filter_prefix_text_equals', 'Search') ~ ': ' ~ filterTitle %}
-{% endif %}
 <input title="{{ filterTitle }}" placeholder="{{ filterTitle }}" name="{{ propertyName }}"
        type="text" class="form-control" value="{{ route.query[propertyName]|default() }}" />
