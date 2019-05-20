@@ -70,6 +70,11 @@ class Insertion extends AbstractModel {
      */
     private $content;
 
+    /**
+     * @var InsertionContact
+     * @ORM\OneToOne(targetEntity="InsertionContact", mappedBy="insertion", fetch="EXTRA_LAZY")
+     */
+    private $contact;
 
     /**
      * @ORM\PrePersist
@@ -203,5 +208,19 @@ class Insertion extends AbstractModel {
      */
     public function setContent(array $content) : void {
         $this->content = $content;
+    }
+
+    /**
+     * @return InsertionContact
+     */
+    public function getContact() : InsertionContact {
+        return $this->contact;
+    }
+
+    /**
+     * @param InsertionContact $contact
+     */
+    public function setContact(InsertionContact $contact) : void {
+        $this->contact = $contact;
     }
 }
