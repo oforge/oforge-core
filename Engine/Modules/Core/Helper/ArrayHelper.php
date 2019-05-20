@@ -27,6 +27,18 @@ class ArrayHelper {
     }
 
     /**
+     * Check if key exist (isset) and value is not empty.
+     *
+     * @param array $array
+     * @param mixed $key
+     *
+     * @return bool
+     */
+    public static function issetNotEmpty(array $array, $key) : bool {
+        return isset($array[$key]) && $array[$key] !== '';
+    }
+
+    /**
      * Returns array value or default.
      * Check array key with isset.
      *
