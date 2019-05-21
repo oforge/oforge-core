@@ -14,7 +14,41 @@
     padding: $size-large;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
     justify-content: center;
     background: $color-secondary;
+    text-align: center;
+    width: 100%;
+    max-width: 30rem;
+    margin: 0 auto;
+
+    &.grid-box--extended {
+        justify-content: flex-start;
+
+        .grid-box__text {
+            border-bottom: 2px solid $text-light;
+            padding: 0 0 $size-large 0;
+            margin: $size-large 0;
+        }
+    }
+
+    &__content {
+        color: $text-light;
+        font-size: $font-size-5;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+    &__text {
+        margin: $size-large 0 0;
+        width: 100%;
+    }
+
+    &__sub-items {
+        margin: 0 auto 0 0;
+    }
+    &__sub-item {
+        color: $text-light;
+        font-size: $font-size-6;
+    }
 }
