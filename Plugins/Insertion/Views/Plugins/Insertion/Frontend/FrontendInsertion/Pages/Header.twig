@@ -5,11 +5,11 @@
         </a>
     {% endif %}
 
-    <ul>
+    <ul class="steps">
         {% for i in range(1, pagecount) %}
-            <li>
+            <li class="step">
                 <a href="{{ url('insertions_createSteps', { type : type.id, page: i}) }}"
-                   class="{% if i < page %}below{% endif %}{% if i == page %}current{% endif %}">
+                   class="step__link{% if i < page %}step__link--done{% endif %}{% if i == page %}step__link--current{% endif %}">
                     {{ i }}
                 </a>
             </li>
