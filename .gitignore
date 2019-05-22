@@ -19,5 +19,4 @@ node_modules
 var
 vendor
 Themes/*.lnk
-composer.phar
-Themes/allyourhorses
+/Themes/AllYourHorses/

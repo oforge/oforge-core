@@ -3,11 +3,14 @@
 namespace Insertion\Models;
 
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 
 /**
  * @ORM\Table(name="oforge_insertion")
+ * @ORM\HasLifecycleCallbacks()
  * @ORM\Entity
  */
 class Insertion extends AbstractModel {
@@ -20,33 +23,16 @@ class Insertion extends AbstractModel {
     private $id;
 
     /**
-     * TODO: Relation mapping
-     *
-     * @var int
-     * @ORM\Column(name="insertion_type_id", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="InsertionType", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="insertion_type_id", referencedColumnName="id")
      */
-    private $insertion_type_id;
+    private $insertionType;
 
     /**
-     * @var string
-     * @ORM\Column(name="insertion_title", type="string", nullable=false)
-     */
-    private $title;
-
-    /**
-     * TODO: Relation mapping
-     * @var int
-     * @ORM\Column(name="insertion_user", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="FrontendUserManagement\Models\User", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="insertion_user", referencedColumnName="id")
      */
     private $user;
-
-    /**
-     * TODO: Mapping to content type rich text
-     *
-     * @var string
-     * @ORM\Column(name="attribute_key_name", type="text", nullable=false)
-     */
-    private $description;
 
     /**
      * @var Datetime
@@ -61,10 +47,44 @@ class Insertion extends AbstractModel {
     private $updatedAt;
 
     /**
+     * @var InsertionMedia[]
+     * @ORM\OneToMany(targetEntity="InsertionMedia", mappedBy="insertion", cascade={"all"}, fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="id", referencedColumnName="insertion_id")
+     */
+    private $media;
+
+    /**
+     * @var InsertionContent[]
+     * @ORM\OneToMany(targetEntity="InsertionContent", mappedBy="insertion", cascade={"all"}, fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="id", referencedColumnName="insertion_id")
+     */
+    private $content;
+
+    /**
+     * @var InsertionContact
+     * @ORM\OneToOne(targetEntity="InsertionContact", mappedBy="insertion", fetch="EXTRA_LAZY")
+     */
+    private $contact;
+
+    /**
+     * @var InsertionAttributeValue[]
+     * @ORM\OneToMany(targetEntity="InsertionAttributeValue", mappedBy="insertion", cascade={"all"}, fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="id", referencedColumnName="insertion_id")
+     */
+    private $values;
+
+    /**
      * @ORM\PrePersist
      */
     public function onPrePersist() {
-        $this->createdAt = new \DateTime("now");
+        $date            = new \DateTime('now');
+        $this->createdAt = $date;
+        $this->updatedAt = $date;
+    }
+
+    public function __construct() {
+        $this->media   = new ArrayCollection();
+        $this->content = new ArrayCollection();
     }
 
     /**
@@ -82,31 +102,21 @@ class Insertion extends AbstractModel {
     }
 
     /**
-     * @return int
+     * @return mixed
      */
-    public function getInsertionTypeId() : int {
-        return $this->insertion_type_id;
+    public function getInsertionType() {
+        return $this->insertionType;
     }
 
     /**
-     * @param int $insertion_type_id
+     * @param mixed $insertionType
+     *
+     * @return Insertion
      */
-    public function setInsertionTypeId(int $insertion_type_id) : void {
-        $this->insertion_type_id = $insertion_type_id;
-    }
+    public function setInsertionType($insertionType) {
+        $this->insertionType = $insertionType;
 
-    /**
-     * @return string
-     */
-    public function getTitle() : string {
-        return $this->title;
-    }
-
-    /**
-     * @param string $title
-     */
-    public function setTitle(string $title) : void {
-        $this->title = $title;
+        return $this;
     }
 
     /**
@@ -118,23 +128,13 @@ class Insertion extends AbstractModel {
 
     /**
      * @param mixed $user
+     *
+     * @return Insertion
      */
-    public function setUser($user) : void {
+    public function setUser($user) : Insertion {
         $this->user = $user;
-    }
 
-    /**
-     * @return string
-     */
-    public function getDescription() : string {
-        return $this->description;
-    }
-
-    /**
-     * @param string $description
-     */
-    public function setDescription(string $description) : void {
-        $this->description = $description;
+        return $this;
     }
 
     /**
@@ -149,5 +149,61 @@ class Insertion extends AbstractModel {
      */
     public function getUpdatedAt() : DateTime {
         return $this->updatedAt;
+    }
+
+    /**
+     * @return InsertionMedia[]
+     */
+    public function getMedia() : ?object {
+        return $this->media;
+    }
+
+    /**
+     * @param InsertionMedia[] $media
+     */
+    public function setMedia(array $media) : void {
+        $this->media = $media;
+    }
+
+    /**
+     * @return InsertionContent[]
+     */
+    public function getContent() : ?object {
+        return $this->content;
+    }
+
+    /**
+     * @param InsertionContent[] $content
+     */
+    public function setContent(array $content) : void {
+        $this->content = $content;
+    }
+
+    /**
+     * @return InsertionContact
+     */
+    public function getContact() : InsertionContact {
+        return $this->contact;
+    }
+
+    /**
+     * @param InsertionContact $contact
+     */
+    public function setContact(InsertionContact $contact) : void {
+        $this->contact = $contact;
+    }
+
+    /**
+     * @return InsertionAttributeValue[]
+     */
+    public function getValues() : ?object {
+        return $this->values;
+    }
+
+    /**
+     * @param InsertionAttributeValue[] $values
+     */
+    public function setValues(array $values) : void {
+        $this->values = $values;
     }
 }

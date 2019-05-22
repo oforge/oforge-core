@@ -17,7 +17,7 @@ class UserService extends AbstractDatabaseAccess {
      * @return User
      * @throws ORMException
      */
-    public function getUserById(int $id): User {
+    public function getUserById(int $id): ?User {
         /** @var User $user */
         $user = $this->repository()->find($id);
         return $user;
