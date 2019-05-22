@@ -351,7 +351,12 @@
                                     {% block logo %}
                                         <tr>
                                             <td>
-                                                <p>Cannot find a logo ¯\_(ツ)_/¯</p>
+                                                {% set logo_src="https://starwarsblog.starwars.com/wp-content/uploads/2017/05/yoda-advice-featured-1.jpg" %}
+                                        {% if logo_src != "" %}
+                                            <img style="width:200px" src={{ logo_src }}>
+                                        {% else %}
+                                                <span>Cannot find a logo ¯\_(ツ)_/¯</span>
+                                        {% endif %}
                                             </td>
                                         </tr>
                                     {% endblock logo %}

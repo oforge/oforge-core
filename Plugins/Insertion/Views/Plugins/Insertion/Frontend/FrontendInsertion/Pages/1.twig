@@ -20,7 +20,7 @@
      {% for attributeGroup in attributes %}
          {% if attributeGroup.items|length > 0 and attributeGroup.name == 'main' %}
              {% for attribute in attributeGroup.items %}
-                 {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'item': attribute.attributeKey } %}
+                 {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey } %}
              {% endfor %}
          {% endif %}
      {% endfor %}
