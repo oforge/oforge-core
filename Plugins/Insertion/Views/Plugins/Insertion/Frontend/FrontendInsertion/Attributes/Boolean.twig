@@ -1,5 +1,5 @@
 <div class="form__control">
 
-    <input type="checkbox" name="insertion_boolean[{{ item.id }}]" {% if data[page]['insertion_boolean'][item.id] == 'on' %}checked="checked"{% endif %}>
-    <label for="insertion_boolean[{{ item.id }}]"> {{  i18n(item.name) }}</label>
+    <input type="checkbox" name="insertion[{{ attribute.id }}]" {% if data[page]['insertion'][attribute.id] == 'on' %}checked="checked"{% endif %}>
+    <label for="insertion[{{ attribute.id }}]"> {{  i18n(attribute.name) }}</label>
 </div>

@@ -119,7 +119,7 @@ class FrontendInsertionController extends SecureFrontendController {
 
             if ($request->isPost()) {
                 $data = $createService->processPostData($typeId);
-                $createService->create($data);
+                $createService->create($typeId, $user, $data);
             }
 
         } else {
