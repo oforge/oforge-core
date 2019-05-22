@@ -38,7 +38,7 @@ class ImageTileLarge extends AbstractContentType
             'css'               => $this->getContentCssClass(),
             'url'               => $contentData['url'],
             'caption'           => $contentData['caption'],
-            'subheader'         => $contentData['subheader'],
+            'subheading'         => $contentData['subheading'],
             'text'              => $contentData['text'],
             'backgroundcolor'   => $contentData['backgroundcolor'],
             'fontcolor'         => $contentData['fontcolor']
@@ -58,7 +58,7 @@ class ImageTileLarge extends AbstractContentType
         $contentData = [
             'url'               => $this->getContentData()['url'],
             'caption'           => $data['caption'],
-            'subheader'         => $data['subheader'],
+            'subheading'         => $data['subheading'],
             'text'              => $data['text'],
             'backgroundcolor'   => $data['backgroundcolor'],
             'fontcolor'         => $data['fontcolor']
@@ -102,7 +102,7 @@ class ImageTileLarge extends AbstractContentType
             'css'               => $contentData['css'],
             'url'               => $contentData['url'],
             'caption'           => $contentData['caption'],
-            'subheader'         => $contentData['subheader'],
+            'subheading'        => $contentData['subheading'],
             'text'              => $contentData['text'],
             'backgroundcolor'   => $contentData['backgroundcolor'],
             'fontcolor'         => $contentData['fontcolor']
