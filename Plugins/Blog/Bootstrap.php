@@ -2,8 +2,6 @@
 
 namespace Blog;
 
-use Blog\Controller\Backend\CommentController;
-use Blog\Controller\Frontend\Blog\BlogController;
 use Blog\Models\Category;
 use Blog\Models\Comment;
 use Blog\Models\Post;
@@ -37,8 +35,8 @@ class Bootstrap extends AbstractBootstrap {
         $this->endpoints = [
             Controller\Backend\CategoryController::class,
             Controller\Backend\PostController::class,
-            CommentController::class,
-            BlogController::class,
+            Controller\Backend\CommentController::class,
+            Controller\Frontend\BlogController::class,
         ];
 
         $this->models = [

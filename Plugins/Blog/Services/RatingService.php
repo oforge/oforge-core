@@ -98,12 +98,14 @@ class RatingService extends AbstractDatabaseAccess {
      * @param array $data
      */
     public function evaluateRating(array &$data) {
-        $tmpRatings = $data['ratings'];
-        $rating     = ['up' => 0, 'down' => 0];
-        foreach ($tmpRatings as $tmpRating) {
-            $rating[$tmpRating['rating'] ? 'up' : 'down']++;
+        if (isset($data['ratings'])) {
+            $tmpRatings = $data['ratings'];
+            $rating     = ['up' => 0, 'down' => 0];
+            foreach ($tmpRatings as $tmpRating) {
+                $rating[$tmpRating['rating'] ? 'up' : 'down']++;
+            }
+            $data['ratings'] = $rating;
         }
-        $data['ratings'] = $rating;
     }
 
 }
