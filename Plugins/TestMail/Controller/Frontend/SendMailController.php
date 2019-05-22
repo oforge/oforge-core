@@ -15,7 +15,7 @@ use Slim\Http\Response;
  */
 class SendMailController extends AbstractController {
     public function indexAction(Request $request, Response $response) {
-        $mailservice         = Oforge()->Services()->get('mail');
+        $mailservice = Oforge()->Services()->get('mail');
         $testOptions = [
             'to'         => [$request->getQueryParam('to') => $request->getQueryParam('to')],
             'cc'         => [],
@@ -25,14 +25,11 @@ class SendMailController extends AbstractController {
             'attachment' => [],
             'template'   => $request->getQueryParam('template'),
         ];
-
         try {
             $mailservice->send($testOptions, []);
         }
         catch(\Exception $e) {
             echo $e;
         }
-        echo "Mail has been sent";
-        die();
     }
 }
