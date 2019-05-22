@@ -1,10 +1,9 @@
 <?php
 
-namespace TestMail\Controller\Frontend;
+namespace TestMail\Controller\Backend;
 
 use Exception;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
-use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -13,8 +12,9 @@ use Slim\Http\Response;
 /**
  * Class TestMailController
  *
- * @package TestMail\Controller\Frontend
- * @EndpointClass(path="/testmail", name="testmail", assetScope="Frontend")
+ * @package TestMail\Controller\Backend
+ * @EndpointClass(path="/backend/testmail", name="backend_testmail", assetScope="Backend")
+ *
  */
 class TestMailController extends AbstractController {
     /**
@@ -27,8 +27,8 @@ class TestMailController extends AbstractController {
     public function indexAction(Request $request, Response $response) {
 
         $router                     = Oforge()->Container()->get('router');
-        $showMailLink               = $router->pathFor('showmail');
-        $sendMailLink               = $router->pathFor('sendmail');
+        $showMailLink               = $router->pathFor('backend_showmail');
+        $sendMailLink               = $router->pathFor('backend_sendmail');
         Oforge()->View()->assign(['showMailLink' => $showMailLink, 'sendMailLink' => $sendMailLink]);
 
         return $response;
