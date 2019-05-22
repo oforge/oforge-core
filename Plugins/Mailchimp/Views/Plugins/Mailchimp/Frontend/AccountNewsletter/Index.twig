@@ -1,0 +1,19 @@
+{% extends "@parent/Frontend/Layout.twig" %}
+{% block content %}
+    {% include 'Plugins/FrontendUserManagement/Frontend/Components/AccountNavBar.twig' with { content_title: i18n('overview', 'Overview') } %}
+    <div class="account content">
+        {% block newsletter %}
+            <div class="panel panel--account flex">
+                {% block account__sidebar %}
+                    {% include 'Plugins/FrontendUserManagement/Frontend/Components/Sidebar.twig' %}
+                {% endblock account__sidebar %}
+
+                {% block newsletter__content %}
+                    <div class="account__content">
+                        {% include 'Plugins/Mailchimp/Frontend/Components/Forms/NewsletterSubscriptionForm.twig' %}
+                    </div>
+                {% endblock newsletter__content %}
+            </div>
+        {% endblock newsletter %}
+    </div>
+{% endblock content %}

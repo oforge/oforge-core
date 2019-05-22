@@ -8,6 +8,7 @@
 !/.idea/encodings.xml
 !/.idea/externalDependencies.xml
 !.phpstorm
+/composer.lock
 /config.php
 /config.dev.php
 /config.prod.php

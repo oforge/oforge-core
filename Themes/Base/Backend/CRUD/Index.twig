@@ -19,6 +19,10 @@
                                 </p>
                             </div>
                         </div>
+                        {% include 'Backend/CRUD/Components/Index/Filter.twig' with {
+                            filter: crud.filter,
+                            route: meta.route
+                        } only %}
                         {% if crud.hasEditors %}
                         <form method="post">
                             {% endif %}

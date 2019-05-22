@@ -6,12 +6,14 @@ use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\DashboardWidgetsService;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\UserFavoritesService;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Notifications\Abstracts\AbstractNotificationService;
 use Oforge\Engine\Modules\Notifications\Services\BackendNotificationService;
 use Twig_Extension;
+use Twig_ExtensionInterface;
 use Twig_Function;
 
-class BackendExtension extends Twig_Extension implements \Twig_ExtensionInterface {
+class BackendExtension extends Twig_Extension implements Twig_ExtensionInterface {
     public function getFunctions() {
         return [
             new Twig_Function('backend_sidebar_navigation', [$this, 'get_sidebar_navigation']),
@@ -29,7 +31,7 @@ class BackendExtension extends Twig_Extension implements \Twig_ExtensionInterfac
 
     /**
      * @return array|object[]
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ServiceNotFoundException
      */
     public function get_backend_notifications() {
         /** @var $authService AuthService */
@@ -47,7 +49,7 @@ class BackendExtension extends Twig_Extension implements \Twig_ExtensionInterfac
 
     /**
      * @return mixed
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ServiceNotFoundException
      */
     public function get_sidebar_navigation() {
         /** @var $sidebarNavigation BackendNavigationService */
@@ -58,7 +60,7 @@ class BackendExtension extends Twig_Extension implements \Twig_ExtensionInterfac
 
     /**
      * @return mixed
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ServiceNotFoundException
      */
     public function get_topbar_navigation() {
         /** @var $topbarNavigation BackendNavigationService */
@@ -81,7 +83,7 @@ class BackendExtension extends Twig_Extension implements \Twig_ExtensionInterfac
      * @param mixed ...$vars
      *
      * @return array
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ServiceNotFoundException
      */
     public function get_breadcrumbs(...$vars) {
         /** @var $sidebarNavigation BackendNavigationService */
@@ -98,7 +100,7 @@ class BackendExtension extends Twig_Extension implements \Twig_ExtensionInterfac
      * @param mixed ...$vars
      *
      * @return array
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ServiceNotFoundException
      */
     public function get_breadcrumbs_map(...$vars) {
         /** @var $sidebarNavigation BackendNavigationService */
@@ -123,7 +125,7 @@ class BackendExtension extends Twig_Extension implements \Twig_ExtensionInterfac
      * @param mixed ...$vars
      *
      * @return bool
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ServiceNotFoundException
      */
     public function is_favorite(...$vars) {
         /** @var $authService AuthService */
@@ -143,7 +145,7 @@ class BackendExtension extends Twig_Extension implements \Twig_ExtensionInterfac
      * @param mixed ...$vars
      *
      * @return array
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ServiceNotFoundException
      */
     public function get_favorites(...$vars) {
         /** @var $authService AuthService */
@@ -190,7 +192,8 @@ class BackendExtension extends Twig_Extension implements \Twig_ExtensionInterfac
 
     /**
      * @return array|object[]
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ServiceNotFoundException
+     * @throws \Doctrine\ORM\ORMException
      */
     public function get_widgets() {
         /** @var $authService AuthService */
@@ -200,16 +203,15 @@ class BackendExtension extends Twig_Extension implements \Twig_ExtensionInterfac
             /** @var DashboardWidgetsService $widgetService */
             $widgetService = Oforge()->Services()->get("backend.dashboard.widgets");
 
-            return $widgetService->getUserWidgets($user['id']);
+   //         return $widgetService->getUserWidgets($user['id']);
         }
 
         return [];
     }
 
-
     /**
      * @return array|object[]
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ServiceNotFoundException
      */
     public function get_widgets_data(...$vars) {
         /** @var $authService AuthService */

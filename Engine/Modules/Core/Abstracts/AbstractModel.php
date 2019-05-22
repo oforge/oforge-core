@@ -2,6 +2,7 @@
 
 namespace Oforge\Engine\Modules\Core\Abstracts;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\PersistentCollection;
 use ReflectionException;
@@ -62,7 +63,7 @@ abstract class AbstractModel {
                     if (isset($classObject)) {
                         $className = $classObject->getName();
                         if (isset($className)) {
-                            $value = Oforge()->DB()->getEnityManager()->getRepository($className)->find($value);
+                            $value = Oforge()->DB()->getEntityManager()->getRepository($className)->find($value);
                         }
                     } else {
                         switch ("" . $params[0]->getType()) {
@@ -80,6 +81,7 @@ abstract class AbstractModel {
     }
 
 
+    /** @deprecated  */
     public static function definition()
     {
         $methods = get_class_methods(static::class);
@@ -117,7 +119,7 @@ abstract class AbstractModel {
      *
      * @return array
      */
-    public function toArray($maxDepth = 2) {
+    public function toArray($maxDepth = 2) : array {
         $result = [];
         foreach (get_class_methods($this) as $classMethod) {
             foreach (['get', 'is'] as $prefix) {
@@ -154,7 +156,7 @@ abstract class AbstractModel {
             }
 
             return null;
-        } elseif ((is_array($result) || is_a($result, PersistentCollection::class)) && $maxDepth > 0) {
+        } elseif (is_array($result) || is_subclass_of($result, Collection::class)) {
             $subResult = [];
             foreach ($result as $item) {
                 $subResult[] = $item->assignArray($item, $maxDepth - 1);

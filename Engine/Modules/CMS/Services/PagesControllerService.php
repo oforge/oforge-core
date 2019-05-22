@@ -34,7 +34,7 @@ class PagesControllerService extends AbstractDatabaseAccess {
             "contentType" => ContentType::class, 
             "content" => Content::class]);
         
-        $this->entityManager = Oforge()->DB()->getEnityManager();
+        $this->entityManager = Oforge()->DB()->getEntityManager();
     }
 
     /**
@@ -69,7 +69,7 @@ class PagesControllerService extends AbstractDatabaseAccess {
     public function getDefaultLanguageForPage($id)
     {
         $pageEntity = $this->repository('page')->findOneBy(["id" => $id]);
-        
+
         if ($pageEntity)
         {
             $siteEntity = $this->repository('site')->findOneBy(["id" => $pageEntity->getSite()]);
@@ -202,12 +202,12 @@ class PagesControllerService extends AbstractDatabaseAccess {
         $pageTreeService = OForge()->Services()->get("page.tree.service");
         
         $selectedPage = isset($post["cms_page_jstree_selected_page"]) && $post["cms_page_jstree_selected_page"] > 0 ? $post["cms_page_jstree_selected_page"] : 0;
-        
+
         if (!isset($post["cms_page_selected_language"]) || $post["cms_page_selected_language"] < 1)
         {
             $post["cms_page_selected_language"] = $this->getDefaultLanguageForPage($selectedPage);
         }
-        
+
         $data = [
             "js"                      => ["cms_pages_controller_jstree_config" => $pageTreeService->generateJsTreeConfigJSON()],
             "languages"               => $this->getAvailableLanguages(),
@@ -228,6 +228,7 @@ class PagesControllerService extends AbstractDatabaseAccess {
         $selectedPage       = isset($post["cms_page_jstree_selected_page"]) && $post["cms_page_jstree_selected_page"] > 0 ? $post["cms_page_jstree_selected_page"] : 0;
         $selectedLanguage   = isset($post["cms_page_selected_language"])    && $post["cms_page_selected_language"] > 0    ? $post["cms_page_selected_language"]    : $post["cms_page_selected_language"] = $this->getDefaultLanguageForPage($selectedPage);
         $pagePath           = isset($post["cms_page_data_page_path"])       && !empty($post["cms_page_data_page_path"])   ? $post["cms_page_data_page_path"]       : false;
+
 
         if ($pagePath)
         {
@@ -264,7 +265,7 @@ class PagesControllerService extends AbstractDatabaseAccess {
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    private function createContentElement($pagePathId, $selectedElementId, $createContentWithTypeId, $createContentAtOrderIndex)
+    public function createContentElement($pagePathId, $selectedElementId, $createContentWithTypeId, $createContentAtOrderIndex)
     {
         /** @var ContentType $contentTypeEntity */
         $contentTypeEntity = $this->repository('contentType')->findOneBy(["id" => $createContentWithTypeId]);
@@ -284,7 +285,7 @@ class PagesControllerService extends AbstractDatabaseAccess {
             
             $contentId = $contentEntity->getId();
             
-            if ($selectedElementId < 1)
+            if ($pagePathId !== false && $selectedElementId < 1)
             {
                 $pageContentEntities = $this->repository('pageContent')->findBy(["pagePath" => $pagePathId]);
                 
@@ -370,7 +371,7 @@ class PagesControllerService extends AbstractDatabaseAccess {
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    private function deleteContentElement($pagePathId, $selectedElementId, $deleteContentWithId, $deleteContentAtOrderIndex)
+    public function deleteContentElement($pagePathId, $selectedElementId, $deleteContentWithId, $deleteContentAtOrderIndex)
     {
         if ($selectedElementId)
         {
@@ -408,12 +409,15 @@ class PagesControllerService extends AbstractDatabaseAccess {
             }
             else
             {
-                $pageContentEntity = $this->repository('pageContent')->findOneBy(["pagePath" => $pagePathId, "content" => $contentElementId, "order" => $contentElementAtOrderIndex]);
-
-                if ($pageContentEntity)
+                if ($pagePathId !== false)
                 {
-                    $this->entityManager->remove($pageContentEntity);
-                    $this->entityManager->flush();
+                    $pageContentEntity = $this->repository('pageContent')->findOneBy(["pagePath" => $pagePathId, "content" => $contentElementId, "order" => $contentElementAtOrderIndex]);
+
+                    if ($pageContentEntity)
+                    {
+                        $this->entityManager->remove($pageContentEntity);
+                        $this->entityManager->flush();
+                    }
                 }
             }
         }
@@ -449,12 +453,15 @@ class PagesControllerService extends AbstractDatabaseAccess {
             "selectedElement"   => $selectedElement,
             "post"              => $post
         ];
-        
+
+
+
+
         if ($selectedPage)
         {
             $pageArray        = $pageBuilderService->getPageArray($selectedPage);
             $pageContents     = $pageArray["paths"][$selectedLanguage]["pageContent"];
-            
+
             if ($selectedElement)
             {
                 $data["contents"] = $pageBuilderService->getContentDataArrayById($pageContents, $selectedElement);
