@@ -1,6 +1,6 @@
 <?php
 
-namespace TestMail\Controller\Frontend;
+namespace TestMail\Controller\Backend;
 
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
@@ -10,8 +10,8 @@ use Slim\Http\Response;
 /**
  * Class ShowMailController
  *
- * @package TestMail\Controller\Frontend
- * @EndpointClass(path="/sendmail", name="sendmail", assetScope="Frontend")
+ * @package TestMail\Controller\Backend
+ * @EndpointClass(path="/backend/sendmail", name="backend_sendmail", assetScope="Backend")
  */
 class SendMailController extends AbstractController {
     public function indexAction(Request $request, Response $response) {
