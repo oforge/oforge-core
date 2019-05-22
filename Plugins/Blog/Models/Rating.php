@@ -18,7 +18,7 @@ class Rating extends AbstractModel {
      * @ORM\Column(name="id", type="string", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class="\Blog\Models\RatingIdGenerator")
+     * @ORM\CustomIdGenerator(class="Blog\Models\RatingIdGenerator")
      */
     private $id;
     /**

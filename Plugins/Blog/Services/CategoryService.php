@@ -21,6 +21,8 @@ class CategoryService extends AbstractDatabaseAccess {
     }
 
     /**
+     * Get category by ID.
+     *
      * @param int $categoryID
      *
      * @return Category|null
@@ -36,6 +38,8 @@ class CategoryService extends AbstractDatabaseAccess {
     }
 
     /**
+     * Get categories for give language or if null by current system/user language.
+     *
      * @param string|null $language
      *
      * @return Category[]

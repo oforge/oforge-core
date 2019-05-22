@@ -3,10 +3,12 @@
 namespace Blog;
 
 use Blog\Controller\Backend\CommentController;
+use Blog\Controller\Frontend\Blog\BlogController;
 use Blog\Models\Category;
 use Blog\Models\Comment;
 use Blog\Models\Post;
 use Blog\Models\Rating;
+use Blog\Services\AuthService;
 use Blog\Services\CategoryService;
 use Blog\Services\CommentService;
 use Blog\Services\PostService;
@@ -36,7 +38,7 @@ class Bootstrap extends AbstractBootstrap {
             Controller\Backend\CategoryController::class,
             Controller\Backend\PostController::class,
             CommentController::class,
-            // BlogController::class,
+            BlogController::class,
         ];
 
         $this->models = [
@@ -47,6 +49,7 @@ class Bootstrap extends AbstractBootstrap {
         ];
 
         $this->services = [
+            'blog.auth'     => AuthService::class,
             'blog.category' => CategoryService::class,
             'blog.comment'  => CommentService::class,
             'blog.post'     => PostService::class,
