@@ -1,0 +1,13 @@
+<div class="blog-post">
+    {{ o_dump(blogPost) }}
+    {#    <div>{{ blogPost.headerImage }}</div>#}
+    {% if blog.category is not defined %}
+        <div>{{ blogPost.category.name }}</div>
+    {% endif %}
+    <div>{{ blogPost.created }}</div>
+    {% include 'Plugins/Blog/Frontend/Components/RatingView.twig' %}
+    <div>{{ blogPost.headerTitle }}</div>
+    <div>{{ blogPost.excerpt }}</div>
+    <a href="{{ url('frontend_blog_view', {postID:blogPost.id, seoUrlPath:blogPost.seoUrlPath}) }}"
+       title="{{ blogPost.headerTitle }}">LINK</a>
+</div>

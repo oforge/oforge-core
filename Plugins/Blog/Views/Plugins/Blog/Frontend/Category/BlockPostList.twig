@@ -1,0 +1,11 @@
+<div class="blog-posts">
+    {% for blogPost in blog.posts %}
+        {% include blog.template.blockPostEntry|default('Plugins/Blog/Frontend/Category/BlockPostEntry.twig') %}
+    {% else %}
+        {{ i18n('plugin_blog_no_posts_yet', 'No posts yet.') }}
+    {% endfor %}
+    <div>
+{#        TODO load more button#}
+        <button>Load more</button>
+    </div>
+</div>

@@ -1,0 +1,19 @@
+<ul>
+    <li>
+        <a href="{{ url('frontend_blog') }}">{{ i18n('plugin_blog_blog', 'Blog') }}</a>
+    </li>
+    {% if blog.category is defined %}
+        <li>
+            <a href="{{ url('frontend_blog', {categoryID: blog.category.id, seoUrlPath: blog.category.seoUrlPath}) }}">
+                {{ blog.category.name }}
+            </a>
+        </li>
+        {% if blog.post is defined %}
+            <li>
+                <a href="{{ url('frontend_view', {postID: blog.post.id, seoUrlPath: blog.post.seoUrlPath}) }}">
+                    {{ blog.post.headerTitle }}
+                </a>
+            </li>
+        {% endif %}
+    {% endif %}
+</ul>
