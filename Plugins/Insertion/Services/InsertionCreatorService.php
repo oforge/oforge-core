@@ -4,20 +4,29 @@ namespace Insertion\Services;
 
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\UserService;
 use Insertion\Models\AttributeKey;
 use Insertion\Models\AttributeValue;
 use Insertion\Models\Insertion;
 use Insertion\Models\InsertionAttributeValue;
+use Insertion\Models\InsertionContact;
 use Insertion\Models\InsertionContent;
+use Insertion\Models\InsertionMedia;
+use Insertion\Models\InsertionType;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\I18n\Models\Language;
+use Oforge\Engine\Modules\Media\Models\Media;
 use Oforge\Engine\Modules\Media\Services\MediaService;
 
 class InsertionCreatorService extends AbstractDatabaseAccess {
     public function __construct() {
         parent::__construct([
-            'default' => Insertion::class,
+            'default'  => Insertion::class,
+            'type'     => InsertionType::class,
+            'language' => Language::class,
+            'media'    => Media::class,
         ]);
     }
 
@@ -80,8 +89,54 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
         return $_SESSION['insertion' . $typeId];
     }
 
-    public function create(?array $data) {
+    public function parsePageData(array $pageData) : array {
 
+
+        return ["contact" => [], "content" => [], "media" => []];
+    }
+
+    public function create(int $typeId, User $user, array $data) : ?int {
+        $type     = $this->repository("type")->findOneBy(["id" => $typeId]);
+        $language = $this->repository("language")->findOneBy(["iso" => "de"]);
+
+
+        $this->parsePageData($data);
+
+        print_r($data);
+        die();
+        if (isset($type) && isset($language)) {
+            $content = InsertionContent::create(["language" => $language, "name" => "asd", "title" => "asd", "description" => "asdasd"]);
+            $contact = InsertionContact::create([
+                "name"    => "asdas",
+                "email"   => "asdasd",
+                "phone"   => "oasdphone",
+                "zip"     => "zuip",
+                "city"    => "asasd",
+                "visible" => 1,
+            ]);
+
+            $media  = $this->repository("media")->findOneBy(["id" => 1]);
+            $imedia = InsertionMedia::create(["name" => "asdas", 'content' => $media]);
+
+            $insertion = Insertion::create(["insertionType" => $type, "user" => $user]);
+
+            $content->setInsertion($insertion);
+            $insertion->setContent([$content]);
+
+            $contact->setInsertion($insertion);
+            $insertion->setContact($contact);
+
+            $imedia->setInsertion($insertion);
+            $insertion->setMedia([$imedia]);
+
+            $this->entityManager()->persist($imedia);
+            $this->entityManager()->persist($content);
+            $this->entityManager()->persist($contact);
+            $this->entityManager()->persist($insertion);
+            $this->entityManager()->flush();
+
+            return $insertion->getId();
+        }
     }
 }
 

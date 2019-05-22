@@ -2,7 +2,7 @@
 
 {% block page_content %}
     {# contact information #}
-    <textarea name="description">Lorem Ipsum</textarea>
+    <textarea name="insertion_description">Lorem Ipsum</textarea>
     {# contact attributes #}
     {% for attributeGroup in attributes %}
         {% if attributeGroup.items|length > 0 and attributeGroup.name == 'contact' %}
@@ -10,7 +10,7 @@
                 <h2>{{ i18n(attributeGroup.name) }}</h2>
                 <div>
                     {% for attribute in attributeGroup.items %}
-                        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'item': attribute.attributeKey } %}
+                        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey } %}
                     {% endfor %}
                 </div>
             </div>

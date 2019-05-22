@@ -5,6 +5,7 @@ namespace Insertion\Models;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
+use Oforge\Engine\Modules\Media\Models\Media;
 
 /**
  * @ORM\Table(name="oforge_insertion_media")
@@ -29,7 +30,7 @@ class InsertionMedia extends AbstractModel {
     private $insertion;
 
     /**
-     * @var Content
+     * @var Media
      * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\Media\Models\Media", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="content_id", referencedColumnName="id")
      */
@@ -50,16 +51,16 @@ class InsertionMedia extends AbstractModel {
     private $order;
 
     /**
-     * @return int
+     * @return intgetInsertion
      */
-    public function getId() : int {
+    public function getId() : ?int {
         return $this->id;
     }
 
     /**
      * @return Insertion
      */
-    public function getInsertion() : Insertion {
+    public function getInsertion() : ?Insertion {
         return $this->insertion;
     }
 
@@ -71,16 +72,16 @@ class InsertionMedia extends AbstractModel {
     }
 
     /**
-     * @return Content
+     * @return Media
      */
-    public function getContent() : Content {
+    public function getContent() : Media {
         return $this->content;
     }
 
     /**
-     * @param Content $content
+     * @param Media $content
      */
-    public function setContent(Content $content) : void {
+    public function setContent(Media $content) : void {
         $this->content = $content;
     }
 
@@ -101,7 +102,7 @@ class InsertionMedia extends AbstractModel {
     /**
      * @return int
      */
-    public function getOrder() : int {
+    public function getOrder() : ?int {
         return $this->order;
     }
 

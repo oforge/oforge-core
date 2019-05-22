@@ -1,10 +1,10 @@
 <div class="form__control">
-    <label class="form__label">{{ i18n(item.name) }}</label>
-    {% set values = getInserationValues(item.id) %}
+    <label class="form__label">{{ i18n(attribute.name) }}</label>
+    {% set values = getInserationValues(attribute.id) %}
 
     <div>
         {% for value in values.values %}
-            {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ value.subAttributeKey.type|capitalize  ~ '.twig'  with {'item': value.subAttributeKey }  %}
+            {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ value.subAttributeKey.type|capitalize  ~ '.twig'  with {'attribute': value.subAttributeKey }  %}
         {% endfor %}
     </div>
 </div>
