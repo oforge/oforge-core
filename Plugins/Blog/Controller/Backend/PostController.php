@@ -310,12 +310,7 @@ class PostController extends BaseCrudController {
             $data['author']   = $data['author']['id'];
             $data['category'] = $data['category']['id'];
 
-            $tmpRatings = $data['ratings'];
-            $rating     = ['up' => 0, 'down' => 0];
-            foreach ($tmpRatings as $tmpRating) {
-                $rating[$tmpRating['rating'] ? 'up' : 'down']++;
-            }
-            $data['ratings'] = $rating;
+            Oforge()->Services()->get('blog.rating')->evaluateRating($data);
         }
 
         return $data;
