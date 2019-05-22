@@ -9,14 +9,17 @@ use Insertion\Models\AttributeKey;
 use Insertion\Models\AttributeValue;
 use Insertion\Models\Insertion;
 use Insertion\Models\InsertionAttributeValue;
+use Insertion\Models\InsertionContent;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\I18n\Models\Language;
 
 class InsertionService extends AbstractDatabaseAccess {
     public function __construct() {
         parent::__construct([
             'default' => Insertion::class,
             'insertionAttributeValue' => InsertionAttributeValue::class,
+            'language' => Language::class
         ]);
     }
 
@@ -39,10 +42,18 @@ class InsertionService extends AbstractDatabaseAccess {
         }
         $user = $userService->getUserById(1);
         $insertion->setInsertionType($insertionType);
-        $insertion->setTitle($title);
         $insertion->setUser($user);
-        $insertion->setDescription($description);
 
+        $content = new InsertionContent();
+        $insertion->setContent([$content]);
+
+        $content->setDescription($description);
+        $content->setTitle($title);
+
+        $language = $this->repository("language")->findOneBy(["iso" => "de"]);
+        $content->setLanguage($language);
+
+        $this->entityManager()->persist($content);
         $this->entityManager()->persist($insertion);
         $this->entityManager()->flush($insertion);
 
