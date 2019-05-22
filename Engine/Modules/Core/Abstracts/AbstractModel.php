@@ -2,6 +2,7 @@
 
 namespace Oforge\Engine\Modules\Core\Abstracts;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\PersistentCollection;
 use ReflectionException;
@@ -155,7 +156,7 @@ abstract class AbstractModel {
             }
 
             return null;
-        } elseif ((is_array($result) || is_a($result, PersistentCollection::class)) && $maxDepth > 0) {
+        } elseif (is_array($result) || is_subclass_of($result, Collection::class)) {
             $subResult = [];
             foreach ($result as $item) {
                 $subResult[] = $item->assignArray($item, $maxDepth - 1);

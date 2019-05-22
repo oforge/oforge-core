@@ -200,7 +200,8 @@ CREATE TABLE `oforge_cms_content_type_group` (
 INSERT INTO `oforge_cms_content_type_group` (`id`, `content_type_group_name`, `description`) VALUES
 (1,	'container',	'Container'),
 (2,	'basic',	'Basic'),
-(3,	'media',	'Media');
+(3,	'media',	'Media'),
+(4,	'tiles',	'Tiles');
 
 DROP TABLE IF EXISTS `oforge_cms_content_type`;
 CREATE TABLE `oforge_cms_content_type` (

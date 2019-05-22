@@ -1,0 +1,19 @@
+{% block step_header %}
+    {% if page != 1 %}<a href="{{ url('insertions_createSteps', { type : type.id, page: page - 1}) }}"
+               class="form__input form__input--submit button">
+            BACK
+        </a>
+    {% endif %}
+
+    <ul class="steps">
+        {% for i in range(1, pagecount) %}
+            <li class="step {% if i < page %}step--done{% endif %}{% if i == page %}step--current{% endif %}">
+                <a href="{{ url('insertions_createSteps', { type : type.id, page: i}) }}"
+                   class="step__link">
+                    {{ i }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+{% endblock step_header %}
