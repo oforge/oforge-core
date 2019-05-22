@@ -46,7 +46,7 @@ class PostService extends AbstractDatabaseAccess {
      * @throws ServiceNotFoundException
      * @throws ConfigElementNotFoundException
      */
-    public function getPosts(int $page, int $categoryID = null) {
+    public function getPosts(int $page, ?int $categoryID) {
         /**
          * @var Post[] $posts
          * @var ConfigService $configService

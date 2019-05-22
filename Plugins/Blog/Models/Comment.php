@@ -21,7 +21,7 @@ class Comment extends AbstractModel {
      * @ORM\Column(name="id", type="string", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class="\Blog\Models\CommentIdGenerator")
+     * @ORM\CustomIdGenerator(class="Blog\Models\CommentIdGenerator")
      */
     private $id;
     /**
