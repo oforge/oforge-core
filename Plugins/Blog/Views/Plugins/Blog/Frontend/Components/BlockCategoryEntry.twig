@@ -1,0 +1,13 @@
+{% if headerCategory is defined %}
+    <li class="blog-category-entry {{ headerCategory.cssClass }} {% if meta.route.params.categoryID == headerCategory.id %}blog-category-entry--active{% endif %}">
+        <a href="{{ url('frontend_blog', {categoryID: headerCategory.id, seoUrlPath: headerCategory.seoUrlPath}) }}">
+            {{ headerCategory.name }}
+        </a>
+    </li>
+{% else %}
+    <li class="blog-category-entry {% if meta.route.params.categoryID is not defined %}blog-category-entry--active{% endif %}">
+        <a href="{{ url('frontend_blog') }}">
+            {{ i18n('plugin_blog_category_home', 'Home') }}
+        </a>
+    </li>
+{% endif %}

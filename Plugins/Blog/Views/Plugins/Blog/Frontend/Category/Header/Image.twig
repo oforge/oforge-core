@@ -1,0 +1,8 @@
+{% block blog_category_header_image %}
+    {% if blog.category is defined and blog.category.headerImage %}
+        {{ blog.category.headerImage }}
+    {% else %}
+        BACKGROUND
+    {% endif %}
+{% endblock blog_category_header_image %}
+
