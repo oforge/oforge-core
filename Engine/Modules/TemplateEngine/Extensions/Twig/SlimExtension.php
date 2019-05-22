@@ -8,6 +8,8 @@
 
 namespace Oforge\Engine\Modules\TemplateEngine\Extensions\Twig;
 
+use Exception;
+use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Slim\Router;
 use Twig_Extension;
 use Twig_Function;
@@ -26,22 +28,13 @@ class SlimExtension extends Twig_Extension {
      */
     public function getFunctions() {
         return [
-            new Twig_Function('url', [$this, 'getSlimUrl'], ['is_safe' => ['html']]),
+            new Twig_Function('url', [$this, 'getSlimUrl'], [
+                'is_safe' => ['html'],
+            ]),
         ];
     }
 
     /**
-     * @inheritDoc
-     */
-    public function getTests() {
-        return [
-            new \Twig_Test('array', [$this, 'isArray']),
-            new \Twig_Test('string', [$this, 'isString']),
-        ];
-    }
-
-    /**
-     *
      * @param mixed ...$vars
      *
      * @return string
@@ -50,44 +43,15 @@ class SlimExtension extends Twig_Extension {
         if (!isset($this->router)) {
             $this->router = Oforge()->App()->getContainer()->get('router');
         }
-        switch (count($vars)) {
-            case 1:
-                $result = $this->router->pathFor($vars[0]);
-                break;
-            case 2:
-                $result = $this->router->pathFor($vars[0], $vars[1]);
-                break;
-            case 3:
-                $result = $this->router->pathFor($vars[0], $vars[1], $vars[2]);
-                break;
-            default:
-                $result = '';
-                break;
+        $name        = ArrayHelper::get($vars, 0);
+        $namedParams = ArrayHelper::get($vars, 1, []);
+        $queryParams = ArrayHelper::get($vars, 2, []);
+        try {
+            $result = $this->router->pathFor($name, $namedParams, $queryParams);
+        } catch (Exception $e) {
+            $result = $name;
         }
 
         return $result;
     }
-
-    /**
-     * Slim test '... is array' to php is_array.
-     *
-     * @param mixed $value
-     *
-     * @return bool
-     */
-    public function isArray($value) {
-        return is_array($value);
-    }
-
-    /**
-     * Slim test '... is string' to php is_string.
-     *
-     * @param mixed $value
-     *
-     * @return bool
-     */
-    public function isString($value) {
-        return is_string($value);
-    }
-
 }

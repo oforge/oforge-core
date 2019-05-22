@@ -24,9 +24,9 @@ class Snippet extends AbstractModel {
     private $id;
     /**
      * @var string
-     * @ORM\Column(name="scope", type="string", nullable=false)
+     * @ORM\Column(name="scope", type="string", nullable=false, options={"default":"en"})
      */
-    private $scope;
+    private $scope = 'en';
     /**
      * @var string
      * @ORM\Column(name="snippet_name", type="string", nullable=false)

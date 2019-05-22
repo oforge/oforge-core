@@ -1,72 +1,51 @@
 // CMS Elements Controller Module
 // will be initialized on load of elements/index.twig
 var cmsElementsControllerModule = (function() {
-	// status variable to check if foreign object was dragged to jsTree
-	var isForeignDND = false;
-
-	// variable that holds the selected parent for content type dragged to jsTree
-	var contentTypeParentForeignDND = false;
-
 	// bind functions to window resize event
 	$(window).resize(function() {
 		cecm.resizeContentEditor();
 	});
 
-	// drag 'n drop event listeners for jsTree foreign objects
-	$(document).bind("dnd_start.vakata", function(event, data) {
-		console.log("jsTree - Start dnd");
-		console.log("Data:");
-		console.log(jsonStringify(data.data.jstree));
-		console.log(jsonStringify(data.data.obj));
-		console.log(jsonStringify(data.data.nodes));
-		console.log("------------------");
-	})
-	.bind("dnd_stop.vakata", function(event, data) {
-		console.log("jsTree - Stop dnd");
-		console.log("Data:");
-		console.log(jsonStringify(data.data.jstree));
-		console.log(jsonStringify(data.data.obj));
-		console.log(jsonStringify(data.data.nodes));
-		console.log("this was a foreign operation: " + isForeignDND);
-		console.log("------------------");
+	// mark and select selectable elements in page builder
+	$('[data-pb-id]').each(
+		function() {
+			var selectedElement = '^(' + $(this).attr('data-pb-se') + '\-)';
+			var regularExpression = new RegExp(selectedElement);
+			
+			if (
+				$(this).attr('data-pb-id') != $(this).attr('data-pb-se')
+				&& $(this).attr('data-pb-id').startsWith($(this).attr('data-pb-se'))
+				&& $(this).attr('data-pb-id').replace(regularExpression, '').indexOf('-') === -1
+			) {
+				// add delete button to element
+				$(this).append('<div class="content-type-delete-button" onclick="deleteContentType(event, this)"><img src="/Themes/Base/Backend/__assets/img/pagebuilder/delete.svg"></div>');
 
-		var dndData = data.data;
+				// mark selectable elements in page builder on mouse hover
+				$(this).hover(
+					function() {
+						$(this).addClass("cms-page-builder-selected-element");
+					},
+					function() {
+						$(this).removeClass("cms-page-builder-selected-element");
+					}		
+				);
+						
+				// select element in page builder on mouse click
+				$(this).click(
+					function() {
+						var contentElements = $(this).attr('data-pb-id').split('-');
 
-		if (isForeignDND && contentTypeParentForeignDND) {
-			if (data && data.data && data.data.nodes &&  data.data.nodes.length > 0) {
-				var node = data.data.nodes[0];
-		
-				if (node && node.data_ct_id) {
-					$('#cms_edit_element_id').val(node.data_ct_id);
-					$('#cms_edit_element_parent_id').val(contentTypeParentForeignDND);
-					$('#cms_edit_element_action').val('dnd');
-					$('#cms_element_jstree_form').submit();
-				}
+						if (contentElements && contentElements.length > 0) {
+							$('#cms_edit_element_id').val(contentElements[contentElements.length - 1]);
+							$('#cms_edit_element_action').val('edit');
+							$('#cms_element_jstree_form').submit();
+						}
+					}
+				);
 			}
 		}
-	});
-
-	// make foreign objects draggable to jsTree
-	$('.jstree_draggable').on('mousedown', function (event) {
-		$(this).wrap( "<div id='jstree-drag-element'></div>" );
-		var dragHelper = '<div id="jstree-dnd" class="jstree-default"><i class="jstree-icon jstree-er"></i>' + $('#jstree-drag-element').html() + '<ins class="jstree-copy" style="display:none;">+</ins></div>';
-		$(this).unwrap();
-
-		return $.vakata.dnd.start(
-			event,
-			{
-				'jstree' : true,
-				'obj' 	 : $(this),
-				'nodes'  : [{
-					'icon'		 : 'jstree-file',
-					'text'		 : 'New Content Element',
-					'data_ct_id' : $(this).attr('data-ct-id')
-				}]
-			},
-			dragHelper
-		);
-	});
-
+	);
+	
 	// jsTree callback functions
 	$('#cms_elements_controller_jstree').on('loaded.jstree', function (event, data) {
 		$('#cms_elements_controller_jstree').jstree('open_all');
@@ -74,9 +53,17 @@ var cmsElementsControllerModule = (function() {
 
 	$('#cms_elements_controller_jstree').on('select_node.jstree', function (event, data) {
 		// switch element on element select
-		$('#cms_element_jstree_selected_element').val($('#cms_elements_controller_jstree').jstree('get_selected'));
-		$('#cms_element_selected_element').val('');
-		$('#cms_element_editor_form').submit();
+		var element = String($('#cms_elements_controller_jstree').jstree('get_selected'));
+
+		console.log("Selected element: " + element);
+
+		if (element.startsWith("_element#")) {
+			var elementId = element.replace('_element#', '');
+
+			$('#cms_edit_element_id').val(elementId);
+			$('#cms_edit_element_action').val('edit');
+			$('#cms_element_jstree_form').submit();
+		}
 	});
 	
 	// called after creating the node in jsTree. afterwards "rename_node.jstree"-callback
@@ -121,7 +108,7 @@ var cmsElementsControllerModule = (function() {
 			var tree = $('#cms_elements_controller_jstree').jstree(true);
 			var node = tree.get_node("#");
 	
-			if (node.id === "#" || node.id.startsWith("_parent")) {
+			if (node.id === "#" || node.id.startsWith("_parent#")) {
 				node = tree.create_node(node, {"type":"folder"});
 				tree.edit(node);
 			} else {
@@ -149,7 +136,7 @@ var cmsElementsControllerModule = (function() {
 		var node = data.node;
 		var parent = data.parent;
 
-		if (isForeignDND === false && node && node.id) {
+		if (pbIsForeignDND === false && node && node.id) {
 			if (node.id.startsWith("_parent#")) {
 				if (parent && (parent === ("#") || parent.startsWith("_parent#"))) {
 					$('#cms_edit_element_id').val(node.id);
@@ -179,8 +166,8 @@ var cmsElementsControllerModule = (function() {
 					console.log("-----------------------");
 
 					// by default assume that this is not a foreign dnd operation
-					isForeignDND = false;
-					contentTypeParentForeignDND = false;
+					pbIsForeignDND = false;
+					pbContentTypeParentForeignDND = false;
 
 					// check if this is a context menu operation and if yes permit it
 					if (op === "create_node" || op === "rename_node" || op === "delete_node" || op === "edit") {
@@ -190,8 +177,8 @@ var cmsElementsControllerModule = (function() {
 					// check if this is a foreign dnd operation and if yes allow it
 					if (op === "move_node" && !node && more.dnd === true && more.is_foreign === true) {
 						if (par && par.id && !par.id.startsWith("_element#")) {
-							isForeignDND = true;
-							contentTypeParentForeignDND = par.id;
+							pbIsForeignDND = true;
+							pbContentTypeParentForeignDND = par.id;
 							return true;
 						} else {
 							return false;
@@ -320,6 +307,8 @@ if (typeof Oforge !== 'undefined') {
         selector: '#element_editor_container_wrapper',
         init: function () {
 			window.cecm = cmsElementsControllerModule();
+			window.dndhdlr = window.cecm;
+			
 			cecm.resizeContentEditor();
         }
     });

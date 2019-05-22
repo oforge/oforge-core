@@ -1,0 +1,12 @@
+{% if filter %}
+    <div class="row">
+        <div class="col-xs-12">
+            <form method="GET" class="form-inline">
+                {% for propertyName, filterConfig in filter %}
+                    {% include 'Backend/CRUD/Components/Index/FilterType/' ~ filterConfig.type|capitalize ~ '.twig' ignore missing %}
+                {% endfor %}
+                <button class="btn btn-default" type="submit">Filtern</button>
+            </form>
+        </div>
+    </div>
+{% endif %}

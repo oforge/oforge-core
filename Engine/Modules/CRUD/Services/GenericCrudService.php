@@ -6,7 +6,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistsException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistException;
 use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
 use ReflectionException;
 
@@ -46,6 +46,7 @@ class GenericCrudService extends AbstractDatabaseAccess {
      */
     public function list(string $class, array $criteria = [], array $orderBy = null, $offset = null, $limit = null) : array {
         $repository = $this->getRepository($class);
+        //TODO Crud-Index - Extended filtering - $criteria to complex where clauses
         /** @var AbstractModel[] $entities */
         $entities = $repository->findBy($criteria, $orderBy, $limit, $offset);
         $result   = [];
@@ -84,7 +85,7 @@ class GenericCrudService extends AbstractDatabaseAccess {
      * @param string $class
      * @param array $options
      *
-     * @throws ConfigElementAlreadyExistsException
+     * @throws ConfigElementAlreadyExistException
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws ReflectionException
@@ -98,7 +99,7 @@ class GenericCrudService extends AbstractDatabaseAccess {
                 'id' => $id,
             ]);
             if (isset($entity)) {
-                throw new ConfigElementAlreadyExistsException("Entity with id '$id' already exists!");
+                throw new ConfigElementAlreadyExistException("Entity with id '$id' already exists!");
             }
         }
         /** @var AbstractModel $instance */

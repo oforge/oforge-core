@@ -34,7 +34,7 @@
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-outline pull-left"
                                                 data-dismiss="modal">{{ i18n('abort', 'Abort') }}</button>
-                                        <form method="POST" action="{{ url('backend_helpdesk') }}/closeTicket">
+                                        <form method="POST" action="{{ url('backend_helpdesk_closeTicket') }}">
                                             <input type="hidden" name="ticketId" value="{{ ticket.id }}">
                                             <button class="btn btn-outline btn-warning" type="submit">
                                                 {{ i18n('backend_helpdesk_close_ticket', 'Close Ticket') }}

@@ -1,2 +1,40 @@
-@import "panel.scss";
+.flex.insertions {
+    flex-direction: column-reverse;
+    flex-wrap: wrap;
+}
+
+.insertion__sidebar {
+    background: $color-light;
+    padding: $size-medium;
+    margin-top: $size-large;
+}
+
+.insertion__content {
+    width: 100%;
+}
+
+@media (min-width: $screen-large) {
+    .flex.insertions {
+        flex-direction: row;
+        flex-wrap: nowrap;
+    }
+    .insertion {
+        &__sidebar {
+            margin-top: 0;
+            width: 30rem;
+        }
+        &__content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-left: $size-large;
+            width: calc(100% - 30rem - #{$size-large});
+        }
+    }
+}
+
+@import "panel";
 @import "product-list";
+@import "tag";
+@import "insertion";
+@import "steps";

@@ -2,16 +2,30 @@
 
 namespace Oforge\Engine\Modules\TemplateEngine\Core\Manager;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractTemplateManager;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Exceptions\Template\TemplateNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\Helper;
 use Oforge\Engine\Modules\Core\Helper\Statics;
+use Oforge\Engine\Modules\TemplateEngine\Core\Exceptions\InvalidScssVariableException;
 use Oforge\Engine\Modules\TemplateEngine\Core\Services\TemplateManagementService;
 use Oforge\Engine\Modules\TemplateEngine\Core\Services\TemplateRenderService;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Twig_Error_Loader;
+use Twig_Error_Runtime;
+use Twig_Error_Syntax;
 
+/**
+ * Class TemplateManager
+ *
+ * @package Oforge\Engine\Modules\TemplateEngine\Core\Manager
+ */
 class TemplateManager extends AbstractTemplateManager {
+    /** @var TemplateManager $instance */
     protected static $instance;
 
     /**
@@ -19,7 +33,7 @@ class TemplateManager extends AbstractTemplateManager {
      *
      * @return TemplateManager
      */
-    public static function getInstance() {
+    public static function getInstance() : TemplateManager {
         if (!isset(self::$instance)) {
             self::$instance = new TemplateManager();
         }
@@ -30,16 +44,14 @@ class TemplateManager extends AbstractTemplateManager {
     /**
      * Initialize and configure the TemplateManager.
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
-     * @throws \Oforge\Engine\Modules\TemplateEngine\Core\Exceptions\InvalidScssVariableException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\TemplateNotFoundException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ServiceNotFoundException
+     * @throws InvalidScssVariableException
+     * @throws TemplateNotFoundException
      */
     public function init() {
-        /**
-         * @var $templateManagementService TemplateManagementService
-         */
+        /** @var TemplateManagementService $templateManagementService */
         $templateManagementService = Oforge()->Services()->get("template.management");
 
         $templateFiles = Helper::getTemplateFiles(ROOT_PATH . DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR);
@@ -61,23 +73,22 @@ class TemplateManager extends AbstractTemplateManager {
      *
      * @param Request $request
      * @param Response $response
-     * @param $data
+     * @param array $data
      *
      * @return ResponseInterface|Response
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\TemplateNotFoundException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ServiceNotFoundException
+     * @throws TemplateNotFoundException
+     * @throws Twig_Error_Loader
+     * @throws Twig_Error_Runtime
+     * @throws Twig_Error_Syntax
      */
-    public function render(Request $request, Response $response, $data) {
-        /**
-         * @var $templateRenderService TemplateRenderService
-         */
+    public function render(Request $request, Response $response, array $data) {
+        /** @var TemplateRenderService $templateRenderService */
         $templateRenderService = Oforge()->Services()->get("template.render");
 
         return $templateRenderService->render($request, $response, $data);
     }
+
 }

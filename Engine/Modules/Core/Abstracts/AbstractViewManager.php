@@ -51,7 +51,7 @@ abstract class AbstractViewManager {
     public abstract function Flash() : TwigFlash;
 
     /**
-     * Assign Data from a Controller to a Template
+     * Assign data from a controller to a template
      *
      * @param array $data
      *
@@ -60,7 +60,7 @@ abstract class AbstractViewManager {
     public abstract function assign($data);
 
     /**
-     * Fetch View Data. This function should be called from the route middleware
+     * Fetch view data. This function should be called from the route middleware
      * so that it can transport the data to the TemplateEngine
      *
      * @return array
@@ -83,6 +83,6 @@ abstract class AbstractViewManager {
      *
      * @return bool
      */
-    public abstract function has(string $key);
+    public abstract function has(string $key) : bool;
 
 }

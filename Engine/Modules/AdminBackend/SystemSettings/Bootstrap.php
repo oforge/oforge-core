@@ -6,10 +6,9 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\AdminBackend\SystemSettings\Controller\Backend\SystemSettingsController;
-use Oforge\Engine\Modules\AdminBackend\SystemSettings\Controller\Backend\SystemSettingsGroupController;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistsException;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 
@@ -26,17 +25,16 @@ class Bootstrap extends AbstractBootstrap {
     public function __construct() {
         $this->endpoints = [
             SystemSettingsController::class,
-            SystemSettingsGroupController::class,
         ];
     }
 
     /**
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws ConfigElementAlreadyExistsException
-     * @throws ConfigOptionKeyNotExistsException
-     * @throws ParentNotFoundException
+     * @throws ConfigElementAlreadyExistException
+     * @throws ConfigOptionKeyNotExistException
      * @throws ServiceNotFoundException
+     * @throws ParentNotFoundException
      */
     public function activate() {
         /** @var BackendNavigationService $backendNavigation */
