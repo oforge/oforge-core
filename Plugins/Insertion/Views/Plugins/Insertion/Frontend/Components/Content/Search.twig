@@ -28,10 +28,11 @@
                     <label for="search_key2"
                            class="form__label">Key2
                     </label>
-                    <div class="form__input form__input--select">
+                    <div class="form__input form__input--select" data-required>
                         <select name="search_key2"
                                 id="search_key2"
-                                class="form__input form__input--no-input">
+                                class="form__input form__input--no-input"
+                                required>
                             <option value="#">Foo</option>
                             <option value="#">Bar</option>
                             <option value="#">Crux</option>
@@ -86,8 +87,19 @@
                     <input type="checkbox"
                            id="key4"
                            name="key4"
-                           class="form__input form__input--checkbox form__input--checkbox-small">
+                           class="form__input form__input--checkbox form__input--checkbox-small"
+                           required
+                           data-required>
                     <label for="key4" class="space-left">Key4</label>
+                </div>
+                <div class="form__control space-up">
+                    <label for="key5" class="form__label">Key5</label>
+                    <input type="text"
+                           id="key5"
+                           name="key5"
+                           class="form__input"
+                           required
+                           data-required>
                 </div>
             </div>
 
