@@ -5,9 +5,11 @@ namespace Insertion\Controller\Frontend;
 use FrontendUserManagement\Abstracts\SecureFrontendController;
 use FrontendUserManagement\Services\FrontendUserService;
 use Insertion\Services\InsertionCreatorService;
+use Insertion\Services\InsertionFeedbackService;
 use Insertion\Services\InsertionTypeService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
+use Oforge\Engine\Modules\Core\Helper\StringHelper;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
@@ -110,6 +112,8 @@ class FrontendInsertionController extends SecureFrontendController {
          */
         $userService = Oforge()->Services()->get("frontend.user");
         $user        = $userService->getUser();
+        /** @var Router $router */
+        $router = Oforge()->App()->getContainer()->get('router');
 
         if (isset($user)) {
             /**
@@ -119,14 +123,27 @@ class FrontendInsertionController extends SecureFrontendController {
 
             if ($request->isPost()) {
                 $data = $createService->processPostData($typeId);
-                $createService->create($typeId, $user, $data);
+                try {
+                    $processData = $createService->parsePageData($data);
+                    $createService->create($typeId, $user, $processData);
+
+                    $uri = $router->pathFor('insertions_feedback');
+
+                    return $response->withRedirect($uri, 301);
+                } catch (\Exception $exception) {
+                    Oforge()->Logger()->get()->error("insertion_creation", $data);
+                    Oforge()->Logger()->get()->error("insertion_creation_stack", $exception->getTrace());
+
+                    Oforge()->View()->Flash()->addMessage("error", "server_error");
+                    $uri = $router->pathFor('insertions_createSteps', ["type" => $typeId, "page" => "5"]);
+
+                    return $response->withRedirect($uri, 301);
+                }
             }
 
         } else {
             Oforge()->View()->Flash()->addMessage("error", "missing_user");
-            /** @var Router $router */
-            $router = Oforge()->App()->getContainer()->get('router');
-            $uri    = $router->pathFor('insertions_createSteps', ["type" => $typeId, "page" => "5"]);
+            $uri = $router->pathFor('insertions_createSteps', ["type" => $typeId, "page" => "5"]);
 
             return $response->withRedirect($uri, 301);
         }
@@ -135,7 +152,36 @@ class FrontendInsertionController extends SecureFrontendController {
     /**
      * @param Request $request
      * @param Response $response
-     * @EndpointAction()
+     * @EndpointAction(path="/feedback")
+     */
+    public function feedbackAction(Request $request, Response $response) {
+        if ($request->isPost()) {
+            /**
+             * @var $feedbackService InsertionFeedbackService
+             */
+            $feedbackService = Oforge()->Services()->get("insertion.feedback");
+            $feedbackService->savePostData();
+
+            /** @var Router $router */
+            $router = Oforge()->App()->getContainer()->get('router');
+            $uri = $router->pathFor('insertions_success');
+
+            return $response->withRedirect($uri, 301);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @EndpointAction(path="/success")
+     */
+    public function successAction(Request $request, Response $response) {
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @EndpointAction(path="/process/{type}")
      */
     public function viewAction(Request $request, Response $response) {
     }

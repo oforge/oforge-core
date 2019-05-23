@@ -16,6 +16,7 @@ use Insertion\Models\InsertionMedia;
 use Insertion\Models\InsertionType;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Helper\StringHelper;
 use Oforge\Engine\Modules\I18n\Models\Language;
 use Oforge\Engine\Modules\Media\Models\Media;
 use Oforge\Engine\Modules\Media\Services\MediaService;
@@ -24,6 +25,7 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
     public function __construct() {
         parent::__construct([
             'default'  => Insertion::class,
+            'key'      => AttributeKey::class,
             'type'     => InsertionType::class,
             'language' => Language::class,
             'media'    => Media::class,
@@ -90,46 +92,88 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
     }
 
     public function parsePageData(array $pageData) : array {
+        $language = $this->repository("language")->findOneBy(["iso" => "de"]);
 
+        $data = [
+            "contact"    => [
+                "name"    => $pageData[3]["contact_name"],
+                "email"   => $pageData[3]["contact_email"],
+                "phone"   => $pageData[3]["contact_phone"],
+                "zip"     => $pageData[3]["contact_zip"],
+                "city"    => $pageData[3]["contact_city"],
+                "visible" => isset($pageData[3]["contact_visible"]) && !empty($pageData[3]["contact_visible"]),
+            ],
+            "content"    => [
+                "language"    => $language,
+                "name"        => $pageData[1]["insertion_name"],
+                "title"       => $pageData[1]["insertion_title"],
+                "description" => $pageData[3]["insertion_description"],
+            ],
+            "media"      => [],
+            "attributes" => [],
+        ];
 
-        return ["contact" => [], "content" => [], "media" => []];
+        if (isset($pageData[1]["images"]) && sizeof($pageData[1]["images"]) > 0) {
+            foreach ($pageData[1]["images"] as $image) {
+                $media = $this->repository("media")->findOneBy(["id" => $image["id"]]);
+                array_push($data["media"], ["name" => $image["name"], $media]);
+            }
+        }
+
+        foreach ($pageData as $page) {
+            if (isset($page["insertion"])) {
+                foreach ($page["insertion"] as $key => $value) {
+                    $attributeKey = $this->repository("key")->findOneBy(["id" => $key]);
+                    if (isset($attributeKey)) {
+                        if (is_array($value)) {
+                            foreach ($value as $val) {
+                                array_push($data["attributes"], ["attributeKey" => $attributeKey, "value" => $val]);
+                            }
+                        } else {
+                            array_push($data["attributes"], ["attributeKey" => $attributeKey, "value" => $value]);
+                        }
+                    }
+                }
+            }
+        }
+
+        return $data;
     }
 
     public function create(int $typeId, User $user, array $data) : ?int {
-        $type     = $this->repository("type")->findOneBy(["id" => $typeId]);
-        $language = $this->repository("language")->findOneBy(["iso" => "de"]);
+        $type = $this->repository("type")->findOneBy(["id" => $typeId]);
 
-
-        $this->parsePageData($data);
-
-        print_r($data);
-        die();
-        if (isset($type) && isset($language)) {
-            $content = InsertionContent::create(["language" => $language, "name" => "asd", "title" => "asd", "description" => "asdasd"]);
-            $contact = InsertionContact::create([
-                "name"    => "asdas",
-                "email"   => "asdasd",
-                "phone"   => "oasdphone",
-                "zip"     => "zuip",
-                "city"    => "asasd",
-                "visible" => 1,
-            ]);
-
-            $media  = $this->repository("media")->findOneBy(["id" => 1]);
-            $imedia = InsertionMedia::create(["name" => "asdas", 'content' => $media]);
-
+        if (isset($type)) {
             $insertion = Insertion::create(["insertionType" => $type, "user" => $user]);
 
+            $content = InsertionContent::create($data["content"]);
             $content->setInsertion($insertion);
-            $insertion->setContent([$content]);
 
+            $contact = InsertionContact::create($data["contact"]);
             $contact->setInsertion($insertion);
+
+            $media   = [];
+            foreach ($data["media"] as $mediaData) {
+                $imedia = InsertionMedia::create($mediaData);
+                $imedia->setInsertion($insertion);
+                $this->entityManager()->persist($imedia);
+                array_push($media, $imedia);
+            }
+
+
+            $attributeValues   = [];
+            foreach ($data["attributes"] as $attributeData) {
+                $attributeValue = InsertionAttributeValue::create($attributeData);
+                $attributeValue->setInsertion($insertion);
+                $this->entityManager()->persist($attributeValue);
+                array_push($attributeValues, $attributeValue);
+            }
+
+            $insertion->setContent([$content]);
             $insertion->setContact($contact);
+            $insertion->setMedia($media);
+            $insertion->setValues($attributeValues);
 
-            $imedia->setInsertion($insertion);
-            $insertion->setMedia([$imedia]);
-
-            $this->entityManager()->persist($imedia);
             $this->entityManager()->persist($content);
             $this->entityManager()->persist($contact);
             $this->entityManager()->persist($insertion);

@@ -1,0 +1,29 @@
+{% extends "@parent/Frontend/Layout.twig" %}
+{% set grid_box_classes = 'grid-box--extended' %}
+{% block content %}
+
+    <div class="content content--insertions">
+        {% block insertions %}
+            <form class="form form--insertion"
+                  action="{{ url('insertions_feedback') }}"
+                  method="post"
+                  enctype="multipart/form-data">
+                <div class="form-controls">
+
+                    {% block page_content %}
+                        <input name="feedback_rating" type="number" min="1" max="5" />
+                        <textarea name="feedback_text"  >Lorem Ipsum</textarea>
+                    {% endblock page_content %}
+
+                    <div class="form__control">
+                        <input type="hidden" name="token" value="{{ token() }}">
+                        <input type="submit"
+                               value="{{ i18n('insertion_feedback_submit') }}"
+                               class="form__input form__input--submit button">
+                    </div>
+                </div>
+            </form>
+
+        {% endblock insertions %}
+    </div>
+{% endblock content %}
