@@ -74,6 +74,19 @@ class Insertion extends AbstractModel {
     private $values;
 
     /**
+     * @var float
+     * @ORM\Column(name="price", type="float")
+     */
+    private $price;
+
+    /**
+     * @var boolean
+     * @ORM\Column(name="visible", type="boolean", nullable=true)
+     */
+    private $tax;
+
+
+    /**
      * @ORM\PrePersist
      */
     public function onPrePersist() {
@@ -205,5 +218,33 @@ class Insertion extends AbstractModel {
      */
     public function setValues(array $values) : void {
         $this->values = $values;
+    }
+
+    /**
+     * @return float
+     */
+    public function getPrice() : float {
+        return $this->price;
+    }
+
+    /**
+     * @param float $price
+     */
+    public function setPrice(float $price) : void {
+        $this->price = $price;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTax() : ?bool {
+        return $this->tax;
+    }
+
+    /**
+     * @param bool $tax
+     */
+    public function setTax(?bool $tax) : void {
+        $this->tax = $tax;
     }
 }
