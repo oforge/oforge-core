@@ -108,7 +108,7 @@ class InsertionService extends AbstractDatabaseAccess {
      * @throws ORMException
      */
     public function getInsertionById($id) {
-        $this->repository()->find($id);
+        return $this->repository()->find($id);
     }
 
     public function updateInsertion($id) {

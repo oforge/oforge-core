@@ -2,11 +2,14 @@
 
 namespace Insertion\Controller\Frontend;
 
+use Doctrine\DBAL\Schema\View;
+use Doctrine\ORM\Event\OnFlushEventArgs;
 use FrontendUserManagement\Abstracts\SecureFrontendController;
 use FrontendUserManagement\Services\FrontendUserService;
 use Insertion\Services\InsertionCreatorService;
 use Insertion\Services\InsertionFeedbackService;
 use Insertion\Services\InsertionListService;
+use Insertion\Services\InsertionService;
 use Insertion\Services\InsertionTypeService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
@@ -221,6 +224,18 @@ class FrontendInsertionController extends SecureFrontendController {
      * @param Response $response
      * @EndpointAction(path="/detail/{id}")
      */
-    public function detailAction(Request $request, Response $response) {
+    public function detailAction(Request $request, Response $response, $args) {
+        $id = $args["id"];
+        /**
+         * @var $service InsertionService
+         */
+        $service   = Oforge()->Services()->get("insertion");
+        $insertion = $service->getInsertionById(intval($id));
+
+        if (!isset($insertion) || $insertion == null) {
+            return $response->withRedirect("/404", 301);
+        }
+
+        Oforge()->View()->assign(["insertion" => $insertion->toArray(3)]);
     }
 }
