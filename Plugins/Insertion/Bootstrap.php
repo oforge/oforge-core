@@ -20,6 +20,7 @@ use Insertion\Models\InsertionTypeGroup;
 use Insertion\Services\AttributeService;
 use Insertion\Services\InsertionCreatorService;
 use Insertion\Services\InsertionFeedbackService;
+use Insertion\Services\InsertionListService;
 use Insertion\Services\InsertionMockService;
 use Insertion\Services\InsertionService;
 use Insertion\Services\InsertionTypeService;
@@ -46,7 +47,8 @@ class Bootstrap extends AbstractBootstrap {
             'insertion.attribute' => AttributeService::class,
             'insertion.mock'      => InsertionMockService::class,
             'insertion.creator'   => InsertionCreatorService::class,
-            'insertion.feedback'   => InsertionFeedbackService::class,
+            'insertion.feedback'  => InsertionFeedbackService::class,
+            'insertion.list'      => InsertionListService::class,
         ];
 
         $this->models = [
@@ -60,7 +62,7 @@ class Bootstrap extends AbstractBootstrap {
             InsertionContent::class,
             InsertionMedia::class,
             InsertionTypeGroup::class,
-            InsertionFeedback::class
+            InsertionFeedback::class,
         ];
 
         $this->dependencies = [

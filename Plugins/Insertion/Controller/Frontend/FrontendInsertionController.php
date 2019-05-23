@@ -6,6 +6,7 @@ use FrontendUserManagement\Abstracts\SecureFrontendController;
 use FrontendUserManagement\Services\FrontendUserService;
 use Insertion\Services\InsertionCreatorService;
 use Insertion\Services\InsertionFeedbackService;
+use Insertion\Services\InsertionListService;
 use Insertion\Services\InsertionTypeService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
@@ -164,7 +165,7 @@ class FrontendInsertionController extends SecureFrontendController {
 
             /** @var Router $router */
             $router = Oforge()->App()->getContainer()->get('router');
-            $uri = $router->pathFor('insertions_success');
+            $uri    = $router->pathFor('insertions_success');
 
             return $response->withRedirect($uri, 301);
         }
@@ -176,6 +177,41 @@ class FrontendInsertionController extends SecureFrontendController {
      * @EndpointAction(path="/success")
      */
     public function successAction(Request $request, Response $response) {
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @EndpointAction(path="/search/{type}")
+     */
+    public function listingAction(Request $request, Response $response, $args) {
+        $typeIdOrName = $args["type"];
+
+        $result = [];
+
+        /**
+         * @var $service InsertionTypeService
+         */
+        $service = Oforge()->Services()->get("insertion.type");
+        $type    = $service->getInsertionTypeByName($typeIdOrName);
+        if ($type == null) {
+            $type = $service->getInsertionTypeById($typeIdOrName);
+        }
+
+        if (!isset($type) || $type == null) {
+            return $response->withRedirect("/404", 301);
+        }
+
+        $typeAttributes       = $service->getInsertionTypeAttributeTree($type->getId());
+        $result["attributes"] = $typeAttributes;
+
+        /**
+         * @var $listService InsertionListService
+         */
+        $listService = Oforge()->Services()->get("insertion.list");
+        $listService->search($type->getId(), $_GET);
+
+        Oforge()->View()->assign($result);
     }
 
     /**

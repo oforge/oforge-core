@@ -51,7 +51,7 @@ class InsertionMedia extends AbstractModel {
     private $order;
 
     /**
-     * @return intgetInsertion
+     * @return int
      */
     public function getId() : ?int {
         return $this->id;
