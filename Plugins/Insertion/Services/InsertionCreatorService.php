@@ -116,7 +116,7 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
         if (isset($pageData[1]["images"]) && sizeof($pageData[1]["images"]) > 0) {
             foreach ($pageData[1]["images"] as $image) {
                 $media = $this->repository("media")->findOneBy(["id" => $image["id"]]);
-                array_push($data["media"], ["name" => $image["name"], $media]);
+                array_push($data["media"], ["name" => $image["name"], "content" => $media]);
             }
         }
 

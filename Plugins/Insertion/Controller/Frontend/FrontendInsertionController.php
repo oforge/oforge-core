@@ -219,8 +219,8 @@ class FrontendInsertionController extends SecureFrontendController {
     /**
      * @param Request $request
      * @param Response $response
-     * @EndpointAction(path="/process/{type}")
+     * @EndpointAction(path="/detail/{id}")
      */
-    public function viewAction(Request $request, Response $response) {
+    public function detailAction(Request $request, Response $response) {
     }
 }

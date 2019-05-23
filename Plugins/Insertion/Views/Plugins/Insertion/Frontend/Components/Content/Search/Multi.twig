@@ -5,7 +5,7 @@
         <select name="{{ attribute.name }}[]" multiple>
             {% for value in attribute.values %}
                 <option value="{{ value.id }}"
-                        {% if value.id in filter['insertion'][attribute.id] %}selected="selected"{% endif %}>
+                        {% if value.id in search.filter[attribute.name] %}selected="selected"{% endif %}>
                     {{ i18n(value.value) }}
                 </option>
             {% endfor %}
