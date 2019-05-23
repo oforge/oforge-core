@@ -80,7 +80,7 @@ class FrontendInsertionController extends SecureFrontendController {
             $createService->processPostData($typeId);
         }
 
-        $data           = $createService->getProcessedData($typeId);
+        $data = $createService->getProcessedData($typeId);
         $result["data"] = $data;
 
         Oforge()->View()->assign($result);

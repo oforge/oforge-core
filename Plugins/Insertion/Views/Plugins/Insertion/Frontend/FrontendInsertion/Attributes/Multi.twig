@@ -7,11 +7,19 @@
     <label for="insertion[{{ attribute.id }}][]"
            class="form__label">{{ i18n(attribute.name) }}</label>
 
-    <select  name="insertion[{{ attribute.id }}][]" multiple>
-        {% for value in attribute.values %}
-            <option value="{{ value.id }}" {% if value.id in data[page]['insertion'][attribute.id] %}selected="selected"{% endif %}>
-                {{ i18n(value.value) }}
-            </option>
-        {% endfor %}
-    </select>
+    <div class="select"
+         data-multi-select>
+        <p class="select__search" data-multi-select-search>
+        <ul class="select__list">
+            {% for value in attribute.values %}
+                <li class="select__item {% if value.id in data[page]['insertion'][attribute.id] %}select__item--checked{% endif %}"
+                    data-multi-select-item="{{ value.id }}">
+                    {{ i18n(value.value) }}
+                </li>
+            {% endfor %}
+        </ul>
+        <input type="hidden"
+               name="insertion[{{ attribute.id }}][]"
+               data-multi-select-input>
+    </div>
 </div>
