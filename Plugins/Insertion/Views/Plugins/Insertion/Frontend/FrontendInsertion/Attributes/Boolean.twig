@@ -1,5 +1,14 @@
 <div class="form__control">
 
-    <input type="checkbox" name="insertion[{{ attribute.id }}]" {% if data[page]['insertion'][attribute.id] == 'on' %}checked="checked"{% endif %}>
+    <pre>
+        {{ required }}
+    </pre>
+
+    <input type="checkbox"
+           name="insertion[{{ attribute.id }}]"
+           {% if data[page]['insertion'][attribute.id] == 'on' %}
+                checked="checked"
+           {% endif %}
+            >
     <label for="insertion[{{ attribute.id }}]"> {{  i18n(attribute.name) }}</label>
 </div>

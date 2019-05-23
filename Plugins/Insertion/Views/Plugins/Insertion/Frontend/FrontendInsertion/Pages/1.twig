@@ -1,62 +1,64 @@
 {% extends "Plugins/Insertion/Frontend/FrontendInsertion/Pages/PageBase.twig" %}
 
 {% block page_content %}
-     {# Main details #}
+    {# Main details #}
 
-     <div class="form__control">
+    <div class="form__control">
 
-         <label for="insertion_name"
-                class="form__label">{{ i18n('insertion_name' ) }}</label>
+        <label for="insertion_name"
+               class="form__label">{{ i18n('insertion_name' ) }}</label>
 
-         <input
-                 name="insertion_name"
-                 value="{{ data[page]['insertion_name'] }}"
-                 type="text"
-                 class="form__input form__input"
-                 placeholder="{{ i18n('insertion_name_placeholder') }}"
-                 required>
-     </div>
+        <input
+                name="insertion_name"
+                value="{{ data[page]['insertion_name'] }}"
+                type="text"
+                class="form__input form__input"
+                placeholder="{{ i18n('insertion_name_placeholder') }}"
+                data-required
+                required>
+    </div>
 
-     {% for attributeGroup in attributes %}
-         {% if attributeGroup.items|length > 0 and attributeGroup.name == 'main' %}
-             {% for attribute in attributeGroup.items %}
-                 {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey } %}
-             {% endfor %}
-         {% endif %}
-     {% endfor %}
+    {% for attributeGroup in attributes %}
+        {% if attributeGroup.items|length > 0 and attributeGroup.name == 'main' %}
+            {% for attribute in attributeGroup.items %}
+                {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey } %}
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
 
-     <div class="form__control">
+    <div class="form__control">
 
-         <label for="insertion_name"
-                class="form__label">{{ i18n('insertion_title') }}</label>
+        <label for="insertion_name"
+               class="form__label">{{ i18n('insertion_title') }}</label>
 
-         <input
-                 name="insertion_title"
-                 value="{{ data[page]['insertion_title'] }}"
-                 type="text"
-                 class="form__input form__input"
-                 placeholder="{{ i18n('insertion_name_placeholder') }}"
-                 required>
-     </div>
+        <input
+                name="insertion_title"
+                value="{{ data[page]['insertion_title'] }}"
+                type="text"
+                class="form__input form__input"
+                placeholder="{{ i18n('insertion_name_placeholder') }}"
+                data-required
+                required>
+    </div>
 
-     <ul class="image-upload">
-         {% for image in data[page]['images'] %}
-             <li>
-                 <img width="300" src="{{ media(image.path, 300) }}" alt="{{ image.name }}" />
-                 <!--input type="hidden" name="images_interactions[{{ image.id }}]" value="delete" /-->
-             </li>
-         {% endfor %}
+    <ul class="image-upload">
+        {% for image in data[page]['images'] %}
+            <li>
+                <img width="300" src="{{ media(image.path, 300) }}" alt="{{ image.name }}" />
+                <!--input type="hidden" name="images_interactions[{{ image.id }}]" value="delete" /-->
+            </li>
+        {% endfor %}
 
-         <li>
-             <input type="file" name="images[0]" accept="image/*" onchange="loadFile(event, 0)">
-             <img id="output0" width="300" />
-         </li>
+        <li>
+            <input type="file" name="images[0]" accept="image/*" onchange="loadFile(event, 0)">
+            <img id="output0" width="300" />
+        </li>
 
-         <script>
-             var loadFile = function (event, index) {
-                 var output = document.getElementById('output' + index);
-                 output.src = URL.createObjectURL(event.target.files[0]);
-             };
-         </script>
-     </ul>
- {% endblock page_content %}
+        <script>
+            var loadFile = function (event, index) {
+                var output = document.getElementById('output' + index);
+                output.src = URL.createObjectURL(event.target.files[0]);
+            };
+        </script>
+    </ul>
+{% endblock page_content %}
