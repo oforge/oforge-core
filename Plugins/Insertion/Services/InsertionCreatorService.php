@@ -144,7 +144,7 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
         $type = $this->repository("type")->findOneBy(["id" => $typeId]);
 
         if (isset($type)) {
-            $insertion = Insertion::create(["insertionType" => $type, "user" => $user]);
+            $insertion = Insertion::create(["insertionType" => $type, "user" => $user, "price" => 100.0]);
 
             $content = InsertionContent::create($data["content"]);
             $content->setInsertion($insertion);
