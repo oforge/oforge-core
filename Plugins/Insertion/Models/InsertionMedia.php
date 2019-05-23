@@ -74,14 +74,14 @@ class InsertionMedia extends AbstractModel {
     /**
      * @return Media
      */
-    public function getContent() : Media {
+    public function getContent() : ?Media {
         return $this->content;
     }
 
     /**
      * @param Media $content
      */
-    public function setContent(Media $content) : void {
+    public function setContent(?Media $content) : void {
         $this->content = $content;
     }
 

@@ -130,6 +130,8 @@ class FrontendInsertionController extends SecureFrontendController {
 
                     $uri = $router->pathFor('insertions_feedback');
 
+                    $createService->clearProcessedData($typeId);
+
                     return $response->withRedirect($uri, 301);
                 } catch (\Exception $exception) {
                     Oforge()->Logger()->get()->error("insertion_creation", $data);
@@ -208,8 +210,8 @@ class FrontendInsertionController extends SecureFrontendController {
         /**
          * @var $listService InsertionListService
          */
-        $listService = Oforge()->Services()->get("insertion.list");
-        $listService->search($type->getId(), $_GET);
+        $listService      = Oforge()->Services()->get("insertion.list");
+        $result["search"] = $listService->search($type->getId(), $_GET);
 
         Oforge()->View()->assign($result);
     }
