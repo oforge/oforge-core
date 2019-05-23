@@ -79,7 +79,7 @@
     }
 
     // dirrty hack :/
-    &.form__input--checkbox.form__input--checkbox.form__input--checkbox {
+    &.form__input--checkbox {
         width: 3.6rem;
 
         &:checked {
@@ -150,6 +150,11 @@
             transform: translateY(-50%);
             z-index: 0;
         }
+
+        &.valid:after, &.invalid:after {
+            border-color: $color-light transparent transparent transparent;
+        }
+
         select {
             background: transparent;
             padding: $size-small;
@@ -171,27 +176,21 @@
         width: calc(50% - #{$size-medium});
     }
 
-    &:not(.form__input--no-input):focus:required:invalid {
-        background: $invalid;
-        color: $text-light;
-    }
-
-    // reason for dirrty hack :/
-    &:not(.form__input--checkbox),
-    &:not(.form__input--no-input) {
-        &:required:valid {
-            background: $color-secondary;
-            color: $text-light;
-        }
-    }
-
     &.invalid {
         background-color: $invalid;
         color: $text-light;
+
+        > select {
+            color: $text-light;
+        }
     }
     &.valid {
         background-color: $color-secondary;
         color: $text-light;
+
+        > select {
+            color: $text-light;
+        }
     }
 }
 
