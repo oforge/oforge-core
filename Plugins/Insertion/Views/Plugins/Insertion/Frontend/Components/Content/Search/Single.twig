@@ -6,7 +6,7 @@
         <select class="form__input form__input--select" data-required name="{{ attribute.name }}">
             {% for value in attribute.values %}
                 <option value="{{ value.id }}"
-                        {% if value.id == filter['insertion'][attribute.id] %}selected="selected"{% endif %}>
+                        {% if value.id == search.filter[attribute.name] %}selected="selected"{% endif %}>
                     {{ i18n(value.value) }}
                 </option>
             {% endfor %}

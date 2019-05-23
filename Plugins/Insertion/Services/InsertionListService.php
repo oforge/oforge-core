@@ -88,7 +88,7 @@ class InsertionListService extends AbstractDatabaseAccess {
         $result["query"]["items"]     = [];
 
         foreach ($paginator as $item) {
-            $result["query"]["items"][] = $item->toArray();
+            $result["query"]["items"][] = $item->toArray(3);
         }
 
         //TODO price range

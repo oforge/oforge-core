@@ -12,7 +12,10 @@ class ImageCompressService {
         $media         = $configService->getByPath($path);
 
         if (!isset($media)) {
-            return $path;
+            $media = $configService->get($path);
+            if (!isset($media)) {
+                return $path;
+            }
         }
 
         $suffix = "";

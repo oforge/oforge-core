@@ -2,7 +2,7 @@
     <input type="checkbox"
            id="key4"
            name="{{ attribute.name }}"
-           {% if filter['insertion'][attribute.id] == 'on' %}checked="checked"{% endif %}
+           {% if search.filter[attribute.name] == 'on' %}checked="checked"{% endif %}
            class="form__input form__input--checkbox form__input--checkbox-small">
     <label for="{{ attribute.name }}" class="space-left">{{ i18n(attribute.name) }}</label>
 </div>
