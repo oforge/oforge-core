@@ -1,0 +1,106 @@
+*, *:before, *:after {
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+p {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border-top: none;
+    border-left: none;
+    border-bottom: 1px solid $color-primary;
+    border-right: 1px solid $color-primary;
+    background: $color-light;
+    color: $color-primary;
+    margin: 0;
+    padding: 4px;
+    height: 3.2rem;
+    display: block;
+    text-overflow: ellipsis;
+    $color-light-space: nowrap;
+    overflow: hidden;
+}
+.select {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    height: 3.2rem;
+    max-width: 24rem;
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid $color-primary;
+    padding-right: 20px;
+    > * { height: 0px; visibility: hidden; }
+
+    .select__search {
+        height: 3.2rem;
+        visibility: visible;
+    }
+
+    &.select--is-open {
+        height: auto;
+        overflow: auto;
+        > * {
+            height: auto;
+            visibility: visible;
+        }
+        .select__search {
+            height: 3.2rem;
+        }
+    }
+
+    &:after {
+        content: ' ';
+        position: absolute;
+        display: block;
+        width: 12px;
+        height: 8px;
+        border-style: solid;
+        border-width: 8px 6px 0 6px;
+        border-color: $color-primary transparent transparent transparent;
+        right: 4px;
+        top: calc((3.2rem / 2) - 4px);
+        z-index: 0;
+    }
+
+    &__item {
+        position: relative;
+        padding: 2px 2px 2px 20px;
+
+        &:before {
+            position: absolute;
+            content: ' ';
+            display: block;
+            left: 2px;
+            top: 2px;
+            width: 1.6rem;
+            height: 1.6rem;
+            border: 1px solid $color-primary;
+        }
+
+        &.select__item--checked {
+            &:after {
+                position: absolute;
+                left: 7px;
+                top: 3px;
+                content: ' ';
+                display: block;
+                width: 6px;
+                height: 12px;
+                border: solid $color-primary;
+                border-width: 0 2px 2px 0;
+                transform: rotate(45deg);
+            }
+        }
+    }
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.select__item {
+    margin: .8rem 0;
+}

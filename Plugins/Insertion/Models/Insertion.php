@@ -77,13 +77,13 @@ class Insertion extends AbstractModel {
      * @var float
      * @ORM\Column(name="price", type="float")
      */
-    private $price;
+    private $price = 0;
 
     /**
      * @var boolean
      * @ORM\Column(name="tax", type="boolean", nullable=true)
      */
-    private $tax;
+    private $tax = false;
 
 
     /**
