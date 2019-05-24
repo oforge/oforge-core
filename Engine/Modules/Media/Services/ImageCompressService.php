@@ -6,7 +6,8 @@ use Oforge\Engine\Modules\Media\Models\Media;
 
 class ImageCompressService {
 
-    public function getPath(string $path, int $width) : string {
+    public function getPath(?string $path, int $width) : ?string {
+        if(!isset($path)) return null;
         /** @var MediaService $configService */
         $configService = Oforge()->Services()->get('media');
         $media         = $configService->getByPath($path);

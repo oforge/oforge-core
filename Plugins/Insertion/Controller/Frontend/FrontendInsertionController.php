@@ -6,6 +6,8 @@ use Doctrine\DBAL\Schema\View;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use FrontendUserManagement\Abstracts\SecureFrontendController;
 use FrontendUserManagement\Services\FrontendUserService;
+use Insertion\Models\InsertionType;
+use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Services\InsertionCreatorService;
 use Insertion\Services\InsertionFeedbackService;
 use Insertion\Services\InsertionListService;
@@ -133,9 +135,9 @@ class FrontendInsertionController extends SecureFrontendController {
 
                     $uri = $router->pathFor('insertions_feedback');
 
-                    $createService->clearProcessedData($typeId);
+                    //  $createService->clearProcessedData($typeId);
 
-                    return $response->withRedirect($uri, 301);
+                    //   return $response->withRedirect($uri, 301);
                 } catch (\Exception $exception) {
                     Oforge()->Logger()->get()->error("insertion_creation", $data);
                     Oforge()->Logger()->get()->error("insertion_creation_stack", $exception->getTrace());
@@ -188,6 +190,8 @@ class FrontendInsertionController extends SecureFrontendController {
      * @param Request $request
      * @param Response $response
      * @EndpointAction(path="/search/{type}")
+     *
+     * @throws \Doctrine\ORM\ORMException
      */
     public function listingAction(Request $request, Response $response, $args) {
         $typeIdOrName = $args["type"];
@@ -198,7 +202,10 @@ class FrontendInsertionController extends SecureFrontendController {
          * @var $service InsertionTypeService
          */
         $service = Oforge()->Services()->get("insertion.type");
-        $type    = $service->getInsertionTypeByName($typeIdOrName);
+        /**
+         * @var $type InsertionType
+         */
+        $type = $service->getInsertionTypeByName($typeIdOrName);
         if ($type == null) {
             $type = $service->getInsertionTypeById($typeIdOrName);
         }
@@ -209,6 +216,14 @@ class FrontendInsertionController extends SecureFrontendController {
 
         $typeAttributes       = $service->getInsertionTypeAttributeTree($type->getId());
         $result["attributes"] = $typeAttributes;
+        $result["keys"]       = [];
+        /**
+         * @var $attribute InsertionTypeAttribute
+         */
+        foreach ($type->getAttributes() as $attribute) {
+            $key                           = $attribute->getAttributeKey();
+            $result["keys"][$key->getName()] = $key->toArray(0);
+        }
 
         /**
          * @var $listService InsertionListService
