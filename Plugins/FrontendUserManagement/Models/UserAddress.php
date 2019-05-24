@@ -9,8 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
  * Currently a user can have two addresses.
  * One normal address and one differing billing address.
  *
- * @ORM\Table(name="frontend_user_management_user_address")
  * @ORM\Entity
+ * @ORM\Table(name="frontend_user_management_user_address")
  */
 class UserAddress extends AbstractModel {
     /**
@@ -20,180 +20,172 @@ class UserAddress extends AbstractModel {
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-
     /**
-     * @var string
-     * @ORM\Column(name="street_name", type="string", nullable=false)
+     * @var string|null $streetName
+     * @ORM\Column(name="street_name", type="string", nullable=true)
      */
     private $streetName;
-
     /**
-     * @var string
-     * @ORM\Column(name="street_number", type="string", nullable=false)
+     * @var string|null $streetNumber
+     * @ORM\Column(name="street_number", type="string", nullable=true)
      */
     private $streetNumber;
-
     /**
-     * @var string
-     * @ORM\Column(name="post_code", type="string", nullable=false)
+     * @var string|null $postCode
+     * @ORM\Column(name="post_code", type="string", nullable=true)
      */
     private $postCode;
-
     /**
-     * @var string
-     * @ORM\Column(name="city", type="string", nullable=false)
+     * @var string|null $city
+     * @ORM\Column(name="city", type="string", nullable=true)
      */
     private $city;
-
     /**
-     * @var string
-     * @ORM\Column(name="country", type="string", nullable=false)
+     * @var string|null $country
+     * @ORM\Column(name="country", type="string", nullable=true)
      */
     private $country = "Germany";
-
     /**
-     * @var bool
+     * @var bool $isBillingAddress
      * @ORM\Column(name="is_billing_address", type="boolean", nullable=false)
      */
     private $isBillingAddress = true;
-
     /**
-     * @ORM\OneToOne(targetEntity="User")
+     * @var User $user
+     * @ORM\OneToOne(targetEntity="User", inversedBy="detail", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
-    private $userID;
+    private $user;
+
+    /**
+     * UserDetail constructor.
+     *
+     * @param User $user
+     */
+    public function __construct(User $user) {
+        $this->user = $user;
+    }
 
     /**
      * @return int
      */
-    public function getId(): int
-    {
+    public function getId() : int {
         return $this->id;
     }
 
     /**
-     * @param string $streetName
-     * @return UserAddress
+     * @return string|null
      */
-    public function setStreetName(string $streetName): UserAddress
-    {
-        $this->streetName = $streetName;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getStreetName(): string
-    {
+    public function getStreetName() : ?string {
         return $this->streetName;
     }
 
     /**
-     * @param string $streetNumber
+     * @param string|null $streetName
+     *
      * @return UserAddress
      */
-    public function setStreetNumber(string $streetNumber): UserAddress
-    {
-        $this->streetNumber = $streetNumber;
+    public function setStreetName(?string $streetName) : UserAddress {
+        $this->streetName = $streetName;
+
         return $this;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getStreetNumber(): string
-    {
+    public function getStreetNumber() : ?string {
         return $this->streetNumber;
     }
 
     /**
-     * @param string $postCode
+     * @param string|null $streetNumber
+     *
      * @return UserAddress
      */
-    public function setPostCode(string $postCode): UserAddress
-    {
-        $this->postCode = $postCode;
+    public function setStreetNumber(?string $streetNumber) : UserAddress {
+        $this->streetNumber = $streetNumber;
+
         return $this;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getPostCode(): string
-    {
+    public function getPostCode() : ?string {
         return $this->postCode;
     }
 
     /**
-     * @param string $city
+     * @param string|null $postCode
+     *
      * @return UserAddress
      */
-    public function setCity(string $city): UserAddress
-    {
-        $this->city = $city;
+    public function setPostCode(?string $postCode) : UserAddress {
+        $this->postCode = $postCode;
+
         return $this;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getCity(): string
-    {
+    public function getCity() : ?string {
         return $this->city;
     }
 
     /**
-     * @param string $country
+     * @param string|null $city
+     *
      * @return UserAddress
      */
-    public function setCountry(string $country): UserAddress
-    {
-        $this->country = $country;
+    public function setCity(?string $city) : UserAddress {
+        $this->city = $city;
+
         return $this;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getCountry(): string
-    {
+    public function getCountry() : ?string {
         return $this->country;
     }
 
     /**
-     * @param mixed $isBillingAddress
+     * @param string|null $country
+     *
      * @return UserAddress
      */
-    public function setIsBillingAddress($isBillingAddress)
-    {
-        $this->isBillingAddress = $isBillingAddress;
+    public function setCountry(?string $country) : UserAddress {
+        $this->country = $country;
+
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function getisBillingAddress()
-    {
+    public function isBillingAddress() : bool {
         return $this->isBillingAddress;
     }
 
     /**
-     * @param mixed $userID
+     * @param bool $isBillingAddress
+     *
      * @return UserAddress
      */
-    public function setUserID($userID)
-    {
-        $this->userID = $userID;
+    public function setIsBillingAddress(bool $isBillingAddress) : UserAddress {
+        $this->isBillingAddress = $isBillingAddress;
+
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return User
      */
-    public function getUserID()
-    {
-        return $this->userID;
+    public function getUser() : User {
+        return $this->user;
     }
+
 }

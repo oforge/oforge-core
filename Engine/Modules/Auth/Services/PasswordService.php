@@ -2,7 +2,13 @@
 
 namespace Oforge\Engine\Modules\Auth\Services;
 
+/**
+ * Class PasswordService
+ *
+ * @package Oforge\Engine\Modules\Auth\Services
+ */
 class PasswordService {
+
     /**
      * @param string $password
      *
@@ -12,9 +18,10 @@ class PasswordService {
         if (strlen($password) > 5) {
             return password_hash($password, PASSWORD_BCRYPT);
         }
+
         return null;
     }
-    
+
     /**
      * @param string $password
      * @param string $hash
@@ -24,4 +31,5 @@ class PasswordService {
     public function validate(string $password, string $hash) {
         return password_verify($password, $hash);
     }
+
 }

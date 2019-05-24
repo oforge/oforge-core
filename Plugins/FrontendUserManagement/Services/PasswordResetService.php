@@ -80,7 +80,7 @@ class PasswordResetService extends AbstractDatabaseAccess {
             $user->setPassword($password);
             $this->entityManager()->flush();
 
-            $user = $user->toArray();
+            $user = $user->toArray(1);
             unset($user["password"]);
             $user["type"] = User::class;
         }
