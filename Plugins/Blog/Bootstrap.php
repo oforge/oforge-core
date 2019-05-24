@@ -39,6 +39,13 @@ class Bootstrap extends AbstractBootstrap {
             Controller\Frontend\BlogController::class,
         ];
 
+        $this->middlewares = [
+            'frontend_blog' => [
+                'class'    => Middlewares\BlogMiddlewareBlogMiddleware::class,
+                'position' => 1,
+            ],
+        ];
+
         $this->models = [
             Category::class,
             Post::class,

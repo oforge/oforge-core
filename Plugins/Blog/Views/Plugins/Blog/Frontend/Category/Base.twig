@@ -1,13 +1,10 @@
 {% extends 'Plugins/Blog/Frontend/Components/Base.twig' %}
 
 {% block blog_content %}
-    {% block blog_category_content %}
-        {% include 'Plugins/Blog/Frontend/Category/Header/Header.twig' %}
-        {% include 'Plugins/Blog/Frontend/Category/ContentHeader.twig' %}
-    {% endblock blog_category_content %}
-    <section class="content-content">
+    {% include 'Plugins/Blog/Frontend/Category/Header.twig' %}
+    <div class="blog-content">
         <h2>{{ i18n('plugin_blog_posts', 'Posts') }}</h2>
         {% include 'Plugins/Blog/Frontend/Category/BlockPostList.twig' %}
-    </section>
-{#    <div style="background-color: #ccc; font-size: smaller">{{ o_print(blog.posts) }}</div>#}
+    </div>
+{#        <div style="background-color: #ccc; font-size: smaller">{{ o_print(blog) }}</div>#}
 {% endblock blog_content %}

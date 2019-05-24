@@ -1,0 +1,12 @@
+{% extends 'Plugins/Blog/Frontend/Components/Base.twig' %}
+
+{% block blog_content %}
+    {% include 'Plugins/Blog/Frontend/Components/Breadcrump.twig' %}
+    {% include 'Plugins/Blog/Frontend/Post/Header.twig' %}
+    {% include 'Plugins/Blog/Frontend/Post/RatingForm.twig' %}
+
+    <div class="blog-post-content">
+        {{ blog.post.content|raw }}
+    </div>
+    {% include 'Plugins/Blog/Frontend/Post/Comments.twig' %}
+{% endblock blog_content %}
