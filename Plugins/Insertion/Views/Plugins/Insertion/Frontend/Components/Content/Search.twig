@@ -1,94 +1,111 @@
 {% block insertion_search %}
     <div class="insertion__sidebar">
         <form class="form form--search-filter"
-              action="#"
-              method="post">
+              action=""
+              method="get">
             <h3 class="form__title">{{ i18n('adjust_search', 'Adjust your search') }}</h3>
 
             <div class="form-controls">
-                <div class="form__control">
-                    <label for="search_key1"
-                           class="form__label">Key1
-                    </label>
-                    <div class="form__input form__input--select">
-                        <select name="search_key1"
-                                id="search_key1"
-                                class="form__input form__input--no-input">
-                            <option value="#">Foo</option>
-                            <option value="#">Bar</option>
-                            <option value="#">Crux</option>
-                            <option value="#">Blub</option>
-                        </select>
+                {% for attributeGroup in attributes %}
+                    {% for attribute in attributeGroup.items %}
+                        {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey } %}
+                    {% endfor %}
+                {% endfor %}
+                <!--
+                                <div class="form__control">
+                                    <label for="search_key1"
+                                           class="form__label">Key1
+                                    </label>
+                                    <div class="form__input form__input--select" data-required>
+                                        <select name="search_key1"
+                                                required
+                                                id="search_key1"
+                                                class="form__input form__input--no-input">
+                                            <option disabled selected>Choose whatever</option>
+                                            <option value="#">Foo</option>
+                                            <option value="#">Bar</option>
+                                            <option value="#">Crux</option>
+                                            <option value="#">Blub</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form__control">
+                                    <label for="search_key2"
+                                           class="form__label">Key2
+                                    </label>
+                                    <div class="form__input form__input--select">
+                                        <select name="search_key2"
+                                                id="search_key2"
+                                                class="form__input form__input--no-input">
+                                            <option value="#">Foo</option>
+                                            <option value="#">Bar</option>
+                                            <option value="#">Crux</option>
+                                            <option value="#">Blub</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                -->
+                <div class="form-controls form-controls--with-separator flex flex--row flex--wrap flex--center flex--between">
+                    <div class="form__control">
+                        <label for="search_key3" class="form__label">
+                            Key3
+                        </label>
+                        <div class="range-slider">
+                            <input id="search_key3"
+                                   name="search_key3"
+                                   type="range"
+                                   multiple
+                                   data-range-slider="search_key3"
+                                   value="10,80" />
+                        </div>
                     </div>
                 </div>
 
                 <div class="form__control">
-                    <label for="search_key2"
-                           class="form__label">Key2
-                    </label>
-                    <div class="form__input form__input--select">
-                        <select name="search_key2"
-                                id="search_key2"
-                                class="form__input form__input--no-input">
-                            <option value="#">Foo</option>
-                            <option value="#">Bar</option>
-                            <option value="#">Crux</option>
-                            <option value="#">Blub</option>
-                        </select>
-                    </div>
+                    <input type="submit"
+                           value="{{ i18n('apply_filter') }}"
+                           class="form__input form__input--submit button">
                 </div>
             </div>
 
-            <div class="form-controls form-controls--with-separator flex flex--row flex--wrap flex--center flex--between">
-                <div class="form__control">
-                    <label for="search_key3" class="form__label">
-                        Key3
-                    </label>
-                    <div class="range-slider">
-                        <input id="search_key3"
-                               name="search_key3"
-                               type="range"
-                               multiple
-                               data-range-slider="search_key3"
-                               value="10,80" />
-                    </div>
-                </div>
+            <!--
+                            <div class="form__control form__input half flex flex--row flex--center space-up">
+                                <label for="range-from" class="form__label">
+                                    From
+                                </label>
+                                <input type="text"
+                                       class="form__input form__input--no-input"
+                                       id="range-from"
+                                       name="range-from"
+                                       size="1"
+                                       data-range-value="low"
+                                       data-range-slider-name="search_key3">
+                            </div>
 
-                <div class="form__control form__input half flex flex--row flex--center space-up">
-                    <label for="range-from" class="form__label">
-                        From
-                    </label>
-                    <input type="text"
-                           class="form__input form__input--no-input"
-                           id="range-from"
-                           name="range-from"
-                           size="1"
-                           data-range-value="low"
-                           data-range-slider-name="search_key3">
-                </div>
+                            <div class="form__control form__input half flex flex--row flex--center space-up">
+                                <label for="range-to" class="form__label">
+                                    To
+                                </label>
+                                <input type="text"
+                                       class="form__input form__input--no-input"
+                                       id="range-to"
+                                       name="range-to"
+                                       size="1"
+                                       data-range-value="high"
+                                       data-range-slider-name="search_key3">
+                            </div>
 
-                <div class="form__control form__input half flex flex--row flex--center space-up">
-                    <label for="range-to" class="form__label">
-                        To
-                    </label>
-                    <input type="text"
-                           class="form__input form__input--no-input"
-                           id="range-to"
-                           name="range-to"
-                           size="1"
-                           data-range-value="high"
-                           data-range-slider-name="search_key3">
-                </div>
-
-                <div class="form__control flex flex--row flex--center space-up">
-                    <input type="checkbox"
-                           id="key4"
-                           name="key4"
-                           class="form__input form__input--checkbox form__input--checkbox-small">
-                    <label for="key4" class="space-left">Key4</label>
-                </div>
-            </div>
-
+                            <div class="form__control flex flex--row flex--center space-up">
+                                <input type="checkbox"
+                                       id="key4"
+                                       name="key4"
+                                       class="form__input form__input--checkbox form__input--checkbox-small">
+                                <label for="key4" class="space-left">Key4</label>
+                            </div>
+                        </div>
+            -->
             <div class="form-controls">
 
             </div>

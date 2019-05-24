@@ -4,7 +4,7 @@ namespace Insertion\Services;
 
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Insertion\Enums\AttributeType;
+use Insertion\Enum\AttributeType;
 use Insertion\Models\AttributeKey;
 use Insertion\Models\Insertion;
 use Insertion\Models\InsertionAttributeValue;
@@ -82,10 +82,20 @@ class InsertionMockService {
         $insertionTypes = [];
         /** @var InsertionTypeService $insertionTypeService */
         $insertionTypeService = Oforge()->Services()->get('insertion.type');
-        $insertionType        = $insertionTypeService->createNewInsertionType('eSports');
+
+        $rootType  = $insertionTypeService->createNewInsertionType('Gaming');
+        $rootType2 = $insertionTypeService->createNewInsertionType('Non Gaming');
+        array_push($insertionTypes, $rootType);
+        array_push($insertionTypes, $rootType2);
+
+        $insertionType2 = $insertionTypeService->createNewInsertionType('Basketball', $rootType2);
+        array_push($insertionTypes, $insertionType2);
+
+        $insertionType = $insertionTypeService->createNewInsertionType('eSports', $rootType);
 
         foreach ($attributes as $attribute) {
             $insertionTypeService->addAttributeToInsertionType($insertionType, $attribute, false);
+            $insertionTypeService->addAttributeToInsertionType($insertionType2, $attribute, false);
         }
         array_push($insertionTypes, $insertionType);
 
@@ -104,11 +114,11 @@ class InsertionMockService {
 
         /** @var InsertionService $insertionService */
         $insertionService = Oforge()->Services()->get('insertion');
-        $insertion        = $insertionService->createNewInsertion($insertionType, 'thelegend', 'This is a good player.');
+        $insertion        = $insertionService->createNewInsertion($insertionType, 'thelegend', 'Best player ever', 'This is a good player. He has skill.');
 
         array_push($insertions, $insertion);
 
-        $insertion = $insertionService->createNewInsertion($insertionType, 'noobmaster69', 'This is a flamer.');
+        $insertion = $insertionService->createNewInsertion($insertionType, 'noobmaster69', 'Worst player ever!', 'This is a flamer. We do not like him.');
         array_push($insertions, $insertion);
 
         return $insertions;

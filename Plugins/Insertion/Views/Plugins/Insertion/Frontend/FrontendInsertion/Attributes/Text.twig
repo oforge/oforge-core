@@ -1,0 +1,10 @@
+<div class="form__control">
+
+    <label for="insertion_text[{{ attribute.id }}]"
+           class="form__label">{{ i18n(attribute.name) }}</label>
+
+    <input type="text"
+           name="insertion[{{ attribute.id }}]"
+           value="{{ data[page]['insertion'][attribute.id] }}"
+           class="form__input" />
+</div>

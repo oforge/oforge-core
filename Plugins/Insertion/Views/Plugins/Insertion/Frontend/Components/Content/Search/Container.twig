@@ -1,0 +1,5 @@
+{% set values = getInserationValues(attribute.id) %}
+{% for value in values.values %}
+    {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ value.subAttributeKey.type|capitalize  ~ '.twig'  with {'attribute': value.subAttributeKey } %}
+{% endfor %}
+

@@ -9,27 +9,33 @@ use Insertion\Models\AttributeKey;
 use Insertion\Models\AttributeValue;
 use Insertion\Models\Insertion;
 use Insertion\Models\InsertionAttributeValue;
+use Insertion\Models\InsertionContent;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\I18n\Models\Language;
 
 class InsertionService extends AbstractDatabaseAccess {
     public function __construct() {
         parent::__construct([
-            'default' => Insertion::class,
+            'default'                 => Insertion::class,
             'insertionAttributeValue' => InsertionAttributeValue::class,
+            'language'                => Language::class,
         ]);
     }
 
     /**
      * @param $insertionType
+     * @param $name
      * @param $title
      * @param $description
+     * @param string $iso
      *
      * @return Insertion|null
      * @throws ORMException
+     * @throws OptimisticLockException
      * @throws ServiceNotFoundException
      */
-    public function createNewInsertion($insertionType, $title, $description) {
+    public function createNewInsertion($insertionType, $name, $title, $description, $iso = 'de') {
         $insertion = new Insertion();
 
         /** @var UserService $userService */
@@ -39,10 +45,21 @@ class InsertionService extends AbstractDatabaseAccess {
         }
         $user = $userService->getUserById(1);
         $insertion->setInsertionType($insertionType);
-        $insertion->setTitle($title);
         $insertion->setUser($user);
-        $insertion->setDescription($description);
 
+        $content = new InsertionContent();
+        $insertion->setContent([$content]);
+
+        $content->setName($name);
+        $content->setDescription($description);
+        $content->setTitle($title);
+        $content->setInsertion($insertion);
+
+        /** @var Language $language */
+        $language = $this->repository("language")->findOneBy(["iso" => $iso]);
+        $content->setLanguage($language);
+
+        $this->entityManager()->persist($content);
         $this->entityManager()->persist($insertion);
         $this->entityManager()->flush($insertion);
 
@@ -91,7 +108,7 @@ class InsertionService extends AbstractDatabaseAccess {
      * @throws ORMException
      */
     public function getInsertionById($id) {
-        $this->repository()->find($id);
+        return $this->repository()->find($id);
     }
 
     public function updateInsertion($id) {
@@ -120,10 +137,7 @@ class InsertionService extends AbstractDatabaseAccess {
      */
     public function addAttributeValueToInsertion($insertion, $attributeKey, $value) {
         $insertionAttributeValue = new InsertionAttributeValue();
-        $insertionAttributeValue
-            ->setAttributeKey($attributeKey)
-            ->setInsertion($insertion)
-            ->setValue($value->getValue());
+        $insertionAttributeValue->setAttributeKey($attributeKey)->setInsertion($insertion)->setValue($value->getValue());
 
         $this->entityManager()->persist($insertionAttributeValue);
         $this->entityManager()->flush($insertionAttributeValue);

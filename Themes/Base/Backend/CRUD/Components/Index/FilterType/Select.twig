@@ -1,28 +1,30 @@
 {% if filterConfig.list is defined %}
-    <select name="{{ propertyName }}" class="form-control" title="{{ filterTitle }}"
-            data-placeholder="{{ filterTitle }}">
-        <option {% if route.query[propertyName] is not defined %}selected{% endif %} value="">
-            {{ filterTitle }}
-        </option>
-        {% for value, label in filterConfig.list %}
-            {% if label.options is defined %}
-                {% set optgroupLabel = label.label %}
-                <optgroup label="{{ optgroupLabel }}">
-                    {% for value,label in label.options %}
-                        {% set selected = route.query[propertyName] is defined and (route.query[propertyName] == value or route.query[propertyName] is same as(value)) %}
-                        <option {% if selected %}selected{% endif %} value="{{ value }}">
-                            {{ label }}
-                        </option>
-                    {% endfor %}
-                </optgroup>
-            {% else %}
-                {% set selected = route.query[propertyName] is defined and (route.query[propertyName] == value or route.query[propertyName] is same as(value)) %}
-                <option {% if selected %}selected{% endif %} value="{{ value }}">
-                    {{ label }}
-                </option>
-            {% endif %}
-        {% endfor %}
-    </select>
+    <span>
+        <select name="{{ propertyName }}" class="form-control select2" title="{{ filterTitle }}
+                data-placeholder="{{ filterTitle }}">
+            <option {% if route.query[propertyName] is not defined %}selected{% endif %} value="">
+                {{ filterTitle }}
+            </option>
+            {% for value, label in filterConfig.list %}
+                {% if label.options is defined %}
+                    {% set optgroupLabel = label.label %}
+                    <optgroup label="{{ optgroupLabel }}">
+                        {% for value,label in label.options %}
+                            {% set selected = route.query[propertyName] is defined and (route.query[propertyName] == value or route.query[propertyName] is same as(value)) %}
+                            <option {% if selected %}selected{% endif %} value="{{ value }}">
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </optgroup>
+                {% else %}
+                    {% set selected = route.query[propertyName] is defined and (route.query[propertyName] == value or route.query[propertyName] is same as(value)) %}
+                    <option {% if selected %}selected{% endif %} value="{{ value }}">
+                        {{ label }}
+                    </option>
+                {% endif %}
+            {% endfor %}
+        </select>
+    </span>
 {% else %}
     <div class="alert alert-danger" role="alert">
         Missing select options list configuration for "{{ propertyName }}"
