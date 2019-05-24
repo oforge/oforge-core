@@ -18,6 +18,7 @@ class InsertionListService extends AbstractDatabaseAccess {
     public function __construct() {
         parent::__construct([
             'default'                => Insertion::class,
+            'type'                   => InsertionType::class,
             'insertionTypeAttribute' => InsertionTypeAttribute::class,
             'key'                    => AttributeKey::class,
             'group'                  => InsertionTypeGroup::class,
@@ -31,7 +32,7 @@ class InsertionListService extends AbstractDatabaseAccess {
         $attributeKeys = array_keys($_GET);
         $keys          = $this->repository("key")->findBy(["name" => $attributeKeys]);
 
-        $result = ["filter" => [], "query" => []];
+        $result = ["filter" => [], "query" => [], 'order' => $_GET["order"]];
 
         $queryBuilder = $this->entityManager()->createQueryBuilder()->select('i')->from("Insertion\Models\Insertion", "i")->where("i.insertionType = :type");
         $queryBuilder->setParameter("type", $typeId);
@@ -87,11 +88,81 @@ class InsertionListService extends AbstractDatabaseAccess {
         $result["query"]["pageCount"] = ceil((1.0) * $paginator->count() / $pageSize);
         $result["query"]["items"]     = [];
 
+        /**
+         * @var $type InsertionType
+         */
+        $type = $this->repository("type")->findOneBy(["id" => $typeId]);
+
+        $attributes = $type->getAttributes();
+
+        $valueMap     = [];
+        $attributeMap = [];
+
+        /**
+         * @var $attribute InsertionTypeAttribute
+         */
+        foreach ($attributes as $attribute) {
+            $attributeMap[$attribute->getAttributeKey()->getId()] = [
+                "name" => $attribute->getAttributeKey()->getName(),
+                "top"  => $attribute->isTop(),
+            ];
+
+            foreach ($attribute->getAttributeKey()->getValues() as $value) {
+                $valueMap[$value->getId()] = $value->getValue();
+            }
+        }
+
+        $result["values"] = $valueMap;
+
         foreach ($paginator as $item) {
-            $result["query"]["items"][] = $item->toArray(3);
+            $data = [
+                "id"        => $item->getId(),
+                "contact"   => $item->getContact()->toArray(0),
+                "content"   => [],
+                "media"     => [],
+                "values"    => [],
+                "topvalues" => [],
+                "price"     => $item->getPrice(),
+                "tax"       => $item->isTax(),
+                "createdAt" => $item->getCreatedAt(),
+
+            ];
+
+            foreach ($item->getContent() as $content) {
+                $data["content"][] = $content->toArray(0);
+            }
+
+            foreach ($item->getMedia() as $media) {
+                $data["media"][] = $media->toArray(0);
+            }
+
+            foreach ($item->getValues() as $value) {
+                $data["values"][] = $value->toArray(0);;
+            }
+
+            /**
+             * @var $attribute InsertionTypeAttribute
+             */
+            foreach ($attributes as $attribute) {
+                if ($attribute->isTop()) {
+                    foreach ($data["values"] as $value) {
+                        if ($value["attributeKey"] == $attribute->getAttributeKey()->getId()) {
+                            $data["topvalues"][] = [
+                                "name"         => $attribute->getAttributeKey()->getName(),
+                                "type"         => $attribute->getAttributeKey()->getType(),
+                                "attributeKey" => $attribute->getAttributeKey()->getId(),
+                                "value"        => $value["value"],
+                            ];
+                        }
+                    }
+                }
+            }
+
+            $result["query"]["items"][] = $data;
         }
 
         //TODO price range
+        //TODO range
 
         return $result;
     }

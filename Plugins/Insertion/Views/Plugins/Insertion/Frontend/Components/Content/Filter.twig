@@ -1,17 +1,35 @@
 {% block product_filter %}
-    <div class="panel panel--filter filter filter--product">
-        <div class="tags">
-            <div class="tag-list">
-                {% for i in range(0, 12) %}
-                    <div class="tag">
-                        <a href="#" class="close"></a>
-                        <span class="tag__text">{{ i }} Lorem</span>
-                    </div>
-                {% endfor %}
+    {% if search.filter|length > 0 %}
+        <div class="panel panel--filter filter filter--product">
+            <div class="tags">
+                <div class="tag-list">
+                    {% for f, value in search.filter %}
+                        {% if value is iterable %}
+                            {% for v in value %}
+                                <div class="tag" data-key="{{ f }}" data-value="{{ v }}">
+                                    <a href="#"
+                                       onclick="window.location.href = Oforge.removeQueryString('{{ f }}[]', '{{ v }}')"
+                                       class="close"></a>
+                                    <span class="tag__text">{{ i18n(f) }} {{ search.values[v] }}</span>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="tag" data-key="{{ f }}" data-value="{{ value }}">
+                                <a href="#" onclick="window.location.href = Oforge.updateQueryString('{{ f }}')"
+                                   class="close"></a>
+                                {% if keys[f].type is same as( 'boolean') %}
+                                    <span class="tag__text">{{ i18n(f) }}</span>
+                                {% else %}
+                                    <span class="tag__text">{{ i18n(f) }} {{ search.values[value] }}</span>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="button button--filter-search">
+                <i class="icon"></i><span class="filter-search-text">{{ i18n('edit_search', 'Edit search') }}</span>
             </div>
         </div>
-        <div class="button button--filter-search">
-            <i class="icon"></i><span class="filter-search-text">{{ i18n('edit_search', 'Edit search') }}</span>
-        </div>
-    </div>
+    {% endif %}
 {% endblock product_filter %}

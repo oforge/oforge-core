@@ -6,6 +6,7 @@ use Doctrine\Common\Annotations\AnnotationException;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\FilesystemCache;
+use Doctrine\ORM\Cache\CacheConfiguration;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
@@ -98,6 +99,7 @@ class ForgeDatabase {
 
         $this->configuration = Setup::createAnnotationMetadataConfiguration($metadataDirs, $isDevMode, null, $filesystemCache);
         $this->configuration->setMetadataDriverImpl($annotationDriver);
+        $this->configuration->setQueryCacheImpl($filesystemCache);
     }
 
     /**
@@ -106,7 +108,6 @@ class ForgeDatabase {
     public function getEntityManager() : EntityManager {
         if (!isset($this->entityManager)) {
             $this->entityManager = EntityManager::create($this->settings['connection'], $this->configuration);
-
             DiscriminatorEntryListener::register($this->entityManager);
         }
 

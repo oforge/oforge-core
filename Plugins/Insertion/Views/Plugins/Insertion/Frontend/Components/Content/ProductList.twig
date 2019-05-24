@@ -12,7 +12,7 @@
                 <div class="panel panel--product product">
                     <a href="{{ url("insertions_detail", {id: item.id}) }}" class="product__image">
                         {% if item.media is defined and item.media|length > 0 and item.media[0].content is defined %}
-                            <img src="{{ media(item.media[0].content.id, 300) }}" alt="{{ item.content[0].name }}"
+                            <img src="{{ media(item.media[0].content, 300) }}" alt="{{ item.content[0].name }}"
                                  class="image">
                         {% else %}
                             <!-- TODO add dummy image -->
@@ -22,50 +22,29 @@
                         <div class="label label--image label--top-right"></div>
                     </a>
                     <div class="product__attributes product__attributes--main">
-                        {% for attribute in item.insertionType.attributes %}
-                            {% if attribute.top %}
-                                {% for value in item.values %}
-                                    {% if value.attributeKey.id == attribute.attributeKey %}
-                                        <div class="product__attribute">
-                                            <!-- Fallunterscheidung hinzufügen -->
-                                            <span class="product__label">{{ i18n(value.attributeKey.name) }}</span>
-                                            <span class="product__value">{{ value.value }}</span>
-                                        </div>
-                                    {% endif %}
-                                {% endfor %}
-                            {% endif %}
+
+                        {% for value in item.topvalues|slice(0,3) %}
+                            <div class="product__attribute">
+                                <span class="product__label">{{ i18n(value.name) }}</span>
+                                <span class="product__value">{{ value.value.value }}</span>
+                            </div>
                         {% endfor %}
                     </div>
                     <div class="product__content">
                         <h3 class="product__title">{{ item.content[0].title }}</h3>
                         <div class="product__attributes product__attributes--top">
-                            {% for attribute in item.insertionType.attributes %}
-                                {% if attribute.top %}
-                                    {% for value in item.values %}
-                                        {% if value.attributeKey.id == attribute.attributeKey %}
-                                            <div class="product__attribute">
-                                                <!-- Fallunterscheidung hinzufügen -->
-                                                <span class="product__label">{{ i18n(value.attributeKey.name) }}</span>
-                                                <span class="product__value">{{ value.value }}</span>
-                                            </div>
-                                        {% endif %}
-                                    {% endfor %}
-                                {% endif %}
+                            <div class="product__attribute">
+                                <span class="product__label">{{ i18n('insertion_name') }}</span>
+                                <span class="product__value">{{ item.content[0].name }}</span>
+                            </div>
+                            {% for topvalue in item.topvalues|slice(1,2) %}
+                                {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
                             {% endfor %}
                         </div>
                         <div class="product__attributes product__attributes--bottom">
-                            {% for attribute in item.insertionType.attributes %}
-                                {% if attribute.top %}
-                                    {% for value in item.values %}
-                                        {% if value.attributeKey.id == attribute.attributeKey %}
-                                            <div class="product__attribute">
-                                                <!-- Fallunterscheidung hinzufügen -->
-                                                <span class="product__label">{{ i18n(value.attributeKey.name) }}</span>
-                                                <span class="product__value">{{ value.value }}</span>
-                                            </div>
-                                        {% endif %}
-                                    {% endfor %}
-                                {% endif %}
+
+                            {% for topvalue in item.topvalues|slice(3,3) %}
+                                {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
                             {% endfor %}
                         </div>
                         <div class="product__meta">
