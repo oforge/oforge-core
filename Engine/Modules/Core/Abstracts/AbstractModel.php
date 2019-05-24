@@ -30,6 +30,35 @@ abstract class AbstractModel {
         return $object;
     }
 
+    /** @deprecated */
+    public static function definition() {
+        $methods = get_class_methods(static::class);
+        $data    = [];
+        foreach ($methods as $method) {
+            $name = null;
+
+            if (substr($method, 0, 3) === 'get') {
+                $name = lcfirst(substr($method, 3));
+            } elseif (substr($method, 0, 2) === 'is') {
+                $name = lcfirst(substr($method, 2));
+            }
+
+            if (isset($name)) {
+                $r = new ReflectionMethod(static::class, $method);
+
+                $type = $r->getReturnType();
+
+                $methodDefinition = ["name" => $name];
+                if (isset($type)) {
+                    $methodDefinition["type"] = "" . $type;
+                }
+                array_push($data, $methodDefinition);
+            }
+        }
+
+        return $data;
+    }
+
     /**
      * Method for mass-assignment.
      * Will call (existing) setter method for every key. Supports both key formats "testKey" and "test_key".
@@ -54,7 +83,7 @@ abstract class AbstractModel {
             }
 
             if (method_exists($this, $method)) {
-                $r = new ReflectionMethod(static::class, $method);
+                $r      = new ReflectionMethod(static::class, $method);
                 $params = $r->getParameters();
 
                 if (sizeof($params) == 1) {
@@ -79,54 +108,43 @@ abstract class AbstractModel {
         return $this;
     }
 
-
-    /** @deprecated  */
-    public static function definition()
-    {
-        $methods = get_class_methods(static::class);
-        $data = [];
-        foreach ($methods as $method) {
-            $name = null;
-
-            if (substr($method, 0, 3) === 'get') {
-                $name = lcfirst(substr($method, 3));
-            } else if (substr($method, 0, 2) === 'is') {
-                $name = lcfirst(substr($method, 2));
-            }
-
-            if (isset($name)) {
-                $r = new ReflectionMethod(static::class, $method);
-
-                $type = $r->getReturnType();
-
-                $methodDefinition = ["name" => $name];
-                if (isset($type)) {
-                    $methodDefinition["type"] = "" . $type;
-                }
-                array_push($data, $methodDefinition);
-            }
-        }
-
-        return $data;
-    }
-
-
     /**
-     * Convert this object to array.
+     * Convert this object to array.<br>
+     * With the second parameter, properties can be excluded form convert.<br>
+     * Example:<br>
+     *      ['prop1', 'prop2', 'prop3' => ['sub31', 'sub32'], 'prop4' => ['*', '!sub41'] ]
+     * <ul>
+     *   <li>Excludes <i>prop1</i> and <i>prop2</i> of this object object.</li>
+     *   <li>Excludes sub properties <i>sub31</i> and <i>sub32</i> of this object property <i>prop3</i>.</li>
+     *   <li>Excludes all properties except <i>sub41</i> of current this object <i>prop4</i>.</li>
+     * </ul>
      *
      * @param int $maxDepth
+     * @param array $excludeProperties
      *
      * @return array
      */
-    public function toArray($maxDepth = 2) : array {
+    public function toArray($maxDepth = 2, $excludeProperties = []) : array {
+        foreach ($excludeProperties as $key => $value) {
+            if (is_numeric($key) && is_string($value)) {
+                // unset($excludeProperties[$key]);
+                $excludeProperties[$value] = $key;
+            }
+        }
         $result = [];
         foreach (get_class_methods($this) as $classMethod) {
             foreach (['get', 'is'] as $prefix) {
                 $length = strlen($prefix);
                 if (substr($classMethod, 0, $length) === $prefix) {
                     $propertyName = lcfirst(substr($classMethod, $length));
+                    if (isset($excludeProperties[$propertyName])) {
+                        if (is_array($excludeProperties[$propertyName])) {
+                            $result[$propertyName] = $this->assignArray($this->$classMethod(), $maxDepth, $excludeProperties[$propertyName]);
+                        }
+                    } elseif (!isset($excludeProperties['*']) || isset($excludeProperties['!' . $propertyName])) {
+                        $result[$propertyName] = $this->assignArray($this->$classMethod(), $maxDepth, []);
+                    }
 
-                    $result[$propertyName] = $this->assignArray($this->$classMethod(), $maxDepth);
                     break;
                 }
             }
@@ -140,16 +158,17 @@ abstract class AbstractModel {
      *
      * @param mixed $result
      * @param int $maxDepth
+     * @param array $excludeProperties
      *
      * @return mixed
      */
-    private function assignArray($result, int $maxDepth) {
+    private function assignArray($result, int $maxDepth, array $excludeProperties) {
         if (is_scalar($result)) {
             return $result;
         } elseif (is_subclass_of($result, AbstractModel::class)) {
             /** @var AbstractModel $result */
             if ($maxDepth > 0) {
-                return $result->toArray($maxDepth - 1);
+                return $result->toArray($maxDepth - 1, $excludeProperties);
             } elseif (method_exists($result, 'getId')) {
                 return $result->getId();
             }
@@ -158,7 +177,7 @@ abstract class AbstractModel {
         } elseif ((is_array($result) || is_a($result, PersistentCollection::class)) && $maxDepth > 0) {
             $subResult = [];
             foreach ($result as $item) {
-                $subResult[] = $item->assignArray($item, $maxDepth - 1);
+                $subResult[] = $item->assignArray($item, $maxDepth - 1, $excludeProperties);
             }
 
             return $subResult;
