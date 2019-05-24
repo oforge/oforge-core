@@ -5,12 +5,12 @@ if (!Element.prototype.matches) {
 
 if (!Element.prototype.closest) {
     Element.prototype.closest = function(s) {
-        var el = this;
+        var element = this;
 
         do {
-            if (el.matches(s)) return el;
-            el = el.parentElement || el.parentNode;
-        } while (el !== null && el.nodeType === 1);
+            if (element.matches(s)) return element;
+            element = element.parentElement || element.parentNode;
+        } while (element !== null && element.nodeType === 1);
         return null;
     };
 }
