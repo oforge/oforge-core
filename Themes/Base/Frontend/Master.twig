@@ -52,9 +52,7 @@
             }
         </style>
         <div class="meta">
-            {% for key, val in debug.session  %}
-                <p>{{ key }} : {{ val }}</p>
-            {% endfor %}
+            {{ o_print(debug.session) }}
         </div>
     {% endif %}
 {% endblock master__meta %}
