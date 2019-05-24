@@ -1,17 +1,19 @@
 <div class="form__control">
 
-        <pre>
-            {{ required }}
-        </pre>
-
     <label for="insertion[{{ attribute.id }}]"
            class="form__label">{{ i18n(attribute.name) }}</label>
 
-    <select  name="insertion[{{ attribute.id }}]" >
-        {% for value in attribute.values %}
-            <option value="{{ value.id }}" {% if value.id == data[page]['insertion'][attribute.id] %}selected="selected"{% endif %}>
-                {{ i18n(value.value) }}
-            </option>
-        {% endfor %}
-    </select>
+    <div class="form__input form__input--select"
+         {% if required %}data-required{% endif %}>
+        <select name="insertion[{{ attribute.id }}]"
+                class="form__input form__input--no-input"
+                {% if required %}required{% endif %}>
+            <option disabled selected>{{ i18n(attribute.name) }}</option>
+            {% for value in attribute.values %}
+                <option value="{{ value.id }}" {% if value.id == data[page]['insertion'][attribute.id] %}selected="selected"{% endif %}>
+                    {{ i18n(value.value) }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
 </div>
