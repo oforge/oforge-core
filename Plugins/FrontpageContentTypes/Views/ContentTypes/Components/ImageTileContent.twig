@@ -1,0 +1,16 @@
+{% block image_tile_content %}
+<div style="background-color:{{ data.backgroundcolor }}">
+    <img src="{{ data.url }}" alt="brr">
+    <h2 style="color:{{ data.fontcolor }};">{{ data.caption }}</h2>
+    {% if data.subheading %}<h3>{{ data.subheading }}</h3>{% endif %}
+    {% if data.text %}<p>{{ data.text }}</p>{% endif %}
+    {% block image_tile_link %}
+        {% if data.link %}
+            <a href="{{ data.link }}">{% if data.linktext %}{{ data.linktext }}{% endif %}
+            <svg class="icon icon--secondary icon--profil">
+                <use xlink:href="#mehr_lesen"></use>
+            </svg>
+            </a>{% endif %}
+    {% endblock image_tile_link %}
+</div>
+{% endblock image_tile_content %}

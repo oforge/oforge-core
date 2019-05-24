@@ -1,0 +1,8 @@
+<div class="form__control flex flex--row flex--center space-up">
+    <input type="checkbox"
+           id="key4"
+           name="{{ attribute.name }}"
+           {% if search.filter[attribute.name] == 'on' %}checked="checked"{% endif %}
+           class="form__input form__input--checkbox form__input--checkbox-small">
+    <label for="{{ attribute.name }}" class="space-left">{{ i18n(attribute.name) }}</label>
+</div>

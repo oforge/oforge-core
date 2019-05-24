@@ -1,0 +1,14 @@
+<div class="">
+    <label for="{{ attribute.name }}[]"
+           class="form__label">{{ i18n(attribute.name) }}</label>
+    <div class="" data-required>
+        <select name="{{ attribute.name }}[]" multiple>
+            {% for value in attribute.values %}
+                <option value="{{ value.id }}"
+                        {% if value.id in search.filter[attribute.name] %}selected="selected"{% endif %}>
+                    {{ i18n(value.value) }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+</div>

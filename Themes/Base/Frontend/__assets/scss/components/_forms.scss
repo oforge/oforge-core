@@ -78,11 +78,13 @@
         color: $color-primary;
     }
 
+    // dirrty hack :/
     &.form__input--checkbox {
         width: 3.6rem;
 
         &:checked {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%233c3c3b' viewBox='0 0 24 24'%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E");
+            background-color: $color-secondary;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23ffffff' viewBox='0 0 24 24'%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-size: contain;
         }
@@ -148,6 +150,11 @@
             transform: translateY(-50%);
             z-index: 0;
         }
+
+        &.valid:after, &.invalid:after {
+            border-color: $color-light transparent transparent transparent;
+        }
+
         select {
             background: transparent;
             padding: $size-small;
@@ -167,6 +174,23 @@
 
     &.form__input--half {
         width: calc(50% - #{$size-medium});
+    }
+
+    &.invalid {
+        background-color: $invalid;
+        color: $text-light;
+
+        > select {
+            color: $text-light;
+        }
+    }
+    &.valid {
+        background-color: $color-secondary;
+        color: $text-light;
+
+        > select {
+            color: $text-light;
+        }
     }
 }
 
