@@ -71,7 +71,7 @@ class PostService extends AbstractDatabaseAccess {
         $limit  = null;
         $offset = null;
         if ($page > -1) {
-            $limit  = $configService->get('blog_epp_posts');
+            $limit  = $configService->get('blog_load_more_epp_posts');
             $offset = $page * $limit;
         }
 
