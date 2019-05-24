@@ -4,18 +4,18 @@ namespace FrontendUserManagement\Services;
 
 use Doctrine\ORM\ORMException;
 use Exception;
-use FrontendUserManagement\Models\UserDetail;
+use FrontendUserManagement\Models\UserAddress;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 
 /**
- * Class UserDetailsService
+ * Class UserAddressService
  *
  * @package FrontendUserManagement\Services
  */
-class UserDetailsService extends AbstractDatabaseAccess {
+class UserAddressService extends AbstractDatabaseAccess {
 
     public function __construct() {
-        parent::__construct(UserDetail::class);
+        parent::__construct(UserAddress::class);
     }
 
     /**
@@ -25,11 +25,11 @@ class UserDetailsService extends AbstractDatabaseAccess {
      */
     public function save(array $data) {
         try {
-            $detail = $this->get($data['userId']);
-            if (isset($detail)) {
-                $detail->fromArray($data);
-                $detail = $this->entityManager()->merge($detail);
-                $this->entityManager()->flush($detail);
+            $address = $this->get($data['userId']);
+            if (isset($address)) {
+                $address->fromArray($data);
+                $address = $this->entityManager()->merge($address);
+                $this->entityManager()->flush($address);
 
                 return true;
             }
@@ -43,14 +43,14 @@ class UserDetailsService extends AbstractDatabaseAccess {
     /**
      * @param $userID
      *
-     * @return UserDetail|null
+     * @return UserAddress|null
      * @throws ORMException
      */
-    public function get($userID) : ?UserDetail {
-        /** @var UserDetail|null $detail */
-        $detail = $this->repository()->findOneBy(['user' => $userID]);
+    public function get($userID) : ?UserAddress {
+        /** @var UserAddress|null $address */
+        $address = $this->repository()->findOneBy(['user' => $userID]);
 
-        return $detail;
+        return $address;
     }
 
 }

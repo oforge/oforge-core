@@ -7,8 +7,8 @@
  */
 namespace Oforge\Engine\Modules\UserManagement\Services;
 
-use Oforge\Engine\Modules\Auth\Models\User\User;
+use Oforge\Engine\Modules\Auth\Models\User\BaseUser;
 
 class UsersCrudService extends BaseUsersCrudService {
-    protected $userModel = User::class;
+    protected $userModel = BaseUser::class;
 }

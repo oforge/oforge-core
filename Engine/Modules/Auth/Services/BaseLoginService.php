@@ -8,10 +8,8 @@
 
 namespace Oforge\Engine\Modules\Auth\Services;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
-use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
-use Oforge\Engine\Modules\Auth\Models\User\User;
+use Doctrine\ORM\ORMException;
+use Oforge\Engine\Modules\Auth\Models\User\BaseUser;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 
@@ -24,6 +22,11 @@ use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
  */
 class BaseLoginService extends AbstractDatabaseAccess {
 
+    /**
+     * BaseLoginService constructor.
+     *
+     * @param $models
+     */
     public function __construct($models) {
         parent::__construct($models);
     }
@@ -36,32 +39,23 @@ class BaseLoginService extends AbstractDatabaseAccess {
      *
      * @return string|null
      * @throws ServiceNotFoundException
+     * @throws ORMException
      */
     public function login(string $email, string $password) {
-        /**
-         * @var $authService AuthService
-         */
-        $authService = Oforge()->Services()->get("auth");
+        /** @var AuthService $authService */
+        $authService = Oforge()->Services()->get('auth');
 
-        /**
-         * @var $passwordService PasswordService
-         */
-        $passwordService = Oforge()->Services()->get("password");
+        /** @var PasswordService $passwordService */
+        $passwordService = Oforge()->Services()->get('password');
 
-        /**
-         * @var BackendUser|User $user
-         */
-        $user = $this->repository()->findOneBy(["email" => $email]);
+        /** @var BaseUser $user */
+        $user = $this->repository()->findOneBy(['email' => $email]);//TODO include 'active' => true ?
 
         if (isset($user)) {
             if ($passwordService->validate($password, $user->getPassword())) {
-                $userObj = $user->toArray();
-                unset($userObj["password"]);
-
-                $userObj["type"] = get_class($user);
-                if (get_class($user) == BackendUser::class) {
-                    $userObj["role"] = $user->getRole();
-                }
+                $userObj = $user->toArray(1);
+                unset($userObj['password']);
+                $userObj['type'] = get_class($user);
 
                 return $authService->createJWT($userObj);
             }
