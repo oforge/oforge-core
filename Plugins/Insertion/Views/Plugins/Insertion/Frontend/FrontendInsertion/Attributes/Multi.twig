@@ -1,14 +1,11 @@
 <div class="form__control">
 
-        <pre>
-            {{ required }}
-        </pre>
-
     <label for="insertion[{{ attribute.id }}][]"
            class="form__label">{{ i18n(attribute.name) }}</label>
 
     <div class="select"
-         data-multi-select="insertion[{{ attribute.id }}][]">
+         data-multi-select="insertion[{{ attribute.id }}][]"
+         {% if required %}required{% endif %}>
         <p class="select__search"
            data-multi-select-search></p>
         <ul class="select__list"
