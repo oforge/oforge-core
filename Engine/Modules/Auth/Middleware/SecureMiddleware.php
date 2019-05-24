@@ -5,9 +5,9 @@ namespace Oforge\Engine\Modules\Auth\Middleware;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Auth\Services\PermissionService;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Helper\RedirectHelper;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Slim\Router;
 
 /**
  * Class SecureMiddleware
@@ -15,7 +15,6 @@ use Slim\Router;
  * @package Oforge\Engine\Modules\Auth\Middleware
  */
 class SecureMiddleware {
-
     /** @var string $urlPathName The named path for redirects */
     protected $urlPathName = '';
 
@@ -46,10 +45,8 @@ class SecureMiddleware {
         }
 
         if (isset($permissions)) {
-            /**
-             * @var $authService AuthService
-             */
-            $authService = Oforge()->Services()->get("auth");
+            /** @var AuthService $authService */
+            $authService = Oforge()->Services()->get('auth');
             $user        = $authService->decode($auth);
 
             if ($this->isUserValid($user, $permissions)) {
@@ -65,14 +62,8 @@ class SecureMiddleware {
 
                 Oforge()->View()->assign(['stopNext' => true]);
 
-                /**
-                 * @var Router $router
-                 */
-                $router = Oforge()->App()->getContainer()->get("router");
                 if (!empty($this->urlPathName)) {
-                    $uri = $router->pathFor($this->urlPathName);
-
-                    return $response = $response->withRedirect($uri, 302);
+                    return RedirectHelper::redirect($response, $this->urlPathName);
                 }
 
                 return $response = $response->withRedirect('/', 302);
@@ -90,9 +81,10 @@ class SecureMiddleware {
      */
     protected function isUserValid($user, $permissions) {
         return (!is_null($user)
-                && isset($user["role"])
-                && $user["role"] <= $permissions["role"]
-                && isset($user["type"])
-                && $user["type"] == $permissions["type"]);
+                && isset($user['role'])
+                && $user['role'] <= $permissions['role']
+                && isset($user['type'])
+                && $user['type'] == $permissions['type']);
     }
+
 }

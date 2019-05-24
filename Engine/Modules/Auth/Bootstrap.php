@@ -15,6 +15,7 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
  * @package Oforge\Engine\Modules\Auth
  */
 class Bootstrap extends AbstractBootstrap {
+
     /**
      * Bootstrap constructor.
      */
@@ -24,10 +25,10 @@ class Bootstrap extends AbstractBootstrap {
         ];
 
         $this->services = [
-            "auth"          => AuthService::class,
-            "backend.login" => BackendLoginService::class,
-            "password"      => PasswordService::class,
-            "permissions"   => PermissionService::class,
+            'auth'          => AuthService::class,
+            'backend.login' => BackendLoginService::class,
+            'password'      => PasswordService::class,
+            'permissions'   => PermissionService::class,
         ];
     }
 

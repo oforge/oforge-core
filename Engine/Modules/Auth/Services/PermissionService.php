@@ -20,7 +20,7 @@ class PermissionService {
     public function put(string $class, string $method, string $userType, ?int $role = null) {
         $key = $class . ':' . $method;
 
-        $this->methods[$key] = ["class" => $class, "method" => $method, "type" => $userType, "role" => $role];
+        $this->methods[$key] = ['class' => $class, 'method' => $method, 'type' => $userType, 'role' => $role];
     }
 
     /**
