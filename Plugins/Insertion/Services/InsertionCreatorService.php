@@ -40,7 +40,6 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
         if (isset($_POST["current_page"])) {
             $_SESSION['insertion' . $typeId] = array_merge($_SESSION['insertion' . $typeId], $_POST);
 
-
             if (isset($_FILES["images"])) {
                 /** @var MediaService $configService */
                 $mediaService = Oforge()->Services()->get('media');
@@ -72,7 +71,7 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
                             $file[$k] = $_FILES["images"][$k][$key];
                         }
 
-                        $media                                                     = $mediaService->add($file);
+                        $media                                       = $mediaService->add($file);
                         $_SESSION['insertion' . $typeId]["images"][] = $media->toArray();
                     }
                 }
@@ -110,6 +109,7 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
             ],
             "media"      => [],
             "attributes" => [],
+            "price"      => isset($pageData["price"]) ? $pageData["price"] : 0,
         ];
 
         if (isset($pageData["images"]) && sizeof($pageData["images"]) > 0) {
@@ -141,7 +141,7 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
         $type = $this->repository("type")->findOneBy(["id" => $typeId]);
 
         if (isset($type)) {
-            $insertion = Insertion::create(["insertionType" => $type, "user" => $user, "price" => 100.0]);
+            $insertion = Insertion::create(["insertionType" => $type, "user" => $user, "price" => $data["price"]]);
 
             $content = InsertionContent::create($data["content"]);
             $content->setInsertion($insertion);
@@ -149,7 +149,7 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
             $contact = InsertionContact::create($data["contact"]);
             $contact->setInsertion($insertion);
 
-            $media   = [];
+            $media = [];
             foreach ($data["media"] as $mediaData) {
                 $imedia = InsertionMedia::create($mediaData);
                 $imedia->setInsertion($insertion);
@@ -157,8 +157,7 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
                 array_push($media, $imedia);
             }
 
-
-            $attributeValues   = [];
+            $attributeValues = [];
             foreach ($data["attributes"] as $attributeData) {
                 $attributeValue = InsertionAttributeValue::create($attributeData);
                 $attributeValue->setInsertion($insertion);

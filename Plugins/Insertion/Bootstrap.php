@@ -24,6 +24,7 @@ use Insertion\Services\InsertionListService;
 use Insertion\Services\InsertionMockService;
 use Insertion\Services\InsertionService;
 use Insertion\Services\InsertionTypeService;
+use Insertion\Services\InsertionUpdaterService;
 use Insertion\Twig\InsertionExtensions;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\TemplateEngine\Core\Services\TemplateRenderService;
@@ -47,6 +48,7 @@ class Bootstrap extends AbstractBootstrap {
             'insertion.attribute' => AttributeService::class,
             'insertion.mock'      => InsertionMockService::class,
             'insertion.creator'   => InsertionCreatorService::class,
+            'insertion.updater'   => InsertionUpdaterService::class,
             'insertion.feedback'  => InsertionFeedbackService::class,
             'insertion.list'      => InsertionListService::class,
         ];
