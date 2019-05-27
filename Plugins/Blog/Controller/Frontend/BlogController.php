@@ -3,10 +3,9 @@
 namespace Blog\Controller\Frontend;
 
 use Blog\Enums\BlogPermission;
-use Blog\Exceptions\PostNotFoundException;
 use Blog\Exceptions\UserNotLoggedInException;
 use Blog\Exceptions\UserRatingForPostNotFoundException;
-use Blog\Services\AuthService;
+use Blog\Services\UserService;
 use Blog\Services\CategoryService;
 use Blog\Services\CommentService;
 use Blog\Services\PostService;
@@ -35,8 +34,8 @@ use Slim\Http\Response;
  * @EndpointClass(path="/blog", name="frontend_blog", assetScope="Frontend")
  */
 class BlogController extends SecureFrontendController {
-    /** @var AuthService $authService */
-    private $authService;
+    /** @var UserService $userService */
+    private $userService;
     /** @var CategoryService $categoryService */
     private $categoryService;
     /** @var CommentService $commentService */
@@ -53,11 +52,11 @@ class BlogController extends SecureFrontendController {
      * @throws LoggerAlreadyExistException
      */
     public function __construct() {
-        $this->authService     = Oforge()->Services()->get('blog.auth');
         $this->categoryService = Oforge()->Services()->get('blog.category');
         $this->commentService  = Oforge()->Services()->get('blog.comment');
         $this->postService     = Oforge()->Services()->get('blog.post');
         $this->ratingService   = Oforge()->Services()->get('blog.rating');
+        $this->userService     = Oforge()->Services()->get('blog.user');
     }
 
     public function initPermissions() {
@@ -184,28 +183,6 @@ class BlogController extends SecureFrontendController {
      * @param Request $request
      * @param Response $response
      * @param array $args
-     * @EndpointAction(path="/login/{postID:\d+}", name="login", method=EndpointMethod::POST)
-     */
-    public function loginProcessAction(Request $request, Response $response, array $args) {
-        // TODO
-        Oforge()->View()->assign(['tmp' => $args]);
-    }
-
-    /**
-     * @param Request $request
-     * @param Response $response
-     * @param array $args
-     * @EndpointAction(path="/registration/{postID:\d+}", name="registration", method=EndpointMethod::POST)
-     */
-    public function registrationProcessAction(Request $request, Response $response, array $args) {
-        // TODO
-        Oforge()->View()->assign(['tmp' => $args]);
-    }
-
-    /**
-     * @param Request $request
-     * @param Response $response
-     * @param array $args
      * @EndpointAction(path="/post/{postID:\d+}/{seoUrlPath}/comments/create", name="create_comment", method=EndpointMethod::POST)
      *
      * @return Response
@@ -216,18 +193,19 @@ class BlogController extends SecureFrontendController {
             $userID  = ArrayHelper::get($postData, 'userID');
             $comment = ArrayHelper::get($postData, 'comment');
             if (!empty($userID) && !empty($comment) && $userID == Oforge()->View()->get('user.id')) {
+                $twigFlash = Oforge()->View()->Flash();
                 try {
                     $this->commentService->createComment([
                         'author'  => $userID,
                         'content' => $comment,
                         'post'    => $args['postID'],
                     ]);
+                    $twigFlash->addMessage('success', I18N::translate('plugin_blog_comment_creating_success', 'Your comment has been added successfully.'));
                 } catch (UserNotLoggedInException $exception) {
-                    Oforge()->View()->Flash()
-                            ->addMessage('warning', I18N::translate('plugin_blog_user_not_logged_in_comment', 'You must be logged in to leave a comment.'));
+                    $twigFlash->addMessage('warning', I18N::translate('plugin_blog_comment_user_not_logged_in', 'You must be logged in to leave a comment.'));
                 } catch (Exception $exception) {
                     Oforge()->Logger()->logException($exception);
-                    Oforge()->View()->Flash()->addMessage('error', I18N::translate('plugin_blog_comment_saving_failed', 'The comment could not be saved.'));
+                    $twigFlash->addMessage('error', I18N::translate('plugin_blog_comment_creating_failed', 'The comment could not be saved.'));
                 }
             }
         }
@@ -280,16 +258,17 @@ class BlogController extends SecureFrontendController {
      * @return Response
      */
     public function leaveRatingAction(Request $request, Response $response, array $args) {
-        $postID = $args['postID'];
+        $postID      = $args['postID'];
         $ratingValue = $args['rating'] === 'up';
+        $twigFlash   = Oforge()->View()->Flash();
         try {
             $this->ratingService->createOrUpdateRating($postID, $ratingValue);
+            $twigFlash->addMessage('error', I18N::translate('plugin_blog_rating_saving_success', 'Your post rating has been saved.'));
         } catch (UserNotLoggedInException $exception) {
-            Oforge()->View()->Flash()
-                    ->addMessage('warning', I18N::translate('plugin_blog_user_not_logged_in_rating', 'You must be logged in to leave a rating.'));
+            $twigFlash->addMessage('warning', I18N::translate('plugin_blog_rating_user_not_logged_in', 'You must be logged in to leave a rating.'));
         } catch (ORMException $exception) {
             Oforge()->Logger()->logException($exception);
-            Oforge()->View()->Flash()->addMessage('error', I18N::translate('plugin_blog_rating_saving_failed', 'The rating could not be saved.'));
+            $twigFlash->addMessage('error', I18N::translate('plugin_blog_rating_saving_failed', 'The rating could not be saved.'));
         }
 
         return RedirectHelper::redirect($response, 'frontend_blog_view', $args);

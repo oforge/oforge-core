@@ -22,8 +22,8 @@ use Oforge\Engine\Modules\Core\Services\ConfigService;
  * @package Blog\Services
  */
 class CommentService extends AbstractDatabaseAccess {
-    /** @var AuthService authService */
-    private $authService;
+    /** @var UserService $userService */
+    private $userService;
 
     /**
      * @inheritDoc
@@ -31,7 +31,7 @@ class CommentService extends AbstractDatabaseAccess {
      */
     public function __construct() {
         parent::__construct([Comment::class => Comment::class, Post::class => Post::class]);
-        $this->authService = Oforge()->Services()->get('blog.auth');
+        $this->userService = Oforge()->Services()->get('blog.user');
     }
 
     /**
@@ -97,10 +97,11 @@ class CommentService extends AbstractDatabaseAccess {
      * @param array $data
      *
      * @throws UserNotLoggedInException
+     * @throws ConfigOptionKeyNotExistException
      * @throws ORMException
      */
     public function createComment(array $data) {
-        if (!$this->authService->isUserLoggedIn()) {
+        if (!$this->userService->isLoggedIn()) {
             throw new UserNotLoggedInException();
         }
         if ($this->isValid($data)) {
