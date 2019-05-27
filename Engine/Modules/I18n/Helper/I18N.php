@@ -65,6 +65,34 @@ class I18N {
     }
 
     /**
+     * Twig internationalization function (i18n).
+     *
+     * @param array $context
+     * @param string $key
+     * @param string|null $defaultValue
+     *
+     * @return bool
+     */
+    public static function twigTranslateExists($context, string $key, ?string $defaultValue = null) : bool {
+        try {
+            if (!isset($language)) {
+                $language = self::getCurrentLanguage($context);
+            }
+
+            if (!isset(self::$i18nService)) {
+                /** @var InternationalizationService $service */
+                self::$i18nService = Oforge()->Services()->get('i18n');
+            }
+
+            return self::$i18nService->exists($key, $language);
+        } catch (Exception $exception) {
+            Oforge()->Logger()->get()->error($exception->getMessage(), $exception->getTrace());
+        }
+
+        return false;
+    }
+
+    /**
      * Init current language for internationalization.
      *
      * @param mixed $context

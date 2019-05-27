@@ -38,21 +38,20 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
         }
 
         if (isset($_POST["current_page"])) {
-            $currentPage = $_POST["current_page"];
+            $_SESSION['insertion' . $typeId] = array_merge($_SESSION['insertion' . $typeId], $_POST);
 
-            $_SESSION['insertion' . $typeId][$currentPage] = $_POST;
 
             if (isset($_FILES["images"])) {
                 /** @var MediaService $configService */
                 $mediaService = Oforge()->Services()->get('media');
 
-                if (!isset($_SESSION['insertion' . $typeId][$currentPage]["images"])) {
-                    $_SESSION['insertion' . $typeId][$currentPage]["images"] = [];
+                if (!isset($_SESSION['insertion' . $typeId]["images"])) {
+                    $_SESSION['insertion' . $typeId]["images"] = [];
                 }
 
                 $imgs = [];
 
-                foreach ($_SESSION['insertion' . $typeId][$currentPage]["images"] as $image) {
+                foreach ($_SESSION['insertion' . $typeId]["images"] as $image) {
                     if (isset($_POST["images_interactions"])) {
                         if (isset($image["id"]) && isset($_POST["images_interactions"][$image["id"]])
                             && $_POST["images_interactions"][$image["id"]] == "delete") {
@@ -63,7 +62,7 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
                     }
                 }
 
-                $_SESSION['insertion' . $typeId][$currentPage]["images"] = $imgs;
+                $_SESSION['insertion' . $typeId]["images"] = $imgs;
 
                 foreach ($_FILES["images"]["error"] as $key => $error) {
                     if ($error == UPLOAD_ERR_OK) {
@@ -74,7 +73,7 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
                         }
 
                         $media                                                     = $mediaService->add($file);
-                        $_SESSION['insertion' . $typeId][$currentPage]["images"][] = $media->toArray();
+                        $_SESSION['insertion' . $typeId]["images"][] = $media->toArray();
                     }
                 }
             }
@@ -96,42 +95,40 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
 
         $data = [
             "contact"    => [
-                "name"    => $pageData[3]["contact_name"],
-                "email"   => $pageData[3]["contact_email"],
-                "phone"   => $pageData[3]["contact_phone"],
-                "zip"     => $pageData[3]["contact_zip"],
-                "city"    => $pageData[3]["contact_city"],
-                "visible" => isset($pageData[3]["contact_visible"]) && !empty($pageData[3]["contact_visible"]),
+                "name"    => $pageData["contact_name"],
+                "email"   => $pageData["contact_email"],
+                "phone"   => $pageData["contact_phone"],
+                "zip"     => $pageData["contact_zip"],
+                "city"    => $pageData["contact_city"],
+                "visible" => isset($pageData["contact_visible"]) && !empty($pageData[3]["contact_visible"]),
             ],
             "content"    => [
                 "language"    => $language,
-                "name"        => $pageData[1]["insertion_name"],
-                "title"       => $pageData[1]["insertion_title"],
-                "description" => $pageData[3]["insertion_description"],
+                "name"        => $pageData["insertion_name"],
+                "title"       => $pageData["insertion_title"],
+                "description" => $pageData["insertion_description"],
             ],
             "media"      => [],
             "attributes" => [],
         ];
 
-        if (isset($pageData[1]["images"]) && sizeof($pageData[1]["images"]) > 0) {
-            foreach ($pageData[1]["images"] as $image) {
+        if (isset($pageData["images"]) && sizeof($pageData["images"]) > 0) {
+            foreach ($pageData["images"] as $image) {
                 $media = $this->repository("media")->findOneBy(["id" => $image["id"]]);
                 array_push($data["media"], ["name" => $image["name"], "content" => $media]);
             }
         }
 
-        foreach ($pageData as $page) {
-            if (isset($page["insertion"])) {
-                foreach ($page["insertion"] as $key => $value) {
-                    $attributeKey = $this->repository("key")->findOneBy(["id" => $key]);
-                    if (isset($attributeKey)) {
-                        if (is_array($value)) {
-                            foreach ($value as $val) {
-                                array_push($data["attributes"], ["attributeKey" => $attributeKey, "value" => $val]);
-                            }
-                        } else {
-                            array_push($data["attributes"], ["attributeKey" => $attributeKey, "value" => $value]);
+        if (isset($pageData["insertion"])) {
+            foreach ($pageData["insertion"] as $key => $value) {
+                $attributeKey = $this->repository("key")->findOneBy(["id" => $key]);
+                if (isset($attributeKey)) {
+                    if (is_array($value)) {
+                        foreach ($value as $val) {
+                            array_push($data["attributes"], ["attributeKey" => $attributeKey, "value" => $val]);
                         }
+                    } else {
+                        array_push($data["attributes"], ["attributeKey" => $attributeKey, "value" => $value]);
                     }
                 }
             }

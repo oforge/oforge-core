@@ -82,7 +82,7 @@ class FrontendInsertionController extends SecureFrontendController {
             $createService->processPostData($typeId);
         }
 
-        $data = $createService->getProcessedData($typeId);
+        $data           = $createService->getProcessedData($typeId);
         $result["data"] = $data;
 
         Oforge()->View()->assign($result);
@@ -131,13 +131,14 @@ class FrontendInsertionController extends SecureFrontendController {
                 $data = $createService->processPostData($typeId);
                 try {
                     $processData = $createService->parsePageData($data);
+
                     $createService->create($typeId, $user, $processData);
 
                     $uri = $router->pathFor('insertions_feedback');
 
-                    //  $createService->clearProcessedData($typeId);
+                    $createService->clearProcessedData($typeId);
 
-                    //   return $response->withRedirect($uri, 301);
+                    return $response->withRedirect($uri, 301);
                 } catch (\Exception $exception) {
                     Oforge()->Logger()->get()->error("insertion_creation", $data);
                     Oforge()->Logger()->get()->error("insertion_creation_stack", $exception->getTrace());
@@ -221,7 +222,7 @@ class FrontendInsertionController extends SecureFrontendController {
          * @var $attribute InsertionTypeAttribute
          */
         foreach ($type->getAttributes() as $attribute) {
-            $key                           = $attribute->getAttributeKey();
+            $key                             = $attribute->getAttributeKey();
             $result["keys"][$key->getName()] = $key->toArray(0);
         }
 
