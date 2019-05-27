@@ -3,7 +3,6 @@
         $(element).select2({
             dropdownParent: $(element).parent(),
             placeholder: $(element).data('placeholder'),
-            allowClear: true,
             dropdownAutoWidth: true,
             containerCss : { width: '100%', }
         });

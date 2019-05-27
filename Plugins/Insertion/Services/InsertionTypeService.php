@@ -168,8 +168,18 @@ class InsertionTypeService extends AbstractDatabaseAccess {
         // $insertionType->addAttribute()
     }
 
-    public function removeAttributeFromInsertionType($attributeId) {
-        // TODO
+    /**
+     * @param $insertionTypeId
+     * @param $attributeId
+     *
+     * @throws ORMException
+     */
+    public function removeAttributeFromInsertionType($insertionTypeId, $attributeId) {
+        $candidate = $this->repository('insertionTypeAttribute')->findOneBy([
+            'insertionId' => $insertionTypeId,
+            'attributeId' => $attributeId,
+        ]);
+        $this->entityManager()->remove($candidate);
     }
 
     /**
