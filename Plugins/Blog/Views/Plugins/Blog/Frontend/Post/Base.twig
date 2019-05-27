@@ -19,7 +19,7 @@
     <div class="blog-leave-a-comment">
         <h2>{{ i18n('plugin_blog_block_write_comment_title', 'Write a comment') }}</h2>
         <p>{{ i18n('plugin_blog_block_write_comment_subtitle','Sign in with your account to post a comment.') }}</p>
-        {% if user %}
+        {% if blog.userLoggedIn %}
             {% include 'Plugins/Blog/Frontend/Post/CommentForm.twig' %}
         {% else %}
             {% include 'Plugins/Blog/Frontend/Post/LoginRegisterForm.twig' %}

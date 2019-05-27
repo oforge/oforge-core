@@ -1,5 +1,5 @@
 <div>
-    {% set formUp = blog.userRating is same as(null) or blog.userRating is same as(false) %}
+    {% set formUp = blog.userLoggedIn and (blog.userRating is same as(null) or blog.userRating is same as(false)) %}
     {% if formUp %}
     <a href="{{ url('frontend_blog_leave_rating', {postID: blogPost.id, seoUrlPath:blogPost.seoUrlPath, rating:'up'}) }}">
         {% endif %}
@@ -10,7 +10,7 @@
         {% if formUp %}
     </a>
     {% endif %}
-    {% set formDown = blog.userRating is same as(null) or blog.userRating is same as(true) %}
+    {% set formDown = blog.userLoggedIn and (blog.userRating is same as(null) or blog.userRating is same as(true)) %}
     {% if formDown %}
     <a href="{{ url('frontend_blog_leave_rating', {postID: blogPost.id, seoUrlPath:blogPost.seoUrlPath, rating:'down'}) }}">
         {% endif %}

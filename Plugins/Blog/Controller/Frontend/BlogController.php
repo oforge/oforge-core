@@ -5,11 +5,11 @@ namespace Blog\Controller\Frontend;
 use Blog\Enums\BlogPermission;
 use Blog\Exceptions\UserNotLoggedInException;
 use Blog\Exceptions\UserRatingForPostNotFoundException;
-use Blog\Services\UserService;
 use Blog\Services\CategoryService;
 use Blog\Services\CommentService;
 use Blog\Services\PostService;
 use Blog\Services\RatingService;
+use Blog\Services\UserService;
 use Doctrine\ORM\ORMException;
 use Exception;
 use FrontendUserManagement\Abstracts\SecureFrontendController;
@@ -128,9 +128,7 @@ class BlogController extends SecureFrontendController {
      * @EndpointAction(path="/post/{postID:\d+}[/[{seoUrlPath}[/]]]", name="view")
      */
     public function viewPostAction(Request $request, Response $response, array $args) {
-        /**
-         * @var ConfigService $configService
-         */
+        /** @var ConfigService $configService */
         $configService = Oforge()->Services()->get('config');
         $viewData      = [
             'commentsPerPage' => $configService->get('blog_load_more_epp_comments'),
@@ -169,7 +167,8 @@ class BlogController extends SecureFrontendController {
             } catch (ORMException $exception) {
                 Oforge()->Logger()->logException($exception);
             }
-            $viewData['userRating'] = $userRating;
+            $viewData['userRating']   = $userRating;
+            $viewData['userLoggedIn'] = $this->userService->isLoggedIn();
 
         } catch (ORMException $exception) {
             Oforge()->Logger()->logException($exception);
@@ -263,7 +262,7 @@ class BlogController extends SecureFrontendController {
         $twigFlash   = Oforge()->View()->Flash();
         try {
             $this->ratingService->createOrUpdateRating($postID, $ratingValue);
-            $twigFlash->addMessage('error', I18N::translate('plugin_blog_rating_saving_success', 'Your post rating has been saved.'));
+            $twigFlash->addMessage('success', I18N::translate('plugin_blog_rating_saving_success', 'Your post rating has been saved.'));
         } catch (UserNotLoggedInException $exception) {
             $twigFlash->addMessage('warning', I18N::translate('plugin_blog_rating_user_not_logged_in', 'You must be logged in to leave a rating.'));
         } catch (ORMException $exception) {

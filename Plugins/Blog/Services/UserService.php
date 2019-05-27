@@ -54,19 +54,17 @@ class UserService extends AbstractDatabaseAccess {
     private function init() {
         if (is_null($this->userData)) {
             $userData = Oforge()->View()->get('user');
-            if (isset($userData)) {
-                $this->userData = $userData;
-            } elseif (isset($_SESSION['auth'])) {
+            if (!isset($userData) && isset($_SESSION['auth'])) {
                 try {
                     /** @var BasicAuthService $authService */
                     $authService = Oforge()->Services()->get('auth');
-                    $user        = $authService->decode($_SESSION['auth']);
-                    if (isset($user) && $user['type'] == User::class) {
-                        $this->userData = $user;
-                    }
+                    $userData    = $authService->decode($_SESSION['auth']);
                 } catch (Exception $exception) {
                     Oforge()->Logger()->logException($exception);
                 }
+            }
+            if (isset($userData) && $userData['type'] === User::class) {
+                $this->userData = $userData;
             }
         }
     }
