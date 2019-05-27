@@ -1,14 +1,24 @@
 <div>
+    {% set formUp = blog.userRating is same as(null) or blog.userRating is same as(false) %}
+    {% if formUp %}
     <a href="{{ url('frontend_blog_leave_rating', {postID: blogPost.id, seoUrlPath:blogPost.seoUrlPath, rating:'up'}) }}">
+        {% endif %}
         <span>
-            {{ blogPost.ratings.up }}
+                {{ blogPost.ratings.up }}
             {% include 'Plugins/Blog/Frontend/Components/RatingUpIcon.twig' %}
-        </span>
+            </span>
+        {% if formUp %}
     </a>
+    {% endif %}
+    {% set formDown = blog.userRating is same as(null) or blog.userRating is same as(true) %}
+    {% if formDown %}
     <a href="{{ url('frontend_blog_leave_rating', {postID: blogPost.id, seoUrlPath:blogPost.seoUrlPath, rating:'down'}) }}">
+        {% endif %}
         <span>
-            {% include 'Plugins/Blog/Frontend/Components/RatingDownIcon.twig' %}
+                {% include 'Plugins/Blog/Frontend/Components/RatingDownIcon.twig' %}
             {{ blogPost.ratings.down }}
-        </span>
+            </span>
+        {% if formDown %}
     </a>
+    {% endif %}
 </div>

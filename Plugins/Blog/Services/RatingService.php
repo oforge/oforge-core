@@ -59,7 +59,6 @@ class RatingService extends AbstractDatabaseAccess {
      * @param bool $ratingValue
      *
      * @throws UserNotLoggedInException
-     * @throws PostNotFoundException
      * @throws ORMException
      */
     public function createOrUpdateRating(int $postID, bool $ratingValue) {
@@ -67,27 +66,22 @@ class RatingService extends AbstractDatabaseAccess {
             throw new UserNotLoggedInException();
         }
         $userID = $this->authService->getUserID();
-        /** @var Post|null $post */
-        $post = $this->repository(Post::class)->findOneBy(['id' => $postID]);
-        if (!isset($post)) {
-            throw new PostNotFoundException($postID);
-        }
         $entityManager = $this->entityManager();
         /** @var Rating|null $rating */
         $rating = $this->repository(Rating::class)->findOneBy([
-            'post'   => $post,
+            'post'   => $postID,
             'userID' => $userID,
         ]);
-        if (!isset($rating)) {
+        if (isset($rating)) {
+            $rating = $entityManager->merge($rating);
+            $rating->setRating($ratingValue);
+        } else {
             $rating = Rating::create([
-                'post'   => $post,
+                'post'   => $postID,
                 'userID' => $userID,
                 'rating' => $ratingValue,
             ]);
             $entityManager->persist($rating);
-        } else {
-            $rating = $entityManager->merge($rating);
-            $rating->setRating($ratingValue);
         }
         $entityManager->flush($rating);
     }
@@ -102,7 +96,9 @@ class RatingService extends AbstractDatabaseAccess {
             $tmpRatings = $data['ratings'];
             $rating     = ['up' => 0, 'down' => 0];
             foreach ($tmpRatings as $tmpRating) {
-                $rating[$tmpRating['rating'] ? 'up' : 'down']++;
+                if (isset($tmpRating['rating'])) {
+                    $rating[$tmpRating['rating'] ? 'up' : 'down']++;
+                }
             }
             $data['ratings'] = $rating;
         }

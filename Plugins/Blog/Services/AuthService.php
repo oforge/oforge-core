@@ -41,7 +41,7 @@ class AuthService extends AbstractDatabaseAccess {
     /**
      * @return int|null
      */
-    public function getUserID() : ?array {
+    public function getUserID() : ?int {
         $this->initUser();
 
         return $this->isUserLoggedIn() ? $this->userData['id'] : null;

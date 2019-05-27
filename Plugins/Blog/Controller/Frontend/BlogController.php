@@ -3,7 +3,9 @@
 namespace Blog\Controller\Frontend;
 
 use Blog\Enums\BlogPermission;
+use Blog\Exceptions\PostNotFoundException;
 use Blog\Exceptions\UserNotLoggedInException;
+use Blog\Exceptions\UserRatingForPostNotFoundException;
 use Blog\Services\AuthService;
 use Blog\Services\CategoryService;
 use Blog\Services\CommentService;
@@ -139,7 +141,7 @@ class BlogController extends SecureFrontendController {
 
         try {
             $post     = $this->postService->getPost($postID);
-            $postData = $post->toArray(1, ['author' => ['*', '!name'], 'category' => ['posts'], 'comments']);
+            $postData = $post->toArray(2, ['author' => ['*', '!name'], 'category' => ['posts'], 'comments']);
             $this->ratingService->evaluateRating($postData);
             $postData['created'] = $post->getCreated()->format('Y.m.d H:i:s');
             $postData['updated'] = $post->getCreated()->format('Y.m.d H:i:s');
@@ -157,6 +159,18 @@ class BlogController extends SecureFrontendController {
             }
             $viewData['comments']       = $commentsData;
             $viewData['comments_count'] = $post->getComments()->count();
+
+            $userRating = null;
+            try {
+                $userRating = $this->ratingService->getUserRatingOfPost($post);
+            } catch (UserNotLoggedInException $exception) {
+                // do nothing
+            } catch (UserRatingForPostNotFoundException $exception) {
+                // do nothing
+            } catch (ORMException $exception) {
+                Oforge()->Logger()->logException($exception);
+            }
+            $viewData['userRating'] = $userRating;
 
         } catch (ORMException $exception) {
             Oforge()->Logger()->logException($exception);
@@ -210,7 +224,7 @@ class BlogController extends SecureFrontendController {
                     ]);
                 } catch (UserNotLoggedInException $exception) {
                     Oforge()->View()->Flash()
-                            ->addMessage('warning', I18N::translate('plugin_blog_user_not_logged_in', 'You must be logged in to leave a comment.'));
+                            ->addMessage('warning', I18N::translate('plugin_blog_user_not_logged_in_comment', 'You must be logged in to leave a comment.'));
                 } catch (Exception $exception) {
                     Oforge()->Logger()->logException($exception);
                     Oforge()->View()->Flash()->addMessage('error', I18N::translate('plugin_blog_comment_saving_failed', 'The comment could not be saved.'));
@@ -262,10 +276,23 @@ class BlogController extends SecureFrontendController {
      * @param Response $response
      * @param array $args
      * @EndpointAction(path="/post/{postID:\d+}/{seoUrlPath}/leave-rating/{rating:up|down}[/]", name="leave_rating", method=EndpointMethod::ANY)
+     *
+     * @return Response
      */
     public function leaveRatingAction(Request $request, Response $response, array $args) {
-        // TODO
-        Oforge()->View()->assign(['tmp' => $args]);
+        $postID = $args['postID'];
+        $ratingValue = $args['rating'] === 'up';
+        try {
+            $this->ratingService->createOrUpdateRating($postID, $ratingValue);
+        } catch (UserNotLoggedInException $exception) {
+            Oforge()->View()->Flash()
+                    ->addMessage('warning', I18N::translate('plugin_blog_user_not_logged_in_rating', 'You must be logged in to leave a rating.'));
+        } catch (ORMException $exception) {
+            Oforge()->Logger()->logException($exception);
+            Oforge()->View()->Flash()->addMessage('error', I18N::translate('plugin_blog_rating_saving_failed', 'The rating could not be saved.'));
+        }
+
+        return RedirectHelper::redirect($response, 'frontend_blog_view', $args);
     }
 
     /** @return array */
