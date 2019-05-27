@@ -58,7 +58,7 @@
     border: 2px solid $color-secondary;
     width: 80%;
     margin-left: auto;
-    border-radius: .6rem;
+    border-radius: $border-radius;
     padding: .4rem;
     position: relative;
 
@@ -67,6 +67,7 @@
         margin-left: 0;
     }
 }
+
 .message + .message {
     margin-top: $size-large;
 }

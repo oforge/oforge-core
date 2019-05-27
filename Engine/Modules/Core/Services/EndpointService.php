@@ -167,7 +167,7 @@ class EndpointService extends AbstractDatabaseAccess {
                 $cacheFile = Statics::ENDPOINT_CACHE_DIR . DIRECTORY_SEPARATOR . $fileName . '.cache';
                 if (file_exists($cacheFile)) {
                     if (!isset($this->configCache[$fileName])) {
-                        $content                      = trim(file_get_contents($fileName));
+                        $content                      = trim(file_get_contents($cacheFile));
                         $this->configCache[$fileName] = unserialize($content);
                     }
                     $endpointConfigsForClass = $this->configCache[$fileName];

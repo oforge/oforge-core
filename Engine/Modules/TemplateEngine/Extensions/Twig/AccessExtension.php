@@ -37,6 +37,10 @@ class AccessExtension extends Twig_Extension implements Twig_ExtensionInterface 
                 'is_safe'       => ['html'],
                 'needs_context' => true,
             ]),
+            new Twig_Function('i18nExists', [$this, 'getInternationalizationExists'], [
+                'is_safe'       => ['html'],
+                'needs_context' => true,
+            ]),
             new Twig_Function('dotToNested', [$this, 'dotToNested'], [
                 'is_safe' => ['html'],
             ]),
@@ -100,17 +104,34 @@ class AccessExtension extends Twig_Extension implements Twig_ExtensionInterface 
     }
 
     /**
-     * @param $context
-     * @param mixed ...$vars
-     *
-     * @return string
-     */
+ * @param $context
+ * @param mixed ...$vars
+ *
+ * @return string
+ */
     public function getInternationalization($context, ...$vars) {
         $result = "";
         if (count($vars) > 0 && isset($vars[0])) {
             $defaultValue = count($vars) > 1 ? $vars[1] : null;
 
             $result = I18N::twigTranslate($context, $vars[0], $defaultValue);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param $context
+     * @param mixed ...$vars
+     *
+     * @return string
+     */
+    public function getInternationalizationExists($context, ...$vars) {
+        $result = false;
+        if (count($vars) > 0 && isset($vars[0])) {
+            $defaultValue = count($vars) > 1 ? $vars[1] : null;
+
+            $result = I18N::twigTranslateExists($context, $vars[0], $defaultValue);
         }
 
         return $result;
