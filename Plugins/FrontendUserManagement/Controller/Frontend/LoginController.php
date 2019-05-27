@@ -7,6 +7,7 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Core\Services\RedirectService;
 use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
@@ -50,9 +51,11 @@ class LoginController extends AbstractController {
             die();
         }
 
-        /** @var FrontendUserLoginService $loginService */
-        /** @var Router $router */
-        /** @var RedirectService $redirectService */
+        /**
+         * @var FrontendUserLoginService $loginService
+         * @var Router $router
+         * @var RedirectService $redirectService
+         */
         $loginService    = Oforge()->Services()->get('frontend.user.management.login');
         $router          = Oforge()->App()->getContainer()->get('router');
         $redirectService = Oforge()->Services()->get('redirect');
@@ -72,8 +75,12 @@ class LoginController extends AbstractController {
             return $response->withRedirect($uri, 302);
         }
 
-        $body = $request->getParsedBody();
-        $jwt  = null;
+        $body     = $request->getParsedBody();
+        $jwt      = null;
+        $referrer = ArrayHelper::get($body, 'frontend_login_referrer');
+        if (isset($referrer)) {
+            $uri = $referrer;
+        }
 
         /**
          * no token was sent
@@ -123,7 +130,9 @@ class LoginController extends AbstractController {
         $_SESSION['auth']           = $jwt;
         $_SESSION['user_logged_in'] = true;
 
-        $uri = $router->pathFor('frontend_account_dashboard');
+        if (!isset($referrer)) {
+            $uri = $router->pathFor('frontend_account_dashboard');
+        }
         Oforge()->View()->Flash()->addMessage('success', I18N::translate('login_success', 'You have successfully logged in!'));
 
         return $response->withRedirect($uri, 302);
