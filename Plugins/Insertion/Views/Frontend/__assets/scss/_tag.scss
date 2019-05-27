@@ -8,7 +8,7 @@
 .button.button--filter-search {
     align-items: center;
     justify-content: space-between;
-    border-radius: 0;
+    border-radius: $border-radius;
     border-left: 1px solid $color-secondary;
     display: flex;
     margin-left: $size-small;
@@ -32,7 +32,7 @@
     justify-content: center;
     background: $color-secondary;
     color: $color-light;
-    border-radius: $size-medium;
+    border-radius: $border-radius;
     padding: $size-small $size-medium;
     margin: $size-medium $size-medium 0 0;
 
