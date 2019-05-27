@@ -1,6 +1,6 @@
 <div class="blog-post-comment">
-    {#    TODO author name + image #}
-    <div>{{ blogPostComment.author.id }}</div>
-{#    <div>{{ blogPostComment.title }}</div>#}
+    <div>{{ blogPostComment.title }}</div>
+    <div>{{ blogPostComment.created }}</div>
+    <div>{{ blogPostComment.author.detail.firstName }} {{ blogPostComment.author.detail.lastName }}</div>
     <div>{{ blogPostComment.content }}</div>
 </div>

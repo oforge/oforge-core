@@ -1,4 +1,6 @@
 <div>
     <div>{{ blog.post.created }}</div>
-    <div>{{ blog.post.author }}</div>
+    {% if blog.post.author.name %}
+        <div>{{ blog.post.author.name }}</div>
+    {% endif %}
 </div>

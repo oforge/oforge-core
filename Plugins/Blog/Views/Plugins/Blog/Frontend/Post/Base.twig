@@ -9,9 +9,20 @@
     {% else %}
         {% include 'Plugins/Blog/Frontend/Components/RatingView.twig' with {blogPost:blog.post} %}
     {% endif %}
-
     <div class="blog-post-content">
         {{ blog.post.content|raw }}
     </div>
-    {% include 'Plugins/Blog/Frontend/Post/Comments.twig' %}
+    <div class="blog-post-comments">
+        <h2>{{ blog.comments_count }} {{ i18n('plugin_blog_comments_count', 'comments') }}</h2>
+        {% include 'Plugins/Blog/Frontend/Post/CommentList.twig' %}
+    </div>
+    <div class="blog-leave-a-comment">
+        <h2>{{ i18n('plugin_blog_block_write_comment_title', 'Write a comment') }}</h2>
+        <p>{{ i18n('plugin_blog_block_write_comment_subtitle','Sign in with your account to post a comment.') }}</p>
+        {% if user %}
+            {% include 'Plugins/Blog/Frontend/Post/CommentForm.twig' %}
+        {% else %}
+            {% include 'Plugins/Blog/Frontend/Post/LoginRegisterForm.twig' %}
+        {% endif %}
+    </div>
 {% endblock blog_content %}

@@ -15,8 +15,6 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 class AuthService extends AbstractDatabaseAccess {
     /** @var array|null $userData */
     private $userData = null;
-    /** @var User|null $userData */
-    private $user = null;
 
     /** @inheritDoc */
     public function __construct() {
@@ -37,7 +35,7 @@ class AuthService extends AbstractDatabaseAccess {
     public function isUserLoggedIn() : bool {
         $this->initUser();
 
-        return isset($this->user);
+        return isset($this->userData);
     }
 
     /**
@@ -46,7 +44,7 @@ class AuthService extends AbstractDatabaseAccess {
     public function getUserID() : ?array {
         $this->initUser();
 
-        return $this->isUserLoggedIn() ? $this->user->getId() : null;
+        return $this->isUserLoggedIn() ? $this->userData['id'] : null;
     }
 
     /**
@@ -59,29 +57,24 @@ class AuthService extends AbstractDatabaseAccess {
     }
 
     /**
-     * @return User|null
-     */
-    public function getUser() : ?User {
-        $this->initUser();
-
-        return $this->user;
-    }
-
-    /**
      * Check and decode user data of session
      */
     private function initUser() {
-        if (is_null($this->userData) && isset($_SESSION['auth'])) {
-            try {
-                /** @var BasicAuthService $authService */
-                $authService = Oforge()->Services()->get('auth');
-                $user        = $authService->decode($_SESSION['auth']);
-                if (isset($user) && $user['type'] == User::class) {
-                    $this->userData = $user;
-                    $this->user     = $this->repository()->findOneBy(['id' => $user['id']]);
+        if (is_null($this->userData)) {
+            $userData = Oforge()->View()->get('user');
+            if (isset($userData)) {
+                $this->userData = $userData;
+            } elseif (isset($_SESSION['auth'])) {
+                try {
+                    /** @var BasicAuthService $authService */
+                    $authService = Oforge()->Services()->get('auth');
+                    $user        = $authService->decode($_SESSION['auth']);
+                    if (isset($user) && $user['type'] == User::class) {
+                        $this->userData = $user;
+                    }
+                } catch (Exception $exception) {
+                    Oforge()->Logger()->logException($exception);
                 }
-            } catch (Exception $exception) {
-                Oforge()->Logger()->logException($exception);
             }
         }
     }
