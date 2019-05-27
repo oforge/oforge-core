@@ -9,6 +9,14 @@
     text-decoration: none;
     cursor: pointer;
 
+    &.button--flex {
+        display: flex;
+
+        .button__text {
+            margin-left: $size-large;
+        }
+    }
+
     &.button--primary {
         background: $color-primary;
         color: $text-light;
