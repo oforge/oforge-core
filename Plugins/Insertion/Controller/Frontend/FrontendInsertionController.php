@@ -5,6 +5,7 @@ namespace Insertion\Controller\Frontend;
 use Doctrine\DBAL\Schema\View;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use FrontendUserManagement\Abstracts\SecureFrontendController;
+use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\FrontendUserService;
 use Insertion\Models\InsertionType;
 use Insertion\Models\InsertionTypeAttribute;
@@ -320,5 +321,22 @@ class FrontendInsertionController extends SecureFrontendController {
         $result["insertion"] = $insertion->toArray(1);
 
         Oforge()->View()->assign($result);
+    }
+
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @EndpointAction(path="/account")
+     *
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function accountListAction(Request $request, Response $response) {
+
+
+    }
+
+    public function initPermissions() {
+        $this->ensurePermissions('accountListAction', User::class);
     }
 }

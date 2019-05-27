@@ -2,10 +2,12 @@
 
 namespace Insertion;
 
+use FrontendUserManagement\Services\AccountNavigationService;
 use Insertion\Controller\Backend\BackendAttributeController;
 use Insertion\Controller\Backend\BackendInsertionController;
 use Insertion\Controller\Backend\BackendInsertionTypeController;
 use Insertion\Controller\Frontend\FrontendInsertionController;
+use Insertion\Controller\Frontend\FrontendUsersInsertionController;
 use Insertion\Models\AttributeKey;
 use Insertion\Models\AttributeValue;
 use Insertion\Models\Insertion;
@@ -38,6 +40,7 @@ class Bootstrap extends AbstractBootstrap {
     public function __construct() {
         $this->endpoints = [
             FrontendInsertionController::class,
+            FrontendUsersInsertionController::class,
             BackendAttributeController::class,
             BackendInsertionController::class,
             BackendInsertionTypeController::class,
@@ -119,6 +122,18 @@ class Bootstrap extends AbstractBootstrap {
             'parent'   => 'backend_insertion',
             'icon'     => 'fa fa-bar-chart',
             'path'     => '',
+            'position' => 'sidebar',
+        ]);
+
+
+        /** @var AccountNavigationService $accountNavigationService */
+        $accountNavigationService = Oforge()->Services()->get('frontend.user.management.account.navigation');
+
+        $accountNavigationService->put([
+            'name'     => 'frontend_account_insertions',
+            'order'    => 1,
+            'icon'     => 'profil',
+            'path'     => 'frontend_account_insertions',
             'position' => 'sidebar',
         ]);
     }
