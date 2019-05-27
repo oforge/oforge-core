@@ -3,7 +3,16 @@
 {% block pagecontent %}
     <div class="col-xs-12">
         <div class="box">
-            <!-- /.box-header -->
+            <div class="box-header with-border">
+                <h3 class="box-title">{{ i18n("backend_insertion_attribute_title", "Edit Attribute") }}</h3>
+                <div class="box-tools pull-right">
+                    <div class="btn-group">
+                        <a href="{{ url('backend_insertion_attribute_edit') }}" class="btn btn-default">
+                            <i class="glyphicon glyphicon-plus"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
             <div class="box-body">
                 <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
                     <div class="row">
@@ -35,10 +44,26 @@
                                 <tbody>
                                 {% for attribute in content.attributes %}
                                     <tr role="row" class="odd">
-                                        <td class="sorting_1">{{ attribute.name }}</td>
-                                        <td>{{ attribute.type }}</td>
-                                        <td>{{ attribute.filterType }}</td>
-                                        <td>{{ attribute.values|length }}</td>
+                                        <td class="sorting_1">
+                                            <a href="{{ url("backend_insertion_attribute_edit") ~ "?id=" ~ attribute.id }}">
+                                                {{ attribute.name }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="{{ url("backend_insertion_attribute_edit") ~ "?id=" ~ attribute.id }}">
+                                                {{ attribute.type }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="{{ url("backend_insertion_attribute_edit") ~ "?id=" ~ attribute.id }}">
+                                                {{ attribute.filterType }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="{{ url("backend_insertion_attribute_edit") ~ "?id=" ~ attribute.id }}">
+                                                {{ attribute.values|length }}
+                                            </a>
+                                        </td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>
@@ -49,27 +74,13 @@
                         <div class="col-sm-7">
                             <div class="dataTables_paginate paging_simple_numbers" id="example1_paginate">
                                 <ul class="pagination">
-                                    <li class="paginate_button previous disabled" id="example1_previous"><a href="#"
-                                                                                                            aria-controls="example1"
-                                                                                                            data-dt-idx="0"
-                                                                                                            tabindex="0">Previous</a>
-                                    </li>
-                                    <li class="paginate_button active"><a href="#" aria-controls="example1"
-                                                                          data-dt-idx="1" tabindex="0">1</a></li>
-                                    <li class="paginate_button "><a href="#" aria-controls="example1" data-dt-idx="2"
-                                                                    tabindex="0">2</a></li>
-                                    <li class="paginate_button "><a href="#" aria-controls="example1" data-dt-idx="3"
-                                                                    tabindex="0">3</a></li>
-                                    <li class="paginate_button "><a href="#" aria-controls="example1" data-dt-idx="4"
-                                                                    tabindex="0">4</a></li>
-                                    <li class="paginate_button "><a href="#" aria-controls="example1" data-dt-idx="5"
-                                                                    tabindex="0">5</a></li>
-                                    <li class="paginate_button "><a href="#" aria-controls="example1" data-dt-idx="6"
-                                                                    tabindex="0">6</a></li>
-                                    <li class="paginate_button next" id="example1_next"><a href="#"
-                                                                                           aria-controls="example1"
-                                                                                           data-dt-idx="7" tabindex="0">Next</a>
-                                    </li>
+                                    {% for i in range(1, pageCount) %}
+                                        <li class="paginate_button {% if currentPage == i %}active{% endif %}">
+                                            <a href="{{ url('backend_insertion_attribute') ~ "?page=" ~ i }}" aria-controls="" data-dt-idx="{{ i }}" tabindex="0">
+                                                {{ i }}
+                                            </a>
+                                        </li>
+                                    {% endfor %}
                                 </ul>
                             </div>
                         </div>

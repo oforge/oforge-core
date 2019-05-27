@@ -1,12 +1,11 @@
-console.log('load');
-
 var $TABLE = $('[data-editable-table]');
 var $BTN = $('[data-export-button]');
 var $EXPORT = $('[data-export]');
 
 $('[data-table-add]').click(function () {
-    var $clone = $TABLE.find('tr.hide').clone(true).removeClass('hide');
+    var $clone = $TABLE.find('tr.hide').clone(true).removeAttr('class');
     $TABLE.find('table').append($clone);
+    $clone.find('select').select2();
 });
 
 $('[data-table-remove]').click(function () {
@@ -40,17 +39,34 @@ $BTN.click(function () {
 
     // Turn all existing rows into a loopable array
     $rows.each(function () {
-        var $td = $(this).find('td');
+        var $tds = $(this).find('td');
         var h = {};
 
         // Use the headers from earlier to name our hash keys
         headers.forEach(function (header, i) {
-            h[header] = $td.eq(i).text();
+            header = header.replace(' ', '_');
+            var $td = $tds.eq(i);
+            var type = $td.attr("data-type");
+
+            if(type != null) {
+                switch(type) {
+                    case "text":
+                        h[header] = $td.text();
+                        if($td.attr("data-id") != null) {
+                            h['id'] = $td.attr("data-id");
+                        }
+                        break;
+                    case "select":
+                        h[header] = $td.find("select").children("option:selected").val();
+                        break;
+                }
+            }
         });
 
         data.push(h);
     });
 
+    console.log(data);
     // Output the result
     $EXPORT.val(JSON.stringify(data));
 });
