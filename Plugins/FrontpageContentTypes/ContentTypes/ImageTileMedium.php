@@ -101,7 +101,7 @@ class ImageTileMedium extends AbstractContentType
             'type'              => "ContentTypes/" . $this->getPath() . "/PageBuilder.twig",
             'typeId'            => $this->getId(),
             'isContainer'       => $this->isContainer(),
-            'css'               => $contentData['css'],
+            'css'               => $this->getContentCssClass(),
             'url'               => $contentData['url'],
             'caption'           => $contentData['caption'],
             'text'              => $contentData['text'],

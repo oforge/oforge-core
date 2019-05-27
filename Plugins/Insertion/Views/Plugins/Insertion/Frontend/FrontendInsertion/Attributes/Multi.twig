@@ -3,15 +3,15 @@
     <label for="insertion[{{ attribute.id }}][]"
            class="form__label">{{ i18n(attribute.name) }}</label>
 
-    <div class="select"
+    <div class="multi-select"
          data-multi-select="insertion[{{ attribute.id }}][]"
-         {% if required %}required{% endif %}>
-        <p class="select__search"
+         {% if required %}data-required{% endif %}>
+        <p class="multi-select__search"
            data-multi-select-search></p>
-        <ul class="select__list"
+        <ul class="multi-select__list"
             data-multi-select-list>
             {% for value in attribute.values %}
-                <li class="select__item {% if value.id in data[page]['insertion'][attribute.id] %}select__item--checked{% endif %}"
+                <li class="multi-select__item {% if value.id in data['insertion'][attribute.id] %}multi-select__item--checked{% endif %}"
                     data-multi-select-item="{{ value.id }}">
                     {{ i18n(value.value) }}
                 </li>

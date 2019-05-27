@@ -4,7 +4,14 @@
             <div class="tags">
                 <div class="tag-list">
                     {% for f, value in search.filter %}
-                        {% if value is iterable %}
+                        {% if f is same as ("price") %}
+                            <div class="tag" data-key="{{ f }}">
+                                <a href="#"
+                                   onclick="window.location.href = Oforge.updateQueryString(encodeURIComponent('{{ f }}[]'))"
+                                   class="close"></a>
+                                <span class="tag__text">{{ i18n(f) }} {{ value[0] }} {{ i18n(f ~ '_between') }}   {{ value[1] }}</span>
+                            </div>
+                        {% elseif value is iterable %}
                             {% for v in value %}
                                 <div class="tag" data-key="{{ f }}" data-value="{{ v }}">
                                     <a href="#"
