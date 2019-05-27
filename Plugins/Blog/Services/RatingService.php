@@ -16,13 +16,13 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
  * @package Blog\Services
  */
 class RatingService extends AbstractDatabaseAccess {
-    /** @var AuthService authService */
-    private $authService;
+    /** @var UserService $userService */
+    private $userService;
 
     /** @inheritDoc */
     public function __construct() {
         parent::__construct([Post::class => Post::class, Rating::class => Rating::class]);
-        $this->authService = Oforge()->Services()->get('blog.auth');
+        $this->userService = Oforge()->Services()->get('blog.user');
     }
 
     /**
@@ -36,10 +36,10 @@ class RatingService extends AbstractDatabaseAccess {
      * @throws UserRatingForPostNotFoundException
      */
     public function getUserRatingOfPost(Post $post) : bool {
-        if (!$this->authService->isUserLoggedIn()) {
+        if (!$this->userService->isLoggedIn()) {
             throw new UserNotLoggedInException();
         }
-        $userID = $this->authService->getUserID();
+        $userID = $this->userService->getID();
         /** @var Rating|null $rating */
         $rating = $this->repository(Rating::class)->findOneBy([
             'post'   => $post,
@@ -62,10 +62,10 @@ class RatingService extends AbstractDatabaseAccess {
      * @throws ORMException
      */
     public function createOrUpdateRating(int $postID, bool $ratingValue) {
-        if (!$this->authService->isUserLoggedIn()) {
+        if (!$this->userService->isLoggedIn()) {
             throw new UserNotLoggedInException();
         }
-        $userID = $this->authService->getUserID();
+        $userID = $this->userService->getID();
         $entityManager = $this->entityManager();
         /** @var Rating|null $rating */
         $rating = $this->repository(Rating::class)->findOneBy([

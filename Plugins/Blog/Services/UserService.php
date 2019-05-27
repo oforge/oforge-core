@@ -12,7 +12,7 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
  *
  * @package Blog\Services
  */
-class AuthService extends AbstractDatabaseAccess {
+class UserService extends AbstractDatabaseAccess {
     /** @var array|null $userData */
     private $userData = null;
 
@@ -21,19 +21,11 @@ class AuthService extends AbstractDatabaseAccess {
         parent::__construct(User::class);
     }
 
-    public function login() {
-        //TODO
-    }
-
-    public function registration() {
-        //TODO
-    }
-
     /**
      * @return bool
      */
-    public function isUserLoggedIn() : bool {
-        $this->initUser();
+    public function isLoggedIn() : bool {
+        $this->init();
 
         return isset($this->userData);
     }
@@ -41,25 +33,25 @@ class AuthService extends AbstractDatabaseAccess {
     /**
      * @return int|null
      */
-    public function getUserID() : ?int {
-        $this->initUser();
+    public function getID() : ?int {
+        $this->init();
 
-        return $this->isUserLoggedIn() ? $this->userData['id'] : null;
+        return $this->isLoggedIn() ? $this->userData['id'] : null;
     }
 
     /**
      * @return array|null
      */
-    public function getUserData() : ?array {
-        $this->initUser();
+    public function getData() : ?array {
+        $this->init();
 
-        return $this->isUserLoggedIn() ? $this->userData : null;
+        return $this->isLoggedIn() ? $this->userData : null;
     }
 
     /**
      * Check and decode user data of session
      */
-    private function initUser() {
+    private function init() {
         if (is_null($this->userData)) {
             $userData = Oforge()->View()->get('user');
             if (isset($userData)) {
