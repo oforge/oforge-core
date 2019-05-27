@@ -136,24 +136,19 @@ class InsertionListService extends AbstractDatabaseAccess {
         }
 
         if (isset($_GET["order"])) {
-            $queryValue = null;
             switch ($_GET["order"]) {
                 case 'price_asc':
-                    $queryValue = "i.price ASC";
+                    $queryBuilder->orderBy("i.price ", "ASC");
                     break;
                 case 'price_desc':
-                    $queryValue = "i.price DESC";
+                    $queryBuilder->orderBy("i.price ", "desc");
                     break;
                 case 'date_asc':
-                    $queryValue = "i.createdAt ASC";
+                    $queryBuilder->orderBy("i.createdAt", "ASC");
                     break;
                 case  'date_desc';
-                    $queryValue = "i.createdAt DESC";
+                    $queryBuilder->orderBy("i.createdAt", "desc");
                     break;
-            }
-
-            if($queryValue != null) {
-                $queryBuilder->add('orderBy', $queryValue);
             }
         }
 
