@@ -69,7 +69,7 @@ class ImageCompressService {
                 return true;
             }
         } catch (\ImagickException $e) {
-            Oforge()->Logger()->get()->error("ImagickException", $e);
+            Oforge()->Logger()->get()->error("ImagickException", $e->getTrace());
         }
 
         return false;

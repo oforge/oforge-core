@@ -6,12 +6,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Insertion\Enum\AttributeType;
 use Insertion\Models\AttributeKey;
 use Insertion\Models\Insertion;
 use Insertion\Models\InsertionType;
 use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Models\InsertionTypeGroup;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
+use Oforge\Engine\Modules\CRUD\Enum\CrudFilterType;
 use Oforge\Engine\Modules\CRUD\Services\GenericCrudService;
 
 class InsertionListService extends AbstractDatabaseAccess {
@@ -45,24 +47,58 @@ class InsertionListService extends AbstractDatabaseAccess {
                     $value                                      = $_GET[$attributeKey->getName()];
                     $result['filter'][$attributeKey->getName()] = $value;
 
-                    if (is_array($value)) {
-                        $firstV = true;
-                        foreach ($value as $v) {
-                            $queryBuilder->leftJoin("i.values", "v$attributeCount");
-                            if ($firstV) {
-                                $firstV = false;
-                                $queryBuilder->andWhere("v$attributeCount.attributeKey = ?" . $keyCount . " and v$attributeCount.value = ?" . ($keyCount + 1)
-                                                        . "");
+                    if (is_array($value)) { //should always be a multi selection or a range component
 
-                            } else {
-                                $queryBuilder->orWhere("v$attributeCount.attributeKey = ?" . $keyCount . " and v$attributeCount.value = ?" . ($keyCount + 1)
-                                                       . "");
+                        switch ($attributeKey->getFilterType()) {
+                            case AttributeType::RANGE:
+                                if (sizeof($value) == 2) {
+                                    $queryBuilder->leftJoin("i.values", "v$attributeCount");
 
-                            }
-                            $queryBuilder->setParameter($keyCount++, $attributeKey->getId());
-                            $queryBuilder->setParameter($keyCount++, $v);
+                                    $query = "v$attributeCount.attributeKey = ?" . $keyCount . " and v$attributeCount.value between ?" . ($keyCount + 1)
+                                             . " and " . ($keyCount + 2);
 
-                            $attributeCount++;
+                                    $queryBuilder->andWhere($query);
+
+                                    $queryBuilder->setParameter($keyCount++, $attributeKey->getId());
+
+                                    $min = $value[0];
+                                    $max = $value[1];
+
+                                    if ($min > $max) {
+                                        $t   = $min;
+                                        $min = $max;
+                                        $max = $t;
+                                    }
+
+                                    $queryBuilder->setParameter($keyCount++, $min);
+                                    $queryBuilder->setParameter($keyCount++, $max);
+
+                                    $attributeCount++;
+                                }
+                                break;
+                            default:
+                                $firstV = true;
+                                foreach ($value as $v) {
+                                    $queryBuilder->leftJoin("i.values", "v$attributeCount");
+
+                                    $query = "v$attributeCount.attributeKey = ?" . $keyCount . " and v$attributeCount.value = ?" . ($keyCount + 1);
+
+                                    if ($firstV) {
+                                        $firstV = false;
+                                        $queryBuilder->andWhere($query);
+
+                                    } else {
+                                        $queryBuilder->orWhere($query);
+                                    }
+
+                                    $queryBuilder->setParameter($keyCount++, $attributeKey->getId());
+                                    $queryBuilder->setParameter($keyCount++, $v);
+
+                                    $attributeCount++;
+                                }
+
+                                break;
+
                         }
 
                     } else {
@@ -76,6 +112,48 @@ class InsertionListService extends AbstractDatabaseAccess {
                         $attributeCount++;
                     }
                 }
+            }
+        }
+
+        if (isset($_GET["price"]) && is_array($_GET["price"]) && sizeof($_GET["price"]) == 2) {
+            $query = "i.price between ?" . ($keyCount) . " and ?" . ($keyCount + 1);
+
+            $queryBuilder->andWhere($query);
+
+            $min = $_GET["price"][0];
+            $max = $_GET["price"][1];
+
+            if ($min > $max) {
+                $t   = $min;
+                $min = $max;
+                $max = $t;
+            }
+
+            $queryBuilder->setParameter($keyCount++, $min);
+            $queryBuilder->setParameter($keyCount++, $max);
+
+            $result['filter']["price"] = [$min, $max];
+        }
+
+        if (isset($_GET["order"])) {
+            $queryValue = null;
+            switch ($_GET["order"]) {
+                case 'price_asc':
+                    $queryValue = "i.price ASC";
+                    break;
+                case 'price_desc':
+                    $queryValue = "i.price DESC";
+                    break;
+                case 'date_asc':
+                    $queryValue = "i.createdAt ASC";
+                    break;
+                case  'date_desc';
+                    $queryValue = "i.createdAt DESC";
+                    break;
+            }
+
+            if($queryValue != null) {
+                $queryBuilder->add('orderBy', $queryValue);
             }
         }
 

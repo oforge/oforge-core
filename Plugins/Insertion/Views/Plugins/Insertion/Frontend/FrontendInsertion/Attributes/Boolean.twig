@@ -3,7 +3,7 @@
     <input type="checkbox"
            class="form__input form__input--checkbox"
            name="insertion[{{ attribute.id }}]"
-           {% if data[page]['insertion'][attribute.id] == 'on' %}
+           {% if data['insertion'][attribute.id] == 'on' %}
                 checked="checked"
            {% endif %}
            {% if required %}required{% endif %}>
