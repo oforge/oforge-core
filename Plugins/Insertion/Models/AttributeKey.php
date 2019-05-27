@@ -22,7 +22,7 @@ class AttributeKey extends AbstractModel {
 
     /**
      * @var string
-     * @ORM\Column(name="attribute_key_name", type="string", nullable=false)
+     * @ORM\Column(name="attribute_key_name", type="string", nullable=false, unique=true)
      */
     private $name;
 

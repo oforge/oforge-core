@@ -20,13 +20,15 @@ class SecureController extends AbstractController {
      * @param string $method
      * @param string $userType
      * @param int|null $role
-     *
-     * @throws ServiceNotFoundException
      */
     protected function ensurePermissions(string $method, string $userType, ?int $role = null) {
-        /** @var PermissionService $permissionService */
-        $permissionService = Oforge()->Services()->get('permissions');
-        $permissionService->put(get_called_class(), $method, $userType, $role);
+        try {
+            /** @var PermissionService $permissionService */
+            $permissionService = Oforge()->Services()->get('permissions');
+            $permissionService->put(get_called_class(), $method, $userType, $role);
+        } catch (ServiceNotFoundException $exception) {
+            Oforge()->Logger()->logException($exception);
+        }
     }
 
 }

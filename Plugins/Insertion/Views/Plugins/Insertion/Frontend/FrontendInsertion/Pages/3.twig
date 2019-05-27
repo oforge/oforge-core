@@ -2,7 +2,7 @@
 
 {% block page_content %}
     {# contact information #}
-    <textarea name="description">Lorem Ipsum</textarea>
+    <textarea name="insertion_description">Lorem Ipsum</textarea>
     {# contact attributes #}
     {% for attributeGroup in attributes %}
         {% if attributeGroup.items|length > 0 and attributeGroup.name == 'contact' %}
@@ -10,7 +10,7 @@
                 <h2>{{ i18n(attributeGroup.name) }}</h2>
                 <div>
                     {% for attribute in attributeGroup.items %}
-                        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'item': attribute.attributeKey } %}
+                        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': attribute.required } %}
                     {% endfor %}
                 </div>
             </div>
@@ -18,7 +18,7 @@
     {% endfor %}
 
     <input type="text" name="contact_name"
-           value="{% if data[page]['contact_name'] is defined %}{{ data[page]['contact_name'] }}{% else %}Example Name{% endif %}" />
+           value="{% if data['contact_name'] is defined %}{{ data['contact_name'] }}{% else %}Example Name{% endif %}" />
     <input type="email" name="contact_email" value="Example@Name.de" />
     <input type="tel" name="contact_phone" value="012121312" />
     <input type="text" name="contact_zip" value="01234" />

@@ -3,7 +3,9 @@
 namespace Insertion\Models;
 
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 
 /**
@@ -27,22 +29,10 @@ class Insertion extends AbstractModel {
     private $insertionType;
 
     /**
-     * @var string
-     * @ORM\Column(name="insertion_title", type="string", nullable=false)
-     */
-    private $title;
-
-    /**
      * @ORM\ManyToOne(targetEntity="FrontendUserManagement\Models\User", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="insertion_user", referencedColumnName="id")
      */
     private $user;
-
-    /**
-     * @var string
-     * @ORM\Column(name="attribute_key_name", type="text", nullable=false)
-     */
-    private $description;
 
     /**
      * @var Datetime
@@ -77,12 +67,44 @@ class Insertion extends AbstractModel {
     private $contact;
 
     /**
+     * @var InsertionAttributeValue[]
+     * @ORM\OneToMany(targetEntity="InsertionAttributeValue", mappedBy="insertion", cascade={"all"}, fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="id", referencedColumnName="insertion_id")
+     */
+    private $values;
+
+    /**
+     * @var float
+     * @ORM\Column(name="price", type="float")
+     */
+    private $price = 0;
+
+    /**
+     * @var boolean
+     * @ORM\Column(name="tax", type="boolean", nullable=true)
+     */
+    private $tax = false;
+
+
+    /**
+     * @var boolean
+     * @ORM\Column(name="active", type="boolean", nullable=true)
+     */
+    private $active = false;
+
+
+    /**
      * @ORM\PrePersist
      */
     public function onPrePersist() {
-        $date = new \DateTime('now');
+        $date            = new \DateTime('now');
         $this->createdAt = $date;
         $this->updatedAt = $date;
+    }
+
+    public function __construct() {
+        $this->media   = new ArrayCollection();
+        $this->content = new ArrayCollection();
     }
 
     /**
@@ -118,23 +140,6 @@ class Insertion extends AbstractModel {
     }
 
     /**
-     * @return string
-     */
-    public function getTitle() : string {
-        return $this->title;
-    }
-
-    /**
-     * @param string $title
-     *
-     * @return Insertion
-     */
-    public function setTitle(string $title) : Insertion {
-        $this->title = $title;
-        return $this;
-    }
-
-    /**
      * @return mixed
      */
     public function getUser() {
@@ -148,23 +153,7 @@ class Insertion extends AbstractModel {
      */
     public function setUser($user) : Insertion {
         $this->user = $user;
-        return $this;
-    }
 
-    /**
-     * @return string
-     */
-    public function getDescription() : string {
-        return $this->description;
-    }
-
-    /**
-     * @param string $description
-     *
-     * @return Insertion
-     */
-    public function setDescription(string $description) : Insertion {
-        $this->description = $description;
         return $this;
     }
 
@@ -185,7 +174,7 @@ class Insertion extends AbstractModel {
     /**
      * @return InsertionMedia[]
      */
-    public function getMedia() : array {
+    public function getMedia() : ?object {
         return $this->media;
     }
 
@@ -199,7 +188,7 @@ class Insertion extends AbstractModel {
     /**
      * @return InsertionContent[]
      */
-    public function getContent() : array {
+    public function getContent() : ?object {
         return $this->content;
     }
 
@@ -222,5 +211,61 @@ class Insertion extends AbstractModel {
      */
     public function setContact(InsertionContact $contact) : void {
         $this->contact = $contact;
+    }
+
+    /**
+     * @return InsertionAttributeValue[]
+     */
+    public function getValues() : ?object {
+        return $this->values;
+    }
+
+    /**
+     * @param InsertionAttributeValue[] $values
+     */
+    public function setValues(array $values) : void {
+        $this->values = $values;
+    }
+
+    /**
+     * @return float
+     */
+    public function getPrice() : float {
+        return $this->price;
+    }
+
+    /**
+     * @param float $price
+     */
+    public function setPrice(float $price) : void {
+        $this->price = $price;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTax() : ?bool {
+        return $this->tax;
+    }
+
+    /**
+     * @param bool $tax
+     */
+    public function setTax(?bool $tax) : void {
+        $this->tax = $tax;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive() : ?bool {
+        return $this->active;
+    }
+
+    /**
+     * @param bool $active
+     */
+    public function setActive(bool $active) : void {
+        $this->active = $active;
     }
 }

@@ -2,53 +2,55 @@
 
 namespace FrontendUserManagement\Services;
 
-
 use Doctrine\ORM\ORMException;
+use Exception;
 use FrontendUserManagement\Models\UserDetail;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 
+/**
+ * Class UserDetailsService
+ *
+ * @package FrontendUserManagement\Services
+ */
 class UserDetailsService extends AbstractDatabaseAccess {
 
     public function __construct() {
-        parent::__construct(['default' => UserDetail::class]);
+        parent::__construct(UserDetail::class);
     }
 
     /**
-     * @param array $userDetails
+     * @param array $data
+     *
      * @return bool
      */
-    public function save(array $userDetails) {
-        $details = $this->get($userDetails['userId']);
-
-        if (!$details) {
-            $details = UserDetail::create();
-        }
-
-        $details->setFirstName($userDetails['firstName']);
-        $details->setLastName($userDetails['lastName']);
-        $details->setNickName($userDetails['nickName']);
-        $details->setContactEmail($userDetails['contactEmail']);
-        $details->setPhoneNumber($userDetails['contactPhone']);
-        $details->setuserId($userDetails['userId']);
-
+    public function save(array $data) {
         try {
-            $this->entityManager()->persist($details);
-            $this->entityManager()->flush();
-        } catch (\Exception $ex) {
+            $detail = $this->get($data['userId']);
+            if (isset($detail)) {
+                $detail->fromArray($data);
+                $detail = $this->entityManager()->merge($detail);
+                $this->entityManager()->flush($detail);
 
+                return true;
+            }
+        } catch (Exception $ex) {
             Oforge()->Logger()->get()->addError('Could not persist / flush userDetails', ['msg' => $ex->getMessage()]);
-            return false;
         }
-        return true;
+
+        return false;
     }
 
-    public function get($userId) {
-        $details = $this->repository()->findBy(['userId' => $userId]);
-        if (!$details) {
-            return null;
-        } else {
-            $details = $details[0];
-        }
-        return $details;
+    /**
+     * @param $userID
+     *
+     * @return UserDetail|null
+     * @throws ORMException
+     */
+    public function get($userID) : ?UserDetail {
+        /** @var UserDetail|null $detail */
+        $detail = $this->repository()->findOneBy(['user' => $userID]);
+
+        return $detail;
     }
+
 }

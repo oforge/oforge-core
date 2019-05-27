@@ -5,6 +5,7 @@ namespace Insertion\Models;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
+use Oforge\Engine\Modules\I18n\Models\Language;
 
 /**
  * @ORM\Table(name="oforge_insertion_content")
@@ -56,7 +57,7 @@ class InsertionContent extends AbstractModel {
     /**
      * @return int
      */
-    public function getId() : int {
+    public function getId() : ?int {
         return $this->id;
     }
 
@@ -77,7 +78,7 @@ class InsertionContent extends AbstractModel {
     /**
      * @return Insertion
      */
-    public function getInsertion() : Insertion {
+    public function getInsertion() : ?Insertion {
         return $this->insertion;
     }
 

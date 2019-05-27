@@ -181,7 +181,7 @@ class RegistrationController extends AbstractController {
         $mailOptions  = [
             'to'       => [$user['email'] => $user['email']],
             'subject'  => 'Oforge | Your registration!',
-            'template' => 'RegisterConfirmation.twig',
+            'template' => 'RegisterConfirm.twig',
         ];
         $templateData = [
             'activationLink' => $activationLink,

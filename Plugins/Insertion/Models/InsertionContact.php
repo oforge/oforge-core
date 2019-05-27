@@ -65,14 +65,14 @@ class InsertionContact extends AbstractModel {
     /**
      * @return int
      */
-    public function getId() : int {
+    public function getId() : ?int {
         return $this->id;
     }
 
     /**
      * @return Insertion
      */
-    public function getInsertion() : Insertion {
+    public function getInsertion() : ?Insertion {
         return $this->insertion;
     }
 

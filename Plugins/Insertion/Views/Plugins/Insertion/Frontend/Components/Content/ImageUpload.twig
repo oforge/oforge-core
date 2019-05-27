@@ -1,0 +1,41 @@
+{% block image_upload %}
+    <ul class="image-upload"
+        data-image-upload>
+        {% for image in data[page]['images'] %}
+            <li class="image-upload__item">
+                <img src="{{ media(image.path, 300) }}"
+                     alt="{{ image.name }}"
+                     class="image-upload__image" />
+                <!--input type="hidden" name="images_interactions[{{ image.id }}]" value="delete" /-->
+                <input type="file"
+                       name="images[]"
+                       accept="image/*"
+                       onchange="loadFile(event, 0)" style="display: none;">
+            </li>
+        {% endfor %}
+
+        <li>
+            <input type="file"
+                   name="images[]"
+                   accept="image/*"
+                   onchange="loadFile(event, 0)" style="display: block;">
+            <a href="#"
+               class="button button--flex button--primary flex flex--row flex--center flex--justify"
+               onclick="">
+                <svg class="icon icon--light">
+                    <use xlink:href="#postfach"></use>
+                </svg>
+                <span class="button__text">Hallo</span>
+            </a>
+
+            <img id="output0" width="300" />
+        </li>
+
+        <script>
+            var loadFile = function (event, index) {
+                var output = document.getElementById('output' + index);
+                output.src = URL.createObjectURL(event.target.files[0]);
+            };
+        </script>
+    </ul>
+{% endblock image_upload %}

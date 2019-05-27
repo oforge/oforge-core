@@ -39,7 +39,7 @@ class InternationalizationService extends AbstractDatabaseAccess {
             if (!isset($snippet)) {
                 $snippet = Snippet::create([
                     'name'  => $key,
-                    'scope' => 'en',
+                    'scope' => $language,
                     'value' => isset($defaultValue) ? $defaultValue : $key,
                 ]);
                 $this->entityManager()->persist($snippet);
@@ -49,6 +49,29 @@ class InternationalizationService extends AbstractDatabaseAccess {
         }
 
         return $this->cache[$key];
+    }
+
+
+    /**
+     * @param string $key
+     * @param string $language
+     *
+     * @return bool
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function exists(string $key, string $language) : bool {
+        if (!isset($this->cache[$key])) {
+            /** @var Snippet $snippet */
+            $snippet = $this->repository()->findOneBy([
+                'name'  => $key,
+                'scope' => $language,
+            ]);
+
+            return isset($snippet);
+        }
+
+        return true;
     }
 
 }

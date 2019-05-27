@@ -6,13 +6,17 @@ use Oforge\Engine\Modules\Media\Models\Media;
 
 class ImageCompressService {
 
-    public function getPath(string $path, int $width) : string {
+    public function getPath(?string $path, int $width) : ?string {
+        if(!isset($path)) return null;
         /** @var MediaService $configService */
         $configService = Oforge()->Services()->get('media');
         $media         = $configService->getByPath($path);
 
         if (!isset($media)) {
-            return $path;
+            $media = $configService->get($path);
+            if (!isset($media)) {
+                return $path;
+            }
         }
 
         $suffix = "";
@@ -65,7 +69,7 @@ class ImageCompressService {
                 return true;
             }
         } catch (\ImagickException $e) {
-            Oforge()->Logger()->get()->error("ImagickException", $e);
+            Oforge()->Logger()->get()->error("ImagickException", $e->getTrace());
         }
 
         return false;
