@@ -41,10 +41,11 @@ Features, für später:
 			- viewAction 			frontend_blog_view		        /blog/post/{postID:\d+}[/[{seoUrlPath}[/]]]
 			- loginAction			frontend_blog_login				/blog/login/{postID:\d+}
 			- registrationAction	frontend_blog_registration		/blog/registration/{postID:\d+}
-			- loadCommentsAction 	frontend_blog_comments_more		/blog/post/{postID:\d+}/{postSeo}/comments/more/{page:\d+} (Ajax Schnittstelle, GET)
-			- createCommentAction	frontend_blog_comment_create	/blog/post/{postID:\d+}/{postSeo}/comments/create   POST
-			- deleteCommentAction	frontend_blog_comment_delete	/blog/post/{postID:\d+}/{postSeo}/comments/delete   DELETE
-			- leaveRatingAction     frontend_blog_leave_rating      /blog/post/{postID:\d+}/{postSeo}/leave-rating      POST
+			- createCommentAction	frontend_blog_comment_create	/blog/post/{postID:\d+}/{seoUrlPath}/comments/create   POST
+			- deleteCommentAction	frontend_blog_comment_delete	/blog/post/{postID:\d+}/{seoUrlPath}/comments/delete   POST
+			- leaveRatingAction     frontend_blog_leave_rating      /blog/post/{postID:\d+}/{seoUrlPath}/leave-rating/{rating:up|down}[/]
+			- loadMorePostsAction 	    frontend_blog_more_posts		/blog/more-posts/[{categoryID:\d+}/{page:\d+} (Ajax Schnittstelle, GET)
+			- loadMoreCommentsAction 	frontend_blog_more_comments		/blog/post/{postID:\d+}/{seoUrlPath}/more-comments/{page:\d+} (Ajax Schnittstelle, GET)
 - Views
 	- Backend
 		- Blog

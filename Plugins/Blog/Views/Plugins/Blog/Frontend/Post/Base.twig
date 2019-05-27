@@ -3,7 +3,12 @@
 {% block blog_content %}
     {% include 'Plugins/Blog/Frontend/Components/Breadcrump.twig' %}
     {% include 'Plugins/Blog/Frontend/Post/Header.twig' %}
-    {% include 'Plugins/Blog/Frontend/Post/RatingForm.twig' %}
+    {% include 'Plugins/Blog/Frontend/Post/PostMeta.twig' %}
+    {% if user %}
+        {% include 'Plugins/Blog/Frontend/Post/RatingForm.twig' with {blogPost:blog.post} %}
+    {% else %}
+        {% include 'Plugins/Blog/Frontend/Components/RatingView.twig' with {blogPost:blog.post} %}
+    {% endif %}
 
     <div class="blog-post-content">
         {{ blog.post.content|raw }}

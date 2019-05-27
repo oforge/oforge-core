@@ -16,8 +16,10 @@ use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Helper\RedirectHelper;
 use Oforge\Engine\Modules\Core\Models\Endpoint\EndpointMethod;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
+use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -53,7 +55,11 @@ class BlogController extends SecureFrontendController {
     }
 
     public function initPermissions() {
+        $this->ensurePermissions('indexAction', User::class, BlogPermission::PUBLIC);
         $this->ensurePermissions('viewPostAction', User::class, BlogPermission::PUBLIC);
+        $this->ensurePermissions('createCommentAction', User::class, BlogPermission::LOGGED);
+        $this->ensurePermissions('deleteCommentAction', User::class, BlogPermission::LOGGED);
+        $this->ensurePermissions('leaveRatingAction', User::class, BlogPermission::LOGGED);
     }
 
     /**
@@ -129,7 +135,7 @@ class BlogController extends SecureFrontendController {
 
         try {
             $post     = $this->postService->getPost($postID);
-            $postData = $post->toArray(2, ['author' => ['*', '!id'], 'category' => ['posts'], 'comments']);
+            $postData = $post->toArray(2, [/*'author' => ['*', '!id'], */'category' => ['posts'], 'comments']);
             $this->ratingService->evaluateRating($postData);
             $postData['created'] = $post->getCreated()->format('Y.m.d H:i:s');
             $postData['updated'] = $post->getCreated()->format('Y.m.d H:i:s');
@@ -164,7 +170,7 @@ class BlogController extends SecureFrontendController {
      */
     public function loginProcessAction(Request $request, Response $response, array $args) {
         // TODO
-        Oforge()->View()->assign(['xxx' => $args]);
+        Oforge()->View()->assign(['tmp' => $args]);
     }
 
     /**
@@ -175,7 +181,7 @@ class BlogController extends SecureFrontendController {
      */
     public function registrationProcessAction(Request $request, Response $response, array $args) {
         // TODO
-        Oforge()->View()->assign(['xxx' => $args]);
+        Oforge()->View()->assign(['tmp' => $args]);
     }
 
     /**
@@ -186,7 +192,7 @@ class BlogController extends SecureFrontendController {
      */
     public function createCommentAction(Request $request, Response $response, array $args) {
         // TODO
-        Oforge()->View()->assign(['xxx' => $args]);
+        Oforge()->View()->assign(['tmp' => $args]);
         // Oforge()->View()->assign(['blog' => $this->getUserData()]);
     }
 
@@ -194,33 +200,49 @@ class BlogController extends SecureFrontendController {
      * @param Request $request
      * @param Response $response
      * @param array $args
-     * @EndpointAction(path="/post/{postID:\d+}/{seoUrlPath}/comments/delete/{commentID}", name="delete_comment", method=EndpointMethod::DELETE)
+     * @EndpointAction(path="/post/{postID:\d+}/{seoUrlPath}/comments/delete/{commentID}", name="delete_comment", method=EndpointMethod::POST)
+     *
+     * @return Response
      */
     public function deleteCommentAction(Request $request, Response $response, array $args) {
-        // TODO
-        Oforge()->View()->assign(['xxx' => $args]);
+        // TODO BlogController#deleteCommentAction
+
+        Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_create_success', 'Entity successfully created.'));
+
+        return RedirectHelper::redirect($response, 'frontend_blog_view', $args);
     }
 
     /**
      * @param Request $request
      * @param Response $response
      * @param array $args
-     * @EndpointAction(path="/post/{postID:\d+}/{seoUrlPath}/comments/more/{page:\d+}", name="more_comments", method=EndpointMethod::GET)
+     * @EndpointAction(path="/post/{postID:\d+}/{seoUrlPath}/more-comments/{page:\d+}", name="more_comments", method=EndpointMethod::GET)
      */
     public function loadMoreCommentsAction(Request $request, Response $response, array $args) {
-        // TODO
-        Oforge()->View()->assign(['xxx' => $args]);
+        // TODO BlogController#loadMoreCommentsAction
+        Oforge()->View()->assign(['json' => ['tmp' => $args]]);
     }
 
     /**
      * @param Request $request
      * @param Response $response
      * @param array $args
-     * @EndpointAction(path="/post/{postID:\d+}/{seoUrlPath}/leave-rating", name="leave_rating", method=EndpointMethod::POST)
+     * @EndpointAction(path="/more-posts/{categoryID:\d+}/{page:\d+}", name="more_posts", method=EndpointMethod::GET)
+     */
+    public function loadMorePostsAction(Request $request, Response $response, array $args) {
+        // TODO BlogController#loadMoreCommentsAction
+        Oforge()->View()->assign(['json' => ['tmp' => $args]]);
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @EndpointAction(path="/post/{postID:\d+}/{seoUrlPath}/leave-rating/{rating:up|down}[/]", name="leave_rating", method=EndpointMethod::ANY)
      */
     public function leaveRatingAction(Request $request, Response $response, array $args) {
         // TODO
-        Oforge()->View()->assign(['xxx' => $args]);
+        Oforge()->View()->assign(['tmp' => $args]);
     }
 
     /** @return array */

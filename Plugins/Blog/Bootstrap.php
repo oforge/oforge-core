@@ -41,7 +41,7 @@ class Bootstrap extends AbstractBootstrap {
 
         $this->middlewares = [
             'frontend_blog' => [
-                'class'    => Middlewares\BlogMiddlewareBlogMiddleware::class,
+                'class'    => Middlewares\BlogMiddleware::class,
                 'position' => 1,
             ],
         ];
