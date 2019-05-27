@@ -35,24 +35,6 @@
                required>
     </div>
 
-    <ul class="image-upload">
-        {% for image in data['images'] %}
-            <li>
-                <img width="300" src="{{ media(image.path, 300) }}" alt="{{ image.name }}" />
-                <!--input type="hidden" name="images_interactions[{{ image.id }}]" value="delete" /-->
-            </li>
-        {% endfor %}
+    {% include 'Plugins/Insertion/Frontend/Components/Content/ImageUpload.twig' %}
 
-        <li>
-            <input type="file" name="images[0]" accept="image/*" onchange="loadFile(event, 0)">
-            <img id="output0" width="300" />
-        </li>
-
-        <script>
-            var loadFile = function (event, index) {
-                var output = document.getElementById('output' + index);
-                output.src = URL.createObjectURL(event.target.files[0]);
-            };
-        </script>
-    </ul>
 {% endblock page_content %}
