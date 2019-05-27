@@ -2,7 +2,7 @@
     {% if blog.posts %}
         <div id="blog-posts">
             {% for blogPost in blog.posts %}
-                {% include blog.template.blockPostEntry|default('Plugins/Blog/Frontend/Category/BlockPostEntry.twig') %}
+                {% include blog.template.blockPostEntry|default('Plugins/Blog/Frontend/Category/PostEntry.twig') %}
             {% endfor %}
         </div>
         {#        {% if blog.posts|length >= blog.postsPerPage %}#}{#        TODO uncomment later#}

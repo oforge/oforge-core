@@ -3,6 +3,7 @@
 namespace Blog\Controller\Frontend;
 
 use Blog\Enums\BlogPermission;
+use Blog\Exceptions\UserNotLoggedInException;
 use Blog\Services\AuthService;
 use Blog\Services\CategoryService;
 use Blog\Services\CommentService;
@@ -15,7 +16,9 @@ use FrontendUserManagement\Models\User;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
+use Oforge\Engine\Modules\Core\Exceptions\LoggerAlreadyExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Core\Helper\RedirectHelper;
 use Oforge\Engine\Modules\Core\Models\Endpoint\EndpointMethod;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
@@ -45,6 +48,7 @@ class BlogController extends SecureFrontendController {
      * BlogController constructor.
      *
      * @throws ServiceNotFoundException
+     * @throws LoggerAlreadyExistException
      */
     public function __construct() {
         $this->authService     = Oforge()->Services()->get('blog.auth');
@@ -135,7 +139,7 @@ class BlogController extends SecureFrontendController {
 
         try {
             $post     = $this->postService->getPost($postID);
-            $postData = $post->toArray(2, [/*'author' => ['*', '!id'], */'category' => ['posts'], 'comments']);
+            $postData = $post->toArray(1, ['author' => ['*', '!name'], 'category' => ['posts'], 'comments']);
             $this->ratingService->evaluateRating($postData);
             $postData['created'] = $post->getCreated()->format('Y.m.d H:i:s');
             $postData['updated'] = $post->getCreated()->format('Y.m.d H:i:s');
@@ -147,7 +151,9 @@ class BlogController extends SecureFrontendController {
             $comments     = $this->commentService->getCommentsOfPost($post);
             $commentsData = [];
             foreach ($comments as $comment) {
-                $commentsData[] = $comment->toArray(1, ['author' => ['*', '!id'], 'post']);//TODO author name
+                $data            = $comment->toArray(2, ['author' => ['*', '!detail'], 'post']);
+                $data['created'] = $comment->getCreated()->format('Y.m.d H:i:s');
+                $commentsData[]  = $data;
             }
             $viewData['comments']       = $commentsData;
             $viewData['comments_count'] = $post->getComments()->count();
@@ -155,8 +161,6 @@ class BlogController extends SecureFrontendController {
         } catch (ORMException $exception) {
             Oforge()->Logger()->logException($exception);
         }
-
-        // TODO
         Oforge()->View()->assign([
             'blog' => $viewData,
         ]);
@@ -188,12 +192,33 @@ class BlogController extends SecureFrontendController {
      * @param Request $request
      * @param Response $response
      * @param array $args
-     * @EndpointAction(path="/post/{postID:\d+}/{seoUrlPath}/comments/create", name="create_comment", method=EndpointMethod::ANY)
+     * @EndpointAction(path="/post/{postID:\d+}/{seoUrlPath}/comments/create", name="create_comment", method=EndpointMethod::POST)
+     *
+     * @return Response
      */
     public function createCommentAction(Request $request, Response $response, array $args) {
-        // TODO
-        Oforge()->View()->assign(['tmp' => $args]);
-        // Oforge()->View()->assign(['blog' => $this->getUserData()]);
+        $postData = $request->getParsedBody();
+        if ($request->isPost() && !empty($postData)) {
+            $userID  = ArrayHelper::get($postData, 'userID');
+            $comment = ArrayHelper::get($postData, 'comment');
+            if (!empty($userID) && !empty($comment) && $userID == Oforge()->View()->get('user.id')) {
+                try {
+                    $this->commentService->createComment([
+                        'author'  => $userID,
+                        'content' => $comment,
+                        'post'    => $args['postID'],
+                    ]);
+                } catch (UserNotLoggedInException $exception) {
+                    Oforge()->View()->Flash()
+                            ->addMessage('warning', I18N::translate('plugin_blog_user_not_logged_in', 'You must be logged in to leave a comment.'));
+                } catch (Exception $exception) {
+                    Oforge()->Logger()->logException($exception);
+                    Oforge()->View()->Flash()->addMessage('error', I18N::translate('plugin_blog_comment_saving_failed', 'The comment could not be saved.'));
+                }
+            }
+        }
+
+        return RedirectHelper::redirect($response, 'frontend_blog_view', $args);
     }
 
     /**
@@ -205,9 +230,7 @@ class BlogController extends SecureFrontendController {
      * @return Response
      */
     public function deleteCommentAction(Request $request, Response $response, array $args) {
-        // TODO BlogController#deleteCommentAction
-
-        Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_create_success', 'Entity successfully created.'));
+        // TODO later BlogController#deleteCommentAction
 
         return RedirectHelper::redirect($response, 'frontend_blog_view', $args);
     }

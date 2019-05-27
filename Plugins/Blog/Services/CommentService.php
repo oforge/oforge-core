@@ -94,31 +94,20 @@ class CommentService extends AbstractDatabaseAccess {
     /**
      * Create comment for post(ID).
      *
-     * @param int $postID
      * @param array $data
      *
-     * @throws PostNotFoundException
      * @throws UserNotLoggedInException
      * @throws ORMException
      */
-    public function createComment(int $postID, array $data) {
+    public function createComment(array $data) {
         if (!$this->authService->isUserLoggedIn()) {
             throw new UserNotLoggedInException();
         }
-        $user = $this->authService->getUser();
-        /** @var Post|null $post */
-        $post = $this->repository(Post::class)->findOneBy(['id' => $postID]);
-        if (!isset($post)) {
-            throw new PostNotFoundException($postID);
+        if ($this->isValid($data)) {
+            $comment = Comment::create($data);
+            $this->entityManager()->persist($comment);
+            $this->entityManager()->flush($comment);
         }
-        $data    = array_merge([
-            // 'title' => '',
-            'post'   => $post,
-            'author' => $user,
-        ]);
-        $comment = Comment::create($data);
-        $this->entityManager()->persist($comment);
-        $this->entityManager()->flush($comment);
     }
 
     /**
@@ -154,30 +143,20 @@ class CommentService extends AbstractDatabaseAccess {
      * @throws InvalidArgumentException
      */
     protected function isValid(array $data) : bool {
-        $requiredKeys = ['comment'];
+        $requiredKeys = ['content'];
         foreach ($requiredKeys as $dataKey) {
             if (!isset($data[$dataKey]) || $data[$dataKey] === '') {
                 throw new ConfigOptionKeyNotExistException($dataKey);
             }
         }
         $dataTypes = [
-            'comment' => 'string',
+            'contents' => 'string',
         ];
         foreach ($dataTypes as $dataKey => $dataType) {
             if (!isset($options[$dataKey])) {
                 continue;
             }
             switch ($dataType) {
-                case 'bool':
-                    if (!is_bool($data[$dataKey])) {
-                        throw new InvalidArgumentException("Option '$dataKey' should be of type string.");
-                    }
-                    break;
-                case 'int':
-                    if (!is_int($data[$dataKey])) {
-                        throw new InvalidArgumentException("Option '$dataKey' should be of type string.");
-                    }
-                    break;
                 case 'string':
                     if (!is_string($data[$dataKey])) {
                         throw new InvalidArgumentException("Option '$dataKey' should be of type string.");

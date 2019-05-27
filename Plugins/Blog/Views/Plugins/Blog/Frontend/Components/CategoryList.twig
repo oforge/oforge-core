@@ -1,0 +1,6 @@
+<ul class="blog-category-list">
+    {% include blog.template.categoryEntry|default('Plugins/Blog/Frontend/Components/CategoryEntry.twig') %}
+    {% for headerCategory in blog.categories %}
+        {% include blog.template.categoryEntry|default('Plugins/Blog/Frontend/Components/CategoryEntry.twig') %}
+    {% endfor %}
+</ul>
