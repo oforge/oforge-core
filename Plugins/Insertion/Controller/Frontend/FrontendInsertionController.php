@@ -13,6 +13,7 @@ use Insertion\Services\InsertionFeedbackService;
 use Insertion\Services\InsertionListService;
 use Insertion\Services\InsertionService;
 use Insertion\Services\InsertionTypeService;
+use Insertion\Services\InsertionUpdaterService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Helper\StringHelper;
@@ -253,5 +254,71 @@ class FrontendInsertionController extends SecureFrontendController {
         }
 
         Oforge()->View()->assign(["insertion" => $insertion->toArray(3)]);
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @EndpointAction(path="/edit/{id}")
+     *
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function editAction(Request $request, Response $response, $args) {
+        $id = $args["id"];
+        /**
+         * @var $service InsertionService
+         */
+        $service   = Oforge()->Services()->get("insertion");
+        $insertion = $service->getInsertionById(intval($id));
+
+        /**
+         * @var $insertionTypeService InsertionTypeService
+         */
+        $insertionTypeService = Oforge()->Services()->get("insertion.type");
+
+        /**
+         * @var $userService FrontendUserService
+         */
+        $userService = Oforge()->Services()->get("frontend.user");
+        $user        = $userService->getUser();
+
+        if (!isset($insertion) || $insertion == null) {
+            return $response->withRedirect("/404", 301);
+        }
+
+        if($insertion->getUser()->getId() != $user->getId()) {
+            return $response->withRedirect("/401", 301);
+        }
+
+        $type                 = $insertion->getInsertionType();
+        $typeAttributes       = $insertionTypeService->getInsertionTypeAttributeTree($insertion->getInsertionType()->getId());
+        $result["attributes"] = $typeAttributes;
+        $result["keys"]       = [];
+        /**
+         * @var $attribute InsertionTypeAttribute
+         */
+        foreach ($type->getAttributes() as $attribute) {
+            $key                             = $attribute->getAttributeKey();
+            $result["keys"][$key->getName()] = $key->toArray(0);
+        }
+
+        /**
+         * @var $updateService InsertionUpdaterService
+         */
+        $updateService = Oforge()->Services()->get("insertion.updater");
+
+        $result["data"] = $updateService->getFormData($insertion);
+
+        if ($request->isPost()) {
+            $data = $updateService->parsePageData($_POST);
+
+            $updateService->update($insertion, $data);
+            $result["data"] = $updateService->getFormData($insertion);
+
+        }
+
+        $result["insertion"] = $insertion->toArray(1);
+
+        Oforge()->View()->assign($result);
     }
 }
