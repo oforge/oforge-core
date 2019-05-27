@@ -83,5 +83,6 @@ class Statics {
         '$radius-small'                  => '$size-small',
         '$radius-medium'                 => '$size-medium',
         '$radius-large'                  => '$size-large',
+        '$border-radius'                 => '$radius-medium',
     ];
 }

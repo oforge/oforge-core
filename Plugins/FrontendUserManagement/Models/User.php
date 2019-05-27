@@ -63,14 +63,14 @@ class User extends BaseUser {
     /**
      * @return UserDetail
      */
-    public function getDetail() : UserDetail {
+    public function getDetail() : ?UserDetail {
         return $this->detail;
     }
 
     /**
      * @return UserAddress
      */
-    public function getAddress() : UserAddress {
+    public function getAddress() : ?UserAddress {
         return $this->address;
     }
 
