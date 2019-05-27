@@ -13,6 +13,7 @@ use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Core\Services\RedirectService;
 use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
@@ -53,7 +54,6 @@ class RegistrationController extends AbstractController {
      * @return Response
      * @throws ConfigElementNotFoundException
      * @throws ConfigOptionKeyNotExistException
-     * @throws Exception
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws ServiceNotFoundException
@@ -116,6 +116,10 @@ class RegistrationController extends AbstractController {
         $password              = $body['frontend_registration_password'];
         $passwordConfirm       = $body['frontend_registration_password_confirm'];
         $privacyNoticeAccepted = $body['frontend_registration_privacy_notice_accepted'];
+        $referrer              = ArrayHelper::get($body, 'frontend_registration_referrer');
+        if (isset($referrer)) {
+            $uri = $referrer;
+        }
 
         /**
          * no token was sent
@@ -189,7 +193,9 @@ class RegistrationController extends AbstractController {
 
         $mailService->send($mailOptions, $templateData);
 
-        $uri = $router->pathFor('frontend_login');
+        if (!isset($referrer)) {
+            $uri = $router->pathFor('frontend_login');
+        }
         Oforge()->View()->Flash()->addMessage('success', I18N::translate('registration_success_mail_send',
             'Registration successful. You will receive an email with information about you account activation.'));
 
