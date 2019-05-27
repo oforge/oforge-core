@@ -18,7 +18,7 @@
     {% endfor %}
 
     <input type="text" name="contact_name"
-           value="{% if data[page]['contact_name'] is defined %}{{ data[page]['contact_name'] }}{% else %}Example Name{% endif %}" />
+           value="{% if data['contact_name'] is defined %}{{ data['contact_name'] }}{% else %}Example Name{% endif %}" />
     <input type="email" name="contact_email" value="Example@Name.de" />
     <input type="tel" name="contact_phone" value="012121312" />
     <input type="text" name="contact_zip" value="01234" />
