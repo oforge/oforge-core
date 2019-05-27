@@ -21,9 +21,9 @@ if (typeof Oforge !== 'undefined') {
 
                 document.addEventListener('click', function(evt) {
                     if (multi.contains(evt.target)) {
-                        multi.classList.add('select--is-open');
+                        multi.classList.add('multi-select--is-open');
                     } else {
-                        multi.classList.remove('select--is-open');
+                        multi.classList.remove('multi-select--is-open');
                     }
                 });
             });
@@ -31,7 +31,7 @@ if (typeof Oforge !== 'undefined') {
             checkList.forEach(function(check) {
                 var input = null;
 
-                if (check.matches('.select__item--checked')) {
+                if (check.matches('.multi-select__item--checked')) {
                     checkedValues.push(check.dataset.multiSelectItem);
                     checkedNames.push(check.innerHTML);
 
@@ -56,7 +56,7 @@ if (typeof Oforge !== 'undefined') {
                     var input = null;
 
                     if (valueIndex > -1) {
-                        check.classList.remove('select__item--checked');
+                        check.classList.remove('multi-select__item--checked');
                         checkedValues.splice(valueIndex, 1);
                         checkedNames.splice(valueIndex, 1);
 
@@ -64,7 +64,7 @@ if (typeof Oforge !== 'undefined') {
                         input.remove();
 
                     } else {
-                        check.classList.add('select__item--checked');
+                        check.classList.add('multi-select__item--checked');
                         checkedValues.push(value);
                         checkedNames.push(valueName);
 

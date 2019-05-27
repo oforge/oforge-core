@@ -1,9 +1,8 @@
-.select {
+.multi-select {
     position: relative;
     display: inline-block;
     cursor: pointer;
     height: 3.2rem;
-    max-width: 24rem;
     width: 100%;
     overflow: hidden;
     border: 1px solid $color-primary;
@@ -28,7 +27,7 @@
         overflow: hidden;
     }
 
-    &.select--is-open {
+    &.multi-select--is-open {
         height: auto;
         overflow: auto;
     }
@@ -56,25 +55,26 @@
     }
 
     &__item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
         position: relative;
-        padding: .2rem .2rem .2rem 2rem;
+        padding: $size-small;
 
         &:before {
-            position: absolute;
             content: ' ';
             display: block;
-            left: .2rem;
-            top: .2rem;
             width: 1.6rem;
             height: 1.6rem;
             border: 1px solid $color-primary;
+            margin: 0 $size-small 0 0;
         }
 
-        &.select__item--checked {
+        &.multi-select__item--checked {
             &:after {
                 position: absolute;
-                left: .7rem;
-                top: .3rem;
+                left: .9rem;
+                top: .8rem;
                 content: ' ';
                 display: block;
                 width: .6rem;
@@ -87,6 +87,6 @@
     }
 }
 
-.select__item {
+.multi-select__item {
     margin: .8rem 0;
 }
