@@ -12,7 +12,7 @@ class AttributeService extends AbstractDatabaseAccess {
 
     public function __construct() {
         parent::__construct([
-            'attributeKey' => AttributeKey::class,
+            'attributeKey'   => AttributeKey::class,
             'attributeValue' => AttributeValue::class,
         ]);
     }
@@ -70,16 +70,37 @@ class AttributeService extends AbstractDatabaseAccess {
 
     /**
      * @param $id
-     * @param array $values
+     * @param $name
+     * @param $type
+     * @param $filterType
      *
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function updateAttributeValue($id, $values) {
+    public function updateAttributeKey($id, $name, $type, $filterType) {
+        /** @var AttributeKey $attributeKey */
+        $attributeKey = $this->repository('attributeKey')->find($id);
+        $attributeKey->setName($name);
+        $attributeKey->setType($type);
+        $attributeKey->setFilterType($filterType);
+
+        $this->entityManager()->persist($attributeKey);
+        $this->entityManager()->flush();
+    }
+
+    /**
+     * @param $id
+     * @param $value
+     * @param null $subAttributeKey
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function updateAttributeValue($id, $value, $subAttributeKey = null) {
         /** @var AttributeValue $attributeValue */
         $attributeValue = $this->repository('attributeValue')->find($id);
-        $attributeValue->setValue($values['value']);
-        $attributeValue->setSubAttributeKey($values['subAttributeKey']);
+        $attributeValue->setValue($value);
+        $attributeValue->setSubAttributeKey($subAttributeKey);
 
         $this->entityManager()->persist($attributeValue);
         $this->entityManager()->flush();
@@ -88,19 +109,35 @@ class AttributeService extends AbstractDatabaseAccess {
     /**
      * @param $id
      *
-     * @return object|null
+     * @return AttributeKey|null
      * @throws ORMException
      */
     public function getAttribute($id) {
-        return $this->repository('attributeKey')->find($id);
+        /** @var AttributeKey $attributeKey */
+        $attributeKey = $this->repository('attributeKey')->find($id);
+
+        return $attributeKey;
     }
 
     /**
+     * @param null $offset
+     * @param null $limit
+     *
      * @return array
      * @throws ORMException
      */
-    public function getAttributeList() {
-        return $this->repository('attributeKey')->findAll();
+    public function getAttributeList($limit = null, $offset = null) {
+        return $this->repository('attributeKey')->findBy([], null, $limit, $offset);
+    }
+
+    /**
+     * @throws ORMException
+     */
+    public function getAttributeCount() {
+        $queryBuilder = $this->entityManager()->createQueryBuilder();
+        $result       = $queryBuilder->select($queryBuilder->expr()->count('a.id'))->from(AttributeKey::class, 'a');
+
+        return $result->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -113,6 +150,7 @@ class AttributeService extends AbstractDatabaseAccess {
         $attributeKey = $this->repository('attributeKey')->find($id);
         $this->entityManager()->remove($attributeKey);
         $this->entityManager()->flush();
+        $this->repository('attributeKey')->clear();
     }
 
     /**

@@ -87,6 +87,13 @@ class Insertion extends AbstractModel {
 
 
     /**
+     * @var boolean
+     * @ORM\Column(name="active", type="boolean", nullable=true)
+     */
+    private $active = false;
+
+
+    /**
      * @ORM\PrePersist
      */
     public function onPrePersist() {
@@ -246,5 +253,19 @@ class Insertion extends AbstractModel {
      */
     public function setTax(?bool $tax) : void {
         $this->tax = $tax;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive() : ?bool {
+        return $this->active;
+    }
+
+    /**
+     * @param bool $active
+     */
+    public function setActive(bool $active) : void {
+        $this->active = $active;
     }
 }

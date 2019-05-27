@@ -124,6 +124,7 @@ class InsertionService extends AbstractDatabaseAccess {
         $insertion = $this->repository()->find($id);
         $this->entityManager()->remove($insertion);
         $this->entityManager()->flush();
+        $this->repository()->clear();
     }
 
     /**
