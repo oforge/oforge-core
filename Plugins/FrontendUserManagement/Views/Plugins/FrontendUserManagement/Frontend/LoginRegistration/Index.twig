@@ -7,37 +7,7 @@
                     <h2 class="panel__title">{{ i18n('welcome') }}</h2>
                 {% endblock login_registration_title %}
 
-                <div class="panel__content flex flex--wrap">
-                    <div class="panel__column">
-                        {% block login_registration_subtitle %}
-                            <h3 class="panel__sub-title">{{ i18n('I want to...') }}</h3>
-                        {% endblock login_registration_subtitle %}
-                        <div class="buttons flex flex--row flex--center flex--between">
-                            <a class="button tab tab--active" data-tab="login">
-                                {{ i18n('login') }}
-                            </a>
-
-                            <a class="button tab " data-tab="registration">
-                                {{ i18n('register') }}
-                            </a>
-                        </div>
-                        <div class="separator"></div>
-                        <h3 class="form__title">{{ i18n('Insert your login data:') }}</h3>
-                        <div class="tab__content tab__content--visible" data-tab-content="login">
-                            {% include 'Plugins/FrontendUserManagement/Frontend/Components/Forms/LoginForm.twig' %}
-                        </div>
-
-                        <div class="tab__content" data-tab-content="registration">
-                            {% include 'Plugins/FrontendUserManagement/Frontend/Components/Forms/RegistrationForm.twig' %}
-                        </div>
-                    </div>
-                    {% block login_registration__registration_benefits %}
-                    <div class="panel__column panel__column--border">
-                        <h3 class="panel__sub-title">{{ i18n('Registration benefits:') }}</h3>
-                        {% include 'Plugins/FrontendUserManagement/Frontend/Components/Content/Benefits.twig' %}
-                    </div>
-                    {% endblock login_registration__registration_benefits %}
-                </div>
+                {% include 'Plugins/FrontendUserManagement/Frontend/Components/Content/LoginRegistration.twig' %}
             </div>
         {% endblock login_registration %}
     </div>
