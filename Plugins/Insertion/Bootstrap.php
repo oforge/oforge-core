@@ -22,6 +22,7 @@ use Insertion\Services\InsertionMockService;
 use Insertion\Services\InsertionService;
 use Insertion\Services\InsertionTypeService;
 use Insertion\Twig\InsertionExtensions;
+use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\TemplateEngine\Core\Services\TemplateRenderService;
 
@@ -72,4 +73,46 @@ class Bootstrap extends AbstractBootstrap {
 
         $templateRenderer->View()->addExtension(new InsertionExtensions());
     }
+
+    public function activate() {
+        /** @var BackendNavigationService $sidebarNavigation */
+        $sidebarNavigation = Oforge()->Services()->get('backend.navigation');
+        $sidebarNavigation->put([
+            'name'     => 'backend_content',
+            'order'    => 2,
+            'position' => 'sidebar',
+        ]);
+        $sidebarNavigation->put([
+            'name'     => 'backend_insertion',
+            'order'    => 100,
+            'parent'   => 'backend_content',
+            'icon'     => 'fa fa-newspaper-o',
+            'position' => 'sidebar',
+        ]);
+        $sidebarNavigation->put([
+            'name'     => 'backend_insertion_attribute',
+            'order'    => 1,
+            'parent'   => 'backend_insertion',
+            'icon'     => 'fa fa-sitemap',
+            'path'     => 'backend_insertion_attribute',
+            'position' => 'sidebar',
+        ]);
+        $sidebarNavigation->put([
+            'name'     => 'backend_insertion_insertion_type',
+            'order'    => 2,
+            'parent'   => 'backend_insertion',
+            'icon'     => 'fa fa-file-text-o',
+            'path'     => '',
+            'position' => 'sidebar',
+        ]);
+        $sidebarNavigation->put([
+            'name'     => 'backend_insertion_insertion',
+            'order'    => 3,
+            'parent'   => 'backend_insertion',
+            'icon'     => 'fa fa-bar-chart',
+            'path'     => '',
+            'position' => 'sidebar',
+        ]);
+    }
+
 }
