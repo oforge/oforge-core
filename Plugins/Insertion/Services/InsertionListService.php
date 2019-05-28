@@ -36,7 +36,7 @@ class InsertionListService extends AbstractDatabaseAccess {
 
         $result = ["filter" => [], "query" => [], 'order' => $_GET["order"]];
 
-        $queryBuilder = $this->entityManager()->createQueryBuilder()->select('i')->from("Insertion\Models\Insertion", "i")->where("i.insertionType = :type");
+        $queryBuilder = $this->entityManager()->createQueryBuilder()->select('i')->from("Insertion\Models\Insertion", "i")->where("i.insertionType = :type and i.active = true and i.moderation = false");
         $queryBuilder->setParameter("type", $typeId);
 
         $keyCount       = 1;
@@ -240,4 +240,14 @@ class InsertionListService extends AbstractDatabaseAccess {
         return $result;
     }
 
+    public function getUserInsertions($user, $page = 1) : ?array {
+        $insertions = $this->repository()->findBy(["user" => $user, "deleted" => false], null, 10, ($page - 1) * 10);
+
+        $result = [];
+        foreach ($insertions as $insertion) {
+            $result[] = $insertion->toArray(2);
+        }
+
+        return $result;
+    }
 }

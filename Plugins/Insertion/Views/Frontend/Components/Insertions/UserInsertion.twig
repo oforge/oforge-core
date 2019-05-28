@@ -1,0 +1,25 @@
+<div>
+    {% if insertion.media is defined and insertion.media|length > 0 and insertion.media[0].content is defined %}
+        <img src="{{ media(insertion.media[0].content, 200) }}" alt="{{ insertion.content[0].name }}"
+             class="image">
+    {% else %}
+        <!-- TODO add dummy image -->
+        <img src="https://placeponi.es/300/300" alt="ponie" class="image">
+    {% endif %}
+
+    ID : {{ insertion.id }} <br />
+    TITLE : {{ insertion.content[0].title }} <br />
+    Name : {{ insertion.content[0].name }} <br />
+    Preis : {{ insertion.price }} {% if insertion.tax %} netto {% else %} brutto {% endif %}<br />
+    <a href="{{ url('insertions_edit', {id: insertion.id}) }}">EDIT</a>
+    {% if insertion.active %}
+        <a href="{{ url('frontend_account_insertions_disable', {id: insertion.id}) }}">DISABLE</a><br />
+    {% else %}
+        <a href="{{ url('frontend_account_insertions_activate', {id: insertion.id}) }}">Activate</a><br />
+    {% endif %}
+    <br />
+    <span>hervorheben</span><br />    <!-- kommt später -->
+
+
+    <a href="{{ url('frontend_account_insertions_delete', {id: insertion.id}) }}">DELETE</a><br />
+</div>
