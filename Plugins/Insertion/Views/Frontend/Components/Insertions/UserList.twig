@@ -1,0 +1,5 @@
+{% block insertion__list__content %}
+    {% for insertion in insertions %}
+        {% include 'Frontend/Components/Insertions/UserInsertion.twig' with {insertion : insertion } %}
+    {% endfor %}
+{% endblock %}

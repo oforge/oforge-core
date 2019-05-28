@@ -287,7 +287,7 @@ class FrontendInsertionController extends SecureFrontendController {
             return $response->withRedirect("/404", 301);
         }
 
-        if($insertion->getUser()->getId() != $user->getId()) {
+        if ($user == null || $insertion->getUser()->getId() != $user->getId()) {
             return $response->withRedirect("/401", 301);
         }
 
@@ -321,19 +321,6 @@ class FrontendInsertionController extends SecureFrontendController {
         $result["insertion"] = $insertion->toArray(1);
 
         Oforge()->View()->assign($result);
-    }
-
-
-    /**
-     * @param Request $request
-     * @param Response $response
-     * @EndpointAction(path="/account")
-     *
-     * @throws \Doctrine\ORM\ORMException
-     */
-    public function accountListAction(Request $request, Response $response) {
-
-
     }
 
     public function initPermissions() {

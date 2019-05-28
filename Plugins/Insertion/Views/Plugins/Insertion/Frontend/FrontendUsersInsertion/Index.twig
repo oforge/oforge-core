@@ -9,8 +9,30 @@
                 {% endblock account__sidebar %}
 
                 {% block account__content %}
+                    <div class="account__content">
+                        <h1>{{ i18n('frontend_user_insertions_headline') }}</h1>
+                        <div class="">
+                            <a href="{{ url( 'frontend_user_insertions_create') }}"
+                               class="button button--secondary button--shadow button--uppercase button--header">{{ i18n('frontend_user_insertion_create', 'Jetzt inserieren!') }}</a>
 
-                    TODO
+
+                            <div class="">
+                                <h2>{{ i18n('insertions') }}</h2>
+                            </div>
+
+                            <div id="insertion-container" class="">
+                                {% include 'Frontend/Components/Insertions/UserList.twig' with {insertions : insertions } %}
+                            </div>
+
+                            {% if insertions|length >= 10 %}
+                                <a href="#" class="button" data-addmore="true" data-container="#insertion-container"
+                                   data-url="{{ url('frontend_account_insertions_page') }}">
+                                    <!-- /insertions/search?page=3 -->
+                                    <span>load more </span>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
                 {% endblock account__content %}
 
             </div>
