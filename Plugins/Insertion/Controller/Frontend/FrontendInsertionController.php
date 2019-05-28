@@ -5,6 +5,7 @@ namespace Insertion\Controller\Frontend;
 use Doctrine\DBAL\Schema\View;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use FrontendUserManagement\Abstracts\SecureFrontendController;
+use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\FrontendUserService;
 use Insertion\Models\InsertionType;
 use Insertion\Models\InsertionTypeAttribute;
@@ -286,7 +287,7 @@ class FrontendInsertionController extends SecureFrontendController {
             return $response->withRedirect("/404", 301);
         }
 
-        if($insertion->getUser()->getId() != $user->getId()) {
+        if ($user == null || $insertion->getUser()->getId() != $user->getId()) {
             return $response->withRedirect("/401", 301);
         }
 
@@ -320,5 +321,9 @@ class FrontendInsertionController extends SecureFrontendController {
         $result["insertion"] = $insertion->toArray(1);
 
         Oforge()->View()->assign($result);
+    }
+
+    public function initPermissions() {
+        $this->ensurePermissions('accountListAction', User::class);
     }
 }

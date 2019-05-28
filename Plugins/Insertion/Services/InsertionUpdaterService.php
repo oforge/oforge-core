@@ -125,13 +125,11 @@ class InsertionUpdaterService extends AbstractDatabaseAccess {
     }
 
     public function update(Insertion $insertion, array $data) {
-
         if ($insertion->getContent() == null || sizeof($insertion->getContent()) == 0) {
             $content = InsertionContent::create($data["content"]);
             $content->setInsertion($insertion);
             $insertion->setContent([$content]);
         }
-
 
         $content = $insertion->getContent()[0];
         $content->fromArray($data["content"]);
@@ -202,6 +200,27 @@ class InsertionUpdaterService extends AbstractDatabaseAccess {
         //TODO update media data
         $this->entityManager()->flush();
 
+    }
+
+    public function deactivate(Insertion $insertion) {
+        $insertion->setActive(false);
+        $insertion->setDeleted(false);
+        $this->entityManager()->persist($insertion);
+        $this->entityManager()->flush();
+    }
+
+    public function activate(Insertion $insertion) {
+        $insertion->setActive(true);
+        $insertion->setDeleted(false);
+        $this->entityManager()->persist($insertion);
+        $this->entityManager()->flush();
+    }
+
+    public function delete(Insertion $insertion) {
+        $insertion->setActive(false);
+        $insertion->setDeleted(true);
+        $this->entityManager()->persist($insertion);
+        $this->entityManager()->flush();
     }
 }
 
