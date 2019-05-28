@@ -230,11 +230,11 @@ class BlogController extends SecureFrontendController {
      * @param Request $request
      * @param Response $response
      * @param array $args
-     * @EndpointAction(path="/post/{postID:\d+}/{seoUrlPath}/more-comments/{page:\d+}", name="more_comments", method=EndpointMethod::GET)
+     * @EndpointAction(path="/post/{postID:\d+}/{seoUrlPath}/comments/more?page={page:\d+}", name="more_comments", method=EndpointMethod::GET)
      */
     public function loadMoreCommentsAction(Request $request, Response $response, array $args) {
         // TODO BlogController#loadMoreCommentsAction
-        Oforge()->View()->assign(['json' => ['tmp' => $args]]);
+        Oforge()->View()->assign(['json2' => ['tmp' => $args, 'tmp2' => $request->getQueryParams()]]);
     }
 
     /**
