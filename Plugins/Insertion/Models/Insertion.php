@@ -92,6 +92,18 @@ class Insertion extends AbstractModel {
      */
     private $active = false;
 
+    /**
+     * @var boolean
+     * @ORM\Column(name="deleted", type="boolean", nullable=true, options={"default":false})
+     */
+    private $deleted = false;
+
+    /**
+     * @var boolean
+     * @ORM\Column(name="moderation", type="boolean", options={"default":true})
+     */
+    private $moderation = false;
+
 
     /**
      * @ORM\PrePersist
@@ -267,5 +279,33 @@ class Insertion extends AbstractModel {
      */
     public function setActive(bool $active) : void {
         $this->active = $active;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDeleted() : bool {
+        return $this->deleted;
+    }
+
+    /**
+     * @param bool $deleted
+     */
+    public function setDeleted(bool $deleted) : void {
+        $this->deleted = $deleted;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isModeration() : bool {
+        return $this->moderation;
+    }
+
+    /**
+     * @param bool $moderation
+     */
+    public function setModeration(bool $moderation) : void {
+        $this->moderation = $moderation;
     }
 }
