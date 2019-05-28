@@ -19,6 +19,7 @@ use Oforge\Engine\Modules\CRUD\Enum\CrudFilterType;
 use Oforge\Engine\Modules\CRUD\Enum\CrudGroubByOrder;
 use Oforge\Engine\Modules\I18n\Models\Language;
 use Oforge\Engine\Modules\I18n\Services\LanguageService;
+use Slim\Http\Response;
 
 /**
  * Class CategoryController
@@ -235,6 +236,12 @@ class CategoryController extends BaseCrudController {
         }
 
         return $this->selectLanguages;
+    }
+
+    /** @inheritDoc */
+    protected function handleDeleteAction(Response $response, string $entityID) {
+        // TODO: onCategoryDelete: handle posts, comments, ratings
+        return parent::handleDeleteAction($response, $entityID);
     }
 
 }
