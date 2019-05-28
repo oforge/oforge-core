@@ -1,13 +1,13 @@
-<div id="blog-posts-wrapper">
+<div id="blog-posts">
     {% if blog.posts %}
-        <div id="blog-posts">
+        <div id="blog-posts-container">
             {% for blogPost in blog.posts %}
                 {% include blog.template.blockPostEntry|default('Plugins/Blog/Frontend/Category/PostEntry.twig') %}
             {% endfor %}
         </div>
         {#        {% if blog.posts|length >= blog.postsPerPage %}#}{#        TODO uncomment later#}
         <div>
-            <button id="blog-load-more" data-type="posts" data-container="blog-posts" class="button button--primary">
+            <button id="blog-load-more" class="button button--primary" data-type="posts" data-page="1" data-container="blog-posts-container" data-position="bottom">
                 {{ i18n('plugin_blog_btn_load_more_posts', 'Load more') }}
             </button>
         </div>

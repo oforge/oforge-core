@@ -26,3 +26,9 @@
         {% endif %}
     </div>
 {% endblock blog_content %}
+
+{% block master__footer_scripts %}{#TODO remove after jsassetsservice includes plugin-js#}
+    {{ parent() }}
+    <script type="text/javascript" src="/Plugins/Blog/Views/Plugins/Blog/Frontend/__assets/js/loadmore.js" defer></script>
+{% endblock master__footer_scripts %}
+

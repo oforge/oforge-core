@@ -24,6 +24,7 @@ use Oforge\Engine\Modules\CRUD\Enum\CrudGroubByOrder;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\I18n\Models\Language;
 use Oforge\Engine\Modules\I18n\Services\LanguageService;
+use Slim\Http\Response;
 
 /**
  * Class PostController
@@ -366,7 +367,7 @@ class PostController extends BaseCrudController {
             /** @var BackendUser[] $entities */
             $entities = $entityManager->getRepository(BackendUser::class)->findBy(['active' => true]);
             foreach ($entities as $entity) {
-                $this->selectBackendUsers[$entity->getId()] = $entity->getEmail();#TODO change later to name
+                $this->selectBackendUsers[$entity->getId()] = $entity->getName();
             }
         }
 
@@ -435,6 +436,12 @@ class PostController extends BaseCrudController {
         }
 
         return $this->selectLanguages;
+    }
+
+    /** @inheritDoc */
+    protected function handleDeleteAction(Response $response, string $entityID) {
+        // TODO: onPostDelete: handle comments, ratings
+        return parent::handleDeleteAction($response, $entityID);
     }
 
 }
