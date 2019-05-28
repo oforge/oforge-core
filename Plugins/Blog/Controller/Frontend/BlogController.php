@@ -3,6 +3,7 @@
 namespace Blog\Controller\Frontend;
 
 use Blog\Enums\BlogPermission;
+use Blog\Exceptions\PostNotFoundException;
 use Blog\Exceptions\UserNotLoggedInException;
 use Blog\Exceptions\UserRatingForPostNotFoundException;
 use Blog\Services\CategoryService;
@@ -49,7 +50,6 @@ class BlogController extends SecureFrontendController {
      * BlogController constructor.
      *
      * @throws ServiceNotFoundException
-     * @throws LoggerAlreadyExistException
      */
     public function __construct() {
         $this->categoryService = Oforge()->Services()->get('blog.category');
@@ -77,9 +77,7 @@ class BlogController extends SecureFrontendController {
      * @EndpointAction(path="[/[{categoryID:\d+}[/[{seoUrlPath}[/]]]]]")
      */
     public function indexAction(Request $request, Response $response, array $args) {
-        /**
-         * @var ConfigService $configService
-         */
+        /** @var ConfigService $configService */
         $configService = Oforge()->Services()->get('config');
         $viewData      = [
             'postsPerPage' => $configService->get('blog_load_more_epp_posts'),
@@ -134,8 +132,8 @@ class BlogController extends SecureFrontendController {
             'commentsPerPage' => $configService->get('blog_load_more_epp_comments'),
             // 'categories'   => $this->prepareCategories(),
         ];
-        $postID        = $args['postID'];
 
+        $postID = $args['postID'];
         try {
             $post     = $this->postService->getPost($postID);
             $postData = $post->toArray(2, ['author' => ['*', '!name'], 'category' => ['posts'], 'comments']);
@@ -147,7 +145,7 @@ class BlogController extends SecureFrontendController {
             $viewData['category'] = $postCategoryData;
             $viewData['post']     = $postData;
 
-            $comments     = $this->commentService->getCommentsOfPost($post);
+            $comments     = $this->commentService->getCommentsOfPost($post, 0);
             $commentsData = [];
             foreach ($comments as $comment) {
                 $data            = $comment->toArray(2, ['author' => ['*', '!detail'], 'post']);
@@ -221,7 +219,7 @@ class BlogController extends SecureFrontendController {
      * @return Response
      */
     public function deleteCommentAction(Request $request, Response $response, array $args) {
-        // TODO later BlogController#deleteCommentAction
+        // TODO FEATURE/later BlogController#deleteCommentAction
 
         return RedirectHelper::redirect($response, 'frontend_blog_view', $args);
     }
@@ -230,22 +228,67 @@ class BlogController extends SecureFrontendController {
      * @param Request $request
      * @param Response $response
      * @param array $args
-     * @EndpointAction(path="/post/{postID:\d+}/{seoUrlPath}/comments/more?page={page:\d+}", name="more_comments", method=EndpointMethod::GET)
+     *
+     * @return Response
+     * @EndpointAction(path="/post/{postID:\d+}/{seoUrlPath}/comments/more", name="more_comments", method=EndpointMethod::GET)
      */
     public function loadMoreCommentsAction(Request $request, Response $response, array $args) {
-        // TODO BlogController#loadMoreCommentsAction
-        Oforge()->View()->assign(['json2' => ['tmp' => $args, 'tmp2' => $request->getQueryParams()]]);
+        $queryParams = $request->getQueryParams();
+        $postID      = $args['postID'];
+        $page        = -1 + ArrayHelper::get($queryParams, 'page', 1);
+        try {
+            $comments     = $this->commentService->getComments($postID, $page);
+            $commentsData = [];
+            foreach ($comments as $comment) {
+                $data            = $comment->toArray(2, ['author' => ['*', '!detail'], 'post']);
+                $data['created'] = $comment->getCreated()->format('Y.m.d H:i:s');
+                $commentsData[]  = $data;
+            }
+            Oforge()->View()->assign([
+                'blog.comments' => $commentsData,
+            ]);
+        } catch (PostNotFoundException $exception) {
+            Oforge()->Logger()->logException($exception);
+
+            return $response->write('');
+        } catch (Exception $exception) {
+            Oforge()->Logger()->logException($exception);
+
+            return $response->write('');
+        }
     }
 
     /**
      * @param Request $request
      * @param Response $response
      * @param array $args
-     * @EndpointAction(path="/more-posts/{categoryID:\d+}/{page:\d+}", name="more_posts", method=EndpointMethod::GET)
+     *
+     * @return Response
+     * @EndpointAction(path="/more-posts", name="more_posts", method=EndpointMethod::GET)
      */
     public function loadMorePostsAction(Request $request, Response $response, array $args) {
-        // TODO BlogController#loadMoreCommentsAction
-        Oforge()->View()->assign(['json' => ['tmp' => $args]]);
+        $queryParams = $request->getQueryParams();
+        $categoryID  = ArrayHelper::get($queryParams, 'categoryID', null);
+        $page        = -1 + ArrayHelper::get($queryParams, 'page', 1);
+
+        try {
+            $posts             = $this->postService->getPosts($page, $categoryID);
+            $postsData         = [];
+            $excludeProperties = isset($categoryID) ? ['category', 'comments', 'author'] : ['category' => ['posts'], 'comments', 'author'];
+            foreach ($posts as $post) {
+                $postData = $post->toArray(2, $excludeProperties);
+                $this->ratingService->evaluateRating($postData);
+                $postData['created'] = $post->getCreated()->format('Y.m.d H:i:s');
+                $postsData[]         = $postData;
+            }
+            Oforge()->View()->assign([
+                'blog.posts' => $postsData,
+            ]);
+        } catch (Exception $exception) {
+            Oforge()->Logger()->logException($exception);
+
+            return $response->write('');
+        }
     }
 
     /**
