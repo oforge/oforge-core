@@ -1,16 +1,13 @@
 {% if blog.comments %}
-    <div class="blog-post-comments-container">
+    <div id="blog-post-comments-container">
         {% for blogPostComment in blog.comments %}
-            {% include blog.template.blockCommentEntry|default('Plugins/Blog/Frontend/Post/CommentEntry.twig') %}
+            {% include 'Plugins/Blog/Frontend/Post/CommentEntry.twig' %}
         {% endfor %}
     </div>
     {#        {% if blog.comments|length >= blog.commentsPerPage %}#}{#        TODO uncomment later#}
     <div>
-        <button id="blog-load-more" class="button button--primary" data-config="{{ {
-            url: url('frontend_blog_more_comments', {postID:blog.post.id, seoUrlPath:blog.post.seoUrlPath, page: '::pageNumber'}),
-            container: 'blog-post-comments-container',
-            insertPosition: 'top',
-        }|json_encode }}">
+        <button class="button button--primary" data-addmore="true" data-container="#blog-post-comments-container"
+                data-url="{{ url('frontend_blog_more_comments', {postID:blog.post.id, seoUrlPath:blog.post.seoUrlPath}) }}">
             {{ i18n('plugin_blog_btn_load_more_comments', 'other comments') }}
         </button>
     </div>
