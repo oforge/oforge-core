@@ -1,0 +1,78 @@
+.upload {
+
+    &__list {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        margin: 0;
+        list-style: none;
+        padding: $size-small;
+        border: 1px solid $color-primary;
+    }
+
+    &__item {
+        padding: 2px;
+        border: 1px solid $color-primary;
+        position: relative;
+
+        &.upload__item--placeholder {
+            &.hidden {
+                display: none;
+            }
+            .upload__image {
+                width: 200px;
+                height: 200px;
+                background: $color-light;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                &:before {
+                    content: 'No Image';
+                }
+            }
+        }
+    }
+
+    &__image {
+        width: 200px;
+        height: 200px;
+    }
+
+    &__delete {
+        padding: .5rem;
+        background-color: $warning;
+        color: $text-light;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    &__choose-main {
+        position: absolute;
+        display: block;
+        width: 1rem;
+        height: 1rem;
+        top: .5rem;
+        right: .5rem;
+        background: $color-light;
+        border-radius: 50%;
+        cursor: pointer;
+
+        &.upload__choose-main--is-main {
+            background: $color-secondary;
+        }
+    }
+}
+
+.upload__item + .upload__item {
+    margin-left: $size-small;
+}
+.button {
+    display: inline-block;
+    text-decoration: none;
+    color: $text-light;
+    background: $color-primary;
+    padding: $size-small $size-large;
+}
