@@ -82,7 +82,7 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
 
             array_push($result, [
                     'id' => $ticket->getId(),
-                    'issueType' => $this->repository('IssueTypes')->find($ticket->getIssueType())->getIssueTypeName(),
+                    'issueType' => $ticket->getIssueType(),
                     'title' => $ticket->getTitle(),
                     'conversation' => $conversation,
                     'created' => $ticket->getCreated()->format('Y-m-d H:i:s')
