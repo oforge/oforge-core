@@ -108,7 +108,7 @@ if (typeof Oforge !== 'undefined') {
 
                 itemToDelete.remove();
                 mainListItem = uploadItem.querySelector('.upload__choose-main--is-main');
-                if (!mainListItem) {
+                if (!mainListItem && mainInput) {
                     mainInput.remove();
                 }
             }
