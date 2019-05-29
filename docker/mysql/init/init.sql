@@ -189,7 +189,7 @@ INSERT INTO `oforge_i18n_snippet` (`id`, `scope`, `snippet_name`, `value`) VALUE
 
 DROP TABLE IF EXISTS `oforge_cms_content_type_group`;
 CREATE TABLE `oforge_cms_content_type_group` (
-                                     `id` int(11) NOT NULL,
+                                     `id` int(11) NOT NULL AUTO_INCREMENT,
                                      `content_type_group_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
                                      `description` varchar(255) COLLATE utf8mb4_unicode_ci,
                                      PRIMARY KEY (`id`),
@@ -200,8 +200,7 @@ CREATE TABLE `oforge_cms_content_type_group` (
 INSERT INTO `oforge_cms_content_type_group` (`id`, `content_type_group_name`, `description`) VALUES
 (1,	'container',	'Container'),
 (2,	'basic',	'Basic'),
-(3,	'media',	'Media'),
-(4,	'tiles',	'Tiles');
+(3,	'media',	'Media');
 
 DROP TABLE IF EXISTS `oforge_cms_content_type`;
 CREATE TABLE `oforge_cms_content_type` (

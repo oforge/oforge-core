@@ -41,19 +41,10 @@ class RegisterContentTypeService extends AbstractDatabaseAccess
         /** @var ContentTypeGroup $group */
 
         $group = $this->repository('group')->findOneBy(['name' => $contentTypeGroup]);
-        /**
-        if ($group === null) {
-            $group = new ContentTypeGroup();
-            $id = $this->entityManager()
-                ->createQueryBuilder()
-                ->select('MAX(gruop.id)')
-                ->from($this->repository('group'), 'group')
-                ->getQuery()
-                ->getSingleScalarResult();
 
-            $group->setName('contentTypeGroup')->setDescription('');
-            $this->entityManager()->persist($group);
-        }**/
+        if ($group === null) {
+            $group = $this->registerContentGroup($contentTypeGroup);
+        }
 
         $contentType->setGroup($group)
             ->setName($contentTypeName)
@@ -67,20 +58,19 @@ class RegisterContentTypeService extends AbstractDatabaseAccess
     }
 
     /**
-    public function registerContentGroup(string $groupName, string $description) {
+     * @param string $groupName
+     * @param string $description
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function registerContentGroup(string $groupName, string $description = '')
+    {
         $group = $this->repository('group')->findOneBy(['name' => $groupName]);
         if ($group === null) {
             $group = new ContentTypeGroup();
-            $id = $this->entityManager()
-                ->createQueryBuilder()
-                ->select('MAX(gruop.id)')
-                ->from($this->repository('group'), 'group')
-                ->getQuery()
-                ->getSingleScalarResult();
-
-            $group->setName('contentTypeGroup')->setDescription('');
+            $group->setName($groupName)->setDescription($description);
             $this->entityManager()->persist($group);
         }
+
+        return $group;
     }
-     **/
 }
