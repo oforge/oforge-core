@@ -8,10 +8,7 @@
 
 namespace Oforge\Engine\Modules\Media\Twig;
 
-use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
-use Oforge\Engine\Modules\Core\Services\ConfigService;
-use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\Media\Services\ImageCompressService;
 use Twig_Extension;
 use Twig_ExtensionInterface;
@@ -29,7 +26,7 @@ class MediaExtension extends Twig_Extension implements Twig_ExtensionInterface {
      */
     public function getFunctions() {
         return [
-            new Twig_Function('media', [$this, 'getMedia'])
+            new Twig_Function('media', [$this, 'getMedia']),
         ];
     }
 
@@ -40,13 +37,19 @@ class MediaExtension extends Twig_Extension implements Twig_ExtensionInterface {
      * @throws ServiceNotFoundException
      */
     public function getMedia(...$vars) {
-        $result = '';
-        if (count($vars) == 2) {
+        $result    = '';
+        $varLength = count($vars);
+        if ($varLength > 0) {
             /** @var ImageCompressService $configService */
             $configService = Oforge()->Services()->get('image.compress');
-            $result = $configService->getPath($vars[0], $vars[1]);
+            if ($varLength == 2) {
+                $result = $configService->getPath($vars[0], $vars[1]);
+            } else {
+                $result = $configService->getPath($vars[0]);
+            }
         }
 
         return $result;
     }
+
 }
