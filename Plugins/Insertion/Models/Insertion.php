@@ -212,9 +212,9 @@ class Insertion extends AbstractModel {
     }
 
     /**
-     * @return InsertionContact
+     * @return InsertionContact|null
      */
-    public function getContact() : InsertionContact {
+    public function getContact() : ?InsertionContact {
         return $this->contact;
     }
 
