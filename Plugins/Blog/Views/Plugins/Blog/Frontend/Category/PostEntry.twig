@@ -1,12 +1,15 @@
-<div class="blog-post" title="{{ blogPost.headerTitle }}">
-    {#    <div>{{ blogPost.headerImage }}</div>#}
+<div class="blog-posts-entry" title="{{ blogPost.headerTitle }}">
+    <div class="blog-post-entry-image">
+        {#TODO blog post image blogPost.headerImage #}
+        IMAGE
+    </div>
     {% if blog.category is not defined %}
-        <div>{{ blogPost.category.name }}</div>
+        <div class="blog-post-entry-category">{{ blogPost.category.name }}</div>
     {% endif %}
-    <div>{{ blogPost.created }}</div>
+    <div class="blog-post-entry-created">{{ blogPost.created }}</div>
     {% include 'Plugins/Blog/Frontend/Components/RatingView.twig' %}
-    <div>{{ blogPost.headerTitle }}</div>
-    <div>{{ blogPost.excerpt }}</div>
+    <div class="blog-post-entry-title">{{ blogPost.headerTitle }}</div>
+    <div class="blog-post-entry-excerpt">{{ blogPost.excerpt }}</div>
     <a href="{{ url('frontend_blog_view', {postID:blogPost.id, seoUrlPath:blogPost.seoUrlPath}) }}"
        title="{{ blogPost.headerTitle }}">LINK</a>
 </div>

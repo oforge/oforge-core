@@ -1,6 +1,6 @@
-<ul class="blog-category-list">
+<div class="blog-category-list">
     {% include 'Plugins/Blog/Frontend/Components/CategoryEntry.twig' %}
-    {% for headerCategory in blog.categories %}
+    {% for blogCategory in blog.categories %}
         {% include 'Plugins/Blog/Frontend/Components/CategoryEntry.twig' %}
     {% endfor %}
-</ul>
+</div>

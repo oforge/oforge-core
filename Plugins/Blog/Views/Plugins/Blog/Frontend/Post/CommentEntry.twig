@@ -1,6 +1,14 @@
 <div class="blog-post-comment">
-    <div>{{ blogPostComment.title }}</div>
-    <div>{{ blogPostComment.created }}</div>
-    <div>{{ blogPostComment.author.detail.firstName }} {{ blogPostComment.author.detail.lastName }}</div>
-    <div>{{ blogPostComment.content }}</div>
+    <div class="blog-post-comment-title">
+        {{ blogPostComment.title }}
+    </div>
+    <div class="blog-post-comment-created">
+        {{ blogPostComment.created }}
+    </div>
+    <div class="blog-post-comment-author">
+        {{ blogPostComment.author.detail.firstName }} {{ blogPostComment.author.detail.lastName }}
+    </div>
+    <div class="blog-post-comment-content">
+        {{ blogPostComment.content }}
+    </div>
 </div>

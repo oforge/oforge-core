@@ -1,13 +1,15 @@
-{% if headerCategory is defined %}
-    <li class="blog-category-entry {{ headerCategory.cssClass }} {% if meta.route.params.categoryID == headerCategory.id %}blog-category-entry--active{% endif %}">
-        <a href="{{ url('frontend_blog', {categoryID: headerCategory.id, seoUrlPath: headerCategory.seoUrlPath}) }}">
-            {{ headerCategory.name }}
+{% if blogCategory is defined %}
+    {% set isActive = meta.route.params.categoryID == blogCategory.id %}
+    <div class="blog-category-list-entry {{ blogCategory.cssClass }} {% if isActive %}blog-category-list-entry--active{% endif %}">
+        <a href="{{ url('frontend_blog', {categoryID: blogCategory.id, seoUrlPath: blogCategory.seoUrlPath}) }}">
+            {{ blogCategory.name }}
         </a>
-    </li>
+    </div>
 {% else %}
-    <li class="blog-category-entry {% if meta.route.params.categoryID is not defined %}blog-category-entry--active{% endif %}">
+    {% set isActive = meta.route.params.categoryID is not defined %}
+    <div class="blog-category-list-entry {% if isActive %}blog-category-list-entry--active{% endif %}">
         <a href="{{ url('frontend_blog') }}">
-            {{ i18n('plugin_blog_category_home', 'Home') }}
+            {{ i18n('plugin_blog_frontend_blog_home', 'Blog') }}
         </a>
-    </li>
+    </div>
 {% endif %}

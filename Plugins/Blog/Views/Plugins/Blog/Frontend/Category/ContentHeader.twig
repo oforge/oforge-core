@@ -1,11 +1,7 @@
-<section class="content-header">
+<div class="blog-content-header">
     {% include 'Plugins/Blog/Frontend/Components/Breadcrump.twig' %}
-    {% block blog_category_content_header %}
-        {% if blog.category is defined %}
-            <h1>{{ blog.category.headerTitle }}</h1>
-            <p>{{ blog.category.headerSubtext }}</p>
-        {% else %}
-            <h1>{{ i18n('plugin_blog_blog', 'Blog') }}</h1>
-        {% endif %}
-    {% endblock blog_category_content_header %}
-</section>
+    <h1>{{ blog.category.headerTitle|default(i18n('plugin_blog_frontend_blog_home', 'Blog')) }}</h1>
+    {% if blog.category.headerSubtext %}
+        <p>{{ blog.category.headerSubtext }}</p>
+    {% endif %}
+</div>

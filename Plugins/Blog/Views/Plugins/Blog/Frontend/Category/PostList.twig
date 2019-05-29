@@ -5,15 +5,15 @@
                 {% include 'Plugins/Blog/Frontend/Category/PostEntry.twig' %}
             {% endfor %}
         </div>
-        {#        {% if blog.posts|length >= blog.postsPerPage %}#}{#        TODO uncomment later#}
-        <div>
-            <button class="button button--primary" data-addmore="true" data-container="#blog-posts-container"
-                    data-url="{{ url('frontend_blog_more_posts', {}, {categoryID: blog.category.id}) }}">
-                {{ i18n('plugin_blog_btn_load_more_posts', 'Load more') }}
-            </button>
-        </div>
-        {#        {% endif %}#}{#        TODO uncomment later#}
+        {% if blog.posts|length >= blog.postsPerPage %}
+            <div class="blog-load-more blog-load-more-posts">
+                <button class="button button--primary" data-addmore="true" data-container="#blog-posts-container"
+                        data-url="{{ url('frontend_blog_more_posts', {}, {categoryID: blog.category.id}) }}">
+                    {{ i18n('plugin_blog_btn_load_more_posts', 'Load more') }}
+                </button>
+            </div>
+        {% endif %}
     {% else %}
-        {{ i18n('plugin_blog_no_posts_yet', 'No posts yet.') }}
+        {% include 'Plugins/Blog/Frontend/Category/PostListEmpty.twig' %}
     {% endif %}
 </div>

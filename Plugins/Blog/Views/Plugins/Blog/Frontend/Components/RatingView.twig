@@ -1,9 +1,9 @@
-<div>
-    <span>
+<div class="blog-post-rating">
+    <span class="blog-post-rating-up">
         {{ blogPost.ratings.up }}
         {% include 'Plugins/Blog/Frontend/Components/RatingUpIcon.twig' %}
     </span>
-    <span>
+    <span class="blog-post-rating-down">
         {% include 'Plugins/Blog/Frontend/Components/RatingDownIcon.twig' %}
         {{ blogPost.ratings.down }}
     </span>
