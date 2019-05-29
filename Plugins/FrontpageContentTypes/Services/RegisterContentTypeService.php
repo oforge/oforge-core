@@ -43,7 +43,7 @@ class RegisterContentTypeService extends AbstractDatabaseAccess
         $group = $this->repository('group')->findOneBy(['name' => $contentTypeGroup]);
 
         if ($group === null) {
-            $group = $this->registerContentGroup($contentTypeGroup);
+            $group = $this->registerContentGroup($contentTypeGroup, $contentTypeGroup);
         }
 
         $contentType->setGroup($group)

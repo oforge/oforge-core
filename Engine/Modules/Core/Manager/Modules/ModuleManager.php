@@ -187,11 +187,7 @@ class ModuleManager {
              */
             $instance = new $className();
 
-            try {
-                Oforge()->DB()->initModelSchema($instance->getModels());
-            } catch(\Exception $e) {
-                die;
-            }
+            Oforge()->DB()->initModelSchema($instance->getModels());
 
             $services = $instance->getServices();
             Oforge()->Services()->register($services);
