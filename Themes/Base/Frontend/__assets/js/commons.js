@@ -1,7 +1,6 @@
 // check if the Oforge namespace exists
 if (typeof Oforge !== 'undefined') {
 
-
     Oforge.removeQueryString = function (key, value, url) {
         if (!url) url = window.location.href;
         var re = new RegExp("([?&])" + encodeURIComponent(key) + "=" + encodeURIComponent(value) + "?(&|#|$)(.*)", "gi"),
@@ -14,20 +13,28 @@ if (typeof Oforge !== 'undefined') {
         }
 
         return url;
-    }
+    };
 
-
-    Oforge.updateQueryString = function (key, value, url) {
-        if (!url) url = window.location.href;
+    Oforge.updateQueryString = function (key, value, url, removeEmpty) {
+        if (!url) {
+            url = window.location.href;
+        }
+        if (removeEmpty !== true && removeEmpty !== false) {
+            removeEmpty = false;
+        }
         var re = new RegExp("([?&])" + key + "=.*?(&|#|$)(.*)", "gi"),
             hash;
 
         if (re.test(url)) {
-            if (typeof value !== 'undefined' && value !== null)
-                return url.replace(re, '$1' + key + "=" + value + '$2$3');
-            else {
+            if (typeof value !== 'undefined' && value !== null) {
+                if (value === '' && removeEmpty) {
+                    return url.replace(re, '$1$3');
+                } else {
+                    return url.replace(re, '$1' + key + "=" + value + '$2$3');
+                }
+            } else {
                 hash = url.split('#');
-                url = hash[0].replace(re, '$1$3').replace(/(&|\?)$/, '');
+                url = hash[0].replace(re, '$1$3').replace(/([&?])$/, '');
                 if (typeof hash[1] !== 'undefined' && hash[1] !== null)
                     url += '#' + hash[1];
                 return url;
@@ -43,7 +50,7 @@ if (typeof Oforge !== 'undefined') {
             } else
                 return url;
         }
-    }
+    };
 
 
     // if it exists, it should have the register function, so register your module
@@ -58,27 +65,24 @@ if (typeof Oforge !== 'undefined') {
         init: function () {
             var self = this;
 
-            $elements = $(self.selector);
-            $elements.click(function (event) {
-                var target = $(event.target).closest(self.selector);
-                var url = target.attr("data-url");
-                var page = parseInt(target.attr("data-page"), 10);
-                if (page == null || isNaN(page)) {
+            $(self.selector).click(function (event) {
+                var $button = $(this);
+                var $container = $($button.data("container"));
+                var url = $button.data("url");
+                var page = parseInt($button.data("page"), 10);
+                if (page === null || isNaN(page)) {
                     page = 1;
                 }
-
                 page += 1;
-
-                container = $(target.attr("data-container"));
 
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function () {
-                    if (this.readyState == 4 && this.status == 200) {
-                        if (this.responseText.trim() == "") {
-                            target.hide();
+                    if (this.readyState === 4 && this.status === 200) {
+                        if (this.responseText.trim() === '') {
+                            $button.hide();
                         } else {
-                            container.append($(this.responseText));
-                            target.attr("data-page", page);
+                            $container.append($(this.responseText));
+                            $button.data("page", page);
                         }
                     }
                 };
