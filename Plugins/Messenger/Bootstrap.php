@@ -38,6 +38,10 @@ class Bootstrap extends AbstractBootstrap {
         $this->services = [
             'frontend.messenger' => FrontendMessengerService::class,
         ];
+
+        $this->dependencies = [
+            \FrontendUserManagement\Bootstrap::class
+        ];
     }
 
     /**
