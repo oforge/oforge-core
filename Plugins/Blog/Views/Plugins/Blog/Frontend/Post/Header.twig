@@ -1,5 +1,5 @@
-<div class="blog-post-header">
+<div class="blog-header blog-header-post">
     {% include 'Plugins/Blog/Frontend/Post/HeaderImage.twig' %}
     <h1>{{ blog.post.headerTitle }}</h1>
-    <p>{{ blog.post.headerSubtext }}</p>
+    <p>{{ blog.post.headerSubtext|raw }}</p>
 </div>

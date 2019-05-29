@@ -1,0 +1,26 @@
+.blog-post-rating {
+    a {
+        // leave rating form link
+        text-decoration: none;
+        color: inherit;
+    }
+
+    &-down {
+        &-icon {
+
+        }
+    }
+
+    &-up {
+        &-icon {
+
+        }
+    }
+
+    &--user-rated {
+        svg {
+            color: $color-primary;
+        }
+
+    }
+}
