@@ -5,7 +5,7 @@
         {% include 'Backend/Master/Components/Head/Main.twig' %}
     {% endblock %}
 </head>
-<body class="hold-transition skin-oforge sidebar-mini {% if meta.backend.sidebar|default(config('backend_sidebar_collapsed')) %}sidebar-collapse{% endif %}">
+<body class="hold-transition skin-oforge sidebar-mini {% if meta.backend.sidebar|default(config('backend_sidebar_collapsed_default')) %}sidebar-collapse{% endif %}">
 <div class="wrapper">
 
     {% if debug.console %}
