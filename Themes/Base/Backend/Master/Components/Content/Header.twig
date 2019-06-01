@@ -5,7 +5,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            {% if meta.page.favoriteButton is defined and not meta.page.favoriteButton %}
+            {% if meta.backend.favoriteButton is defined and not meta.backend.favoriteButton %}
                 <a class="favorite"><span class="glyphicon glyphicon-star-empty"></span></a>
             {% else %}
                 <a href="{{ url('backend_favorites_toggle', {}, {name: meta.route.name}) }}" class="favorite"

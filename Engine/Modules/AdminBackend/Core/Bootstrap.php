@@ -76,6 +76,7 @@ class Bootstrap extends AbstractBootstrap {
         //TODO in import csv
         // I18N::translate('config_backend_project_footer_text', 'Copyright', 'en');
         // I18N::translate('config_backend_project_footer_text', 'Backend footer text', 'en');
+        // I18N::translate('config_backend_sidebar_collapsed_default', 'Collapse sidebar default', 'en');
         /** @var ConfigService $configService */
         $configService = Oforge()->Services()->get('config');
         $configService->add([
@@ -85,6 +86,13 @@ class Bootstrap extends AbstractBootstrap {
             'default'  => 'Oforge',
             'label'    => 'config_backend_project_footer_text',
             'required' => true,
+        ]);
+        $configService->add([
+            'name'     => 'backend_sidebar_collapsed_default',
+            'type'     => ConfigType::BOOLEAN,
+            'group'    => 'backend',
+            'default'  => false,
+            'label'    => 'config_backend_sidebar_collapsed_default',
         ]);
         /** @var BackendNavigationService $sidebarNavigation */
         $sidebarNavigation = Oforge()->Services()->get('backend.navigation');
