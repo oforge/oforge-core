@@ -3,6 +3,7 @@
 namespace Oforge\Engine\Modules\TemplateEngine\Core\Twig;
 
 use Exception;
+use Oforge\Engine\Modules\I18n\Helper\I18N;
 
 /**
  * Storage of messages and data for next request / redirect.
@@ -35,7 +36,8 @@ class TwigFlash {
     public function addExceptionMessage(string $type, string $message, Exception $exception, $dismissible = true) {
         $exceptionMessage = $exception->getMessage();
         $exceptionTrace   = $exception->getTraceAsString();
-        $errorMessage     = "<details><summary>$message</summary><div><p>$exceptionMessage</p><pre>$exceptionTrace</pre></div></details>";
+        $clickMessage = I18N::translate('flash_exception_message_click_for_details_note', '(Click for Details)');
+        $errorMessage     = "<details><summary>$message $clickMessage</summary><div><p>$exceptionMessage</p><pre>$exceptionTrace</pre></div></details>";
         $this->addMessage($type, $errorMessage, $dismissible);
     }
 
