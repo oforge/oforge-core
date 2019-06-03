@@ -9,6 +9,7 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistException;
 use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
+use Oforge\Engine\Modules\CRUD\Enum\CrudFilterComparator;
 use ReflectionException;
 
 /**
@@ -45,11 +46,49 @@ class GenericCrudService extends AbstractDatabaseAccess {
      * @return AbstractModel[]
      * @throws ORMException
      */
-    public function list(string $class, array $criteria = [], array $orderBy = null, $offset = null, $limit = null) : array {
-        $repository = $this->getRepository($class);
-        //TODO Crud-Index - Extended filtering - $criteria to complex where clauses
+    public function list(string $class, array $criteria = [], array $orderBy = null, ?int $offset = null, ?int $limit = null) : array {
+        $repository   = $this->getRepository($class);
+        $queryBuilder = $builder = $repository->createQueryBuilder('e');
+        $parameters   = [];
+        if (!empty($criteria)) {
+            $wheres = [];
+            foreach ($criteria as $propertyName => $propertyCriteria) {
+                $prefixPropertyName     = 'e.' . $propertyName;
+                $prefixValuePlaceholder = ':' . $propertyName;
+                if ($propertyCriteria['comparator'] == CrudFilterComparator::LIKE) {
+                    $parameters[$propertyName] = '%' . $propertyCriteria['value'] . '%';
+
+                    $wheres[] = $queryBuilder->expr()->like($prefixPropertyName, $prefixValuePlaceholder);
+                } else {
+                    $parameters[$propertyName] = $propertyCriteria['value'];
+
+                    $wheres[] = $queryBuilder->expr()->eq($prefixPropertyName, $prefixValuePlaceholder);
+                }
+            }
+            $queryBuilder->where($queryBuilder->expr()->andX()->addMultiple($wheres));
+        }
+        if (!empty($orderBy)) {
+            $first = true;
+            foreach ($orderBy as $propertyName => $order) {
+                if ($first) {
+                    $first = false;
+                    $queryBuilder->orderBy('e.' . $propertyName, $order);
+                } else {
+                    $queryBuilder->addOrderBy('e.' . $propertyName, $order);
+                }
+            }
+        }
+        if (isset($offset)) {
+            $queryBuilder->setFirstResult($offset);
+        }
+        if (isset($limit)) {
+            $queryBuilder->setMaxResults($limit);
+        }
+        if (!empty($parameters)) {
+            $queryBuilder->setParameters($parameters);
+        }
         /** @var AbstractModel[] $entities */
-        $entities = $repository->findBy($criteria, $orderBy, $limit, $offset);
+        $entities = $queryBuilder->getQuery()->getResult();
 
         return $entities;
     }
