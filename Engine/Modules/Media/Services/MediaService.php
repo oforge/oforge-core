@@ -22,8 +22,7 @@ class MediaService extends AbstractDatabaseAccess {
             if (move_uploaded_file($file['tmp_name'], ROOT_PATH . $relative)) {
 
                 $media = Media::create(["type" => $file["type"], "name" =>  basename($file['name']), "path" => $relative ]);
-                $this->entityManager()->persist($media);
-                $this->entityManager()->flush();
+                $this->entityManager()->create($media);
 
                 return $media;
             }

@@ -153,7 +153,7 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
             foreach ($data["media"] as $mediaData) {
                 $imedia = InsertionMedia::create($mediaData);
                 $imedia->setInsertion($insertion);
-                $this->entityManager()->persist($imedia);
+                $this->entityManager()->create($imedia, false);
                 array_push($media, $imedia);
             }
 
@@ -161,7 +161,7 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
             foreach ($data["attributes"] as $attributeData) {
                 $attributeValue = InsertionAttributeValue::create($attributeData);
                 $attributeValue->setInsertion($insertion);
-                $this->entityManager()->persist($attributeValue);
+                $this->entityManager()->create($attributeValue, false);
                 array_push($attributeValues, $attributeValue);
             }
 
@@ -170,9 +170,9 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
             $insertion->setMedia($media);
             $insertion->setValues($attributeValues);
 
-            $this->entityManager()->persist($content);
-            $this->entityManager()->persist($contact);
-            $this->entityManager()->persist($insertion);
+            $this->entityManager()->create($content, false);
+            $this->entityManager()->create($contact, false);
+            $this->entityManager()->create($insertion, false);
             $this->entityManager()->flush();
 
             return $insertion->getId();

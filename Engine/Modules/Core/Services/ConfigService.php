@@ -72,11 +72,10 @@ class ConfigService extends AbstractDatabaseAccess {
                 foreach ($config->getValues() as $value) {
                     $value->setConfig($config);
                 }
-                $this->entityManager()->persist($config);
+                $this->entityManager()->create($config);
                 $this->entityManager()->flush($config);
             }
             $this->repository()->clear();
-
         }
     }
 
@@ -143,11 +142,11 @@ class ConfigService extends AbstractDatabaseAccess {
             if (isset($scope)) {
                 foreach ($config->getValues() as $value) {
                     if ($value->getScope() === $scope) {
-                        $this->entityManager()->remove($value);
+                        $this->entityManager()->remove($value, false);
                     }
                 }
             } else {
-                $this->entityManager()->remove($config);
+                $this->entityManager()->remove($config, false);
             }
             $this->entityManager()->flush();
             $this->repository()->clear();
@@ -177,8 +176,7 @@ class ConfigService extends AbstractDatabaseAccess {
         foreach ($config->getValues() as $configValue) {
             if ($configValue->getScope() === $scope) {
                 $configValue->setValue($value);
-                $this->entityManager()->flush($configValue);
-                $this->entityManager()->clear();
+                $this->entityManager()->update($configValue);
 
                 return true;
             }

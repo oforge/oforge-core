@@ -39,7 +39,7 @@ class UserFavoritesService extends AbstractDatabaseAccess {
             $backendUserFavourites[0]->setActive(!$backendUserFavourites[0]->isActive());
         } else {
             $backendUserFavourites = BackendUserFavorites::create(["name" => $routeName, "userId" => $userId, "active" => true]);
-            $this->entityManager()->persist($backendUserFavourites);
+            $this->entityManager()->create($backendUserFavourites, false);
 
             if (isset($backendNavigation)) {
                 $backendUserFavourites->setIcon($backendNavigation->getIcon());

@@ -98,8 +98,7 @@ class PluginStateService extends AbstractDatabaseAccess {
                     'order'     => $instance->getOrder(),
                 ]);
 
-                $this->entityManager()->persist($plugin);
-                $this->entityManager()->flush();
+                $this->entityManager()->create($plugin);
 
                 if (isset($pluginMiddlewares) && is_array($pluginMiddlewares) && sizeof($pluginMiddlewares) > 0) {
                     /** @var MiddlewareService $middlewaresService */
@@ -164,9 +163,9 @@ class PluginStateService extends AbstractDatabaseAccess {
                 Oforge()->Services()->register($services);
                 $instance->install();
                 $plugin->setInstalled(true);
+                $this->entityManager()->update($plugin);
             }
         }
-        $this->entityManager()->flush();
     }
 
     /**
@@ -209,7 +208,7 @@ class PluginStateService extends AbstractDatabaseAccess {
         }
 
         $plugin->setInstalled(false);
-        $this->entityManager()->flush();
+        $this->entityManager()->update($plugin);
 
     }
 
@@ -284,7 +283,7 @@ class PluginStateService extends AbstractDatabaseAccess {
             Oforge()->Services()->register($services);
             $instance->activate();
             $plugin->setActive(true);
-            $this->entityManager()->flush();
+            $this->entityManager()->update($plugin);
         }
         /** @var TemplateManagementService $templateManagementService */
         $templateManagementService = Oforge()->Services()->get('template.management');
@@ -359,7 +358,7 @@ class PluginStateService extends AbstractDatabaseAccess {
             }
 
             $pluginToDeactivate->setActive(false);
-            $this->entityManager()->flush();
+            $this->entityManager()->update($pluginToDeactivate);
         }
     }
 
