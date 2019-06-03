@@ -15,6 +15,7 @@ use Oforge\Engine\Modules\Core\Helper\RedirectHelper;
 use Oforge\Engine\Modules\Core\Helper\StringHelper;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
 use Oforge\Engine\Modules\CRUD\Enum\CrudFilterComparator;
+use Oforge\Engine\Modules\CRUD\Enum\CrudFilterType;
 use Oforge\Engine\Modules\CRUD\Enum\CrudGroubByOrder;
 use Oforge\Engine\Modules\CRUD\Services\GenericCrudService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
@@ -583,20 +584,38 @@ class BaseCrudController extends SecureBackendController {
         $queryKeyEntitiesPerPage = $queryKeys['entitiesPerPage'];
         unset($queryParams[$queryKeyPage], $queryParams[$queryKeyEntitiesPerPage]);
 
-        $filter = [];
+        $filters = [];
 
         if (!empty($this->indexFilter)) {
             foreach ($this->indexFilter as $propertyName => $filterConfig) {
                 if (isset($queryParams[$propertyName]) && $queryParams[$propertyName] !== '') {
                     $propertyNameValue = $queryParams[$propertyName];
-                    $compare           = ArrayHelper::get($filterConfig, 'compare', CrudFilterComparator::EQUALS);
-                    //TODO Crud-Index - Extended filtering - evaluate & set filterConfig
-                    $filter[$propertyName] = $propertyNameValue;
+                    switch ($filterConfig['type']) {
+                        case CrudFilterType::SELECT:
+                            $comparator = CrudFilterComparator::EQUALS;
+                            break;
+                        case CrudFilterType::TEXT:
+                            $comparator = ArrayHelper::get($filterConfig, 'compare', CrudFilterComparator::EQUALS);
+                            break;
+                        default:
+                            continue 2;
+                    }
+                    switch ($comparator) {
+                        case CrudFilterComparator::EQUALS:
+                        case CrudFilterComparator::LIKE:
+                            break;
+                        default:
+                            $comparator = CrudFilterComparator::EQUALS;
+                    }
+                    $filters[$propertyName] = [
+                        'comparator' => $comparator,
+                        'value'      => $propertyNameValue,
+                    ];
                 }
             }
         }
 
-        return $filter;
+        return $filters;
     }
 
     /**
