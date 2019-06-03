@@ -146,7 +146,7 @@ class CommentController extends BaseCrudController {
 
     /** @inheritDoc */
     protected function prepareItemDataArray(?AbstractModel $entity, string $crudAction) : array {
-        $data = parent::prepareItemDataArray($entity, $crudAction);
+        $data = $entity->toArray(1);
         if ($crudAction !== 'create') {
             /** @var DateTimeImmutable $dateTime */
             $dateTime        = $data['created'];
@@ -155,7 +155,7 @@ class CommentController extends BaseCrudController {
             $data['updated'] = $dateTime->format('Y.m.d H:i:s');
 
             $data['author'] = $data['author']['id'];
-            $data['post']   = $data['post']['id'];
+            $data['post'] = $data['post']['id'];
         }
 
         return $data;
@@ -221,8 +221,8 @@ class CommentController extends BaseCrudController {
 
             $queryBuilder = $entityManager->getRepository(Comment::class)->createQueryBuilder('c')#
                                           ->select('ud')#
-                                          ->leftJoin('c.author', 'u')#
-                                          ->leftJoin(UserDetail::class, 'ud', 'WITH', 'ud.userId = u.id')#
+                                          ->leftJoin('c.author', 'fu')#
+                                          ->leftJoin(UserDetail::class, 'ud', 'WITH', 'ud.user = fu.id')#
                                           ->groupBy('ud.id')#
                                           ->distinct();
             if (ArrayHelper::issetNotEmpty($_GET, 'post')) {
