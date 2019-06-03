@@ -4,10 +4,6 @@
 namespace FrontpageContentTypes\Services;
 
 
-use Doctrine\ORM\Query\Expr\GroupBy;
-use FrontpageContentTypes\ContentTypes\IconTileBasic;
-
-use Mailchimp\Models\UserNewsletter;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentTypeGroup;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
@@ -33,9 +29,10 @@ class RegisterContentTypeService extends AbstractDatabaseAccess
     {
         /** @var ContentType $contentType */
         $contentType = $this->repository()->findOneBy(['name' => $contentTypeName]);
-
+        $create      = false;
         if ($contentType === null) {
             $contentType = new ContentType();
+            $create      = true;
         }
 
         /** @var ContentTypeGroup $group */
@@ -62,8 +59,11 @@ class RegisterContentTypeService extends AbstractDatabaseAccess
             ->setDescription($description)
             ->setClassPath($classPath);
 
-        $this->entityManager()->persist($contentType);
-        $this->entityManager()->flush();
+        if ($create) {
+            $this->entityManager()->create($contentType);
+        } else {
+            $this->entityManager()->update($contentType);
+        }
     }
 
     /**

@@ -36,8 +36,7 @@ class InsertionTypeService extends AbstractDatabaseAccess {
         $insertionType->setName($name);
         $insertionType->setParent($parent);
 
-        $this->entityManager()->persist($insertionType);
-        $this->entityManager()->flush();
+        $this->entityManager()->create($insertionType);
 
         return $insertionType;
     }
@@ -154,15 +153,14 @@ class InsertionTypeService extends AbstractDatabaseAccess {
         $group = $this->repository("group")->findOneBy(["name" => $attributeGroup]);
         if (!isset($group)) {
             $group = InsertionTypeGroup::create(["name" => $attributeGroup]);
-            $this->entityManager()->persist($group);
+            $this->entityManager()->create($group);
         }
 
         $insertionTypeAttribute = new InsertionTypeAttribute();
         $insertionTypeAttribute->setInsertionType($insertionType)->setAttributeKey($attributeKey)->setIsTop($isTop)->setAttributeGroup($group)
                                ->setRequired($required);
 
-        $this->entityManager()->persist($insertionTypeAttribute);
-        $this->entityManager()->flush($insertionTypeAttribute);
+        $this->entityManager()->create($insertionTypeAttribute);
 
         $insertionType->setAttributes([$attributeKey]);
         // $insertionType->addAttribute()
@@ -191,7 +189,6 @@ class InsertionTypeService extends AbstractDatabaseAccess {
     public function deleteInsertionType($id) {
         $insertionType = $this->repository()->find($id);
         $this->entityManager()->remove($insertionType);
-        $this->entityManager()->flush();
     }
 
 }

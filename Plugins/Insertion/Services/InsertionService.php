@@ -59,9 +59,8 @@ class InsertionService extends AbstractDatabaseAccess {
         $language = $this->repository("language")->findOneBy(["iso" => $iso]);
         $content->setLanguage($language);
 
-        $this->entityManager()->persist($content);
-        $this->entityManager()->persist($insertion);
-        $this->entityManager()->flush($insertion);
+        $this->entityManager()->create($content, false);
+        $this->entityManager()->create($insertion);
 
         return $insertion;
     }
@@ -123,7 +122,6 @@ class InsertionService extends AbstractDatabaseAccess {
     public function deleteInsertion($id) {
         $insertion = $this->repository()->find($id);
         $this->entityManager()->remove($insertion);
-        $this->entityManager()->flush();
         $this->repository()->clear();
     }
 
@@ -140,8 +138,7 @@ class InsertionService extends AbstractDatabaseAccess {
         $insertionAttributeValue = new InsertionAttributeValue();
         $insertionAttributeValue->setAttributeKey($attributeKey)->setInsertion($insertion)->setValue($value->getValue());
 
-        $this->entityManager()->persist($insertionAttributeValue);
-        $this->entityManager()->flush($insertionAttributeValue);
+        $this->entityManager()->create($insertionAttributeValue);
 
         return $insertionAttributeValue;
     }

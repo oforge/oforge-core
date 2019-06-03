@@ -28,8 +28,7 @@ class UserDetailsService extends AbstractDatabaseAccess {
             $detail = $this->get($data['userId']);
             if (isset($detail)) {
                 $detail->fromArray($data);
-                $detail = $this->entityManager()->merge($detail);
-                $this->entityManager()->flush($detail);
+                $this->entityManager()->update($detail);
 
                 return true;
             }
