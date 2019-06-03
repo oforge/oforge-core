@@ -2,14 +2,12 @@
 
 namespace Insertion\Controller\Backend;
 
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException as ORMExceptionAlias;
 use Doctrine\ORM\ORMException;
 use Insertion\Enum\AttributeType;
 use Insertion\Models\AttributeKey;
 use Insertion\Models\AttributeValue;
 use Insertion\Services\AttributeService;
-use Insertion\Services\InsertionMockService;
 use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
@@ -37,10 +35,10 @@ class BackendAttributeController extends SecureBackendController {
         /** @var AttributeService $attributeService */
         $attributeService = Oforge()->Services()->get('insertion.attribute');
         $count            = $attributeService->getAttributeCount();
-        $limit            = 2;
+        $limit            = 20;
         $offset           = 0;
         $page             = 1;
-        $pageCount        = ceil($count / $limit);
+        $pageCount        = $count > 0 ? ceil($count / $limit) : 1;
         $data             = [];
 
         if (isset($request->getQueryParams()['page']) && is_numeric($request->getQueryParams()['page'])) {
@@ -81,12 +79,10 @@ class BackendAttributeController extends SecureBackendController {
             $body           = $request->getParsedBody();
             $body['values'] = json_decode($body['values'], true);
             if (isset($request->getQueryParams()['id'])) {
-                $attributeService->updateAttributeKey($attributeKeyId, $body['name'], $body['type'], $body['filterType']);
-                /** @var $attributeKey AttributeKey */
-                $attributeKey = $attributeService->getAttribute($attributeKeyId);
+                /** @var AttributeKey $attributeKey */
+                $attributeKey = $attributeService->updateAttributeKey($attributeKeyId, $body['name'], $body['type'], $body['filterType']);
                 /** @var AttributeValue[] $attributeValues */
                 $attributeValues = $attributeKey->getValues();
-
                 $idList = [];
                 foreach ($attributeValues as $value) {
                     $idList[] = $value->getId();
@@ -191,20 +187,6 @@ class BackendAttributeController extends SecureBackendController {
 
         return $response->withRedirect($uri, 302);
 
-    }
-
-    /**
-     * @param Request $request
-     * @param Response $response
-     *
-     * @throws ORMExceptionAlias
-     * @throws ServiceNotFoundException
-     * @throws OptimisticLockException
-     * @EndpointAction(path="/mock")
-     */
-    public function mockAction(Request $request, Response $response) {
-        /** @var InsertionMockService $mockService */
-        InsertionMockService::init();
     }
 
     public function initPermissions() {
