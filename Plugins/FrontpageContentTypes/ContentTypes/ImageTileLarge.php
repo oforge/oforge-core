@@ -58,7 +58,7 @@ class ImageTileLarge extends AbstractContentType
         $contentData = [
             'url'               => $this->getContentData()['url'],
             'caption'           => $data['caption'],
-            'subheading'         => $data['subheading'],
+            'subheading'        => $data['subheading'],
             'text'              => $data['text'],
             'backgroundcolor'   => $data['backgroundcolor'],
             'fontcolor'         => $data['fontcolor']
