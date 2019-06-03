@@ -113,7 +113,7 @@ class Bootstrap extends AbstractBootstrap {
             'order'    => 2,
             'parent'   => 'backend_insertion',
             'icon'     => 'fa fa-file-text-o',
-            'path'     => '',
+            'path'     => 'backend_insertion_type',
             'position' => 'sidebar',
         ]);
         $sidebarNavigation->put([

@@ -1,0 +1,15 @@
+{% extends '@parent/Frontend/Components/Header/TopNav.twig' %}
+{% block top_nav_links %}
+    {{ parent() }}
+
+    {% if user_logged_in %}
+        <li class="top-nav-list__item item--login">
+            <a href="{{ url('frontend_account_messages')  }}"
+               title="Login">
+                <svg class="icon icon--secondary icon--postfach">
+                    <use xlink:href="#postfach"></use>
+                </svg>
+            </a>
+        </li>
+    {% endif %}
+{% endblock top_nav_links %}

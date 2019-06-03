@@ -41,7 +41,7 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
             $_SESSION['insertion' . $typeId] = array_merge($_SESSION['insertion' . $typeId], $_POST);
 
             if (isset($_FILES["images"])) {
-                /** @var MediaService $configService */
+                /** @var MediaService $mediaService */
                 $mediaService = Oforge()->Services()->get('media');
 
                 if (!isset($_SESSION['insertion' . $typeId]["images"])) {
