@@ -35,34 +35,34 @@ class Bootstrap extends AbstractBootstrap
         $registerContentTypeService->registerContentType('tiles',
             'icontilebasic',
             'IconTileBasic',
-            '/Themes/Base/ContentTypes/__assets/img/icontilebasic.jpg',
+            '/Themes/Base/ContentTypes/__assets/img/icontilebasic.png',
             'Icon Tile Basic',
             'FrontpageContentTypes\\ContentTypes\\IconTileBasic');
 
         $registerContentTypeService->registerContentType('tiles',
             'icontiletext',
             'IconTileText',
-            '/Themes/Base/ContentTypes/__assets/img/icontiletext.jpg',
+            '/Themes/Base/ContentTypes/__assets/img/icontilebasic.png',
             'Icon Tile Text',
             'FrontpageContentTypes\\ContentTypes\\IconTileText');
 
         $registerContentTypeService->registerContentType('tiles',
             'imagetilesmall',
             'ImageTileSmall',
-            '/Themes/Base/ContentTypes/__assets/img/imagetilesmall.jpeg',
+            '/Themes/Base/ContentTypes/__assets/img/imagetile.png',
             'Image Tile Small',
             'FrontpageContentTypes\\ContentTypes\\ImageTileSmall');
 
         $registerContentTypeService->registerContentType('tiles',
             'imagetilemedium',
             'ImageTileMedium',
-            '/Themes/Base/ContentTypes/__assets/img/imagetilemedium.jpg',
+            '/Themes/Base/ContentTypes/__assets/img/imagetile.png',
             'Image Tile Medium',
             'FrontpageContentTypes\\ContentTypes\\ImageTileMedium');
         $registerContentTypeService->registerContentType('tiles',
             'imagetilelarge',
             'ImageTileLarge',
-            '/Themes/Base/ContentTypes/__assets/img/imagetilelarge.jpeg',
+            '/Themes/Base/ContentTypes/__assets/img/imagetile.png',
             'Image Tile Large',
             'FrontpageContentTypes\\ContentTypes\\ImageTileLarge');
     }

@@ -14,6 +14,11 @@ use Oforge\Engine\Modules\Media\Twig\MediaExtension;
 use Oforge\Engine\Modules\TemplateEngine\Core\Services\TemplateRenderService;
 use Twig_Error_Loader;
 
+/**
+ * Class Bootstrap
+ *
+ * @package Oforge\Engine\Modules\Media
+ */
 class Bootstrap extends AbstractBootstrap {
 
     public function __construct() {
@@ -22,8 +27,8 @@ class Bootstrap extends AbstractBootstrap {
         ];
 
         $this->services = [
-            "media"          => MediaService::class,
-            "image.compress" => ImageCompressService::class,
+            'media'          => MediaService::class,
+            'image.compress' => ImageCompressService::class,
         ];
     }
 
@@ -35,11 +40,8 @@ class Bootstrap extends AbstractBootstrap {
      * @throws Twig_Error_Loader
      */
     public function activate() {
-        /**
-         * @var $templateRenderer TemplateRenderService
-         */
-        $templateRenderer = Oforge()->Services()->get("template.render");
-
+        /** @var TemplateRenderService $templateRenderer */
+        $templateRenderer = Oforge()->Services()->get('template.render');
         $templateRenderer->View()->addExtension(new MediaExtension());
     }
 }

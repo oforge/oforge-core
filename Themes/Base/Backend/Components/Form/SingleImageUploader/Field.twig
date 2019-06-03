@@ -1,0 +1,44 @@
+<div class="form-single-image-uploader">
+    {% if singleImageUploader.name is not defined or singleImageUploader.id is not defined or singleImageUploader.value is not defined %}
+        <div><strong>Missing field parameter:</strong>
+            <ul>
+                {% if singleImageUploader.name is not defined %}
+                    <li>singleImageUploader.name</li>{% endif %}
+                {% if singleImageUploader.id is not defined %}
+                    <li>singleImageUploader.id</li>{% endif %}
+                {% if singleImageUploader.value is not defined %}
+                    <li>singleImageUploader.value</li>{% endif %}
+            </ul>
+        </div>
+    {% endif %}
+    <div class="form-single-image-uploader--preview-wrapper">
+        <img class="form-single-image-uploader--preview" src="{{ singleImageUploader.value }}"
+             data-current="{{ singleImageUploader.value }}" />
+        <span class="form-single-image-uploader--preview-delete-overlay">
+            <span>{{ i18n('image_uploader_delete', 'Delete') }}</span>
+        </span>
+    </div>
+    <div class="{% if singleImageUploader.controlsOnHover %}form-single-image-uploader--controls{% endif %}">
+        {% if singleImageUploader.deletable is not defined or singleImageUploader.deletable is same as(true) %}
+            <label
+                class="form-single-image-uploader--delete {% if not singleImageUploader.value %}form-single-image-uploader--disabled{% endif %}"
+                title="{{ i18n('image_uploader_delete', 'Delete') }}">
+                {% include 'Backend/Components/Form/SingleImageUploader/IconDelete.twig' %}
+            </label>
+        {% endif %}
+        <label class="form-single-image-uploader--upload" for="{{ singleImageUploader.id }}"
+               title="{{ i18n('image_uploader_upload', 'Upload image') }}">
+            {% include 'Backend/Components/Form/SingleImageUploader/IconUpload.twig' %}
+        </label>
+        <label class="form-single-image-uploader--reset"
+               title="{{ i18n('image_uploader_reset', 'Reset') }}">
+            {% include 'Backend/Components/Form/SingleImageUploader/IconReset.twig' %}
+        </label>
+{#        TODO Image(/Media)-Chooser button (for existing media file)#}
+    </div>
+    <input class="form-single-image-uploader--filename form-control" name="{{ singleImageUploader.name }}[filename]" type="text"
+           placeholder="{{ i18n('image_uploader_placeholder_filename', 'File name') }}"
+           title="{{ i18n('image_uploader_placeholder_filename', 'File name') }}" />
+    <input type="hidden" name="{{ singleImageUploader.name }}[action]" value="none" />
+    <input type="file" accept="image/*" name="{{ singleImageUploader.name }}" id="{{ singleImageUploader.id }}" />
+</div>
