@@ -74,6 +74,7 @@ class AttributeService extends AbstractDatabaseAccess {
      * @param $type
      * @param $filterType
      *
+     * @return AttributeKey
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -86,6 +87,8 @@ class AttributeService extends AbstractDatabaseAccess {
 
         $this->entityManager()->persist($attributeKey);
         $this->entityManager()->flush();
+
+        return $attributeKey;
     }
 
     /**

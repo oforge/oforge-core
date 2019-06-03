@@ -2,16 +2,14 @@
 
 namespace Insertion\Services;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Insertion\Models\AttributeKey;
-use Insertion\Models\Insertion;
 use Insertion\Models\InsertionType;
 use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Models\InsertionTypeGroup;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
-use Oforge\Engine\Modules\CRUD\Services\GenericCrudService;
 
 class InsertionTypeService extends AbstractDatabaseAccess {
     public function __construct() {
@@ -45,11 +43,11 @@ class InsertionTypeService extends AbstractDatabaseAccess {
     /**
      * @param $name
      *
-     * @return array|null
+     * @return object
      * @throws ORMException
      */
     public function getInsertionTypeByName($name) {
-        return $this->repository()->findBy(['name' => $name]);
+        return $this->repository()->findOneBy(['name' => $name]);
     }
 
     /**
@@ -66,8 +64,8 @@ class InsertionTypeService extends AbstractDatabaseAccess {
      * @return array
      * @throws ORMException
      */
-    public function getInsertionTypeList() {
-        return $this->repository()->findAll();
+    public function getInsertionTypeList($limit, $offset) {
+        return $this->repository()->findBy([], null, $limit, $offset);
     }
 
     /**
@@ -189,9 +187,95 @@ class InsertionTypeService extends AbstractDatabaseAccess {
      * @throws OptimisticLockException
      */
     public function deleteInsertionType($id) {
+        /** @var InsertionType $insertionType */
         $insertionType = $this->repository()->find($id);
+        /** @var InsertionTypeAttribute $attribute */
+        foreach ($insertionType->getAttributes() as $attribute) {
+            $this->deleteInsertionTypeAttribute($attribute->getId());
+        }
+        $this->entityManager()->flush();
         $this->entityManager()->remove($insertionType);
         $this->entityManager()->flush();
     }
 
+    /**
+     * @return mixed
+     * @throws ORMException
+     * @throws NonUniqueResultException
+     */
+    public function getInsertionTypeCount() {
+        $queryBuilder = $this->entityManager()->createQueryBuilder();
+        $result       = $queryBuilder->select($queryBuilder->expr()->count('t.id'))->from(InsertionType::class, 't');
+
+        return $result->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * @return array
+     * @throws ORMException
+     */
+    public function getAttributeGroupList() {
+        return $this->repository('group')->findAll();
+    }
+
+    /**
+     * @param $id
+     * @param $name
+     * @param $parent
+     *
+     * @return object|null
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function updateInsertionType($id, $name, $parent) {
+        /** @var InsertionType $insertionType */
+        $insertionType = $this->repository()->find($id);
+        $insertionType->setName($name);
+        $insertionType->setParent($parent);
+
+        $this->entityManager()->merge($insertionType);
+        $this->entityManager()->flush();
+
+        return $insertionType;
+    }
+
+    /**
+     * @param $id
+     * @param $attributeKey
+     * @param $top
+     * @param $attributeGroup
+     * @param $required
+     *
+     * @return InsertionTypeAttribute
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function updateInsertionTypeAttribute($id, $attributeKey, $top, $attributeGroup, $required) {
+        /** @var InsertionTypeAttribute $insertionTypeAttribute */
+        $insertionTypeAttribute = $this->repository('insertionTypeAttribute')->find($id);
+        /** @var InsertionTypeGroup $group */
+        $group = $this->repository('group')->findOneBy(['name' => $attributeGroup]);
+
+        $insertionTypeAttribute->setAttributeKey($attributeKey);
+        $insertionTypeAttribute->setIsTop($top);
+        $insertionTypeAttribute->setAttributeGroup($group);
+        $insertionTypeAttribute->setRequired($required);
+
+        $this->entityManager()->merge($insertionTypeAttribute);
+        $this->entityManager()->flush();
+
+        return $insertionTypeAttribute;
+    }
+
+    /**
+     * @param $id
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function deleteInsertionTypeAttribute($id) {
+        $insertionTypeAttribute = $this->repository('insertionTypeAttribute')->find($id);
+        $this->entityManager()->remove($insertionTypeAttribute);
+        $this->entityManager()->flush();
+    }
 }

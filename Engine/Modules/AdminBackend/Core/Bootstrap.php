@@ -74,36 +74,11 @@ class Bootstrap extends AbstractBootstrap {
      */
     public function install() {
         //TODO in import csv
-        // I18N::translate('config_system_project_name', 'Project name', 'en');
-        // I18N::translate('config_system_project_short', 'Project short name', 'en');
         // I18N::translate('config_backend_project_footer_text', 'Copyright', 'en');
         // I18N::translate('config_backend_project_footer_text', 'Backend footer text', 'en');
+        // I18N::translate('config_backend_sidebar_collapsed_default', 'Collapse sidebar default', 'en');
         /** @var ConfigService $configService */
         $configService = Oforge()->Services()->get('config');
-        $configService->add([
-            'name'     => 'system_project_name',
-            'type'     => ConfigType::STRING,
-            'group'    => 'system',
-            'default'  => 'Oforge',
-            'label'    => 'config_system_project_name',
-            'required' => true,
-        ]);
-        $configService->add([
-            'name'     => 'system_project_short',
-            'type'     => ConfigType::STRING,
-            'group'    => 'system',
-            'default'  => 'OF',
-            'label'    => 'config_system_project_short',
-            'required' => true,
-        ]);
-        $configService->add([
-            'name'     => 'system_project_copyright',
-            'type'     => ConfigType::STRING,
-            'group'    => 'system',
-            'default'  => 'Oforge',
-            'label'    => 'config_system_project_copyright',
-            'required' => true,
-        ]);
         $configService->add([
             'name'     => 'backend_project_footer_text',
             'type'     => ConfigType::STRING,
@@ -112,7 +87,13 @@ class Bootstrap extends AbstractBootstrap {
             'label'    => 'config_backend_project_footer_text',
             'required' => true,
         ]);
-
+        $configService->add([
+            'name'     => 'backend_sidebar_collapsed_default',
+            'type'     => ConfigType::BOOLEAN,
+            'group'    => 'backend',
+            'default'  => false,
+            'label'    => 'config_backend_sidebar_collapsed_default',
+        ]);
         /** @var BackendNavigationService $sidebarNavigation */
         $sidebarNavigation = Oforge()->Services()->get('backend.navigation');
         $sidebarNavigation->put([
