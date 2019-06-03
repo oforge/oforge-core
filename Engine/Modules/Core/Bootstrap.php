@@ -72,11 +72,37 @@ class Bootstrap extends AbstractBootstrap {
      */
     public function install() {
         //TODO in import csv
+        // I18N::translate('config_system_project_name', 'Project name', 'en');
+        // I18N::translate('config_system_project_short', 'Project short name', 'en');
         // I18N::translate('config_debug_mode', 'Debug mode', 'en');
         // I18N::translate('debug_console', 'Console output', 'en');
-        // I18N::translate('debug_session', 'Include session data', 'en');
+        // I18N::translate('config_debug_session', 'Include session data', 'en');
         /** @var ConfigService $configService */
         $configService = Oforge()->Services()->get('config');
+        $configService->add([
+            'name'     => 'system_project_name',
+            'type'     => ConfigType::STRING,
+            'group'    => 'system',
+            'default'  => 'Oforge',
+            'label'    => 'config_system_project_name',
+            'required' => true,
+        ]);
+        $configService->add([
+            'name'     => 'system_project_short',
+            'type'     => ConfigType::STRING,
+            'group'    => 'system',
+            'default'  => 'OF',
+            'label'    => 'config_system_project_short',
+            'required' => true,
+        ]);
+        $configService->add([
+            'name'     => 'system_project_copyright',
+            'type'     => ConfigType::STRING,
+            'group'    => 'system',
+            'default'  => 'Oforge',
+            'label'    => 'config_system_project_copyright',
+            'required' => true,
+        ]);
         $configService->add([
             'name'    => 'debug_mode',
             'type'    => ConfigType::BOOLEAN,

@@ -111,6 +111,7 @@ class ConfigService extends AbstractDatabaseAccess {
                     ->createQueryBuilder('c')#
                     ->select('c.group')#
                     ->distinct(true)#
+                    ->addOrderBy('c.name')
                     ->getQuery()->getArrayResult();
     }
 
