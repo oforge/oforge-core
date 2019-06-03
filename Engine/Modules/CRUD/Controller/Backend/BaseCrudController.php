@@ -12,9 +12,12 @@ use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Core\Helper\RedirectHelper;
 use Oforge\Engine\Modules\Core\Helper\StringHelper;
+use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
 use Oforge\Engine\Modules\CRUD\Enum\CrudGroubByOrder;
 use Oforge\Engine\Modules\CRUD\Services\GenericCrudService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
+use Oforge\Engine\Modules\Media\Models\Media;
+use Oforge\Engine\Modules\Media\Services\MediaService;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -61,7 +64,8 @@ class BaseCrudController extends SecureBackendController {
      *              ],
      *              'renderer' => [ // Configuration for renderer
      *                  'alignment' => 'left|center|right', // If type = int|float|currency then default = right otherwise left. (Optional)
-     *                  'custom'    => '...'        // If type = custom. Twig path for include.
+     *                  'custom'    => '...',   // If type = custom. Twig path for include.
+     *                  'width'     => 200,     // if type = image (Optional)
      *              ],
      *          ], ...
      *      ];
@@ -256,17 +260,20 @@ class BaseCrudController extends SecureBackendController {
      * @EndpointAction()
      */
     public function createAction(Request $request, Response $response) {
-        $params = $request->getParams();
-        if ($request->isPost() && !empty($params)) {
+        $postData = $request->getParams();
+        if ($request->isPost() && !empty($postData)) {
             try {
-                $this->crudService->create($this->model, $params['data']);
+                $data = $postData['data'];
+                $this->handleFileUploads($data);
+                $data = $this->convertData($data);
+                $this->crudService->create($this->model, $data);
                 Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_create_success', 'Entity successfully created.'));
 
                 return $this->redirect($response, 'index');
             } catch (Exception $exception) {
                 Oforge()->View()->Flash()
                         ->addExceptionMessage('danger', I18N::translate('backend_crud_msg_create_failed', 'Entity creation failed.'), $exception);
-                Oforge()->View()->Flash()->setData($this->moduleModelName, $params['data']);
+                Oforge()->View()->Flash()->setData($this->moduleModelName, $data);
 
                 return $this->redirect($response, 'create');
             }
@@ -332,13 +339,15 @@ class BaseCrudController extends SecureBackendController {
         $postData = $request->getParsedBody();
         if ($request->isPost() && !empty($postData)) {
             try {
-                $data = $this->convertData($postData['data']);
+                $data = $postData['data'];
+                $this->handleFileUploads($data);
+                $data = $this->convertData($data);
                 $this->crudService->update($this->model, $data);
                 Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_update_success', 'Entity successfully updated.'));
             } catch (Exception $exception) {
                 Oforge()->View()->Flash()
                         ->addExceptionMessage('danger', I18N::translate('backend_crud_msg_update_failed', 'Entity update failed.'), $exception);
-                Oforge()->View()->Flash()->setData($this->moduleModelName, $postData['data']);
+                Oforge()->View()->Flash()->setData($this->moduleModelName, $data);
             }
 
             return $this->redirect($response, 'update', ['id' => $args['id']]);
@@ -410,7 +419,6 @@ class BaseCrudController extends SecureBackendController {
 
     /**
      * @inheritdoc
-     * @throws ServiceNotFoundException
      */
     public function initPermissions() {
         if ($this->crudActions['index'] ?? true) {
@@ -456,21 +464,22 @@ class BaseCrudController extends SecureBackendController {
     /**
      * Handle update action on crud index.
      *
-     * @param array $params
+     * @param array $postData
      */
-    protected function handleIndexUpdate(array $params) {
-        $list = $params['data'];
-        foreach ($list as $index => $data) {
-            $list[$index] = $this->convertData($data);
+    protected function handleIndexUpdate(array $postData) {
+        $list = $postData['data'];
+        $this->handleFileUploads($list);
+        foreach ($list as $entityID => $data) {
+            $list[$entityID] = $this->convertData($data);
         }
-        $params['data'] = $list;
+        $postData['data'] = $list;
         try {
-            $this->crudService->update($this->model, $params);
+            $this->crudService->update($this->model, $postData);
             Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_bulk_update_success', 'Entities successfully bulk updated.'));
         } catch (Exception $exception) {
             Oforge()->View()->Flash()
                     ->addExceptionMessage('danger', I18N::translate('backend_crud_msg_bulk_update_failed', 'Entities bulk update failed.'), $exception);
-            Oforge()->View()->Flash()->setData($this->moduleModelName, $params['data']);
+            Oforge()->View()->Flash()->setData($this->moduleModelName, $postData['data']);
         }
     }
 
@@ -650,6 +659,126 @@ class BaseCrudController extends SecureBackendController {
                 'current' => $entitiesPerPage,
             ],
         ];
+    }
+
+    /** Handles uploaded media files (find by defined modelProperties).
+     *
+     * @param array $postData
+     */
+    private function handleFileUploads(array &$postData) {
+        if (empty($this->modelProperties) || !isset($_FILES['data'])) {
+            return;
+        }
+        $isSingle  = isset($postData['id']);
+        $filesMeta = $_FILES['data'];
+
+        foreach ($this->modelProperties as $property) {
+            if (!isset($property['type']) || !in_array($property['type'], [CrudDataTypes::IMAGE])) {
+                continue;
+            }
+            $propertyName = $property['name'];
+            if ($isSingle) {
+                if (!isset($postData[$propertyName]['action'])) {
+                    continue;
+                }
+                $fileData = [
+                    'entityID' => $postData['id'],
+                    'action'   => $postData[$propertyName]['action'],
+                    'new_name' => $postData[$propertyName]['filename'],
+                    // 'mediaID'  => $postData[$propertyName]['mediaID'],
+                ];
+                if (isset($filesMeta['name'][$propertyName])) {
+                    $fileData = array_merge($fileData, [
+                        'name'     => $filesMeta['name'][$propertyName],
+                        'tmp_name' => $filesMeta['tmp_name'][$propertyName],
+                        'type'     => $filesMeta['type'][$propertyName],
+                        'error'    => $filesMeta['error'][$propertyName],
+                        'size'     => $filesMeta['size'][$propertyName],
+                    ]);
+                }
+                unset($postData[$propertyName]);
+                $this->handleFileUpload($postData, $propertyName, $fileData);
+            } else {
+                foreach ($postData as $entityID => &$data) {
+                    if (!isset($data[$propertyName]['action'])) {
+                        continue;
+                    }
+                    $fileData = [
+                        'entityID' => $entityID,
+                        'action'   => $data[$propertyName]['action'],
+                        'new_name' => $data[$propertyName]['filename'],
+                        // 'mediaID'  => $data[$propertyName]['mediaID'],
+                    ];
+                    if (isset($filesMeta['name'][$entityID][$propertyName])) {
+                        $fileData = array_merge($fileData, [
+                            'name'     => $filesMeta['name'][$entityID][$propertyName],
+                            'tmp_name' => $filesMeta['tmp_name'][$entityID][$propertyName],
+                            'type'     => $filesMeta['type'][$entityID][$propertyName],
+                            'error'    => $filesMeta['error'][$entityID][$propertyName],
+                            'size'     => $filesMeta['size'][$entityID][$propertyName],
+                        ]);
+                    }
+                    unset($data[$propertyName]);
+                    $this->handleFileUpload($data, $propertyName, $fileData);
+                }
+                unset($data);
+            }
+        }
+    }
+
+    /**
+     * /** Handle uploaded media file for single field.
+     *
+     * @param array $entityData
+     * @param string $propertyName
+     * @param array $fileData
+     */
+    private function handleFileUpload(array &$entityData, string $propertyName, array $fileData) {
+        /**
+         * @var MediaService $mediaService
+         * @var Media|null $media
+         */
+        if ($fileData['action'] === 'delete') {
+            //TODO delete orphan media?
+            $entityData[$propertyName] = null;
+        } elseif ($fileData['action'] === 'upload') {
+            if (!empty($fileData['new_name'])) {
+                $oldName          = $fileData['name'];
+                $fileExtension    = substr($oldName, strrpos($oldName, '.'));
+                $fileData['name'] = $fileData['new_name'] . $fileExtension;
+            }
+
+            try {
+                $mediaService = Oforge()->Services()->get('media');
+                $media        = $mediaService->add($fileData);
+                if (isset($media)) {
+                    $entityData[$propertyName] = $media->getId();
+                } else {
+                    Oforge()->View()->Flash()->addMessage('error', I18N::translate('backend_crud_image_upload_failed', 'Image upload failed.'));
+                }
+            } catch (Exception $exception) {
+                Oforge()->View()->Flash()->addMessage('error', I18N::translate('backend_crud_image_upload_failed', 'Image upload failed.'));
+                Oforge()->Logger()->logException($exception);
+            }
+        } elseif ($fileData['action'] === 'chooser') {
+            try {
+                $mediaService = Oforge()->Services()->get('media');
+                $mediaID      = $fileData['mediaID'];
+                $media        = $mediaService->getById($mediaID);
+                if (isset($media)) {
+                    $entityData[$propertyName] = $media->getId();
+                } else {
+                    Oforge()->View()->Flash()->addMessage('error', sprintf(#
+                        I18N::translate('backend_crud_media_not_found', 'Media entity with ID "%s" file not found.'),#
+                        $mediaID#
+                    ));
+                }
+            } catch (Exception $exception) {
+                Oforge()->View()->Flash()->addMessage('error', I18N::translate('backend_crud_image_replace_failed', 'Image replace failed.'));
+                Oforge()->Logger()->logException($exception);
+            }
+
+        }
     }
 
 }

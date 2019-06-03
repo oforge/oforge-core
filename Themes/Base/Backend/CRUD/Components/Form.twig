@@ -11,7 +11,7 @@
                     </a>
                 {% elseif crud.actions[crud.context] %}
                     {% if crud.context != 'view' %}
-                        <form method="post">
+                        <form method="post" enctype="multipart/form-data">
                     {% endif %}
                     {% if crud.context != 'create' %}
                         <input type="hidden" name="data[id]" value="{{ item['id'] }}" />
