@@ -1,6 +1,6 @@
 {% extends "Backend/Master/Index.twig" %}
 {% set meta = mergeRecursive(meta|default({}), dotToNested({
-    'page.favoriteButton': false,
+    'backend.favoriteButton': false,
 })) %}
 {% set breadcrumbs = backend_breadcrumbs(meta.route.name)|default({})|slice(0, -1)|merge([{
     path: meta.route.name,
