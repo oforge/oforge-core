@@ -1,8 +1,8 @@
 <div class="blog-header-image">
-    HEADER_IMAGE{#TODO blog post header image#}
-    {#    {% if blog.post is defined and blog.post.headerImage %}#}
-    {#        {{ blog.category.headerImage }}#}
-    {#    {% else %}#}
-    {#        BACKGROUND#}
-    {#    {% endif %}#}
+    {#TODO blog post header image#}
+        {% if blog.post is defined and blog.post.headerImage %}
+            <img src="{{ media(blog.post.headerImage) }}" />
+        {% else %}
+            DEFAULT_IMAGE
+        {% endif %}
 </div>

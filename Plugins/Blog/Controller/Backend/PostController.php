@@ -128,7 +128,7 @@ class PostController extends BaseCrudController {
         ],# headerSubtext
         [
             'name'  => 'headerImage',
-            'type'  => CrudDataTypes::STRING,
+            'type'  => CrudDataTypes::IMAGE,
             'label' => ['key' => 'plugin_blog_property_post_headerImage', 'default' => 'Header image'],
             'crud'  => [
                 'index'  => 'off',
@@ -337,19 +337,8 @@ class PostController extends BaseCrudController {
         $data['category'] = $category;
         $data['language'] = $category->getLanguage();
         if ($crudAction === 'create') {
-            $userID = Oforge()->View()->get('user.id');
-        } else {
-            $userID = $data['author'];
+            $data['author'] = Oforge()->View()->get('user.id');
         }
-        /** @var BackendUser|null $user */
-        $user = $entityManager->getRepository(BackendUser::class)->findOneBy(['id' => $userID]);
-        if (!isset($user)) {
-            throw new NotFoundException(sprintf(#
-                I18N::translate('plugin_blog_backenduser_not_found', 'Backend user with ID "%1" not found.'),#
-                $categoryID)#
-            );
-        }
-        $data['author'] = $user;
 
         return parent::convertData($data, $crudAction);
     }

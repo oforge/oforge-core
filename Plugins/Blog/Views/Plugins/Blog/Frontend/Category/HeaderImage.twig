@@ -1,9 +1,10 @@
 <div class="blog-header-image">
-    HEADER_IMAGE{#TODO blog category header image#}
-    {#    {% if blog.category is defined and blog.category.headerImage %}#}
-    {#        {{ blog.category.headerImage }}#}
-    {#    {% else %}#}
-    {#        BACKGROUND#}
-    {#    {% endif %}#}
+    {#TODO blog category header image#}
+    {% if blog.category is defined and blog.category.headerImage %}
+        <img src="{{ media(blog.category.headerImage) }}" />
+{#        <div style="background-image: url('{{ media(blog.category.headerImage) }}')"></div>#}
+    {% else %}
+        DEFAULT_IMAGE
+    {% endif %}
 </div>
 
