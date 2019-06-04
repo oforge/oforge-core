@@ -2,7 +2,12 @@
 
 {% block page_content %}
     {# contact information #}
-    <textarea name="insertion_description">Lorem Ipsum</textarea>
+    <label for="insertion_description"
+           class="form__label">
+        {{ i18n('description') }}
+    </label>
+    <textarea name="insertion_description"
+              class="form__input form__input--textarea">{{ i18n('description') }}</textarea>
     {# contact attributes #}
     {% for attributeGroup in attributes %}
         {% if attributeGroup.items|length > 0 and attributeGroup.name == 'contact' %}
@@ -17,16 +22,22 @@
         {% endif %}
     {% endfor %}
 
-    <input type="text" name="contact_name"
-           value="{% if data['contact_name'] is defined %}{{ data['contact_name'] }}{% else %}Example Name{% endif %}" />
-    <input type="email" name="contact_email" value="Example@Name.de" />
-    <input type="tel" name="contact_phone" value="012121312" />
-    <input type="text" name="contact_zip" value="01234" />
-    <input type="text" name="contact_city" value="Dortmund" />
+    <div class="form__controls">
+        <input type="text" name="contact_name"
+               value="{% if data['contact_name'] is defined %}{{ data['contact_name'] }}{% else %}Example Name{% endif %}" />
+        <input type="email" name="contact_email" value="Example@Name.de" />
+        <input type="tel" name="contact_phone" value="012121312" />
+        <input type="text" name="contact_zip" value="01234" />
+        <input type="text" name="contact_city" value="Dortmund" />
 
-    <label>
-        Klick mich
-        <input type="checkbox" name="contact_visible" />
-    </label>
+        <label class="form__label form__label--checkbox">
+            Klick mich
+            <input type="checkbox"
+                   name="contact_visible"
+                   class="form__input form__input--checkbox form__input--checkbox-small" />
+        </label>
+    </div>
+
+
 
 {% endblock page_content %}
