@@ -140,7 +140,7 @@ class AccountController extends SecureFrontendController {
 
         $guid = $user['guid'];
 
-        $entityManager = Oforge()->DB()->getEntityManager();
+        $entityManager = Oforge()->DB()->getForgeEntityManager();
         $repository    = $entityManager->getRepository(User::class);
         $dbPassword    = $repository->find($user['id'])->getPassword();
 

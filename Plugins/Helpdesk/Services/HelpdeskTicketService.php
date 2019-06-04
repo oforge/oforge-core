@@ -37,8 +37,7 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
         $ticket->setTitle($title);
         $ticket->setMessage($message);
 
-        $this->entityManager()->persist($ticket);
-        $this->entityManager()->flush();
+        $this->entityManager()->create($ticket);
 
         /** @var HelpdeskMessengerService $helpdeskMessengerService */
         $helpdeskMessengerService = Oforge()->Services()->get('helpdesk.messenger');
@@ -117,8 +116,7 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
 
         $ticket->setStatus($status);
 
-        $this->entityManager()->persist($ticket);
-        $this->entityManager()->flush();
+        $this->entityManager()->update($ticket);
     }
 
     /**
@@ -131,8 +129,7 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
         $issueType = new IssueTypes();
         $issueType->setIssueTypeName($issueName);
 
-        $this->entityManager()->persist($issueType);
-        $this->entityManager()->flush();
+        $this->entityManager()->create($issueType);
     }
 
     /**

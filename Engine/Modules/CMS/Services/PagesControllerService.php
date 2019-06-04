@@ -7,6 +7,7 @@ use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\CMS\Abstracts\AbstractContentType;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Forge\ForgeEntityManager;
 use Oforge\Engine\Modules\I18n\Models\Language;
 use Oforge\Engine\Modules\CMS\Models\Layout\Layout;
 use Oforge\Engine\Modules\CMS\Models\Site\Site;
@@ -17,7 +18,8 @@ use Oforge\Engine\Modules\CMS\Models\Content\Content;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
 
 class PagesControllerService extends AbstractDatabaseAccess {
-    private $entityManager = NULL;
+    /** @var ForgeEntityManager  */
+    private $forgeEntityManager = NULL;
 
     /**
      * PagesControllerService constructor.
@@ -34,7 +36,7 @@ class PagesControllerService extends AbstractDatabaseAccess {
             "contentType" => ContentType::class, 
             "content" => Content::class]);
         
-        $this->entityManager = Oforge()->DB()->getEntityManager();
+        $this->forgeEntityManager = Oforge()->DB()->getForgeEntityManager();
     }
 
     /**
@@ -96,8 +98,7 @@ class PagesControllerService extends AbstractDatabaseAccess {
         {
             $this->findAndRemoveChildPages($pageEntity->getId());
             
-            $this->entityManager->remove($pageEntity);
-            $this->entityManager->flush();
+            $this->forgeEntityManager->remove($pageEntity);
         }
     }
 
@@ -132,9 +133,8 @@ class PagesControllerService extends AbstractDatabaseAccess {
                     $pageEntity->setParent($selectedPageParentId);
                     $pageEntity->setName($selectedPageName);
                     
-                    $this->entityManager->persist($pageEntity);
-                    $this->entityManager->flush();
-                    
+                    $this->forgeEntityManager->create($pageEntity);
+
                     $pageId = $pageEntity->getId();
                 }
                 break;
@@ -145,8 +145,7 @@ class PagesControllerService extends AbstractDatabaseAccess {
                 {
                     $pageEntity->setName($selectedPageName);
                     
-                    $this->entityManager->persist($pageEntity);
-                    $this->entityManager->flush();
+                    $this->forgeEntityManager->update($pageEntity);
                 }
                 break;
             case 'delete':
@@ -156,8 +155,7 @@ class PagesControllerService extends AbstractDatabaseAccess {
                 {
                     $this->findAndRemoveChildPages($pageEntity->getId());
                     
-                    $this->entityManager->remove($pageEntity);
-                    $this->entityManager->flush();
+                    $this->forgeEntityManager->remove($pageEntity);
                 }
                 break;
         }
@@ -246,12 +244,12 @@ class PagesControllerService extends AbstractDatabaseAccess {
                     $pagePathEntity = new PagePath;
                     $pagePathEntity->setPage($pageEntity);
                     $pagePathEntity->setLanguage($languageEntity);
+                    $pagePathEntity->setPath($pagePath);
+                    $this->forgeEntityManager->create($pagePathEntity);
+                } else {
+                    $pagePathEntity->setPath($pagePath);
+                    $this->forgeEntityManager->update($pagePathEntity);
                 }
-                
-                $pagePathEntity->setPath($pagePath);
-                
-                $this->entityManager->persist($pagePathEntity);
-                $this->entityManager->flush();
             }
         }
     }
@@ -280,9 +278,8 @@ class PagesControllerService extends AbstractDatabaseAccess {
             $contentEntity->setName(uniqid());
             $contentEntity->setCssClass('');
             
-            $this->entityManager->persist($contentEntity);
-            $this->entityManager->flush();
-            
+            $this->entityManager->create($contentEntity);
+
             $contentId = $contentEntity->getId();
             
             if ($pagePathId !== false && $selectedElementId < 1)
@@ -303,8 +300,7 @@ class PagesControllerService extends AbstractDatabaseAccess {
                             {
                                 $pageContentEntity->setOrder($currentOrder + 1);
                                 
-                                $this->entityManager->persist($pageContentEntity);
-                                $this->entityManager->flush();
+                                $this->forgeEntityManager->update($pageContentEntity);
                             }
                         }
                         else
@@ -336,8 +332,7 @@ class PagesControllerService extends AbstractDatabaseAccess {
                     $pageContentEntity->setContent($contentEntity);
                     $pageContentEntity->setOrder($createContentAtOrderIndex);
                     
-                    $this->entityManager->persist($pageContentEntity);
-                    $this->entityManager->flush();
+                    $this->forgeEntityManager->create($pageContentEntity);
                 }
             }
             else
@@ -415,8 +410,7 @@ class PagesControllerService extends AbstractDatabaseAccess {
 
                     if ($pageContentEntity)
                     {
-                        $this->entityManager->remove($pageContentEntity);
-                        $this->entityManager->flush();
+                        $this->forgeEntityManager->remove($pageContentEntity);
                     }
                 }
             }

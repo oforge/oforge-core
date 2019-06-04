@@ -51,8 +51,7 @@ class ScssVariableService extends AbstractDatabaseAccess {
         }
 
         $element->setValue($value);
-        $this->entityManager()->persist($element);
-        $this->entityManager()->flush();
+        $this->entityManager()->update($element);
     }
 
     /**
@@ -85,8 +84,7 @@ class ScssVariableService extends AbstractDatabaseAccess {
             $element = new ScssVariable();
 
             $element->fromArray($templateVariable);
-            $this->entityManager()->persist($element);
-            $this->entityManager()->flush();
+            $this->entityManager()->create($element);
         }
     }
 

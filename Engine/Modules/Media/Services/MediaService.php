@@ -41,8 +41,7 @@ class MediaService extends AbstractDatabaseAccess {
                     'name' => $filename,
                     'path' => $relativeFilePath,
                 ]);
-                $this->entityManager()->persist($media);
-                $this->entityManager()->flush();
+                $this->entityManager()->create($media);
 
                 return $media;
             }

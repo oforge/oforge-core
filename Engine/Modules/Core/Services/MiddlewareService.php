@@ -122,8 +122,7 @@ class MiddlewareService extends AbstractDatabaseAccess {
             if(!isset($element)) {
                 $element = Middleware::create(["name" => $pathName,  "class" => $middleware["class"], "active" => $active, "position" => $middleware["position"]]);
 
-                $this->entityManager()->persist($element);
-                $this->entityManager()->flush();
+                $this->entityManager()->create($element);
             }
 
             return $element;
@@ -187,6 +186,6 @@ class MiddlewareService extends AbstractDatabaseAccess {
         $middleware = $this->repository()->findOneBy(['class' => $middlewareName]);
         $middleware->setActive($state);
         //$this->entityManager()->persist($middleware);
-        $this->entityManager()->flush($middleware);
+        $this->entityManager()->update($middleware);
     }
 }
