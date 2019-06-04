@@ -26,6 +26,14 @@ class InsertionUserSearchBookmark extends AbstractModel {
      */
     private $createdAt;
 
+
+
+    /**
+     * @var InsertionType
+     * @ORM\ManyToOne(targetEntity="Insertion\Models\InsertionType", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="insertion_type_id", referencedColumnName="id")
+     */
+    private $insertionType;
     /**
      * @var array
      * @ORM\Column(name="params", type="object")
@@ -94,6 +102,20 @@ class InsertionUserSearchBookmark extends AbstractModel {
     public function setParams(array $params) : InsertionUserSearchBookmark {
         $this->params = $params;
         return $this;
+    }
+
+    /**
+     * @return InsertionType
+     */
+    public function getInsertionType() : InsertionType {
+        return $this->insertionType;
+    }
+
+    /**
+     * @param InsertionType $insertionType
+     */
+    public function setInsertionType(InsertionType $insertionType) : void {
+        $this->insertionType = $insertionType;
     }
 
 }

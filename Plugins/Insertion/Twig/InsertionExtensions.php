@@ -9,6 +9,9 @@
 namespace Insertion\Twig;
 
 use Insertion\Services\AttributeService;
+use Insertion\Services\InsertionBookmarkService;
+use Insertion\Services\InsertionSearchBookmarkService;
+use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
@@ -30,7 +33,10 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
      */
     public function getFunctions() {
         return [
-            new Twig_Function('getInserationValues', [$this, 'getInserationValues'])
+            new Twig_Function('getInserationValues', [$this, 'getInserationValues']),
+
+            new Twig_Function('hasBookmark', [$this, 'hasBookmark']),
+            new Twig_Function('hasSearchBookmark', [$this, 'hasSearchBookmark']),
         ];
     }
 
@@ -45,11 +51,57 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
         if (count($vars) == 1) {
             /** @var AttributeService $attributeService */
             $attributeService = Oforge()->Services()->get('insertion.attribute');
-            $tmp = $attributeService->getAttribute($vars[0]);
-            if(isset($tmp)) {
+            $tmp              = $attributeService->getAttribute($vars[0]);
+            if (isset($tmp)) {
                 $result = $tmp->toArray(3);
             }
         }
+
         return $result;
+    }
+
+    /**
+     * @param mixed ...$vars
+     *
+     * @return boolean
+     * @throws ServiceNotFoundException
+     */
+    public function hasBookmark(...$vars) {
+        if (count($vars) == 1) {
+            /** @var $authService AuthService */
+            $authService = Oforge()->Services()->get("auth");
+            $user        = $authService->decode($_SESSION["auth"]);
+            if (isset($user) && isset($user['id'])) {
+                /** @var InsertionBookmarkService $bookmarkService */
+                $bookmarkService = Oforge()->Services()->get("insertion.bookmark");
+
+                return $bookmarkService->hasBookmark($vars[0], $user['id']);
+            }
+        }
+
+        return false;
+    }
+
+
+    /**
+     * @param mixed ...$vars
+     *
+     * @return boolean
+     * @throws ServiceNotFoundException
+     */
+    public function hasSearchBookmark(...$vars) {
+        if (count($vars) == 2) {
+            /** @var $authService AuthService */
+            $authService = Oforge()->Services()->get("auth");
+            $user        = $authService->decode($_SESSION["auth"]);
+            if (isset($user) && isset($user['id'])) {
+                /** @var InsertionSearchBookmarkService $bookmarkService */
+                $bookmarkService = Oforge()->Services()->get("insertion.search.bookmark");
+
+                return $bookmarkService->hasBookmark($vars[0], $user['id'], $vars[1]);
+            }
+        }
+
+        return false;
     }
 }
