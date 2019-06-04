@@ -9,7 +9,7 @@
                 <ul class="account-nav__list">
                     {% for nav_item in sidebar_navigation %}
                         <li class="account-nav__list-item">
-                            <a href="{{ url(nav_item.path) }}" class="account-nav__link flex flex--row flex--center flex--between">
+                            <a href="{{ url(nav_item.path) }}" class="account-nav__link{% if meta.route.name == nav_item.name %} account-nav__link--active{% endif %} flex flex--row flex--center flex--between">
                                 <span class="account-nav__text">
                                     {{ i18n(nav_item.name) }}
                                 </span>

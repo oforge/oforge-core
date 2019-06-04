@@ -13,7 +13,8 @@
                        type="email"
                        class="form__input form__input {% block login_input_email_classes %}{% endblock login_input_email_classes %}"
                        placeholder="{{ i18n('email') }}"
-                       required>
+                       required
+                       data-required>
             </div>
             <div class="form__control">
                 {% block login_label_password %}
@@ -25,7 +26,8 @@
                        type="password"
                        class="form__input form__input {% block login_input_password_classes %}{% endblock login_input_password_classes %}"
                        placeholder="{{ i18n('password') }}"
-                       required>
+                       required
+                       data-required>
             </div>
             {% block login_forgot_password %}
             <div class="form__control flex flex--row flex--end">
