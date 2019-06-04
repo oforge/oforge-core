@@ -63,7 +63,7 @@ class SystemSettingsController extends SecureBackendController {
                     Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_settings_update_success', 'Settings successfully updated.'));
                 } catch (Exception $exception) {
                     Oforge()->View()->Flash()
-                            ->addExceptionMessage('danger', I18N::translate('backend_settings_update_failed', 'Update of settings failed.'), $exception);
+                            ->addExceptionMessage('error', I18N::translate('backend_settings_update_failed', 'Update of settings failed.'), $exception);
                     Oforge()->View()->Flash()->setData(self::class, $formData);
                 }
 
