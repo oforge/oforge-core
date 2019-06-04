@@ -180,8 +180,12 @@ abstract class AbstractModel {
             return null;
         } elseif (is_array($result) || is_subclass_of($result, Collection::class)) {
             $subResult = [];
-            foreach ($result as $item) {
-                $subResult[] = $item->assignArray($item, $maxDepth - 1);
+            foreach ($result as $key => $item) {
+                if(is_string($item)) {
+                    $subResult[$key] = $this->assignArray($item, $maxDepth - 1);
+                } else {
+                    $subResult[] = $this->assignArray($item, $maxDepth - 1);
+                }
             }
 
             return $subResult;

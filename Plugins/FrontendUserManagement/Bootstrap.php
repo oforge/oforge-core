@@ -39,7 +39,7 @@ class Bootstrap extends AbstractBootstrap {
         ];
 
         $this->middlewares = [
-            'frontend'         => [
+            '*'                => [
                 'class'    => FrontendUserStateMiddleware::class,
                 'position' => 1,
             ],
