@@ -155,7 +155,7 @@ abstract class AbstractModel {
                     $result[$propertyName] = $this->assignCleanedArray($this->$classMethod(), $maxDepth, $cache);
                     break;
                 }
-            }
+            } 
         }
 
         return $result;
