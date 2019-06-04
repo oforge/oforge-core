@@ -49,6 +49,11 @@
 
             border-bottom: 2px solid $color-secondary;
         }
+
+        &.account-nav__link--active {
+            color: $color-secondary;
+            border-color: $color-secondary;
+        }
     }
 
     &__text {
