@@ -132,7 +132,7 @@ class Bootstrap extends AbstractBootstrap {
         $accountNavigationService->put([
             'name'     => 'frontend_account_insertions',
             'order'    => 1,
-            'icon'     => 'profil',
+            'icon'     => 'insertion',
             'path'     => 'frontend_account_insertions',
             'position' => 'sidebar',
         ]);

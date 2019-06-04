@@ -84,21 +84,21 @@ class Bootstrap extends AbstractBootstrap {
         $accountNavigationService->put([
             'name'     => 'frontend_account_details',
             'order'    => 1,
-            'icon'     => 'inserat_erstellen',
+            'icon'     => 'contact',
             'path'     => 'frontend_account_details',
             'position' => 'sidebar',
         ]);
         $accountNavigationService->put([
             'name'     => 'frontend_account_edit',
             'order'    => 1,
-            'icon'     => 'profil',
+            'icon'     => 'profile',
             'path'     => 'frontend_account_edit',
             'position' => 'sidebar',
         ]);
         $accountNavigationService->put([
             'name'     => 'frontend_logout',
             'order'    => 1000,
-            'icon'     => 'profil',
+            'icon'     => 'exit',
             'path'     => 'frontend_logout',
             'position' => 'sidebar',
         ]);
