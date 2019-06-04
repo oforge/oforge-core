@@ -31,8 +31,7 @@ class BackendNavigationService extends AbstractDatabaseAccess {
         if (!isset($element)) {
             if ($this->isValid($options)) {
                 $entity = BackendNavigation::create($options);
-                $this->entityManager()->persist($entity);
-                $this->entityManager()->flush();
+                $this->entityManager()->create($entity);
             }
         }
     }

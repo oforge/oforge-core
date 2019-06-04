@@ -5,6 +5,7 @@ namespace Oforge\Engine\Modules\Core\Abstracts;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\ORMException;
+use Oforge\Engine\Modules\Core\Forge\ForgeEntityManager;
 
 /**
  * Class AbstractModel
@@ -13,8 +14,8 @@ use Doctrine\ORM\ORMException;
  * @package Oforge\Engine\Modules\Core\Abstracts
  */
 abstract class AbstractDatabaseAccess {
-    /** @var EntityManager $entityManger */
-    private $entityManger;
+    /** @var ForgeEntityManager $forgeEntityManger */
+    private $forgeEntityManger;
     /** @var array $repositories */
     private $repositories;
     /** @var array $models */
@@ -29,16 +30,13 @@ abstract class AbstractDatabaseAccess {
         $this->models = is_string($models) ? ['default' => $models] : $models;
     }
 
-    /**
-     * @return EntityManager
-     * @throws ORMException
-     */
-    public function entityManager() : EntityManager {
-        if (!isset($this->entityManger)) {
-            $this->entityManger = Oforge()->DB()->getEntityManager();
+    /** @return ForgeEntityManager */
+    public function entityManager() : ForgeEntityManager {
+        if (!isset($this->forgeEntityManger)) {
+            $this->forgeEntityManger = Oforge()->DB()->getForgeEntityManager();
         }
 
-        return $this->entityManger;
+        return $this->forgeEntityManger;
     }
 
     /**
@@ -61,7 +59,6 @@ abstract class AbstractDatabaseAccess {
      * @param string $class
      *
      * @return EntityRepository
-     * @throws ORMException
      */
     protected function getRepository(string $class) : EntityRepository {
         return $this->entityManager()->getRepository($class);

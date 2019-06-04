@@ -7,14 +7,16 @@ use Oforge\Engine\Modules\CMS\Models\Content\ContentTypeGroup;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentParent;
 use Oforge\Engine\Modules\CMS\Models\Content\Content;
+use Oforge\Engine\Modules\Core\Forge\ForgeEntityManager;
 
 class ElementsControllerService extends AbstractDatabaseAccess {
-    private $entityManager = NULL;
+    /** @var ForgeEntityManager  */
+    private $forgeEntityManager = NULL;
     
     public function __construct() {
         parent::__construct(["contentTypeGroup" => ContentTypeGroup::class, "contentType" => ContentType::class, "contentParent" => ContentParent::class, "content" => Content::class]);
         
-        $this->entityManager = Oforge()->DB()->getEntityManager();
+        $this->forgeEntityManager = Oforge()->DB()->getForgeEntityManager();
     }
 
     private function getPageContentArrayForContentElement($contentId)
@@ -127,8 +129,7 @@ class ElementsControllerService extends AbstractDatabaseAccess {
         {
             $contentEntity->setParent(NULL);
             
-            $this->entityManager->persist($contentEntity);
-            $this->entityManager->flush();
+            $this->forgeEntityManager->update($contentEntity);
         }
     }
 
@@ -147,8 +148,7 @@ class ElementsControllerService extends AbstractDatabaseAccess {
 
             $this->resetContentElementContentParent($contentParentEntity);
             
-            $this->entityManager->remove($contentParentEntity);
-            $this->entityManager->flush();
+            $this->forgeEntityManager->remove($contentParentEntity);
         }
     }
 
@@ -165,8 +165,7 @@ class ElementsControllerService extends AbstractDatabaseAccess {
             {
                 $moveContentParentEntity->setParent($toContentParentEntity);
                 
-                $this->entityManager->persist($moveContentParentEntity);
-                $this->entityManager->flush();
+                $this->forgeEntityManager->update($moveContentParentEntity);
             }
         }
         elseif ($moveContentParentId > 0 && $selectedElementParentId === "#")
@@ -177,8 +176,7 @@ class ElementsControllerService extends AbstractDatabaseAccess {
             {
                 $moveContentParentEntity->setParent(NULL);
                 
-                $this->entityManager->persist($moveContentParentEntity);
-                $this->entityManager->flush();
+                $this->forgeEntityManager->update($moveContentParentEntity);
             }
         }
     }
@@ -196,8 +194,7 @@ class ElementsControllerService extends AbstractDatabaseAccess {
             {
                 $moveContentElementEntity->setParent($toContentParentEntity);
                 
-                $this->entityManager->persist($moveContentElementEntity);
-                $this->entityManager->flush();
+                $this->forgeEntityManager->update($moveContentElementEntity);
             }
         }
         elseif ($moveContentElementId > 0 && strpos($selectedElementParentId, "_parent#") !== 0)
@@ -208,8 +205,7 @@ class ElementsControllerService extends AbstractDatabaseAccess {
             {
                 $moveContentElementEntity->setParent(NULL);
                 
-                $this->entityManager->persist($moveContentElementEntity);
-                $this->entityManager->flush();
+                $this->forgeEntityManager->update($moveContentElementEntity);
             }
         }
     }
@@ -242,9 +238,8 @@ class ElementsControllerService extends AbstractDatabaseAccess {
             $contentEntity->setName(uniqid());
             $contentEntity->setCssClass('');
             
-            $this->entityManager->persist($contentEntity);
-            $this->entityManager->flush();
-            
+            $this->forgeEntityManager->create($contentEntity);
+
             $contentId = $contentEntity->getId();
         }
 
@@ -305,9 +300,8 @@ class ElementsControllerService extends AbstractDatabaseAccess {
                 $newContentParentEntity->setParent($contentParentEntity);
                 $newContentParentEntity->setDescription($selectedElementDescription);
                 
-                $this->entityManager->persist($newContentParentEntity);
-                $this->entityManager->flush();
-                
+                $this->entityManager->create($newContentParentEntity);
+
                 $contentParentId = $newContentParentEntity->getId();
                 break;
             case 'rename':
@@ -321,8 +315,7 @@ class ElementsControllerService extends AbstractDatabaseAccess {
                     {
                         $contentParentEntity->setDescription($selectedElementDescription);
                 
-                        $this->entityManager->persist($contentParentEntity);
-                        $this->entityManager->flush();
+                        $this->entityManager->update($contentParentEntity);
                     }
                 }
                 break;
@@ -339,8 +332,7 @@ class ElementsControllerService extends AbstractDatabaseAccess {
     
                         $this->resetContentElementContentParent($contentParentEntity);
                         
-                        $this->entityManager->remove($contentParentEntity);
-                        $this->entityManager->flush();
+                        $this->entityManager->update($contentParentEntity);
                     }
                 }
                 break;
