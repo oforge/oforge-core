@@ -1,1 +1,14 @@
 {% extends 'Backend/CRUD/Index.twig' %}
+
+{% block crud_actions_group %}
+    {% if meta.route.query.category is defined %}
+        {% set buttonQuery = {category: meta.route.query.category} %}
+    {% else %}
+        {% set buttonQuery = {} %}
+    {% endif %}
+    <a href="{{ url(meta.route.name  ~ '_create', {}, buttonQuery) }}"
+       title="{{ i18n('backend_crud_btn_create', 'create') }}"
+       class="btn btn-primary {% if not crud.actions.create %}disabled{% endif %}">
+        <i class="fa fa-plus"></i>
+    </a>
+{% endblock crud_actions_group %}

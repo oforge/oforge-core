@@ -110,7 +110,7 @@ class CategoryController extends BaseCrudController {
         ],# headerSubtext
         [
             'name'  => 'headerImage',
-            'type'  => CrudDataTypes::STRING,
+            'type'  => CrudDataTypes::IMAGE,
             'label' => ['key' => 'plugin_blog_property_category_headerImage', 'default' => 'Header image'],
             'crud'  => [
                 'index'  => 'off',
