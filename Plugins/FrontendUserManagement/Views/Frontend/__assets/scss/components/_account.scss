@@ -65,6 +65,10 @@
     margin-top: 1rem;
 }
 
+.account__content {
+    padding: $size-large;
+}
+
 @media screen and (min-width: $screen-large) {
     .panel--account {
         flex-direction: row;
