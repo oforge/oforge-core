@@ -19,11 +19,14 @@ use Insertion\Models\InsertionMedia;
 use Insertion\Models\InsertionType;
 use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Models\InsertionTypeGroup;
+use Insertion\Models\InsertionUserBookmark;
 use Insertion\Services\AttributeService;
+use Insertion\Services\InsertionBookmarkService;
 use Insertion\Services\InsertionCreatorService;
 use Insertion\Services\InsertionFeedbackService;
 use Insertion\Services\InsertionListService;
 use Insertion\Services\InsertionMockService;
+use Insertion\Services\InsertionSearchBookmarkService;
 use Insertion\Services\InsertionService;
 use Insertion\Services\InsertionTypeService;
 use Insertion\Services\InsertionUpdaterService;
@@ -47,14 +50,16 @@ class Bootstrap extends AbstractBootstrap {
         ];
 
         $this->services = [
-            'insertion'           => InsertionService::class,
-            'insertion.type'      => InsertionTypeService::class,
-            'insertion.attribute' => AttributeService::class,
-            'insertion.mock'      => InsertionMockService::class,
-            'insertion.creator'   => InsertionCreatorService::class,
-            'insertion.updater'   => InsertionUpdaterService::class,
-            'insertion.feedback'  => InsertionFeedbackService::class,
-            'insertion.list'      => InsertionListService::class,
+            'insertion'                 => InsertionService::class,
+            'insertion.type'            => InsertionTypeService::class,
+            'insertion.attribute'       => AttributeService::class,
+            'insertion.mock'            => InsertionMockService::class,
+            'insertion.creator'         => InsertionCreatorService::class,
+            'insertion.updater'         => InsertionUpdaterService::class,
+            'insertion.feedback'        => InsertionFeedbackService::class,
+            'insertion.list'            => InsertionListService::class,
+            'insertion.bookmark'        => InsertionBookmarkService::class,
+            'insertion.search.bookmark' => InsertionSearchBookmarkService::class,
         ];
 
         $this->models = [
@@ -125,7 +130,6 @@ class Bootstrap extends AbstractBootstrap {
             'position' => 'sidebar',
         ]);
 
-
         /** @var AccountNavigationService $accountNavigationService */
         $accountNavigationService = Oforge()->Services()->get('frontend.user.management.account.navigation');
 
@@ -134,6 +138,22 @@ class Bootstrap extends AbstractBootstrap {
             'order'    => 1,
             'icon'     => 'profil',
             'path'     => 'frontend_account_insertions',
+            'position' => 'sidebar',
+        ]);
+
+        $accountNavigationService->put([
+            'name'     => 'frontend_account_insertions_bookmarks',
+            'order'    => 2,
+            'icon'     => 'star',
+            'path'     => 'frontend_account_insertions_bookmarks',
+            'position' => 'sidebar',
+        ]);
+
+        $accountNavigationService->put([
+            'name'     => 'frontend_account_insertions_searchBookmarks',
+            'order'    => 4,
+            'icon'     => 'star',
+            'path'     => 'frontend_account_insertions_searchBookmarks',
             'position' => 'sidebar',
         ]);
     }
