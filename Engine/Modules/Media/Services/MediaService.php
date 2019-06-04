@@ -50,6 +50,10 @@ class MediaService extends AbstractDatabaseAccess {
         return null;
     }
 
+    public function delete($id) {
+        //TODO
+    }
+
     /**
      * @param int $id
      *
