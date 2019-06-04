@@ -140,8 +140,11 @@ abstract class AbstractModel {
      * @return array
      */
     public function toCleanedArray($maxDepth = 2, array &$cache = []) : array {
-        $result                                              = [];
-        $cache[get_class($result) . "::::" . $this->getId()] = true;
+        $result = [];
+
+        if (!is_array($result)) {
+            $cache[get_class($result) . "::::" . $this->getId()] = true;
+        }
 
         foreach (get_class_methods($this) as $classMethod) {
             foreach (['get', 'is'] as $prefix) {
@@ -181,7 +184,7 @@ abstract class AbstractModel {
         } elseif (is_array($result) || is_subclass_of($result, Collection::class)) {
             $subResult = [];
             foreach ($result as $key => $item) {
-                if(is_string($item)) {
+                if (is_string($item)) {
                     $subResult[$key] = $this->assignArray($item, $maxDepth - 1);
                 } else {
                     $subResult[] = $this->assignArray($item, $maxDepth - 1);
