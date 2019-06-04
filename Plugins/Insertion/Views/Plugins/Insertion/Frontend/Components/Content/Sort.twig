@@ -12,6 +12,15 @@
                             {% if search.order is same as(orderItem) %}selected="selected"{% endif %} >{{ i18n(orderItem) }}</option>
                 {% endfor %}
             </select>
+
+            <form method="post"
+                  action="{{ url('frontend_account_insertions_toggleSearchBookmark', {'typeId': typeId }) }}"
+                  enctype="multipart/form-data">
+                <input type="hidden" name="filter" value="{{ search.filter|json_encode() }}" />
+                <input type="submit"
+                       value="{% if hasSearchBookmark(typeId, search.filter ) %}Remove from wishlist{% else %}Add to wishlist{% endif %}" />
+            </form>
+
         </div>
     </div>
 {% endblock product_list_sort %}
