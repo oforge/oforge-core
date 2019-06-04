@@ -6,19 +6,26 @@
         {% if property.editor.size %}size="{{ property.editor.size }}"{% endif %}
     >
         {% for value,label in property.list %}
-            {#<option value="" selected>{{ i18n("backend_crud_select_empty") }}</option>#}
             {% if label.options is defined %}
                 <optgroup label="{{ label.label }}">
                     {% for value,label in label.options %}
-                        {% set selected = route.query[propertyName] is defined and (route.query[propertyName] == value or route.query[propertyName] is same as(value)) %}
+                        {% if crud.context == 'create' %}
+                            {% set selected = (value == meta.route.query[property.name]|default('')) %}
+                        {% else %}
+                            {% set selected = (value == item[property.name]|default(property.editor.default)) %}
+                        {% endif %}
                         <option {% if selected %}selected{% endif %} value="{{ value }}">
                             {{ label }}
                         </option>
                     {% endfor %}
                 </optgroup>
             {% else %}
-                <option {% if value == item[property.name] or value == property.editor.default %}selected{% endif %}
-                        value="{{ value }}">
+                {% if crud.context == 'create' %}
+                    {% set selected = (value == meta.route.query[property.name]|default('')) %}
+                {% else %}
+                    {% set selected = (value == item[property.name]|default(property.editor.default)) %}
+                {% endif %}
+                <option {% if selected %}selected{% endif %} value="{{ value }}">
                     {{ label }}
                 </option>
             {% endif %}
