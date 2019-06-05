@@ -137,7 +137,7 @@ class Bootstrap extends AbstractBootstrap {
             'order'    => 3,
             'parent'   => 'backend_insertion',
             'icon'     => 'fa fa-bar-chart',
-            'path'     => '',
+            'path'     => 'backend_insertions',
             'position' => 'sidebar',
         ]);
 

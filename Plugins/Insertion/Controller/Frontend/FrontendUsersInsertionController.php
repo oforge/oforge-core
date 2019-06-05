@@ -320,14 +320,15 @@ class FrontendUsersInsertionController extends SecureFrontendController {
          * @var $userService FrontendUserService
          */
         $userService = Oforge()->Services()->get("frontend.user");
+
         $user        = $userService->getUser();
         /**
          * @var $service InsertionProfileService
          */
         $service = Oforge()->Services()->get("insertion.profile");
 
-        if ($request->isPost()) {
-            $service->update($user->getId(), $_POST);
+        if ($request->isPost() && $user != null) {
+            $service->update($user, $_POST);
         }
 
         $result = $service->get($user->getId());

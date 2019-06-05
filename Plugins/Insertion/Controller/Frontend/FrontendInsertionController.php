@@ -7,18 +7,23 @@ use Doctrine\ORM\Event\OnFlushEventArgs;
 use FrontendUserManagement\Abstracts\SecureFrontendController;
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\FrontendUserService;
+use Insertion\Models\Insertion;
 use Insertion\Models\InsertionType;
 use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Services\InsertionCreatorService;
 use Insertion\Services\InsertionFeedbackService;
 use Insertion\Services\InsertionListService;
+use Insertion\Services\InsertionProfileService;
 use Insertion\Services\InsertionService;
 use Insertion\Services\InsertionTypeService;
 use Insertion\Services\InsertionUpdaterService;
+use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
+use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\CMS\Abstracts\AbstractContentType;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Helper\StringHelper;
+use function PHPSTORM_META\type;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
@@ -237,7 +242,7 @@ class FrontendInsertionController extends SecureFrontendController {
 
         Oforge()->View()->assign($result);
     }
-    
+
     /**
      * @param Request $request
      * @param Response $response
@@ -248,11 +253,28 @@ class FrontendInsertionController extends SecureFrontendController {
         /**
          * @var $service InsertionService
          */
-        $service   = Oforge()->Services()->get("insertion");
+        $service = Oforge()->Services()->get("insertion");
+        /**
+         * @var $insertion Insertion
+         */
         $insertion = $service->getInsertionById(intval($id));
 
         if (!isset($insertion) || $insertion == null) {
             return $response->withRedirect("/404", 301);
+        }
+
+        if (!($insertion->isActive() && $insertion->isModeration())) {
+            if (isset($_SESSION['auth'])) {
+                $auth = $_SESSION['auth'];
+            }
+
+            /** @var AuthService $authService */
+            $authService = Oforge()->Services()->get('auth');
+            $user        = $authService->decode($auth);
+
+            if ($user["type"] != BackendUser::class) {
+                return $response->withRedirect("/404", 301);
+            }
         }
 
         Oforge()->View()->assign(["insertion" => $insertion->toArray(3, ['user' => ['*', 'id']])]);
@@ -322,6 +344,34 @@ class FrontendInsertionController extends SecureFrontendController {
         $result["insertion"] = $insertion->toArray(1);
 
         Oforge()->View()->assign($result);
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @EndpointAction(path="/profile/{id}")
+     *
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function profileAction(Request $request, Response $response, $args) {
+        /**
+         * @var $service InsertionProfileService
+         */
+        $service = Oforge()->Services()->get("insertion.profile");
+
+        $result = $service->getById($args["id"]);
+
+        if ($result == null) {
+            return $response->withRedirect("/404", 301);
+        }
+
+        /**
+         * @var $listService InsertionListService
+         */
+        $listService = Oforge()->Services()->get("insertion.list");
+        $insertions  = $listService->getUserInsertions($result->getUser()->getId(), 1, 20);
+
+        Oforge()->View()->assign(["profile" => $result->toArray(), "insertions" => $insertions]);
     }
 
     public function initPermissions() {
