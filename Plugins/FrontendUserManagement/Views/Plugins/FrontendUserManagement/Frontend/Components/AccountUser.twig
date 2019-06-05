@@ -1,0 +1,24 @@
+{# block sidebar__account_user #}
+{% block account_user %}
+    <div class="account__user">
+        <div class="user__picture">
+            {% if user.detail %}
+                <img src="{{ user.detail.img }}" alt="{{ user.detail.name }}">
+            {% else %}
+                <img src="http://placeimg.com/640/640/people" alt="{{ user.detail.name }}">
+            {% endif %}
+        </div>
+        <div class="user-info">
+            {% if user.details %}
+                <h2 class="user-info__name">
+                    {{ user.detail.name }}
+                </h2>
+            {% endif %}
+
+            <h2 class="user-info__name">
+                {{ user.detail.name }}
+                Rachel Müller</h2>
+            <p class="user-info__email">{{ user.email }}</p>
+        </div>
+    </div>
+{% endblock account_user %}
