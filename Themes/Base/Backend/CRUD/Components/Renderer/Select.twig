@@ -1,21 +1,30 @@
-{% if not property.list %}
+{% if property.list is not defined %}
     <div class="alert alert-danger" role="alert">
-        Missing select list
+        Missing select list configuration for "{{ property.name }}"
     </div>
-{% elseif not property.list[item[property.name]] %}
+{% elseif property.list is empty %}
+    {{ item[property.name] }}
+{% elseif property.list|first.options is defined %}
+    {% set found = false %}
+    {% for group in property.list %}
+        {% if group.options[item[property.name]] is defined %}
+            {% set found = true %}
+            {{ group.options[item[property.name]] }}
+        {% endif %}
+    {% endfor %}
+    {% if not found %}
+        <div>
+            <i class="fa fa-exclamation-triangle"
+               title="{{ i18n('backend_crud_missing_select_value', 'Value not in select list') }}"></i>
+            {{ item[property.name] }}
+        </div>
+    {% endif %}
+{% elseif property.list[item[property.name]] is not defined %}
     <div>
-        <i class="fa fa-exclamation-triangle" title="Value not in select list"></i>
+        <i class="fa fa-exclamation-triangle"
+           title="{{ i18n('backend_crud_missing_select_value', 'Value not in select list') }}"></i>
         {{ item[property.name] }}
     </div>
 {% else %}
-    {% set value = property.list[item[property.name]] %}
-    {% if property.isI18nLabel is defined and property.isI18nLabel %}
-        {% if value is array %}
-            {{ i18n(value.key, value.default) }}
-        {% else %}
-            {{ i18n(value.key) }}
-        {% endif %}
-    {% else %}
-        {{ value }}
-    {% endif %}
+    {{ property.list[item[property.name]] }}
 {% endif %}

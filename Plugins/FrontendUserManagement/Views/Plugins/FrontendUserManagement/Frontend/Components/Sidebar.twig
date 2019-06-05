@@ -2,7 +2,10 @@
 {% block sidebar %}
 
 <div class="account__sidebar">
-    <div class="account__user"></div>
+    {% block sidebar__account_user %}
+        {% include 'Plugins/FrontendUserManagement/Frontend/Components/AccountUser.twig' %}
+    {% endblock sidebar__account_user %}
+
     {% if sidebar_navigation is defined %}
         <div class="account__navigation">
             <nav class="account-nav">

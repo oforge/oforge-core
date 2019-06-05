@@ -177,7 +177,7 @@ class BackendAttributeController extends SecureBackendController {
             try {
                 $attributeService->deleteAttributeKey($attributeKeyId);
             } catch (\Exception $exception) {
-                Oforge()->View()->Flash()->addMessage('danger',
+                Oforge()->View()->Flash()->addMessage('error',
                     I18N::translate('backend_insertion_delete_failed', 'Delete operation of AttributeKey failed. Please remove it from all InsertionsTypes'));
             }
         }
