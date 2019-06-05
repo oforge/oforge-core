@@ -26,10 +26,12 @@ class RouteMiddleware {
 
     /** @inheritDoc */
     public function __invoke(Request $request, Response $response, $next) {
+        $routeInfo = $request->getAttribute('routeInfo');
         Oforge()->View()->assign([
             'meta' => [
                 'route' => array_merge($this->endpoint->toArray(), [
-                    'query' => $request->getQueryParams(),
+                    'params' => $routeInfo[2],
+                    'query'  => $request->getQueryParams(),
                 ]),
             ],
         ]);

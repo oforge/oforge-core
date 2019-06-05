@@ -61,14 +61,14 @@ class User extends BaseUser {
     }
 
     /**
-     * @return UserDetail
+     * @return UserDetail|null
      */
     public function getDetail() : ?UserDetail {
         return $this->detail;
     }
 
     /**
-     * @return UserAddress
+     * @return UserAddress|null
      */
     public function getAddress() : ?UserAddress {
         return $this->address;

@@ -7,12 +7,15 @@ use Doctrine\ORM\ORMException;
 use Exception;
 use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Core\Helper\RedirectHelper;
 use Oforge\Engine\Modules\Core\Helper\StringHelper;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
+use Oforge\Engine\Modules\CRUD\Enum\CrudFilterComparator;
+use Oforge\Engine\Modules\CRUD\Enum\CrudFilterType;
 use Oforge\Engine\Modules\CRUD\Enum\CrudGroubByOrder;
 use Oforge\Engine\Modules\CRUD\Services\GenericCrudService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
@@ -34,10 +37,9 @@ class BaseCrudController extends SecureBackendController {
      *      protected $modelProperties = [
      *          [
      *              // Property name. Required
-     *              'name'      => 'id',
-     *               // Custom i18n key for label of form field, default('crud_<Module>_<ModelName>_<propertyName>' with name as default, or 'ID' default if name = id).
-     *               // String key or array with key and default value.
-     *              'label'     => 'label_id' | ['key' => 'label_id', 'default' => 'ID'],
+     *              'name'      => 'propertyName',
+     *               // Text label or i18n array with key and default value.
+     *              'label'     => 'Text' | ['key' => 'label_id', 'default' => 'ID'],
      *              'type'      => CrudDataTypes::..., // Required
      *              'crud'      => [    // default = off (not rendered). (Required)
      *                  'index'     => 'off|readonly|editable',
@@ -46,10 +48,19 @@ class BaseCrudController extends SecureBackendController {
      *                  'update'    => 'off|readonly|editable',
      *                  'delete'    => 'off|readonly|editable',
      *              ],
-     *              'list'          => [ // If type = select. Name of a protected function to create a dynamic array (e.g. 'getListUsers', or a static array. (Required)
-     *                  <value> => <option text or label e.g. 'backend_crud_property__<name>_<value>'>  // value => (text|(i18n-)label) pair
+     *              // Select with optgroups, key will be ignored in renderer
+     *              'list' => 'functionName' | [
+     *                  'key'   => [
+     *                      'label'     => 'Text' | ['key' => 'i18nLabel', 'default' => 'DefaultText'],
+     *                      'options'   => [
+     *                          'value' => => 'Text' | ['key' => 'i18nLabel', 'default' => 'DefaultText'],
+     *                      ]
+     *                  ],
      *              ],
-     *              'isI18nLabel' => true, # If type = select. Is Label i18n-key or array (key, default)? (Optional)
+     *              // Simple select
+     *              'list' => 'functionName' | [
+     *                  'value' => 'Text' | ['key' => 'i18nLabel', 'default' => 'DefaultText'], # Simple select
+     *              ],
      *              'editor' => [       // Configuration for field editor.
      *                  'default'       => '',      // Default value. (Optional)
      *                  'custom'        => '...'    // If type = custom. Twig path for include.
@@ -96,10 +107,10 @@ class BaseCrudController extends SecureBackendController {
      * Configuration of the filters on the index view.
      *      protected $indexFilter = [
      *          'propertyName' => [
-     *              'type'        => CrudFilterType::...,
-     *              'compare'     => 'equals|like|in'#Default = equals
-     *              'list'        => ''# Required list for type=select, array or protected function name.
-     *              'isI18nLabel' => true, # If type = select. Is Label i18n-key or array (key, default)? (Optional)
+     *              'type'      => CrudFilterType::...,
+     *              'label'     => 'Text' | ['key' => 'i18nLabel', 'default' => 'DefaultText'],
+     *              'compare'   => CrudFilterComparator::#Default = equals
+     *              'list'      => ''# Required list for type=select, array or protected function name.
      *          ],
      *      ];
      *
@@ -171,7 +182,8 @@ class BaseCrudController extends SecureBackendController {
         if (isset($this->model)) {
             $parts = explode('\\Models\\', $this->model, 2);
             if (count($parts) === 2) {
-                $module    = substr($parts[0], 1 + strrpos($parts[0], '\\'));
+                $module    = substr($parts[0], strrpos($parts[0], '\\'));
+                $module    = StringHelper::leftTrim($module, '\\');
                 $modelName = $parts[1];
                 if (strpos($modelName, '\\')) {
                     $modelName = substr($modelName, 1 + strrpos($modelName, '\\'));
@@ -213,13 +225,11 @@ class BaseCrudController extends SecureBackendController {
         }
         if (!empty($entities)) {
             foreach ($entities as $index => $entity) {
-                if (!empty($entity)) {
-                    $entity = $this->prepareItemData($entity, 'index');
-                    if (isset($postData[$index])) {
-                        $entity = ArrayHelper::mergeRecursive($entity, $postData[$index]);
-                    }
-                    $entities[$index] = $entity;
+                $entity = $this->prepareItemDataArray($entity, 'index');
+                if (isset($postData[$index])) {
+                    $entity = ArrayHelper::mergeRecursive($entity, $postData[$index]);
                 }
+                $entities[$index] = $entity;
             }
         }
         list($properties, $hasEditors) = $this->filterPropertiesFor('index');
@@ -231,6 +241,12 @@ class BaseCrudController extends SecureBackendController {
                     $hasRowActions = true;
                     break;
                 }
+            }
+        }
+        $filters = $this->indexFilter;
+        foreach ($filters as $index => $filter) {
+            if (isset($filter['list']) && is_string($filter['list']) && method_exists($this, $filter['list'])) {
+                $filters[$index]['list'] = $this->{$filter['list']}();
             }
         }
 
@@ -245,7 +261,7 @@ class BaseCrudController extends SecureBackendController {
                 'items'         => $entities,
                 'pagination'    => $pagination,
                 'queryKeys'     => $this->indexReservedQueryKeys,
-                'filter'        => $this->indexFilter,
+                'filter'        => $filters,
             ],
         ]);
 
@@ -265,20 +281,20 @@ class BaseCrudController extends SecureBackendController {
             try {
                 $data = $postData['data'];
                 $this->handleFileUploads($data);
-                $data = $this->convertData($data);
+                $data = $this->convertData($data, 'create');
                 $this->crudService->create($this->model, $data);
                 Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_create_success', 'Entity successfully created.'));
 
                 return $this->redirect($response, 'index');
             } catch (Exception $exception) {
                 Oforge()->View()->Flash()
-                        ->addExceptionMessage('danger', I18N::translate('backend_crud_msg_create_failed', 'Entity creation failed.'), $exception);
+                        ->addExceptionMessage('error', I18N::translate('backend_crud_msg_create_failed', 'Entity creation failed.'), $exception);
                 Oforge()->View()->Flash()->setData($this->moduleModelName, $data);
 
                 return $this->redirect($response, 'create');
             }
         }
-        $entity = $this->prepareItemData([], 'create');
+        $entity = $this->prepareItemDataArray(null, 'create');
         if (Oforge()->View()->Flash()->hasData($this->moduleModelName)) {
             $postData = Oforge()->View()->Flash()->getData($this->moduleModelName);
             $entity   = ArrayHelper::mergeRecursive($entity, $postData);
@@ -309,9 +325,7 @@ class BaseCrudController extends SecureBackendController {
      */
     public function viewAction(Request $request, Response $response, array $args) {
         $entity = $this->crudService->getById($this->model, $args['id']);
-        if (!empty($entity)) {
-            $entity = $this->prepareItemData($entity, 'view');
-        }
+        $entity = $this->prepareItemDataArray($entity, 'view');
         list($properties, $hasEditors) = $this->filterPropertiesFor('view');
         Oforge()->View()->assign([
             'crud' => [
@@ -341,21 +355,18 @@ class BaseCrudController extends SecureBackendController {
             try {
                 $data = $postData['data'];
                 $this->handleFileUploads($data);
-                $data = $this->convertData($data);
+                $data = $this->convertData($data, 'update');
                 $this->crudService->update($this->model, $data);
                 Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_update_success', 'Entity successfully updated.'));
             } catch (Exception $exception) {
-                Oforge()->View()->Flash()
-                        ->addExceptionMessage('danger', I18N::translate('backend_crud_msg_update_failed', 'Entity update failed.'), $exception);
+                Oforge()->View()->Flash()->addExceptionMessage('error', I18N::translate('backend_crud_msg_update_failed', 'Entity update failed.'), $exception);
                 Oforge()->View()->Flash()->setData($this->moduleModelName, $data);
             }
 
             return $this->redirect($response, 'update', ['id' => $args['id']]);
         }
         $entity = $this->crudService->getById($this->model, $args['id']);
-        if (!empty($entity)) {
-            $entity = $this->prepareItemData($entity, 'update');
-        }
+        $entity = $this->prepareItemDataArray($entity, 'update');
         if (Oforge()->View()->Flash()->hasData($this->moduleModelName)) {
             $postData = Oforge()->View()->Flash()->getData($this->moduleModelName);
             $entity   = ArrayHelper::mergeRecursive($entity, $postData);
@@ -387,22 +398,13 @@ class BaseCrudController extends SecureBackendController {
     public function deleteAction(Request $request, Response $response, array $args) {
         $postData = $request->getParsedBody();
         if ($request->isPost() && !empty($postData)) {
-            try {
-                $this->crudService->delete($this->model, $args['id']);
-                Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_delete_success', 'Entity successfully delete.'));
-
-                return $this->redirect($response, 'index');
-            } catch (Exception $exception) {
-                Oforge()->View()->Flash()
-                        ->addExceptionMessage('danger', I18N::translate('backend_crud_msg_delete_failed', 'Entity delete failed.'), $exception);
-
-                return $this->redirect($response, 'delete', ['id' => $args['id']]);
+            $return = $this->handleDeleteAction($response, $args['id']);
+            if (isset($return)) {
+                return $return;
             }
         }
         $entity = $this->crudService->getById($this->model, $args['id']);
-        if (!empty($entity)) {
-            $entity = $this->prepareItemData($entity, 'delete');
-        }
+        $entity = $this->prepareItemDataArray($entity, 'delete');
         list($properties, $hasEditors) = $this->filterPropertiesFor('delete');
         Oforge()->View()->assign([
             'crud' => [
@@ -442,23 +444,43 @@ class BaseCrudController extends SecureBackendController {
      * Convert form data to model data, e.g. string to DateTime.
      *
      * @param array $data
+     * @param string $crudAction
      *
      * @return array
      */
-    protected function convertData(array $data) : array {
+    protected function convertData(array $data, string $crudAction) : array {
         return $data;
     }
 
     /**
      * Prepare Item data for view, e.G. DateTime to string or custom column data.
      *
-     * @param array $data
+     * @param AbstractModel $entity
      * @param string $crudAction
      *
      * @return array
      */
-    protected function prepareItemData(array $data, string $crudAction) : array {
-        return $data;
+    protected function prepareItemDataArray(?AbstractModel $entity, string $crudAction) : array {
+        return isset($entity) ? $entity->toArray() : [];
+    }
+
+    /**
+     * @param Response $response
+     * @param string $entityID
+     *
+     * @return Response
+     */
+    protected function handleDeleteAction(Response $response, string $entityID) {
+        try {
+            $this->crudService->delete($this->model, $entityID);
+            Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_delete_success', 'Entity successfully delete.'));
+
+            return $this->redirect($response, 'index');
+        } catch (Exception $exception) {
+            Oforge()->View()->Flash()->addExceptionMessage('error', I18N::translate('backend_crud_msg_delete_failed', 'Entity delete failed.'), $exception);
+
+            return $this->redirect($response, 'delete', ['id' => $entityID]);
+        }
     }
 
     /**
@@ -470,7 +492,7 @@ class BaseCrudController extends SecureBackendController {
         $list = $postData['data'];
         $this->handleFileUploads($list);
         foreach ($list as $entityID => $data) {
-            $list[$entityID] = $this->convertData($data);
+            $list[$entityID] = $this->convertData($data, 'update');
         }
         $postData['data'] = $list;
         try {
@@ -478,7 +500,7 @@ class BaseCrudController extends SecureBackendController {
             Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_bulk_update_success', 'Entities successfully bulk updated.'));
         } catch (Exception $exception) {
             Oforge()->View()->Flash()
-                    ->addExceptionMessage('danger', I18N::translate('backend_crud_msg_bulk_update_failed', 'Entities bulk update failed.'), $exception);
+                    ->addExceptionMessage('error', I18N::translate('backend_crud_msg_bulk_update_failed', 'Entities bulk update failed.'), $exception);
             Oforge()->View()->Flash()->setData($this->moduleModelName, $postData['data']);
         }
     }
@@ -504,12 +526,25 @@ class BaseCrudController extends SecureBackendController {
                     if (isset($property['list']) && is_string($property['list']) && method_exists($this, $property['list'])) {
                         $property['list'] = $this->{$property['list']}();
                     }
-                    $properties[] = $property;
+                    $propertyName = $property['name'];
+
+                    $properties[$propertyName] = $this->modifyPropertyConfig($property);
                 }
             }
         }
 
         return [$properties, $hasEditors];
+    }
+
+    /**
+     * Modifying of property config at runtime, e.g. for adding options by configs.
+     *
+     * @param array $config
+     *
+     * @return array
+     */
+    protected function modifyPropertyConfig(array $config) {
+        return $config;
     }
 
     /**
@@ -524,7 +559,7 @@ class BaseCrudController extends SecureBackendController {
      */
     protected function redirect(Response $response, string $crudAction, array $urlParams = [], array $queryParams = []) {
         $routeName  = Oforge()->View()->get('meta')['route']['name'];
-        $actionKeys = ['view', 'update', 'delete'];
+        $actionKeys = ['view', 'create', 'delete', 'update'];
         foreach ($actionKeys as $actionKey) {
             if (StringHelper::endsWith($routeName, '_' . $actionKey)) {
                 $routeName = substr($routeName, 0, -(strlen($actionKey) + 1));
@@ -551,19 +586,38 @@ class BaseCrudController extends SecureBackendController {
         $queryKeyEntitiesPerPage = $queryKeys['entitiesPerPage'];
         unset($queryParams[$queryKeyPage], $queryParams[$queryKeyEntitiesPerPage]);
 
-        $filter = [];
+        $filters = [];
 
         if (!empty($this->indexFilter)) {
             foreach ($this->indexFilter as $propertyName => $filterConfig) {
                 if (isset($queryParams[$propertyName]) && $queryParams[$propertyName] !== '') {
                     $propertyNameValue = $queryParams[$propertyName];
-                    //TODO Crud-Index - Extended filtering - evaluate & set filterConfig
-                    $filter[$propertyName] = $propertyNameValue;
+                    switch ($filterConfig['type']) {
+                        case CrudFilterType::SELECT:
+                            $comparator = CrudFilterComparator::EQUALS;
+                            break;
+                        case CrudFilterType::TEXT:
+                            $comparator = ArrayHelper::get($filterConfig, 'compare', CrudFilterComparator::EQUALS);
+                            break;
+                        default:
+                            continue 2;
+                    }
+                    switch ($comparator) {
+                        case CrudFilterComparator::EQUALS:
+                        case CrudFilterComparator::LIKE:
+                            break;
+                        default:
+                            $comparator = CrudFilterComparator::EQUALS;
+                    }
+                    $filters[$propertyName] = [
+                        'comparator' => $comparator,
+                        'value'      => $propertyNameValue,
+                    ];
                 }
             }
         }
 
-        return $filter;
+        return $filters;
     }
 
     /**
@@ -777,7 +831,6 @@ class BaseCrudController extends SecureBackendController {
                 Oforge()->View()->Flash()->addMessage('error', I18N::translate('backend_crud_image_replace_failed', 'Image replace failed.'));
                 Oforge()->Logger()->logException($exception);
             }
-
         }
     }
 
