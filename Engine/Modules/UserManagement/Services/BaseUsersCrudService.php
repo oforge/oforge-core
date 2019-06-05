@@ -8,9 +8,11 @@
 
 namespace Oforge\Engine\Modules\UserManagement\Services;
 
+use Doctrine\ORM\ORMException;
 use Exception;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Auth\Services\PasswordService;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\CRUD\Services\GenericCrudService;
@@ -109,15 +111,23 @@ class BaseUsersCrudService {
      * @return array
      */
     public function list(array $params) {
-        return $this->crudService->list($this->userModel, $params);
+        $entities = $this->crudService->list($this->userModel, $params);
+        $entities = array_map(function($entity) {
+            /** @var AbstractModel $entity */
+            return $entity->toArray();
+        }, $entities);
+        return $entities;
     }
 
     /**
      * @param int $id
      *
      * @return array
+     * @throws ORMException
      */
     public function getById(int $id) {
-        return $this->crudService->getById($this->userModel, $id);;
+        $entity = $this->crudService->getById($this->userModel, $id);
+
+        return isset($entity) ? $entity->toArray() : [];
     }
 }

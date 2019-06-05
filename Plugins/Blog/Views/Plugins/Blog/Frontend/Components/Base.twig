@@ -1,0 +1,20 @@
+{% extends '@parent/Frontend/Layout.twig' %}
+
+{% block title %}
+    {{ config('system_project_name') }} >
+    {{ i18n('plugin_blog_frontend_blog_home', 'Blog') }}
+    {% if blog.category %}
+        > {{ blog.category.name }}
+    {% endif %}
+    {% if blog.post %}
+        > {{ blog.post.headerTitle }}
+    {% endif %}
+{% endblock title %}
+
+
+{% block content %}
+    <div class="content">
+        {% block blog_content %}
+        {% endblock blog_content %}
+    </div>
+{% endblock content %}

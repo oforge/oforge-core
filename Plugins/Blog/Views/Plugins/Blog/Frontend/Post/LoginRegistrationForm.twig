@@ -1,0 +1,8 @@
+{% set meta = mergeRecursive(meta|default({}), dotToNested({
+    'route.referrer': url('frontend_blog_view', {postID: blog.post.id, seoUrlPath: blog.post.seoUrlPath}),
+})) %}
+{% embed 'Plugins/FrontendUserManagement/Frontend/Components/Content/LoginRegistration.twig' %}
+    {% block login_registration_subtitle %}{% endblock login_registration_subtitle %}
+    {% block login_registration__registration_benefits %}{% endblock login_registration__registration_benefits %}
+{% endembed %}
+

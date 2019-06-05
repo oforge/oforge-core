@@ -3,9 +3,7 @@
 namespace Insertion\Controller\Backend;
 
 use Doctrine\ORM\ORMException as ORMExceptionAlias;
-use Insertion\Enum\AttributeType;
 use Insertion\Models\AttributeKey;
-use Insertion\Models\AttributeValue;
 use Insertion\Models\InsertionType;
 use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Services\AttributeService;
@@ -177,8 +175,7 @@ class BackendInsertionTypeController extends SecureBackendController {
             try {
                 $insertionTypeService->deleteInsertionType($insertionTypeId);
             } catch (\Exception $exception) {
-                Oforge()->View()->Flash()
-                        ->addMessage('danger', I18N::translate('backend_insertion_type_delete_failed', $exception));
+                Oforge()->View()->Flash()->addMessage('error', I18N::translate('backend_insertion_type_delete_failed', $exception));
             }
         }
         /** @var Router $router */
