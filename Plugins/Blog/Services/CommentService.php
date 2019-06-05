@@ -106,8 +106,7 @@ class CommentService extends AbstractDatabaseAccess {
         }
         if ($this->isValid($data)) {
             $comment = Comment::create($data);
-            $this->entityManager()->persist($comment);
-            $this->entityManager()->flush($comment);
+            $this->entityManager()->create($comment);
         }
     }
 
@@ -124,9 +123,7 @@ class CommentService extends AbstractDatabaseAccess {
     public function deleteComment(string $commentID) : bool {
         $comment = $this->getCommentByID($commentID);
         if (isset($comment)) {
-            $comment = $this->entityManager()->merge($comment);
             $this->entityManager()->remove($comment);
-            $this->entityManager()->flush($comment);
 
             return true;
         } else {

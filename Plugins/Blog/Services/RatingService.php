@@ -73,17 +73,16 @@ class RatingService extends AbstractDatabaseAccess {
             'userID' => $userID,
         ]);
         if (isset($rating)) {
-            $rating = $entityManager->merge($rating);
             $rating->setRating($ratingValue);
+            $rating = $entityManager->update($rating);
         } else {
             $rating = Rating::create([
                 'post'   => $postID,
                 'userID' => $userID,
                 'rating' => $ratingValue,
             ]);
-            $entityManager->persist($rating);
+            $entityManager->create($rating);
         }
-        $entityManager->flush($rating);
     }
 
     /**
