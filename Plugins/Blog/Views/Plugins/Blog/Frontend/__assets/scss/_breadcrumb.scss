@@ -1,0 +1,11 @@
+.blog-breadcrump {
+    span {
+        &:not(:last-child):after {
+            content: '>';
+        }
+    }
+
+    a {
+
+    }
+}

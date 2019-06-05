@@ -1,0 +1,6 @@
+<div class="blog-category-list">
+    {% include 'Plugins/Blog/Frontend/Components/CategoryEntry.twig' %}
+    {% for blogCategory in blog.categories %}
+        {% include 'Plugins/Blog/Frontend/Components/CategoryEntry.twig' %}
+    {% endfor %}
+</div>
