@@ -29,6 +29,21 @@ class InsertionProfileService extends AbstractDatabaseAccess {
         return $result;
     }
 
+    /**
+     * @param int $id
+     *
+     * @return InsertionProfile|null
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function getById($id): ?InsertionProfile {
+        /**
+         * @var $result InsertionProfile
+         */
+        $result = $this->repository()->find($id);
+
+        return $result;
+    }
+
     public function update(User $user, array $params) {
         /**
          * @var $result InsertionProfile
@@ -96,5 +111,7 @@ class InsertionProfileService extends AbstractDatabaseAccess {
             $this->entityManager()->update($result);
         }
     }
+
+
 
 }

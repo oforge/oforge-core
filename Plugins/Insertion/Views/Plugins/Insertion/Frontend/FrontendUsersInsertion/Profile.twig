@@ -27,6 +27,8 @@
                             </script>
                         </div>
 
+                        <a href="{{ url('insertions_profile', {id: profile.id }) }}" >Zum Profil</a>
+
                         <div class="profile">
                             <input type="file" name="profile" accept="image/*" onchange="loadFile(event, 'profile')">
                             <img id="profile"

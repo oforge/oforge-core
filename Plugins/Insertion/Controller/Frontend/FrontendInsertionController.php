@@ -12,6 +12,7 @@ use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Services\InsertionCreatorService;
 use Insertion\Services\InsertionFeedbackService;
 use Insertion\Services\InsertionListService;
+use Insertion\Services\InsertionProfileService;
 use Insertion\Services\InsertionService;
 use Insertion\Services\InsertionTypeService;
 use Insertion\Services\InsertionUpdaterService;
@@ -237,7 +238,7 @@ class FrontendInsertionController extends SecureFrontendController {
 
         Oforge()->View()->assign($result);
     }
-    
+
     /**
      * @param Request $request
      * @param Response $response
@@ -322,6 +323,34 @@ class FrontendInsertionController extends SecureFrontendController {
         $result["insertion"] = $insertion->toArray(1);
 
         Oforge()->View()->assign($result);
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @EndpointAction(path="/profile/{id}")
+     *
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function profileAction(Request $request, Response $response, $args) {
+        /**
+         * @var $service InsertionProfileService
+         */
+        $service = Oforge()->Services()->get("insertion.profile");
+
+        $result = $service->getById($args["id"]);
+
+        if ($result == null) {
+            return $response->withRedirect("/404", 301);
+        }
+
+        /**
+         * @var $listService InsertionListService
+         */
+        $listService = Oforge()->Services()->get("insertion.list");
+        $insertions  = $listService->getUserInsertions($result->getUser()->getId(), 1, 20);
+
+        Oforge()->View()->assign(["profile" => $result->toArray(), "insertions" => $insertions]);
     }
 
     public function initPermissions() {
