@@ -27,8 +27,7 @@ class RegistrationService extends AbstractDatabaseAccess {
             $user = new User();
             $user->setEmail($email);
             $user->setPassword($password);
-            $this->entityManager()->persist($user);
-            $this->entityManager()->flush();
+            $this->entityManager()->create($user);
 
             $user = $user->toArray();
             unset($user["password"]);
@@ -68,8 +67,7 @@ class RegistrationService extends AbstractDatabaseAccess {
         $user = $this->repository()->findOneBy(['guid' => $guid]);
         if ($user) {
             $user->setActive(true);
-            $this->entityManager()->persist($user);
-            $this->entityManager()->flush();
+            $this->entityManager()->update($user);
 
             $user = $user->toArray();
             unset($user["password"]);

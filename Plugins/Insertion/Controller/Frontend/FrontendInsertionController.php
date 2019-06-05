@@ -151,7 +151,6 @@ class FrontendInsertionController extends SecureFrontendController {
                     return $response->withRedirect($uri, 301);
                 }
             }
-
         } else {
             Oforge()->View()->Flash()->addMessage("error", "missing_user");
             $uri = $router->pathFor('insertions_createSteps', ["type" => $typeId, "page" => "5"]);
@@ -220,6 +219,7 @@ class FrontendInsertionController extends SecureFrontendController {
         $typeAttributes       = $service->getInsertionTypeAttributeTree($type->getId());
         $result["attributes"] = $typeAttributes;
         $result["keys"]       = [];
+        $result["typeId"]     = $args["type"];
         /**
          * @var $attribute InsertionTypeAttribute
          */

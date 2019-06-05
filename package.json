@@ -11,8 +11,8 @@
         "svgsprite": "npx svg-sprite --ss ./node_scripts/dest --sscss ./node_scripts/src/svg/*.svg"
     },
     "devDependencies": {
-        "autoprefixer": "^9.4.9",
-        "postcss-cli": "^6.1.2",
-        "svg-sprite": "^1.5.0"
+        "autoprefixer": "*",
+        "postcss-cli": "*",
+        "svg-sprite": "*"
     }
 }

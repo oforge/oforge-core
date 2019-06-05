@@ -10,7 +10,7 @@ use Oforge\Engine\Modules\CMS\Models\Content\Content;
 
 abstract class AbstractContentType extends AbstractDatabaseAccess
 {
-    protected $entityManager    = NULL;
+    protected $forgeEntityManager    = NULL;
     
     private $contentTypeEntity  = NULL;
     
@@ -38,7 +38,7 @@ abstract class AbstractContentType extends AbstractDatabaseAccess
     {
         parent::__construct(['contentType' => ContentType::class, 'content' => Content::class]);
         
-        $this->entityManager = Oforge()->DB()->getEntityManager();
+        $this->forgeEntityManager = Oforge()->DB()->getForgeEntityManager();
         
         $this->contentTypeEntity = $this->repository('contentType')->findOneBy(["classPath" => get_class($this)]);
         
@@ -299,10 +299,12 @@ abstract class AbstractContentType extends AbstractDatabaseAccess
                 if (!$this->contentId || !$this->contentEntity)
                 {
                     $this->contentEntity = new Content;
+                    $create = true;
                 }
                 else
                 {
                     $this->contentEntity->setId($this->contentId);
+                    $create = false;
                 }
                 
                 $this->contentEntity->setType($this->contentTypeEntity);
@@ -310,10 +312,13 @@ abstract class AbstractContentType extends AbstractDatabaseAccess
                 $this->contentEntity->setName($this->contentName);
                 $this->contentEntity->setCssClass($this->contentCssClass);
                 $this->contentEntity->setData($this->contentData);
-                
-                $this->entityManager->persist($this->contentEntity);
-                $this->entityManager->flush();
-                
+
+                if ($create) {
+                    $this->forgeEntityManager->create($this->contentEntity);
+                } else {
+                    $this->forgeEntityManager->update($this->contentEntity);
+                }
+
                 if (!$this->contentId)
                 {
                     $this->contentId = $this->contentEntity->getId();

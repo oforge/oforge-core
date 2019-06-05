@@ -106,8 +106,7 @@ class GenericCrudService extends AbstractDatabaseAccess {
         $instance = new $class();
         $instance = $instance->fromArray($options);
 
-        $this->entityManager()->persist($instance);
-        $this->entityManager()->flush($instance);
+        $this->entityManager()->create($instance);
         $repository->clear();
     }
 
@@ -136,6 +135,7 @@ class GenericCrudService extends AbstractDatabaseAccess {
                 throw new NotFoundException("Entity with id '$id' not found!");
             }
             $entity->fromArray($options);
+            $this->entityManager()->update($entity, false);
         } elseif (isset($options['data'])) {
             $objectsData = $options['data'];
             foreach ($objectsData as $id => $objectData) {
@@ -148,6 +148,7 @@ class GenericCrudService extends AbstractDatabaseAccess {
                     throw new NotFoundException("Entity with id '$id' not found!");
                 }
                 $entity->fromArray($objectData);
+                $this->entityManager()->update($entity, false);
             }
         }
         $this->entityManager()->flush();
@@ -175,7 +176,6 @@ class GenericCrudService extends AbstractDatabaseAccess {
             throw new NotFoundException("Entity with id '$id' not found!");
         }
         $this->entityManager()->remove($entity);
-        $this->entityManager()->flush();
         $repository->clear();
     }
 

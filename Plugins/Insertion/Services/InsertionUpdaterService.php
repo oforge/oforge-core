@@ -129,23 +129,24 @@ class InsertionUpdaterService extends AbstractDatabaseAccess {
             $content = InsertionContent::create($data["content"]);
             $content->setInsertion($insertion);
             $insertion->setContent([$content]);
+            $this->entityManager()->create($content, false);
+        } else {
+            $content = $insertion->getContent()[0];
+            $content->fromArray($data["content"]);
+            $this->entityManager()->update($content, false);
         }
 
-        $content = $insertion->getContent()[0];
-        $content->fromArray($data["content"]);
-
-        $this->entityManager()->persist($content);
 
         if ($insertion->getContact() == null) {
             $contact = InsertionContact::create($data["contact"]);
             $contact->setInsertion($insertion);
             $insertion->setContact($contact);
+            $this->entityManager()->create($contact, false);
+        } else {
+            $contact = $insertion->getContact();
+            $contact->fromArray($data["contact"]);
+            $this->entityManager()->update($contact, false);
         }
-
-        $contact = $insertion->getContact();
-        $contact->fromArray($data["contact"]);
-
-        $this->entityManager()->persist($contact);
         //TODO set correct price
         $insertion->setPrice($data["price"] ? : 100.0);
 
@@ -182,7 +183,7 @@ class InsertionUpdaterService extends AbstractDatabaseAccess {
         //delete not modified elements
         foreach ($delete as $item) {
             $insertion->getValues()->removeElement($item);
-            $this->entityManager()->remove($item);
+            $this->entityManager()->remove($item, false);
         }
 
         //create new values
@@ -191,36 +192,32 @@ class InsertionUpdaterService extends AbstractDatabaseAccess {
 
             $attributeValue = InsertionAttributeValue::create($attributeData);
             $attributeValue->setInsertion($insertion);
-            $this->entityManager()->persist($attributeValue);
+            $this->entityManager()->create($attributeValue, false);
             $insertion->getValues()->add($attributeValue);
 
         }
 
-        $this->entityManager()->persist($insertion);
+        $this->entityManager()->update($insertion, false);
         //TODO update media data
         $this->entityManager()->flush();
-
     }
 
     public function deactivate(Insertion $insertion) {
         $insertion->setActive(false);
         $insertion->setDeleted(false);
-        $this->entityManager()->persist($insertion);
-        $this->entityManager()->flush();
+        $this->entityManager()->update($insertion);
     }
 
     public function activate(Insertion $insertion) {
         $insertion->setActive(true);
         $insertion->setDeleted(false);
-        $this->entityManager()->persist($insertion);
-        $this->entityManager()->flush();
+        $this->entityManager()->update($insertion);
     }
 
     public function delete(Insertion $insertion) {
         $insertion->setActive(false);
         $insertion->setDeleted(true);
-        $this->entityManager()->persist($insertion);
-        $this->entityManager()->flush();
+        $this->entityManager()->update($insertion);
     }
 }
 
