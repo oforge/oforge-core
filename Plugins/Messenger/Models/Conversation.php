@@ -58,13 +58,13 @@ class Conversation extends AbstractModel {
      * @var string
      * @ORM\Column(name="last_message", type="text", nullable=true);
      */
-    private $lastMessage;
+    private $lastMessage = null;
 
     /**
      * @var \DateTime
      * @ORM\Column(name="last_message_timestamp", type="datetime", nullable=true);
      */
-    private $lastMessageTimestamp;
+    private $lastMessageTimestamp = null;
 
     /**
      * Triggered on insert

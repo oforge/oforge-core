@@ -85,6 +85,7 @@ class Bootstrap extends AbstractBootstrap {
 
         $this->dependencies = [
             \FrontendUserManagement\Bootstrap::class,
+            \Messenger\Bootstrap::class,
         ];
     }
 

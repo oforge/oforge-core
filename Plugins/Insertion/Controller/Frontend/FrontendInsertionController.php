@@ -7,6 +7,7 @@ use Doctrine\ORM\Event\OnFlushEventArgs;
 use FrontendUserManagement\Abstracts\SecureFrontendController;
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\FrontendUserService;
+use Insertion\Models\Insertion;
 use Insertion\Models\InsertionType;
 use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Services\InsertionCreatorService;
@@ -15,8 +16,11 @@ use Insertion\Services\InsertionListService;
 use Insertion\Services\InsertionService;
 use Insertion\Services\InsertionTypeService;
 use Insertion\Services\InsertionUpdaterService;
+use Messenger\Models\Conversation;
+use Messenger\Services\FrontendMessengerService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\StringHelper;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -321,6 +325,60 @@ class FrontendInsertionController extends SecureFrontendController {
         $result["insertion"] = $insertion->toArray(1);
 
         Oforge()->View()->assign($result);
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @EndpointAction(path="/contact/{id}")
+     *
+     * @throws ServiceNotFoundException
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function contactAction(Request $request, Response $response, $args) {
+        $id = $args["id"];
+        /** @var $service InsertionService */
+        $insertionService = Oforge()->Services()->get("insertion");
+        /** @var Insertion $insertion */
+        $insertion = $insertionService->getInsertionById(intval($id));
+
+        if (!isset($insertion) || $insertion == null) {
+            return $response->withRedirect("/404", 301);
+        }
+
+        if ($request->isPost()) {
+            $body    = $request->getParsedBody();
+            $message = $body['message'];
+
+            /** @var $userService FrontendUserService */
+            $userService = Oforge()->Services()->get("frontend.user");
+            $user        = $userService->getUser();
+
+            /** @var Router $router */
+            $router = Oforge()->App()->getContainer()->get('router');
+
+            if (is_null($user)) {
+                $uri = $router->pathFor('frontend_login');
+
+                return $response->withRedirect($uri, 302);
+            }
+
+            /** @var FrontendMessengerService $messengerService */
+            $messengerService = Oforge()->Services()->get('frontend.messenger');
+            /** @var Conversation $conversation */
+            $conversation           = $messengerService->checkForConversation($user->getId(), $insertion->getUser()->getId(), 'classified_advert',
+                $insertion->getId());
+
+            if (is_null($conversation)) {
+                $conversation = $messengerService->createNewConversation($user->getId(), $insertion->getUser()->getId(), 'classified_advert', $insertion->getId(),
+                    $insertion->getContent()[0]->getTitle(), $message);
+            }
+            $uri = $router->pathFor('frontend_account_messages', ['id' => $conversation->getId()]);
+
+            return $response->withRedirect($uri, 302);
+        }
+
+        Oforge()->View()->assign(["insertion" => $insertion->toArray(2)]);
     }
 
     public function initPermissions() {
