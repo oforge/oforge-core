@@ -25,6 +25,7 @@ use Insertion\Services\InsertionFeedbackService;
 use Insertion\Services\InsertionListService;
 use Insertion\Services\InsertionMockService;
 use Insertion\Services\InsertionService;
+use Insertion\Services\InsertionSliderService;
 use Insertion\Services\InsertionTypeService;
 use Insertion\Services\InsertionUpdaterService;
 use Insertion\Twig\InsertionExtensions;
@@ -55,6 +56,7 @@ class Bootstrap extends AbstractBootstrap {
             'insertion.updater'   => InsertionUpdaterService::class,
             'insertion.feedback'  => InsertionFeedbackService::class,
             'insertion.list'      => InsertionListService::class,
+            'insertion.slider'    => InsertionSliderService::class,
         ];
 
         $this->models = [
