@@ -97,7 +97,6 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
                 }
             }
 
-            
             if (isset($_SESSION['insertion' . $typeId]["images"][$mainIndex])) {
                 $_SESSION['insertion' . $typeId]["images"][$mainIndex]["main"] = true;
             }
