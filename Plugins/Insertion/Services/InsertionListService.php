@@ -33,7 +33,7 @@ class InsertionListService extends AbstractDatabaseAccess {
 
         $queryBuilder = $this->entityManager()->createQueryBuilder()#
                              ->select('i')->from("Insertion\Models\Insertion", "i")#
-                             ->where("i.insertionType = :type and i.active = true and i.moderation = false");
+                             ->where("i.insertionType = :type and i.active = true and i.moderation = true");
         $queryBuilder->setParameter("type", $typeId);
 
         $keyCount       = 1;
