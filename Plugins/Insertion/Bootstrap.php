@@ -19,11 +19,15 @@ use Insertion\Models\InsertionMedia;
 use Insertion\Models\InsertionType;
 use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Models\InsertionTypeGroup;
+use Insertion\Models\InsertionUserBookmark;
+use Insertion\Models\InsertionUserSearchBookmark;
 use Insertion\Services\AttributeService;
+use Insertion\Services\InsertionBookmarkService;
 use Insertion\Services\InsertionCreatorService;
 use Insertion\Services\InsertionFeedbackService;
 use Insertion\Services\InsertionListService;
 use Insertion\Services\InsertionMockService;
+use Insertion\Services\InsertionSearchBookmarkService;
 use Insertion\Services\InsertionService;
 use Insertion\Services\InsertionTypeService;
 use Insertion\Services\InsertionUpdaterService;
@@ -47,28 +51,32 @@ class Bootstrap extends AbstractBootstrap {
         ];
 
         $this->services = [
-            'insertion'           => InsertionService::class,
-            'insertion.type'      => InsertionTypeService::class,
-            'insertion.attribute' => AttributeService::class,
-            'insertion.mock'      => InsertionMockService::class,
-            'insertion.creator'   => InsertionCreatorService::class,
-            'insertion.updater'   => InsertionUpdaterService::class,
-            'insertion.feedback'  => InsertionFeedbackService::class,
-            'insertion.list'      => InsertionListService::class,
+            'insertion'                 => InsertionService::class,
+            'insertion.type'            => InsertionTypeService::class,
+            'insertion.attribute'       => AttributeService::class,
+            'insertion.mock'            => InsertionMockService::class,
+            'insertion.creator'         => InsertionCreatorService::class,
+            'insertion.updater'         => InsertionUpdaterService::class,
+            'insertion.feedback'        => InsertionFeedbackService::class,
+            'insertion.list'            => InsertionListService::class,
+            'insertion.bookmark'        => InsertionBookmarkService::class,
+            'insertion.search.bookmark' => InsertionSearchBookmarkService::class,
         ];
 
         $this->models = [
             AttributeKey::class,
             AttributeValue::class,
-            InsertionContact::class,
             Insertion::class,
             InsertionAttributeValue::class,
+            InsertionContact::class,
+            InsertionContent::class,
+            InsertionFeedback::class,
+            InsertionMedia::class,
             InsertionType::class,
             InsertionTypeAttribute::class,
-            InsertionContent::class,
-            InsertionMedia::class,
             InsertionTypeGroup::class,
-            InsertionFeedback::class,
+            InsertionUserBookmark::class,
+            InsertionUserSearchBookmark::class
         ];
 
         $this->dependencies = [
@@ -125,15 +133,30 @@ class Bootstrap extends AbstractBootstrap {
             'position' => 'sidebar',
         ]);
 
-
         /** @var AccountNavigationService $accountNavigationService */
         $accountNavigationService = Oforge()->Services()->get('frontend.user.management.account.navigation');
 
         $accountNavigationService->put([
             'name'     => 'frontend_account_insertions',
             'order'    => 1,
-            'icon'     => 'profil',
+            'icon'     => 'insertion',
             'path'     => 'frontend_account_insertions',
+            'position' => 'sidebar',
+        ]);
+
+        $accountNavigationService->put([
+            'name'     => 'frontend_account_insertions_bookmarks',
+            'order'    => 2,
+            'icon'     => 'heart',
+            'path'     => 'frontend_account_insertions_bookmarks',
+            'position' => 'sidebar',
+        ]);
+
+        $accountNavigationService->put([
+            'name'     => 'frontend_account_insertions_searchBookmarks',
+            'order'    => 4,
+            'icon'     => 'magnifier',
+            'path'     => 'frontend_account_insertions_searchBookmarks',
             'position' => 'sidebar',
         ]);
     }

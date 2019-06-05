@@ -2,9 +2,6 @@
 
 namespace Insertion\Services;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Insertion\Enum\AttributeType;
 use Insertion\Models\AttributeKey;
@@ -13,8 +10,6 @@ use Insertion\Models\InsertionType;
 use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Models\InsertionTypeGroup;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
-use Oforge\Engine\Modules\CRUD\Enum\CrudFilterType;
-use Oforge\Engine\Modules\CRUD\Services\GenericCrudService;
 
 class InsertionListService extends AbstractDatabaseAccess {
     public function __construct() {
@@ -36,7 +31,9 @@ class InsertionListService extends AbstractDatabaseAccess {
 
         $result = ["filter" => [], "query" => [], 'order' => $_GET["order"]];
 
-        $queryBuilder = $this->entityManager()->createQueryBuilder()->select('i')->from("Insertion\Models\Insertion", "i")->where("i.insertionType = :type and i.active = true and i.moderation = false");
+        $queryBuilder = $this->entityManager()->createQueryBuilder()#
+                             ->select('i')->from("Insertion\Models\Insertion", "i")#
+                             ->where("i.insertionType = :type and i.active = true and i.moderation = false");
         $queryBuilder->setParameter("type", $typeId);
 
         $keyCount       = 1;

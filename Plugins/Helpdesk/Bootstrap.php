@@ -101,7 +101,7 @@ class Bootstrap extends AbstractBootstrap {
         $accountNavigation->put([
             'name'     => 'frontend_account_support',
             'order'    => 1,
-            'icon'     => 'whatsapp',
+            'icon'     => 'support',
             'path'     => 'frontend_account_support',
             'position' => 'sidebar',
         ]);

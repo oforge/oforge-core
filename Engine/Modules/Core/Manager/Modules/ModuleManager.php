@@ -2,7 +2,6 @@
 
 namespace Oforge\Engine\Modules\Core\Manager\Modules;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -13,6 +12,7 @@ use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\CouldNotInstallModuleException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceAlreadyExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Forge\ForgeEntityManager;
 use Oforge\Engine\Modules\Core\Helper\Helper;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\Core\Models\Module\Module;
@@ -20,7 +20,7 @@ use Oforge\Engine\Modules\Core\Services\MiddlewareService;
 
 class ModuleManager {
     protected static $instance = null;
-    private $entityManger = null;
+    private $forgeEntityManager = null;
     private $moduleRepository = null;
 
     public static function getInstance() {
@@ -31,12 +31,12 @@ class ModuleManager {
         return self::$instance;
     }
 
-    public function entityManger() : EntityManager {
-        if (!isset($this->entityManger)) {
-            $this->entityManger = Oforge()->DB()->getEntityManager();
+    public function entityManger() : ForgeEntityManager {
+        if (!isset($this->forgeEntityManager)) {
+            $this->forgeEntityManager = Oforge()->DB()->getForgeEntityManager();
         }
 
-        return $this->entityManger;
+        return $this->forgeEntityManager;
     }
 
     public function moduleRepository() : EntityRepository {
@@ -163,8 +163,7 @@ class ModuleManager {
                 //found -> nothing to do;
             } else { // if not put the data into the database
                 $newEntry = Module::create(["name" => get_class($instance), "order" => $instance->getOrder(), "active" => 1, "installed" => 0]);
-                $this->entityManger()->persist($newEntry);
-                $this->entityManger()->flush();
+                $this->entityManger()->create($newEntry);
             }
         }
     }
@@ -211,7 +210,8 @@ class ModuleManager {
                     $instance->install();
                 } catch (ConfigElementAlreadyExistException $e) {
                 }
-                $this->entityManger()->persist($entry->setInstalled(true));
+                $entry->setInstalled(true);
+                $this->entityManger()->update($entry, false);
             }
 
             $instance->activate();
@@ -259,7 +259,8 @@ class ModuleManager {
                     $instance->install();
                 } catch (ConfigElementAlreadyExistException $e) {
                 }
-                $this->entityManger()->persist($entry->setInstalled(true));
+                $entry->setInstalled(true);
+                $this->entityManger()->update($entry, false);
                 $needFlush = true;
             } elseif (!isset($entry)) {
                 $this->register($className);
@@ -268,7 +269,8 @@ class ModuleManager {
                 } catch (ConfigElementAlreadyExistException $e) {
                 }
                 $entry = $this->moduleRepository()->findOneBy(["name" => $className]);
-                $this->entityManger()->persist($entry->setInstalled(true));
+                $entry->setInstalled(true);
+                $this->entityManger()->update($entry, false);
                 $needFlush = true;
             }
 

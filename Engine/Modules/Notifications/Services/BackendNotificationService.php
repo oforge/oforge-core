@@ -65,23 +65,20 @@ class BackendNotificationService extends AbstractNotificationService {
             $notification->setLink($link);
         }
 
-        $this->entityManager()->persist($notification);
-        $this->entityManager()->flush();
+        $this->entityManager()->create($notification);
     }
 
     /**
      * @param $id
      *
      * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function markAsSeen($id) {
         $notification = $this->repository()->find($id);
 
         $notification->setSeen(true);
 
-        $this->entityManager()->persist($notification);
-        $this->entityManager()->flush();
+        $this->entityManager()->update($notification);
     }
 
     /**
@@ -110,7 +107,6 @@ class BackendNotificationService extends AbstractNotificationService {
         $notification->setMessage($message);
         $notification->setLink($link);
 
-        $this->entityManager()->persist($notification);
-        $this->entityManager()->flush();
+        $this->entityManager()->create($notification);
     }
 }

@@ -217,7 +217,7 @@ class ConsoleService {
         $commandClassNames = [];
 
         // TODO refactor after boostrap refactoring
-        $entityManager    = Oforge()->DB()->getEntityManager();
+        $entityManager    = Oforge()->DB()->getForgeEntityManager();
         $moduleRepository = $entityManager->getRepository(Module::class);
         $pluginRepository = $entityManager->getRepository(Plugin::class);
         /**

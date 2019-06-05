@@ -33,6 +33,14 @@ class InsertionUserBookmark extends AbstractModel {
      */
     private $createdAt;
 
+
+    /**
+     * @var Insertion
+     * @ORM\ManyToOne(targetEntity="Insertion\Models\Insertion", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="insertion_id", referencedColumnName="id")
+     */
+    private $insertion;
+
     /**
      * @ORM\PrePersist
      * @throws \Exception
@@ -48,13 +56,6 @@ class InsertionUserBookmark extends AbstractModel {
     public function getCreatedAt() : DateTime {
         return $this->createdAt;
     }
-
-    /**
-     * @var Insertion
-     * @ORM\ManyToOne(targetEntity="Insertion\Models\Insertion", fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="insertion_id", referencedColumnName="id")
-     */
-    private $insertion;
 
     /**
      * @return int

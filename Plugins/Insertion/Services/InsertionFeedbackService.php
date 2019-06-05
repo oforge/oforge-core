@@ -17,8 +17,7 @@ class InsertionFeedbackService extends AbstractDatabaseAccess {
 
             $data     = ["rating" => $_POST["feedback_rating"], "text" => $_POST["feedback_text"]];
             $feedback = InsertionFeedback::create($data);
-            $this->entityManager()->persist($feedback);
-            $this->entityManager()->flush();
+            $this->entityManager()->create($feedback);
         }
     }
 }

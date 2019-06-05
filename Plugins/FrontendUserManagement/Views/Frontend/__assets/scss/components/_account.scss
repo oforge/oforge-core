@@ -49,6 +49,11 @@
 
             border-bottom: 2px solid $color-secondary;
         }
+
+        &.account-nav__link--active {
+            color: $color-secondary;
+            border-color: $color-secondary;
+        }
     }
 
     &__text {
@@ -58,6 +63,10 @@
 
 .account-nav__link + .account-nav__link {
     margin-top: 1rem;
+}
+
+.account__content {
+    padding: $size-large;
 }
 
 @media screen and (min-width: $screen-large) {

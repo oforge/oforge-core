@@ -41,14 +41,17 @@ class MediaService extends AbstractDatabaseAccess {
                     'name' => $filename,
                     'path' => str_replace('\\', '/', $relativeFilePath),
                 ]);
-                $this->entityManager()->persist($media);
-                $this->entityManager()->flush();
+                $this->entityManager()->create($media);
 
                 return $media;
             }
         }
 
         return null;
+    }
+
+    public function delete($id) {
+        //TODO
     }
 
     /**

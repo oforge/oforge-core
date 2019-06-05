@@ -18,7 +18,7 @@
                      data-upload-delete="{{ image.id }}">
                     {{ i18n('delete') }}
                 </div>
-                <div class="upload__choose-main"
+                <div class="upload__choose-main {% if image.main %}upload__choose-main--is-main{% endif %}"
                      data-upload-choose-main="{{ image.id }}"></div>
             </li>
             {% endfor %}

@@ -39,29 +39,13 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
 
         if (isset($_POST["current_page"])) {
             $_SESSION['insertion' . $typeId] = array_merge($_SESSION['insertion' . $typeId], $_POST);
+            /** @var MediaService $mediaService */
+            $mediaService = Oforge()->Services()->get('media');
 
             if (isset($_FILES["images"])) {
-                /** @var MediaService $mediaService */
-                $mediaService = Oforge()->Services()->get('media');
-
                 if (!isset($_SESSION['insertion' . $typeId]["images"])) {
                     $_SESSION['insertion' . $typeId]["images"] = [];
                 }
-
-                $imgs = [];
-
-                foreach ($_SESSION['insertion' . $typeId]["images"] as $image) {
-                    if (isset($_POST["images_interactions"])) {
-                        if (isset($image["id"]) && isset($_POST["images_interactions"][$image["id"]])
-                            && $_POST["images_interactions"][$image["id"]] == "delete") {
-                            $mediaService->delete($image["id"]);
-                        } else {
-                            array_push($imgs, $image);
-                        }
-                    }
-                }
-
-                $_SESSION['insertion' . $typeId]["images"] = $imgs;
 
                 foreach ($_FILES["images"]["error"] as $key => $error) {
                     if ($error == UPLOAD_ERR_OK) {
@@ -71,10 +55,50 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
                             $file[$k] = $_FILES["images"][$k][$key];
                         }
 
-                        $media                                       = $mediaService->add($file);
-                        $_SESSION['insertion' . $typeId]["images"][] = $media->toArray();
+                        $media     = $mediaService->add($file);
+                        $imageData = $media->toArray();
+                        if (isset($_POST['images_temp_interactions']) && isset($_POST['images_temp_interactions'][$key])
+                            && $_POST['images_temp_interactions'][$key] == 'main') {
+                            foreach ($_SESSION['insertion' . $typeId]["images"] as $imageKey => $value) {
+                                $_SESSION['insertion' . $typeId]["images"][$imageKey]["main"] = false;
+                            }
+                            $imageData["main"] = true;
+                        }
+
+                        $_SESSION['insertion' . $typeId]["images"][] = $imageData;
                     }
                 }
+            }
+
+            $mainIndex = 0;
+
+            if (isset($_POST['images_interactions'])) {
+                $imgs = [];
+
+                //delete images
+                foreach ($_SESSION['insertion' . $typeId]["images"] as $index => $image) {
+                    if (isset($image["id"]) && isset($_POST["images_interactions"][$image["id"]]) && $_POST["images_interactions"][$image["id"]] == "delete") {
+                        $mediaService->delete($image["id"]);
+                    } else {
+                        array_push($imgs, $image);
+                    }
+                }
+
+                $_SESSION['insertion' . $typeId]["images"] = $imgs;
+                //find main image
+                foreach ($_SESSION['insertion' . $typeId]["images"] as $index => $image) {
+                    if (isset($image["id"]) && isset($_POST["images_interactions"][$image["id"]])) {
+                        if ($_POST["images_interactions"][$image["id"]] == "main") {
+                            $mainIndex = $index;
+                        }
+                    }
+
+                    $_SESSION['insertion' . $typeId]["images"][$index]["main"] = false;
+                }
+            }
+
+            if (isset($_SESSION['insertion' . $typeId]["images"][$mainIndex])) {
+                $_SESSION['insertion' . $typeId]["images"][$mainIndex]["main"] = true;
             }
         }
 
@@ -115,7 +139,7 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
         if (isset($pageData["images"]) && sizeof($pageData["images"]) > 0) {
             foreach ($pageData["images"] as $image) {
                 $media = $this->repository("media")->findOneBy(["id" => $image["id"]]);
-                array_push($data["media"], ["name" => $image["name"], "content" => $media]);
+                array_push($data["media"], ["name" => $image["name"], "content" => $media, "main" => $image["main"]]);
             }
         }
 
@@ -153,7 +177,7 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
             foreach ($data["media"] as $mediaData) {
                 $imedia = InsertionMedia::create($mediaData);
                 $imedia->setInsertion($insertion);
-                $this->entityManager()->persist($imedia);
+                $this->entityManager()->create($imedia, false);
                 array_push($media, $imedia);
             }
 
@@ -161,7 +185,7 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
             foreach ($data["attributes"] as $attributeData) {
                 $attributeValue = InsertionAttributeValue::create($attributeData);
                 $attributeValue->setInsertion($insertion);
-                $this->entityManager()->persist($attributeValue);
+                $this->entityManager()->create($attributeValue, false);
                 array_push($attributeValues, $attributeValue);
             }
 
@@ -170,9 +194,9 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
             $insertion->setMedia($media);
             $insertion->setValues($attributeValues);
 
-            $this->entityManager()->persist($content);
-            $this->entityManager()->persist($contact);
-            $this->entityManager()->persist($insertion);
+            $this->entityManager()->create($content, false);
+            $this->entityManager()->create($contact, false);
+            $this->entityManager()->create($insertion, false);
             $this->entityManager()->flush();
 
             return $insertion->getId();

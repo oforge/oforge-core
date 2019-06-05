@@ -19,7 +19,7 @@ class EntryList extends AbstractContentType
      */
     private function getRowEntities(?int $rowId)
     {
-        $rowEntities = $this->entityManager->getRepository(RowModel::class)->findBy(["row" => $rowId], ["order" => "ASC"]);
+        $rowEntities = $this->forgeEntityManager->getRepository(RowModel::class)->findBy(["row" => $rowId], ["order" => "ASC"]);
         
         if ($rowEntities)
         {
@@ -132,8 +132,7 @@ class EntryList extends AbstractContentType
                     {
                         $rowEntity->setOrder($currentOrder + 1);
                         
-                        $this->entityManager->persist($rowEntity);
-                        $this->entityManager->flush();
+                        $this->forgeEntityManager->update($rowEntity);
                     }
                 }
                 else
@@ -160,9 +159,8 @@ class EntryList extends AbstractContentType
         $rowEntity->setContent($contentEntity);
         $rowEntity->setOrder($order);
         
-        $this->entityManager->persist($rowEntity);
-        $this->entityManager->flush();
-        
+        $this->forgeEntityManager->create($rowEntity);
+
         return $this;
     }
 
@@ -176,12 +174,11 @@ class EntryList extends AbstractContentType
      */
     public function deleteChild($contentElementId, $contentElementAtOrderIndex)
     {
-        $rowEntity = $this->entityManager->getRepository(RowModel::class)->findOneBy(["row" => $this->getContentId(), "content" => $contentElementId, "order" => $contentElementAtOrderIndex]);
+        $rowEntity = $this->forgeEntityManager->getRepository(RowModel::class)->findOneBy(["row" => $this->getContentId(), "content" => $contentElementId, "order" => $contentElementAtOrderIndex]);
         
         if ($rowEntity)
         {
-            $this->entityManager->remove($rowEntity);
-            $this->entityManager->flush();
+            $this->forgeEntityManager->remove($rowEntity);
         }
 
         return $this;

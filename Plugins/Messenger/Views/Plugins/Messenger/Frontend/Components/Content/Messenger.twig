@@ -27,10 +27,14 @@
         </div>
         <div class="messenger__chat">
             <div class="messenger__header messenger__header--chat flex flex--row flex--center flex--between">
-                <span class="icon"></span>
+
+                TODO USER AVATAR
+
                 <h3 class="title title--chat">{{ conversation.chatPartner }}</h3>
                 <a href="{{ url('frontend_account_messages', {id: conversation.id}) }}">
-                    <span class="icon"></span>
+                    <svg class="icon">
+                        <use xlink:href="#circuit"></use>
+                    </svg>
                 </a>
             </div>
             <div class="messages">

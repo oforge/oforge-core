@@ -47,7 +47,6 @@ class KeyValueStoreService extends AbstractDatabaseAccess {
             $element = KeyValue::create(["name" => $name, "value" => $value]);
         }
 
-        $this->entityManager()->persist($element);
-        $this->entityManager()->flush();
+        $this->entityManager()->update($element);
     }
 }
