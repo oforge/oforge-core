@@ -33,8 +33,7 @@ class ContentTypeGroupManagementService extends AbstractDatabaseAccess
         if (!isset($element)) {
             if ($this->isValid($options)) {
                 $entity = ContentTypeGroup::create($options);
-                $this->entityManager()->persist($entity);
-                $this->entityManager()->flush();
+                $this->entityManager()->create($entity);
             }
         }
     }

@@ -3,5 +3,16 @@
     <li class="top-nav-list__item item--login">
         <a href="{{ url( 'insertions_create') }}" class="button button--secondary button--shadow button--uppercase button--header">{{ i18n('insertion_create', 'Jetzt inserieren!') }}</a>
     </li>
+
     {{ parent() }}
+
+    <li class="top-nav-list__item item--login">
+        <a href="{{ url('frontend_account_insertions_bookmarks')}}"
+           title="bookmarks">
+            <svg class="icon icon--secondary icon--heart">
+                <use xlink:href="#heart"></use>
+            </svg>
+        </a>
+    </li>
 {% endblock top_nav_links %}
+

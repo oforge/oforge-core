@@ -59,7 +59,7 @@ class Bootstrap extends AbstractBootstrap {
         $accountNavigationService->put([
             'name'     => 'frontend_account_messages',
             'order'    => 1,
-            'icon'     => 'postfach',
+            'icon'     => 'email',
             'path'     => 'frontend_account_messages',
             'position' => 'sidebar',
         ]);

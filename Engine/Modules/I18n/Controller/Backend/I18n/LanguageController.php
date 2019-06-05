@@ -2,10 +2,10 @@
 
 namespace Oforge\Engine\Modules\I18n\Controller\Backend\I18n;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
+use Oforge\Engine\Modules\Core\Forge\ForgeEntityManager;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
@@ -89,8 +89,8 @@ class LanguageController extends BaseCrudController {
         if (!isset($this->snippets)) {
             $this->snippets = [];
             try {
-                /* @var EntityManager $entityManager */
-                $entityManager = Oforge()->DB()->getEntityManager();
+                /* @var ForgeEntityManager $entityManager */
+                $entityManager = Oforge()->DB()->getForgeEntityManager();
                 $queryBuilder  = $entityManager->getRepository(Snippet::class)->createQueryBuilder('s');
                 $entries       = $queryBuilder->select('s.scope, COUNT(s) as value')->groupBy('s.scope')->getQuery()->getArrayResult();
                 foreach ($entries as $entry) {

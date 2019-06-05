@@ -28,8 +28,7 @@ class UserAddressService extends AbstractDatabaseAccess {
             $address = $this->get($data['userId']);
             if (isset($address)) {
                 $address->fromArray($data);
-                $address = $this->entityManager()->merge($address);
-                $this->entityManager()->flush($address);
+                $this->entityManager()->update($address);
 
                 return true;
             }

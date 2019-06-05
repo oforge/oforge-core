@@ -83,15 +83,15 @@ abstract class AbstractModel {
             }
 
             if (method_exists($this, $method)) {
-                $r      = new ReflectionMethod(static::class, $method);
-                $params = $r->getParameters();
+                $reflectionMethod = new ReflectionMethod(static::class, $method);
+                $params           = $reflectionMethod->getParameters();
 
-                if (sizeof($params) == 1) {
+                if (count($params) === 1) {
                     $classObject = $params[0]->getClass();
                     if (isset($classObject)) {
                         $className = $classObject->getName();
                         if (isset($className)) {
-                            $value = Oforge()->DB()->getEntityManager()->getRepository($className)->find($value);
+                            $value = Oforge()->DB()->getForgeEntityManager()->getRepository($className)->find($value);
                         }
                     } else {
                         switch ("" . $params[0]->getType()) {
@@ -154,6 +154,35 @@ abstract class AbstractModel {
     }
 
     /**
+     * Convert this object to array.
+     *
+     * @param int $maxDepth
+     *
+     * @return array
+     */
+    public function toCleanedArray($maxDepth = 2, array &$cache = []) : array {
+        $result = [];
+
+        if (!is_array($result)) {
+            $cache[get_class($result) . "::::" . $this->getId()] = true;
+        }
+
+        foreach (get_class_methods($this) as $classMethod) {
+            foreach (['get', 'is'] as $prefix) {
+                $length = strlen($prefix);
+                if (substr($classMethod, 0, $length) === $prefix) {
+                    $propertyName = lcfirst(substr($classMethod, $length));
+
+                    $result[$propertyName] = $this->assignCleanedArray($this->$classMethod(), $maxDepth, $cache);
+                    break;
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * Convert non scalar values to array.
      *
      * @param mixed $result
@@ -176,37 +205,11 @@ abstract class AbstractModel {
             return null;
         } elseif (is_array($result) || is_subclass_of($result, Collection::class)) {
             $subResult = [];
-            foreach ($result as $item) {
-                $subResult[] = $item->assignArray($item, $maxDepth - 1, $excludeProperties);
+            foreach ($result as $key => $item) {
+                $subResult[$key] = $this->assignArray($item, $maxDepth - 1, $excludeProperties);
             }
 
             return $subResult;
-        }
-
-        return $result;
-    }
-
-    /**
-     * Convert this object to array.
-     *
-     * @param int $maxDepth
-     *
-     * @return array
-     */
-    public function toCleanedArray($maxDepth = 2, array &$cache = []) : array {
-        $result     = [];
-        $cache[get_class($result) . "::::" . $this->getId()] = true;
-
-        foreach (get_class_methods($this) as $classMethod) {
-            foreach (['get', 'is'] as $prefix) {
-                $length = strlen($prefix);
-                if (substr($classMethod, 0, $length) === $prefix) {
-                    $propertyName = lcfirst(substr($classMethod, $length));
-
-                    $result[$propertyName] = $this->assignCleanedArray($this->$classMethod(), $maxDepth, $cache);
-                    break;
-                }
-            }
         }
 
         return $result;
