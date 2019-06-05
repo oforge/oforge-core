@@ -1,0 +1,8 @@
+<div class="blog-header-image">
+    {#TODO ALEX blog post header image#}
+    {% if blog.post is defined and blog.post.headerImage %}
+        <img src="{{ media(blog.post.headerImage) }}" />
+    {% else %}
+        DEFAULT_IMAGE
+    {% endif %}
+</div>

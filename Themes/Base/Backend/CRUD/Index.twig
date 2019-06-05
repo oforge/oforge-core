@@ -19,8 +19,8 @@
                                 </p>
                             </div>
                         </div>
-                        {% include 'Backend/CRUD/Components/Index/Filter.twig' with {
-                            filter: crud.filter,
+                        {% include 'Backend/CRUD/Components/Index/FilterBar.twig' with {
+                            crud: crud,
                             route: meta.route
                         } only %}
                         {% if crud.hasEditors %}
