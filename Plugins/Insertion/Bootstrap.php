@@ -20,6 +20,7 @@ use Insertion\Models\InsertionType;
 use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Models\InsertionTypeGroup;
 use Insertion\Models\InsertionUserBookmark;
+use Insertion\Models\InsertionUserSearchBookmark;
 use Insertion\Services\AttributeService;
 use Insertion\Services\InsertionBookmarkService;
 use Insertion\Services\InsertionCreatorService;
@@ -65,15 +66,17 @@ class Bootstrap extends AbstractBootstrap {
         $this->models = [
             AttributeKey::class,
             AttributeValue::class,
-            InsertionContact::class,
             Insertion::class,
             InsertionAttributeValue::class,
+            InsertionContact::class,
+            InsertionContent::class,
+            InsertionFeedback::class,
+            InsertionMedia::class,
             InsertionType::class,
             InsertionTypeAttribute::class,
-            InsertionContent::class,
-            InsertionMedia::class,
             InsertionTypeGroup::class,
-            InsertionFeedback::class,
+            InsertionUserBookmark::class,
+            InsertionUserSearchBookmark::class
         ];
 
         $this->dependencies = [
@@ -144,7 +147,7 @@ class Bootstrap extends AbstractBootstrap {
         $accountNavigationService->put([
             'name'     => 'frontend_account_insertions_bookmarks',
             'order'    => 2,
-            'icon'     => 'star',
+            'icon'     => 'heart',
             'path'     => 'frontend_account_insertions_bookmarks',
             'position' => 'sidebar',
         ]);
@@ -152,7 +155,7 @@ class Bootstrap extends AbstractBootstrap {
         $accountNavigationService->put([
             'name'     => 'frontend_account_insertions_searchBookmarks',
             'order'    => 4,
-            'icon'     => 'star',
+            'icon'     => 'magnifier',
             'path'     => 'frontend_account_insertions_searchBookmarks',
             'position' => 'sidebar',
         ]);
