@@ -34,7 +34,7 @@ class PageService extends AbstractDatabaseAccess {
      * @return PagePath|object|null
      * @throws ORMException
      */
-    private function getPagePath(string $path) : ?PagePath {
+    public function getPagePath(string $path) : ?PagePath {
         return $this->repository()->findOneBy(["path" => $path]);
     }
 

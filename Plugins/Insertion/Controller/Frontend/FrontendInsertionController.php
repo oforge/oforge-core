@@ -15,6 +15,7 @@ use Insertion\Services\InsertionListService;
 use Insertion\Services\InsertionService;
 use Insertion\Services\InsertionTypeService;
 use Insertion\Services\InsertionUpdaterService;
+use Oforge\Engine\Modules\CMS\Abstracts\AbstractContentType;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Helper\StringHelper;
@@ -236,7 +237,7 @@ class FrontendInsertionController extends SecureFrontendController {
 
         Oforge()->View()->assign($result);
     }
-
+    
     /**
      * @param Request $request
      * @param Response $response
@@ -254,7 +255,7 @@ class FrontendInsertionController extends SecureFrontendController {
             return $response->withRedirect("/404", 301);
         }
 
-        Oforge()->View()->assign(["insertion" => $insertion->toArray(3)]);
+        Oforge()->View()->assign(["insertion" => $insertion->toArray(3, ['user' => ['*', 'id']])]);
     }
 
     /**

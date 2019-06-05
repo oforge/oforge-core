@@ -1,0 +1,21 @@
+{% extends "@parent/Frontend/Layout.twig" %}
+{% block content %}
+    {% include 'Plugins/FrontendUserManagement/Frontend/Components/AccountNavBar.twig' with { back_link : true, content_title: i18n('user_details', 'User details')} %}
+    <div class="account content">
+        {% block account %}
+            <div class="panel panel--account flex">
+                {% block account__sidebar %}
+                    {% include 'Plugins/FrontendUserManagement/Frontend/Components/Sidebar.twig' %}
+                {% endblock account__sidebar %}
+
+                {% block account__content %}
+                    <form action="{{ url('frontend_account_insertions_profile') }}" method="post" enctype="multipart/form-data">
+
+
+                        <input type="submit" />
+                    </form>
+                {% endblock account__content %}
+            </div>
+        {% endblock account %}
+    </div>
+{% endblock content %}

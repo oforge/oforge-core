@@ -78,9 +78,11 @@ class FileSystemHelper {
     public static function findFiles(string $path, string $searchFileName) {
         $path   = realpath($path);
         $result = [];
-        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path)) as $f) {
-            if (strtolower($f->getFileName()) === $searchFileName) {
-                $result[] = $f->getPath() . DIRECTORY_SEPARATOR . $f->getFileName();
+        $recursiveDirectoryIterator = new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::FOLLOW_SYMLINKS);
+        $recursiveIteratorIterator = new RecursiveIteratorIterator($recursiveDirectoryIterator);
+        foreach ($recursiveIteratorIterator as $file) {
+            if (strtolower($file->getFileName()) === $searchFileName) {
+                $result[] = $file->getPath() . DIRECTORY_SEPARATOR . $file->getFileName();
             }
         }
 
