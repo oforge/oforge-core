@@ -25,11 +25,7 @@ class SendMailController extends AbstractController {
             'attachment' => [],
             'template'   => $request->getQueryParam('template'),
         ];
-        try {
-            $mailservice->send($testOptions, []);
-        }
-        catch(\Exception $e) {
-            echo $e;
-        }
+
+        $mailservice->send($testOptions, []);
     }
 }
