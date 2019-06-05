@@ -70,9 +70,7 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
                 }
             }
 
-
             $mainIndex = 0;
-
 
             if (isset($_POST['images_interactions'])) {
                 $imgs = [];
@@ -85,8 +83,6 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
                         array_push($imgs, $image);
                     }
                 }
-
-
 
                 $_SESSION['insertion' . $typeId]["images"] = $imgs;
                 //find main image
@@ -101,7 +97,10 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
                 }
             }
 
-            $_SESSION['insertion' . $typeId]["images"][$mainIndex]["main"] = true;
+            
+            if (isset($_SESSION['insertion' . $typeId]["images"][$mainIndex])) {
+                $_SESSION['insertion' . $typeId]["images"][$mainIndex]["main"] = true;
+            }
         }
 
         return $_SESSION['insertion' . $typeId];
@@ -141,7 +140,7 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
         if (isset($pageData["images"]) && sizeof($pageData["images"]) > 0) {
             foreach ($pageData["images"] as $image) {
                 $media = $this->repository("media")->findOneBy(["id" => $image["id"]]);
-                array_push($data["media"], ["name" => $image["name"],  "content" => $media, "main" => $image["main"]]);
+                array_push($data["media"], ["name" => $image["name"], "content" => $media, "main" => $image["main"]]);
             }
         }
 
