@@ -46,8 +46,8 @@ class TemplateManagementService extends AbstractDatabaseAccess {
 
         $templateToActivate->setActive(true);
 
-        $this->entityManager()->persist($templateToActivate);
-        $this->entityManager()->persist($activeTemplate);
+        $this->entityManager()->update($templateToActivate, false);
+        $this->entityManager()->update($activeTemplate, false);
         $this->entityManager()->flush();
     }
 
@@ -86,8 +86,7 @@ class TemplateManagementService extends AbstractDatabaseAccess {
 
             $template = Template::create(["name" => $name, "active" => 0, "installed" => 0, "parentId" => $parent]);
 
-            $this->entityManager()->persist($template);
-            $this->entityManager()->flush();
+            $this->entityManager()->create($template);
 
             if ($instance) {
                 $instance->registerTemplateVariables();
@@ -170,9 +169,7 @@ class TemplateManagementService extends AbstractDatabaseAccess {
      * @throws TemplateNotFoundException
      */
     public function getActiveTemplate() {
-        /**
-         * @var $template Template
-         */
+        /** @var Template $template */
         $template = $this->repository()->findOneBy(["active" => 1]);
         if ($template === null) {
             $template = $this->repository()->findOneBy(["name" => Statics::DEFAULT_THEME]);
@@ -182,7 +179,7 @@ class TemplateManagementService extends AbstractDatabaseAccess {
             }
 
             $template->setActive(1);
-            $this->entityManager()->flush();
+            $this->entityManager()->update($template);
         }
 
         return $template;

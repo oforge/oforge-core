@@ -30,7 +30,7 @@ class PasswordResetService extends AbstractDatabaseAccess {
         $user = $this->repository()->findOneBy(['email' => $email]);
         $guid= SessionHelper::generateGuid();
         $user->setGuid($guid);
-        $this->entityManager()->flush();
+        $this->entityManager()->update($user);
 
         $activationLink = 'http://';
         if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
@@ -78,7 +78,7 @@ class PasswordResetService extends AbstractDatabaseAccess {
         if ($user) {
             $user->setGuid(SessionHelper::generateGuid());
             $user->setPassword($password);
-            $this->entityManager()->flush();
+            $this->entityManager()->update($user);
 
             $user = $user->toArray(1);
             unset($user["password"]);

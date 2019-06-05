@@ -30,6 +30,9 @@ if (typeof Oforge !== 'undefined') {
                     );
                     uploadItemElement.appendChild(input);
                     checkPlaceholderItem();
+                    var button = uploadImageList.querySelector(self.selectors.uploadButton).closest('.upload__item--new-button');
+                    button.remove();
+                    uploadImageList.appendChild(button);
                 };
                 input.click();
             }
@@ -111,6 +114,32 @@ if (typeof Oforge !== 'undefined') {
                 if (!mainListItem && mainInput) {
                     mainInput.remove();
                 }
+
+                sortNewItems();
+            }
+
+            function sortNewItems() {
+                var newItems = document.querySelectorAll('[data-new-item]');
+                newItems.forEach(function(item, index) {
+                    item.setAttribute('data-upload-id', index);
+                    var uploadImage = item.querySelector('[data-upload-image]');
+                    var uploadDelete = item.querySelector('[data-upload-delete]');
+                    var uploadChooseMain = item.querySelector('[data-upload-choose-main]');
+                    var fileInput = item.querySelector('[data-file-input]');
+
+                    if (uploadImage) {
+                        uploadImage.setAttribute('data-upload-image', index);
+                    }
+                    if (uploadDelete) {
+                        uploadDelete.setAttribute('data-upload-delete', index);
+                    }
+                    if (uploadChooseMain) {
+                        uploadChooseMain.setAttribute('data-upload-choose-main', index);
+                    }
+                    if (fileInput) {
+                        fileInput.setAttribute('data-file-input', index);
+                    }
+                });
             }
 
             function setMainListItem(uploadId) {

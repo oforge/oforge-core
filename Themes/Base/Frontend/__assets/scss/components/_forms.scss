@@ -1,10 +1,15 @@
 .form {
     width: 100%;
 
-    &__title {
+    &__title,
+    &__sub-title {
         margin-bottom: $size-large;
         font-weight: normal;
         color: $text-dark;
+    }
+    &__sub-title {
+        font-size: $font-size-5;
+        font-weight: bold;
     }
 }
 

@@ -1,0 +1,32 @@
+{% for item in bookmarks %}
+    <div>
+        <a href="{{ item.url }}">
+            {% for f, value in item.params %}
+                {% if f is same as ("price") %}
+                    <span class="tag" data-key="{{ f }}">
+                                <span class="tag__text">{{ i18n(f) }} {{ value[0] }} {{ i18n(f ~ '_between') }}   {{ value[1] }}</span>
+                            </span>
+                {% elseif value is iterable %}
+                    {% for v in value %}
+                        <span class="tag" data-key="{{ f }}" data-value="{{ v }}">
+                                    <span class="tag__text">{{ i18n(f) }} {{ search.values[v] }}</span>
+                                </span>
+                    {% endfor %}
+                {% else %}
+                    <span class="tag" data-key="{{ f }}" data-value="{{ value }}">
+                                {% if keys[f].type is same as( 'boolean') %}
+                                    <span class="tag__text">{{ i18n(f) }}</span>
+                                {% else %}
+                                    <span class="tag__text">{{ i18n(f) }} {{ search.values[value] }}</span>
+                                {% endif %}
+                            </span>
+                {% endif %}
+            {% endfor %}
+
+        </a>
+        <a href="{{ url('frontend_account_insertions_toggleSearchBookmark', {'insertionId': item.insertionType }) }}"
+           class="button button--secondary">{% if hasSearchBookmark(item.insertionType, item.params) %} Remove from wishlist {% else %}Add to wishlist{% endif %}</a>
+
+    </div>
+
+{% endfor %}

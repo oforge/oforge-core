@@ -11,6 +11,7 @@ use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\SchemaValidator;
 use Doctrine\ORM\Tools\Setup;
@@ -26,8 +27,8 @@ class ForgeDatabase {
     private const PATH_CACHE_FILE = ROOT_PATH . Statics::DB_CACHE_FILE;
     /** @var ForgeDatabase $instance */
     protected static $instance = null;
-    /** @var EntityManager $entityManager */
-    private $entityManager = null;
+    /** @var ForgeEntityManager $forgeEntityManager */
+    private $forgeEntityManager = null;
     /** @var SchemaTool $schemaTool */
     private $schemaTool = null;
     /** @var SchemaValidator $schemaValidator */
@@ -103,15 +104,20 @@ class ForgeDatabase {
     }
 
     /**
-     * @return EntityManager
+     * @return ForgeEntityManager
      */
-    public function getEntityManager() : EntityManager {
-        if (!isset($this->entityManager)) {
-            $this->entityManager = EntityManager::create($this->settings['connection'], $this->configuration);
-            DiscriminatorEntryListener::register($this->entityManager);
+    public function getForgeEntityManager() : ForgeEntityManager {
+        if (!isset($this->forgeEntityManager)) {
+            try {
+                $entityManager = EntityManager::create($this->settings['connection'], $this->configuration);
+                DiscriminatorEntryListener::register($entityManager);
+                $this->forgeEntityManager = new ForgeEntityManager($entityManager);
+            } catch (ORMException $exception) {
+                Oforge()->Logger()->logException($exception);
+            }
         }
 
-        return $this->entityManager;
+        return $this->forgeEntityManager;
     }
 
     /**
@@ -119,7 +125,7 @@ class ForgeDatabase {
      */
     public function getSchemaValidator() : SchemaValidator {
         if (!isset($this->schemaValidator)) {
-            $this->schemaValidator = new SchemaValidator($this->getEntityManager());
+            $this->schemaValidator = new SchemaValidator($this->getForgeEntityManager()->getEntityManager());
         }
 
         return $this->schemaValidator;
@@ -130,7 +136,7 @@ class ForgeDatabase {
      */
     public function getSchemaTool() : SchemaTool {
         if (!isset($this->schemaTool)) {
-            $this->schemaTool = new SchemaTool($this->getEntityManager());
+            $this->schemaTool = new SchemaTool($this->getForgeEntityManager()->getEntityManager());
         }
 
         return $this->schemaTool;
@@ -148,7 +154,7 @@ class ForgeDatabase {
      * @param string $schema
      */
     protected function addMetaData(string $schema) {
-        $metaData                   = $this->getEntityManager()->getClassMetadata($schema);
+        $metaData                   = $this->getForgeEntityManager()->getEntityManager()->getClassMetadata($schema);
         $this->metaDataCollection[] = $metaData;
 
         $inSync = $this->getSchemaValidator()->schemaInSyncWithMetadata();

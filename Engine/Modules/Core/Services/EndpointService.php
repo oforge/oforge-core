@@ -50,7 +50,7 @@ class EndpointService extends AbstractDatabaseAccess {
             $endpoint = $this->repository()->findOneBy(['name' => $endpointConfig['name']]);
             if (!isset($endpoint)) {
                 $endpoint = EndpointModel::create($endpointConfig);
-                $this->entityManager()->persist($endpoint);
+                $this->entityManager()->create($endpoint, false);
                 $created = true;
             }
         }
@@ -102,7 +102,7 @@ class EndpointService extends AbstractDatabaseAccess {
      */
     public function deinstall(array $endpoints) {//TODO ungetestet
         $this->iterateEndpointModels($endpoints, function (EndpointModel $endpoint) {
-            $this->entityManager()->remove($endpoint);
+            $this->entityManager()->remove($endpoint, false);
 
             return true;
         });
@@ -126,6 +126,7 @@ class EndpointService extends AbstractDatabaseAccess {
             if (!empty($endpoints)) {
                 foreach ($endpoints as $endpoint) {
                     $callable($endpoint);
+                    $this->entityManager()->update($endpoint, false);
                 }
                 $this->entityManager()->flush();
             }
