@@ -16,7 +16,7 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 class InsertionSliderService extends AbstractDatabaseAccess
 {
 
-    private const MAX_INSERTIONS = 3;
+    private const MAX_INSERTIONS = 20;
 
     public function __construct()
     {
@@ -29,7 +29,7 @@ class InsertionSliderService extends AbstractDatabaseAccess
         ]);
     }
 
-    public function getRandomInsertions($page = 1)
+    public function getRandomInsertions()
     {
         $result = [];
 

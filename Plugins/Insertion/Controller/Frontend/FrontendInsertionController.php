@@ -237,20 +237,7 @@ class FrontendInsertionController extends SecureFrontendController {
 
         Oforge()->View()->assign($result);
     }
-
-    /**
-     * @param Request $request
-     * @param Response $response
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
-     */
-
-    public function sliderAction(Request $request, Response $response) {
-        $sliderService = Oforge()->Services()->get("insertion.slider");
-        $result = $sliderService->getRandomInsertions();
-
-        Oforge()->View()->assign(["insertions" => $result]);
-    }
-
+    
     /**
      * @param Request $request
      * @param Response $response
