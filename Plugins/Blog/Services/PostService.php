@@ -59,7 +59,7 @@ class PostService extends AbstractDatabaseAccess {
         } else {
             /** @var LanguageService $languageService */
             $languageService = Oforge()->Services()->get('i18n.language');
-            $language        = $languageService->getCurrentLanguageIso([]);// TODO Get current language???
+            $language        = $languageService->getCurrentLanguageIso([]);
 
             $criteria = [
                 'language' => $language,

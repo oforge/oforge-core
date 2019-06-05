@@ -5,6 +5,7 @@ namespace Blog\Controller\Backend;
 use Blog\Models\Category;
 use Blog\Models\Post;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\ORMException;
 use Exception;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
@@ -17,6 +18,7 @@ use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
 use Oforge\Engine\Modules\CRUD\Enum\CrudFilterComparator;
 use Oforge\Engine\Modules\CRUD\Enum\CrudFilterType;
 use Oforge\Engine\Modules\CRUD\Enum\CrudGroubByOrder;
+use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\I18n\Models\Language;
 use Oforge\Engine\Modules\I18n\Services\LanguageService;
 use Slim\Http\Response;
@@ -198,7 +200,7 @@ class CategoryController extends BaseCrudController {
     /** @inheritDoc */
     protected function prepareItemDataArray(?AbstractModel $entity, string $crudAction) : array {
         $data = parent::prepareItemDataArray($entity, $crudAction);
-        if ($crudAction !== 'create') {
+        if (!empty($data) && $crudAction !== 'create') {
             if (!isset($this->dataPostsOfCategory)) {
                 $this->dataPostsOfCategory = [];
                 /* @var EntityManager $entityManager */
@@ -240,8 +242,33 @@ class CategoryController extends BaseCrudController {
 
     /** @inheritDoc */
     protected function handleDeleteAction(Response $response, string $entityID) {
-        // TODO: onCategoryDelete: handle posts, comments, ratings
-        return parent::handleDeleteAction($response, $entityID);
+        try {
+            /** @var Category $category */
+            $category = $this->crudService->getById($this->model, $entityID);
+            if (!isset($category)) {
+                Oforge()->View()->Flash()->addMessage('error', sprintf(#
+                    I18N::translate('plugin_blog_category_not_found', 'Category with ID "%s" not found.'),#
+                    $entityID#
+                ));
+
+                return $this->redirect($response, 'index');
+            }
+            $postCount = $category->getPosts()->count();
+            if ($postCount > 0) {
+                Oforge()->View()->Flash()->addMessage('warning', sprintf(#
+                    I18N::translate('plugin_blog_category_not_deleted_has_posts', 'Category with ID "%s" can not be deleted because it still contains posts.'),#
+                    $entityID#
+                ));
+
+                return $this->redirect($response, 'index');
+            }
+
+            return parent::handleDeleteAction($response, $entityID);
+        } catch (ORMException $exception) {
+            Oforge()->View()->Flash()->addExceptionMessage('error', I18N::translate('backend_crud_error', 'An error has occurred.'), $exception);
+
+            return $this->redirect($response, 'delete', ['id' => $entityID]);
+        }
     }
 
 }

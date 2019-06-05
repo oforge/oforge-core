@@ -228,6 +228,20 @@ class BlogController extends SecureFrontendController {
      * @param Request $request
      * @param Response $response
      * @param array $args
+     * @EndpointAction(path="/post/{postID:\d+}/{seoUrlPath}/comments/report/{commentID}", name="report_comment", method=EndpointMethod::POST)
+     *
+     * @return Response
+     */
+    public function reportCommentAction(Request $request, Response $response, array $args) {
+        // TODO FEATURE/later BlogController#reportCommentAction
+
+        return RedirectHelper::redirect($response, 'frontend_blog_view', $args);
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
      *
      * @return Response
      * @EndpointAction(path="/post/{postID:\d+}/{seoUrlPath}/comments/more", name="more_comments", method=EndpointMethod::GET)

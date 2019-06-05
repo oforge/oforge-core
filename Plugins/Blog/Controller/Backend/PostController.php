@@ -5,9 +5,11 @@ namespace Blog\Controller\Backend;
 use Blog\Models\Category;
 use Blog\Models\Comment;
 use Blog\Models\Post;
+use Blog\Models\Rating;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
+use Exception;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
@@ -287,7 +289,7 @@ class PostController extends BaseCrudController {
     /** @inheritDoc */
     protected function prepareItemDataArray(?AbstractModel $entity, string $crudAction) : array {
         $data = parent::prepareItemDataArray($entity, $crudAction);
-        if ($crudAction !== 'create') {
+        if (!empty($data) && $crudAction !== 'create') {
             if (!isset($this->commentsPerPost)) {
                 $this->commentsPerPost = [];
                 /* @var EntityManager $entityManager */
@@ -330,7 +332,7 @@ class PostController extends BaseCrudController {
         $category = $entityManager->getRepository(Category::class)->findOneBy(['id' => $categoryID]);
         if (!isset($category)) {
             throw new NotFoundException(sprintf(#
-                I18N::translate('plugin_blog_category_not_found', 'Category with ID "%1" not found.'),#
+                I18N::translate('plugin_blog_category_not_found', 'Category with ID "%s" not found.'),#
                 $categoryID)#
             );
         }
@@ -429,8 +431,44 @@ class PostController extends BaseCrudController {
 
     /** @inheritDoc */
     protected function handleDeleteAction(Response $response, string $entityID) {
-        // TODO: onPostDelete: handle comments, ratings
-        return parent::handleDeleteAction($response, $entityID);
+        $entityManager = Oforge()->DB()->getEntityManager();
+        try {
+            /** @var Post $post */
+            $post = $this->crudService->getById(Post::class, $entityID);
+            if (!isset($post)) {
+                Oforge()->View()->Flash()->addMessage('error', sprintf(#
+                    I18N::translate('plugin_blog_post_not_found', 'Post with ID "%s" not found.'),#
+                    $entityID#
+                ));
+
+                return $this->redirect($response, 'index');
+            }
+
+            $commentsDeleted = $entityManager->createQueryBuilder()#
+                                             ->delete(Comment::class, 'c')#
+                                             ->where('c.post = :postID')#
+                                             ->setParameter('postID', $entityID)#
+                                             ->getQuery()->getScalarResult();
+            $ratingsDeleted  = $entityManager->createQueryBuilder()#
+                                             ->delete(Rating::class, 'r')#
+                                             ->where('r.post = :postID')#
+                                             ->setParameter('postID', $entityID)#
+                                             ->getQuery()->getScalarResult();
+            $entityManager->remove($post);
+            $entityManager->flush();
+
+            Oforge()->View()->Flash()->addMessage('success', sprintf(#
+                I18N::translate('plugin_blog_msg_post_delete_success', 'Post with %s comments & %s ratings successfully deleted.'),#
+                $commentsDeleted,#
+                $ratingsDeleted#
+            ));
+
+            return $this->redirect($response, 'index');
+        } catch (Exception $exception) {
+            Oforge()->View()->Flash()->addExceptionMessage('error', I18N::translate('backend_crud_msg_delete_failed', 'Entity delete failed.'), $exception);
+
+            return $this->redirect($response, 'index');
+        }
     }
 
 }

@@ -359,8 +359,7 @@ class BaseCrudController extends SecureBackendController {
                 $this->crudService->update($this->model, $data);
                 Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_update_success', 'Entity successfully updated.'));
             } catch (Exception $exception) {
-                Oforge()->View()->Flash()
-                        ->addExceptionMessage('error', I18N::translate('backend_crud_msg_update_failed', 'Entity update failed.'), $exception);
+                Oforge()->View()->Flash()->addExceptionMessage('error', I18N::translate('backend_crud_msg_update_failed', 'Entity update failed.'), $exception);
                 Oforge()->View()->Flash()->setData($this->moduleModelName, $data);
             }
 
@@ -399,7 +398,10 @@ class BaseCrudController extends SecureBackendController {
     public function deleteAction(Request $request, Response $response, array $args) {
         $postData = $request->getParsedBody();
         if ($request->isPost() && !empty($postData)) {
-            $this->handleDeleteAction($response, $args['id']);
+            $return = $this->handleDeleteAction($response, $args['id']);
+            if (isset($return)) {
+                return $return;
+            }
         }
         $entity = $this->crudService->getById($this->model, $args['id']);
         $entity = $this->prepareItemDataArray($entity, 'delete');

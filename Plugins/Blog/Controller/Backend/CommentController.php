@@ -146,8 +146,11 @@ class CommentController extends BaseCrudController {
 
     /** @inheritDoc */
     protected function prepareItemDataArray(?AbstractModel $entity, string $crudAction) : array {
+        if (!isset($entity)) {
+            return [];
+        }
         $data = $entity->toArray(1);
-        if ($crudAction !== 'create') {
+        if (!empty($data) && $crudAction !== 'create') {
             /** @var DateTimeImmutable $dateTime */
             $dateTime        = $data['created'];
             $data['created'] = $dateTime->format('Y.m.d H:i:s');
@@ -155,7 +158,7 @@ class CommentController extends BaseCrudController {
             $data['updated'] = $dateTime->format('Y.m.d H:i:s');
 
             $data['author'] = $data['author']['id'];
-            $data['post'] = $data['post']['id'];
+            $data['post']   = $data['post']['id'];
         }
 
         return $data;

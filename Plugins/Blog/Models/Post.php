@@ -35,15 +35,15 @@ class Post extends AbstractModel {
      */
     private $updated;
     /**
-     * @var string $language
-     * @ORM\Column(name="language", type="string", nullable=false)
-     */
-    private $language;
-    /**
      * @var string $seoUrlPath
      * @ORM\Column(name="seo_url_path", type="string", nullable=false)
      */
     private $seoUrlPath;
+    /**
+     * @var string $language
+     * @ORM\Column(name="language", type="string", nullable=false)
+     */
+    private $language;
     /**
      * @var BackendUser $author
      * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\Auth\Models\User\BackendUser")
