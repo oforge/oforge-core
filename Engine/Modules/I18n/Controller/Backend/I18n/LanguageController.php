@@ -3,9 +3,10 @@
 namespace Oforge\Engine\Modules\I18n\Controller\Backend\I18n;
 
 use Doctrine\ORM\ORMException;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Forge\ForgeEntityManager;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
-use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
 use Oforge\Engine\Modules\I18n\Models\Language;
@@ -32,7 +33,7 @@ class LanguageController extends BaseCrudController {
         [
             'name'  => 'iso',
             'type'  => CrudDataTypes::STRING,
-            'label' => ['key' => 'backend_crud_i18n_language_iso', 'default' => 'ISO'],
+            'label' => ['key' => 'module_i18n_language_iso', 'default' => 'ISO'],
             'crud'  => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
@@ -44,7 +45,7 @@ class LanguageController extends BaseCrudController {
         [
             'name'  => 'name',
             'type'  => CrudDataTypes::STRING,
-            'label' => ['key' => 'backend_crud_i18n_language_name', 'default' => 'Name'],
+            'label' => ['key' => 'module_i18n_language_name', 'default' => 'Name'],
             'crud'  => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
@@ -56,7 +57,7 @@ class LanguageController extends BaseCrudController {
         [
             'name'  => 'active',
             'type'  => CrudDataTypes::BOOL,
-            'label' => ['key' => 'backend_crud_i18n_language_active', 'default' => 'Active'],
+            'label' => ['key' => 'module_i18n_language_active', 'default' => 'Active'],
             'crud'  => [
                 'index'  => 'editable',
                 'view'   => 'editable',
@@ -83,7 +84,8 @@ class LanguageController extends BaseCrudController {
     }
 
     /** @inheritDoc */
-    protected function prepareItemData(array $data, string $crudAction) : array {
+    protected function prepareItemDataArray(?AbstractModel $entity, string $crudAction) : array {
+        $data = parent::prepareItemDataArray($entity, $crudAction);
         if (!isset($this->snippets)) {
             $this->snippets = [];
             try {

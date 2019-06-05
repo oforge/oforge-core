@@ -1,0 +1,7 @@
+<div class="blog-content-header">
+    {% include 'Plugins/Blog/Frontend/Components/Breadcrump.twig' %}
+    <h1>{{ blog.category.headerTitle|default(i18n('plugin_blog_frontend_blog_home', 'Blog')) }}</h1>
+    {% if blog.category.headerSubtext %}
+        <p>{{ blog.category.headerSubtext }}</p>
+    {% endif %}
+</div>
