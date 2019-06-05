@@ -30,8 +30,7 @@ class FrontendMessengerService extends AbstractMessengerService {
         $conversation->setTargetId($targetId);
         $conversation->setTitle($title);
 
-        $this->entityManager()->persist($conversation);
-        $this->entityManager()->flush();
+        $this->entityManager()->create($conversation);
 
         parent::sendMessage($conversation->getId(), $conversationType, $requester, $firstMessage);
     }

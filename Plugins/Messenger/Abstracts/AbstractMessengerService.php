@@ -111,15 +111,11 @@ abstract class AbstractMessengerService extends AbstractDatabaseAccess {
         $messageObject->setSender($senderType . '_' . $sender);
         $messageObject->setMessage($messageContent);
         $messageObject->setConversationId($conversationId);
-        $this->entityManager()->persist($messageObject);
-        $this->entityManager()->flush();
-
-
+        $this->entityManager()->create($messageObject);
 
         $conversation->setLastMessage($messageObject->getMessage());
         $conversation->setLastMessageTimestamp($messageObject->getTimestamp());
-        $this->entityManager()->persist($conversation);
-        $this->entityManager()->flush();
+        $this->entityManager()->update($conversation);
     }
 
     /**
@@ -134,7 +130,6 @@ abstract class AbstractMessengerService extends AbstractDatabaseAccess {
         $conversation = $this->repository('conversation')->findBy(['id' => $conversationId]);
 
         $conversation->setState($newStatus);
-        $this->entityManager()->persist($conversation);
-        $this->entityManager()->flush();
+        $this->entityManager()->update($conversation);
     }
 }

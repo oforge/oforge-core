@@ -28,8 +28,7 @@ class DashboardWidgetsService extends AbstractDatabaseAccess {
     public function register($widget) {
         if ($this->isValid($widget)) {
             $instance = DashboardWidget::create($widget);
-            $this->entityManager()->persist($instance);
-            $this->entityManager()->flush();
+            $this->entityManager()->create($instance);
         }
     }
 
@@ -98,10 +97,10 @@ class DashboardWidgetsService extends AbstractDatabaseAccess {
                                                         "order"    => $position++,
                                                         "position" => $widget->getPosition(),
             ]);
-            $this->entityManager()->persist($userWidget);
+            $this->entityManager()->create($userWidget, false);
         }
 
-        if (sizeof($widgets) > 0) {
+        if (count($widgets) > 0) {
             $this->entityManager()->flush();
         }
     }

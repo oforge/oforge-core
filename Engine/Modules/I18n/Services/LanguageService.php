@@ -102,8 +102,7 @@ class LanguageService extends AbstractDatabaseAccess {
             $language = $this->repository()->findOneBy(['iso' => $options['iso']]);
             if (!isset($language)) {
                 $language = Language::create($options);
-                $this->entityManager()->persist($language);
-                $this->entityManager()->flush($language);
+                $this->entityManager()->create($language);
             }
         }
     }
@@ -126,10 +125,7 @@ class LanguageService extends AbstractDatabaseAccess {
             }
             if (isset($language)) {
                 $language->fromArray($options);
-                if (!$this->entityManager()->contains($language)) {
-                    $this->entityManager()->merge($language);
-                }
-                $this->entityManager()->flush($language);
+                $this->entityManager()->update($language);
             }
         }
     }
@@ -146,7 +142,6 @@ class LanguageService extends AbstractDatabaseAccess {
             throw new NotFoundException("Language with id '$id' not found!");
         }
         $this->entityManager()->remove($language);
-        $this->entityManager()->flush($language);
     }
 
     /**

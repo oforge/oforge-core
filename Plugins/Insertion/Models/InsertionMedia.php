@@ -51,6 +51,12 @@ class InsertionMedia extends AbstractModel {
     private $order;
 
     /**
+     * @var bool
+     * @ORM\Column(name="is_main", type="boolean", nullable=true)
+     */
+    private $isMain;
+
+    /**
      * @return int
      */
     public function getId() : ?int {
@@ -111,6 +117,20 @@ class InsertionMedia extends AbstractModel {
      */
     public function setOrder(int $order) : void {
         $this->order = $order;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMain() : ?bool {
+        return $this->isMain;
+    }
+
+    /**
+     * @param bool $isMain
+     */
+    public function setMain(?bool $isMain) : void {
+        $this->isMain = $isMain;
     }
 
 }

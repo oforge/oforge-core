@@ -4,7 +4,6 @@ namespace Oforge\Engine\Modules\Core\Abstracts;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\ORMException;
-use Doctrine\ORM\PersistentCollection;
 use ReflectionException;
 use ReflectionMethod;
 
@@ -29,55 +28,6 @@ abstract class AbstractModel {
         $object->fromArray($array, $fillable);
 
         return $object;
-    }
-
-    /**
-     * Method for mass-assignment.
-     * Will call (existing) setter method for every key. Supports both key formats "testKey" and "test_key".
-     *
-     * @param array $array
-     * @param array $fillable
-     *
-     * @return $this
-     * @throws ORMException
-     * @throws ReflectionException
-     */
-    public function fromArray(array $array = [], array $fillable = []) {
-        foreach ($array as $key => $value) {
-            if (count($fillable) && !in_array($key, $fillable)) {
-                continue;
-            }
-            $keys   = explode("_", $key);
-            $method = "set";
-
-            foreach ($keys as $keyPart) {
-                $method .= ucfirst($keyPart);
-            }
-
-            if (method_exists($this, $method)) {
-                $r      = new ReflectionMethod(static::class, $method);
-                $params = $r->getParameters();
-
-                if (sizeof($params) == 1) {
-                    $classObject = $params[0]->getClass();
-                    if (isset($classObject)) {
-                        $className = $classObject->getName();
-                        if (isset($className)) {
-                            $value = Oforge()->DB()->getEntityManager()->getRepository($className)->find($value);
-                        }
-                    } else {
-                        switch ("" . $params[0]->getType()) {
-                            case "int":
-                                $value = intval($value);
-                        }
-                    }
-                }
-
-                $this->$method($value);
-            }
-        }
-
-        return $this;
     }
 
     /** @deprecated */
@@ -110,6 +60,55 @@ abstract class AbstractModel {
     }
 
     /**
+     * Method for mass-assignment.
+     * Will call (existing) setter method for every key. Supports both key formats "testKey" and "test_key".
+     *
+     * @param array $array
+     * @param array $fillable
+     *
+     * @return $this
+     * @throws ORMException
+     * @throws ReflectionException
+     */
+    public function fromArray(array $array = [], array $fillable = []) {
+        foreach ($array as $key => $value) {
+            if (count($fillable) && !in_array($key, $fillable)) {
+                continue;
+            }
+            $keys   = explode("_", $key);
+            $method = "set";
+
+            foreach ($keys as $keyPart) {
+                $method .= ucfirst($keyPart);
+            }
+
+            if (method_exists($this, $method)) {
+                $reflectionMethod = new ReflectionMethod(static::class, $method);
+                $params           = $reflectionMethod->getParameters();
+
+                if (count($params) === 1) {
+                    $classObject = $params[0]->getClass();
+                    if (isset($classObject)) {
+                        $className = $classObject->getName();
+                        if (isset($className)) {
+                            $value = Oforge()->DB()->getForgeEntityManager()->getRepository($className)->find($value);
+                        }
+                    } else {
+                        switch ("" . $params[0]->getType()) {
+                            case "int":
+                                $value = intval($value);
+                        }
+                    }
+                }
+
+                $this->$method($value);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * Convert this object to array.
      *
      * @param int $maxDepth
@@ -128,6 +127,35 @@ abstract class AbstractModel {
                     break;
                 }
             }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Convert this object to array.
+     *
+     * @param int $maxDepth
+     *
+     * @return array
+     */
+    public function toCleanedArray($maxDepth = 2, array &$cache = []) : array {
+        $result = [];
+
+        if (!is_array($result)) {
+            $cache[get_class($result) . "::::" . $this->getId()] = true;
+        }
+
+        foreach (get_class_methods($this) as $classMethod) {
+            foreach (['get', 'is'] as $prefix) {
+                $length = strlen($prefix);
+                if (substr($classMethod, 0, $length) === $prefix) {
+                    $propertyName = lcfirst(substr($classMethod, $length));
+
+                    $result[$propertyName] = $this->assignCleanedArray($this->$classMethod(), $maxDepth, $cache);
+                    break;
+                }
+            } 
         }
 
         return $result;
@@ -155,37 +183,15 @@ abstract class AbstractModel {
             return null;
         } elseif (is_array($result) || is_subclass_of($result, Collection::class)) {
             $subResult = [];
-            foreach ($result as $item) {
-                $subResult[] = $item->assignArray($item, $maxDepth - 1);
+            foreach ($result as $key => $item) {
+                if (is_string($item)) {
+                    $subResult[$key] = $this->assignArray($item, $maxDepth - 1);
+                } else {
+                    $subResult[] = $this->assignArray($item, $maxDepth - 1);
+                }
             }
 
             return $subResult;
-        }
-
-        return $result;
-    }
-
-    /**
-     * Convert this object to array.
-     *
-     * @param int $maxDepth
-     *
-     * @return array
-     */
-    public function toCleanedArray($maxDepth = 2, array &$cache = []) : array {
-        $result     = [];
-        $cache[get_class($result) . "::::" . $this->getId()] = true;
-
-        foreach (get_class_methods($this) as $classMethod) {
-            foreach (['get', 'is'] as $prefix) {
-                $length = strlen($prefix);
-                if (substr($classMethod, 0, $length) === $prefix) {
-                    $propertyName = lcfirst(substr($classMethod, $length));
-
-                    $result[$propertyName] = $this->assignCleanedArray($this->$classMethod(), $maxDepth, $cache);
-                    break;
-                }
-            }
         }
 
         return $result;

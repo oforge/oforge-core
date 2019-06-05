@@ -32,8 +32,7 @@ class AttributeService extends AbstractDatabaseAccess {
         $attributeKey->setType($inputType);
         $attributeKey->setFilterType($filterType);
 
-        $this->entityManager()->persist($attributeKey);
-        $this->entityManager()->flush();
+        $this->entityManager()->create($attributeKey);
 
         return $attributeKey;
     }
@@ -52,8 +51,7 @@ class AttributeService extends AbstractDatabaseAccess {
         $attributeValue->setValue($value);
         $attributeValue->setSubAttributeKey($subAttributeKey);
 
-        $this->entityManager()->persist($attributeValue);
-        $this->entityManager()->flush();
+        $this->entityManager()->create($attributeValue);
     }
 
     /**
@@ -74,6 +72,7 @@ class AttributeService extends AbstractDatabaseAccess {
      * @param $type
      * @param $filterType
      *
+     * @return AttributeKey
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -84,8 +83,9 @@ class AttributeService extends AbstractDatabaseAccess {
         $attributeKey->setType($type);
         $attributeKey->setFilterType($filterType);
 
-        $this->entityManager()->persist($attributeKey);
-        $this->entityManager()->flush();
+        $this->entityManager()->update($attributeKey);
+
+        return $attributeKey;
     }
 
     /**
@@ -102,8 +102,7 @@ class AttributeService extends AbstractDatabaseAccess {
         $attributeValue->setValue($value);
         $attributeValue->setSubAttributeKey($subAttributeKey);
 
-        $this->entityManager()->persist($attributeValue);
-        $this->entityManager()->flush();
+        $this->entityManager()->update($attributeValue);
     }
 
     /**
@@ -149,7 +148,6 @@ class AttributeService extends AbstractDatabaseAccess {
     public function deleteAttributeKey($id) {
         $attributeKey = $this->repository('attributeKey')->find($id);
         $this->entityManager()->remove($attributeKey);
-        $this->entityManager()->flush();
         $this->repository('attributeKey')->clear();
     }
 
@@ -162,6 +160,5 @@ class AttributeService extends AbstractDatabaseAccess {
     public function deleteAttributeValue($id) {
         $attributeValue = $this->repository('attributeValue')->find($id);
         $this->entityManager()->remove($attributeValue);
-        $this->entityManager()->flush();
     }
 }

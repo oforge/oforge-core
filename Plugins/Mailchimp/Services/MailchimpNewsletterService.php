@@ -151,11 +151,14 @@ class MailchimpNewsletterService extends AbstractDatabaseAccess
         $user = $repository->findOneBy(['userId' => $user_id]);
         if ($user === null) {
             $user = new UserNewsletter();
+            $user->setUserId($user_id);
+            $user->setSubscribed($subscribed);
+            $this->entityManager()->create($user);
+        } else {
+            $user->setUserId($user_id);
+            $user->setSubscribed($subscribed);
+            $this->entityManager()->update($user);
         }
 
-        $user->setUserId($user_id);
-        $user->setSubscribed($subscribed);
-        $this->entityManager()->persist($user);
-        $this->entityManager()->flush();
     }
 }

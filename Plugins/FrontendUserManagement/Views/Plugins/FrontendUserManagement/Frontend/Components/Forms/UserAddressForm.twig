@@ -62,9 +62,6 @@
                        required
                        {% if (userAddress) %}value="{{ userAddress.city }}"{% endif %}>
             </div>
-        </div>
-
-        <div class="form-controls">
             <div class="form__control">
                 <input type="hidden" name="token" value="{{ token() }}">
                 <input type="submit"

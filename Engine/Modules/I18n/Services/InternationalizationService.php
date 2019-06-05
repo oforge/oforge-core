@@ -42,8 +42,7 @@ class InternationalizationService extends AbstractDatabaseAccess {
                     'scope' => $language,
                     'value' => isset($defaultValue) ? $defaultValue : $key,
                 ]);
-                $this->entityManager()->persist($snippet);
-                $this->entityManager()->flush($snippet);
+                $this->entityManager()->create($snippet);
             }
             $this->cache[$key] = $snippet->getValue();
         }

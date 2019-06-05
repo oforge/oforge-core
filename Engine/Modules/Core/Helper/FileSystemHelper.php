@@ -136,6 +136,22 @@ class FileSystemHelper {
     }
 
     /**
+     * Helper method for call mkdir.
+     *
+     * @param string $path
+     * @param bool $recursive
+     * @param int $mode
+     * @param resource|null $context
+     */
+    public static function mkdir(string $path, bool $recursive = true, int $mode = 0777, $context = null) {
+        if (isset($context)) {
+            @mkdir($path, $mode, $recursive, $context);
+        } else {
+            @mkdir($path, $mode, $recursive);
+        }
+    }
+
+    /**
      * Get cached data or find files with filename in path and cache it.
      *
      * @param string $context
