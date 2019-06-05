@@ -53,8 +53,9 @@ class Bootstrap extends AbstractBootstrap {
         /** @var LanguageService $languageService */
         $languageService = Oforge()->Services()->get('i18n.language');
         $languageService->create([
-            'iso'  => 'en',
-            'name' => 'English',
+            'iso'    => 'en',
+            'name'   => 'English',
+            'active' => true,
         ]);
 
         /** @var BackendNavigationService $sidebarNavigation */

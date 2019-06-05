@@ -92,7 +92,7 @@
                 <div class="contact__address">12345 Velgast</div>
                 <div class="contact__phone">Tel.: +49(0)231 1234567890</div>
                 <a href="#" class="button button--secondary">Contact me</a>
-                <a href="#" class="button button--secondary">Add to wishlist</a>
+                <a href="{{ url('frontend_account_insertions_toggleBookmark', {'insertionId': insertion.id }) }}" class="button button--secondary">{% if hasBookmark(insertion.id) %} Japs vorhanden {% else %}Add to wishlist{% endif %}</a>
             </div>
 
             <div class="panel panel--map map">

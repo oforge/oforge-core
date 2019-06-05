@@ -30,8 +30,7 @@ class ContentTypeManagementService extends AbstractDatabaseAccess
         if (!isset($element)) {
             if ($this->isValid($options)) {
                 $entity = ContentType::create($options);
-                $this->entityManager()->persist($entity);
-                $this->entityManager()->flush();
+                $this->entityManager()->create($entity);
             }
         }
     }

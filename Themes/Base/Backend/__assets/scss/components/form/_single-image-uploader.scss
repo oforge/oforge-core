@@ -1,0 +1,100 @@
+.form-single-image-uploader {
+    $imageUploaderPreviewWidth: 30rem !default;
+    $imageUploaderButtonBorderColor: black !default;
+    $imageUploaderButtonBgColor: white !default;
+    $imageUploaderButtonColorDisabled: gray !default;
+    $imageUploaderButtonPadding: .3rem !default;
+    $imageUploaderButtonMargin: .5rem !default;
+    $imageUploaderButtonSize: 2.4rem !default;
+    $imageUploaderButtonTop: .8rem !default;
+    $imageUploaderButtonLeft: .3 !default; // percent of $imageUploaderButtonSize
+    position: relative;
+
+    input[type="file"] {
+        display: none;
+    }
+
+    &--filename {
+        margin-top: 0.5rem;
+        width: calc(30rem + 2px);
+        display: none;
+    }
+
+    &--preview-wrapper {
+        position: relative;
+        min-height: 7rem;
+        width: calc(#{$imageUploaderPreviewWidth} + 2px);
+        border: 1px solid gray;
+        user-select: none;
+
+        &.delete {
+            .form-single-image-uploader--preview {
+                opacity: .6;
+
+                &-delete-overlay > span {
+                    display: inherit;
+                }
+            }
+        }
+    }
+
+    &--preview {
+        width: $imageUploaderPreviewWidth;
+
+        &-delete-overlay {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: $imageUploaderPreviewWidth;
+
+            & > span {
+                display: none;
+                font-size: 300%;
+                font-weight: bold;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+        }
+    }
+
+    &--controls {
+        display: none;
+    }
+
+    &:hover &--controls {
+        display: inherit;
+    }
+
+    &--upload, &--delete, &--reset {
+        position: absolute;
+        border: 1px solid $imageUploaderButtonBorderColor;
+        width: $imageUploaderButtonSize;
+        height: $imageUploaderButtonSize;
+        padding: $imageUploaderButtonPadding;
+        left: $imageUploaderPreviewWidth - $imageUploaderButtonSize * $imageUploaderButtonLeft;
+        background: $imageUploaderButtonBgColor;
+        cursor: pointer;
+    }
+
+    &--delete {
+        top: $imageUploaderButtonTop;
+    }
+
+    &--disabled {
+        color: $imageUploaderButtonColorDisabled;
+        border-color: $imageUploaderButtonColorDisabled;
+        cursor: not-allowed;
+    }
+
+    &--upload {
+        top: $imageUploaderButtonTop + 1 * ($imageUploaderButtonSize + $imageUploaderButtonMargin);
+    }
+
+    &--reset {
+        display: none;
+        top: $imageUploaderButtonTop + 2 * ($imageUploaderButtonSize + $imageUploaderButtonMargin);
+    }
+}

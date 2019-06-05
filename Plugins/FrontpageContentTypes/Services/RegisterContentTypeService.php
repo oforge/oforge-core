@@ -4,10 +4,6 @@
 namespace FrontpageContentTypes\Services;
 
 
-use Doctrine\ORM\Query\Expr\GroupBy;
-use FrontpageContentTypes\ContentTypes\IconTileBasic;
-
-use Mailchimp\Models\UserNewsletter;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentTypeGroup;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
@@ -33,27 +29,19 @@ class RegisterContentTypeService extends AbstractDatabaseAccess
     {
         /** @var ContentType $contentType */
         $contentType = $this->repository()->findOneBy(['name' => $contentTypeName]);
-
+        $create      = false;
         if ($contentType === null) {
             $contentType = new ContentType();
+            $create      = true;
         }
 
         /** @var ContentTypeGroup $group */
 
         $group = $this->repository('group')->findOneBy(['name' => $contentTypeGroup]);
-        /**
-        if ($group === null) {
-            $group = new ContentTypeGroup();
-            $id = $this->entityManager()
-                ->createQueryBuilder()
-                ->select('MAX(gruop.id)')
-                ->from($this->repository('group'), 'group')
-                ->getQuery()
-                ->getSingleScalarResult();
 
-            $group->setName('contentTypeGroup')->setDescription('');
-            $this->entityManager()->persist($group);
-        }**/
+        if ($group === null) {
+            $group = $this->registerContentGroup($contentTypeGroup, $contentTypeGroup);
+        }
 
         $contentType->setGroup($group)
             ->setName($contentTypeName)
@@ -62,25 +50,28 @@ class RegisterContentTypeService extends AbstractDatabaseAccess
             ->setDescription($description)
             ->setClassPath($classPath);
 
-        $this->entityManager()->persist($contentType);
-        $this->entityManager()->flush();
+        if ($create) {
+            $this->entityManager()->create($contentType);
+        } else {
+            $this->entityManager()->update($contentType);
+        }
     }
 
     /**
-    public function registerContentGroup(string $groupName, string $description) {
+     * @param string $groupName
+     * @param string $description
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function registerContentGroup(string $groupName, string $description = '')
+    {
         $group = $this->repository('group')->findOneBy(['name' => $groupName]);
         if ($group === null) {
             $group = new ContentTypeGroup();
-            $id = $this->entityManager()
-                ->createQueryBuilder()
-                ->select('MAX(gruop.id)')
-                ->from($this->repository('group'), 'group')
-                ->getQuery()
-                ->getSingleScalarResult();
-
-            $group->setName('contentTypeGroup')->setDescription('');
-            $this->entityManager()->persist($group);
+            $group->setName($groupName)->setDescription($description);
+            $this->entityManager()->create($group);
         }
+
+        return $group;
     }
-     **/
+
 }

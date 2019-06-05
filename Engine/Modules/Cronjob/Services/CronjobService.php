@@ -68,7 +68,7 @@ class CronjobService extends AbstractDatabaseAccess {
             $element = $this->repository()->findOneBy(['id' => $cronjob->getId()]);
             if (!isset($element)) {
                 try {
-                    $this->entityManager()->persist($cronjob);
+                    $this->entityManager()->create($cronjob, false);
                 } catch (Exception $exception) {
                     Oforge()->Logger()->get()->error($exception->getMessage(), $exception->getTrace());
                 }
@@ -133,10 +133,11 @@ class CronjobService extends AbstractDatabaseAccess {
     public function run(string $name) {
         try {
             $cronjob = $this->getCronjob($name);
-            $this->entityManager()->flush();
+            $success = $this->runCronjob($cronjob);
+            $this->entityManager()->update($cronjob);
             $this->repository()->clear();
 
-            return $this->runCronjob($cronjob);
+            return $success;
         } catch (Exception $exception) {
             Oforge()->Logger()->get()->error($exception->getMessage(), $exception->getTrace());
         }
@@ -168,6 +169,7 @@ class CronjobService extends AbstractDatabaseAccess {
                     $lastExecutionTime = $cronjob->getNextExecutionTime() ?? new DateTimeImmutable();
                     $nextExecutionTime = $lastExecutionTime->add(new DateInterval('PT' . $executionInterval . 'S'));
                     $cronjob->setNextExecutionTime($nextExecutionTime);
+                    $this->entityManager()->update($cronjob, false);
                 }
             } catch (Exception $exception) {
                 Oforge()->Logger()->get()->error($exception->getMessage(), $exception->getTrace());

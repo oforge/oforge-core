@@ -48,25 +48,31 @@ $BTN.click(function () {
             var $td = $tds.eq(i);
             var type = $td.attr("data-type");
 
-            if(type != null) {
-                switch(type) {
+            if ($td.attr("data-id") != null) {
+                h['id'] = $td.attr("data-id");
+            }
+
+            if (type != null) {
+                switch (type) {
                     case "text":
                         h[header] = $td.text();
-                        if($td.attr("data-id") != null) {
-                            h['id'] = $td.attr("data-id");
-                        }
                         break;
                     case "select":
                         h[header] = $td.find("select").children("option:selected").val();
                         break;
+                    case "checkbox":
+                        var ele = $td.find("input[type=checkbox]:checked");
+                        if(ele.length>0) {
+                            h[header] = true;
+                        } else {
+                            h[header] = false;
+                        }
+                        break;
                 }
             }
         });
-
         data.push(h);
     });
-
-    console.log(data);
     // Output the result
     $EXPORT.val(JSON.stringify(data));
 });

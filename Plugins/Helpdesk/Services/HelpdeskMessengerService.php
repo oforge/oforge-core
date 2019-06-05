@@ -32,8 +32,7 @@ class HelpdeskMessengerService extends AbstractMessengerService {
         $conversation->setState('open');
         $conversation->setType($conversationType);
 
-        $this->entityManager()->persist($conversation);
-        $this->entityManager()->flush();
+        $this->entityManager()->create($conversation);
 
         parent::sendMessage($conversation->getId(), 'frontend', $requester, $firstMessage);
 

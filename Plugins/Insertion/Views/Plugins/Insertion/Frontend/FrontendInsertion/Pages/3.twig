@@ -2,7 +2,14 @@
 
 {% block page_content %}
     {# contact information #}
-    <textarea name="insertion_description">Lorem Ipsum</textarea>
+    <div class="form__control">
+        <label for="insertion_description"
+               class="form__label">
+            {{ i18n('description') }}
+        </label>
+        <textarea name="insertion_description"
+                  class="form__input form__input--textarea">{{ i18n('description') }}</textarea>
+    </div>
     {# contact attributes #}
     {% for attributeGroup in attributes %}
         {% if attributeGroup.items|length > 0 and attributeGroup.name == 'contact' %}
@@ -16,17 +23,52 @@
             </div>
         {% endif %}
     {% endfor %}
+    <div class="form__control">
+        <h3 class="form__sub-title">{{ i18n('contact_partner') }}</h3>
+        <input type="text"
+               name="contact_name"
+               class="form__input"
+               value="{% if data['contact_name'] is defined %}
+                            {{ data['contact_name'] }}
+                          {% else %}Example Name{% endif %}" />
+    </div>
+    <div class="form__control">
+        <h3 class="form__sub-title">{{ i18n('contact_data') }}</h3>
+        <input type="email"
+               name="contact_email"
+               class="form__input"
+               value="Example@Name.de" />
+    </div>
+    <div class="form__control">
+        <input type="tel"
+               name="contact_phone"
+               class="form__input"
+               value="012121312" />
+    </div>
+    <div class="form__control columns">
+        <h3 class="form__sub-title">{{ i18n('city') }}</h3>
+        <div class="column column--one-third">
+            <input type="text"
+                   name="contact_zip"
+                   class="form__input"
+                   value="01234" />
+        </div>
+        <div class="column column--two-third">
+            <input type="text"
+                   name="contact_city"
+                   class="form__input"
+                   value="Dortmund" />
+        </div>
+    </div>
+    <div class="form__control">
+        <label class="form__label form__label--checkbox">
+            <input type="checkbox"
+                   name="contact_visible"
+                   class="form__input form__input--checkbox form__input--checkbox-small" />
+            {{ i18n('contact_data_visible', 'My contact data should be visible for registered users only.') }}
+        </label>
+    </div>
 
-    <input type="text" name="contact_name"
-           value="{% if data['contact_name'] is defined %}{{ data['contact_name'] }}{% else %}Example Name{% endif %}" />
-    <input type="email" name="contact_email" value="Example@Name.de" />
-    <input type="tel" name="contact_phone" value="012121312" />
-    <input type="text" name="contact_zip" value="01234" />
-    <input type="text" name="contact_city" value="Dortmund" />
 
-    <label>
-        Klick mich
-        <input type="checkbox" name="contact_visible" />
-    </label>
 
 {% endblock page_content %}
