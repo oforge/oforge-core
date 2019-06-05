@@ -170,7 +170,7 @@ abstract class AbstractModel {
      * @return mixed
      */
     private function assignArray($result, int $maxDepth) {
-        if (is_scalar($result)) {
+        if (is_scalar($result) || is_array($result)) {
             return $result;
         } elseif (is_subclass_of($result, AbstractModel::class)) {
             /** @var AbstractModel $result */
@@ -181,14 +181,10 @@ abstract class AbstractModel {
             }
 
             return null;
-        } elseif (is_array($result) || is_subclass_of($result, Collection::class)) {
+        } elseif (is_subclass_of($result, Collection::class)) {
             $subResult = [];
             foreach ($result as $key => $item) {
-                if (is_string($item)) {
-                    $subResult[$key] = $this->assignArray($item, $maxDepth - 1);
-                } else {
-                    $subResult[] = $this->assignArray($item, $maxDepth - 1);
-                }
+                $subResult[] = $this->assignArray($item, $maxDepth - 1);
             }
 
             return $subResult;

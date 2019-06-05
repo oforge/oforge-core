@@ -65,7 +65,6 @@ class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
         $bookmarks = $this->repository("search")->findBy(["insertionType" => $insertionType, "user" => $user]);
 
         $bookmark = null;
-
         /**
          * @var $found InsertionUserSearchBookmark
          */
@@ -104,10 +103,11 @@ class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
 
         $first = true;
 
+
         foreach ($params as $key => $value) {
             if (is_array($value)) {
                 foreach ($value as $v) {
-                    $url   .= ($first ? "?" : "&") . urlencode($key) . "=" . urlencode($v);
+                    $url   .= ($first ? "?" : "&") . urlencode($key . '[]') . "=" . urlencode($v);
                     $first = false;
                 }
             } else {
