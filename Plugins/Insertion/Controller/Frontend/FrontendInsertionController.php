@@ -15,6 +15,7 @@ use Insertion\Services\InsertionListService;
 use Insertion\Services\InsertionService;
 use Insertion\Services\InsertionTypeService;
 use Insertion\Services\InsertionUpdaterService;
+use Oforge\Engine\Modules\CMS\Abstracts\AbstractContentType;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Helper\StringHelper;
@@ -235,6 +236,19 @@ class FrontendInsertionController extends SecureFrontendController {
         $result["search"] = $listService->search($type->getId(), $_GET);
 
         Oforge()->View()->assign($result);
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     */
+
+    public function sliderAction(Request $request, Response $response) {
+        $sliderService = Oforge()->Services()->get("insertion.slider");
+        $result = $sliderService->getRandomInsertions();
+
+        Oforge()->View()->assign(["insertions" => $result]);
     }
 
     /**
