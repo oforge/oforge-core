@@ -54,7 +54,7 @@ class CategoryService extends AbstractDatabaseAccess {
              */
             $languageService = Oforge()->Services()->get('i18n.language');
 
-            $language = $languageService->getCurrentLanguageIso([]);// TODO Get current language ???
+            $language = $languageService->getCurrentLanguageIso([]);
         }
         $categories = $this->repository()->findBy([
             'language' => $language,

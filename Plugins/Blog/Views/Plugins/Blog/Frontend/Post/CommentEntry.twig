@@ -5,6 +5,14 @@
     <div class="blog-post-comment-created">
         {{ blogPostComment.created }}
     </div>
+    <div class="blog-post-comment-author-image">
+        {#TODO ALEX blog category user.detail.image #}
+        {% if blogPostComment.author.detail.image %}
+            <img src="{{ media(blogPostComment.author.detail.image) }}" />
+        {% else %}
+            DEFAULT_IMAGE
+        {% endif %}
+    </div>
     <div class="blog-post-comment-author">
         {{ blogPostComment.author.detail.firstName }} {{ blogPostComment.author.detail.lastName }}
     </div>
