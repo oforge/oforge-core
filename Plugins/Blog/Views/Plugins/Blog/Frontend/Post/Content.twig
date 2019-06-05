@@ -1,0 +1,11 @@
+<div class="blog-content">
+    {% include 'Plugins/Blog/Frontend/Post/PostMeta.twig' %}
+    {% if user %}
+        {% include 'Plugins/Blog/Frontend/Post/RatingForm.twig' with {blogPost:blog.post} %}
+    {% else %}
+        {% include 'Plugins/Blog/Frontend/Components/RatingView.twig' with {blogPost:blog.post} %}
+    {% endif %}
+    {% include 'Plugins/Blog/Frontend/Post/ContentContent.twig' %}
+    {% include 'Plugins/Blog/Frontend/Post/CommentList.twig' %}
+    {% include 'Plugins/Blog/Frontend/Post/LeaveComment.twig' %}
+</div>

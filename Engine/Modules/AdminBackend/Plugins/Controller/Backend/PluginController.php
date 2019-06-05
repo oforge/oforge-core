@@ -3,6 +3,7 @@
 namespace Oforge\Engine\Modules\AdminBackend\Plugins\Controller\Backend;
 
 use Exception;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\Plugin\CouldNotActivatePluginException;
@@ -529,7 +530,8 @@ class PluginController extends BaseCrudController {
     }
 
     /** @inheritDoc */
-    protected function prepareItemData(array $data, string $crudAction) : array {
+    protected function prepareItemDataArray(?AbstractModel $entity, string $crudAction) : array {
+        $data = parent::prepareItemDataArray($entity, $crudAction);
         // TODO include data version, description.long & description.short
         return $data;
     }
