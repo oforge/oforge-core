@@ -237,8 +237,8 @@ class InsertionListService extends AbstractDatabaseAccess {
         return $result;
     }
 
-    public function getUserInsertions($user, $page = 1) : ?array {
-        $insertions = $this->repository()->findBy(["user" => $user, "deleted" => false], null, 10, ($page - 1) * 10);
+    public function getUserInsertions($user, $page = 1, $count = 10) : ?array {
+        $insertions = $this->repository()->findBy(["user" => $user, "deleted" => false], null, $count, ($page - 1) * $count);
 
         $result = [];
         foreach ($insertions as $insertion) {
