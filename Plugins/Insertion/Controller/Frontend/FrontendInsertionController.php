@@ -255,7 +255,7 @@ class FrontendInsertionController extends SecureFrontendController {
             return $response->withRedirect("/404", 301);
         }
 
-        Oforge()->View()->assign(["insertion" => $insertion->toArray(3)]);
+        Oforge()->View()->assign(["insertion" => $insertion->toArray(3, ['user' => ['*', 'id']])]);
     }
 
     /**
