@@ -39,7 +39,7 @@ class MediaService extends AbstractDatabaseAccess {
                 $media = Media::create([
                     'type' => $file['type'],
                     'name' => $filename,
-                    'path' => $relativeFilePath,
+                    'path' => str_replace('\\', '/', $relativeFilePath),
                 ]);
                 $this->entityManager()->persist($media);
                 $this->entityManager()->flush();
