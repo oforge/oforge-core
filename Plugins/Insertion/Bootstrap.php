@@ -31,6 +31,7 @@ use Insertion\Services\InsertionMockService;
 use Insertion\Services\InsertionProfileService;
 use Insertion\Services\InsertionSearchBookmarkService;
 use Insertion\Services\InsertionService;
+use Insertion\Services\InsertionSliderService;
 use Insertion\Services\InsertionTypeService;
 use Insertion\Services\InsertionUpdaterService;
 use Insertion\Twig\InsertionExtensions;
@@ -64,6 +65,7 @@ class Bootstrap extends AbstractBootstrap {
             'insertion.bookmark'        => InsertionBookmarkService::class,
             'insertion.search.bookmark' => InsertionSearchBookmarkService::class,
             'insertion.profile'         => InsertionProfileService::class,
+            'insertion.slider'          => InsertionSliderService::class,
         ];
 
         $this->models = [
