@@ -13,6 +13,7 @@ use Insertion\Services\InsertionBookmarkService;
 use Insertion\Services\InsertionCreatorService;
 use Insertion\Services\InsertionFeedbackService;
 use Insertion\Services\InsertionListService;
+use Insertion\Services\InsertionProfileService;
 use Insertion\Services\InsertionSearchBookmarkService;
 use Insertion\Services\InsertionService;
 use Insertion\Services\InsertionTypeService;
@@ -306,6 +307,33 @@ class FrontendUsersInsertionController extends SecureFrontendController {
         return $response->withRedirect($url, 301);
     }
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @EndpointAction(path = "/profile")
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     */
+    public function profileAction(Request $request, Response $response) {
+        /**
+         * @var $userService FrontendUserService
+         */
+        $userService = Oforge()->Services()->get("frontend.user");
+        $user        = $userService->getUser();
+        /**
+         * @var $service InsertionProfileService
+         */
+        $service = Oforge()->Services()->get("insertion.profile");
+
+        if ($request->isPost()) {
+            $service->update($user->getId(), $_POST);
+        }
+
+        $result = $service->get($user->getId());
+        Oforge()->View()->assign(["profile" => $result != null ? $result->toArray() : null]);
+    }
+
     public function initPermissions() {
         $this->ensurePermissions('accountListAction', User::class);
         $this->ensurePermissions('bookmarksAction', User::class);
@@ -318,5 +346,6 @@ class FrontendUsersInsertionController extends SecureFrontendController {
         $this->ensurePermissions('indexAction', User::class);
         $this->ensurePermissions('toggleBookmarkAction', User::class);
         $this->ensurePermissions('toggleSearchBookmarkAction', User::class);
+        $this->ensurePermissions('profileAction', User::class);
     }
 }

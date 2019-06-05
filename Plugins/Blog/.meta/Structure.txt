@@ -1,0 +1,148 @@
+Blog-Module/Plugin
+- Blog-Einträge mit Kommentar-Funktion
+- Listenbasierte Kommentare, neuere zuerst
+- Admin: Direktes Löschen von Kommentaren
+- Author & Datum nicht in frontend-view (AYH)
+- load more by ajax
+
+Features, für später:
+	- Post-Tags
+	- FrontendUser: update comment
+	- Moderation von Comments (freischalten)
+	- Kommentar-Antworten-Button
+	- Beitrag melden (über Meldesystem, wie bei Inseraten?)	
+
+
+- Controller
+	- Backend
+		- CategoryController extends BaseCrudController
+			- indexAction 		backend_block_category_index	/backend/blog/categoryies
+			- createAction		backend_block_category_create	/backend/blog/categoryies/create
+			- viewAction 		backend_block_category_view		/backend/blog/categoryies/view/{postID:\d+}
+			- updateAction 		backend_block_category_update	/backend/blog/categoryies/update/{postID:\d+}
+			- deleteAction		backend_block_category_delete	/backend/blog/categoryies/delete/{postID:\d+}
+		- PostController extends BaseCrudController     
+			- indexAction 		backend_block_post_index		/backend/blog/posts[/{categoryID:\d+}/{categorySeo:[^\d]+}}]
+			- createAction		backend_block_post_create		/backend/blog/posts/create
+			- viewAction 		backend_block_post_view			/backend/blog/posts/view/{postID:\d+}
+			- updateAction 		backend_block_post_update		/backend/blog/posts/update/{postID:\d+}
+			- deleteAction		backend_block_post_delete		/backend/blog/posts/delete/{postID:\d+}
+		- CommentController extends BaseCrudController
+			- indexAction		backend_block_comment_index		/backend/blog/comments[/{postID:\d+}]
+			- createAction		backend_block_comment_create	/backend/blog/comments/{postID:\d+}/create
+			- viewAction		backend_block_comment_view		/backend/blog/comments/view/{commentID:\d+}
+			- updateAction		backend_block_comment_update	/backend/blog/comments/update/{commentID:\d+}
+			- deleteAction		backend_block_comment_delete	/backend/blog/comments/delete/{commentID:\d+}
+	- Frontend
+		- BlogController
+			- #prepareBreadcrump
+			- #prepareCategories
+			- indexAction 			frontend_blog_index		        /blog[/[{categoryID:\d+}[/[{seoUrlPath}[/]]]]]
+			- viewAction 			frontend_blog_view		        /blog/post/{postID:\d+}[/[{seoUrlPath}[/]]]
+			- loginAction			frontend_blog_login				/blog/login/{postID:\d+}
+			- registrationAction	frontend_blog_registration		/blog/registration/{postID:\d+}
+			- createCommentAction	frontend_blog_comment_create	/blog/post/{postID:\d+}/{seoUrlPath}/comments/create   POST
+			- deleteCommentAction	frontend_blog_comment_delete	/blog/post/{postID:\d+}/{seoUrlPath}/comments/delete   POST
+			- leaveRatingAction     frontend_blog_leave_rating      /blog/post/{postID:\d+}/{seoUrlPath}/leave-rating/{rating:up|down}[/]
+			- loadMorePostsAction 	    frontend_blog_more_posts		/blog/more-posts/[{categoryID:\d+}/{page:\d+} (Ajax Schnittstelle, GET)
+			- loadMoreCommentsAction 	frontend_blog_more_comments		/blog/post/{postID:\d+}/{seoUrlPath}/more-comments/{page:\d+} (Ajax Schnittstelle, GET)
+- Views
+	- Backend
+		- Blog
+			- Category
+				- index.twig extend crud...
+					- Filter: Sprache(iso->Text), (später: contains in Name)
+					- OrderBy: name asc
+					- Spalten: Sprache, Name, Link zum Frontend
+						Linkbutton "Posts (of category)" mit Anzahl Posts und Icon (ala Wordpress)
+				- (view/create/update/delete).twig extend crud...
+			- Post
+				- index.twig extend crud...
+					- Filter: Sprache(iso->Text), Kategorie(id->Name), (vielleicht User(UserID->User(Name/Mail???))), (später: contains in Titel)
+					- OrderBy: created desc
+					- Spalten/Werte: created, updated, Sprache, Kategorie, Rating,
+							User(Author), Titel, Link zum Frontend, 
+							Linkbutton "Comments (of post)" mit Anzahl Comments und Icon (ala Wordpress)
+							ggf kombinierte Spalten
+				- (view/create/update/delete).twig extend crud...
+			- Comment
+				- index.twig extend crud...
+					- Filter: Post(PostID->PostName), User(UserID->User(Name/Mail???)), (später: contains in Content)
+					- OrderBy: created desc
+					- Spalten: created, updated, Author(Name/Mail???), Content
+				- (view/create/update/delete).twig extend crud...
+	- Frontend
+		- Blog
+			- Components
+				- Common
+					- Breadcrump.twig
+					- CategoryEntry.twig
+					- CategoryList.twig
+				- Index
+					- PostEntry.twig
+				- View
+					- CommentEntry.twig
+					- Rating.twig.twig
+					- CommentForm.twig
+					- LoginForm.twig
+			- index.twig
+			- view.twig
+- Services
+	- CategoryService
+        - getCategories(?string languageIso = null):Category[]
+        - getCategoryByID(int categoryID):?Category
+	- PostService
+        - getPostByID(int postID):?Post
+        - getPostsOfCategory(Category category, int page = 0):Post[]
+	- CommentService
+	    - getCommentByID(string commentID):?Comment
+        - getComments(int postID, int page = 0):Comment[]
+        - getCommentsOfPost(Post post, int page = 0):Comment[]
+        - createComment(int postID, array data):bool
+        (- deleteComment(string commentID):bool)
+	- RatingService
+	    - getUserRatingOfPost(Post post):bool
+        - createOrUpdateRating(int postID, bool rating):bool (userID intern auslesen)
+        - evaluateRating(Post post):array(up,down)
+    - BlogAuthService???
+        - login(array data)
+        - registration(array data)
+- Model
+	- Category
+		- id
+		- language:string
+		- name:string
+		- seoUrlPath:string
+		- cssClass:string (optional css class)
+		- headerTitle:string
+		- headerSubtext:string
+		- headerImage:int(imageId)
+		- posts:Post[] (lazy joincolumn Post.id)
+	- Post
+		- id:bigint
+		- createdAt:DateTimeImmutable
+		- updatedAt:DateTimeImmutable
+		- language:string
+		- seoUrlPath:string
+		- author:BackendUser (lazy joincolumn BackendUser.id)
+		- headerTitle:string
+		- headerSubtext:string
+		- headerImage:int(imageId)
+		- excerpt:text(!html)
+		- content:text(html)
+		- category:Category (lazy joincolumn by Category.id)
+		- ratings:Rating[] (lazy joincolumn by Rating.id)
+		- comments:Comment[] (lazy joincolumn by Comment.id)
+	- Rating
+		- id:string(generated with: post.id, author.id, createdAt)
+		- post:Post (lazy joincolumn by Post.id)
+		- userID:int(FrontendUserID)
+		- value:bool
+	- Comment
+		- id:string(generated with: Post.id, Author.id, createdAt)
+		- createdAt:DateTimeImmutable
+		- updatedAt:DateTimeImmutable
+		- postID:Post (lazy joincolumn by Post.id)
+		- author:FrontendUser (lazy joincolumn FrontendUser.id)
+		- title:string
+		- content:text(!html)

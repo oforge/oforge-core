@@ -68,13 +68,14 @@ abstract class AbstractViewManager {
     public abstract function fetch();
 
     /**
-     * Get a specific key value from the viewData
+     * Get a specific key value from the viewData or $default if data with key does not exist.
      *
      * @param string $key
+     * @param mixed $default
      *
      * @return mixed
      */
-    public abstract function get(string $key);
+    public abstract function get(string $key, $default = null);
 
     /**
      * Check if a specific key exists and is not empty
