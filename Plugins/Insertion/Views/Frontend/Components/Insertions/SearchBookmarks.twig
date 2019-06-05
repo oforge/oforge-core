@@ -1,3 +1,4 @@
+{#
 {% for item in bookmarks %}
     <div>
         <a href="{{ item.url }}">
@@ -30,3 +31,219 @@
     </div>
 
 {% endfor %}
+#}
+
+{#
+<div>
+    <div>
+        <span class="tag" data-key="">
+            <span class="tag__text">Wow omg</span>
+        </span>
+        <span class="tag" data-key="" data-value="">
+            <span class="tag__text">iterable</span>
+        </span>
+        <span class="tag" data-key="" data-value="">
+            <span class="tag__text">boolean</span>
+        </span>
+        <span class="tag" data-key="" data-value="">
+            <span class="tag__text">boolean</span>
+        </span>
+        <span class="tag" data-key="" data-value="">
+            <span class="tag__text">boolean</span>
+        </span>
+        <span class="tag" data-key="" data-value="">
+            <span class="tag__text">boolean</span>
+        </span>
+        <span class="tag" data-key="" data-value="">
+            <span class="tag__text">boolean</span>
+        </span>
+        <span class="tag" data-key="" data-value="">
+            <span class="tag__text">boolean</span>
+        </span>
+        <span class="tag" data-key="" data-value="">
+            <span class="tag__text">boolean</span>
+        </span>
+    </div>
+    <a href="{{ url('frontend_account_insertions_toggleSearchBookmark', {'insertionId': item.insertionType }) }}"
+       class="button button--secondary"> Remove from wishlist</a>
+</div>
+#}
+<div class="search--bookmark">
+    <h3 class="bookmark-title">Gespeicherte Suche #1</h3>
+    <span class="tag" data-key="">
+            <span class="tag__text">Wowwgre omg</span>
+        </span>
+    <span class="tag" data-key="" data-value="">
+            <span class="tag__text">iterable</span>
+        </span>
+    <span class="tag" data-key="" data-value="">
+            <span class="tag__text">boolewerhwerf an</span>
+        </span>
+    <span class="tag" data-key="">
+            <span class="tag__text">Wow omg</span>
+        </span>
+    <span class="tag" data-key="" data-value="">
+            <span class="tag__text">iterable</span>
+        </span>
+    <span class="tag" data-key="" data-value="">
+            <span class="tag__text">boolwrthwrthwrtean</span>
+        </span>
+    <span class="tag" data-key="">
+            <span class="tag__text">Wow omg</span>
+        </span>
+    <span class="tag" data-key="" data-value="">
+            <span class="tag__text">iterable</span>
+        </span>
+    <span class="tag" data-key="" data-value="">
+            <span class="tag__text">boolean</span>
+        </span>
+    <span class="tag" data-key="">
+            <span class="tag__text">Wow omg</span>
+        </span>
+    <span class="tag" data-key="" data-value="">
+            <span class="tag__text">iterable</span>
+        </span>
+    <span class="tag" data-key="" data-value="">
+            <span class="tag__text">boolean</span>
+        </span>
+    <span class="tag" data-key="">
+            <span class="tag__text">Wow omg</span>
+        </span>
+    <span class="tag" data-key="" data-value="">
+            <span class="tag__text">iterable</span>
+        </span>
+    <span class="tag" data-key="" data-value="">
+            <span class="tag__text">boolean</span>
+        </span>
+    <div class="bookmark--actions">
+        <a href="{{ url('frontend_account_insertions_toggleSearchBookmark', {'insertionId': item.insertionType }) }}"
+           class="button button--primary">Suchergebnisse Anzeigen <svg class="icon">
+                <use xlink:href="#magnifier"></use>
+            </svg></a>
+        <a href="" class="delete-bookmark">
+            <svg class="icon icon--primary">
+                <use xlink:href="#close"></use>
+            </svg>
+        </a>
+    </div>
+</div>
+
+<div class="search--bookmark">
+    <h3 class="bookmark-title">Gespeicherte Suche #1</h3>
+    <span class="tag" data-key="">
+            <span class="tag__text">Wow omg</span>
+        </span>
+    <span class="tag" data-key="" data-value="">
+            <span class="tag__text">iterable</span>
+        </span>
+    <span class="tag" data-key="" data-value="">
+            <span class="tag__text">boolean</span>
+        </span>
+    <span class="tag" data-key="">
+            <span class="tag__text">Wow omg</span>
+        </span>
+    <span class="tag" data-key="" data-value="">
+            <span class="tag__text">iterable</span>
+        </span>
+    <span class="tag" data-key="" data-value="">
+            <span class="tag__text">boolean</span>
+        </span>
+    <span class="tag" data-key="">
+            <span class="tag__text">Wow omg</span>
+        </span>
+    <span class="tag" data-key="" data-value="">
+            <span class="tag__text">iterable</span>
+        </span>
+    <span class="tag" data-key="" data-value="">
+            <span class="tag__text">boolean</span>
+        </span>
+    <span class="tag" data-key="">
+            <span class="tag__text">Wow omg</span>
+        </span>
+    <span class="tag" data-key="" data-value="">
+            <span class="tag__text">iterable</span>
+        </span>
+    <span class="tag" data-key="" data-value="">
+            <span class="tag__text">boolean</span>
+        </span>
+    <span class="tag" data-key="">
+            <span class="tag__text">Wow omg</span>
+        </span>
+    <span class="tag" data-key="" data-value="">
+            <span class="tag__text">iterable</span>
+        </span>
+    <span class="tag" data-key="" data-value="">
+            <span class="tag__text">boolean</span>
+        </span>
+    <div class="bookmark--actions">
+        <a href="{{ url('frontend_account_insertions_toggleSearchBookmark', {'insertionId': item.insertionType }) }}"
+           class="button button--primary">Suchergebnisse Anzeigen <svg class="icon">
+                <use xlink:href="#magnifier"></use>
+            </svg></a>
+        <a href="" class="delete-bookmark">
+            <svg class="icon icon--primary">
+                <use xlink:href="#close"></use>
+            </svg>
+        </a>
+    </div>
+</div>
+
+<div class="search--bookmark">
+    <h3 class="bookmark-title">Gespeicherte Suche #1</h3>
+    <span class="tag" data-key="">
+            <span class="tag__text">Wow omg edrg</span>
+        </span>
+    <span class="tag" data-key="" data-value="">
+            <span class="tag__text">iterable</span>
+        </span>
+    <span class="tag" data-key="" data-value="">
+            <span class="tag__text">boolean</span>
+        </span>
+    <span class="tag" data-key="">
+            <span class="tag__text">Wow omg</span>
+        </span>
+    <span class="tag" data-key="" data-value="">
+            <span class="tag__text">iterable</span>
+        </span>
+    <span class="tag" data-key="" data-value="">
+            <span class="tag__text">boolean</span>
+        </span>
+    <span class="tag" data-key="">
+            <span class="tag__text">Wow omg</span>
+        </span>
+    <span class="tag" data-key="" data-value="">
+            <span class="tag__text">iterableerherth</span>
+        </span>
+    <span class="tag" data-key="" data-value="">
+            <span class="tag__text">boolean</span>
+        </span>
+    <span class="tag" data-key="">
+            <span class="tag__text">Wow omg</span>
+        </span>
+    <span class="tag" data-key="" data-value="">
+            <span class="tag__text">iterable</span>
+        </span>
+    <span class="tag" data-key="" data-value="">
+            <span class="tag__text">boolean</span>
+        </span>
+    <span class="tag" data-key="">
+            <span class="tag__text">Wow omg</span>
+        </span>
+    <span class="tag" data-key="" data-value="">
+            <span class="tag__text">iterable</span>
+        </span>
+    <span class="tag" data-key="" data-value="">
+            <span class="tag__text">boolean</span>
+        </span>
+    <div class="bookmark--actions">
+        <a href="{{ url('frontend_account_insertions_toggleSearchBookmark', {'insertionId': item.insertionType }) }}"
+           class="button button--primary">Suchergebnisse Anzeigen <svg class="icon">
+                <use xlink:href="#magnifier"></use>
+            </svg></a>
+        <a href="" class="delete-bookmark">
+            <svg class="icon icon--primary">
+                <use xlink:href="#close"></use>
+            </svg>
+        </a>
+    </div>
+</div>
