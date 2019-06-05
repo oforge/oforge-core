@@ -11,6 +11,7 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Forge\ForgeEntityManager;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
@@ -203,8 +204,8 @@ class CategoryController extends BaseCrudController {
         if (!empty($data) && $crudAction !== 'create') {
             if (!isset($this->dataPostsOfCategory)) {
                 $this->dataPostsOfCategory = [];
-                /* @var EntityManager $entityManager */
-                $entityManager = Oforge()->DB()->getEntityManager();
+                /* @var ForgeEntityManager $entityManager */
+                $entityManager = Oforge()->DB()->getForgeEntityManager();
                 $entries       = $entityManager->getRepository(Post::class)->createQueryBuilder('p')#
                                                ->select('IDENTITY(p.category) as id, COUNT(p) as value')#
                                                ->groupBy('p.category')#

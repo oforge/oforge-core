@@ -5,12 +5,12 @@ namespace Blog\Controller\Backend;
 use Blog\Models\Comment;
 use Blog\Models\Post;
 use DateTimeImmutable;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Models\UserDetail;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Forge\ForgeEntityManager;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
@@ -171,8 +171,8 @@ class CommentController extends BaseCrudController {
      */
     protected function getSelectPosts() {
         if (!isset($this->selectPosts)) {
-            /* @var EntityManager $entityManager */
-            $entityManager = Oforge()->DB()->getEntityManager();
+            /* @var ForgeEntityManager $entityManager */
+            $entityManager = Oforge()->DB()->getForgeEntityManager();
             $languages     = [];
             /** @var LanguageService $languageService */
             $languageService = Oforge()->Services()->get('i18n.language');
@@ -219,8 +219,8 @@ class CommentController extends BaseCrudController {
     protected function getSelectCommentUsers() {
         if (!isset($this->selectCommentUsers)) {
             $this->selectCommentUsers = [];
-            /* @var EntityManager $entityManager */
-            $entityManager = Oforge()->DB()->getEntityManager();
+            /* @var ForgeEntityManager $entityManager */
+            $entityManager = Oforge()->DB()->getForgeEntityManager();
 
             $queryBuilder = $entityManager->getRepository(Comment::class)->createQueryBuilder('c')#
                                           ->select('ud')#

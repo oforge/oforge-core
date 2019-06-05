@@ -6,6 +6,7 @@ use Blog\Models\Category;
 use Blog\Models\Comment;
 use Blog\Models\Post;
 use Blog\Models\Rating;
+use Blog\Services\RatingService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
@@ -16,6 +17,7 @@ use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Forge\ForgeEntityManager;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
@@ -292,8 +294,8 @@ class PostController extends BaseCrudController {
         if (!empty($data) && $crudAction !== 'create') {
             if (!isset($this->commentsPerPost)) {
                 $this->commentsPerPost = [];
-                /* @var EntityManager $entityManager */
-                $entityManager = Oforge()->DB()->getEntityManager();
+                /* @var ForgeEntityManager $entityManager */
+                $entityManager = Oforge()->DB()->getForgeEntityManager();
                 $entries       = $entityManager->getRepository(Comment::class)->createQueryBuilder('c')#
                                                ->select('IDENTITY(c.post) as id, COUNT(c) as value')#
                                                ->groupBy('c.post')#
@@ -313,7 +315,9 @@ class PostController extends BaseCrudController {
             $data['author']   = $data['author']['id'];
             $data['category'] = $data['category']['id'];
 
-            Oforge()->Services()->get('blog.rating')->evaluateRating($data);
+            /** @var RatingService $ratingService */
+            $ratingService = Oforge()->Services()->get('blog.rating');
+            $ratingService->evaluateRating($data);
         }
 
         return $data;
@@ -324,8 +328,8 @@ class PostController extends BaseCrudController {
      * @throws NotFoundException
      */
     protected function convertData(array $data, string $crudAction) : array {
-        /* @var EntityManager $entityManager */
-        $entityManager = Oforge()->DB()->getEntityManager();
+        /* @var ForgeEntityManager $entityManager */
+        $entityManager = Oforge()->DB()->getForgeEntityManager();
 
         $categoryID = $data['category'];
         /** @var Category|null $category */
@@ -353,8 +357,8 @@ class PostController extends BaseCrudController {
     protected function getSelectBackendUsers() {
         if (!isset($this->selectBackendUsers)) {
             $this->selectBackendUsers = [];
-            /* @var EntityManager $entityManager */
-            $entityManager = Oforge()->DB()->getEntityManager();
+            /* @var ForgeEntityManager $entityManager */
+            $entityManager = Oforge()->DB()->getForgeEntityManager();
             /** @var BackendUser[] $entities */
             $entities = $entityManager->getRepository(BackendUser::class)->findBy(['active' => true]);
             foreach ($entities as $entity) {
@@ -375,8 +379,8 @@ class PostController extends BaseCrudController {
     protected function getSelectCategories() {
         if (!isset($this->selectCategories)) {
             $languages = $this->getSelectLanguages();
-            /* @var EntityManager $entityManager */
-            $entityManager      = Oforge()->DB()->getEntityManager();
+            /* @var ForgeEntityManager $entityManager */
+            $entityManager = Oforge()->DB()->getForgeEntityManager();
             $criteria           = [];
             $filteredByLanguage = false;
             if (ArrayHelper::issetNotEmpty($_GET, 'language')) {
@@ -431,7 +435,8 @@ class PostController extends BaseCrudController {
 
     /** @inheritDoc */
     protected function handleDeleteAction(Response $response, string $entityID) {
-        $entityManager = Oforge()->DB()->getEntityManager();
+        /* @var ForgeEntityManager $entityManager */
+        $entityManager = Oforge()->DB()->getForgeEntityManager();
         try {
             /** @var Post $post */
             $post = $this->crudService->getById(Post::class, $entityID);
