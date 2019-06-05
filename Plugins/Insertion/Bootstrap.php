@@ -7,6 +7,7 @@ use Insertion\Controller\Backend\BackendAttributeController;
 use Insertion\Controller\Backend\BackendInsertionController;
 use Insertion\Controller\Backend\BackendInsertionTypeController;
 use Insertion\Controller\Frontend\FrontendInsertionController;
+use Insertion\Controller\Frontend\FrontendInsertionSupplierController;
 use Insertion\Controller\Frontend\FrontendUsersInsertionController;
 use Insertion\Models\AttributeKey;
 use Insertion\Models\AttributeValue;
@@ -25,6 +26,7 @@ use Insertion\Services\InsertionFeedbackService;
 use Insertion\Services\InsertionListService;
 use Insertion\Services\InsertionMockService;
 use Insertion\Services\InsertionService;
+use Insertion\Services\InsertionSupplierService;
 use Insertion\Services\InsertionTypeService;
 use Insertion\Services\InsertionUpdaterService;
 use Insertion\Twig\InsertionExtensions;
@@ -41,6 +43,7 @@ class Bootstrap extends AbstractBootstrap {
         $this->endpoints = [
             FrontendInsertionController::class,
             FrontendUsersInsertionController::class,
+            FrontendInsertionSupplierController::class,
             BackendAttributeController::class,
             BackendInsertionController::class,
             BackendInsertionTypeController::class,
@@ -55,6 +58,7 @@ class Bootstrap extends AbstractBootstrap {
             'insertion.updater'   => InsertionUpdaterService::class,
             'insertion.feedback'  => InsertionFeedbackService::class,
             'insertion.list'      => InsertionListService::class,
+            'insertion.supplier'  => InsertionSupplierService::class,
         ];
 
         $this->models = [
