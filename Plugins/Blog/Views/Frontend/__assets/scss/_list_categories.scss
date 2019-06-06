@@ -4,20 +4,37 @@
         flex-direction: row;
         align-items: center;
         justify-content: center;
+        flex-wrap: wrap;
     }
     &__category {
         padding: $size-large;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        width: 16rem;
+        height: 16rem;
 
         &.blog__category--active {
             .blog__category-link {
                 background: $color-secondary;
+                color: $color-light;
+                .icon {
+                    fill: $color-light;
+                }
             }
         }
     }
     &__category-link {
         background: $color-light;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: $color-primary;
+        text-decoration: none;
+        width: 100%;
+        height: 100%;
+
+        .icon {
+            width: 6rem;
+            height: 6rem;
+        }
     }
 }
