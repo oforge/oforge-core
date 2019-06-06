@@ -31,5 +31,4 @@ class FrontendUserService {
 
         return null;
     }
-
 }

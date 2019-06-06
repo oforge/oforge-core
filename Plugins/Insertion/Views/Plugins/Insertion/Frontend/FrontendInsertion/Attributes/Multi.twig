@@ -1,9 +1,9 @@
-<div class="form__control">
+<div class="form__control form-group">
 
     <label for="insertion[{{ attribute.id }}][]"
            class="form__label">{{ i18n(attribute.name) }}</label>
 
-    <div class="multi-select"
+    <div class="multi-select form-control"
          data-multi-select="insertion[{{ attribute.id }}][]"
          {% if required %}data-required{% endif %}>
         <p class="multi-select__search"
