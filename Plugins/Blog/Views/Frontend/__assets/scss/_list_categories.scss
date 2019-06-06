@@ -1,0 +1,23 @@
+.blog {
+    &__category-list {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+    }
+    &__category {
+        padding: $size-large;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &.blog__category--active {
+            .blog__category-link {
+                background: $color-secondary;
+            }
+        }
+    }
+    &__category-link {
+        background: $color-light;
+    }
+}
