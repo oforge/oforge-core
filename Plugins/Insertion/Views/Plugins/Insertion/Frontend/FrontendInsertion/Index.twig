@@ -4,6 +4,7 @@
     {% include '@parent/Frontend/Components/MobileNavBar.twig' with { back_link : true, nav_title: i18n('insertion', 'FrontendInsertion')} %}
     <div class="content content--insertion">
         {% block insertions %}
+
             <div class="flex insertions">
                 {% block insertion__search %}
                     {% include 'Plugins/Insertion/Frontend/Components/Content/Search.twig' %}
