@@ -1,0 +1,62 @@
+{% extends "@parent/Frontend/Layout.twig" %}
+{% block content %}
+    {% include 'Plugins/FrontendUserManagement/Frontend/Components/AccountNavBar.twig' with { back_link : true, content_title: i18n('user_details', 'User details')} %}
+    <div class="account content">
+        {% block account %}
+            <div class="panel panel--account flex">
+                {% block account__sidebar %}
+                    {% include 'Plugins/FrontendUserManagement/Frontend/Components/Sidebar.twig' %}
+                {% endblock account__sidebar %}
+
+                {% block account__content %}
+                    <form action="{{ url('frontend_account_insertions_profile') }}" method="post"
+                          enctype="multipart/form-data">
+
+                        <div class="background">
+
+                            <input type="file" name="background" accept="image/*"
+                                   onchange="loadFile(event, 'background')">
+
+                            <img id="background"
+                                 src="{% if profile.background is defined %}{{ media(profile.background.id) }}{% endif %}" />
+                            <script>
+                                var loadFile = function (event, id) {
+                                    var output = document.getElementById(id);
+                                    output.src = URL.createObjectURL(event.target.files[0]);
+                                };
+                            </script>
+                        </div>
+
+                        <a href="{{ url('insertions_profile', {id: profile.id }) }}" >Zum Profil</a>
+
+                        <div class="profile">
+                            <input type="file" name="profile" accept="image/*" onchange="loadFile(event, 'profile')">
+                            <img id="profile"
+                                 src="{% if profile.main is defined %}{{ media(profile.main.id) }}{% endif %}" />
+                        </div>
+
+                        <textarea name="description">{{ profile.description }}</textarea>
+
+                        <input type="text" name="imprint_name" placeholder="Name" value="{{ profile.imprintName }}" />
+                        <input type="text" name="imprint_street" placeholder="Street"
+                               value="{{ profile.imprintStreet }}" />
+                        <input type="text" name="imprint_zipCity" placeholder="PLZ, ORT"
+                               value="{{ profile.imprintZipCity }}" />
+                        <input type="phone" name="imprint_phone" placeholder="Telefon"
+                               value="{{ profile.imprintPhone }}" />
+                        <input type="email" name="imprint_email" placeholder="E-Mail"
+                               value="{{ profile.imprintEmail }}" />
+
+
+                        <input type="text" name="imprint_company_number"
+                               placeholder="Unternehmens Registrierungszeug" value="{{ profile.imprintCompanyNumber }}" />
+                        <input type="text" name="imprint_company_tax" placeholder="Steuerzeugs"
+                               value="{{ profile.imprintCompanyTaxId }}" />
+
+                        <input type="submit" />
+                    </form>
+                {% endblock account__content %}
+            </div>
+        {% endblock account %}
+    </div>
+{% endblock content %}

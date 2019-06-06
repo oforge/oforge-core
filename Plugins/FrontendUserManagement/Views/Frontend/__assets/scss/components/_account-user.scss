@@ -1,0 +1,28 @@
+.account__user {
+  display: none;
+  padding: 1rem 0 2rem 0rem;
+
+  .user__picture {
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 .4rem .8rem rgba(112, 112, 112, 1);
+    display: flex;
+    margin-bottom: 3rem;
+    transform: translateX(-10px);
+  }
+
+  .user-info__name {
+    color: $color-primary;
+    margin-bottom: $size-medium;
+  }
+
+  .user-info__email {
+    color: $color-secondary;
+  }
+}
+
+@media screen and (min-width: $screen-large) {
+  .account__user {
+    display: block;
+  }
+}

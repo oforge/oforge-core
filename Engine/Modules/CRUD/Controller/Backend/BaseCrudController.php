@@ -165,7 +165,7 @@ class BaseCrudController extends SecureBackendController {
     /** @var GenericCrudService $crudService */
     protected $crudService;
     /** @var string $moduleModelName */
-    private $moduleModelName;
+    protected $moduleModelName;
 
     /**
      * BaseCrudController constructor.
@@ -719,7 +719,7 @@ class BaseCrudController extends SecureBackendController {
      *
      * @param array $postData
      */
-    private function handleFileUploads(array &$postData, string $crudAction) {
+    protected function handleFileUploads(array &$postData, string $crudAction) {
         if (empty($this->modelProperties) || !isset($_FILES['data'])) {
             return;
         }
@@ -787,7 +787,7 @@ class BaseCrudController extends SecureBackendController {
      * @param string $propertyName
      * @param array $fileData
      */
-    private function handleFileUpload(array &$entityData, string $propertyName, array $fileData) {
+    protected function handleFileUpload(array &$entityData, string $propertyName, array $fileData) {
         /**
          * @var MediaService $mediaService
          * @var Media|null $media

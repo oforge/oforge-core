@@ -1,0 +1,14 @@
+{% for type in types %}
+    {% if type.children|length > 0 %}
+        {% set parentName = parent == null ? type.name ~ " - " : (parent ~ " - " ~ type.name ~ " - ") %}
+        {% include 'Plugins/Insertion/Backend/BackendInsertion/CRUD/TypeOptions.twig' with { types: type.children, parent: parentName } %}
+    {% else %}
+        <option value="{{ type.id }}">{{ parent }}{{ type.name }}</option>
+    {% endif %}
+{% endfor %}
+
+{#
+
+
+
+        ##}

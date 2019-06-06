@@ -49,16 +49,25 @@
                 -->
                 <div class="form-controls form-controls--with-separator flex flex--row flex--wrap flex--center flex--between">
                     <div class="form__control">
-                        <label for="price" class="form__label">
+                        <label for="price[]" class="form__label">
                             {{ i18n('price_filter') }}
                         </label>
-                        <div class="range-slider">
-                            <input id="price"
-                                   name="price[]"
+                        <div class="range-slider"
+                             data-range-slider="true">
+                            <input name="price[]"
+                                   data-range-name="price-from"
+                                   data-range-from="true"
                                    type="range"
-                                   multiple
-                                   data-range-slider="price"
-                                   value="{% if search.filter['price'] is defined %}{{ search.filter['price'][0] }},{{ search.filter['price'][1] }}{% else %}1, 2000{% endif %}" />
+                                   min="0"
+                                   max="2000"
+                                   value="{% if search.filter['price'] is defined %}{{ search.filter['price'][0] }}{% else %}0{% endif %}">
+                            <input name="price[]"
+                                   data-range-name="price-to"
+                                   data-range-to="true"
+                                   type="range"
+                                   min="0"
+                                   max="2000"
+                                   value="{% if search.filter['price'] is defined %}{{ search.filter['price'][1] }}{% else %}2000{% endif %}">
                         </div>
                     </div>
                 </div>

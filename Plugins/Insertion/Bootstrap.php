@@ -16,6 +16,7 @@ use Insertion\Models\InsertionContact;
 use Insertion\Models\InsertionContent;
 use Insertion\Models\InsertionFeedback;
 use Insertion\Models\InsertionMedia;
+use Insertion\Models\InsertionProfile;
 use Insertion\Models\InsertionType;
 use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Models\InsertionTypeGroup;
@@ -25,10 +26,13 @@ use Insertion\Services\AttributeService;
 use Insertion\Services\InsertionBookmarkService;
 use Insertion\Services\InsertionCreatorService;
 use Insertion\Services\InsertionFeedbackService;
+use Insertion\Services\InsertionFormsService;
 use Insertion\Services\InsertionListService;
 use Insertion\Services\InsertionMockService;
+use Insertion\Services\InsertionProfileService;
 use Insertion\Services\InsertionSearchBookmarkService;
 use Insertion\Services\InsertionService;
+use Insertion\Services\InsertionSliderService;
 use Insertion\Services\InsertionTypeService;
 use Insertion\Services\InsertionUpdaterService;
 use Insertion\Twig\InsertionExtensions;
@@ -57,10 +61,13 @@ class Bootstrap extends AbstractBootstrap {
             'insertion.mock'            => InsertionMockService::class,
             'insertion.creator'         => InsertionCreatorService::class,
             'insertion.updater'         => InsertionUpdaterService::class,
+            'insertion.forms'           => InsertionFormsService::class,
             'insertion.feedback'        => InsertionFeedbackService::class,
             'insertion.list'            => InsertionListService::class,
             'insertion.bookmark'        => InsertionBookmarkService::class,
             'insertion.search.bookmark' => InsertionSearchBookmarkService::class,
+            'insertion.profile'         => InsertionProfileService::class,
+            'insertion.slider'          => InsertionSliderService::class,
         ];
 
         $this->models = [
@@ -76,7 +83,8 @@ class Bootstrap extends AbstractBootstrap {
             InsertionTypeAttribute::class,
             InsertionTypeGroup::class,
             InsertionUserBookmark::class,
-            InsertionUserSearchBookmark::class
+            InsertionUserSearchBookmark::class,
+            InsertionProfile::class,
         ];
 
         $this->dependencies = [
@@ -129,7 +137,7 @@ class Bootstrap extends AbstractBootstrap {
             'order'    => 3,
             'parent'   => 'backend_insertion',
             'icon'     => 'fa fa-bar-chart',
-            'path'     => '',
+            'path'     => 'backend_insertions',
             'position' => 'sidebar',
         ]);
 
@@ -145,8 +153,16 @@ class Bootstrap extends AbstractBootstrap {
         ]);
 
         $accountNavigationService->put([
-            'name'     => 'frontend_account_insertions_bookmarks',
+            'name'     => 'frontend_account_insertions_profile',
             'order'    => 2,
+            'icon'     => 'profile',
+            'path'     => 'frontend_account_insertions_profile',
+            'position' => 'sidebar',
+        ]);
+
+        $accountNavigationService->put([
+            'name'     => 'frontend_account_insertions_bookmarks',
+            'order'    => 3,
             'icon'     => 'heart',
             'path'     => 'frontend_account_insertions_bookmarks',
             'position' => 'sidebar',
