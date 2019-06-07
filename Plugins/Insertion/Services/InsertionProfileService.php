@@ -75,22 +75,6 @@ class InsertionProfileService extends AbstractDatabaseAccess {
                 }
             }
         }
-        if (isset($_FILES["profile"])) {
-            $media = $mediaService->add($_FILES["profile"]);
-            if ($media != null) {
-                $oldId = null;
-
-                if ($result->getMain() != null) {
-                    $oldId = $result->getMain()->getId();
-                }
-
-                $result->setMain($media);
-
-                if ($oldId != null) {
-                    $mediaService->delete($oldId);
-                }
-            }
-        }
 
         $result->fromArray([
             "description"          => $params["description"],
