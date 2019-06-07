@@ -30,9 +30,19 @@ class Endpoint extends AbstractModel {
     private $name;
     /**
      * @var string
+     * @ORM\Column(name="parent_path_name", type="string", nullable=false)
+     */
+    private $parentName;
+    /**
+     * @var string
      * @ORM\Column(name="path", type="string", nullable=false)
      */
     private $path;
+    /**
+     * @var string
+     * @ORM\Column(name="context", type="string", nullable=false)
+     */
+    private $context;
     /**
      * @var string
      * @ORM\Column(name="controller_class", type="string", nullable=false)
@@ -117,6 +127,24 @@ class Endpoint extends AbstractModel {
     /**
      * @return string
      */
+    public function getParentName() : string {
+        return $this->parentName;
+    }
+
+    /**
+     * @param string $parentName
+     *
+     * @return Endpoint
+     */
+    public function setParentName(string $parentName) : Endpoint {
+        $this->parentName = $parentName;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
     public function getPath() : string {
         return $this->path;
     }
@@ -128,6 +156,24 @@ class Endpoint extends AbstractModel {
      */
     public function setPath(string $path) : Endpoint {
         $this->path = $path;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContext() : string {
+        return $this->context;
+    }
+
+    /**
+     * @param string $context
+     *
+     * @return Endpoint
+     */
+    public function setContext(string $context) : Endpoint {
+        $this->context = $context;
 
         return $this;
     }
