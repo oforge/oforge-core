@@ -8,7 +8,6 @@ namespace PHPSTORM_META {
             'blog.comment'  => \Blog\Services\CommentService::class,
             'blog.post'     => \Blog\Services\PostService::class,
             'blog.rating'   => \Blog\Services\RatingService::class,
-            'blog.user'     => \Blog\Services\UserService::class,
         ]));
     }
 

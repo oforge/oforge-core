@@ -11,6 +11,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Exception;
 use FrontendUserManagement\Models\UserDetail;
+use FrontendUserManagement\Services\FrontendUserService;
 use InvalidArgumentException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
@@ -25,8 +26,8 @@ use Oforge\Engine\Modules\I18n\Services\LanguageService;
  * @package Blog\Services
  */
 class CommentService extends AbstractDatabaseAccess {
-    /** @var UserService $userService */
-    private $userService;
+    /** @var FrontendUserService $frontendUserService */
+    private $frontendUserService;
 
     /**
      * @inheritDoc
@@ -34,7 +35,7 @@ class CommentService extends AbstractDatabaseAccess {
      */
     public function __construct() {
         parent::__construct([Comment::class => Comment::class, Post::class => Post::class]);
-        $this->userService = Oforge()->Services()->get('blog.user');
+        $this->frontendUserService = Oforge()->Services()->get('frontend.user');
     }
 
     /**
@@ -104,7 +105,7 @@ class CommentService extends AbstractDatabaseAccess {
      * @throws ORMException
      */
     public function createComment(array $data) {
-        if (!$this->userService->isLoggedIn()) {
+        if (!$this->frontendUserService->isLoggedIn()) {
             throw new UserNotLoggedInException();
         }
         if ($this->isValid($data)) {
