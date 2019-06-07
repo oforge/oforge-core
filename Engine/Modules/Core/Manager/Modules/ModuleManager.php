@@ -245,6 +245,7 @@ class ModuleManager {
             Oforge()->Services()->register($services);
 
             $endpoints = $instance->getEndpoints();
+
             Oforge()->Services()->get('endpoint')->install($endpoints);
             Oforge()->Services()->get('endpoint')->activate($endpoints);
 

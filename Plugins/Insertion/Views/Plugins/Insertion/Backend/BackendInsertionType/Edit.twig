@@ -10,7 +10,7 @@
                         <div class="box-tools pull-right">
                             <form method="POST" id="delete-form"
                                   action="{{ url('backend_insertion_type_delete') ~ "?id=" ~ content.insertionType.id }}"></form>
-                            <div class="btn-group">
+                            <div class="btn-group pull-right">
                                 <button type="submit" form="delete-form" class="btn btn-danger">
                                     <i class="fa fa-trash"></i> {{ i18n('delete', 'delete') }}
                                 </button>

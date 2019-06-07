@@ -32,7 +32,7 @@
                         <div class="profile">
                             <input type="file" name="profile" accept="image/*" onchange="loadFile(event, 'profile')">
                             <img id="profile"
-                                 src="{% if profile.main is defined %}{{ media(profile.main.id) }}{% endif %}" />
+                                 src="{% if user.detail.image is defined %}{{ media(user.detail.image.id) }}{% endif %}" />
                         </div>
 
                         <textarea name="description">{{ profile.description }}</textarea>
