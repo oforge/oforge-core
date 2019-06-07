@@ -1,7 +1,9 @@
 {# block layout__header #}
 {% block header %}
-    <header class="header header--main">
-        <div class="header__image"></div>
+    <header class="header {% block header_class %}{{ meta.header_class }} {{ meta.name }}{% endblock header_class %}">
+        {% block header_image %}
+            <div class="header__image"></div>
+        {% endblock header_image %}
         <div class="header__content">
             {% block header__burger_menu %}
                 {% include 'Frontend/Components/Header/BurgerMenu.twig' %}
