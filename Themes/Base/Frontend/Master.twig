@@ -19,7 +19,7 @@
         {% endif %}
     {% endblock master__styles %}
 </head>
-<body  class="{% block body_class %}routeparent-{{ meta.route.parentName|lower}} routecontext-{{ meta.route.context|lower}} routename-{{ meta.route.name|lower }} {{ meta.body_class|lower }} {% endblock body_class %}" >
+<body class="{% block body_class %}controller--{{ meta.route.parentName|lower}} module--{{ meta.route.context|lower}} action--{{ meta.route.name|lower }} {{ meta.body_class|lower }} {% endblock body_class %}" >
 
 {% if debug.console %}
     {{ o_dump() }}
