@@ -55,12 +55,12 @@ class MediaService extends AbstractDatabaseAccess {
     }
 
     /**
-     * @param int $id
+     * @param $id
      *
      * @return Media|null
      * @throws ORMException
      */
-    public function getById(int $id) : ?Media {
+    public function getById($id) : ?Media {
         /** @var Media|null $result */
         $result = $this->repository()->findOneBy([
             'id' => $id,
