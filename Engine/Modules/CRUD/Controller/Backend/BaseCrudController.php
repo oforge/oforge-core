@@ -165,7 +165,7 @@ class BaseCrudController extends SecureBackendController {
     /** @var GenericCrudService $crudService */
     protected $crudService;
     /** @var string $moduleModelName */
-    private $moduleModelName;
+    protected $moduleModelName;
 
     /**
      * BaseCrudController constructor.
@@ -280,7 +280,7 @@ class BaseCrudController extends SecureBackendController {
         if ($request->isPost() && !empty($postData)) {
             try {
                 $data = $postData['data'];
-                $this->handleFileUploads($data);
+                $this->handleFileUploads($data, 'create');
                 $data = $this->convertData($data, 'create');
                 $this->crudService->create($this->model, $data);
                 Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_create_success', 'Entity successfully created.'));
@@ -354,7 +354,7 @@ class BaseCrudController extends SecureBackendController {
         if ($request->isPost() && !empty($postData)) {
             try {
                 $data = $postData['data'];
-                $this->handleFileUploads($data);
+                $this->handleFileUploads($data, 'update');
                 $data = $this->convertData($data, 'update');
                 $this->crudService->update($this->model, $data);
                 Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_update_success', 'Entity successfully updated.'));
@@ -490,7 +490,7 @@ class BaseCrudController extends SecureBackendController {
      */
     protected function handleIndexUpdate(array $postData) {
         $list = $postData['data'];
-        $this->handleFileUploads($list);
+        $this->handleFileUploads($list, 'index');
         foreach ($list as $entityID => $data) {
             $list[$entityID] = $this->convertData($data, 'update');
         }
@@ -719,11 +719,11 @@ class BaseCrudController extends SecureBackendController {
      *
      * @param array $postData
      */
-    private function handleFileUploads(array &$postData) {
+    protected function handleFileUploads(array &$postData, string $crudAction) {
         if (empty($this->modelProperties) || !isset($_FILES['data'])) {
             return;
         }
-        $isSingle  = isset($postData['id']);
+        $isSingle  = $crudAction !== 'index';
         $filesMeta = $_FILES['data'];
 
         foreach ($this->modelProperties as $property) {
@@ -787,7 +787,7 @@ class BaseCrudController extends SecureBackendController {
      * @param string $propertyName
      * @param array $fileData
      */
-    private function handleFileUpload(array &$entityData, string $propertyName, array $fileData) {
+    protected function handleFileUpload(array &$entityData, string $propertyName, array $fileData) {
         /**
          * @var MediaService $mediaService
          * @var Media|null $media
@@ -801,7 +801,6 @@ class BaseCrudController extends SecureBackendController {
                 $fileExtension    = substr($oldName, strrpos($oldName, '.'));
                 $fileData['name'] = $fileData['new_name'] . $fileExtension;
             }
-
             try {
                 $mediaService = Oforge()->Services()->get('media');
                 $media        = $mediaService->add($fileData);

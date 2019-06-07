@@ -27,6 +27,7 @@ use Insertion\Services\AttributeService;
 use Insertion\Services\InsertionBookmarkService;
 use Insertion\Services\InsertionCreatorService;
 use Insertion\Services\InsertionFeedbackService;
+use Insertion\Services\InsertionFormsService;
 use Insertion\Services\InsertionListService;
 use Insertion\Services\InsertionMockService;
 use Insertion\Services\InsertionProfileService;
@@ -62,6 +63,7 @@ class Bootstrap extends AbstractBootstrap {
             'insertion.mock'            => InsertionMockService::class,
             'insertion.creator'         => InsertionCreatorService::class,
             'insertion.updater'         => InsertionUpdaterService::class,
+            'insertion.forms'           => InsertionFormsService::class,
             'insertion.feedback'        => InsertionFeedbackService::class,
             'insertion.list'            => InsertionListService::class,
             'insertion.bookmark'        => InsertionBookmarkService::class,
@@ -89,6 +91,7 @@ class Bootstrap extends AbstractBootstrap {
 
         $this->dependencies = [
             \FrontendUserManagement\Bootstrap::class,
+            \Messenger\Bootstrap::class,
         ];
     }
 
