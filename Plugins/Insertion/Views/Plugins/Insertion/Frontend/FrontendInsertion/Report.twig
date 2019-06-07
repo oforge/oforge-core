@@ -6,6 +6,13 @@
             {% include 'Plugins/Insertion/Frontend/Components/Content/ProductPanel.twig' with {item: insertion } %}
             <div>
                 <form method="POST">
+                    <label for="issueType"></label>
+                    <select name="issueType" id="issueType">
+                        <option value="1">Problem 1</option>
+                        <option value="1">Problem 2</option>
+                        <option value="1">Problem 3</option>
+                        <option value="1">Problem 4</option>
+                    </select>
                     <label for="message"></label>
                     <input type="text" name="message" id="message">
                     <button type="submit">send message</button>
