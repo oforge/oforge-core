@@ -129,10 +129,6 @@ class CommentController extends BaseCrudController {
         'update' => true,
         'delete' => true,
     ];
-    /** @var array $selectCommentUsers */
-    private $selectCommentUsers;
-    /** @var array $selectPosts */
-    private $selectPosts;
 
     public function __construct() {
         parent::__construct();
@@ -161,18 +157,15 @@ class CommentController extends BaseCrudController {
     /**
      * @return array
      */
-    protected function getSelectPosts() {
-        if (!isset($this->selectPosts)) {
-            $this->selectPosts = [];
-            try {
-                /** @var CommentService $commentService */
-                $commentService    = Oforge()->Services()->get('blog.comment');
-                $this->selectPosts = $commentService->getFilterDataPostsOfComments();
-            } catch (ServiceNotFoundException $exception) {
-            }
-        }
+    protected function getSelectPosts() : array {
+        try {
+            /** @var CommentService $commentService */
+            $commentService = Oforge()->Services()->get('blog.comment');
 
-        return $this->selectPosts;
+            return $commentService->getFilterDataPostsOfComments();
+        } catch (ServiceNotFoundException $exception) {
+            return [];
+        }
     }
 
     /**
@@ -180,19 +173,15 @@ class CommentController extends BaseCrudController {
      *
      * @return array
      */
-    protected function getSelectCommentUsers() {
-        if (!isset($this->selectCommentUsers)) {
-            $this->selectCommentUsers = [];
-            try {
-                /** @var CommentService $commentService */
-                $commentService = Oforge()->Services()->get('blog.comment');
+    protected function getSelectCommentUsers() : array {
+        try {
+            /** @var CommentService $commentService */
+            $commentService = Oforge()->Services()->get('blog.comment');
 
-                $this->selectCommentUsers = $commentService->getFilterDataUserNamesOfComments();
-            } catch (ServiceNotFoundException $exception) {
-            }
+            return $commentService->getFilterDataUserNamesOfComments();
+        } catch (ServiceNotFoundException $exception) {
+            return [];
         }
-
-        return $this->selectCommentUsers;
     }
 
 }
