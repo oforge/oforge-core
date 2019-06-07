@@ -3,21 +3,15 @@
 namespace Blog\Controller\Backend;
 
 use Blog\Models\Comment;
-use Blog\Models\Post;
+use Blog\Services\CommentService;
 use DateTimeImmutable;
-use Doctrine\ORM\ORMException;
-use FrontendUserManagement\Models\UserDetail;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
-use Oforge\Engine\Modules\Core\Forge\ForgeEntityManager;
-use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
 use Oforge\Engine\Modules\CRUD\Enum\CrudFilterComparator;
 use Oforge\Engine\Modules\CRUD\Enum\CrudFilterType;
-use Oforge\Engine\Modules\I18n\Models\Language;
-use Oforge\Engine\Modules\I18n\Services\LanguageService;
 
 /**
  * Class CommentController
@@ -166,45 +160,16 @@ class CommentController extends BaseCrudController {
 
     /**
      * @return array
-     * @throws ORMException
-     * @throws ServiceNotFoundException
      */
     protected function getSelectPosts() {
         if (!isset($this->selectPosts)) {
-            /* @var ForgeEntityManager $entityManager */
-            $entityManager = Oforge()->DB()->getForgeEntityManager();
-            $languages     = [];
-            /** @var LanguageService $languageService */
-            $languageService = Oforge()->Services()->get('i18n.language');
-            /** @var Language[] $entities */
-            $entities = $languageService->list();
-            foreach ($entities as $entity) {
-                $languages[$entity->getIso()] = $entity->getName();
+            $this->selectPosts = [];
+            try {
+                /** @var CommentService $commentService */
+                $commentService    = Oforge()->Services()->get('blog.comment');
+                $this->selectPosts = $commentService->getFilterDataPostsOfComments();
+            } catch (ServiceNotFoundException $exception) {
             }
-            $queryBuilder = $entityManager->getRepository(Post::class)->createQueryBuilder('p')#
-                                          ->select('p')#
-                                          ->leftJoin('p.comments', 'c')#
-                                          ->groupBy('p.id')#
-                                          ->distinct();
-            if (ArrayHelper::issetNotEmpty($_GET, 'author')) {
-                $queryBuilder = $queryBuilder->where('c.author = ?1')->setParameter(1, $_GET['author']);
-            }
-            /** @var Post[] $entities */
-            $entities = $queryBuilder->getQuery()->getResult();
-
-            $posts = [];
-            foreach ($entities as $entity) {
-                $language     = $entity->getLanguage();
-                $languageName = ArrayHelper::get($languages, $entity->getLanguage(), $entity->getLanguage());
-                if (!isset($posts[$language])) {
-                    $posts[$language] = [
-                        'label'   => $languageName,
-                        'options' => [],
-                    ];
-                }
-                $posts[$language]['options'][$entity->getId()] = $entity->getHeaderTitle();
-            }
-            $this->selectPosts = $posts;
         }
 
         return $this->selectPosts;
@@ -214,27 +179,16 @@ class CommentController extends BaseCrudController {
      * Get comment users for select field.
      *
      * @return array
-     * @return array
      */
     protected function getSelectCommentUsers() {
         if (!isset($this->selectCommentUsers)) {
             $this->selectCommentUsers = [];
-            /* @var ForgeEntityManager $entityManager */
-            $entityManager = Oforge()->DB()->getForgeEntityManager();
+            try {
+                /** @var CommentService $commentService */
+                $commentService = Oforge()->Services()->get('blog.comment');
 
-            $queryBuilder = $entityManager->getRepository(Comment::class)->createQueryBuilder('c')#
-                                          ->select('ud')#
-                                          ->leftJoin('c.author', 'fu')#
-                                          ->leftJoin(UserDetail::class, 'ud', 'WITH', 'ud.user = fu.id')#
-                                          ->groupBy('ud.id')#
-                                          ->distinct();
-            if (ArrayHelper::issetNotEmpty($_GET, 'post')) {
-                $queryBuilder = $queryBuilder->where('c.post = ?1')->setParameter(1, $_GET['post']);
-            }
-            /** @var UserDetail[] $userDetails */
-            $userDetails = $queryBuilder->getQuery()->getResult();
-            foreach ($userDetails as $userDetail) {
-                $this->selectCommentUsers[$userDetail->getId()] = $userDetail->getLastName() . ', ' . $userDetail->getFirstName();
+                $this->selectCommentUsers = $commentService->getFilterDataUserNamesOfComments();
+            } catch (ServiceNotFoundException $exception) {
             }
         }
 

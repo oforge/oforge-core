@@ -3,14 +3,13 @@
 namespace Blog\Controller\Backend;
 
 use Blog\Models\Category;
-use Blog\Models\Post;
+use Blog\Services\CategoryService;
 use Doctrine\ORM\ORMException;
 use Exception;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
-use Oforge\Engine\Modules\Core\Forge\ForgeEntityManager;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
@@ -75,9 +74,21 @@ class CategoryController extends BaseCrudController {
             ],
         ],# seoUrlPath
         [
+            'name'  => 'icon',
+            'type'  => CrudDataTypes::STRING,
+            'label' => ['key' => 'plugin_blog_property_category_icon', 'default' => 'Icon'],
+            'crud'  => [
+                'index'  => 'off',
+                'view'   => 'readonly',
+                'create' => 'editable',
+                'update' => 'editable',
+                'delete' => 'off',
+            ],
+        ],# cssClass
+        [
             'name'  => 'cssClass',
             'type'  => CrudDataTypes::STRING,
-            'label' => ['key' => 'plugin_blog_property_category_cssClass', 'default' => 'CSS class'],
+            'label' => ['key' => 'plugin_blog_property_category_cssClasses', 'default' => 'CSS classes'],
             'crud'  => [
                 'index'  => 'off',
                 'view'   => 'readonly',
@@ -203,14 +214,12 @@ class CategoryController extends BaseCrudController {
         if (!empty($data) && $crudAction !== 'create') {
             if (!isset($this->dataPostsOfCategory)) {
                 $this->dataPostsOfCategory = [];
-                /* @var ForgeEntityManager $entityManager */
-                $entityManager = Oforge()->DB()->getForgeEntityManager();
-                $entries       = $entityManager->getRepository(Post::class)->createQueryBuilder('p')#
-                                               ->select('IDENTITY(p.category) as id, COUNT(p) as value')#
-                                               ->groupBy('p.category')#
-                                               ->getQuery()->getArrayResult();
-                foreach ($entries as $entry) {
-                    $this->dataPostsOfCategory[$entry['id']] = $entry['value'];
+                try {
+                    /** @var CategoryService $categoryService */
+                    $categoryService = Oforge()->Services()->get('blog.category');
+
+                    $this->dataPostsOfCategory = $categoryService->getFilterDataPostCountOfCategories();
+                } catch (ServiceNotFoundException $exception) {
                 }
             }
             $data['posts'] = ArrayHelper::get($this->dataPostsOfCategory, $data['id'], 0);
