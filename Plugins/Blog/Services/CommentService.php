@@ -10,11 +10,14 @@ use Blog\Models\Post;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Exception;
+use FrontendUserManagement\Models\UserDetail;
 use InvalidArgumentException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
+use Oforge\Engine\Modules\I18n\Services\LanguageService;
 
 /**
  * Class CommentService
@@ -129,6 +132,69 @@ class CommentService extends AbstractDatabaseAccess {
         } else {
             throw new CommentNotFoundException($commentID);
         }
+    }
+
+    /**
+     * Get distinct posts of comments (with optional comment author filtering by query param author).
+     *
+     * @return array
+     * @throws ServiceNotFoundException
+     */
+    public function getFilterDataPostsOfComments() : array {
+        /** @var LanguageService $languageService */
+        $languageService = Oforge()->Services()->get('i18n.language');
+        $languages       = $languageService->getFilterDataLanguages();
+
+        $queryBuilder = $this->getRepository(Post::class)->createQueryBuilder('p')#
+                             ->select('p')#
+                             ->leftJoin('p.comments', 'c')#
+                             ->groupBy('p.id')#
+                             ->distinct();
+        if (ArrayHelper::issetNotEmpty($_GET, 'author')) {
+            $queryBuilder = $queryBuilder->where('c.author = ?1')->setParameter(1, $_GET['author']);
+        }
+        /** @var Post[] $entities */
+        $entities = $queryBuilder->getQuery()->getResult();
+
+        $result = [];
+        foreach ($entities as $entity) {
+            $language     = $entity->getLanguage();
+            $languageName = ArrayHelper::get($languages, $entity->getLanguage(), $entity->getLanguage());
+            if (!isset($result[$language])) {
+                $result[$language] = [
+                    'label'   => $languageName,
+                    'options' => [],
+                ];
+            }
+            $result[$language]['options'][$entity->getId()] = $entity->getHeaderTitle();
+        }
+
+        return $result;
+    }
+
+    /**
+     * Collect users for comments (with optional post filtering by query param post).
+     *
+     * @return array
+     */
+    public function getFilterDataUserNamesOfComments() : array {
+        $result       = [];
+        $queryBuilder = $this->getRepository(Comment::class)->createQueryBuilder('c')#
+                             ->select('ud')#
+                             ->leftJoin('c.author', 'fu')#
+                             ->leftJoin(UserDetail::class, 'ud', 'WITH', 'ud.user = fu.id')#
+                             ->groupBy('ud.id')#
+                             ->distinct();
+        if (ArrayHelper::issetNotEmpty($_GET, 'post')) {
+            $queryBuilder = $queryBuilder->where('c.post = ?1')->setParameter(1, $_GET['post']);
+        }
+        /** @var UserDetail[] $userDetails */
+        $userDetails = $queryBuilder->getQuery()->getResult();
+        foreach ($userDetails as $userDetail) {
+            $result[$userDetail->getId()] = $userDetail->getLastName() . ', ' . $userDetail->getFirstName();
+        }
+
+        return $result;
     }
 
     /**

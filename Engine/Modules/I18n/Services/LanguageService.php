@@ -58,6 +58,24 @@ class LanguageService extends AbstractDatabaseAccess {
     }
 
     /**
+     * @return array
+     */
+    public function getFilterDataLanguages() : array {
+        $languages = [];
+        try {
+            /** @var Language[] $entities */
+            $entities = $this->list();
+            foreach ($entities as $entity) {
+                $languages[$entity->getIso()] = $entity->getName();
+            }
+        } catch (ORMException $exception) {
+            Oforge()->Logger()->logException($exception);
+        }
+
+        return $languages;
+    }
+
+    /**
      * @param mixed $context
      *
      * @return string

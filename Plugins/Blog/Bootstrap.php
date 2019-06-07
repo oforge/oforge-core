@@ -97,6 +97,13 @@ class Bootstrap extends AbstractBootstrap {
             'label'   => 'config_blog_category_maxlength_name',
         ]);
         $configService->add([
+            'name'    => 'blog_category_icon_default',
+            'type'    => ConfigType::STRING,
+            'group'   => 'blog',
+            'default' => '',
+            'label'   => 'config_blog_category_icon_default',
+        ]);
+        $configService->add([
             'name'    => 'blog_post_maxlength_header_title',
             'type'    => ConfigType::INTEGER,
             'group'   => 'blog',

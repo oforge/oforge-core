@@ -2,15 +2,14 @@
 
 namespace Blog\Controller\Backend;
 
+use Blog\Exceptions\PostNotFoundException;
 use Blog\Models\Category;
 use Blog\Models\Comment;
 use Blog\Models\Post;
-use Blog\Models\Rating;
+use Blog\Services\PostService;
 use Blog\Services\RatingService;
 use DateTimeImmutable;
 use Doctrine\ORM\ORMException;
-use Exception;
-use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
@@ -356,12 +355,11 @@ class PostController extends BaseCrudController {
     protected function getSelectBackendUsers() {
         if (!isset($this->selectBackendUsers)) {
             $this->selectBackendUsers = [];
-            /* @var ForgeEntityManager $entityManager */
-            $entityManager = Oforge()->DB()->getForgeEntityManager();
-            /** @var BackendUser[] $entities */
-            $entities = $entityManager->getRepository(BackendUser::class)->findBy(['active' => true]);
-            foreach ($entities as $entity) {
-                $this->selectBackendUsers[$entity->getId()] = $entity->getName();
+            try {
+                /** @var PostService $postService */
+                $postService              = Oforge()->Services()->get('blog.post');
+                $this->selectBackendUsers = $postService->getFilterDataUsersOfPosts();
+            } catch (ServiceNotFoundException $exception) {
             }
         }
 
@@ -377,34 +375,13 @@ class PostController extends BaseCrudController {
      */
     protected function getSelectCategories() {
         if (!isset($this->selectCategories)) {
-            $languages = $this->getSelectLanguages();
-            /* @var ForgeEntityManager $entityManager */
-            $entityManager = Oforge()->DB()->getForgeEntityManager();
-            $criteria           = [];
-            $filteredByLanguage = false;
-            if (ArrayHelper::issetNotEmpty($_GET, 'language')) {
-                $criteria['language'] = $_GET['language'];
-                $filteredByLanguage   = true;
+            $this->selectCategories = [];
+            try {
+                /** @var PostService $postService */
+                $postService            = Oforge()->Services()->get('blog.post');
+                $this->selectCategories = $postService->getFilterDataCategoriesOfPosts();
+            } catch (ServiceNotFoundException $exception) {
             }
-            $categories = [];
-            /** @var Category[] $entities */
-            $entities = $entityManager->getRepository(Category::class)->findBy($criteria);
-            foreach ($entities as $entity) {
-                if ($filteredByLanguage) {
-                    $categories[$entity->getId()] = $entity->getName();
-                } else {
-                    $language     = $entity->getLanguage();
-                    $languageName = ArrayHelper::get($languages, $entity->getLanguage(), $entity->getLanguage());
-                    if (!isset($categories[$language])) {
-                        $categories[$language] = [
-                            'label'   => $languageName,
-                            'options' => [],
-                        ];
-                    }
-                    $categories[$language]['options'][$entity->getId()] = $entity->getName();
-                }
-            }
-            $this->selectCategories = $categories;
         }
 
         return $this->selectCategories;
@@ -434,45 +411,28 @@ class PostController extends BaseCrudController {
 
     /** @inheritDoc */
     protected function handleDeleteAction(Response $response, string $entityID) {
-        /* @var ForgeEntityManager $entityManager */
-        $entityManager = Oforge()->DB()->getForgeEntityManager();
+        /** @var PostService $postService */
+        $postService = Oforge()->Services()->get('blog.post');
         try {
-            /** @var Post $post */
-            $post = $this->crudService->getById(Post::class, $entityID);
-            if (!isset($post)) {
-                Oforge()->View()->Flash()->addMessage('error', sprintf(#
-                    I18N::translate('plugin_blog_post_not_found', 'Post with ID "%s" not found.'),#
-                    $entityID#
+            $result = $postService->delete($entityID);
+            if (isset($result)) {
+                list($commentsDeleted, $ratingsDeleted) = $result;
+                Oforge()->View()->Flash()->addMessage('success', sprintf(#
+                    I18N::translate('plugin_blog_msg_post_delete_success', 'Post with %s comments & %s ratings successfully deleted.'),#
+                    $commentsDeleted,#
+                    $ratingsDeleted#
                 ));
-
-                return $this->redirect($response, 'index');
+            } else {
+                Oforge()->View()->Flash()->addMessage('error', I18N::translate('backend_crud_msg_delete_failed', 'Entity delete failed.'));
             }
-
-            $commentsDeleted = $entityManager->createQueryBuilder()#
-                                             ->delete(Comment::class, 'c')#
-                                             ->where('c.post = :postID')#
-                                             ->setParameter('postID', $entityID)#
-                                             ->getQuery()->getScalarResult();
-            $ratingsDeleted  = $entityManager->createQueryBuilder()#
-                                             ->delete(Rating::class, 'r')#
-                                             ->where('r.post = :postID')#
-                                             ->setParameter('postID', $entityID)#
-                                             ->getQuery()->getScalarResult();
-            $entityManager->remove($post);
-            $entityManager->flush();
-
-            Oforge()->View()->Flash()->addMessage('success', sprintf(#
-                I18N::translate('plugin_blog_msg_post_delete_success', 'Post with %s comments & %s ratings successfully deleted.'),#
-                $commentsDeleted,#
-                $ratingsDeleted#
+        } catch (PostNotFoundException $exception) {
+            Oforge()->View()->Flash()->addMessage('error', sprintf(#
+                I18N::translate('plugin_blog_post_not_found', 'Post with ID "%s" not found.'),#
+                $entityID#
             ));
-
-            return $this->redirect($response, 'index');
-        } catch (Exception $exception) {
-            Oforge()->View()->Flash()->addExceptionMessage('error', I18N::translate('backend_crud_msg_delete_failed', 'Entity delete failed.'), $exception);
-
-            return $this->redirect($response, 'index');
         }
+
+        return $this->redirect($response, 'index');
     }
 
 }
