@@ -24,6 +24,8 @@ use Oforge\Engine\Modules\CMS\Models\Page\Page;
 use Oforge\Engine\Modules\CMS\Models\Page\PageContent;
 use Oforge\Engine\Modules\CMS\Models\Page\PagePath;
 use Oforge\Engine\Modules\CMS\Models\Site\Site;
+use Oforge\Engine\Modules\CMS\Services\ContentTypeGroupManagementService;
+use Oforge\Engine\Modules\CMS\Services\ContentTypeManagementService;
 use Oforge\Engine\Modules\CMS\Services\ContentTypeService;
 use Oforge\Engine\Modules\CMS\Services\DummyPageGenerator;
 use Oforge\Engine\Modules\CMS\Services\NamedContentService;
@@ -72,15 +74,17 @@ class Bootstrap extends AbstractBootstrap {
 
         $this->services = [
 
-            "dummy.page.generator"        => DummyPageGenerator::class,
-            "page.path"                   => PageService::class,
-            "pages.controller.service"    => PagesControllerService::class,
-            "page.tree.service"           => PageTreeService::class,
-            "page.builder.service"        => PageBuilderService::class,
-            "content.type.service"        => ContentTypeService::class,
-            "elements.controller.service" => ElementsControllerService::class,
-            "element.tree.service"        => ElementTreeService::class,
-            'named.content'               => NamedContentService::class,
+            "dummy.page.generator"          => DummyPageGenerator::class,
+            "page.path"                     => PageService::class,
+            "pages.controller.service"      => PagesControllerService::class,
+            "page.tree.service"             => PageTreeService::class,
+            "page.builder.service"          => PageBuilderService::class,
+            "content.type.service"          => ContentTypeService::class,
+            "elements.controller.service"   => ElementsControllerService::class,
+            "element.tree.service"          => ElementTreeService::class,
+            'named.content'                 => NamedContentService::class,
+            'content.type.management'       => ContentTypeGroupManagementService::class,
+            'content.type.group.management' => ContentTypeManagementService::class,
         ];
     }
 
