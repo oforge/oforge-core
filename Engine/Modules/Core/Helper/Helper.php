@@ -98,7 +98,6 @@ class Helper {
             });
         $recursiveIteratorIterator  = new RecursiveIteratorIterator($recursiveFilterIterator);
         foreach ($recursiveIteratorIterator as $file) {
-            var_dump($file);
             if (strtolower($file->getFileName()) === $searchFileName) {
                 $classpath = str_replace($path . DIRECTORY_SEPARATOR, "", $file->getPath());
                 $classpath = str_replace(".php", "", $classpath);
