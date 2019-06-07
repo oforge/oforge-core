@@ -38,6 +38,7 @@ class UserDetailsController extends SecureFrontendController {
         /** @var UserService $userService */
         $userService = Oforge()->Services()->get('frontend.user.management.user');
         $user        = $userService->getUserById($userId);
+
         Oforge()->View()->assign([
             'userAddress' => $user->getAddress(),
             'userDetails' => $user->getDetail(),
