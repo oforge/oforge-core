@@ -4,11 +4,11 @@ namespace Oforge\Engine\Modules\I18n\Controller\Backend\I18n;
 
 use Exception;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
 use Oforge\Engine\Modules\CRUD\Enum\CrudFilterComparator;
 use Oforge\Engine\Modules\CRUD\Enum\CrudFilterType;
-use Oforge\Engine\Modules\I18n\Models\Language;
 use Oforge\Engine\Modules\I18n\Models\Snippet;
 use Oforge\Engine\Modules\I18n\Services\LanguageService;
 
@@ -81,8 +81,6 @@ class SnippetsController extends BaseCrudController {
             'compare' => CrudFilterComparator::LIKE,
         ],
     ];
-    /** @var array $selectLanguages */
-    private $selectLanguages;
 
     public function __construct() {
         parent::__construct();
@@ -94,19 +92,15 @@ class SnippetsController extends BaseCrudController {
      * @return array
      * @throws Exception
      */
-    protected function getSelectLanguages() {
-        if (!isset($this->selectLanguages)) {
-            $this->selectLanguages = [];
+    protected function getSelectLanguages() : array {
+        try {
             /** @var LanguageService $languageService */
             $languageService = Oforge()->Services()->get('i18n.language');
-            /** @var Language[] $entities */
-            $entities = $languageService->list();
-            foreach ($entities as $entity) {
-                $this->selectLanguages[$entity->getIso()] = $entity->getName();
-            }
-        }
 
-        return $this->selectLanguages;
+            return $languageService->getFilterDataLanguages();
+        } catch (ServiceNotFoundException $exception) {
+            return [];
+        }
     }
 
 }

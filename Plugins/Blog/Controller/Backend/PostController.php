@@ -4,7 +4,6 @@ namespace Blog\Controller\Backend;
 
 use Blog\Exceptions\PostNotFoundException;
 use Blog\Models\Category;
-use Blog\Models\Comment;
 use Blog\Models\Post;
 use Blog\Services\PostService;
 use Blog\Services\RatingService;
@@ -24,7 +23,6 @@ use Oforge\Engine\Modules\CRUD\Enum\CrudFilterComparator;
 use Oforge\Engine\Modules\CRUD\Enum\CrudFilterType;
 use Oforge\Engine\Modules\CRUD\Enum\CrudGroubByOrder;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
-use Oforge\Engine\Modules\I18n\Models\Language;
 use Oforge\Engine\Modules\I18n\Services\LanguageService;
 use Slim\Http\Response;
 
@@ -255,14 +253,6 @@ class PostController extends BaseCrudController {
     protected $indexOrderBy = [
         'created' => CrudGroubByOrder::DESC,
     ];
-    /** @var array $commentsPerPost */
-    private $commentsPerPost;
-    /** @var array $selectBackendUsers */
-    private $selectBackendUsers;
-    /** @var array $selectCategories */
-    private $selectCategories;
-    /** @var array $selectLanguages */
-    private $selectLanguages;
 
     public function __construct() {
         parent::__construct();
@@ -290,19 +280,17 @@ class PostController extends BaseCrudController {
     protected function prepareItemDataArray(?AbstractModel $entity, string $crudAction) : array {
         $data = parent::prepareItemDataArray($entity, $crudAction);
         if (!empty($data) && $crudAction !== 'create') {
-            if (!isset($this->commentsPerPost)) {
-                $this->commentsPerPost = [];
-                /* @var ForgeEntityManager $entityManager */
-                $entityManager = Oforge()->DB()->getForgeEntityManager();
-                $entries       = $entityManager->getRepository(Comment::class)->createQueryBuilder('c')#
-                                               ->select('IDENTITY(c.post) as id, COUNT(c) as value')#
-                                               ->groupBy('c.post')#
-                                               ->getQuery()->getArrayResult();
-                foreach ($entries as $entry) {
-                    $this->commentsPerPost[$entry['id']] = $entry['value'];
+            if (!isset($this->filterSelectData['commentsPerPost'])) {
+                try {
+                    /** @var PostService $postService */
+                    $postService = Oforge()->Services()->get('blog.post');
+
+                    $this->filterSelectData['commentsPerPost'] = $postService->getFilterDataCommentsCountOfPosts();
+                } catch (ServiceNotFoundException $exception) {
+                    $this->filterSelectData['commentsPerPost'] = [];
                 }
             }
-            $data['comments'] = ArrayHelper::get($this->commentsPerPost, $data['id'], 0);
+            $data['comments'] = ArrayHelper::get($this->filterSelectData['commentsPerPost'], $data['id'], 0);
 
             /** @var DateTimeImmutable $dateTime */
             $dateTime        = $data['created'];
@@ -352,18 +340,15 @@ class PostController extends BaseCrudController {
      *
      * @return array
      */
-    protected function getSelectBackendUsers() {
-        if (!isset($this->selectBackendUsers)) {
-            $this->selectBackendUsers = [];
-            try {
-                /** @var PostService $postService */
-                $postService              = Oforge()->Services()->get('blog.post');
-                $this->selectBackendUsers = $postService->getFilterDataUsersOfPosts();
-            } catch (ServiceNotFoundException $exception) {
-            }
-        }
+    protected function getSelectBackendUsers() : array {
+        try {
+            /** @var PostService $postService */
+            $postService = Oforge()->Services()->get('blog.post');
 
-        return $this->selectBackendUsers;
+            return $postService->getFilterDataUsersOfPosts();
+        } catch (ServiceNotFoundException $exception) {
+            return [];
+        }
     }
 
     /**
@@ -373,40 +358,31 @@ class PostController extends BaseCrudController {
      * @throws ORMException
      * @throws ServiceNotFoundException
      */
-    protected function getSelectCategories() {
-        if (!isset($this->selectCategories)) {
-            $this->selectCategories = [];
-            try {
-                /** @var PostService $postService */
-                $postService            = Oforge()->Services()->get('blog.post');
-                $this->selectCategories = $postService->getFilterDataCategoriesOfPosts();
-            } catch (ServiceNotFoundException $exception) {
-            }
-        }
+    protected function getSelectCategories() : array {
+        try {
+            /** @var PostService $postService */
+            $postService = Oforge()->Services()->get('blog.post');
 
-        return $this->selectCategories;
+            return $postService->getFilterDataCategoriesOfPosts();
+        } catch (ServiceNotFoundException $exception) {
+            return [];
+        }
     }
 
     /**
      * Get languages for select field.
      *
      * @return array
-     * @throws ServiceNotFoundException
-     * @throws ORMException
      */
-    protected function getSelectLanguages() {
-        if (!isset($this->selectLanguages)) {
-            $this->selectLanguages = [];
+    protected function getSelectLanguages() : array {
+        try {
             /** @var LanguageService $languageService */
             $languageService = Oforge()->Services()->get('i18n.language');
-            /** @var Language[] $entities */
-            $entities = $languageService->list();
-            foreach ($entities as $entity) {
-                $this->selectLanguages[$entity->getIso()] = $entity->getName();
-            }
-        }
 
-        return $this->selectLanguages;
+            return $languageService->getFilterDataLanguages();
+        } catch (ServiceNotFoundException $exception) {
+            return [];
+        }
     }
 
     /** @inheritDoc */

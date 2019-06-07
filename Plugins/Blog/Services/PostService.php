@@ -146,12 +146,30 @@ class PostService extends AbstractDatabaseAccess {
     }
 
     /**
+     * Count comments of posts
+     *
+     * @return array
+     */
+    public function getFilterDataCommentsCountOfPosts() : array {
+        $result  = [];
+        $entries = $this->getRepository(Comment::class)->createQueryBuilder('c')#
+                        ->select('IDENTITY(c.post) as id, COUNT(c) as value')#
+                        ->groupBy('c.post')#
+                        ->getQuery()->getArrayResult();
+        foreach ($entries as $entry) {
+            $result[$entry['id']] = $entry['value'];
+        }
+
+        return $result;
+    }
+
+    /**
      * @param string $postID
      *
      * @return array
      * @throws PostNotFoundException
      */
-    public function delete(string $postID):?array {
+    public function delete(string $postID) : ?array {
         try {
             /** @var Post $post */
             $post = $this->getPost((int) $postID);

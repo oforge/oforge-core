@@ -5,7 +5,6 @@ namespace Blog\Controller\Backend;
 use Blog\Models\Category;
 use Blog\Services\CategoryService;
 use Doctrine\ORM\ORMException;
-use Exception;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
@@ -18,7 +17,6 @@ use Oforge\Engine\Modules\CRUD\Enum\CrudFilterComparator;
 use Oforge\Engine\Modules\CRUD\Enum\CrudFilterType;
 use Oforge\Engine\Modules\CRUD\Enum\CrudGroubByOrder;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
-use Oforge\Engine\Modules\I18n\Models\Language;
 use Oforge\Engine\Modules\I18n\Services\LanguageService;
 use Slim\Http\Response;
 
@@ -181,10 +179,6 @@ class CategoryController extends BaseCrudController {
     protected $indexOrderBy = [
         'name' => CrudGroubByOrder::ASC,
     ];
-    /** @var array $selectLanguages */
-    private $selectLanguages;
-    /** @var array $dataPostsOfCategory */
-    private $dataPostsOfCategory;
 
     public function __construct() {
         parent::__construct();
@@ -212,17 +206,17 @@ class CategoryController extends BaseCrudController {
     protected function prepareItemDataArray(?AbstractModel $entity, string $crudAction) : array {
         $data = parent::prepareItemDataArray($entity, $crudAction);
         if (!empty($data) && $crudAction !== 'create') {
-            if (!isset($this->dataPostsOfCategory)) {
-                $this->dataPostsOfCategory = [];
+            if (!isset($this->filterSelectData['postsOfCategory'])) {
                 try {
                     /** @var CategoryService $categoryService */
                     $categoryService = Oforge()->Services()->get('blog.category');
 
-                    $this->dataPostsOfCategory = $categoryService->getFilterDataPostCountOfCategories();
+                    $this->filterSelectData['postsOfCategory'] = $categoryService->getFilterDataPostCountOfCategories();
                 } catch (ServiceNotFoundException $exception) {
+                    $this->filterSelectData['postsOfCategory'] = [];
                 }
             }
-            $data['posts'] = ArrayHelper::get($this->dataPostsOfCategory, $data['id'], 0);
+            $data['posts'] = ArrayHelper::get($this->filterSelectData['postsOfCategory'], $data['id'], 0);
         }
 
         return $data;
@@ -232,21 +226,16 @@ class CategoryController extends BaseCrudController {
      * Get languages for select field.
      *
      * @return array
-     * @throws Exception
      */
-    protected function getSelectLanguages() {
-        if (!isset($this->selectLanguages)) {
-            $this->selectLanguages = [];
+    protected function getSelectLanguages() : array {
+        try {
             /** @var LanguageService $languageService */
             $languageService = Oforge()->Services()->get('i18n.language');
-            /** @var Language[] $entities */
-            $entities = $languageService->list();
-            foreach ($entities as $entity) {
-                $this->selectLanguages[$entity->getIso()] = $entity->getName();
-            }
-        }
 
-        return $this->selectLanguages;
+            return $languageService->getFilterDataLanguages();
+        } catch (ServiceNotFoundException $exception) {
+            return [];
+        }
     }
 
     /** @inheritDoc */
