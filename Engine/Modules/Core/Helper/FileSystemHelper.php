@@ -11,8 +11,7 @@ use RecursiveIteratorIterator;
  * @package Oforge\Engine\Modules\Core\Helper
  */
 class FileSystemHelper {
-    public const OMIT        = ['.', '..'];
-    public const OMIT_OFORGE = ['.', '..', 'var', 'vendor'];
+    public const OMIT = ['.', '..', '.git', 'var', 'vendor', 'node_modules'];
     /**
      * Caching of findFiles results.
      *
@@ -76,10 +75,16 @@ class FileSystemHelper {
      * @return string[] Array with full path to files.
      */
     public static function findFiles(string $path, string $searchFileName) {
+        $omits  = array_fill_keys(self::OMIT, true);
         $path   = realpath($path);
         $result = [];
+
         $recursiveDirectoryIterator = new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::FOLLOW_SYMLINKS);
-        $recursiveIteratorIterator = new RecursiveIteratorIterator($recursiveDirectoryIterator);
+        $recursiveFilterIterator    = new \RecursiveCallbackFilterIterator($recursiveDirectoryIterator,
+            function ($file, $key, $iterator) use ($omits, $searchFileName) {
+                return !isset($omits[$file->getFileName()]);
+            });
+        $recursiveIteratorIterator  = new RecursiveIteratorIterator($recursiveFilterIterator);
         foreach ($recursiveIteratorIterator as $file) {
             if (strtolower($file->getFileName()) === $searchFileName) {
                 $result[] = $file->getPath() . DIRECTORY_SEPARATOR . $file->getFileName();
@@ -128,7 +133,7 @@ class FileSystemHelper {
         foreach ($fileNames as $fileName) {
             $filePath = $path . DIRECTORY_SEPARATOR . $fileName;
 
-            if (is_dir($filePath) && !in_array($fileName, self::OMIT_OFORGE)) {
+            if (is_dir($filePath) && !in_array($fileName, self::OMIT)) {
                 $result[] = $filePath;
                 $result   = array_merge($result, self::getSubDirectories($filePath));
             }

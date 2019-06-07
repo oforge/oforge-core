@@ -8,7 +8,6 @@ use Blog\Models\Post;
 use Blog\Models\Rating;
 use Blog\Services\RatingService;
 use DateTimeImmutable;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 use Exception;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
