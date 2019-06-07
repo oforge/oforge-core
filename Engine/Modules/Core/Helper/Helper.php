@@ -14,7 +14,6 @@ use RecursiveIteratorIterator;
  * @deprecated
  */
 class Helper {
-    protected static $omitFolders = [".", "..", "vendor", "var"];
 
     /**
      * get all Bootstrap.php files inside a defined path
@@ -31,7 +30,7 @@ class Helper {
         if (file_exists($cacheFile) && Oforge()->Settings()->get("mode") != "development") {
             $result = unserialize(file_get_contents($cacheFile));
         } else {
-            $result = self::findFilesInPath($path, "bootstrap.php");
+            $result = FileSystemHelper::findFiles($path, "bootstrap.php");
             file_put_contents($cacheFile, serialize($result));
         }
 
@@ -46,39 +45,13 @@ class Helper {
      * @return array
      */
     public static function getTemplateFiles(string $path) {
-
         $cacheFile = ROOT_PATH . Statics::CACHE_DIR . DIRECTORY_SEPARATOR . basename($path) . ".cache";
 
         if (file_exists($cacheFile) && Oforge()->Settings()->get("mode") != "development") {
             $result = unserialize(file_get_contents($cacheFile));
         } else {
-            $result = self::findFilesInPath($path, "template.php");
+            $result = FileSystemHelper::findFiles($path, "template.php");
             file_put_contents($cacheFile, serialize($result));
-        }
-
-        return $result;
-    }
-
-    /**
-     * search for filename inside a path
-     *
-     * @param $path string
-     * @param $fileName string
-     *
-     * @return array
-     */
-    private static function findFilesInPath($path, $fileName) {
-        $result = [];
-
-        $path = realpath($path);
-        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path)) as $f) {
-            if (strtolower($f->getFileName()) == $fileName) {
-
-                $classpath = str_replace($path . DIRECTORY_SEPARATOR, "", $f->getPath());
-                $classpath = str_replace(".php", "", $classpath);
-
-                $result[$classpath] = $f->getPath() . DIRECTORY_SEPARATOR . $f->getFileName();
-            }
         }
 
         return $result;
@@ -111,12 +84,12 @@ class Helper {
      * @return array|null
      */
     public static function getFileMeta(string $fileName) {
-        $file = fopen($fileName, 'r');
-        $class = '';
+        $file      = fopen($fileName, 'r');
+        $class     = '';
         $namespace = '';
-        $buffer = '';
-        $i = 0;
-        $fileMeta = [];
+        $buffer    = '';
+        $i         = 0;
+        $fileMeta  = [];
 
         while (!$class) {
             if (feof($file)) {
@@ -130,21 +103,21 @@ class Helper {
                 continue;
             }
 
-            for (;$i < count($tokens); $i++) {
+            for (; $i < count($tokens); $i++) {
                 if ($tokens[$i][0] === T_NAMESPACE) {
-                    for ($j=$i+1;$j<count($tokens); $j++) {
+                    for ($j = $i + 1; $j < count($tokens); $j++) {
                         if ($tokens[$j][0] === T_STRING) {
-                            $namespace .= '\\'.$tokens[$j][1];
-                        } else if ($tokens[$j] === '{' || $tokens[$j] === ';') {
+                            $namespace .= '\\' . $tokens[$j][1];
+                        } elseif ($tokens[$j] === '{' || $tokens[$j] === ';') {
                             break;
                         }
                     }
                 }
 
                 if ($tokens[$i][0] === T_CLASS) {
-                    for ($j=$i+1;$j<count($tokens);$j++) {
+                    for ($j = $i + 1; $j < count($tokens); $j++) {
                         if ($tokens[$j] === '{') {
-                            $class = $tokens[$i+2][1];
+                            $class = $tokens[$i + 2][1];
                         }
                     }
                 }
