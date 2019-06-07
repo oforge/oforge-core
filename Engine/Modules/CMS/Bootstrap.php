@@ -28,13 +28,13 @@ use Oforge\Engine\Modules\CMS\Services\ContentTypeGroupManagementService;
 use Oforge\Engine\Modules\CMS\Services\ContentTypeManagementService;
 use Oforge\Engine\Modules\CMS\Services\ContentTypeService;
 use Oforge\Engine\Modules\CMS\Services\DummyPageGenerator;
+use Oforge\Engine\Modules\CMS\Services\ElementsControllerService;
+use Oforge\Engine\Modules\CMS\Services\ElementTreeService;
 use Oforge\Engine\Modules\CMS\Services\NamedContentService;
 use Oforge\Engine\Modules\CMS\Services\PageBuilderService;
 use Oforge\Engine\Modules\CMS\Services\PagesControllerService;
 use Oforge\Engine\Modules\CMS\Services\PageService;
 use Oforge\Engine\Modules\CMS\Services\PageTreeService;
-use Oforge\Engine\Modules\CMS\Services\ElementsControllerService;
-use Oforge\Engine\Modules\CMS\Services\ElementTreeService;
 use Oforge\Engine\Modules\CMS\Twig\AccessExtension;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\TemplateEngine\Core\Services\TemplateRenderService;
@@ -83,8 +83,8 @@ class Bootstrap extends AbstractBootstrap {
             "elements.controller.service"   => ElementsControllerService::class,
             "element.tree.service"          => ElementTreeService::class,
             'named.content'                 => NamedContentService::class,
-            'content.type.management'       => ContentTypeGroupManagementService::class,
-            'content.type.group.management' => ContentTypeManagementService::class,
+            'content.type.management'       => ContentTypeManagementService::class,
+            'content.type.group.management' => ContentTypeGroupManagementService::class,
         ];
     }
 
