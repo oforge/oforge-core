@@ -31,6 +31,10 @@ class IssueTypeGroup extends AbstractModel {
      */
     private $issueTypes;
 
+    public function __construct() {
+        $this->issueTypes = new ArrayCollection();
+    }
+
     /**
      * @return int
      */

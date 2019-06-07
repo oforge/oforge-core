@@ -2,6 +2,7 @@
 
 namespace Helpdesk\Models;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 
@@ -23,6 +24,12 @@ class IssueTypes extends AbstractModel {
      * @ORM\Column(name="issue_type_name", type="string", nullable=false, unique=true)
      */
     private $issueTypeName;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Helpdesk\Models\IssueTypeGroup", inversedBy="issueTypes")
+     * @ORM\JoinColumn(name="issue_type_group_id", referencedColumnName="id")
+     */
+    private $issueTypeGroup;
 
     /**
      * @return int
@@ -48,4 +55,24 @@ class IssueTypes extends AbstractModel {
 
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getIssueTypeGroup() {
+        return $this->issueTypeGroup;
+    }
+
+    /**
+     * @param mixed $issueTypeGroup
+     *
+     * @return IssueTypes
+     */
+    public function setIssueTypeGroup($issueTypeGroup) {
+        $this->issueTypeGroup = $issueTypeGroup;
+
+        return $this;
+    }
+
+
 }
