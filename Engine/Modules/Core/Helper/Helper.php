@@ -14,6 +14,7 @@ use RecursiveIteratorIterator;
  * @deprecated
  */
 class Helper {
+    public const OMIT = ['.', '..', '.git', 'var', 'vendor', 'node_modules'];
 
     /**
      * get all Bootstrap.php files inside a defined path
@@ -30,7 +31,7 @@ class Helper {
         if (file_exists($cacheFile) && Oforge()->Settings()->get("mode") != "development") {
             $result = unserialize(file_get_contents($cacheFile));
         } else {
-            $result = FileSystemHelper::findFiles($path, "bootstrap.php");
+            $result = self::findFiles($path, "bootstrap.php");
             file_put_contents($cacheFile, serialize($result));
         }
 
@@ -50,7 +51,7 @@ class Helper {
         if (file_exists($cacheFile) && Oforge()->Settings()->get("mode") != "development") {
             $result = unserialize(file_get_contents($cacheFile));
         } else {
-            $result = FileSystemHelper::findFiles($path, "template.php");
+            $result = self::findFiles($path, "template.php");
             file_put_contents($cacheFile, serialize($result));
         }
 
@@ -72,6 +73,37 @@ class Helper {
             return new $className();
         }
         throw new InvalidClassException($className, AbstractBootstrap::class);
+    }
+
+    /**
+     * Search recursive for for files with name inside a path.
+     *
+     * @param string $path string Directory or file path.
+     * @param string $searchFileName Search file name.
+     *
+     * @return string[] Array with full path to files.
+     */
+    public static function findFiles(string $path, string $searchFileName) {
+        $omits  = array_fill_keys(self::OMIT, true);
+        $path   = realpath($path);
+        $result = [];
+
+        $recursiveDirectoryIterator = new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::FOLLOW_SYMLINKS);
+        $recursiveFilterIterator    = new \RecursiveCallbackFilterIterator($recursiveDirectoryIterator,
+            function ($file, $key, $iterator) use ($omits, $searchFileName) {
+                return !isset($omits[$file->getFileName()]);
+            });
+        $recursiveIteratorIterator  = new RecursiveIteratorIterator($recursiveFilterIterator);
+        foreach ($recursiveIteratorIterator as $file) {
+            if (strtolower($file->getFileName()) === $searchFileName) {
+                $classpath = str_replace($path . DIRECTORY_SEPARATOR, "", $file->getPath());
+                $classpath = str_replace(".php", "", $classpath);
+
+                $result[$classpath] = $file->getPath() . DIRECTORY_SEPARATOR . $file->getFileName();
+            }
+        }
+
+        return $result;
     }
 
     /**
