@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Insertion\Services;
-
 
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -13,24 +11,21 @@ use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Models\InsertionTypeGroup;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 
-class InsertionSliderService extends AbstractDatabaseAccess
-{
+class InsertionSliderService extends AbstractDatabaseAccess {
 
     private const MAX_INSERTIONS = 20;
 
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct([
-            'default' => Insertion::class,
-            'type' => InsertionType::class,
+            'default'                => Insertion::class,
+            'type'                   => InsertionType::class,
             'insertionTypeAttribute' => InsertionTypeAttribute::class,
-            'key' => AttributeKey::class,
-            'group' => InsertionTypeGroup::class,
+            'key'                    => AttributeKey::class,
+            'group'                  => InsertionTypeGroup::class,
         ]);
     }
 
-    public function getRandomInsertions()
-    {
+    public function getRandomInsertions() {
         $result = [];
 
         /** @var QueryBuilder $queryBuilder */
@@ -45,8 +40,10 @@ class InsertionSliderService extends AbstractDatabaseAccess
         //Select a bunch of random insertions from the Database
         $randomKeys = array_rand($ids, sizeof($ids) < self::MAX_INSERTIONS ? sizeof($ids) : self::MAX_INSERTIONS);
         foreach ($randomKeys as $randomKey) {
-            $insertion = $this->repository()->findOneBy(["id" => $ids[$randomKey], "deleted" => false], null, 1);
-            array_push($result, $insertion->toArray(3));
+            $insertion = $this->repository()->findOneBy(["id" => $ids[$randomKey], "deleted" => false, "active" => true, "moderation" => "true"], null, 1);
+            if ($insertion != null) {
+                array_push($result, $insertion->toArray(3));
+            }
         }
 
         return $result;
