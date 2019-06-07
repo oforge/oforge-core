@@ -10,8 +10,8 @@ use Oforge\Engine\Modules\CMS\Models\Content\ContentTypeGroup;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
 use Oforge\Engine\Modules\CMS\Models\Content\Content;
 use Oforge\Engine\Modules\CMS\Models\ContentTypes\Row;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistsException;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 
 class ContentTypeGroupManagementService extends AbstractDatabaseAccess
 {
@@ -23,10 +23,7 @@ class ContentTypeGroupManagementService extends AbstractDatabaseAccess
     /**
      * @param array $options
      *
-     * @throws ConfigElementAlreadyExistsException
-     * @throws ConfigOptionKeyNotExistsException
      * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function put(array $options) : void {
         $element = $this->repository()->findOneBy(["name" => strtolower($options["name"])]);
@@ -52,21 +49,18 @@ class ContentTypeGroupManagementService extends AbstractDatabaseAccess
         return $entry;
     }
 
-
     /**
      * @param array $options
      *
      * @return bool
-     * @throws ConfigElementAlreadyExistsException
-     * @throws ConfigOptionKeyNotExistsException
-     * @throws ORMException
+     * @throws ConfigOptionKeyNotExistException
      */
     private function isValid($options) {
         // Check if required keys are within the options
         $keys = ["name", "description"];
         foreach ($keys as $key) {
             if (!array_key_exists($key, $options)) {
-                throw new ConfigOptionKeyNotExistsException($key);
+                throw new ConfigOptionKeyNotExistException($key);
             }
         }
 
