@@ -1,0 +1,124 @@
+.content--supplier {
+    // TODO: User Image
+
+    .slider--supplier {
+        margin-top: $size-large;
+
+        .slide {
+            position: relative;
+        }
+
+        .slide + .slide {
+            margin-left: $size-medium;
+        }
+
+        .slick-prev {
+            left: 25px;
+            z-index: 100;
+            top: 35%;
+
+            .icon {
+                transform: rotate(180deg) translateX(3px);
+            }
+        }
+
+        .slick-next {
+            right: 25px;
+            z-index: 100;
+            top: 35%;
+
+            .icon {
+                transform: translateX(3px);
+            }
+        }
+
+        .slick-arrow {
+            display: block;
+            height: auto;
+            width: auto;
+            padding: $size-large $size-large;
+            background: $color-secondary;
+            border-radius: 50%;
+            transform: scale(1);
+            transition: transform 100ms ease-out;
+
+            &:before {
+                content: none;
+            }
+
+            &:focus {
+                background: $color-secondary;
+            }
+
+            .icon {
+                fill: $color-light;
+
+            }
+
+            &:hover {
+                background: $color-secondary-light;
+                transform: scale(1.1);
+                transition: transform 100ms ease-in-out;
+
+                .icon {
+
+                }
+            }
+        }
+
+        .slick-slide {
+
+            div, .slide, .slide__image {
+                height: 100%;
+            }
+
+            img {
+                transform: scale(1);
+                transition: transform 100ms cubic-bezier(.33, .47, .46, .82);
+                margin: auto;
+            }
+
+            &:hover {
+                img {
+                    transform: scale(1.05);
+                    transition: transform 150ms cubic-bezier(.33, .47, .46, .82);
+                }
+            }
+
+            .badge {
+                width: 100px;
+                height: 35px;
+                text-align: center;
+                z-index: 9999;
+                transform: rotate(-45deg);
+                position: absolute;
+                top: -2px;
+                left: -30px;
+                border: 2px solid $color-light;
+
+
+                .icon {
+                    fill: $color-light;
+                    position: relative;
+                    left: 30px;
+                }
+            }
+
+            &:after, &:before {
+                content: "";
+                display: table;
+            }
+
+            &:after {
+                clear: both;
+            }
+
+        }
+
+        .slick-initialized {
+            .slick-slide {
+                border: 2px solid $color-light;
+            }
+        }
+    }
+}
