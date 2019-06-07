@@ -4,7 +4,6 @@ namespace Blog\Controller\Backend;
 
 use Blog\Models\Category;
 use Blog\Models\Post;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 use Exception;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;

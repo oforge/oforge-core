@@ -278,7 +278,7 @@ class PagesControllerService extends AbstractDatabaseAccess {
             $contentEntity->setName(uniqid());
             $contentEntity->setCssClass('');
             
-            $this->entityManager->create($contentEntity);
+            $this->forgeEntityManager->create($contentEntity);
 
             $contentId = $contentEntity->getId();
             

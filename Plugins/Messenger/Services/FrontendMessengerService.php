@@ -18,6 +18,7 @@ class FrontendMessengerService extends AbstractMessengerService {
      * @param $title
      * @param $firstMessage
      *
+     * @return string
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -30,9 +31,12 @@ class FrontendMessengerService extends AbstractMessengerService {
         $conversation->setTargetId($targetId);
         $conversation->setTitle($title);
 
-        $this->entityManager()->create($conversation);
+        parent::entityManager()->create($conversation);
+        $this->entityManager()->flush();
 
         parent::sendMessage($conversation->getId(), $conversationType, $requester, $firstMessage);
+
+        return $conversation;
     }
 
     /**
@@ -43,28 +47,17 @@ class FrontendMessengerService extends AbstractMessengerService {
      */
     public function getConversationList($userId) {
         $queryBuilder = $this->entityManager()->createQueryBuilder();
-        $query        = $queryBuilder
-            ->select('c')
-            ->from(Conversation::class, 'c')
-            ->where(
-                $queryBuilder->expr()->andX(
-                    $queryBuilder->expr()->eq('c.requester', $userId),
-                    $queryBuilder->expr()->eq('c.type', '?1')))
-            ->orWhere(
-                $queryBuilder->expr()->andX(
-                    $queryBuilder->expr()->eq('c.requested', $userId),
-                    $queryBuilder->expr()->eq('c.type', '?2')))
-            ->orWhere(
-                $queryBuilder->expr()->andX(
-                    $queryBuilder->expr()->eq('c.requester', $userId),
-                    $queryBuilder->expr()->eq('c.type', '?3')))
-            ->setParameters([1 => 'classified_advert', 2 => 'classified_advert', 3 => 'helpdesk_inquiry'])
-            ->getQuery();
+        $query        = $queryBuilder->select('c')->from(Conversation::class, 'c')->where($queryBuilder->expr()->andX($queryBuilder->expr()
+                                                                                                                                   ->eq('c.requester', $userId),
+                $queryBuilder->expr()->eq('c.type', '?1')))->orWhere($queryBuilder->expr()->andX($queryBuilder->expr()->eq('c.requested', $userId),
+                $queryBuilder->expr()->eq('c.type', '?2')))->orWhere($queryBuilder->expr()->andX($queryBuilder->expr()->eq('c.requester', $userId),
+                $queryBuilder->expr()->eq('c.type', '?3')))->setParameters([1 => 'classified_advert', 2 => 'classified_advert', 3 => 'helpdesk_inquiry'])
+                                     ->getQuery();
         /** @var Conversation[] $conversations */
         $conversations = $query->execute();
-        $result = [];
+        $result        = [];
 
-        foreach($conversations as $conversation) {
+        foreach ($conversations as $conversation) {
             $conversation = $conversation->toArray();
             if ($conversation['requested'] == $userId) {
                 $conversation['chatPartner'] = $conversation['requester'];
@@ -102,6 +95,27 @@ class FrontendMessengerService extends AbstractMessengerService {
             $conversation['chatPartner'] = $conversation['requester'];
         }
         $conversation['messages'] = $this->getMessagesOfConversation($conversationId);
+
+        return $conversation;
+    }
+
+    /**
+     * @param $requester
+     * @param $requested
+     * @param $conversationType
+     * @param $targetId
+     *
+     * @return object
+     * @throws ORMException
+     */
+    public function checkForConversation($requester, $requested, $conversationType, $targetId) {
+        $conversation = $this->repository('conversation')->findOneBy([
+            'requester'        => $requester,
+            'requested'        => $requested,
+            'type' => $conversationType,
+            'targetId'         => $targetId,
+        ]);
+
         return $conversation;
     }
 }
