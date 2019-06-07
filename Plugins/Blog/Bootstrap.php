@@ -6,7 +6,6 @@ use Blog\Models\Category;
 use Blog\Models\Comment;
 use Blog\Models\Post;
 use Blog\Models\Rating;
-use Blog\Services\UserService;
 use Blog\Services\CategoryService;
 use Blog\Services\CommentService;
 use Blog\Services\PostService;
@@ -54,7 +53,6 @@ class Bootstrap extends AbstractBootstrap {
         ];
 
         $this->services = [
-            'blog.user'     => UserService::class,
             'blog.category' => CategoryService::class,
             'blog.comment'  => CommentService::class,
             'blog.post'     => PostService::class,
@@ -95,6 +93,13 @@ class Bootstrap extends AbstractBootstrap {
             'group'   => 'blog',
             'default' => 0,
             'label'   => 'config_blog_category_maxlength_name',
+        ]);
+        $configService->add([
+            'name'    => 'blog_category_icon_default',
+            'type'    => ConfigType::STRING,
+            'group'   => 'blog',
+            'default' => '',
+            'label'   => 'config_blog_category_icon_default',
         ]);
         $configService->add([
             'name'    => 'blog_post_maxlength_header_title',
