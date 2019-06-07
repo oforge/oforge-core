@@ -6,7 +6,6 @@ use Blog\Models\Category;
 use Blog\Models\Comment;
 use Blog\Models\Post;
 use Blog\Models\Rating;
-use Blog\Services\UserService;
 use Blog\Services\CategoryService;
 use Blog\Services\CommentService;
 use Blog\Services\PostService;
@@ -54,7 +53,6 @@ class Bootstrap extends AbstractBootstrap {
         ];
 
         $this->services = [
-            'blog.user'     => UserService::class,
             'blog.category' => CategoryService::class,
             'blog.comment'  => CommentService::class,
             'blog.post'     => PostService::class,
