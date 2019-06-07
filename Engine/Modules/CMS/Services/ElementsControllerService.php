@@ -300,7 +300,7 @@ class ElementsControllerService extends AbstractDatabaseAccess {
                 $newContentParentEntity->setParent($contentParentEntity);
                 $newContentParentEntity->setDescription($selectedElementDescription);
                 
-                $this->entityManager->create($newContentParentEntity);
+                $this->forgeEntityManager->create($newContentParentEntity);
 
                 $contentParentId = $newContentParentEntity->getId();
                 break;
@@ -315,7 +315,7 @@ class ElementsControllerService extends AbstractDatabaseAccess {
                     {
                         $contentParentEntity->setDescription($selectedElementDescription);
                 
-                        $this->entityManager->update($contentParentEntity);
+                        $this->forgeEntityManager->update($contentParentEntity);
                     }
                 }
                 break;
@@ -332,7 +332,7 @@ class ElementsControllerService extends AbstractDatabaseAccess {
     
                         $this->resetContentElementContentParent($contentParentEntity);
                         
-                        $this->entityManager->update($contentParentEntity);
+                        $this->forgeEntityManager->update($contentParentEntity);
                     }
                 }
                 break;
