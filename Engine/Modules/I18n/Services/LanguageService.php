@@ -9,6 +9,7 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
 use Oforge\Engine\Modules\I18n\Models\Language;
+use Oforge\Engine\Modules\I18n\Models\Snippet;
 use ReflectionException;
 
 /**
@@ -55,6 +56,46 @@ class LanguageService extends AbstractDatabaseAccess {
      */
     public function getActiveLanguages() {
         return $this->repository()->findBy(['active' => true], ['name' => 'ASC']);
+    }
+
+    /**
+     * @param bool $onlyActive
+     *
+     * @return array
+     */
+    public function getFilterDataLanguages(bool $onlyActive = false) : array {
+        $languages = [];
+        try {
+            $criteria = [];
+            if ($onlyActive) {
+                $criteria['active'] = true;
+            }
+            /** @var Language[] $entities */
+            $entities = $this->list($criteria);
+            foreach ($entities as $entity) {
+                $languages[$entity->getIso()] = $entity->getName();
+            }
+        } catch (ORMException $exception) {
+            Oforge()->Logger()->logException($exception);
+        }
+
+        return $languages;
+    }
+
+    /**
+     * Get snippet count for languages.
+     *
+     * @return array
+     */
+    public function getFilterDataSnippetsOfLanguage() : array {
+        $result       = [];
+        $queryBuilder = $this->getRepository(Snippet::class)->createQueryBuilder('s');
+        $entries      = $queryBuilder->select('s.scope, COUNT(s) as value')->groupBy('s.scope')->getQuery()->getArrayResult();
+        foreach ($entries as $entry) {
+            $result[$entry['scope']] = $entry['value'];
+        }
+
+        return $result;
     }
 
     /**

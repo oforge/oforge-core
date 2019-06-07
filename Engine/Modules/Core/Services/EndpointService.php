@@ -267,11 +267,14 @@ class EndpointService extends AbstractDatabaseAccess {
         EndpointClass $classAnnotation,
         ?EndpointAction $methodAnnotation
     ) : array {
-        $name       = $classAnnotation->getName() . '_';
+        $parentName = $classAnnotation->getName();
+        $name       = $parentName . '_';
         $path       = $classAnnotation->getPath();
         $order      = null;
         $assetScope = null;
         $httpMethod = EndpointMethod::ANY;
+
+        $context = explode('\\', $class)[StringHelper::startsWith($class, 'Oforge\Engine\Modules') ? 3 : 0];
 
         $actionName = $classMethod;
         if ($isMethodActionPrefix) {
@@ -304,7 +307,9 @@ class EndpointService extends AbstractDatabaseAccess {
 
         return [
             'name'             => $name,
+            'parentName'       => $parentName,
             'path'             => $path,
+            'context'          => $context,
             'controllerClass'  => $class,
             'controllerMethod' => $classMethod,
             'assetScope'       => $assetScope,

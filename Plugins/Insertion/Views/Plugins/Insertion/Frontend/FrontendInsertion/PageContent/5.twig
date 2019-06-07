@@ -1,4 +1,22 @@
 {% block page_content %}
     {# summary #}
-    summary && login
+
+    {% block summary %}
+        SUMMARY TODO
+    {% endblock summary %}
+
+    {% if not user_logged_in %}
+        {% block registration %}
+            <h2>{{ i18n('registration_login') }}</h2>
+            {% set meta = mergeRecursive(meta|default({}), dotToNested({
+                'route.referrer': url('insertions_createSteps', {type:  type.id, page: page}),
+            })) %}
+
+            {% embed 'Plugins/FrontendUserManagement/Frontend/Components/Content/LoginRegistration.twig' %}
+                {% block login_registration_subtitle %}{% endblock login_registration_subtitle %}
+                {% block login_registration__registration_benefits %}{% endblock login_registration__registration_benefits %}
+            {% endembed %}
+
+        {% endblock registration %}
+    {% endif %}
 {% endblock page_content %}
