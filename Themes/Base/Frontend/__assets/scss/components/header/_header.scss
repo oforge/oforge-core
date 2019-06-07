@@ -1,6 +1,11 @@
 .header-top {
     height: 10rem;
 }
+
+.header:first-of-type + .content {
+    margin-top: 40rem;
+}
+
 @import "logo";
 @import "burger-menu";
 @import "top-nav";
