@@ -1,6 +1,12 @@
 .panel--account {
     flex-direction: column;
     padding: 0;
+    .profile-pic {
+        max-width: 194px;
+    }
+}
+.panel--detail {
+    padding: $size-large;
 }
 
 .account {
@@ -66,9 +72,12 @@
 }
 
 .account__content {
-    padding: $size-large;
+    //padding: $size-large;
 }
+.profile--edit {
+    display: flex;
 
+}
 @media screen and (min-width: $screen-large) {
     .panel--account {
         flex-direction: row;
