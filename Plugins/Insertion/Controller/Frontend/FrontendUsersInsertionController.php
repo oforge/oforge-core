@@ -7,6 +7,7 @@ use Doctrine\ORM\Event\OnFlushEventArgs;
 use FrontendUserManagement\Abstracts\SecureFrontendController;
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\FrontendUserService;
+use FrontendUserManagement\Services\UserDetailsService;
 use Insertion\Models\InsertionType;
 use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Services\InsertionBookmarkService;
@@ -321,7 +322,7 @@ class FrontendUsersInsertionController extends SecureFrontendController {
          */
         $userService = Oforge()->Services()->get("frontend.user");
 
-        $user        = $userService->getUser();
+        $user = $userService->getUser();
         /**
          * @var $service InsertionProfileService
          */
@@ -329,10 +330,22 @@ class FrontendUsersInsertionController extends SecureFrontendController {
 
         if ($request->isPost() && $user != null) {
             $service->update($user, $_POST);
+
+            if (isset($_FILES["profile"])) {
+
+                /**
+                 * @var UserDetailsService $userDetailsService
+                 */
+
+                $userDetailsService = Oforge()->Services()->get('frontend.user.management.user.details');
+
+                $userDetailsService->updateImage($user, $_FILES["profile"]);
+            }
+
         }
 
         $result = $service->get($user->getId());
-        Oforge()->View()->assign(["profile" => $result != null ? $result->toArray() : null]);
+        Oforge()->View()->assign(["profile" => $result != null ? $result->toArray() : null, "user" => $user->toArray()]);
     }
 
     public function initPermissions() {
