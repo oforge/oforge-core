@@ -1,28 +1,30 @@
 {% block page_container %}
     {% include "Plugins/Insertion/Frontend/FrontendInsertion/Pages/Header.twig" %}
 
-    <form class="form form--insertion"
-          action="{% if page == pagecount %}
+    {% block form_content %}
+        <form class="form form--insertion"
+              action="{% if page == pagecount %}
                     {{ url('insertions_processSteps', { type : type.id}) }}
                   {% else %}
                     {{ url('insertions_createSteps', { type : type.id, page: page + 1}) }}
                   {% endif %}"
-          method="post"
-          enctype="multipart/form-data">
-        <div class="form-controls">
+              method="post"
+              enctype="multipart/form-data">
+            <div class="form-controls">
 
-            {% block page_content %}
-            {% endblock page_content %}
+                {% block page_content %}
 
-            <div class="form__control">
-                <input type="hidden" name="token" value="{{ token() }}">
-                <input type="hidden" name="current_page" value="{{ page }}">
-                <input type="submit"
-                       value="{% if page == pagecount %}{{ i18n('insertion_create') }}{% else %}{{ i18n('save_and_next_step') }}{% endif %}"
-                       class="form__input form__input--submit button">
+                {% endblock page_content %}
+
+                <div class="form__control">
+                    <input type="hidden" name="token" value="{{ token() }}">
+                    <input type="hidden" name="current_page" value="{{ page }}">
+                    <input type="submit"
+                           value="{% if page == pagecount %}{{ i18n('insertion_create') }}{% else %}{{ i18n('save_and_next_step') }}{% endif %}"
+                           class="form__input form__input--submit button">
+                </div>
             </div>
-        </div>
-    </form>
-
+        </form>
+    {% endblock form_content %}
 
 {% endblock page_container %}

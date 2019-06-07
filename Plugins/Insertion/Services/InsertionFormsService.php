@@ -39,6 +39,11 @@ class InsertionFormsService extends AbstractDatabaseAccess {
 
         if (isset($_POST["current_page"])) {
             $_SESSION['insertion' . $sessionKey] = array_merge($_SESSION['insertion' . $sessionKey], $_POST);
+
+
+
+
+
             /** @var MediaService $mediaService */
             $mediaService = Oforge()->Services()->get('media');
 
@@ -131,7 +136,7 @@ class InsertionFormsService extends AbstractDatabaseAccess {
                 "phone"   => $pageData["contact_phone"],
                 "zip"     => $pageData["contact_zip"],
                 "city"    => $pageData["contact_city"],
-                "visible" => isset($pageData["contact_visible"]) && !empty($pageData[3]["contact_visible"]),
+                "visible" => isset($pageData["contact_visible"]) && !empty($pageData["contact_visible"]),
             ],
             "content"    => [
                 "language"    => $language,
