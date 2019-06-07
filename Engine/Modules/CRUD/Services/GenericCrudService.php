@@ -142,6 +142,8 @@ class GenericCrudService extends AbstractDatabaseAccess {
 
         $this->entityManager()->create($instance);
         $repository->clear();
+
+        return $instance;
     }
 
     /**
