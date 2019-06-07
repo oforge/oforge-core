@@ -2,16 +2,13 @@
 {% set meta = mergeRecursive(meta|default({}), dotToNested({
     'backend.favoriteButton': false,
 })) %}
-{% set crud = crud|default({})|merge({
-    baseRouteName: meta.route.name|split('_')|slice(0, -1)|join('_')
-}) %}
-{% set breadcrumbs = backend_breadcrumbs(crud.baseRouteName)|default({})|merge([{
+{% set breadcrumbs = backend_breadcrumbs(meta.route.parentName)|default({})|merge([{
     path: meta.route.name,
     visible: true,
     name: i18n('backend_crud_plugin_action_' ~ crud.context, crud.contextLabel),
 }]) %}
 {#pathArgs: {id: crud.item.id},#}
-{% set page_header = i18n(crud.baseRouteName) %}
+{% set page_header = i18n(meta.route.parentName) %}
 {% set page_header_description = i18n('backend_crud_plugin_action_' ~ crud.context, crud.contextLabel) %}
 
 {% block pagecontent %}
@@ -41,7 +38,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-xs-12">
-                                    <a href="{{ url(crud.baseRouteName) }}" class="btn btn-default">
+                                    <a href="{{ url(meta.route.parentName) }}" class="btn btn-default">
                                         {{ i18n('backend_crud_btn_back2index', 'back to overwiew') }}
                                     </a>
                                     <input type="submit"
