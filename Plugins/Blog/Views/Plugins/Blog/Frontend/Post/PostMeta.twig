@@ -1,5 +1,5 @@
 <div class="blog-post-meta">
-    <div class="blog-post-created">{{ blog.post.created }}</div>
+    <div class="blog-post-created">{{ blog.post.created|formatDatetime }}</div>
     {% if blog.post.author.name %}
         <div class="blog-post-author">{{ blog.post.author.name }}</div>
     {% endif %}
