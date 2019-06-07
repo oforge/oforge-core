@@ -125,11 +125,14 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function createIssueType($issueName) {
+    public function createIssueType($issueName, $issueGroup) {
         $issueType = new IssueTypes();
         $issueType->setIssueTypeName($issueName);
+        $issueType->setIssueTypeGroup($issueGroup);
 
         $this->entityManager()->create($issueType);
+
+        return $issueType;
     }
 
     /**
