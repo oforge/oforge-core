@@ -52,19 +52,10 @@ class UserAddress extends AbstractModel {
     private $isBillingAddress = true;
     /**
      * @var User $user
-     * @ORM\OneToOne(targetEntity="User", inversedBy="detail", fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity="User", inversedBy="address", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
-
-    /**
-     * UserDetail constructor.
-     *
-     * @param User $user
-     */
-    public function __construct(User $user) {
-        $this->user = $user;
-    }
 
     /**
      * @return int
@@ -186,6 +177,17 @@ class UserAddress extends AbstractModel {
      */
     public function getUser() : User {
         return $this->user;
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return UserAddress
+     */
+    public function setUser(User $user) : UserAddress {
+        $this->user = $user;
+
+        return $this;
     }
 
 }

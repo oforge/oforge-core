@@ -183,6 +183,7 @@ class MiddlewareService extends AbstractDatabaseAccess {
      * @throws OptimisticLockException
      */
     private function changeActiveState($middlewareName, $state) {
+
         $middleware = $this->repository()->findOneBy(['class' => $middlewareName]);
         $middleware->setActive($state);
         //$this->entityManager()->persist($middleware);

@@ -1,4 +1,4 @@
-<div class="btn-group">
+<div class="btn-group pull-right">
     {% if not item.installed %}
         {% include 'Backend/Plugin/Components/Index/Action/Install.twig' with {isButton: true} %}
     {% elseif not item.active %}
