@@ -4,8 +4,10 @@ namespace Oforge\Engine\Modules\Core\Helper;
 
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Exceptions\InvalidClassException;
+use RecursiveCallbackFilterIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use SplFileInfo;
 
 /**
  * Class Helper
@@ -89,12 +91,14 @@ class Helper {
         $result = [];
 
         $recursiveDirectoryIterator = new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::FOLLOW_SYMLINKS);
-        $recursiveFilterIterator    = new \RecursiveCallbackFilterIterator($recursiveDirectoryIterator,
+        $recursiveFilterIterator    = new RecursiveCallbackFilterIterator($recursiveDirectoryIterator,
             function ($file, $key, $iterator) use ($omits, $searchFileName) {
+            /** @var SplFileInfo $file */
                 return !isset($omits[$file->getFileName()]);
             });
         $recursiveIteratorIterator  = new RecursiveIteratorIterator($recursiveFilterIterator);
         foreach ($recursiveIteratorIterator as $file) {
+            var_dump($file);
             if (strtolower($file->getFileName()) === $searchFileName) {
                 $classpath = str_replace($path . DIRECTORY_SEPARATOR, "", $file->getPath());
                 $classpath = str_replace(".php", "", $classpath);
