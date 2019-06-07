@@ -20,20 +20,16 @@ class User extends BaseUser {
     /**
      * @var UserDetail $detail
      * @ORM\OneToOne(targetEntity="UserDetail", mappedBy="user", fetch="EXTRA_LAZY", cascade={"all"})
-     * @ORM\JoinColumn(name="detail_id", referencedColumnName="id")
      */
     private $detail;
     /**
      * @var UserAddress $address
      * @ORM\OneToOne(targetEntity="UserAddress", mappedBy="user", fetch="EXTRA_LAZY", cascade={"all"})
-     * @ORM\JoinColumn(name="address_id", referencedColumnName="id")
      */
     private $address;
 
     public function __construct() {
         parent::__construct();
-        $this->address = new UserAddress($this);
-        $this->detail  = new UserDetail($this);
     }
 
     /** @ORM\PrePersist */
