@@ -14,11 +14,12 @@
 
                         <div class="background">
 
-                            <input type="file" name="background" accept="image/*"
-                                   onchange="loadFile(event, 'background')">
 
                             <img id="background"
                                  src="{% if profile.background is defined %}{{ media(profile.background.id) }}{% endif %}" />
+                            <input type="file" name="background" accept="image/*"
+                                   onchange="loadFile(event, 'background')">
+                            <!-- TODO: move this code -->
                             <script>
                                 var loadFile = function (event, id) {
                                     var output = document.getElementById(id);
@@ -27,33 +28,38 @@
                             </script>
                         </div>
 
-                        <a href="{{ url('insertions_profile', {id: profile.id }) }}" >Zum Profil</a>
+                        <a href="{{ url('insertions_profile', {id: profile.id }) }}">Zum Profil</a>
 
                         <div class="profile">
                             <input type="file" name="profile" accept="image/*" onchange="loadFile(event, 'profile')">
-                            <img id="profile"
-                                 src="{% if user.detail.image is defined %}{{ media(user.detail.image.id) }}{% endif %}" />
+                        </div>
+                        <div class="profile-pic">
+                            {% include 'Plugins/FrontendUserManagement/Frontend/Components/AccountUser.twig' %}
                         </div>
 
-                        <textarea name="description">{{ profile.description }}</textarea>
+                        <div class="profile--edit">
+                            <textarea name="description">{{ profile.description }}</textarea>
+                            <div class="impress">
+                                <input class="form__input" type="text" name="imprint_name" placeholder="Name" value="{{ profile.imprintName }}" />
+                                <input class="form__input" type="text" name="imprint_street" placeholder="Street"
+                                       value="{{ profile.imprintStreet }}" />
+                                <input class="form__input" type="text" name="imprint_zipCity" placeholder="PLZ, ORT"
+                                       value="{{ profile.imprintZipCity }}" />
+                                <input class="form__input" type="phone" name="imprint_phone" placeholder="Telefon"
+                                       value="{{ profile.imprintPhone }}" />
+                                <input class="form__input" type="email" name="imprint_email" placeholder="E-Mail"
+                                       value="{{ profile.imprintEmail }}" />
+                                <input class="form__input" type="text" name="imprint_company_number"
+                                       placeholder="Unternehmens Registrierungszeug"
+                                       value="{{ profile.imprintCompanyNumber }}" />
+                                <input class="form__input" type="text" name="imprint_company_tax" placeholder="Steuerzeugs"
+                                       value="{{ profile.imprintCompanyTaxId }}" />
+                            </div>
+                            <div class="submit">
+                                <input type="submit" />
+                            </div>
+                        </div>
 
-                        <input type="text" name="imprint_name" placeholder="Name" value="{{ profile.imprintName }}" />
-                        <input type="text" name="imprint_street" placeholder="Street"
-                               value="{{ profile.imprintStreet }}" />
-                        <input type="text" name="imprint_zipCity" placeholder="PLZ, ORT"
-                               value="{{ profile.imprintZipCity }}" />
-                        <input type="phone" name="imprint_phone" placeholder="Telefon"
-                               value="{{ profile.imprintPhone }}" />
-                        <input type="email" name="imprint_email" placeholder="E-Mail"
-                               value="{{ profile.imprintEmail }}" />
-
-
-                        <input type="text" name="imprint_company_number"
-                               placeholder="Unternehmens Registrierungszeug" value="{{ profile.imprintCompanyNumber }}" />
-                        <input type="text" name="imprint_company_tax" placeholder="Steuerzeugs"
-                               value="{{ profile.imprintCompanyTaxId }}" />
-
-                        <input type="submit" />
                     </form>
                 {% endblock account__content %}
             </div>
