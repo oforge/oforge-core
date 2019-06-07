@@ -93,7 +93,7 @@ class Helper {
         $recursiveDirectoryIterator = new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::FOLLOW_SYMLINKS);
         $recursiveFilterIterator    = new RecursiveCallbackFilterIterator($recursiveDirectoryIterator,
             function ($file, $key, $iterator) use ($omits, $searchFileName) {
-            /** @var SplFileInfo $file */
+                /** @var SplFileInfo $file */
                 return !isset($omits[$file->getFileName()]);
             });
         $recursiveIteratorIterator  = new RecursiveIteratorIterator($recursiveFilterIterator);
