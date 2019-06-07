@@ -1,6 +1,6 @@
 <?php
 
-namespace FrontendUserManagement\Models;
+namespace Oforge\Engine\Modules\Auth\Models\User;
 
 use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
@@ -8,9 +8,9 @@ use Oforge\Engine\Modules\Media\Models\Media;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="frontend_user_management_user_detail")
+ * @ORM\Table(name="oforge_auth_backend_user_detail")
  */
-class UserDetail extends AbstractModel {
+class BackendUserDetail extends AbstractModel {
     /**
      * @var int $id
      * @ORM\Column(name="id", type="integer", nullable=false)
@@ -33,19 +33,10 @@ class UserDetail extends AbstractModel {
      * @ORM\Column(name="nick_name", type="string", nullable=true)
      */
     private $nickName;
+
     /**
-     * @var string|null $contactEmail
-     * @ORM\Column(name="contact_email", type="string", nullable=true)
-     */
-    private $contactEmail;
-    /**
-     * @var string|null $phoneNumber
-     * @ORM\Column(name="phone_number", type="string", nullable=true)
-     */
-    private $phoneNumber;
-    /**
-     * @var User $user
-     * @ORM\OneToOne(targetEntity="User", inversedBy="detail", fetch="EXTRA_LAZY")
+     * @var BackendUser $user
+     * @ORM\OneToOne(targetEntity="BackendUser", inversedBy="detail", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
@@ -74,9 +65,9 @@ class UserDetail extends AbstractModel {
     /**
      * @param string|null $firstName
      *
-     * @return UserDetail
+     * @return BackendUserDetail
      */
-    public function setFirstName(?string $firstName) : UserDetail {
+    public function setFirstName(?string $firstName) : BackendUserDetail {
         $this->firstName = $firstName;
 
         return $this;
@@ -92,9 +83,9 @@ class UserDetail extends AbstractModel {
     /**
      * @param string|null $lastName
      *
-     * @return UserDetail
+     * @return BackendUserDetail
      */
-    public function setLastName(?string $lastName) : UserDetail {
+    public function setLastName(?string $lastName) : BackendUserDetail {
         $this->lastName = $lastName;
 
         return $this;
@@ -110,63 +101,27 @@ class UserDetail extends AbstractModel {
     /**
      * @param string|null $nickName
      *
-     * @return UserDetail
+     * @return BackendUserDetail
      */
-    public function setNickName(?string $nickName) : UserDetail {
+    public function setNickName(?string $nickName) : BackendUserDetail {
         $this->nickName = $nickName;
 
         return $this;
     }
 
     /**
-     * @return string|null
+     * @return BackendUser
      */
-    public function getContactEmail() : ?string {
-        return $this->contactEmail;
-    }
-
-    /**
-     * @param string|null $contactEmail
-     *
-     * @return UserDetail
-     */
-    public function setContactEmail(?string $contactEmail) : UserDetail {
-        $this->contactEmail = $contactEmail;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getPhoneNumber() : ?string {
-        return $this->phoneNumber;
-    }
-
-    /**
-     * @param string|null $phoneNumber
-     *
-     * @return UserDetail
-     */
-    public function setPhoneNumber(?string $phoneNumber) : UserDetail {
-        $this->phoneNumber = $phoneNumber;
-
-        return $this;
-    }
-
-    /**
-     * @return User
-     */
-    public function getUser() : User {
+    public function getUser() : BackendUser {
         return $this->user;
     }
 
     /**
-     * @param User $user
+     * @param BackendUser
      *
-     * @return UserDetail
+     * @return BackendUserDetail
      */
-    public function setUser(User $user) : UserDetail {
+    public function setUser(BackendUser $user) : BackendUserDetail {
         $this->user = $user;
 
         return $this;
@@ -175,16 +130,16 @@ class UserDetail extends AbstractModel {
     /**
      * @return Media
      */
-    public function getImage() : ?Media {
+    public function getImage() : Media {
         return $this->image;
     }
 
     /**
      * @param Media $image
      *
-     * @return UserDetail
+     * @return BackendUserDetail
      */
-    public function setImage(Media $image) : UserDetail {
+    public function setImage(Media $image) : BackendUserDetail {
         $this->image = $image;
 
         return $this;
