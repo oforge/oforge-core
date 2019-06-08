@@ -1,6 +1,7 @@
 {# block header__logo #}
 {% block logo %}
     <div class="logo">
+{#        TODO replace href="/" with url('...'), frontend_home|frontend? #}
         <a href="/" class="logo__link">
             {% set logo = content('logo') %}
             {% if logo.url is defined %}

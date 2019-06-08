@@ -8,6 +8,7 @@
     visible: true,
     name: 'config_group_' ~ groupname,
 }]) %}
+{% set page_header = i18n('config_group_' ~ groupname, groupname|capitalize|replace({'_':' '})) %}
 
 {% block pagecontent %}
     <div class="row">
