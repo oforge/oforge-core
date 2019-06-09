@@ -32,6 +32,11 @@ class Category extends AbstractModel {
      */
     private $language;
     /**
+     * @var bool $active
+     * @ORM\Column(name="active", type="boolean", nullable=false, options={"default":true})
+     */
+    private $active = true;
+    /**
      * @var string $seoUrlPath
      * @ORM\Column(name="seo_url_path", type="string", nullable=false)
      */
@@ -93,6 +98,24 @@ class Category extends AbstractModel {
      */
     public function setLanguage(string $language) : Category {
         $this->language = $language;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive() : bool {
+        return $this->active;
+    }
+
+    /**
+     * @param bool $active
+     *
+     * @return Category
+     */
+    public function setActive(bool $active) : Category {
+        $this->active = $active;
 
         return $this;
     }
