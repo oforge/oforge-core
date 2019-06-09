@@ -35,6 +35,11 @@ class Post extends AbstractModel {
      */
     private $updated;
     /**
+     * @var bool $active
+     * @ORM\Column(name="active", type="boolean", nullable=false, options={"default":true})
+     */
+    private $active = true;
+    /**
      * @var string $seoUrlPath
      * @ORM\Column(name="seo_url_path", type="string", nullable=false)
      */
@@ -97,7 +102,7 @@ class Post extends AbstractModel {
 
     public function __construct() {
         $this->comments = new ArrayCollection();
-        $this->ratings = new ArrayCollection();
+        $this->ratings  = new ArrayCollection();
     }
 
     /**
@@ -307,6 +312,24 @@ class Post extends AbstractModel {
      */
     public function getRatings() {
         return $this->ratings;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive() : bool {
+        return $this->active;
+    }
+
+    /**
+     * @param bool $active
+     *
+     * @return Post
+     */
+    public function setActive(bool $active) : Post {
+        $this->active = $active;
+
+        return $this;
     }
 
 }

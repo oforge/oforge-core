@@ -58,18 +58,17 @@ class PostService extends AbstractDatabaseAccess {
          * @var ConfigService $configService
          */
         $configService = Oforge()->Services()->get('config');
+        $criteria      = [
+            'active' => true,
+        ];
         if (isset($categoryID)) {
-            $criteria = [
-                'category' => $categoryID,
-            ];
+            $criteria ['category'] = $categoryID;
         } else {
             /** @var LanguageService $languageService */
             $languageService = Oforge()->Services()->get('i18n.language');
             $language        = $languageService->getCurrentLanguageIso([]);
 
-            $criteria = [
-                'language' => $language,
-            ];
+            $criteria ['language'] = $language;
         }
         $oderBy = [
             'created' => 'DESC',
