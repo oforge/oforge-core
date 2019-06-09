@@ -9,6 +9,6 @@
         id: fieldID,
         name: fieldName,
         disabled: disabled,
-        checked: item[property.name]|default(property.editor.default),
+        checked: item[property.name] is defined ? item[property.name] : property.editor.default,
     } only %}
 </div>
