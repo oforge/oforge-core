@@ -6,8 +6,9 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Services\AccountNavigationService;
 use Helpdesk\Controller\Backend\BackendHelpdeskController;
-use Helpdesk\Controller\Backend\BackendHelpdeskMessengerController;
+use Helpdesk\Controller\Backend\BackendHelpdeskSettingsController;
 use Helpdesk\Controller\Frontend\FrontendHelpdeskController;
+use Helpdesk\Models\IssueTypeGroup;
 use Helpdesk\Models\IssueTypes;
 use Helpdesk\Models\Ticket;
 use Helpdesk\Services\HelpdeskMessengerService;
@@ -20,6 +21,7 @@ use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\CRUD\Services\GenericCrudService;
 
 /**
  * Class Bootstrap
@@ -34,7 +36,7 @@ class Bootstrap extends AbstractBootstrap {
     public function __construct() {
         $this->endpoints = [
             BackendHelpdeskController::class,
-            BackendHelpdeskMessengerController::class,
+            BackendHelpdeskSettingsController::class,
             FrontendHelpdeskController::class,
         ];
 
@@ -46,6 +48,7 @@ class Bootstrap extends AbstractBootstrap {
         $this->models = [
             Ticket::class,
             IssueTypes::class,
+            IssueTypeGroup::class,
         ];
 
         $this->dependencies = [
@@ -60,10 +63,19 @@ class Bootstrap extends AbstractBootstrap {
      * @throws ServiceNotFoundException
      */
     public function install() {
+        /** @var GenericCrudService $crud */
+        $crud = Oforge()->Services()->get('crud');
+        /** @var IssueTypeGroup $supportGroup */
+        $supportGroup = $crud->create(IssueTypeGroup::class, ['issueTypeGroupName' => 'support']);
+        /** @var IssueTypeGroup $reportGroup */
+        $reportGroup = $crud->create(IssueTypeGroup::class, ['issueTypeGroupName' => 'report']);
+
         /** @var HelpdeskTicketService $helpdeskTicketService */
         $helpdeskTicketService = Oforge()->Services()->get('helpdesk.ticket');
-        $helpdeskTicketService->createIssueType('99 Problems');
-        $helpdeskTicketService->createIssueType('but the horse ain\'t one');
+        $helpdeskTicketService->createIssueType('support_issue_type_1', $supportGroup);
+        $helpdeskTicketService->createIssueType('support_issue_type_2', $supportGroup);
+        $helpdeskTicketService->createIssueType('report_issue_type_1', $reportGroup);
+        $helpdeskTicketService->createIssueType('report_issue_type_2', $reportGroup);
 
         $helpdeskTicketService->createNewTicket(1, 1, 'but the horse ain\'t one',
             'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.');
@@ -95,7 +107,22 @@ class Bootstrap extends AbstractBootstrap {
             'order'    => 4,
             'parent'   => 'backend_content',
             'icon'     => 'fa fa-support',
+            'position' => 'sidebar',
+        ]);
+        $sidebarNavigation->put([
+            'name'     => 'backend_helpdesk_tickets',
+            'order'    => 1,
+            'parent'   => 'backend_helpdesk',
+            'icon'     => 'fa fa-ticket',
             'path'     => 'backend_helpdesk',
+            'position' => 'sidebar',
+        ]);
+        $sidebarNavigation->put([
+            'name'     => 'backend_helpdesk_settings',
+            'order'    => 1,
+            'parent'   => 'backend_helpdesk',
+            'icon'     => 'fa fa-gear',
+            'path'     => 'backend_helpdesk_settings',
             'position' => 'sidebar',
         ]);
         $accountNavigation->put([
