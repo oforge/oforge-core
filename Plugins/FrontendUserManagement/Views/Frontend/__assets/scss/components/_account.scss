@@ -73,6 +73,7 @@
     .panel--account {
         flex-direction: row;
         align-items: flex-start;
+        padding: $size-large 0;
     }
 
     .account {
@@ -80,11 +81,11 @@
             display: block;
             width: 30rem;
             padding: 3rem;
+            border-right: 1px solid $color-primary;
         }
 
         &__content {
             width: calc(100% - 30rem);
-            border-left: 1px solid $color-primary;
             padding: 3rem;
         }
 

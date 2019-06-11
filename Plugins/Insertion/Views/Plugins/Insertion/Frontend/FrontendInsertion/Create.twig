@@ -12,11 +12,7 @@
                     {% for type in types %}
                         <div class="grid-box {{ grid_box_classes }}">
 
-                            <a href="{% if type.children is defined %}
-                                    {{ url('insertions_createType', { type : type.id}) }}
-                                 {% else %}
-                                    {{ url('insertions_createSteps', { type : type.id, page: 1}) }}
-                                 {% endif %}"
+                            <a href="{% if type.children is defined %}{{ url('insertions_createType', { type : type.id}) }}{% else %}{{ url('insertions_createSteps', { type : type.id, page: 1}) }}{% endif %}"
                                class="grid-box__content flex flex--center flex--justify">
                                 <svg class="icon icon--large icon--light">
                                     <use xlink:href="#top_inserat"></use>
