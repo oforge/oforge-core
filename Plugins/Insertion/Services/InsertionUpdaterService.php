@@ -80,50 +80,6 @@ class InsertionUpdaterService extends AbstractDatabaseAccess {
         return $result;
     }
 
-    public function parsePageData(array $pageData) : array {
-        $data = [
-            "contact"    => [
-                "name"    => $pageData["contact_name"],
-                "email"   => $pageData["contact_email"],
-                "phone"   => $pageData["contact_phone"],
-                "zip"     => $pageData["contact_zip"],
-                "city"    => $pageData["contact_city"],
-                "visible" => isset($pageData["contact_visible"]) && !empty($pageData[3]["contact_visible"]),
-            ],
-            "content"    => [
-                "name"        => $pageData["insertion_name"],
-                "title"       => $pageData["insertion_title"],
-                "description" => $pageData["insertion_description"],
-            ],
-            "media"      => [],
-            "attributes" => [],
-        ];
-
-        if (isset($pageData["images"]) && sizeof($pageData["images"]) > 0) {
-            foreach ($pageData["images"] as $image) {
-                $media = $this->repository("media")->findOneBy(["id" => $image["id"]]);
-                array_push($data["media"], ["name" => $image["name"], "content" => $media]);
-            }
-        }
-
-        if (isset($pageData["insertion"])) {
-            foreach ($pageData["insertion"] as $key => $value) {
-                $attributeKey = $this->repository("key")->findOneBy(["id" => $key]);
-                if (isset($attributeKey)) {
-                    if (is_array($value)) {
-                        foreach ($value as $val) {
-                            array_push($data["attributes"], ["attributeKey" => $attributeKey, "value" => $val]);
-                        }
-                    } else {
-                        array_push($data["attributes"], ["attributeKey" => $attributeKey, "value" => $value]);
-                    }
-                }
-            }
-        }
-
-        return $data;
-    }
-
     public function update(Insertion $insertion, array $data) {
         if ($insertion->getContent() == null || sizeof($insertion->getContent()) == 0) {
             $content = InsertionContent::create($data["content"]);
@@ -135,7 +91,6 @@ class InsertionUpdaterService extends AbstractDatabaseAccess {
             $content->fromArray($data["content"]);
             $this->entityManager()->update($content, false);
         }
-
 
         if ($insertion->getContact() == null) {
             $contact = InsertionContact::create($data["contact"]);
@@ -197,8 +152,54 @@ class InsertionUpdaterService extends AbstractDatabaseAccess {
 
         }
 
+        $media      = $insertion->getMedia();
+        $notTouched = [];
+        $modified   = [];
+
+        //update existing media
+        foreach ($data["media"] as $key => $attributeData) {
+            $touch = false;
+            foreach ($media as $img) {
+                if (isset($attributeData["content"]) && $img->getContent()->getId() == $attributeData["content"]->getId()) {
+                    $img->setMain($attributeData["main"]);
+                    $modified[$img->getId()] = true;
+                    $touch                   = true;
+
+                    break;
+                }
+            }
+
+            if (!$touch) {
+                $notTouched[$key] = true;
+            }
+        }
+
+        //collect items for deletion
+        $delete = [];
+        foreach ($media as $media) {
+            if (!isset($modified[$media->getId()])) {
+                $delete[] = $media;
+            }
+        }
+
+        //delete not modified elements
+        foreach ($delete as $item) {
+            $insertion->getMedia()->removeElement($item);
+            $this->entityManager()->remove($item);
+        }
+
+        //create new values
+        foreach ($notTouched as $key => $value) {
+            $mediaData = $data["media"][$key];
+
+            $imedia = InsertionMedia::create($mediaData);
+            $imedia->setInsertion($insertion);
+            $this->entityManager()->create($imedia);
+            $insertion->getMedia()->add($imedia);
+        }
+
         $this->entityManager()->update($insertion, false);
-        //TODO update media data
+
         $this->entityManager()->flush();
     }
 

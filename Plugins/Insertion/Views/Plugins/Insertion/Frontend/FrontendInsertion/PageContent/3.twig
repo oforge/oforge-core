@@ -1,0 +1,72 @@
+{% block page_content %}
+    {# contact information #}
+    <div class="form__control  form-group">
+        <label for="insertion_description"
+               class="form__label">
+            {{ i18n('description') }}
+        </label>
+        <textarea name="insertion_description"
+                  class="form__input form__input--textarea form-control">{{ i18n('description') }}</textarea>
+    </div>
+    {# contact attributes #}
+    {% for attributeGroup in attributes %}
+        {% if attributeGroup.items|length > 0 and attributeGroup.name == 'contact' %}
+            <div class="attribute-group">
+                <h2>{{ i18n(attributeGroup.name) }}</h2>
+                <div>
+                    {% for attribute in attributeGroup.items %}
+                        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': attribute.required } %}
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+
+    <div class="form__control  form-group">
+        <h3 class="form__sub-title">{{ i18n('contact_partner') }}</h3>
+        <input type="text"
+               name="contact_name"
+               class="form__input form-control" value="{{ data['contact_name'] }}" />
+    </div>
+    <div class="form__control  form-group">
+        <h3 class="form__sub-title">{{ i18n('contact_data') }}</h3>
+        <input type="email"
+               name="contact_email"
+               class="form__input form-control"
+               value="{{ data['contact_email'] }}" />
+    </div>
+    <div class="form__control  form-group">
+        <input type="tel"
+               name="contact_phone"
+               class="form__input form-control"
+               value="{{ data['contact_phone'] }}" />
+    </div>
+    <div class="form__control columns  form-group">
+        <h3 class="form__sub-title">{{ i18n('city') }}</h3>
+        <div class="column column--one-third">
+            <input type="text"
+                   name="contact_zip"
+                   class="form__input form-control"
+                   value="{{ data['contact_zip'] }}" />
+        </div>
+        <div class="column column--two-third">
+            <input type="text"
+                   name="contact_city"
+                   class="form__input form-control"
+                   value="{{ data['contact_city'] }}" />
+        </div>
+    </div>
+    <div class="form__control form-group">
+        <label class="form__label form__label--checkbox">
+            <input type="hidden" value="off" name="contact_visible" />
+            <input type="checkbox"
+                   name="contact_visible"
+                   {% if data['contact_visible'] == 'on' %}checked="checked"{% endif %}
+                   class="form__input form__input--checkbox form__input--checkbox-small" />
+            {{ i18n('contact_data_visible', 'My contact data should be visible for registered users only.') }}
+        </label>
+    </div>
+
+
+
+{% endblock page_content %}

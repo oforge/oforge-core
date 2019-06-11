@@ -1,4 +1,4 @@
-<div class="form__control">
+<div class="form__control form-group">
 
     <label for="insertion[{{ attribute.id }}]"
            class="form__label">{{ i18n(attribute.name) }}</label>
@@ -6,7 +6,7 @@
     <div class="form__input form__input--select"
          {% if required %}data-required{% endif %}>
         <select name="insertion[{{ attribute.id }}]"
-                class="form__input form__input--no-input"
+                class="form__input form__input--no-input form-control"
                 {% if required %}required{% endif %}>
             <option disabled selected>{{ i18n(attribute.name) }}</option>
             {% for value in attribute.values %}

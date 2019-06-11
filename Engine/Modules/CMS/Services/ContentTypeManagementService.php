@@ -2,69 +2,62 @@
 
 namespace Oforge\Engine\Modules\CMS\Services;
 
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use InvalidArgumentException;
-use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
+use Oforge\Engine\Modules\AdminBackend\Core\Models\BackendNavigation;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistsException;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistsException;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 
-class ContentTypeManagementService extends AbstractDatabaseAccess
-{
-    public function __construct()
-    {
+class ContentTypeManagementService extends AbstractDatabaseAccess {
+    public function __construct() {
         parent::__construct(['default' => ContentType::class]);
     }
 
     /**
      * @param array $options
      *
-     * @throws ConfigElementAlreadyExistsException
-     * @throws ConfigOptionKeyNotExistsException
+     * @return int EntityID
      * @throws ORMException
-     * @throws OptimisticLockException
+     * @throws ConfigOptionKeyNotExistException
      */
-    public function put(array $options) : void {
-        $element = $this->repository()->findOneBy(["name" => strtolower($options["name"])]);
-        if (!isset($element)) {
+    public function put(array $options) : int {
+        $entity = $this->repository()->findOneBy(["name" => strtolower($options["name"])]);
+        if (!isset($entity)) {
             if ($this->isValid($options)) {
                 $entity = ContentType::create($options);
                 $this->entityManager()->create($entity);
             }
         }
+
+        return $entity->getId();
     }
 
     /**
      * @param $name
      *
-     * @throws ORMException
-     *
      * @return ContentType
+     * @throws ORMException
      */
     public function get($name) {
-
         /** @var ContentType $entry */
         $entry = $this->repository()->findBy(["name" => $name]);
 
         return $entry;
     }
 
-
     /**
      * @param array $options
      *
      * @return bool
-     * @throws ConfigElementAlreadyExistsException
-     * @throws ConfigOptionKeyNotExistsException
-     * @throws ORMException
+     * @throws ConfigOptionKeyNotExistException
      */
     private function isValid($options) {
         // Check if required keys are within the options
         $keys = ["name", "path", "group", "icon", "description", "classPath"];
         foreach ($keys as $key) {
             if (!array_key_exists($key, $options)) {
-                throw new ConfigOptionKeyNotExistsException($key);
+                throw new ConfigOptionKeyNotExistException($key);
             }
         }
 

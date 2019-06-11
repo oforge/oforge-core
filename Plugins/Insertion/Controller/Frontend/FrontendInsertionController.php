@@ -13,6 +13,7 @@ use Insertion\Models\InsertionType;
 use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Services\InsertionCreatorService;
 use Insertion\Services\InsertionFeedbackService;
+use Insertion\Services\InsertionFormsService;
 use Insertion\Services\InsertionListService;
 use Insertion\Services\InsertionProfileService;
 use Insertion\Services\InsertionService;
@@ -90,11 +91,16 @@ class FrontendInsertionController extends SecureFrontendController {
          */
         $createService = Oforge()->Services()->get("insertion.creator");
 
+        /**
+         * @var $formsService InsertionFormsService
+         */
+        $formsService = Oforge()->Services()->get("insertion.forms");
+
         if ($request->isPost()) {
-            $createService->processPostData($typeId);
+            $formsService->processPostData($typeId);
         }
 
-        $data           = $createService->getProcessedData($typeId);
+        $data           = $formsService->getProcessedData($typeId);
         $result["data"] = $data;
 
         Oforge()->View()->assign($result);
@@ -139,16 +145,21 @@ class FrontendInsertionController extends SecureFrontendController {
              */
             $createService = Oforge()->Services()->get("insertion.creator");
 
+            /**
+             * @var $formsService InsertionFormsService
+             */
+            $formsService = Oforge()->Services()->get("insertion.forms");
+
             if ($request->isPost()) {
-                $data = $createService->processPostData($typeId);
+                $data = $formsService->processPostData($typeId);
                 try {
-                    $processData = $createService->parsePageData($data);
+                    $processData = $formsService->parsePageData($data);
 
                     $createService->create($typeId, $user, $processData);
 
                     $uri = $router->pathFor('insertions_feedback');
 
-                    $createService->clearProcessedData($typeId);
+                    $formsService->clearProcessedData($typeId);
 
                     return $response->withRedirect($uri, 301);
                 } catch (\Exception $exception) {
@@ -268,6 +279,7 @@ class FrontendInsertionController extends SecureFrontendController {
         }
 
         if (!($insertion->isActive() && $insertion->isModeration())) {
+            $auth = "";
             if (isset($_SESSION['auth'])) {
                 $auth = $_SESSION['auth'];
             }
@@ -336,13 +348,16 @@ class FrontendInsertionController extends SecureFrontendController {
         $updateService = Oforge()->Services()->get("insertion.updater");
 
         $result["data"] = $updateService->getFormData($insertion);
+        /**
+         * @var $formsService InsertionFormsService
+         */
+        $formsService = Oforge()->Services()->get("insertion.forms");
 
         if ($request->isPost()) {
-            $data = $updateService->parsePageData($_POST);
+            $data = $formsService->parsePageData($_POST);
 
             $updateService->update($insertion, $data);
             $result["data"] = $updateService->getFormData($insertion);
-
         }
 
         $result["insertion"] = $insertion->toArray(1);
