@@ -21,7 +21,7 @@ class IssueTypes extends AbstractModel {
 
     /**
      * @var string
-     * @ORM\Column(name="issue_type_name", type="string", nullable=false, unique=true)
+     * @ORM\Column(name="issue_type_name", type="string", nullable=false, unique=false)
      */
     private $issueTypeName;
 
