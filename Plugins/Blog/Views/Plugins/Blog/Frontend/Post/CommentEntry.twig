@@ -3,7 +3,7 @@
         {{ blogPostComment.title }}
     </div>
     <div class="blog-post-comment-created">
-        {{ blogPostComment.created }}
+        {{ blogPostComment.created|formatDatetime }}
     </div>
     <div class="blog-post-comment-author-image">
         {#TODO ALEX blog category user.detail.image #}
