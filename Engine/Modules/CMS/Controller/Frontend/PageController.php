@@ -47,7 +47,6 @@ class PageController extends AbstractController
         $cmsContent = $pagePathService->loadContentForPagePath($path);
         $pagePath = $pagePathService->getPagePath($path);
 
-
         if ($cmsContent !== null) {
             // TODO: Remove meta assignment
             Oforge()->View()->assign(['content' => $cmsContent, "cms" => $pagePath->toArray(), 'meta'=> ["header_class" => "cms cms-page " . $pagePath->getPage()->getName()]]);
