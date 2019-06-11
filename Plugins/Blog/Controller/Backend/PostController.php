@@ -177,6 +177,21 @@ class PostController extends BaseCrudController {
             'list'  => 'getSelectBackendUsers',
         ],# author
         [
+            'name'   => 'active',
+            'type'   => CrudDataTypes::BOOL,
+            'label'  => ['key' => 'plugin_blog_property_post__active', 'default' => 'Active'],
+            'crud'   => [
+                'index'  => 'readonly',
+                'view'   => 'readonly',
+                'create' => 'editable',
+                'update' => 'editable',
+                'delete' => 'readonly',
+            ],
+            'editor' => [
+                'default' => true,
+            ],
+        ],# active
+        [
             'name'     => 'rating',
             'type'     => CrudDataTypes::CUSTOM,
             'label'    => ['key' => 'plugin_blog_property_post_rating', 'default' => 'Rating'],
