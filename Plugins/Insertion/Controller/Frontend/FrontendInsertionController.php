@@ -2,8 +2,6 @@
 
 namespace Insertion\Controller\Frontend;
 
-use Doctrine\DBAL\Schema\View;
-use Doctrine\ORM\Event\OnFlushEventArgs;
 use FrontendUserManagement\Abstracts\SecureFrontendController;
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\FrontendUserService;
@@ -27,7 +25,6 @@ use Oforge\Engine\Modules\CMS\Abstracts\AbstractContentType;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
-use Oforge\Engine\Modules\Core\Helper\StringHelper;
 use function PHPSTORM_META\type;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -419,7 +416,7 @@ class FrontendInsertionController extends SecureFrontendController {
             /** @var $userService FrontendUserService */
             $userService = Oforge()->Services()->get('frontend.user');
 
-            $user        = $userService->getUser();
+            $user = $userService->getUser();
 
             /** @var Router $router */
             $router = Oforge()->App()->getContainer()->get('router');
@@ -450,13 +447,18 @@ class FrontendInsertionController extends SecureFrontendController {
     /**
      * @param Request $request
      * @param Response $response
-     * @EndpointAction(path="/report/{id}")
+     * @param $args
      *
      * @return Response
      * @throws ServiceNotFoundException
      * @throws \Doctrine\ORM\ORMException
+     * @EndpointAction(path="/report/{id}")
      */
     public function reportAction(Request $request, Response $response, $args) {
+        /** @var HelpdeskTicketService $crud */
+        $helpdeskService = Oforge()->Services()->get('helpdesk.ticket');
+        $reportTypes     = $helpdeskService->getIssueTypesByGroup('report');
+
         $id = $args['id'];
         /** @var $service InsertionService */
         $insertionService = Oforge()->Services()->get('insertion');
@@ -495,7 +497,10 @@ class FrontendInsertionController extends SecureFrontendController {
             return $response->withRedirect($uri, 302);
         }
 
-        Oforge()->View()->assign(['insertion' => $insertion->toArray(2)]);
+        Oforge()->View()->assign([
+            'insertion'   => $insertion->toArray(2),
+            'reportTypes' => $reportTypes,
+        ]);
     }
 
     public function initPermissions() {
