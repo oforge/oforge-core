@@ -17,6 +17,10 @@ use FrontendUserManagement\Models\User;
  */
 class FrontendUserService {
 
+    public function isLoggedIn() {
+        return isset($_SESSION['user_logged_in']) && $_SESSION['user_logged_in'] === true;
+    }
+
     public function getUser() : ?User {
         /** @var $authService AuthService */
         $authService = Oforge()->Services()->get("auth");
@@ -31,5 +35,4 @@ class FrontendUserService {
 
         return null;
     }
-
 }

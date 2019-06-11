@@ -59,7 +59,7 @@ class InsertionProfile extends AbstractModel {
 
     /**
      * @var string
-     * @ORM\Column(name="description", type="string")
+     * @ORM\Column(name="description", type="text")
      */
     private $description;
 

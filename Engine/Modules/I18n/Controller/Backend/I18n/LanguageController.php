@@ -2,15 +2,14 @@
 
 namespace Oforge\Engine\Modules\I18n\Controller\Backend\I18n;
 
-use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
-use Oforge\Engine\Modules\Core\Forge\ForgeEntityManager;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
 use Oforge\Engine\Modules\I18n\Models\Language;
-use Oforge\Engine\Modules\I18n\Models\Snippet;
+use Oforge\Engine\Modules\I18n\Services\LanguageService;
 
 /**
  * Class LanguageController
@@ -86,20 +85,18 @@ class LanguageController extends BaseCrudController {
     /** @inheritDoc */
     protected function prepareItemDataArray(?AbstractModel $entity, string $crudAction) : array {
         $data = parent::prepareItemDataArray($entity, $crudAction);
-        if (!isset($this->snippets)) {
+        if (!isset($this->filterSelectData['snippets'])) {
             $this->snippets = [];
             try {
-                /* @var ForgeEntityManager $entityManager */
-                $entityManager = Oforge()->DB()->getForgeEntityManager();
-                $queryBuilder  = $entityManager->getRepository(Snippet::class)->createQueryBuilder('s');
-                $entries       = $queryBuilder->select('s.scope, COUNT(s) as value')->groupBy('s.scope')->getQuery()->getArrayResult();
-                foreach ($entries as $entry) {
-                    $this->snippets[$entry['scope']] = $entry['value'];
-                }
-            } catch (ORMException $exception) {
+                /** @var LanguageService $languageService */
+                $languageService = Oforge()->Services()->get('i18n.language');
+
+                $this->filterSelectData['snippets'] = $languageService->getFilterDataSnippetsOfLanguage();
+            } catch (ServiceNotFoundException $exception) {
+                $this->filterSelectData['snippets'] = [];
             }
         }
-        $data['snippets'] = ArrayHelper::get($this->snippets, $data['iso'], 0);
+        $data['snippets'] = ArrayHelper::get($this->filterSelectData['snippets'], $data['iso'], 0);
 
         return $data;
     }

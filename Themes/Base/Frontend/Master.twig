@@ -19,7 +19,7 @@
         {% endif %}
     {% endblock master__styles %}
 </head>
-<body>
+<body class="{% block body_class %}controller-{{ meta.route.parentName|lower}} module-{{ meta.route.context|lower}} action-{{ meta.route.name|lower }} {{ meta.body_class|lower }} {% endblock body_class %}" >
 
 {% if debug.console %}
     {{ o_dump() }}
@@ -50,6 +50,9 @@
                 font-size: 1.2rem;
                 line-height: 1.4;
                 word-break: break-all;
+            }
+            .meta * {
+                white-space: pre-wrap;
             }
         </style>
         <div class="meta">

@@ -4,6 +4,7 @@ namespace FrontendUserManagement\Models;
 
 use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
+use Oforge\Engine\Modules\Media\Models\Media;
 
 /**
  * @ORM\Entity
@@ -50,13 +51,11 @@ class UserDetail extends AbstractModel {
     private $user;
 
     /**
-     * UserDetail constructor.
-     *
-     * @param User $user
+     * @var Media
+     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\Media\Models\Media", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="image_id", referencedColumnName="id")
      */
-    public function __construct(User $user) {
-        $this->user = $user;
-    }
+    private $image;
 
     /**
      * @return int
@@ -160,6 +159,35 @@ class UserDetail extends AbstractModel {
      */
     public function getUser() : User {
         return $this->user;
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return UserDetail
+     */
+    public function setUser(User $user) : UserDetail {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Media
+     */
+    public function getImage() : ?Media {
+        return $this->image;
+    }
+
+    /**
+     * @param Media $image
+     *
+     * @return UserDetail
+     */
+    public function setImage(Media $image) : UserDetail {
+        $this->image = $image;
+
+        return $this;
     }
 
 }

@@ -16,6 +16,11 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\HasLifecycleCallbacks
  */
 class BackendUser extends BaseUser {
+
+    /**
+     * TODO: This values should not be constants. What if we want to add a new role?
+     *
+     */
     public const ROLE_SYSTEM        = 0;
     public const ROLE_ADMINISTRATOR = 1;
     public const ROLE_MODERATOR     = 2;
@@ -31,6 +36,13 @@ class BackendUser extends BaseUser {
      * @ORM\Column(name="role", type="integer", nullable=false)
      */
     private $role;
+
+    /**
+     * @var BackendUserDetail $detail
+     * @ORM\OneToOne(targetEntity="BackendUserDetail", mappedBy="user", fetch="EXTRA_LAZY", cascade={"all"})
+     * @ORM\JoinColumn(name="detail_id", referencedColumnName="id")
+     */
+    private $detail;
 
     public function __construct() {
         parent::__construct();
@@ -64,4 +76,17 @@ class BackendUser extends BaseUser {
         $this->role = $role;
     }
 
+    /**
+     * @return BackendUserDetail
+     */
+    public function getDetail() : ?BackendUserDetail {
+        return $this->detail;
+    }
+
+    /**
+     * @param BackendUserDetail $detail
+     */
+    public function setDetail(BackendUserDetail $detail) : void {
+        $this->detail = $detail;
+    }
 }

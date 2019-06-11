@@ -165,7 +165,9 @@ class BaseCrudController extends SecureBackendController {
     /** @var GenericCrudService $crudService */
     protected $crudService;
     /** @var string $moduleModelName */
-    private $moduleModelName;
+    protected $moduleModelName;
+    /** @var array $filterSelectData */
+    protected $filterSelectData = [];
 
     /**
      * BaseCrudController constructor.
@@ -244,11 +246,10 @@ class BaseCrudController extends SecureBackendController {
             }
         }
         $filters = $this->indexFilter;
-        foreach ($filters as $index => $filter) {
-            if (isset($filter['list']) && is_string($filter['list']) && method_exists($this, $filter['list'])) {
-                $filters[$index]['list'] = $this->{$filter['list']}();
-            }
+        foreach ($filters as $propertyName => &$filter) {
+            $this->processSelectListCallable($filter, $propertyName);
         }
+        unset($filter);
 
         Oforge()->View()->assign([
             'crud' => [
@@ -280,7 +281,7 @@ class BaseCrudController extends SecureBackendController {
         if ($request->isPost() && !empty($postData)) {
             try {
                 $data = $postData['data'];
-                $this->handleFileUploads($data);
+                $this->handleFileUploads($data, 'create');
                 $data = $this->convertData($data, 'create');
                 $this->crudService->create($this->model, $data);
                 Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_create_success', 'Entity successfully created.'));
@@ -354,7 +355,7 @@ class BaseCrudController extends SecureBackendController {
         if ($request->isPost() && !empty($postData)) {
             try {
                 $data = $postData['data'];
-                $this->handleFileUploads($data);
+                $this->handleFileUploads($data, 'update');
                 $data = $this->convertData($data, 'update');
                 $this->crudService->update($this->model, $data);
                 Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_update_success', 'Entity successfully updated.'));
@@ -441,6 +442,21 @@ class BaseCrudController extends SecureBackendController {
     }
 
     /**
+     * Process select list callable.
+     *
+     * @param array $filter
+     * @param string $key
+     */
+    protected function processSelectListCallable(array &$filter, string $propertyName) {
+        if (isset($filter['list']) && is_string($filter['list']) && method_exists($this, $filter['list'])) {
+            if (!isset($this->filterSelectData[$propertyName])) {
+                $this->filterSelectData[$propertyName] = $this->{$filter['list']}();;
+            }
+            $filter['list'] = $this->filterSelectData[$propertyName];
+        }
+    }
+
+    /**
      * Convert form data to model data, e.g. string to DateTime.
      *
      * @param array $data
@@ -490,7 +506,7 @@ class BaseCrudController extends SecureBackendController {
      */
     protected function handleIndexUpdate(array $postData) {
         $list = $postData['data'];
-        $this->handleFileUploads($list);
+        $this->handleFileUploads($list, 'index');
         foreach ($list as $entityID => $data) {
             $list[$entityID] = $this->convertData($data, 'update');
         }
@@ -523,9 +539,7 @@ class BaseCrudController extends SecureBackendController {
                     } elseif ($property['crud'][$crudAction] === 'editable') {
                         $hasEditors = true;
                     }
-                    if (isset($property['list']) && is_string($property['list']) && method_exists($this, $property['list'])) {
-                        $property['list'] = $this->{$property['list']}();
-                    }
+                    $this->processSelectListCallable($property, $property['name']);
                     $propertyName = $property['name'];
 
                     $properties[$propertyName] = $this->modifyPropertyConfig($property);
@@ -661,69 +675,15 @@ class BaseCrudController extends SecureBackendController {
         return $orderBy;
     }
 
-    /**
-     * Prepare data for index pagination.
-     *
-     * @param array $queryParams
-     *
-     * @return  array
-     * @throws NonUniqueResultException
-     * @throws ORMException
-     */
-    private function prepareIndexPaginationData(array $queryParams) : array {
-        $queryKeys = $this->indexReservedQueryKeys;;
-        $queryKeyPage            = $queryKeys['page'];
-        $queryKeyEntitiesPerPage = $queryKeys['entitiesPerPage'];
-
-        $itemsCount       = $this->crudService->count($this->model);
-        $offset           = null;
-        $entitiesPerPage  = null;
-        $buttons          = null;
-        $paginatorCurrent = null;
-        $paginatorMax     = null;
-
-        if (isset($this->indexPagination)) {
-            $buttons = $this->indexPagination['buttons'];
-            if (isset($queryParams[$queryKeyEntitiesPerPage])) {
-                $entitiesPerPage = $queryParams[$queryKeyEntitiesPerPage];
-            } else {
-                $entitiesPerPage = $this->indexPagination['default'];
-            }
-            $paginatorMax = ceil($itemsCount / $entitiesPerPage);
-            if (isset($queryParams[$queryKeyPage])) {
-                $paginatorCurrent = $queryParams[$queryKeyPage];
-            } else {
-                $paginatorCurrent = 1;
-            }
-            if ($paginatorCurrent > 1) {
-                $offset = ($paginatorCurrent - 1) * $entitiesPerPage;
-            }
-        }
-
-        return [
-            'offset'  => $offset,
-            'limit'   => $entitiesPerPage,
-            'total'   => $itemsCount,
-            'page'    => [
-                'current' => $paginatorCurrent,
-                'max'     => $paginatorMax,
-            ],
-            'buttons' => [
-                'values'  => $buttons,
-                'current' => $entitiesPerPage,
-            ],
-        ];
-    }
-
     /** Handles uploaded media files (find by defined modelProperties).
      *
      * @param array $postData
      */
-    private function handleFileUploads(array &$postData) {
+    protected function handleFileUploads(array &$postData, string $crudAction) {
         if (empty($this->modelProperties) || !isset($_FILES['data'])) {
             return;
         }
-        $isSingle  = isset($postData['id']);
+        $isSingle  = $crudAction !== 'index';
         $filesMeta = $_FILES['data'];
 
         foreach ($this->modelProperties as $property) {
@@ -787,7 +747,7 @@ class BaseCrudController extends SecureBackendController {
      * @param string $propertyName
      * @param array $fileData
      */
-    private function handleFileUpload(array &$entityData, string $propertyName, array $fileData) {
+    protected function handleFileUpload(array &$entityData, string $propertyName, array $fileData) {
         /**
          * @var MediaService $mediaService
          * @var Media|null $media
@@ -801,7 +761,6 @@ class BaseCrudController extends SecureBackendController {
                 $fileExtension    = substr($oldName, strrpos($oldName, '.'));
                 $fileData['name'] = $fileData['new_name'] . $fileExtension;
             }
-
             try {
                 $mediaService = Oforge()->Services()->get('media');
                 $media        = $mediaService->add($fileData);
@@ -832,6 +791,60 @@ class BaseCrudController extends SecureBackendController {
                 Oforge()->Logger()->logException($exception);
             }
         }
+    }
+
+    /**
+     * Prepare data for index pagination.
+     *
+     * @param array $queryParams
+     *
+     * @return  array
+     * @throws NonUniqueResultException
+     * @throws ORMException
+     */
+    private function prepareIndexPaginationData(array $queryParams) : array {
+        $queryKeys = $this->indexReservedQueryKeys;;
+        $queryKeyPage            = $queryKeys['page'];
+        $queryKeyEntitiesPerPage = $queryKeys['entitiesPerPage'];
+
+        $itemsCount       = $this->crudService->count($this->model);
+        $offset           = null;
+        $entitiesPerPage  = null;
+        $buttons          = null;
+        $paginatorCurrent = null;
+        $paginatorMax     = null;
+
+        if (isset($this->indexPagination)) {
+            $buttons = $this->indexPagination['buttons'];
+            if (isset($queryParams[$queryKeyEntitiesPerPage])) {
+                $entitiesPerPage = $queryParams[$queryKeyEntitiesPerPage];
+            } else {
+                $entitiesPerPage = $this->indexPagination['default'];
+            }
+            $paginatorMax = ceil($itemsCount / $entitiesPerPage);
+            if (isset($queryParams[$queryKeyPage])) {
+                $paginatorCurrent = $queryParams[$queryKeyPage];
+            } else {
+                $paginatorCurrent = 1;
+            }
+            if ($paginatorCurrent > 1) {
+                $offset = ($paginatorCurrent - 1) * $entitiesPerPage;
+            }
+        }
+
+        return [
+            'offset'  => $offset,
+            'limit'   => $entitiesPerPage,
+            'total'   => $itemsCount,
+            'page'    => [
+                'current' => $paginatorCurrent,
+                'max'     => $paginatorMax,
+            ],
+            'buttons' => [
+                'values'  => $buttons,
+                'current' => $entitiesPerPage,
+            ],
+        ];
     }
 
 }

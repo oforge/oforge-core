@@ -1,6 +1,16 @@
 {% extends "Plugins/Insertion/Frontend/FrontendInsertion/Pages/PageBase.twig" %}
 
+{% block form_content %}
+
+    {% if user_logged_in %}
+        {{ parent() }}
+    {% else %}
+        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/PageContent/' ~ page ~ '.twig' %}
+    {% endif %}
+
+{% endblock form_content %}
+
 {% block page_content %}
-    {# summary #}
-    summary && login
+    {# Main details #}
+    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/PageContent/' ~ page ~ '.twig' %}
 {% endblock page_content %}

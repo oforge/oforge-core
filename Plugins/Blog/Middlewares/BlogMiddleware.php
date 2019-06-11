@@ -28,16 +28,15 @@ class BlogMiddleware {
         $controllerClass  = $route['controllerClass'];
         $controllerMethod = $route['controllerMethod'];
         try {
-            /** @var AuthService $authService */
-            $authService = Oforge()->Services()->get("auth");
+            $user = Oforge()->View()->get('current_user');
+            if (!isset($user)) {
+                /** @var AuthService $authService */
+                $authService = Oforge()->Services()->get("auth");
 
-            $auth = isset($_SESSION['auth']) ? $_SESSION['auth'] : null;
-            $user = $authService->decode($auth);
+                $auth = isset($_SESSION['auth']) ? $_SESSION['auth'] : null;
+                $user = $authService->decode($auth);
+            }
             if (isset($user)) {
-                Oforge()->View()->assign([
-                    'user' => $user,
-                ]);
-
                 /** @var PermissionService $permissionService */
                 $permissionService = Oforge()->Services()->get('permissions');
                 $permissions       = $permissionService->get($controllerClass, $controllerMethod);
