@@ -16,6 +16,7 @@ use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Forge\ForgeEntityManager;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
+use Oforge\Engine\Modules\Core\Helper\DateTimeFormatter;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
@@ -293,10 +294,8 @@ class PostController extends BaseCrudController {
             $data['comments'] = ArrayHelper::get($this->filterSelectData['commentsPerPost'], $data['id'], 0);
 
             /** @var DateTimeImmutable $dateTime */
-            $dateTime        = $data['created'];
-            $data['created'] = $dateTime->format('Y.m.d H:i:s');
-            $dateTime        = $data['updated'];
-            $data['updated'] = $dateTime->format('Y.m.d H:i:s');
+            $data['created'] = DateTimeFormatter::datetime($data['created']);
+            $data['updated'] = DateTimeFormatter::datetime($data['updated']);
 
             $data['author']   = $data['author']['id'];
             $data['category'] = $data['category']['id'];

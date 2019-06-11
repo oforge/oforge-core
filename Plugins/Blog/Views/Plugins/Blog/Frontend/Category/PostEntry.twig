@@ -10,7 +10,7 @@
     {% if blog.category is not defined %}
         <div class="blog-post-entry-category">{{ blogPost.category.name }}</div>
     {% endif %}
-    <div class="blog-post-entry-created">{{ blogPost.created }}</div>
+    <div class="blog-post-entry-created">{{ blogPost.created|formatDatetime }}</div>
     {% include 'Plugins/Blog/Frontend/Components/RatingView.twig' %}
     <div class="blog-post-entry-title">{{ blogPost.headerTitle }}</div>
     <div class="blog-post-entry-excerpt">{{ blogPost.excerpt }}</div>
