@@ -191,7 +191,6 @@ class GenericCrudService extends AbstractDatabaseAccess {
             $this->entityManager()->flush();
             $repository->clear();
         }
-
     }
 
     /**
