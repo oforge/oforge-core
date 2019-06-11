@@ -60,6 +60,21 @@ class CategoryController extends BaseCrudController {
             'list'  => 'getSelectLanguages',
         ],# language
         [
+            'name'   => 'active',
+            'type'   => CrudDataTypes::BOOL,
+            'label'  => ['key' => 'plugin_blog_property_category__active', 'default' => 'Active'],
+            'crud'   => [
+                'index'  => 'readonly',
+                'view'   => 'readonly',
+                'create' => 'editable',
+                'update' => 'editable',
+                'delete' => 'readonly',
+            ],
+            'editor' => [
+                'default' => true,
+            ],
+        ],# active
+        [
             'name'  => 'seoUrlPath',
             'type'  => CrudDataTypes::STRING,
             'label' => ['key' => 'plugin_blog_property_category_seoUrlPath', 'default' => 'SEO url path'],
