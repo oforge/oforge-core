@@ -12,10 +12,12 @@ use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
+use Oforge\Engine\Modules\Core\Helper\DateTimeFormatter;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Twig_Extension;
 use Twig_ExtensionInterface;
+use Twig_Filter;
 use Twig_Function;
 
 /**
@@ -25,9 +27,22 @@ use Twig_Function;
  */
 class AccessExtension extends Twig_Extension implements Twig_ExtensionInterface {
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
+    public function getFilters() {
+        return [
+            new Twig_Filter('formatDate', [DateTimeFormatter::class, 'date'], [
+                'is_safe' => ['html'],
+            ]),
+            new Twig_Filter('formatDatetime', [DateTimeFormatter::class, 'datetime'], [
+                'is_safe' => ['html'],
+            ]),
+            new Twig_Filter('formatTime', [DateTimeFormatter::class, 'time'], [
+                'is_safe' => ['html'],
+            ]),
+        ];
+    }
+
+    /** @inheritDoc */
     public function getFunctions() {
         return [
             new Twig_Function('config', [$this, 'getConfig'], [

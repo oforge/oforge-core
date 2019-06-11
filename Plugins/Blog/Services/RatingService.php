@@ -2,7 +2,6 @@
 
 namespace Blog\Services;
 
-use Blog\Exceptions\PostNotFoundException;
 use Blog\Exceptions\UserNotLoggedInException;
 use Blog\Exceptions\UserRatingForPostNotFoundException;
 use Blog\Models\Post;
@@ -40,12 +39,15 @@ class RatingService extends AbstractDatabaseAccess {
         if (!$this->frontendUserService->isLoggedIn()) {
             throw new UserNotLoggedInException();
         }
-        $userID = $this->frontendUserService->getUser()->getID();
-        /** @var Rating|null $rating */
-        $rating = $this->repository(Rating::class)->findOneBy([
-            'post'   => $post,
-            'userID' => $userID,
-        ]);
+        $user = $this->frontendUserService->getUser();
+        if (isset($user)) {
+            $userID = $user->getID();
+            /** @var Rating|null $rating */
+            $rating = $this->repository(Rating::class)->findOneBy([
+                'post'   => $post,
+                'userID' => $userID,
+            ]);
+        }
         if (!isset($rating)) {
             throw new UserRatingForPostNotFoundException($post->getId());
         }
@@ -66,7 +68,7 @@ class RatingService extends AbstractDatabaseAccess {
         if (!$this->frontendUserService->isLoggedIn()) {
             throw new UserNotLoggedInException();
         }
-        $userID = $this->frontendUserService->getUser()->getID();
+        $userID        = $this->frontendUserService->getUser()->getID();
         $entityManager = $this->entityManager();
         /** @var Rating|null $rating */
         $rating = $this->repository(Rating::class)->findOneBy([
