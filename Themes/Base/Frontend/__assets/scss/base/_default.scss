@@ -45,10 +45,12 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 .module-frontendusermanagement,
-[class*='controller-frontend_account'] .wrap.wrap--has-image:before {
-    background: url('../img/header.jpg');
-    background-repeat: no-repeat;
-    background-size: cover;
+[class*="controller-frontend_account"] {
+    .wrap--has-image:before {
+        background-image: url('../img/header.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
 }
 
 .description {
