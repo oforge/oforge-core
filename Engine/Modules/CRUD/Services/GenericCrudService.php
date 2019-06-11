@@ -44,7 +44,6 @@ class GenericCrudService extends AbstractDatabaseAccess {
      * @param int|null $limit
      *
      * @return AbstractModel[]
-     * @throws ORMException
      */
     public function list(string $class, array $criteria = [], array $orderBy = null, ?int $offset = null, ?int $limit = null) : array {
         $repository   = $this->getRepository($class);
@@ -153,12 +152,13 @@ class GenericCrudService extends AbstractDatabaseAccess {
      *
      * @param string $class
      * @param array $options
+     * @param bool $flush
      *
      * @throws NotFoundException
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function update(string $class, array $options) {
+    public function update(string $class, array $options, bool $flush = false) {
         $repository = $this->getRepository($class);
 
         if (isset($options['id'])) {
@@ -187,8 +187,11 @@ class GenericCrudService extends AbstractDatabaseAccess {
                 $this->entityManager()->update($entity, false);
             }
         }
-        $this->entityManager()->flush();
-        $repository->clear();
+        if($flush) {
+            $this->entityManager()->flush();
+            $repository->clear();
+        }
+
     }
 
     /**
@@ -212,6 +215,19 @@ class GenericCrudService extends AbstractDatabaseAccess {
             throw new NotFoundException("Entity with id '$id' not found!");
         }
         $this->entityManager()->remove($entity);
+        $repository->clear();
+    }
+
+    /**
+     * @param string $class
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function flush(string $class) {
+        $repository = $this->getRepository($class);
+
+        $this->entityManager()->flush();
         $repository->clear();
     }
 
