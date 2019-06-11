@@ -3,6 +3,10 @@
 
     {% set navigation = content('main_navigation') %}
     <nav class="main-nav">
+        {% block main_nav_title %}
+            {% include 'Frontend/Components/Header/LogoClaim.twig' %}
+        {% endblock main_nav_title %}
+        <div class="title title--main-nav"></div>
         {% if navigation.columns is defined and navigation.columns|length > 0 %}
             <ul class="main-nav-list content content--no-pad columns--{{ navigation.columns|length }}">
                 {% for entry in navigation.columns %}
