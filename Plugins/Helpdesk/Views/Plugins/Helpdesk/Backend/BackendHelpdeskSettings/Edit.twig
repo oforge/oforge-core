@@ -6,7 +6,7 @@
             <div class="col-xs-12">
                 <div class="box">
                     <div class="box-header with-border">
-                        <h3 class="box-title">{{ i18n("backend_insertion_attribute_title", "Edit Attribute") }}</h3>
+                        <h3 class="box-title">{{ i18n("backend_insertion_attribute_title", "Edit IssueType") }}</h3>
                         <div class="box-tools pull-right">
                             <form method="POST" id="delete-form"
                                   action="{{ url('backend_helpdesk_settings_delete') }}"></form>
@@ -25,9 +25,10 @@
                         <form method="POST">
                             <div>
                                 <div class="form-group">
-                                    <label for="issueTypeGroupName">{{ i18n("attribute_name", "Attribute Name") }}</label>
-                                    <input name="issueTypeGroupName" type="text" class="form-control" id="issueTypeGroupName"
-                                           value="{{ content.attribute.name }}">
+                                    <label for="issueTypeGroupName">{{ i18n("attribute_name", "Issue group name") }}</label>
+                                    <input name="issueTypeGroupName" type="text" class="form-control"
+                                           id="issueTypeGroupName"
+                                           value="{{ issueTypeGroup.issueTypeGroupName }}">
                                 </div>
                             </div>
 
@@ -43,16 +44,19 @@
                                     <tbody>
                                     <tr class="hide">
                                         <td data-type="text"
+                                            data-label="issueTypeName"
                                             contenteditable="true">{{ i18n("undefined", "undefined") }}</td>
                                         <td>
                                             <span class="table-remove glyphicon glyphicon-remove"
                                                   data-table-remove></span>
                                         </td>
                                     </tr>
-                                    {% for value in content.attribute.values %}
+                                    {% for issue in issueTypeGroup.issueTypes %}
                                         <tr>
-                                            <td data-type="text" data-id="{{ value.id }}"
-                                                contenteditable="true">{{ value.value }}</td>
+                                            <td data-type="text"
+                                                data-id="{{ issue.id }}"
+                                                data-label="issueTypeName"
+                                                contenteditable="true">{{ issue.issueTypeName }}</td>
                                             <td>
                                             <span class="table-remove glyphicon glyphicon-remove"
                                                   data-table-remove></span>
@@ -65,7 +69,6 @@
                             <input name="values" type="hidden" data-export>
                             <button class="btn" type="submit" data-export-button>{{ i18n("submit") }}</button>
                         </form>
-
                     </div>
                 </div>
                 <!-- /.box-body -->
