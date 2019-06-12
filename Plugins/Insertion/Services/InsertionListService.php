@@ -37,7 +37,7 @@ class InsertionListService extends AbstractDatabaseAccess {
                              ->where("i.insertionType = :type and i.active = true and i.moderation = true");
         $queryBuilder->setParameter("type", $typeId);
 
-        if (isset($_GET["zip"]) && isset($_GET["zip_range"])) {
+        if (isset($_GET["zip"]) && isset($_GET["zip_range"]) && !empty($_GET["zip"]) && $_GET["zip_range"]) {
             $coordinates = Oforge()->Services()->get("insertion.zip")->get($_GET["zip"]);
             if ($coordinates != null) {
                 $queryBuilder->leftJoin("i.contact", "c");
@@ -146,8 +146,6 @@ class InsertionListService extends AbstractDatabaseAccess {
 
             $result['filter']["price"] = [$min, $max];
         }
-
-
 
         if (isset($_GET["order"])) {
             switch ($_GET["order"]) {
