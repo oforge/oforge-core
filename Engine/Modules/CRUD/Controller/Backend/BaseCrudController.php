@@ -358,7 +358,7 @@ class BaseCrudController extends SecureBackendController {
                 $data = $postData['data'];
                 $this->handleFileUploads($data, 'update');
                 $data = $this->convertData($data, 'update');
-                $this->crudService->update($this->model, $data, true);
+                $this->crudService->update($this->model, $data);
                 Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_update_success', 'Entity successfully updated.'));
             } catch (Exception $exception) {
                 Oforge()->View()->Flash()->addExceptionMessage('error', I18N::translate('backend_crud_msg_update_failed', 'Entity update failed.'), $exception);
@@ -513,7 +513,7 @@ class BaseCrudController extends SecureBackendController {
         }
         $postData['data'] = $list;
         try {
-            $this->crudService->update($this->model, $postData, true);
+            $this->crudService->update($this->model, $postData);
             Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_bulk_update_success', 'Entities successfully bulk updated.'));
         } catch (Exception $exception) {
             Oforge()->View()->Flash()

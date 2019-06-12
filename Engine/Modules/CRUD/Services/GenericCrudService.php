@@ -158,7 +158,7 @@ class GenericCrudService extends AbstractDatabaseAccess {
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function update(string $class, array $options, bool $flush = false) {
+    public function update(string $class, array $options, bool $flush = true) {
         $repository = $this->getRepository($class);
 
         if (isset($options['id'])) {
