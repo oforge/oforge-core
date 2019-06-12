@@ -10,7 +10,7 @@
             {% elseif value is iterable %}
                 {% for v in value %}
                     <span class="tag bookmark__tag" data-key="{{ f }}" data-value="{{ v }}">
-                        <span class="tag__text">{{ i18n(f) }} {{ search.values[v] }}</span>
+                        <span class="tag__text">{{ i18n(f) }} {{ values[v] }}</span>
                     </span>
                 {% endfor %}
             {% else %}
@@ -18,7 +18,7 @@
                     {% if keys[f].type is same as( 'boolean') %}
                         <span class="tag__text">{{ i18n(f) }}</span>
                     {% else %}
-                        <span class="tag__text">{{ i18n(f) }} {{ search.values[value] }}</span>
+                        <span class="tag__text">{{ i18n(f) }} {{ values[value] }}</span>
                     {% endif %}
                 </span>
             {% endif %}
