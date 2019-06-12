@@ -90,7 +90,10 @@ class MailService {
                 $mail->isHTML(ArrayHelper::get($options, 'html', true));
                 $mail->Subject = $options["subject"];
                 $mail->Body    = $renderedTemplate;
-                $mail->send();
+                if(!$mail->send()) {
+                    echo "Mailer Error:" . $mail->ErrorInfo;
+                    }
+                else echo "Mail has been sent";
 
                 Oforge()->Logger()->get("mailer")->info("Message has been sent", $options);
             } catch (Exception $e) {
@@ -160,5 +163,13 @@ class MailService {
         $twig->addExtension(new AccessExtension());
 
         return $twig->fetch($template = $options['template'], $data = $templateData);
+    }
+
+    public function batchSend() {
+        //
+    }
+
+    public function getSystemMails() {
+        //
     }
 }
