@@ -198,6 +198,9 @@ class InsertionUpdaterService extends AbstractDatabaseAccess {
             $insertion->getMedia()->add($imedia);
         }
 
+        //save coordinates
+        Oforge()->Services()->get("insertion.zip")->get($contact->getZip());
+
         $this->entityManager()->update($insertion, false);
 
         $this->entityManager()->flush();

@@ -11,42 +11,7 @@
                         {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey } %}
                     {% endfor %}
                 {% endfor %}
-                <!--
-                                <div class="form__control">
-                                    <label for="search_key1"
-                                           class="form__label">Key1
-                                    </label>
-                                    <div class="form__input form__input--select" data-required>
-                                        <select name="search_key1"
-                                                required
-                                                id="search_key1"
-                                                class="form__input form__input--no-input">
-                                            <option disabled selected>Choose whatever</option>
-                                            <option value="#">Foo</option>
-                                            <option value="#">Bar</option>
-                                            <option value="#">Crux</option>
-                                            <option value="#">Blub</option>
-                                        </select>
-                                    </div>
-                                </div>
 
-                                <div class="form__control">
-                                    <label for="search_key2"
-                                           class="form__label">Key2
-                                    </label>
-                                    <div class="form__input form__input--select">
-                                        <select name="search_key2"
-                                                id="search_key2"
-                                                class="form__input form__input--no-input">
-                                            <option value="#">Foo</option>
-                                            <option value="#">Bar</option>
-                                            <option value="#">Crux</option>
-                                            <option value="#">Blub</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                -->
                 <div class="form-controls form-controls--with-separator flex flex--row flex--wrap flex--center flex--between">
                     <div class="form__control">
                         <label for="price[]" class="form__label">
@@ -72,6 +37,21 @@
                     </div>
                 </div>
 
+                <div class="form-controls form-controls--with-separator flex flex--row flex--wrap flex--center flex--between">
+                    <input type="text" name="zip" placeholder="{{ i18n('zip') }}" />
+                    <select name="zip_range">
+                        <option value="0">{{ i18n('exact') }}</option>
+                        <option value="5">{{ i18n('zip_range_5', '5 km') }}</option>
+                        <option value="10">{{ i18n('zip_range_10', '10 km') }}</option>
+                        <option value="20">{{ i18n('zip_range_20', '20 km') }}</option>
+                        <option value="30">{{ i18n('zip_range_30', '30 km') }}</option>
+                        <option value="50">{{ i18n('zip_range_50', '50 km') }}</option>
+                        <option value="100">{{ i18n('zip_range_100', '100 km') }}</option>
+                        <option value="150">{{ i18n('zip_range_150', '150 km') }}</option>
+                        <option value="200">{{ i18n('zip_range_200', '200 km') }}</option>
+                    </select>
+                </div>
+
                 <div class="form__control">
                     <input type="submit"
                            value="{{ i18n('apply_filter') }}"
@@ -79,45 +59,6 @@
                 </div>
             </div>
 
-            <!--
-                            <div class="form__control form__input half flex flex--row flex--center space-up">
-                                <label for="range-from" class="form__label">
-                                    From
-                                </label>
-                                <input type="text"
-                                       class="form__input form__input--no-input"
-                                       id="range-from"
-                                       name="range-from"
-                                       size="1"
-                                       data-range-value="low"
-                                       data-range-slider-name="search_key3">
-                            </div>
-
-                            <div class="form__control form__input half flex flex--row flex--center space-up">
-                                <label for="range-to" class="form__label">
-                                    To
-                                </label>
-                                <input type="text"
-                                       class="form__input form__input--no-input"
-                                       id="range-to"
-                                       name="range-to"
-                                       size="1"
-                                       data-range-value="high"
-                                       data-range-slider-name="search_key3">
-                            </div>
-
-                            <div class="form__control flex flex--row flex--center space-up">
-                                <input type="checkbox"
-                                       id="key4"
-                                       name="key4"
-                                       class="form__input form__input--checkbox form__input--checkbox-small">
-                                <label for="key4" class="space-left">Key4</label>
-                            </div>
-                        </div>
-            -->
-            <div class="form-controls">
-
-            </div>
         </form>
     </div>
 {% endblock insertion_search %}
