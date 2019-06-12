@@ -1,7 +1,7 @@
 {% extends "@parent/Frontend/Layout.twig" %}
 {% block content %}
     {% include 'Plugins/FrontendUserManagement/Frontend/Components/AccountNavBar.twig' with { back_link : true, content_title: i18n('user_details', 'User details')} %}
-    <div class="account content">
+    <div class="account content search-bookmarks">
         {% block account %}
             <div class="panel panel--account flex">
                 {% block account__sidebar %}
@@ -10,19 +10,18 @@
 
                 {% block account__content %}
                     <div class="account__content">
-                        <h1>{{ i18n('frontend_user_search_bookmarks_headline') }}</h1>
+                        <h1>{{ i18n('frontend_user_search_bookmarks_headline', 'Meine gespeicherten Suchen') }}</h1>
                         <div class="">
-                            <div class="">
-                                <h2>{{ i18n('insertions') }}</h2>
+                            <div class="search-bookmarks__header">
+                                <h2>{{ i18n('search_bookmarks', 'Suchen') }}</h2>
                             </div>
 
-                            <div id="bookmarks-container" class="">
+                            <div id="bookmarks-container" class="search-bookmarks__container">
                                 {% include 'Frontend/Components/Insertions/SearchBookmarks.twig' %}
                             </div>
                         </div>
                     </div>
                 {% endblock account__content %}
-
             </div>
         {% endblock account %}
     </div>
