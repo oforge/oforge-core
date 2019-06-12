@@ -25,7 +25,7 @@
         color: $color-primary;
     }
 
-    &__attributes {
+    &__attributes, &__actions {
         margin: $size-large 0 0;
         padding: 0 0 $size-large 0;
         display: flex;
@@ -104,6 +104,10 @@
             flex: 1 0 auto;
             justify-content: center;
             padding: 0 $size-large;
+        }
+        &__actions {
+            border-top: 2px solid $color-secondary;
+            padding-top: $size-large;
         }
 
         &__attributes {

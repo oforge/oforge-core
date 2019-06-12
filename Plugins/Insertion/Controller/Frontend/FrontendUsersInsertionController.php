@@ -211,7 +211,31 @@ class FrontendUsersInsertionController extends SecureFrontendController {
 
         $bookmarks = $bookmarkService->list($user);
 
-        Oforge()->View()->assign(["bookmarks" => $bookmarks]);
+        /**
+         * @var $typeService InsertionTypeService
+         */
+        $typeService = Oforge()->Services()->get("insertion.type");
+
+        $types    = $typeService->getInsertionTypeList(100, 0);
+        $valueMap = [];
+        foreach ($types as $type) {
+
+            /**
+             * @var $attribute InsertionTypeAttribute
+             */
+            foreach ($type->getAttributes() as $attribute) {
+                $attributeMap[$attribute->getAttributeKey()->getId()] = [
+                    "name" => $attribute->getAttributeKey()->getName(),
+                    "top"  => $attribute->isTop(),
+                ];
+
+                foreach ($attribute->getAttributeKey()->getValues() as $value) {
+                    $valueMap[$value->getId()] = $value->getValue();
+                }
+            }
+        }
+
+        Oforge()->View()->assign(["bookmarks" => $bookmarks, "values" => $valueMap]);
 
     }
 
@@ -332,7 +356,6 @@ class FrontendUsersInsertionController extends SecureFrontendController {
             $service->update($user, $_POST);
 
             if (isset($_FILES["profile"])) {
-
                 /**
                  * @var UserDetailsService $userDetailsService
                  */
