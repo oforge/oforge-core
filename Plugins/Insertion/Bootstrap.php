@@ -7,6 +7,7 @@ use Insertion\Controller\Backend\BackendAttributeController;
 use Insertion\Controller\Backend\BackendInsertionController;
 use Insertion\Controller\Backend\BackendInsertionTypeController;
 use Insertion\Controller\Frontend\FrontendInsertionController;
+use Insertion\Controller\Frontend\FrontendInsertionSupplierController;
 use Insertion\Controller\Frontend\FrontendUsersInsertionController;
 use Insertion\Models\AttributeKey;
 use Insertion\Models\AttributeValue;
@@ -51,6 +52,7 @@ class Bootstrap extends AbstractBootstrap {
         $this->endpoints = [
             FrontendInsertionController::class,
             FrontendUsersInsertionController::class,
+            FrontendInsertionSupplierController::class,
             BackendAttributeController::class,
             BackendInsertionController::class,
             BackendInsertionTypeController::class,

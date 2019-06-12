@@ -1,6 +1,5 @@
-.account__user {
+.account__user, .insertion__supplier {
   display: none;
-  padding: 1rem 0 2rem 0rem;
 
   .user__picture {
     border-radius: 50%;
@@ -8,7 +7,10 @@
     box-shadow: 0 .4rem .8rem rgba(112, 112, 112, 1);
     display: flex;
     margin-bottom: 3rem;
-    transform: translateX(-10px);
+    &:after {
+      content: "";
+      padding-bottom: 100%;
+    }
   }
 
   .user-info__name {
@@ -22,7 +24,7 @@
 }
 
 @media screen and (min-width: $screen-large) {
-  .account__user {
+  .account__user, .insertion__supplier {
     display: block;
   }
 }
