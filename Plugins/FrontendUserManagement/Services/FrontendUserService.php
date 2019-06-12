@@ -8,7 +8,10 @@
 
 namespace FrontendUserManagement\Services;
 
+use Exception;
 use FrontendUserManagement\Models\User;
+use Oforge\Engine\Modules\Auth\Services\AuthService;
+use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 
 /**
  * Class FrontendUserService
@@ -17,22 +20,32 @@ use FrontendUserManagement\Models\User;
  */
 class FrontendUserService {
 
-    public function isLoggedIn() {
+    /**
+     * @return bool
+     */
+    public function isLoggedIn() : bool {
         return isset($_SESSION['user_logged_in']) && $_SESSION['user_logged_in'] === true;
     }
 
+    /**
+     * @return User|null
+     */
     public function getUser() : ?User {
-        /** @var $authService AuthService */
-        $authService = Oforge()->Services()->get("auth");
-        $user        = $authService->decode($_SESSION["auth"]);
+        try {
+            /** @var AuthService $authService */
+            $authService = Oforge()->Services()->get('auth');
+            $user        = $authService->decode(ArrayHelper::get($_SESSION, 'auth'));
+            if (isset($user) && isset($user['id']) && $user['type'] === User::class) {
+                /** @var UserService $userService */
+                $userService = Oforge()->Services()->get('frontend.user.management.user');
 
-        if (isset($user) && isset($user['id']) && $user['type'] == User::class) {
-            /** @var $userService UserService */
-            $userService = Oforge()->Services()->get("frontend.user.management.user");
-
-            return $userService->getUserById($user['id']);
+                return $userService->getUserById($user['id']);
+            }
+        } catch (Exception $exception) {
+            Oforge()->Logger()->logException($exception);
         }
 
         return null;
     }
+
 }
