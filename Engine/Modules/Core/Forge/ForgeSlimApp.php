@@ -28,15 +28,6 @@ class ForgeSlimApp extends SlimApp {
         parent::__construct();
         $container = $this->getContainer();
 
-
-
-        $env = $container->get('environment');
-
-        if ($env['PATH_INFO'] = '/blub') {
-            $env['PATH_INFO'] = '/insertions/detail/1';
-        }
-
-
         $errorHandler = function ($container) {
             return function (Request $request, Response $response, $exception) use ($container) {
                 /** @var Exception|Error $exception */
