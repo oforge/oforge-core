@@ -1,0 +1,9 @@
+{% extends 'Backend/CRUD/Index.twig' %}
+
+{% block crud_actions_group %}
+    <a href="{{ url(meta.route.name  ~ '_create', {}, buttonQuery) }}"
+       title="{{ i18n('backend_crud_btn_create', 'create') }}"
+       class="btn btn-primary {% if not crud.actions.create %}disabled{% endif %}">
+        <i class="fa fa-plus"></i>
+    </a>
+{% endblock crud_actions_group %}
