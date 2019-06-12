@@ -1,6 +1,11 @@
 .panel--account {
     flex-direction: column;
     padding: 0;
+
+}
+
+.panel--detail {
+    padding: $size-large;
 }
 
 .account {
@@ -24,6 +29,7 @@
         display: none;
     }
 }
+
 .nav-bar {
     &__title {
         position: absolute;
@@ -66,7 +72,7 @@
 }
 
 .account__content {
-    padding: $size-large;
+    //padding: $size-large;
 }
 
 @media screen and (min-width: $screen-large) {
