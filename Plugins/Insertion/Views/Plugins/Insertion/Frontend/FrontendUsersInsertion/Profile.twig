@@ -1,7 +1,7 @@
 {% extends "@parent/Frontend/Layout.twig" %}
 {% block content %}
     {% include 'Plugins/FrontendUserManagement/Frontend/Components/AccountNavBar.twig' with { back_link : true, content_title: i18n('user_details', 'User details')} %}
-    <div class="account content">
+    <div class="account content content--edit">
         {% block account %}
             <div class="panel panel--account flex">
                 {% block account__sidebar %}
@@ -9,58 +9,80 @@
                 {% endblock account__sidebar %}
 
                 {% block account__content %}
-                    <form action="{{ url('frontend_account_insertions_profile') }}" method="post"
-                          enctype="multipart/form-data">
+                    <div class="account__content flex">
+                        <form action="{{ url('frontend_account_insertions_profile') }}" method="post"
+                              enctype="multipart/form-data">
 
-                        <div class="background">
+                            <div class="background">
+                                <img id="background"
+                                     src="{% if profile.background is defined %}{{ media(profile.background.id) }}{% endif %}" />
 
-
-                            <img id="background"
-                                 src="{% if profile.background is defined %}{{ media(profile.background.id) }}{% endif %}" />
-                            <input type="file" name="background" accept="image/*"
-                                   onchange="loadFile(event, 'background')">
-                            <!-- TODO: move this code -->
-                            <script>
-                                var loadFile = function (event, id) {
-                                    var output = document.getElementById(id);
-                                    output.src = URL.createObjectURL(event.target.files[0]);
-                                };
-                            </script>
-                        </div>
-
-                        <a href="{{ url('insertions_profile', {id: profile.id }) }}">Zum Profil</a>
-
-                        <div class="profile">
-                            <input type="file" name="profile" accept="image/*" onchange="loadFile(event, 'profile')">
-                        </div>
-                        <div class="profile-pic">
-                            {% include 'Plugins/FrontendUserManagement/Frontend/Components/AccountUser.twig' %}
-                        </div>
-
-                        <div class="profile--edit">
-                            <textarea name="description">{{ profile.description }}</textarea>
-                            <div class="impress">
-                                <input class="form__input" type="text" name="imprint_name" placeholder="Name" value="{{ profile.imprintName }}" />
-                                <input class="form__input" type="text" name="imprint_street" placeholder="Street"
-                                       value="{{ profile.imprintStreet }}" />
-                                <input class="form__input" type="text" name="imprint_zipCity" placeholder="PLZ, ORT"
-                                       value="{{ profile.imprintZipCity }}" />
-                                <input class="form__input" type="phone" name="imprint_phone" placeholder="Telefon"
-                                       value="{{ profile.imprintPhone }}" />
-                                <input class="form__input" type="email" name="imprint_email" placeholder="E-Mail"
-                                       value="{{ profile.imprintEmail }}" />
-                                <input class="form__input" type="text" name="imprint_company_number"
-                                       placeholder="Unternehmens Registrierungszeug"
-                                       value="{{ profile.imprintCompanyNumber }}" />
-                                <input class="form__input" type="text" name="imprint_company_tax" placeholder="Steuerzeugs"
-                                       value="{{ profile.imprintCompanyTaxId }}" />
+                                <!-- TODO: move this code -->
+                                <script>
+                                    var loadFile = function (event, id) {
+                                        var output = document.getElementById(id);
+                                        output.src = URL.createObjectURL(event.target.files[0]);
+                                    };
+                                </script>
                             </div>
-                            <div class="submit">
-                                <input type="submit" />
+                            <div class="profile-upload upload-background">
+                                <input type="file" name="background" accept="image/*"
+                                       onchange="loadFile(event, 'background')">
                             </div>
-                        </div>
+                            <div class="profile-upload">
+                                <input type="file" name="profile" accept="image/*"
+                                       onchange="loadFile(event, 'profile')">
+                            </div>
+                            <div class="profile-link">
+                                <a href="{{ url('insertions_profile', {id: profile.id }) }}"><!-- TODO: Snippify -->
+                                    <svg class="icon icon--primary icon--mail">
+                                        <use xlink:href="#fade_in" style=""></use>
+                                    </svg>
+                                </a>
+                            </div>
+                            <div class="profile-pic">
+                                {% include 'Plugins/FrontendUserManagement/Frontend/Components/AccountUser.twig' %}
+                            </div>
+                            <div class="info__description">
+                                <!-- TODO: Snippify -->
+                                Hier können Sie Informationen zu Ihrer Person hinterlegen.
+                            </div>
 
-                    </form>
+                            <div class="profile--edit">
+                                <div class="description--edit">
+                                    <h3 class="form__title"><!-- TODO: Snippify -->Profiltext</h3>
+                                    <textarea name="description"
+                                              class="form__input">{{ profile.description }}</textarea>
+                                </div>
+                                <div class="impress--edit">
+                                    <h3 class="form__title"><!-- TODO: Snippify -->Impressum</h3>
+                                    <input class="form__input" type="text" name="imprint_name" placeholder="Name"
+                                           value="{{ profile.imprintName }}" />
+                                    <input class="form__input" type="text" name="imprint_street" placeholder="Street"
+                                           value="{{ profile.imprintStreet }}" />
+                                    <input class="form__input" type="text" name="imprint_zipCity" placeholder="PLZ, ORT"
+                                           value="{{ profile.imprintZipCity }}" />
+                                    <input class="form__input" type="phone" name="imprint_phone" placeholder="Telefon"
+                                           value="{{ profile.imprintPhone }}" />
+                                    <input class="form__input" type="email" name="imprint_email" placeholder="E-Mail"
+                                           value="{{ profile.imprintEmail }}" />
+                                    <div class="info__business">
+                                        <!-- TODO: Snippify -->
+                                        Nur bei Unternehmen:
+                                    </div>
+                                    <input class="form__input" type="text" name="imprint_company_number"
+                                           placeholder="Registernummer"
+                                           value="{{ profile.imprintCompanyNumber }}" />
+                                    <input class="form__input" type="text" name="imprint_company_tax"
+                                           placeholder="USt.ID"
+                                           value="{{ profile.imprintCompanyTaxId }}" />
+                                </div>
+                                <div class="submit">
+                                    <input type="submit" class="form__input form__input--submit button" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 {% endblock account__content %}
             </div>
         {% endblock account %}

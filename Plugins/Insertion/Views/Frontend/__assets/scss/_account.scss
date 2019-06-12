@@ -1,0 +1,128 @@
+/** Account Edit Page */
+
+.account.content--edit {
+
+    .panel--account {
+        padding: $size-large;
+    }
+
+    .background {
+        margin: -$size-large;
+        margin-bottom: 0;
+    }
+
+    .profile-pic {
+        position: relative;
+        top: -16rem;
+        margin-bottom: -12rem;
+
+        .account__user {
+            display: block;
+        }
+
+        .user-info {
+            display: none;
+        }
+
+        .user__picture {
+            width: 10rem;
+            height: 10rem;
+        }
+    }
+
+    .profile--edit {
+        display: flex;
+        flex-direction: column;
+
+        .description--edit {
+            margin: $size-large 0;
+
+            .form__input {
+                max-width: 100%;
+                width: 100%;
+                height: 20rem;
+                width: 100%;
+            }
+        }
+
+        .submit {
+            margin-top: $size-large;
+        }
+
+        .impress--edit {
+            .form__input {
+                margin: $size-medium 0;
+            }
+        }
+
+        .info__business {
+            margin-top: $size-medium;
+            font-size: 1rem;
+        }
+    }
+
+    .profile-upload {
+        &.upload-background {
+            text-align: right;
+        }
+    }
+
+    .profile-link {
+        display: flex;
+        justify-content: end;
+    }
+
+    .info__description {
+        margin-bottom: 3rem;
+    }
+
+    @media screen and(min-width: $screen-medium) {
+        .panel--account {
+            padding: 3rem;
+        }
+        .background {
+            margin: -3rem -3rem 0 -3rem;
+        }
+        .profile-pic {
+            top: -22rem;
+            margin-bottom: -16rem;
+
+            .user__picture {
+                width: 16rem;
+                height: 16rem;
+            }
+        }
+    }
+
+    @media screen and (min-width: $screen-large) {
+        .panel--account {
+            padding: 0;
+        }
+        .background {
+            margin: 0;
+        }
+        .profile-pic {
+            padding-left: 3rem;
+            //TODO: Set Size
+        }
+        .profile--edit {
+            flex-wrap: wrap;
+            flex-direction: row;
+            justify-content: space-between;
+
+            .description--edit {
+                width: 48%;
+                margin: 0;
+
+                .form__input {
+                    margin: $size-medium 0;
+                }
+            }
+
+            .impress--edit {
+                width: 48%;
+            }
+
+        }
+    }
+}
