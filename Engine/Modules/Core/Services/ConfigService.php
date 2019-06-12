@@ -19,6 +19,7 @@ use Oforge\Engine\Modules\Core\Models\Config\Value;
  * @package Oforge\Engine\Modules\Core\Services
  */
 class ConfigService extends AbstractDatabaseAccess {
+    private $cache = [];
 
     /**
      * ConfigService constructor.
@@ -53,7 +54,7 @@ class ConfigService extends AbstractDatabaseAccess {
             $config = $this->getConfig($options['name']);
             if (is_null($config)) {
                 $options['required'] = ArrayHelper::get($options, 'required', false);
-                $defaultValue = ArrayHelper::get($options, 'default', null);
+                $defaultValue        = ArrayHelper::get($options, 'default', null);
                 if (isset($options['values']) && is_array($options['values'])) {
                     $options['values'] = array_map(function ($entry) use ($defaultValue) {
                         return Value::create([
@@ -89,10 +90,15 @@ class ConfigService extends AbstractDatabaseAccess {
      * @throws ConfigElementNotFoundException
      */
     public function get(string $name, ?string $scope = null) {
+        if (isset($this->cache[$name][$scope])) {
+            return $this->cache[$name][$scope];
+        }
         $config = $this->getConfig($name);
         if (isset($config)) {
             foreach ($config->getValues() as $value) {
                 if ($value->getScope() === $scope) {
+                    $this->updateCacheValue($name, $scope, $value->getValue());
+
                     return $value->getValue();
                 }
             }
@@ -111,7 +117,7 @@ class ConfigService extends AbstractDatabaseAccess {
                     ->createQueryBuilder('c')#
                     ->select('c.group')#
                     ->distinct(true)#
-                    // ->addOrderBy('c.name')
+        // ->addOrderBy('c.name')
                     ->getQuery()->getArrayResult();
     }
 
@@ -176,6 +182,7 @@ class ConfigService extends AbstractDatabaseAccess {
         }
         foreach ($config->getValues() as $configValue) {
             if ($configValue->getScope() === $scope) {
+                $this->updateCacheValue($name, $scope, $value);
                 $configValue->setValue($value);
                 $this->entityManager()->update($configValue);
 
@@ -244,6 +251,13 @@ class ConfigService extends AbstractDatabaseAccess {
         }
 
         return true;
+    }
+
+    private function updateCacheValue(string $name, ?string $scope, $value) {
+        if (!isset($this->cache[$name])) {
+            $this->cache[$name] = [];
+        }
+        $this->cache[$name][$scope] = $value;
     }
 
 }

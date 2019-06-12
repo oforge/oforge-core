@@ -44,8 +44,8 @@ $BTN.click(function () {
 
         // Use the headers from earlier to name our hash keys
         headers.forEach(function (header, i) {
-            header = header.replace(' ', '_');
             var $td = $tds.eq(i);
+            var label =  $td.attr("data-label");
             var type = $td.attr("data-type");
 
             if ($td.attr("data-id") != null) {
@@ -55,17 +55,17 @@ $BTN.click(function () {
             if (type != null) {
                 switch (type) {
                     case "text":
-                        h[header] = $td.text();
+                        h[label] = $td.text();
                         break;
                     case "select":
-                        h[header] = $td.find("select").children("option:selected").val();
+                        h[label] = $td.find("select").children("option:selected").val();
                         break;
                     case "checkbox":
                         var ele = $td.find("input[type=checkbox]:checked");
                         if(ele.length>0) {
-                            h[header] = true;
+                            h[label] = true;
                         } else {
-                            h[header] = false;
+                            h[label] = false;
                         }
                         break;
                 }

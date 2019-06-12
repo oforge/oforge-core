@@ -3,15 +3,12 @@
 namespace Blog\Controller\Backend;
 
 use Blog\Models\Category;
-use Blog\Models\Post;
-use Doctrine\ORM\EntityManager;
+use Blog\Services\CategoryService;
 use Doctrine\ORM\ORMException;
-use Exception;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
-use Oforge\Engine\Modules\Core\Forge\ForgeEntityManager;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
@@ -20,7 +17,6 @@ use Oforge\Engine\Modules\CRUD\Enum\CrudFilterComparator;
 use Oforge\Engine\Modules\CRUD\Enum\CrudFilterType;
 use Oforge\Engine\Modules\CRUD\Enum\CrudGroubByOrder;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
-use Oforge\Engine\Modules\I18n\Models\Language;
 use Oforge\Engine\Modules\I18n\Services\LanguageService;
 use Slim\Http\Response;
 
@@ -64,6 +60,21 @@ class CategoryController extends BaseCrudController {
             'list'  => 'getSelectLanguages',
         ],# language
         [
+            'name'   => 'active',
+            'type'   => CrudDataTypes::BOOL,
+            'label'  => ['key' => 'plugin_blog_property_category__active', 'default' => 'Active'],
+            'crud'   => [
+                'index'  => 'readonly',
+                'view'   => 'readonly',
+                'create' => 'editable',
+                'update' => 'editable',
+                'delete' => 'readonly',
+            ],
+            'editor' => [
+                'default' => true,
+            ],
+        ],# active
+        [
             'name'  => 'seoUrlPath',
             'type'  => CrudDataTypes::STRING,
             'label' => ['key' => 'plugin_blog_property_category_seoUrlPath', 'default' => 'SEO url path'],
@@ -76,9 +87,21 @@ class CategoryController extends BaseCrudController {
             ],
         ],# seoUrlPath
         [
+            'name'  => 'icon',
+            'type'  => CrudDataTypes::STRING,
+            'label' => ['key' => 'plugin_blog_property_category_icon', 'default' => 'Icon'],
+            'crud'  => [
+                'index'  => 'off',
+                'view'   => 'readonly',
+                'create' => 'editable',
+                'update' => 'editable',
+                'delete' => 'off',
+            ],
+        ],# cssClass
+        [
             'name'  => 'cssClass',
             'type'  => CrudDataTypes::STRING,
-            'label' => ['key' => 'plugin_blog_property_category_cssClass', 'default' => 'CSS class'],
+            'label' => ['key' => 'plugin_blog_property_category_cssClasses', 'default' => 'CSS classes'],
             'crud'  => [
                 'index'  => 'off',
                 'view'   => 'readonly',
@@ -171,10 +194,6 @@ class CategoryController extends BaseCrudController {
     protected $indexOrderBy = [
         'name' => CrudGroubByOrder::ASC,
     ];
-    /** @var array $selectLanguages */
-    private $selectLanguages;
-    /** @var array $dataPostsOfCategory */
-    private $dataPostsOfCategory;
 
     public function __construct() {
         parent::__construct();
@@ -202,19 +221,17 @@ class CategoryController extends BaseCrudController {
     protected function prepareItemDataArray(?AbstractModel $entity, string $crudAction) : array {
         $data = parent::prepareItemDataArray($entity, $crudAction);
         if (!empty($data) && $crudAction !== 'create') {
-            if (!isset($this->dataPostsOfCategory)) {
-                $this->dataPostsOfCategory = [];
-                /* @var ForgeEntityManager $entityManager */
-                $entityManager = Oforge()->DB()->getForgeEntityManager();
-                $entries       = $entityManager->getRepository(Post::class)->createQueryBuilder('p')#
-                                               ->select('IDENTITY(p.category) as id, COUNT(p) as value')#
-                                               ->groupBy('p.category')#
-                                               ->getQuery()->getArrayResult();
-                foreach ($entries as $entry) {
-                    $this->dataPostsOfCategory[$entry['id']] = $entry['value'];
+            if (!isset($this->filterSelectData['postsOfCategory'])) {
+                try {
+                    /** @var CategoryService $categoryService */
+                    $categoryService = Oforge()->Services()->get('blog.category');
+
+                    $this->filterSelectData['postsOfCategory'] = $categoryService->getFilterDataPostCountOfCategories();
+                } catch (ServiceNotFoundException $exception) {
+                    $this->filterSelectData['postsOfCategory'] = [];
                 }
             }
-            $data['posts'] = ArrayHelper::get($this->dataPostsOfCategory, $data['id'], 0);
+            $data['posts'] = ArrayHelper::get($this->filterSelectData['postsOfCategory'], $data['id'], 0);
         }
 
         return $data;
@@ -224,21 +241,16 @@ class CategoryController extends BaseCrudController {
      * Get languages for select field.
      *
      * @return array
-     * @throws Exception
      */
-    protected function getSelectLanguages() {
-        if (!isset($this->selectLanguages)) {
-            $this->selectLanguages = [];
+    protected function getSelectLanguages() : array {
+        try {
             /** @var LanguageService $languageService */
             $languageService = Oforge()->Services()->get('i18n.language');
-            /** @var Language[] $entities */
-            $entities = $languageService->list();
-            foreach ($entities as $entity) {
-                $this->selectLanguages[$entity->getIso()] = $entity->getName();
-            }
-        }
 
-        return $this->selectLanguages;
+            return $languageService->getFilterDataLanguages();
+        } catch (ServiceNotFoundException $exception) {
+            return [];
+        }
     }
 
     /** @inheritDoc */

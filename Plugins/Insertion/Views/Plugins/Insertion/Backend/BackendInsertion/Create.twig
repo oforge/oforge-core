@@ -1,0 +1,7 @@
+{% extends 'Backend/CRUD/Components/ViewBase.twig' %}
+
+{% block pagecontent %}
+    <section class="content">
+        {% include 'Plugins/Insertion/Backend/BackendInsertion/CRUD/Form.twig' with { item: crud.item } %}
+    </section>
+{% endblock %}

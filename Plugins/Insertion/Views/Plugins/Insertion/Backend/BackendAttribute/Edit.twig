@@ -10,7 +10,7 @@
                         <div class="box-tools pull-right">
                             <form method="POST" id="delete-form"
                                   action="{{ url('backend_insertion_attribute_delete') ~ "?id=" ~ content.attribute.id }}"></form>
-                            <div class="btn-group">
+                            <div class="btn-group pull-right">
                                 <button type="submit" form="delete-form" class="btn btn-danger">
                                     <i class="fa fa-trash"></i> {{ i18n('delete', 'delete') }}
                                 </button>
@@ -70,8 +70,10 @@
                                     <tbody>
                                     <tr class="hide">
                                         <td data-type="text"
+                                            data-label="value"
                                             contenteditable="true">{{ i18n("undefined", "undefined") }}</td>
-                                        <td data-type="select">
+                                        <td data-type="select"
+                                            data-label="sub_attribute">
                                             <select name="select">
                                                 <option value="0" selected>{{ i18n('none', 'None') }}</option>
                                                 {% for attribute in content.attributeList %}
@@ -86,9 +88,12 @@
                                     </tr>
                                     {% for value in content.attribute.values %}
                                         <tr>
-                                            <td data-type="text" data-id="{{ value.id }}"
+                                            <td data-type="text"
+                                                data-id="{{ value.id }}"
+                                                data-label="value"
                                                 contenteditable="true">{{ value.value }}</td>
-                                            <td data-type="select">
+                                            <td data-type="select"
+                                                data-label="sub_attribute">
                                                 <select class="form-control select2">
                                                     <option value="0" selected>{{ i18n('none', 'None') }}</option>
                                                     {% for attribute in content.attributeList %}

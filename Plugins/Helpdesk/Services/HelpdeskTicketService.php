@@ -4,6 +4,7 @@ namespace Helpdesk\Services;
 
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Helpdesk\Models\IssueTypeGroup;
 use Helpdesk\Models\IssueTypes;
 use Helpdesk\Models\Ticket;
 use Messenger\Models\Conversation;
@@ -14,8 +15,9 @@ use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 class HelpdeskTicketService extends AbstractDatabaseAccess {
     public function __construct() {
         parent::__construct([
-            'default' => Ticket::class,
-            'IssueTypes' => IssueTypes::class,
+            'default'         => Ticket::class,
+            'IssueTypes'      => IssueTypes::class,
+            'IssueTypesGroup' => IssueTypeGroup::class,
         ]);
     }
 
@@ -65,7 +67,7 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
      */
     public function getTicketsByOpener(int $opener, $status = 'open') {
         $tickets = $this->repository()->findBy(['opener' => $opener, 'status' => $status]);
-        $result = [];
+        $result  = [];
 
         /** @var FrontendMessengerService $frontendMessengerService */
         $frontendMessengerService = Oforge()->Services()->get('frontend.messenger');
@@ -80,13 +82,12 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
             }
 
             array_push($result, [
-                    'id' => $ticket->getId(),
-                    'issueType' => $ticket->getIssueType(),
-                    'title' => $ticket->getTitle(),
+                    'id'           => $ticket->getId(),
+                    'issueType'    => $ticket->getIssueType(),
+                    'title'        => $ticket->getTitle(),
                     'conversation' => $conversation,
-                    'created' => $ticket->getCreated()->format('Y-m-d H:i:s')
-                ]
-            );
+                    'created'      => $ticket->getCreated()->format('Y-m-d H:i:s'),
+                ]);
         }
 
         return $result;
@@ -101,6 +102,7 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
     public function getTicketById($id) {
         /** @var Ticket $ticket */
         $ticket = $this->repository()->find($id);
+
         return $ticket;
     }
 
@@ -121,15 +123,19 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
 
     /**
      * @param $issueName
+     * @param $issueGroup
      *
+     * @return IssueTypes
      * @throws ORMException
-     * @throws OptimisticLockException
      */
-    public function createIssueType($issueName) {
+    public function createIssueType($issueName, $issueGroup) {
         $issueType = new IssueTypes();
         $issueType->setIssueTypeName($issueName);
+        $issueType->setIssueTypeGroup($issueGroup);
 
-        $this->entityManager()->create($issueType);
+        $this->entityManager()->update($issueType);
+
+        return $issueType;
     }
 
     /**
@@ -140,4 +146,13 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
         return $this->repository('IssueTypes')->findAll();
     }
 
+    /**
+     * @param $groupName
+     *
+     * @return object|null
+     * @throws ORMException
+     */
+    public function getIssueTypesByGroup($groupName) {
+        return $this->repository('IssueTypesGroup')->findOneBy(['issueTypeGroupName' => $groupName]);
+    }
 }
