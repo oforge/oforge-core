@@ -1,5 +1,11 @@
+/** Supplier Page */
 .content--supplier {
-    // TODO: User Image
+    .insertion__supplier {
+        .user__picture {
+            width: 10rem;
+            height: 10rem;
+        }
+    }
 
     .slider--supplier {
         margin-top: $size-large;
