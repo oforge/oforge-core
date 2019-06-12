@@ -15,7 +15,7 @@
             <!-- Inner Menu: contains the notifications -->
             <ul class="menu">
                 <li><!-- start notification -->
-                    <a href="/backend/notifications/{{ notification.id }}">
+                    <a href="{{ url('backend_notifications', {id: notification.id}) }}">
                         <i class="fa fa-users text-aqua"></i> {{ notification.message }}
                     </a>
                 </li>

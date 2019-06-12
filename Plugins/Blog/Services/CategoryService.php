@@ -59,6 +59,7 @@ class CategoryService extends AbstractDatabaseAccess {
         }
         $categories = $this->repository()->findBy([
             'language' => $language,
+            'active'   => true,
         ]);
 
         return $categories;

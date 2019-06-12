@@ -59,20 +59,24 @@
                                     </thead>
                                     <tbody>
                                     <tr class="hide">
-                                        <td data-type="select">
+                                        <td data-type="select"
+                                            data-label="attribute_key">
                                             <select name="select">
                                                 {% for attribute in content.attributeList %}
                                                     <option value="{{ attribute.id }}">{{ attribute.name }}</option>
                                                 {% endfor %}
                                             </select>
                                         </td>
-                                        <td data-type="checkbox">
+                                        <td data-type="checkbox"
+                                            data-label="is_required">
                                             <input type="checkbox" name="checkbox" value="true">
                                         </td>
-                                        <td data-type="checkbox">
+                                        <td data-type="checkbox"
+                                            data-label="is_top">
                                             <input type="checkbox" name="checkbox" value="true">
                                         </td>
-                                        <td data-type="select">
+                                        <td data-type="select"
+                                            data-label="attribute_group">
                                             <select name="select">
                                                 {% for attributeGroup in content.attributeGroupList %}
                                                     <option value="{{ attributeGroup.name }}">{{ attributeGroup.name }}</option>
@@ -86,7 +90,9 @@
                                     </tr>
                                     {% for value in content.insertionType.attributes %}
                                         <tr>
-                                            <td data-type="select" data-id="{{ value.id }}">
+                                            <td data-type="select"
+                                                data-id="{{ value.id }}"
+                                                data-label="attribute_key">
                                                 <select class="form-control select2">
                                                     {% for attribute in content.attributeList %}
                                                         <option value="{{ attribute.id }}"
@@ -97,13 +103,16 @@
                                                     {% endfor %}
                                                 </select>
                                             </td>
-                                            <td data-type="checkbox">
+                                            <td data-type="checkbox"
+                                                data-label="is_required">
                                                 <input type="checkbox" {% if value.required %}checked{% endif %}>
                                             </td>
-                                            <td data-type="checkbox">
+                                            <td data-type="checkbox"
+                                                data-label="is_top">
                                                 <input type="checkbox" {% if value.top %}checked{% endif %}>
                                             </td>
-                                            <td data-type="select">
+                                            <td data-type="select"
+                                                data-label="attribute_group">
                                                 <select class="form-control select2">
                                                     {% for attributeGroup in content.attributeGroupList %}
                                                         <option value="{{ attributeGroup.name }}"

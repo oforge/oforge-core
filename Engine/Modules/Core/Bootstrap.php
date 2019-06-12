@@ -124,6 +124,30 @@ class Bootstrap extends AbstractBootstrap {
             'default' => true,
             'label'   => 'config_debug_session',
         ]);
+        $configService->add([
+            'name'     => 'system_format_datetime',
+            'type'     => ConfigType::STRING,
+            'group'    => 'date_format',
+            'default'  => 'd.m.Y H:i:s',
+            'label'    => 'config_system_format_datetime',
+            'required' => true,
+        ]);
+        $configService->add([
+            'name'     => 'system_format_date',
+            'type'     => ConfigType::STRING,
+            'group'    => 'date_format',
+            'default'  => 'd.m.Y',
+            'label'    => 'config_system_format_date',
+            'required' => true,
+        ]);
+        $configService->add([
+            'name'     => 'system_format_time',
+            'type'     => ConfigType::STRING,
+            'group'    => 'date_format',
+            'default'  => 'H:i:s',
+            'label'    => 'config_system_format_time',
+            'required' => true,
+        ]);
     }
 
 }

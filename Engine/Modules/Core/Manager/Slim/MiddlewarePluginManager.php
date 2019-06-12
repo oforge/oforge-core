@@ -35,8 +35,14 @@ class MiddlewarePluginManager {
 
             if (method_exists($className, 'prepend')) {
                 $newResponse = (new $className())->prepend($request, $response);
+
                 if (isset($newResponse)) {
-                    $response = $newResponse;
+                    if (is_array($newResponse) && sizeof($newResponse) == 2) {
+                        $request  = $newResponse[0];
+                        $response = $newResponse[1];
+                    } else {
+                        $response = $newResponse;
+                    }
                 }
             }
         }
@@ -53,7 +59,12 @@ class MiddlewarePluginManager {
             if (method_exists($className, 'append')) {
                 $newResponse = (new $className())->append($request, $response);
                 if (isset($newResponse)) {
-                    $response = $newResponse;
+                    if (is_array($newResponse) && sizeof($newResponse) == 2) {
+                        $request  = $newResponse[0];
+                        $response = $newResponse[1];
+                    } else {
+                        $response = $newResponse;
+                    }
                 }
             }
         }
