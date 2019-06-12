@@ -1,27 +1,31 @@
 {# block layout__top_slider #}
+{% extends '@parent/Frontend/Components/Main/TopSlider.twig' %}
 {% block top_slider %}
     {% set slider = getInsertionSliderContent() %}
-    <div class="slider slider--top">
-        {% for insertion in slider.insertions %}
-            <a href="/insertions/detail/{{ insertion.id }}">
-                <div class="slide">
-                    {#
-                    <div class="badge is--new">
-                        <svg class='icon icon--new'>
-                            <use xlink:href='#new'></use>
-                        </svg>
+    {% if slider['insertions']|length > 0 %}
+        <div class="slider slider--top">
+            {% for insertion in slider.insertions %}
+                <a href="/insertions/detail/{{ insertion.id }}">
+                    <div class="slide">
+                        {#
+                        <div class="badge is--new">
+                            <svg class='icon icon--new'>
+                                <use xlink:href='#new'></use>
+                            </svg>
+                        </div>
+                        #}
+                        {% if insertion.media is defined and insertion.media|length > 0 and insertion.media[0].content is defined %}
+                            <img src="{{ media(insertion.media[0].content.id, 200) }}"
+                                 alt="{{ insertion.content[0].name }}"
+                                 class="image">
+                        {% else %}
+                            <!-- TODO add dummy image -->
+                            <img src="https://placeponi.es/300/300" alt="{{ insertion.content[0].title }}"
+                                 title="{{ insertion.content[0].title }}" class="image">
+                        {% endif %}
                     </div>
-                    #}
-                    {% if insertion.media is defined and insertion.media|length > 0 and insertion.media[0].content is defined %}
-                        <img src="{{ media(insertion.media[0].content.id, 200) }}" alt="{{ insertion.content[0].name }}"
-                             class="image">
-                    {% else %}
-                        <!-- TODO add dummy image -->
-                        <img src="https://placeponi.es/300/300" alt="{{ insertion.content[0].title }}"
-                             title="{{ insertion.content[0].title }}" class="image">
-                    {% endif %}
-                </div>
-            </a>
-        {% endfor %}
-    </div>
+                </a>
+            {% endfor %}
+        </div>
+    {% endif %}
 {% endblock top_slider %}
