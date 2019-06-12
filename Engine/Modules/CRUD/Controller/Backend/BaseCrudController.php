@@ -204,21 +204,22 @@ class BaseCrudController extends SecureBackendController {
      * @EndpointAction()
      */
     public function indexAction(Request $request, Response $response) {
-        $params = $request->getParams();
-        if ($request->isPost() && !empty($params)) {
-            if (isset($params['action'])) {
-                $methodName = 'handleIndex' . ucfirst($params['action']);
+        $queryParams = $request->getQueryParams();
+        $postData    = $request->getParsedBody();
+        if ($request->isPost() && !empty($postData)) {
+            if (isset($postData['action'])) {
+                $methodName = 'handleIndex' . ucfirst($postData['action']);
                 if (method_exists($this, $methodName)) {
-                    $this->{$methodName}($params);
+                    $this->{$methodName}($postData);
                 }
 
-                return $this->redirect($response, 'index');
+                return $this->redirect($response, 'index', [], $queryParams);
             }
         }
-        $queryParams = $request->getQueryParams();
-        $pagination  = $this->prepareIndexPaginationData($queryParams);
-        $orderBy     = $this->evaluateIndexOrder($queryParams);
-        $criteria    = $this->evaluateIndexFilter($queryParams);
+        unset($postData);
+        $pagination = $this->prepareIndexPaginationData($queryParams);
+        $orderBy    = $this->evaluateIndexOrder($queryParams);
+        $criteria   = $this->evaluateIndexFilter($queryParams);
 
         $entities = $this->crudService->list($this->model, $criteria, $orderBy, $pagination['offset'], $pagination['limit']);
         if (Oforge()->View()->Flash()->hasData($this->moduleModelName)) {

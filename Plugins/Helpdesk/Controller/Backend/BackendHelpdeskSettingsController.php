@@ -89,7 +89,7 @@ class BackendHelpdeskSettingsController extends SecureBackendController {
                         $crud->update(IssueTypes::class, [
                             'id' => $issueType['id'],
                             'issueTypeName'  => $issueType['issueTypeName'],
-                        ]);
+                        ], false);
                         $idList = array_diff($idList, [$issueType['id']]);
                     } else {
                         $crud->create(IssueTypes::class, [
