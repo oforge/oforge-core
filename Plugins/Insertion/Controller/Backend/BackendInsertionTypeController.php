@@ -95,8 +95,6 @@ class BackendInsertionTypeController extends SecureBackendController {
                 foreach ($body['values'] as $attribute) {
                     /** @var AttributeKey $attributeKey */
                     $attributeKey = $attributeService->getAttribute($attribute['attribute_key']);
-                    print_r($attributeKey->getName());
-                    echo "<br />";
                     if(isset($attribute['id'])) {
                         $insertionTypeService->updateInsertionTypeAttribute($attribute['id'], $attributeKey, $attribute['is_top'], $attribute['attribute_group'],
                             $attribute['is_required']);

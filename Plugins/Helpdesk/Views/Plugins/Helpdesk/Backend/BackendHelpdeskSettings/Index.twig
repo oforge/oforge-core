@@ -1,0 +1,75 @@
+{% extends "Backend/Master/Index.twig" %}
+
+{% block pagecontent %}
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">{{ i18n("backend_insertion_attribute_title", "Edit Attribute") }}</h3>
+                <div class="box-tools pull-right">
+                    <div class="btn-group">
+                        <a href="{{ url('backend_helpdesk_settings_edit') }}" class="btn btn-default">
+                            <i class="glyphicon glyphicon-plus"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="box-body">
+                <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="example1" class="table table-bordered table-striped dataTable" role="grid"
+                                   aria-describedby="example1_info">
+                                <thead>
+                                <tr role="row">
+                                    <th class="sorting_asc" tabindex="0" aria-controls="example1" rowspan="1"
+                                        colspan="1" aria-sort="ascending"
+                                        aria-label="Rendering engine: activate to sort column descending"
+                                        style="width: 297px;">{{ i18n('issue_type_group', 'Issue Type group') }}
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
+                                        aria-label="CSS grade: activate to sort column ascending" style="width: 191px;">
+                                        {{ i18n('amount', 'Amount') }}
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for issueTypeGroup in issueTypeGroups %}
+                                    <tr role="row" class="odd">
+                                        <td class="sorting_1">
+                                            <a href="{{ url("backend_helpdesk_settings_edit") ~ "?id=" ~ issueTypeGroup.id }}">
+                                                {{ issueTypeGroup.issueTypeGroupName }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="{{ url("backend_helpdesk_settings_edit") ~ "?id=" ~ issueTypeGroup.id }}">
+                                                {{ issueTypeGroup.issueTypes|length }}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-7">
+                            <div class="dataTables_paginate paging_simple_numbers" id="example1_paginate">
+                                <ul class="pagination">
+                                    {% for i in range(1, pageCount) %}
+                                        <li class="paginate_button {% if currentPage == i %}active{% endif %}">
+                                            <a href="{{ url('backend_insertion_attribute') ~ "?page=" ~ i }}" aria-controls="" data-dt-idx="{{ i }}" tabindex="0">
+                                                {{ i }}
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+{% endblock %}
