@@ -11,6 +11,7 @@ use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Models\Config\ConfigType;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\Mailer\Services\MailService;
+use SystemMailService\SystemMailService;
 
 /**
  * Class Bootstrap
