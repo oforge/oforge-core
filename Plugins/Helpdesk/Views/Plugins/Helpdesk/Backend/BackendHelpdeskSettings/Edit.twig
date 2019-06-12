@@ -1,0 +1,78 @@
+{% extends "Backend/Master/Index.twig" %}
+
+{% block pagecontent %}
+    <section class="content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ i18n("backend_insertion_attribute_title", "Edit IssueType") }}</h3>
+                        <div class="box-tools pull-right">
+                            <form method="POST" id="delete-form"
+                                  action="{{ url('backend_helpdesk_settings_delete') }}"></form>
+                            <div class="btn-group">
+                                <button type="submit" form="delete-form" class="btn btn-danger">
+                                    <i class="fa fa-trash"></i> {{ i18n('delete', 'delete') }}
+                                </button>
+                                <a href="{{ url('backend_helpdesk_settings') }}" class="btn btn-default">
+                                    <i class="fa fa-mail-reply"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-body">
+                        <form method="POST">
+                            <div>
+                                <div class="form-group">
+                                    <label for="issueTypeGroupName">{{ i18n("attribute_name", "Issue group name") }}</label>
+                                    <input name="issueTypeGroupName" type="text" class="form-control"
+                                           id="issueTypeGroupName"
+                                           value="{{ issueTypeGroup.issueTypeGroupName }}">
+                                </div>
+                            </div>
+
+                            <div data-editable-table class="table-editable">
+                                <span data-table-add class="table-add glyphicon glyphicon-plus"></span>
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>{{ i18n("i18n_issue_name", "I18n Issue Type name") }}</th>
+                                        <th><i class="fa fa-user-times"></i> {{ i18n("delete") }}</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr class="hide">
+                                        <td data-type="text"
+                                            data-label="issueTypeName"
+                                            contenteditable="true">{{ i18n("undefined", "undefined") }}</td>
+                                        <td>
+                                            <span class="table-remove glyphicon glyphicon-remove"
+                                                  data-table-remove></span>
+                                        </td>
+                                    </tr>
+                                    {% for issue in issueTypeGroup.issueTypes %}
+                                        <tr>
+                                            <td data-type="text"
+                                                data-id="{{ issue.id }}"
+                                                data-label="issueTypeName"
+                                                contenteditable="true">{{ issue.issueTypeName }}</td>
+                                            <td>
+                                            <span class="table-remove glyphicon glyphicon-remove"
+                                                  data-table-remove></span>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <input name="values" type="hidden" data-export>
+                            <button class="btn" type="submit" data-export-button>{{ i18n("submit") }}</button>
+                        </form>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -4,6 +4,7 @@ namespace FrontendUserManagement\Services;
 
 use Doctrine\ORM\ORMException;
 use Exception;
+use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Models\UserAddress;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 
@@ -15,7 +16,7 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 class UserAddressService extends AbstractDatabaseAccess {
 
     public function __construct() {
-        parent::__construct(UserAddress::class);
+        parent::__construct(["default" => UserAddress::class, "user" => User::class]);
     }
 
     /**
@@ -26,12 +27,19 @@ class UserAddressService extends AbstractDatabaseAccess {
     public function save(array $data) {
         try {
             $address = $this->get($data['userId']);
-            if (isset($address)) {
+
+            if ($address == null) {
+                $address = UserAddress::create($data);
+                $user   = $this->repository("user")->find($data['userId']);
+                $address->setUser($user);
+                $this->entityManager()->create($address);
+            } else {
                 $address->fromArray($data);
                 $this->entityManager()->update($address);
-
-                return true;
             }
+
+            return true;
+
         } catch (Exception $ex) {
             Oforge()->Logger()->get()->addError('Could not persist / flush userDetails', ['msg' => $ex->getMessage()]);
         }

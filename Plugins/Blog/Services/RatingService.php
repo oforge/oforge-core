@@ -2,12 +2,12 @@
 
 namespace Blog\Services;
 
-use Blog\Exceptions\PostNotFoundException;
 use Blog\Exceptions\UserNotLoggedInException;
 use Blog\Exceptions\UserRatingForPostNotFoundException;
 use Blog\Models\Post;
 use Blog\Models\Rating;
 use Doctrine\ORM\ORMException;
+use FrontendUserManagement\Services\FrontendUserService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 
 /**
@@ -16,13 +16,13 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
  * @package Blog\Services
  */
 class RatingService extends AbstractDatabaseAccess {
-    /** @var UserService $userService */
-    private $userService;
+    /** @var FrontendUserService $frontendUserService */
+    private $frontendUserService;
 
     /** @inheritDoc */
     public function __construct() {
         parent::__construct([Post::class => Post::class, Rating::class => Rating::class]);
-        $this->userService = Oforge()->Services()->get('blog.user');
+        $this->frontendUserService = Oforge()->Services()->get('frontend.user');
     }
 
     /**
@@ -36,15 +36,18 @@ class RatingService extends AbstractDatabaseAccess {
      * @throws UserRatingForPostNotFoundException
      */
     public function getUserRatingOfPost(Post $post) : bool {
-        if (!$this->userService->isLoggedIn()) {
+        if (!$this->frontendUserService->isLoggedIn()) {
             throw new UserNotLoggedInException();
         }
-        $userID = $this->userService->getID();
-        /** @var Rating|null $rating */
-        $rating = $this->repository(Rating::class)->findOneBy([
-            'post'   => $post,
-            'userID' => $userID,
-        ]);
+        $user = $this->frontendUserService->getUser();
+        if (isset($user)) {
+            $userID = $user->getID();
+            /** @var Rating|null $rating */
+            $rating = $this->repository(Rating::class)->findOneBy([
+                'post'   => $post,
+                'userID' => $userID,
+            ]);
+        }
         if (!isset($rating)) {
             throw new UserRatingForPostNotFoundException($post->getId());
         }
@@ -62,10 +65,10 @@ class RatingService extends AbstractDatabaseAccess {
      * @throws ORMException
      */
     public function createOrUpdateRating(int $postID, bool $ratingValue) {
-        if (!$this->userService->isLoggedIn()) {
+        if (!$this->frontendUserService->isLoggedIn()) {
             throw new UserNotLoggedInException();
         }
-        $userID = $this->userService->getID();
+        $userID        = $this->frontendUserService->getUser()->getID();
         $entityManager = $this->entityManager();
         /** @var Rating|null $rating */
         $rating = $this->repository(Rating::class)->findOneBy([

@@ -22,10 +22,12 @@ use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Models\InsertionTypeGroup;
 use Insertion\Models\InsertionUserBookmark;
 use Insertion\Models\InsertionUserSearchBookmark;
+use Insertion\Models\InsertionZipCoordinates;
 use Insertion\Services\AttributeService;
 use Insertion\Services\InsertionBookmarkService;
 use Insertion\Services\InsertionCreatorService;
 use Insertion\Services\InsertionFeedbackService;
+use Insertion\Services\InsertionFormsService;
 use Insertion\Services\InsertionListService;
 use Insertion\Services\InsertionMockService;
 use Insertion\Services\InsertionProfileService;
@@ -34,6 +36,7 @@ use Insertion\Services\InsertionService;
 use Insertion\Services\InsertionSliderService;
 use Insertion\Services\InsertionTypeService;
 use Insertion\Services\InsertionUpdaterService;
+use Insertion\Services\InsertionZipService;
 use Insertion\Twig\InsertionExtensions;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
@@ -60,12 +63,14 @@ class Bootstrap extends AbstractBootstrap {
             'insertion.mock'            => InsertionMockService::class,
             'insertion.creator'         => InsertionCreatorService::class,
             'insertion.updater'         => InsertionUpdaterService::class,
+            'insertion.forms'           => InsertionFormsService::class,
             'insertion.feedback'        => InsertionFeedbackService::class,
             'insertion.list'            => InsertionListService::class,
             'insertion.bookmark'        => InsertionBookmarkService::class,
             'insertion.search.bookmark' => InsertionSearchBookmarkService::class,
             'insertion.profile'         => InsertionProfileService::class,
             'insertion.slider'          => InsertionSliderService::class,
+            'insertion.zip'             => InsertionZipService::class,
         ];
 
         $this->models = [
@@ -83,10 +88,13 @@ class Bootstrap extends AbstractBootstrap {
             InsertionUserBookmark::class,
             InsertionUserSearchBookmark::class,
             InsertionProfile::class,
+            InsertionZipCoordinates::class,
         ];
 
         $this->dependencies = [
             \FrontendUserManagement\Bootstrap::class,
+            \Messenger\Bootstrap::class,
+            \Helpdesk\Bootstrap::class,
         ];
     }
 

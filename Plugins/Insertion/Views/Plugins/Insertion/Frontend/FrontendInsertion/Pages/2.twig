@@ -1,17 +1,6 @@
 {% extends "Plugins/Insertion/Frontend/FrontendInsertion/Pages/PageBase.twig" %}
 
 {% block page_content %}
-    {# Main attributes #}
-    {% for attributeGroup in attributes %}
-        {% if attributeGroup.items|length > 0 and not  (attributeGroup.name == 'main' or attributeGroup.name == 'contact') %}
-            <div class="attribute-group">
-                <h2>{{ i18n(attributeGroup.name) }}</h2>
-                <div>
-                    {% for attribute in attributeGroup.items %}
-                        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': attribute.required } %}
-                    {% endfor %}
-                </div>
-            </div>
-        {% endif %}
-    {% endfor %}
+    {# Main details #}
+    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/PageContent/' ~ page ~ '.twig' %}
 {% endblock page_content %}

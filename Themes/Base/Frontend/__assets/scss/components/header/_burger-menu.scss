@@ -15,7 +15,6 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    transition: background .2s ease;
     cursor: pointer;
     z-index: 2;
 }
@@ -24,7 +23,7 @@
     width: 2rem;
     height: .2rem;
     background: $color-secondary;
-    transition: background .2s ease;
+    transition: all .5s ease;
 }
 
 .patty + .patty {
@@ -32,9 +31,26 @@
 }
 
 #burger:checked + .burger-menu {
-    background: $color-secondary;
     .patty {
-        background: $color-light;
+        &:nth-child(1) {
+            margin-top: 0;
+            -webkit-transform: rotate(135deg);
+            -moz-transform: rotate(135deg);
+            -o-transform: rotate(135deg);
+            transform: rotate(135deg);
+        }
+
+        &:nth-child(2) {
+            display: none;
+        }
+
+        &:nth-child(3) {
+            margin-top: -2px;
+            -webkit-transform: rotate(-135deg);
+            -moz-transform: rotate(-135deg);
+            -o-transform: rotate(-135deg);
+            transform: rotate(-135deg);
+        }
     }
 }
 

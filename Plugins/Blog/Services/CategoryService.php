@@ -3,6 +3,7 @@
 namespace Blog\Services;
 
 use Blog\Models\Category;
+use Blog\Models\Post;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
@@ -58,9 +59,28 @@ class CategoryService extends AbstractDatabaseAccess {
         }
         $categories = $this->repository()->findBy([
             'language' => $language,
+            'active'   => true,
         ]);
 
         return $categories;
+    }
+
+    /**
+     * Count posts for every category.
+     *
+     * @return array
+     */
+    public function getFilterDataPostCountOfCategories() : array {
+        $result  = [];
+        $entries = $this->getRepository(Post::class)->createQueryBuilder('p')#
+                        ->select('IDENTITY(p.category) as id, COUNT(p) as value')#
+                        ->groupBy('p.category')#
+                        ->getQuery()->getArrayResult();
+        foreach ($entries as $entry) {
+            $result[$entry['id']] = $entry['value'];
+        }
+
+        return $result;
     }
 
 }

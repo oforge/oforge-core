@@ -32,10 +32,20 @@ class Category extends AbstractModel {
      */
     private $language;
     /**
+     * @var bool $active
+     * @ORM\Column(name="active", type="boolean", nullable=false, options={"default":true})
+     */
+    private $active = true;
+    /**
      * @var string $seoUrlPath
      * @ORM\Column(name="seo_url_path", type="string", nullable=false)
      */
     private $seoUrlPath;
+    /**
+     * @var string $icon
+     * @ORM\Column(name="icon", type="string", nullable=false, options={"default":""})
+     */
+    private $icon = '';
     /**
      * @var string $cssClass
      * @ORM\Column(name="css_class", type="string", nullable=false, options={"default":""})
@@ -93,6 +103,24 @@ class Category extends AbstractModel {
     }
 
     /**
+     * @return bool
+     */
+    public function isActive() : bool {
+        return $this->active;
+    }
+
+    /**
+     * @param bool $active
+     *
+     * @return Category
+     */
+    public function setActive(bool $active) : Category {
+        $this->active = $active;
+
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getName() : string {
@@ -124,6 +152,24 @@ class Category extends AbstractModel {
      */
     public function setSeoUrlPath(string $seoUrlPath) : Category {
         $this->seoUrlPath = $seoUrlPath;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIcon() : string {
+        return $this->icon;
+    }
+
+    /**
+     * @param string $icon
+     *
+     * @return Category
+     */
+    public function setIcon(string $icon) : Category {
+        $this->icon = $icon;
 
         return $this;
     }

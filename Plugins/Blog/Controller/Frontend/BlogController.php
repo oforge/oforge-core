@@ -10,17 +10,17 @@ use Blog\Services\CategoryService;
 use Blog\Services\CommentService;
 use Blog\Services\PostService;
 use Blog\Services\RatingService;
-use Blog\Services\UserService;
 use Doctrine\ORM\ORMException;
 use Exception;
 use FrontendUserManagement\Abstracts\SecureFrontendController;
 use FrontendUserManagement\Models\User;
+use FrontendUserManagement\Services\FrontendUserService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
-use Oforge\Engine\Modules\Core\Exceptions\LoggerAlreadyExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
+use Oforge\Engine\Modules\Core\Helper\DateTimeFormatter;
 use Oforge\Engine\Modules\Core\Helper\RedirectHelper;
 use Oforge\Engine\Modules\Core\Models\Endpoint\EndpointMethod;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
@@ -35,8 +35,8 @@ use Slim\Http\Response;
  * @EndpointClass(path="/blog", name="frontend_blog", assetScope="Frontend")
  */
 class BlogController extends SecureFrontendController {
-    /** @var UserService $userService */
-    private $userService;
+    /** @var FrontendUserService $frontendUserService */
+    private $frontendUserService;
     /** @var CategoryService $categoryService */
     private $categoryService;
     /** @var CommentService $commentService */
@@ -52,11 +52,11 @@ class BlogController extends SecureFrontendController {
      * @throws ServiceNotFoundException
      */
     public function __construct() {
-        $this->categoryService = Oforge()->Services()->get('blog.category');
-        $this->commentService  = Oforge()->Services()->get('blog.comment');
-        $this->postService     = Oforge()->Services()->get('blog.post');
-        $this->ratingService   = Oforge()->Services()->get('blog.rating');
-        $this->userService     = Oforge()->Services()->get('blog.user');
+        $this->categoryService     = Oforge()->Services()->get('blog.category');
+        $this->commentService      = Oforge()->Services()->get('blog.comment');
+        $this->postService         = Oforge()->Services()->get('blog.post');
+        $this->ratingService       = Oforge()->Services()->get('blog.rating');
+        $this->frontendUserService = Oforge()->Services()->get('frontend.user');
     }
 
     public function initPermissions() {
@@ -104,8 +104,8 @@ class BlogController extends SecureFrontendController {
             foreach ($posts as $post) {
                 $postData = $post->toArray(2, $excludeProperties);
                 $this->ratingService->evaluateRating($postData);
-                $postData['created'] = $post->getCreated()->format('Y.m.d H:i:s');
-                $postsData[]         = $postData;
+                // $postData['created'] = DateTimeFormatter::datetime($post->getCreated());
+                $postsData[] = $postData;
             }
             $viewData['posts'] = $postsData;
         } catch (Exception $exception) {
@@ -138,9 +138,9 @@ class BlogController extends SecureFrontendController {
             $post     = $this->postService->getPost($postID);
             $postData = $post->toArray(2, ['author' => ['*', '!name'], 'category' => ['posts'], 'comments']);
             $this->ratingService->evaluateRating($postData);
-            $postData['created'] = $post->getCreated()->format('Y.m.d H:i:s');
-            $postData['updated'] = $post->getCreated()->format('Y.m.d H:i:s');
-            $postCategoryData    = $postData['category'];
+            // $postData['created'] = DateTimeFormatter::datetime($post->getCreated());
+            // $postData['updated'] = DateTimeFormatter::datetime($post->getUpdated());
+            $postCategoryData = $postData['category'];
             unset($postData['category']);
             $viewData['category'] = $postCategoryData;
             $viewData['post']     = $postData;
@@ -148,9 +148,9 @@ class BlogController extends SecureFrontendController {
             $comments     = $this->commentService->getCommentsOfPost($post, 0);
             $commentsData = [];
             foreach ($comments as $comment) {
-                $data            = $comment->toArray(2, ['author' => ['*', '!detail'], 'post']);
-                $data['created'] = $comment->getCreated()->format('Y.m.d H:i:s');
-                $commentsData[]  = $data;
+                $data = $comment->toArray(2, ['author' => ['*', '!detail'], 'post']);
+                // $data['created'] = DateTimeFormatter::datetime($comment->getCreated());
+                $commentsData[] = $data;
             }
             $viewData['comments']       = $commentsData;
             $viewData['comments_count'] = $post->getComments()->count();
@@ -166,7 +166,7 @@ class BlogController extends SecureFrontendController {
                 Oforge()->Logger()->logException($exception);
             }
             $viewData['userRating']   = $userRating;
-            $viewData['userLoggedIn'] = $this->userService->isLoggedIn();
+            $viewData['userLoggedIn'] = $this->frontendUserService->isLoggedIn();
 
         } catch (ORMException $exception) {
             Oforge()->Logger()->logException($exception);
@@ -255,7 +255,7 @@ class BlogController extends SecureFrontendController {
             $commentsData = [];
             foreach ($comments as $comment) {
                 $data            = $comment->toArray(2, ['author' => ['*', '!detail'], 'post']);
-                $data['created'] = $comment->getCreated()->format('Y.m.d H:i:s');
+                $data['created'] = DateTimeFormatter::datetime($comment->getCreated());
                 $commentsData[]  = $data;
             }
             Oforge()->View()->assign([
@@ -292,7 +292,7 @@ class BlogController extends SecureFrontendController {
             foreach ($posts as $post) {
                 $postData = $post->toArray(2, $excludeProperties);
                 $this->ratingService->evaluateRating($postData);
-                $postData['created'] = $post->getCreated()->format('Y.m.d H:i:s');
+                $postData['created'] = DateTimeFormatter::datetime($post->getCreated());
                 $postsData[]         = $postData;
             }
             Oforge()->View()->assign([

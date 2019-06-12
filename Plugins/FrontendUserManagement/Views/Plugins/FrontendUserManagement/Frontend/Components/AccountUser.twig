@@ -2,23 +2,22 @@
 {% block account_user %}
     <div class="account__user">
         <div class="user__picture">
-            {% if user.detail %}
-                <img src="{{ user.detail.img }}" alt="{{ user.detail.name }}">
+            {% if current_user.detail %}
+                <img src="{{ media(current_user.detail.image) }}" alt="{{ current_user.detail.name }}">
             {% else %}
                 <img src="http://placeimg.com/640/640/people" alt="{{ user.detail.name }}">
             {% endif %}
         </div>
         <div class="user-info">
-            {% if user.details %}
+            {% if current_user.detail %}
                 <h2 class="user-info__name">
-                    {{ user.detail.name }}
+                    {{ current_user.detail.nickName }}
                 </h2>
             {% endif %}
 
             <h2 class="user-info__name">
-                {{ user.detail.name }}
-                Rachel Müller</h2>
-            <p class="user-info__email">{{ user.email }}</p>
+                {{ current_user.detail.name }}</h2>
+            <p class="user-info__email">{{ current_user.email }}</p>
         </div>
     </div>
 {% endblock account_user %}

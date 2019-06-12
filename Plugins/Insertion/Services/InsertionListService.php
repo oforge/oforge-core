@@ -9,6 +9,7 @@ use Insertion\Models\Insertion;
 use Insertion\Models\InsertionType;
 use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Models\InsertionTypeGroup;
+use Insertion\Models\InsertionZipCoordinates;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 
 class InsertionListService extends AbstractDatabaseAccess {
@@ -32,9 +33,23 @@ class InsertionListService extends AbstractDatabaseAccess {
         $result = ["filter" => [], "query" => [], 'order' => $_GET["order"]];
 
         $queryBuilder = $this->entityManager()->createQueryBuilder()#
-                             ->select('i')->from("Insertion\Models\Insertion", "i")#
+                             ->select('i')->from(Insertion::class, "i")#
                              ->where("i.insertionType = :type and i.active = true and i.moderation = true");
         $queryBuilder->setParameter("type", $typeId);
+
+        if (isset($_GET["zip"]) && isset($_GET["zip_range"]) && !empty($_GET["zip"]) && $_GET["zip_range"]) {
+            $coordinates = Oforge()->Services()->get("insertion.zip")->get($_GET["zip"]);
+            if ($coordinates != null) {
+                $queryBuilder->leftJoin("i.contact", "c");
+                $queryBuilder->leftJoin(InsertionZipCoordinates::class, "zip", \Doctrine\ORM\Query\Expr\Join::WITH, 'zip.zip = c.zip');
+                $queryBuilder->andWhere("zip.country = :country and ST_Distance_Sphere(POINT(zip.lng, zip.lat), POINT(:lng,:lat)) / 1000 < :zip_distance");
+                $queryBuilder->setParameter("country", 'germany');
+                $queryBuilder->setParameter("lat", $coordinates->getLat());
+                $queryBuilder->setParameter("lng", $coordinates->getLng());
+                $queryBuilder->setParameter("zip_distance", $_GET["zip_range"]);
+            } else {
+            }
+        }
 
         $keyCount       = 1;
         $attributeCount = 1;
@@ -148,7 +163,6 @@ class InsertionListService extends AbstractDatabaseAccess {
                     break;
             }
         }
-
         $query     = $queryBuilder->getQuery()->setFirstResult(($page - 1) * $pageSize)->setMaxResults($pageSize);
         $paginator = new Paginator($query, $fetchJoinCollection = true);
 
