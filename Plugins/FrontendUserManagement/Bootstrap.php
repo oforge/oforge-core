@@ -13,6 +13,7 @@ use FrontendUserManagement\Models\UserAddress;
 use FrontendUserManagement\Models\UserDetail;
 use FrontendUserManagement\Services\AccountNavigationService;
 use FrontendUserManagement\Widgets\DashboardWidgetHandler;
+use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\DashboardWidgetsService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistException;
@@ -36,6 +37,7 @@ class Bootstrap extends AbstractBootstrap {
             Controller\Frontend\ForgotPasswordController::class,
             Controller\Frontend\AccountController::class,
             Controller\Frontend\UserDetailsController::class,
+            Controller\Backend\BackendFrontendUserManagementController::class,
         ];
 
         $this->middlewares = [
@@ -112,6 +114,17 @@ class Bootstrap extends AbstractBootstrap {
             'name'         => 'frontend_users',
             'cssClass'     => 'bg-yellow',
             'templateName' => 'FrontendUsers',
+        ]);
+
+        /** @var BackendNavigationService $sidebarNavigation */
+        $sidebarNavigation = Oforge()->Services()->get('backend.navigation');
+        $sidebarNavigation->put([
+            'name'     => 'backend_frontend_user_management',
+            'order'    => 4,
+            'parent'   => 'backend_content',
+            'icon'     => 'fa fa-user',
+            'path'     => 'backend_frontend_user_management',
+            'position' => 'sidebar',
         ]);
     }
 
