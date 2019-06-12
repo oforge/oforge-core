@@ -1,0 +1,8 @@
+{% extends "@parent/Frontend/Layout.twig" %}
+
+{% block content %}
+    {% for value in faq %}
+        <h3>{{ value.question }}</h3>
+        <p>{{ value.answer }}</p>
+    {% endfor %}
+{% endblock content %}
