@@ -1,6 +1,5 @@
 .header {
     width: 100%;
-    overflow: hidden;
     padding-bottom: 2rem;
 
     &__image {
@@ -46,6 +45,12 @@
     .home .header:first-of-type + .content {
         margin-top: -41rem;
         padding: $size-large 0;
+    }
+}
+
+@media screen and (min-width: $content-max) {
+    .header {
+        overflow: hidden;
     }
 }
 
