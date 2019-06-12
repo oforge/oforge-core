@@ -21,9 +21,11 @@ class Bootstrap extends AbstractBootstrap {
             \Oforge\Engine\Modules\AdminBackend\Core\Bootstrap::class,
         ];
 
+        /*
         $this->endpoints = [
             DocumentationUIController::class,
         ];
+        */
     }
 
     /**
@@ -31,6 +33,7 @@ class Bootstrap extends AbstractBootstrap {
      */
     public function install() {
         /** @var BackendNavigationService $sidebarNavigation */
+        /*
         $sidebarNavigation = Oforge()->Services()->get('backend.navigation');
         $sidebarNavigation->put([
             'name'     => 'backend_documentation',
@@ -91,7 +94,7 @@ class Bootstrap extends AbstractBootstrap {
             'icon'     => 'fa fa-circle-o',
             'path'     => 'backend_documentation_ui_modals',
             'position' => 'sidebar',
-        ]);
+        ]); */
     }
 
 }
