@@ -1,4 +1,5 @@
 {% extends "@parent/Frontend/Layout.twig" %}
+
 {% block content %}
     {% include 'Plugins/FrontendUserManagement/Frontend/Components/AccountNavBar.twig' with { back_link : true, content_title: i18n('user_details', 'User details')} %}
     <div class="account content">
