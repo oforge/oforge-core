@@ -201,7 +201,7 @@ class InsertionListService extends AbstractDatabaseAccess {
         foreach ($paginator as $item) {
             $data = [
                 "id"        => $item->getId(),
-                "contact"   => $item->getContact()->toArray(0),
+                "contact"   => $item->getContact() != null ? $item->getContact()->toArray(0) : [],
                 "content"   => [],
                 "media"     => [],
                 "values"    => [],
