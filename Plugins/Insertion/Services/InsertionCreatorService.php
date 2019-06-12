@@ -71,6 +71,9 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
             $this->entityManager()->create($insertion, false);
             $this->entityManager()->flush();
 
+            //save coordinates
+            Oforge()->Services()->get("insertion.zip")->get($contact->getZip());
+
             return $insertion->getId();
         }
     }

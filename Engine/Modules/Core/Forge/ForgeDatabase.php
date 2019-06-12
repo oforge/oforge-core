@@ -16,6 +16,8 @@ use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\SchemaValidator;
 use Doctrine\ORM\Tools\Setup;
 use Oforge\Engine\Modules\Core\Annotation\ORM\Discriminator\DiscriminatorEntryListener;
+use Oforge\Engine\Modules\Core\Forge\Doctrine\Point;
+use Oforge\Engine\Modules\Core\Forge\Doctrine\ST_Distance_Sphere;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 
 /**
@@ -101,6 +103,10 @@ class ForgeDatabase {
         $this->configuration = Setup::createAnnotationMetadataConfiguration($metadataDirs, $isDevMode, null, $filesystemCache);
         $this->configuration->setMetadataDriverImpl($annotationDriver);
         $this->configuration->setQueryCacheImpl($filesystemCache);
+
+        $this->configuration->addCustomStringFunction('ST_Distance_Sphere', ST_Distance_Sphere::class);
+        $this->configuration->addCustomStringFunction('POINT', POINT::class);
+
     }
 
     /**
