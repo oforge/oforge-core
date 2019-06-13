@@ -1,6 +1,12 @@
 {% extends "@parent/Frontend/Layout.twig" %}
 
 {% block content %}
+    {% if not insertion.moderation %}
+      <div class="message">
+           {{ i18n('insertion_needs_moderation') }}
+      </div>
+    {% endif %}
+
     <div class="content content--insertion flex">
         <div class="main">
             <div class="panel panel--product-view">

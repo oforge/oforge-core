@@ -275,6 +275,8 @@ class FrontendInsertionController extends SecureFrontendController {
             return $response->withRedirect("/404", 301);
         }
 
+        Oforge()->View()->assign(["insertion" => $insertion->toArray(3, ['user' => ['*', 'id']])]);
+
         if (!($insertion->isActive() && $insertion->isModeration())) {
             $auth = "";
             if (isset($_SESSION['auth'])) {
@@ -285,12 +287,11 @@ class FrontendInsertionController extends SecureFrontendController {
             $authService = Oforge()->Services()->get('auth');
             $user        = $authService->decode($auth);
 
-            if ($user["type"] != BackendUser::class) {
+            if ($user["type"] != BackendUser::class && $insertion->getUser()->getId() != $user["id"]) {
                 return $response->withRedirect("/404", 301);
             }
         }
 
-        Oforge()->View()->assign(["insertion" => $insertion->toArray(3, ['user' => ['*', 'id']])]);
     }
 
     /**
