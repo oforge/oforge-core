@@ -6,12 +6,13 @@ use Doctrine\ORM\ORMException;
 use InvalidArgumentException;
 use Oforge\Engine\Modules\AdminBackend\Core\Models\BackendNavigation;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
+use Oforge\Engine\Modules\CMS\Models\Content\ContentTypeGroup;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 
 class ContentTypeManagementService extends AbstractDatabaseAccess {
     public function __construct() {
-        parent::__construct(['default' => ContentType::class]);
+        parent::__construct(['default' => ContentType::class, 'group' => ContentTypeGroup::class]);
     }
 
     /**
@@ -26,6 +27,12 @@ class ContentTypeManagementService extends AbstractDatabaseAccess {
         if (!isset($entity)) {
             if ($this->isValid($options)) {
                 $entity = ContentType::create($options);
+
+                if (isset($options["group"])) {
+                    $group = $this->getGroup($options["group"]);
+                    $entity->setGroup($group);
+                }
+
                 $this->entityManager()->create($entity);
             }
         }
@@ -93,6 +100,16 @@ class ContentTypeManagementService extends AbstractDatabaseAccess {
         }
 
         return $result;
+    }
+
+    private function getGroup($group) : ContentTypeGroup {
+        $entity = $this->repository('group')->findOneBy(["name" => $group]);
+        if ($entity == null) {
+          //  $entity = ContentTypeGroup::create(["name" => $group, 'description' => '']);
+           // $this->entityManager()->create($entity);
+        }
+
+        return $entity;
     }
 
 }
