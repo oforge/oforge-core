@@ -3,7 +3,14 @@
     padding-bottom: 2rem;
 
     &__image {
-        display: none;
+        display: block;
+        width: 100%;
+        height: 58rem;
+        margin-top: -12rem;
+        background-image: url('../img/header.jpg');
+        background-repeat: no-repeat;
+        background-position: center top;
+        background-size: cover;
     }
 
     &__content {
@@ -12,23 +19,7 @@
 }
 
 .home {
-    .header {
-        height: 58rem;
-        position: relative;
-
-        &__image {
-            position: absolute;
-            display: block;
-            width: 100%;
-            height: 58rem;
-            top: 0;
-            background-image: url('../img/header.jpg');
-            background-repeat: no-repeat;
-            background-position: center top;
-            background-size: cover;
-            z-index: 0;
-        }
-
+    .header__image {
         &:first-of-type + .content {
             margin-top: -46rem;
             padding: 0 0 $size-large;
@@ -42,8 +33,8 @@
 }
 
 @media screen and (min-width: $screen-medium) {
-    .home .header:first-of-type + .content {
-        margin-top: -41rem;
+    .home .header__image:first-of-type + .content {
+        margin-top: -44rem;
         padding: $size-large 0;
     }
 }
@@ -51,6 +42,10 @@
 @media screen and (min-width: $content-max) {
     .header {
         overflow: hidden;
+
+        &__image {
+            margin-top: -14rem;
+        }
     }
 }
 
