@@ -4,18 +4,12 @@
             name: 'collapse',
             selector: '[data-collapse]',
             init: function () {
-                let self = this;
-
-                function toggleCollapse(item) {
-                    item.classList.toggle("collapsed");
-                }
-
-                document.addEventListener('click', function(evt) {
-                    console.log(evt);
-                    if (evt.target.matches(self.selector)) {
-                        evt.target.classList.toggle("active");
-                        toggleCollapse(evt.target.nextElementSibling);
-                    }
+                let triggers = document.querySelectorAll('[data-collapse]');
+                triggers.forEach(function (trigger){
+                    trigger.addEventListener('click', function() {
+                        this.classList.toggle("active");
+                        this.nextElementSibling.classList.toggle("collapsed");
+                    })
                 });
             }
         });
