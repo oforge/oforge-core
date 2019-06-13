@@ -59,6 +59,18 @@
 }
 
 @media screen and (min-width: $content-max) {
+
+    @mixin main-nav-item-size() {
+        @for $i from 1 through 12 {
+            .main-nav-list--#{$i} {
+                .main-nav-list__item {
+                    width: calc(1 / #{$i} * 100%);
+                }
+            }
+        }
+    }
+    @include main-nav-item-size();
+
     #burger:checked ~ .main-nav {
         min-height: auto;
         height: auto;
@@ -88,7 +100,6 @@
         flex-direction: row;
 
         &__item {
-            width: calc(1 / 6 * 100%);
             text-align: center;
 
             &:not(:first-child) {
