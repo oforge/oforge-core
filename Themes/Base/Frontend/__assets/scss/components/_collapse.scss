@@ -1,0 +1,15 @@
+.collapse--container {
+    display: flex;
+    flex-direction: column;
+
+    .collapse, .collapse--item {
+        padding: $size-large;
+        margin-bottom: $size-large;
+        border-bottom: 1px solid $color-primary;
+    }
+    .collapse {
+        &.active {
+            margin-bottom: 0;
+        }
+    }
+}
