@@ -12,4 +12,14 @@
             margin-bottom: 0;
         }
     }
+    .collapse--item {
+        transition: max-height 0.5s ease-in;
+        display: block;
+        max-height: 50rem;
+        &.collapsed {
+            transition: max-height 0.5s ease-in;
+            display: none;
+            max-height: 0;
+        }
+    }
 }

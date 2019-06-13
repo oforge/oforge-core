@@ -11,15 +11,19 @@
 
                 {% block account__content %}
                     <div class="account__content flex">
+                        <h3 class="account__title">{{ i18n('faqs') }}</h3>
                         <div class="collapse--container">
                             {% for value in faq %}
-                                <div class="collapse button button--secondary button--flat flex flex--row flex--between"
-                                     data-collapse>{{ value.question }}
-{#                                    <svg class="icon">#}
-{#                                        <use xlink:href="#circuit"></use>#}
-{#                                    </svg>#}
+                                <div class="collapse button button--secondary button--flat flex flex--row"
+                                     data-collapse>
+                                    <div>{{ value.question }}</div>
+                                    <div>
+                                        <svg class="icon">
+                                            <use xlink:href="#circuit"></use>
+                                        </svg>
+                                    </div>
                                 </div>
-                                <div class="collapse--item" style="display: none">{{ value.answer }}</div>
+                                <div class="collapse--item collapsed">{{ value.answer }}</div>
                             {% endfor %}
                         </div>
                     </div>

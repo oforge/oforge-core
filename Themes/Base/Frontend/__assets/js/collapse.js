@@ -4,19 +4,16 @@
             name: 'collapse',
             selector: '[data-collapse]',
             init: function () {
-                var self = this;
+                let self = this;
 
                 function toggleCollapse(item) {
-                    if(item.style.display === "block") {
-                        item.style.display = "none";
-                    } else {
-                        item.style.display = "block";
-                    }
+                    item.classList.toggle("collapsed");
                 }
 
                 document.addEventListener('click', function(evt) {
-                    evt.target.classList.toggle("active");
+                    console.log(evt);
                     if (evt.target.matches(self.selector)) {
+                        evt.target.classList.toggle("active");
                         toggleCollapse(evt.target.nextElementSibling);
                     }
                 });
@@ -25,5 +22,4 @@
     } else {
         console.warn("Oforge is not defined. Module cannot be registered.");
     }
-
 })();
