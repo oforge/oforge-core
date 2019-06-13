@@ -105,8 +105,8 @@ class ContentTypeManagementService extends AbstractDatabaseAccess {
     private function getGroup($group) : ContentTypeGroup {
         $entity = $this->repository('group')->findOneBy(["name" => $group]);
         if ($entity == null) {
-          //  $entity = ContentTypeGroup::create(["name" => $group, 'description' => '']);
-           // $this->entityManager()->create($entity);
+            $entity = ContentTypeGroup::create(["name" => $group, 'description' => '']);
+            $this->entityManager()->create($entity);
         }
 
         return $entity;
