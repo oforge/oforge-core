@@ -14,12 +14,12 @@
                         <h3 class="account__title">{{ i18n('faqs') }}</h3>
                         <div class="collapse--container">
                             {% for value in faq %}
-                                <div class="collapse button button--secondary button--flat flex flex--row"
+                                <div class="collapse--trigger button button--secondary button--flat"
                                      data-collapse>
                                     <div>{{ value.question }}</div>
-                                    <div>
+                                    <div class="icon--container">
                                         <svg class="icon">
-                                            <use xlink:href="#circuit"></use>
+                                            <use xlink:href="#slider"></use>
                                         </svg>
                                     </div>
                                 </div>
