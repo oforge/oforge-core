@@ -1,8 +1,30 @@
 {% extends "@parent/Frontend/Layout.twig" %}
 
 {% block content %}
-    {% for value in faq %}
-        <h3>{{ value.question }}</h3>
-        <p>{{ value.answer }}</p>
-    {% endfor %}
+
+    <div class="account content">
+        {% block account %}
+            <div class="panel panel--account flex">
+                {% block account__sidebar %}
+                    {% include 'Plugins/FrontendUserManagement/Frontend/Components/Sidebar.twig' %}
+                {% endblock account__sidebar %}
+
+                {% block account__content %}
+                    <div class="account__content flex">
+                        <div class="collapse--container">
+                            {% for value in faq %}
+                                <div class="collapse button button--secondary button--flat flex flex--row flex--between"
+                                     data-collapse>{{ value.question }}
+{#                                    <svg class="icon">#}
+{#                                        <use xlink:href="#circuit"></use>#}
+{#                                    </svg>#}
+                                </div>
+                                <div class="collapse--item" style="display: none">{{ value.answer }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endblock account__content %}
+            </div>
+        {% endblock account %}
+    </div>
 {% endblock content %}
