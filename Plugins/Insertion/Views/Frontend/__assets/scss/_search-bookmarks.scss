@@ -65,6 +65,10 @@
   }
 
   .delete-bookmark {
+    *[type=submit] {
+      visibility: hidden;
+      position: absolute;
+    }
     .icon {
       transform: scale(1);
       transition: transform 100ms cubic-bezier(.33, .47, .46, .82);
