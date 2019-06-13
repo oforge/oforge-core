@@ -1,9 +1,15 @@
 {% extends "@parent/Frontend/Layout.twig" %}
+
+{% block layout__header %}
+    {% include 'Plugins/Insertion/Frontend/Components/Header/Header.twig' %}
+{% endblock layout__header %}
+
 {% block content %}
 
     <div class="content content--insertion content--supplier flex">
         <div class="main">
             <div class="insertion__supplier">
+
                 <div class="user__picture">
                     {% if current_user.detail %}
                         <img src="{{ media(current_user.detail.image) }}" alt="{{ current_user.detail.name }}">
