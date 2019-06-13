@@ -16,6 +16,7 @@ use Oforge\Engine\Modules\I18n\Models\Language;
 use Oforge\Engine\Modules\I18n\Models\Snippet;
 use Oforge\Engine\Modules\I18n\Services\InternationalizationService;
 use Oforge\Engine\Modules\I18n\Services\LanguageService;
+use Oforge\Engine\Modules\I18n\Middleware\I18nMiddleware;
 
 /**
  * Class Bootstrap
@@ -56,6 +57,7 @@ class Bootstrap extends AbstractBootstrap {
             'iso'    => 'en',
             'name'   => 'English',
             'active' => true,
+            'default' => true
         ]);
 
         /** @var BackendNavigationService $sidebarNavigation */
@@ -88,6 +90,10 @@ class Bootstrap extends AbstractBootstrap {
             'path'     => 'backend_i18n_snippets',
             'position' => 'sidebar',
         ]);
+    }
+
+    public function activate() {
+        Oforge()->App()->add(new I18nMiddleware());
     }
 
 }
