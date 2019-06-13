@@ -140,7 +140,7 @@ class Bootstrap extends AbstractBootstrap {
 
         $managementService->put([
             'name'        => 'entrylist',
-            'path'        => 'EntryList',
+            'path'        => 'List',
             'icon'        => '/Themes/Base/ContentTypes/__assets/img/icontilebasic.png',
             'description' => 'entry_list',
             'group'       => 'navigation',
@@ -151,7 +151,7 @@ class Bootstrap extends AbstractBootstrap {
             'name'        => 'navigationentry',
             'path'        => 'NavigationEntry',
             'icon'        => '/Themes/Base/ContentTypes/__assets/img/icontilebasic.png',
-            'description' => 'navigation_list',
+            'description' => 'navigation_entry',
             'group'       => 'navigation',
             'classPath'   => NavigationEntry::class,
         ]);
