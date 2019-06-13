@@ -66,6 +66,18 @@ class LanguageController extends BaseCrudController {
             ],
         ],
         [
+            'name'  => 'default',
+            'type'  => CrudDataTypes::BOOL,
+            'label' => ['key' => 'module_i18n_language_default', 'default' => 'Standard'],
+            'crud'  => [
+                'index'  => 'editable',
+                'view'   => 'editable',
+                'create' => 'off',
+                'update' => 'editable',
+                'delete' => 'readonly',
+            ],
+        ],
+        [
             'name'     => 'action',
             'type'     => CrudDataTypes::CUSTOM,
             'label'    => 'backend_i18n_snippets',
