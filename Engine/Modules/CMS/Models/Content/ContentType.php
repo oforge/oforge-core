@@ -38,10 +38,10 @@ class ContentType extends AbstractModel
      * @ORM\Column(name="content_type_name", type="string", nullable=false, unique=true)
      */
     private $name;
-    
+
     /**
      * @var string
-     * @ORM\Column(name="content_type_path", type="string", nullable=false, unique=true)
+     * @ORM\Column(name="content_type_path", type="string", nullable=false)
      */
     private $path;
     
