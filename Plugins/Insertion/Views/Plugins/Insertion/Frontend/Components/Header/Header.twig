@@ -1,0 +1,8 @@
+{% extends '@parent/Frontend/Components/Header/Header.twig' %}
+{% block header_image %}
+    <div class="header__image"
+            {% if profile.background is defined %}
+                style="background-image: url('{{ media(profile.background.id) }}')"
+            {% endif %}
+    ></div>
+{% endblock header_image %}
