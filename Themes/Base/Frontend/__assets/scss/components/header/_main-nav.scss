@@ -106,6 +106,9 @@
                 border-top: none;
                 border-left: 1px solid $color-secondary-transparent-3;
             }
+            &:last-child {
+                border-bottom: none;
+            }
         }
 
         &__link {

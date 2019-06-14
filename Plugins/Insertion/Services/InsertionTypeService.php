@@ -258,7 +258,7 @@ class InsertionTypeService extends AbstractDatabaseAccess {
         $insertionTypeAttribute->setAttributeGroup($group);
         $insertionTypeAttribute->setRequired($required);
 
-        $this->entityManager()->merge($insertionTypeAttribute);
+        $this->entityManager()->update($insertionTypeAttribute, false);
         $this->entityManager()->flush();
 
         return $insertionTypeAttribute;
