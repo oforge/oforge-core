@@ -6,6 +6,7 @@ use FrontendUserManagement\Services\AccountNavigationService;
 use Insertion\Controller\Backend\BackendAttributeController;
 use Insertion\Controller\Backend\BackendInsertionController;
 use Insertion\Controller\Backend\BackendInsertionTypeController;
+use Insertion\Controller\Backend\BackendInsertionTypeGroupController;
 use Insertion\Controller\Frontend\FrontendInsertionController;
 use Insertion\Controller\Frontend\FrontendInsertionSupplierController;
 use Insertion\Controller\Frontend\FrontendUsersInsertionController;
@@ -56,6 +57,7 @@ class Bootstrap extends AbstractBootstrap {
             BackendAttributeController::class,
             BackendInsertionController::class,
             BackendInsertionTypeController::class,
+            BackendInsertionTypeGroupController::class
         ];
 
         $this->services = [
@@ -133,8 +135,16 @@ class Bootstrap extends AbstractBootstrap {
             'position' => 'sidebar',
         ]);
         $sidebarNavigation->put([
-            'name'     => 'backend_insertion_insertion_type',
+            'name'     => 'backend_insertion_insertion_type_group',
             'order'    => 2,
+            'parent'   => 'backend_insertion',
+            'icon'     => 'fa fa-file-text-o',
+            'path'     => 'backend_insertion_insertion_type_group',
+            'position' => 'sidebar',
+        ]);
+        $sidebarNavigation->put([
+            'name'     => 'backend_insertion_insertion_type',
+            'order'    => 3,
             'parent'   => 'backend_insertion',
             'icon'     => 'fa fa-file-text-o',
             'path'     => 'backend_insertion_type',
@@ -142,7 +152,7 @@ class Bootstrap extends AbstractBootstrap {
         ]);
         $sidebarNavigation->put([
             'name'     => 'backend_insertion_insertion',
-            'order'    => 3,
+            'order'    => 4,
             'parent'   => 'backend_insertion',
             'icon'     => 'fa fa-bar-chart',
             'path'     => 'backend_insertions',
