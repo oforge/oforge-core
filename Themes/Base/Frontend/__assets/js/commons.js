@@ -69,6 +69,10 @@ if (typeof Oforge !== 'undefined') {
                 var $button = $(this);
                 var $container = $($button.data("container"));
                 var url = $button.data("url");
+                var clicked = $button.data("clicked");
+                if (clicked) return;
+
+                $button.data("clicked", true);
                 var page = parseInt($button.data("page"), 10);
                 if (page === null || isNaN(page)) {
                     page = 1;
@@ -83,8 +87,14 @@ if (typeof Oforge !== 'undefined') {
                         } else {
                             $container.append($(this.responseText));
                             $button.data("page", page);
+                            var triggerEvent = $button.data("trigger-event");
+                            if (triggerEvent != null) {
+                                $(window).trigger(triggerEvent);
+                            }
                         }
                     }
+
+                    $button.data("clicked", false);
                 };
                 xhttp.open("GET", Oforge.updateQueryString("page", page, url), false);
                 xhttp.send();
