@@ -292,7 +292,6 @@ class BlogController extends SecureFrontendController {
             foreach ($posts as $post) {
                 $postData = $post->toArray(2, $excludeProperties);
                 $this->ratingService->evaluateRating($postData);
-                $postData['created'] = DateTimeFormatter::datetime($post->getCreated());
                 $postsData[]         = $postData;
             }
             Oforge()->View()->assign([

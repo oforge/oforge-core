@@ -1,27 +1,16 @@
-.blog-post-comments {
-    &-container {
-
+.module-blog {
+    .wrap {
+        &:before {
+            content: none;
+        }
     }
 
-    &--empty {
-
-    }
-}
-
-.blog-post-comment {
-    &-author {
-
-    }
-
-    &-created {
-
-    }
-
-    &-title {
-
-    }
-
-    &-content {
-
+    &.action-frontend_blog {
+      /*  background-image: url(../img/header.jpg);
+        background-repeat: no-repeat;
+        background-size: cover; */
     }
 }
+
+
+
