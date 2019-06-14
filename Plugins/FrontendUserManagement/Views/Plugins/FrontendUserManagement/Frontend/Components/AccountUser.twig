@@ -1,8 +1,7 @@
 {# block sidebar__account_user #}
 {% block account_user %}
     <div class="account__user">
-        <div class="user__picture" {# style="background: url('{{ media(current_user.detail.image) }}') 50% 50% no-repeat; width: 240px; height: 240px;"#}
-        >
+        <div class="user__picture">
             {% if current_user.detail %}
                 <img src="{{ media(current_user.detail.image) }}" alt="{{ current_user.detail.name }}">
             {% else %}

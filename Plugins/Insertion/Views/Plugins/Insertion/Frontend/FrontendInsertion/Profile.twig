@@ -9,7 +9,6 @@
     <div class="content content--insertion content--supplier flex">
         <div class="main">
             <div class="insertion__supplier">
-
                 <div class="user__picture">
                     {% if current_user.detail %}
                         <img src="{{ media(current_user.detail.image) }}" alt="{{ current_user.detail.name }}">
@@ -18,6 +17,7 @@
                     {% endif %}
                 </div>
             </div>
+
             <div class="contact--links flex">
                 <div class="contact--icons">
                     <a class="contact--icon" href="#">
@@ -39,6 +39,7 @@
                     </a>
                 </div>
             </div>
+
             <div class="panel panel--supplier-description description">
                 <div class="description__head">
                     <h4 class="title">Rachel Müller</h4>
@@ -106,15 +107,15 @@
             {% endif %}
 
             <div class="panel panel--contact contact">
-                <div class="contact__name"><strong>Rachel Müller</strong></div>
-                <div class="contact__address">12345 Velgast</div>
-                <div class="contact__phone"><strong>Tel.: +49(0)231 1234567890</strong></div>
+                <div class="contact__name"><strong>{{ profile.user.detail.firstName }} {{ profile.user.detail.lastName }}</strong></div>
+                <div class="contact__address">{{ profile.user.address.postCode }} {{ profile.user.address.city }}</div>
+                <div class="contact__phone"><strong>Tel.: {{ profile.user.detail.phoneNumber }}</strong></div>
 
             </div>
 
             <div class="panel panel--map map">
                 <div class="map__address">
-                    12345 Velgast
+                    {{ profile.user.address.postCode }} {{ profile.user.address.city }}
                 </div>
                 <div class="map__view">
 
@@ -140,7 +141,6 @@
                         <div class="link">http://www.kontakt/impressum/</div>
                     </div>
                 </div>
-                <div class="buttton button--primary">To the insertion</div>
             </div>
 
         </div>
