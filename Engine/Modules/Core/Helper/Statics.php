@@ -11,7 +11,7 @@ class Statics {
     /**
      * Default order value for all order properties.
      */
-    public const DEFAULT_ORDER = 1337;
+    public const DEFAULT_ORDER      = 1337;
     public const ENGINE_DIR         = "Engine";
     public const PLUGIN_DIR         = "Plugins";
     public const VIEW_DIR           = "Views";
@@ -19,7 +19,7 @@ class Statics {
     public const VAR_DIR            = "var";
     public const ASSETS_DIR         = "__assets";
     public const PUBLIC_DIR         = DIRECTORY_SEPARATOR . Statics::VAR_DIR . DIRECTORY_SEPARATOR . "public";
-    public const IMAGES_DIR           = Statics::PUBLIC_DIR . DIRECTORY_SEPARATOR . "images";
+    public const IMAGES_DIR         = Statics::PUBLIC_DIR . DIRECTORY_SEPARATOR . "images";
     public const CACHE_DIR          = DIRECTORY_SEPARATOR . Statics::VAR_DIR . DIRECTORY_SEPARATOR . "cache";
     public const THEME_CACHE_DIR    = Statics::PUBLIC_DIR . DIRECTORY_SEPARATOR . "theme";
     public const DB_CACHE_DIR       = Statics::CACHE_DIR . DIRECTORY_SEPARATOR . "db";
@@ -56,12 +56,19 @@ class Statics {
         '$color-secondary-transparent-3' => 'transparentize($color-light, .3)',
         '$text-light'                    => '$color-light',
         '$text-dark'                     => '$color-primary',
-        '$success'                       => '#0d0',
-        '$info'                          => '#fc0',
-        '$warning'                       => '#d00',
-        '$success-font'                  => '$text-dark',
-        '$info-font'                     => '$text-dark',
-        '$warning-font'                  => '$text-light',
+        '$success'                       => '#708f2c',
+        '$success-light'                 => '#c9eab5',
+        '$info'                          => '#00769f',
+        '$info-light'                    => '#b9e1ef',
+        '$warning'                       => '#e7ad41',
+        '$warning-light'                 => '#f7e0a3',
+        '$error'                         => '#a62422',
+        '$error-light'                   => '#f2aaa9',
+        '$invalid'                       => '#f49191',
+        '$success-font'                  => '$success',
+        'info-font'                      => '$info',
+        '$warning-font'                  => '$warning',
+        'error-font'                     => '$error',
         '$font-family'                   => 'sans-serif',
         '$font-size-1'                   => '3rem',
         '$font-size-2'                   => '2.4rem',
