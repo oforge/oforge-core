@@ -7,7 +7,7 @@
             {% include 'Frontend/Components/Header/LogoClaim.twig' %}
         {% endblock main_nav_title %}
         {% if navigation.columns is defined and navigation.columns|length > 0 %}
-            <ul class="main-nav-list content content--no-pad columns--{{ navigation.columns|length }}">
+            <ul class="main-nav-list content content--no-pad main-nav-list--{{ navigation.columns|length }}">
                 {% for entry in navigation.columns %}
                     {% set data = entry.data %}
                     {% if data is defined %}

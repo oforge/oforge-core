@@ -1,9 +1,6 @@
 {# block layout__header #}
 {% block header %}
     <header class="header">
-        {% block header_image %}
-            <div class="header__image"></div>
-        {% endblock header_image %}
         <div class="header__content">
             {% block header__burger_menu %}
                 {% include 'Frontend/Components/Header/BurgerMenu.twig' %}
@@ -30,3 +27,7 @@
         </div>
     </header>
 {% endblock header %}
+
+{% block header_image %}
+    {% include 'Frontend/Components/Header/HeaderImage.twig' %}
+{% endblock header_image %}

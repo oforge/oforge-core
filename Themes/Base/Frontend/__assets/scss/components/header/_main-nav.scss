@@ -1,30 +1,32 @@
 .main-nav {
-    position: absolute;
+    position: fixed;
     background: $color-light;
     top: 0;
-    right: -100%;
+    right: 0;
     width: 0;
-    height: 0;
-    transition: transform .2s ease-in, width .2s ease-in, height .2s ease-in;
-    overflow-x: hidden;
+    min-height: 100vh;
+    transition: width .2s ease-in;
+    overflow: hidden;
     z-index: 1337;
 
     .main-nav__header {
-        height: 12rem;
-        margin: 0 $size-medium;
+        height: 10rem;
         display: flex;
         justify-content: center;
         align-items: center;
-        border-bottom: 1px solid $color-primary;
+        border-bottom: 2px solid $color-primary;
     }
 }
-
 
 .main-nav-list {
     background: $color-light;
 
+    &__item:last-child {
+        border-bottom: 1px solid $color-primary;
+    }
+
     &__item:not(:first-child) {
-        border-top: 1px solid $color-light;
+        border-top: 1px solid $color-primary;
     }
 
     &__link {
@@ -32,34 +34,47 @@
         display: block;
         color: $text-dark;
         text-decoration: none;
-        text-align: left;
+        text-align: center;
+        transition: background .2s ease-in, color .2s ease-in;
 
         &:hover,
         &:active {
             text-decoration: none;
+            color: $text-light;
             background: $color-secondary;
         }
     }
 }
 
 #burger:checked ~ .main-nav {
-    transform: translate3d(-100%, 0, 0);
     width: 100%;
-    height: 100vh;
 }
 
 @media screen and (min-width: $screen-medium) {
-    .main-nav {
-        .main-nav__header {
-            height: 14rem;
-        }
+
+    #burger:checked ~ .main-nav {
+        width: 32rem;
+        box-shadow: -2px 0 6px $color-primary-transparent-1;
     }
 }
 
 @media screen and (min-width: $content-max) {
+
+    @mixin main-nav-item-size() {
+        @for $i from 1 through 12 {
+            .main-nav-list--#{$i} {
+                .main-nav-list__item {
+                    width: calc(1 / #{$i} * 100%);
+                }
+            }
+        }
+    }
+    @include main-nav-item-size();
+
     #burger:checked ~ .main-nav {
-        transform: none;
+        min-height: auto;
         height: auto;
+        width: 100%;
     }
     .main-nav {
         background: $color-primary;
@@ -69,22 +84,22 @@
         top: auto;
         transform: none;
         transition: none;
-        overflow-x: visible;
+        overflow: visible;
         width: 100%;
+        min-height: auto;
         height: auto;
 
-
-        &__header {
+        .main-nav__header {
             display: none;
         }
     }
 
     .main-nav-list {
+        background: $color-primary;
         display: flex;
         flex-direction: row;
 
         &__item {
-            width: calc(1 / 6 * 100%);
             text-align: center;
 
             &:not(:first-child) {

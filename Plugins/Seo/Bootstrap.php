@@ -3,7 +3,6 @@
 namespace Seo;
 
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
-use Oforge\Engine\Modules\CMS\Services\ContentTypeManagementService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\TemplateEngine\Core\Services\TemplateRenderService;
 use Seo\Controller\Backend\BackendSeoUrlController;

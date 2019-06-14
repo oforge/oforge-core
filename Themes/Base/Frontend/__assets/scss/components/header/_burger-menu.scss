@@ -31,6 +31,7 @@
 }
 
 #burger:checked + .burger-menu {
+    position: fixed;
     .patty {
         &:nth-child(1) {
             margin-top: 0;
@@ -54,9 +55,11 @@
     }
 }
 
-
 @media screen and (min-width: $content-max) {
     .burger-menu {
         display: none;
+    }
+    #burger:checked + .burger-menu {
+        position: absolute;
     }
 }

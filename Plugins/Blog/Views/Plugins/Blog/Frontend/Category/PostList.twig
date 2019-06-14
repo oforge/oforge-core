@@ -1,6 +1,6 @@
 <div id="blog-posts">
     {% if blog.posts %}
-        <div id="blog-posts-container">
+        <div id="blog-posts-container" data-masonry="true">
             {% for blogPost in blog.posts %}
                 {% include 'Plugins/Blog/Frontend/Category/PostEntry.twig' %}
             {% endfor %}

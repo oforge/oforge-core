@@ -1,0 +1,5 @@
+{% block header_image %}
+    {% if headerimage %}
+        <div class="header__image" style="background-image: url('{{ media(headerimage, 1280) }}')"></div>
+    {% endif %}
+{% endblock header_image %}

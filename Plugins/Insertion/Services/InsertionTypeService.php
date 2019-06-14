@@ -230,7 +230,7 @@ class InsertionTypeService extends AbstractDatabaseAccess {
         $insertionType->setName($name);
         $insertionType->setParent($parent);
 
-        $this->entityManager()->merge($insertionType);
+        $this->entityManager()->update($insertionType, false);
         $this->entityManager()->flush();
 
         return $insertionType;
