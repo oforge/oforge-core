@@ -42,13 +42,13 @@ class ImageCompressService {
             $fileExtension = '';
             switch ($media->getType()) {
                 case 'image/jpeg':
-                    $suffix = 'jpeg';
+                    $fileExtension = 'jpeg';
                     break;
                 case 'image/jpg':
-                    $suffix = 'jpg';
+                    $fileExtension = 'jpg';
                     break;
                 case 'image/png':
-                    $suffix = 'png';
+                    $fileExtension = 'png';
                     break;
             }
             if (!empty($fileExtension)) {
