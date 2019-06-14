@@ -28,4 +28,16 @@
         width: 6rem;
         height: 6rem;
     }
+    &.icon--error {
+        fill: $error;
+    }
+    &.icon--info {
+        fill: $info;
+    }
+    &.icon--success {
+        fill: $success;
+    }
+    &.icon--warning {
+        fill: $warning;
+    }
 }
