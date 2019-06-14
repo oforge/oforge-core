@@ -12,7 +12,7 @@
                     <div class="account__content flex">
                         <form action="{{ url('frontend_account_insertions_profile') }}" method="post"
                               enctype="multipart/form-data">
-
+                            <h3 class="account__title">{{ i18n('my_profile') }}</h3>
                             <div class="background">
                                 <img id="background"
                                      src="{% if profile.background is defined %}{{ media(profile.background.id) }}{% endif %}" />
@@ -26,17 +26,23 @@
                                 </script>
                             </div>
                             <div class="profile-upload upload-background">
-                                <input type="file" name="background" accept="image/*"
-                                       onchange="loadFile(event, 'background')">
+                                <label for="background">
+                                    <svg class="icon icon--primary">
+                                        <use xlink:href="#fade_in"></use>
+                                    </svg>
+                                    <input id="background" type="file" name="background" accept="image/*"
+                                           onchange="loadFile(event, 'background')">
+                                </label>
                             </div>
                             <div class="profile-upload">
-                                <input type="file" name="profile" accept="image/*"
+                                <label for="profile"></label>
+                                <input id="profile" type="file" name="profile" accept="image/*"
                                        onchange="loadFile(event, 'profile')">
                             </div>
                             <div class="profile-link">
-                                <a href="{{ url('insertions_profile', {id: profile.id }) }}"><!-- TODO: Snippify -->
+                                <a href="{{ url('insertions_profile', {id: profile.id }) }}">
                                     <svg class="icon icon--primary icon--mail">
-                                        <use xlink:href="#fade_in" style=""></use>
+                                        <use xlink:href="#fade_in"></use>
                                     </svg>
                                 </a>
                             </div>
@@ -44,18 +50,17 @@
                                 {% include 'Plugins/FrontendUserManagement/Frontend/Components/AccountUser.twig' %}
                             </div>
                             <div class="info__description">
-                                <!-- TODO: Snippify -->
-                                Hier können Sie Informationen zu Ihrer Person hinterlegen.
+                                {{ i18n('account_insertions_profile_info') }}
                             </div>
 
                             <div class="profile--edit">
                                 <div class="description--edit">
-                                    <h3 class="form__title"><!-- TODO: Snippify -->Profiltext</h3>
+                                    <h3 class="form__title">{{ i18n('account_profile_text') }}</h3>
                                     <textarea name="description"
                                               class="form__input">{{ profile.description }}</textarea>
                                 </div>
                                 <div class="impress--edit">
-                                    <h3 class="form__title"><!-- TODO: Snippify -->Impressum</h3>
+                                    <h3 class="form__title">{{ i18n('legal_rights') }}</h3>
                                     <input class="form__input" type="text" name="imprint_name" placeholder="Name"
                                            value="{{ profile.imprintName }}" />
                                     <input class="form__input" type="text" name="imprint_street" placeholder="Street"
@@ -67,8 +72,7 @@
                                     <input class="form__input" type="email" name="imprint_email" placeholder="E-Mail"
                                            value="{{ profile.imprintEmail }}" />
                                     <div class="info__business">
-                                        <!-- TODO: Snippify -->
-                                        Nur bei Unternehmen:
+                                        {{ i18n('account_insertions_impress_info') }}
                                     </div>
                                     <input class="form__input" type="text" name="imprint_company_number"
                                            placeholder="Registernummer"
