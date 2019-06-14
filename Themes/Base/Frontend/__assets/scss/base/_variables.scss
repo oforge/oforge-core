@@ -6,7 +6,7 @@ $color-primary-light: rgba(112, 112, 112, 1); // sGrau-1
 $color-primary-lighter: #e8e8e8;
 $color-primary-transparent-1: transparentize($color-primary, .3); // sGrau-2
 $color-primary-transparent-2: rgba(0, 0, 0, 0.54); // sGrau-3
-$header-top: rgba(230,230,230,.8);
+$header-top: rgba(230, 230, 230, .8);
 
 $color-secondary: #708e2b; // pGrün-1
 $color-secondary-light: #90a75c;
@@ -20,34 +20,20 @@ $color-secondary-transparent-3: transparentize($color-light, .3); //sWeiß-1
 $text-light: $color-light;
 $text-dark: $color-primary;
 
-$success: #0d0;
-$info: #fc0;
-$warning: #d00;
+$success: #708f2c;
+$success-light: #c9eab5;
+$info: #00769f;
+$info-light: #b9e1ef;
+$warning: #e7ad41;
+$warning-light: #f7e0a3;
+$error: #a62422;
+$error-light: #f2aaa9;
 $invalid: #f49191;
 
-/*
-Hinweis:
-Icon #00769F
-Background #B9E1EF
-
-Bestätigung:
-Icon #708F2C
-Background #C9EAB5
-
-Warnung:
-Icon #E7AD41
-Background #F7E0A3
-
-Fehler:
-Icon #A62422
-Background #F2AAA9
-
- */
-
-$success-font: $text-dark;
-$info-font: $text-dark;
-$warning-font: $text-light;
-
+$success-font: $success;
+$info-font: $info;
+$warning-font: $warning;
+$error-font: $error;
 
 /*
  * Fonts
