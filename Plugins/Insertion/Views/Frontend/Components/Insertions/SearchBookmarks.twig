@@ -1,7 +1,8 @@
 {% set searchBookmarkCount = 1 %}
 {% for item in bookmarks %}
-    <div class="search__bookmark">
-        <h3 class="bookmark__title">{{ i18n('search_bookmark_title', 'Gespeicherte Suche') }} #{{ searchBookmarkCount }}</h3>
+    <div class="search__bookmark" xmlns="http://www.w3.org/1999/html">
+        <h3 class="bookmark__title">{{ i18n('search_bookmark_title', 'Gespeicherte Suche') }}
+            #{{ searchBookmarkCount }}</h3>
         {% for f, value in item.params %}
             {% if f is same as ("price") %}
                 <span class="tag bookmark__tag" data-key="{{ f }}">
@@ -31,12 +32,21 @@
                     <use xlink:href="#preview"></use>
                 </svg>
             </a>
-            <a href="{{ url('frontend_account_insertions_toggleSearchBookmark', {'typeId': item.insertionType }) }}"
-               class="delete-bookmark" title="{{ i18n('delete_search_bookmark', 'Löschen') }}">
-                <svg class="icon icon--primary">
-                    <use xlink:href="#delete"></use>
-                </svg>
-            </a>
+
+            <form method="post"
+                  action="{{ url('frontend_account_insertions_toggleSearchBookmark', {'typeId': item.insertionType }) }}"
+                  enctype="multipart/form-data">
+                <input type="hidden" name="filter" value="{{ item.params|json_encode() }}" />
+
+                <label class="delete-bookmark">
+                    <input type="submit"
+                           value="{{ i18n('delete_search_bookmark', 'Löschen') }}" />
+                    <svg class="icon icon--primary">
+                        <use xlink:href="#delete"></use>
+                    </svg>
+                </label>
+            </form>
+
         </div>
     </div>
 

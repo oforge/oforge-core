@@ -9,6 +9,8 @@
 namespace Oforge\Engine\Modules\CMS;
 
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
+use Oforge\Engine\Modules\CMS\ContentTypes\EntryList;
+use Oforge\Engine\Modules\CMS\ContentTypes\NavigationEntry;
 use Oforge\Engine\Modules\CMS\Controller\Backend\ElementsController;
 use Oforge\Engine\Modules\CMS\Controller\Backend\PagesController;
 use Oforge\Engine\Modules\CMS\Controller\Backend\TypesController;
@@ -92,8 +94,6 @@ class Bootstrap extends AbstractBootstrap {
     }
 
     public function activate() {
-        $service = Oforge()->Services()->get('dummy.page.generator');
-        $service->create();
         /** @var BackendNavigationService $sidebarNavigation */
         $sidebarNavigation = Oforge()->Services()->get('backend.navigation');
         $sidebarNavigation->put([
@@ -133,5 +133,27 @@ class Bootstrap extends AbstractBootstrap {
 
         $templateRenderer->View()->addExtension(new AccessExtension());
 
+        /**
+         * @var $managementService ContentTypeManagementService
+         */
+        $managementService = Oforge()->Services()->get("content.type.management");
+
+        $managementService->put([
+            'name'        => 'entrylist',
+            'path'        => 'List',
+            'icon'        => '/Themes/Base/ContentTypes/__assets/img/icontilebasic.png',
+            'description' => 'entry_list',
+            'group'       => 'navigation',
+            'classPath'   => EntryList::class,
+        ]);
+
+        $managementService->put([
+            'name'        => 'navigationentry',
+            'path'        => 'NavigationEntry',
+            'icon'        => '/Themes/Base/ContentTypes/__assets/img/icontilebasic.png',
+            'description' => 'navigation_entry',
+            'group'       => 'navigation',
+            'classPath'   => NavigationEntry::class,
+        ]);
     }
 }

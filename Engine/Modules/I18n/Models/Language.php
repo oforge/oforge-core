@@ -34,6 +34,12 @@ class Language extends AbstractModel {
     private $active = false;
 
     /**
+     * @var bool
+     * @ORM\Column(name="is_default", type="boolean", nullable=false, options={"default":false})
+     */
+    private $default = false;
+
+    /**
      * @return int
      */
     public function getId() : ?int {
@@ -80,6 +86,20 @@ class Language extends AbstractModel {
      */
     public function setActive(bool $active) {
         $this->active = $active;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDefault() : bool {
+        return $this->default;
+    }
+
+    /**
+     * @param bool $default
+     */
+    public function setDefault(bool $default) : void {
+        $this->default = $default;
     }
 
 }

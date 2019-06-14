@@ -51,6 +51,7 @@ class InsertionBookmarkService extends AbstractDatabaseAccess {
     }
 
     public function toggle(Insertion $insertion, User $user) : bool {
+
         $bookmark = $this->repository("user")->findOneBy(["insertion" => $insertion, "user" => $user]);
         if (isset($bookmark)) {
             return $this->remove($bookmark->getId());
