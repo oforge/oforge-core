@@ -1,19 +1,18 @@
 <div class="blog-posts-entry" title="{{ blogPost.headerTitle }}">
-    <div class="blog-post-entry-image">
-        {#TODO ALEX blog post image blogPost.headerImage #}
-        {% if blogPost.headerImage %}
-            <img src="{{ media(blogPost.headerImage) }}" />
-        {% else %}
-            DEFAULT_IMAGE
+    <div class="blog-posts-entry-content" data-masonry-content="true">
+        <div class="blog-post-entry-image">
+            {% if blogPost.headerImage %}
+                <img src="{{ media(blogPost.headerImage, 600) }}" />
+            {% endif %}
+        </div>
+        {% if blog.category is not defined %}
+            <div class="blog-post-entry-category">{{ blogPost.category.name }}</div>
         {% endif %}
+        <div class="blog-post-entry-created">{{ blogPost.created|formatDatetime }}</div>
+        {% include 'Plugins/Blog/Frontend/Components/RatingView.twig' %}
+        <div class="blog-post-entry-title">{{ blogPost.headerTitle }}</div>
+        <div class="blog-post-entry-excerpt">{{ blogPost.excerpt }}</div>
+        <a href="{{ url('frontend_blog_view', {postID:blogPost.id, seoUrlPath:blogPost.seoUrlPath}) }}"
+           title="{{ blogPost.headerTitle }}">LINK</a>
     </div>
-    {% if blog.category is not defined %}
-        <div class="blog-post-entry-category">{{ blogPost.category.name }}</div>
-    {% endif %}
-    <div class="blog-post-entry-created">{{ blogPost.created|formatDatetime }}</div>
-    {% include 'Plugins/Blog/Frontend/Components/RatingView.twig' %}
-    <div class="blog-post-entry-title">{{ blogPost.headerTitle }}</div>
-    <div class="blog-post-entry-excerpt">{{ blogPost.excerpt }}</div>
-    <a href="{{ url('frontend_blog_view', {postID:blogPost.id, seoUrlPath:blogPost.seoUrlPath}) }}"
-       title="{{ blogPost.headerTitle }}">LINK</a>
 </div>

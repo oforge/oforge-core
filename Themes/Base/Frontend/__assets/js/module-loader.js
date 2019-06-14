@@ -83,6 +83,7 @@ var Oforge = (function() {
             }
 
             moduleElements = document.querySelectorAll(moduleData.selector);
+            moduleData.target = moduleElements;
 
             // the module's selector is not found in the current page context, so we don't need the module here
             if (moduleElements.length < 1) {
