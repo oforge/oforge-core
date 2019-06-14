@@ -2,19 +2,27 @@
     margin: 1rem 0;
     padding: 1rem;
 
+    display: flex;
+    align-items: center;
+
     &--success {
-        background: $success;
+        background: $success-light;
         color: $success-font;
     }
     &--info {
-        background: $info;
+        background: $info-light;
         color: $info-font;
     }
     &--warning {
-        background: $warning;
-        color: $warning-font;
+        background: $warning-light;
+        color: $warning;
+    }
+    &--error {
+        background: $error-light;
+        color: $error;
     }
     &__message {
         color: inherit;
+        margin-left: $size-large;
     }
 }
