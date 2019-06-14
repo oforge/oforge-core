@@ -1,10 +1,60 @@
 /** Supplier Page */
 .content--supplier {
     .insertion__supplier {
+        display: block;
         .user__picture {
+            margin-bottom: 0;
+            margin-left: $size-large;
             width: 10rem;
             height: 10rem;
         }
+    }
+    .main {
+        position: relative;
+        top: -10rem;
+        margin-bottom: -10rem;
+    }
+    .contact--links {
+        display: flex;
+        justify-content: end;
+        margin-bottom: $size-large;
+
+        .contact--icons {
+            display: flex;
+            justify-content: end;
+
+            .contact--icon {
+                padding: $size-medium 2.4rem;
+                background: #708e2b;
+
+                &.center {
+                    padding: $size-medium 0;
+                }
+                .icon {
+                    fill: $color-light;
+                }
+
+                .wrapper {
+                    padding: 0 2.4rem;
+                    border-left: 2px solid $color-light;
+                    border-right: 2px solid $color-light;
+                }
+            }
+        }
+    }
+    .sidebar--insertion {
+        .panel {
+            padding: $size-large;
+            &--contact {
+                div {
+                    margin: $size-large 0;
+                }
+            }
+        }
+    }
+
+    .panel--supplier-description {
+        padding: $size-large;
     }
 
     .slider--supplier {
@@ -125,6 +175,22 @@
             .slick-slide {
                 border: 2px solid $color-light;
             }
+        }
+    }
+    @media screen and (min-width: $screen-medium) {
+        .insertion__supplier {
+            .user__picture {
+                width: 16rem;
+                height: 16rem;
+            }
+        }
+        .main {
+            top: -16rem;
+            margin-bottom: -16rem;
+        }
+
+        .panel--supplier-description {
+            padding: 3.6rem;
         }
     }
 }
