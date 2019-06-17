@@ -45,26 +45,7 @@
                     <h4 class="title">Rachel Müller</h4>
                     <div class="language-switch"></div>
                 </div>
-                {#                <div class="account__user">#}
-                {#                    <div class="user__picture">#}
-                {#                        {% if current_user.detail %}#}
-                {#                            <img src="{{ media(current_user.detail.image) }}" alt="{{ current_user.detail.name }}">#}
-                {#                        {% else %}#}
-                {#                            <img src="http://placeimg.com/640/640/people" alt="{{ user.detail.name }}">#}
-                {#                        {% endif %}#}
-                {#                    </div>#}
-                {#                    <div class="user-info">#}
-                {#                        {% if current_user.details %}#}
-                {#                            <h2 class="user-info__name">#}
-                {#                                {{ current_user.detail.nickName }}#}
-                {#                            </h2>#}
-                {#                        {% endif %}#}
 
-                {#                        <h2 class="user-info__name">#}
-                {#                            {{ current_user.detail.name }}</h2>#}
-                {#                        <p class="user-info__email">{{ current_user.email }}</p>#}
-                {#                    </div>#}
-                {#                </div>#}
                 <div class="description__body">
                     <span>{{ profile.description }}</span>
                 </div>
@@ -109,7 +90,7 @@
             <div class="panel panel--contact contact">
                 <div class="contact__name"><strong>{{ profile.user.detail.firstName }} {{ profile.user.detail.lastName }}</strong></div>
                 <div class="contact__address">{{ profile.user.address.postCode }} {{ profile.user.address.city }}</div>
-                <div class="contact__phone"><strong>Tel.: {{ profile.user.detail.phoneNumber }}</strong></div>
+                <div class="contact__phone"><strong>{{ i18n('tel') }}: {{ profile.user.detail.phoneNumber }}</strong></div>
 
             </div>
 
@@ -123,21 +104,21 @@
             </div>
 
             <div class="panel panel--about about">
-                <div class="about__title"><strong>Anbieter-Impressum</strong></div>
+                <div class="about__title"><strong>{{ i18n('supplier-impress') }}</strong></div>
                 <div class="about__description">
                     <div class="authority">{{ profile.imprintName }}</div>
                     <div class="address">
                         <div class="street">{{ profile.imprintStreet }}</div>
                         <div class="city">{{ profile.imprintZipCity }}</div>
-                        <div class="country">Deutschland</div>
+                        <div class="country">{{ profile.user.address.country }}</div>
                     </div>
                     <div class="contact upper">
-                        <div class="tel">Telefon:{{ profile.imprintPhone }}</div>
-                        <div class="fax">Fax:</div>
+                        <div class="tel">{{ i18n('tel') }}: {{ profile.imprintPhone }}</div>
+                        <div class="fax">{{ i18n('fax') }}: {{ profile.imprintFax }}</div>
                     </div>
                     <div class="contact lower">
-                        <div class="web">Web:</div>
-                        <div class="mail">Mail:{{ profile.imprintEmail }}</div>
+                        <div class="web">{{ i18n('web') }}: <!-- TODO: Insert Content --></div>
+                        <div class="mail">{{ i18n('email') }}: {{ profile.imprintEmail }}</div>
                         <div class="link">http://www.kontakt/impressum/</div>
                     </div>
                 </div>
