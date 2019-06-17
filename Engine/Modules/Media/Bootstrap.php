@@ -7,6 +7,7 @@ use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\Template\TemplateNotFoundException;
+use Oforge\Engine\Modules\Media\Controller\Backend\MediaController;
 use Oforge\Engine\Modules\Media\Models\Media;
 use Oforge\Engine\Modules\Media\Services\ImageCompressService;
 use Oforge\Engine\Modules\Media\Services\MediaService;
@@ -29,6 +30,10 @@ class Bootstrap extends AbstractBootstrap {
         $this->services = [
             'media'          => MediaService::class,
             'image.compress' => ImageCompressService::class,
+        ];
+
+        $this->endpoints = [
+            MediaController::class
         ];
     }
 

@@ -121,13 +121,14 @@ $(document).on('mouseup', function (event) {
 if ($('#cms_page_builder_form').length && $('#cms_page_richtext_editor').length) {
     $('#cms_page_builder_form').submit(
         function() {
-            $('#cms_page_richtext_text').val(quill.root.innerHTML);
+           // $('#cms_page_richtext_text').val(quill.root.innerHTML);
         }
     );
-    
+
+    /*
     const quill = new Quill('#cms_page_richtext_editor', {
         theme: 'snow'
-    });
+    }); */
 }
 
 // on edit cancel button event
