@@ -53,7 +53,6 @@ class Bootstrap extends AbstractBootstrap {
         $this->endpoints = [
             FrontendInsertionController::class,
             FrontendUsersInsertionController::class,
-            FrontendInsertionSupplierController::class,
             BackendAttributeController::class,
             BackendInsertionController::class,
             BackendInsertionTypeController::class,

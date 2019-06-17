@@ -83,6 +83,7 @@ class InsertionProfileService extends AbstractDatabaseAccess {
             "imprintStreet"        => $params["imprint_street"],
             "imprintZipCity"       => $params["imprint_zipCity"],
             "imprintPhone"         => $params["imprint_phone"],
+            "imprintFax"           => $params["imprint_fax"],
             "imprintEmail"         => $params["imprint_email"],
             "imprintCompanyTaxId"  => $params["imprint_company_tax"],
             "imprintCompanyNumber" => $params["imprint_company_number"],
