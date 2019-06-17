@@ -15,10 +15,6 @@
     overflow: hidden;
     display: flex;
     align-items: center;
-
-    img {
-      height: 100%;
-    }
   }
 
   .text-container {
@@ -158,8 +154,8 @@
     }
 
     .image-container img {
-      height: 100%;
-      width: 150%;
+      height: auto;
+      width: 100%;
       max-width: none;
     }
   }
@@ -168,7 +164,9 @@
     width: 32%;
 
     .image-container img {
-      max-width: 200%;
+      height: 100%;
+      max-width: none;
+      width: auto;
     }
 
     .link strong {
@@ -188,6 +186,11 @@
   .image-tile--small {
     .link strong {
       display: inline;
+    }
+
+    .image-container img {
+      height: auto;
+      width: 100%;
     }
   }
 
@@ -221,6 +224,7 @@
 
       img {
         max-width: none;
+        height: 100%;
       }
     }
 
