@@ -2,6 +2,7 @@
   display: none;
 
   .user__picture {
+    background: $color-light;
     border-radius: 50%;
     overflow: hidden;
     box-shadow: 0 .4rem .8rem rgba(112, 112, 112, 1);
