@@ -187,9 +187,9 @@ class BlogController extends SecureFrontendController {
     public function createCommentAction(Request $request, Response $response, array $args) {
         $postData = $request->getParsedBody();
         if ($request->isPost() && !empty($postData)) {
-            $userID  = Oforge()->View()->get('current_user.id');
+            $userID = ArrayHelper::get($postData, 'userID');
             $comment = ArrayHelper::get($postData, 'comment');
-            if (!empty($userID) && !empty($comment)) {
+            if (!empty($userID) && !empty($comment) && $userID == Oforge()->View()->get('current_user.id')) {
                 $twigFlash = Oforge()->View()->Flash();
                 try {
                     $this->commentService->createComment([
