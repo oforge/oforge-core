@@ -17,10 +17,4 @@
     }
 
     Quill.register('modules/BindFormField', BindFormField);
-
-    // Quill.register('modules/BindFormField', function(quill, field) {
-    //     quill.on('text-change', function() {
-    //         field.value = quill.root.innerHTML;
-    //     });
-    // });
 })(jQuery, Quill);

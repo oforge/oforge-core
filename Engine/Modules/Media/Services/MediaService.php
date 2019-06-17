@@ -4,6 +4,7 @@ namespace Oforge\Engine\Modules\Media\Services;
 
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Helper\FileSystemHelper;
 use Oforge\Engine\Modules\Core\Helper\Statics;
@@ -82,6 +83,27 @@ class MediaService extends AbstractDatabaseAccess {
         ]);;
 
         return $result;
+    }
+
+    public function search(string $query, int $page = 1, int $pageSize = 15) : array {
+        $queryBuilder = $this->repository()->createQueryBuilder('m')->where('m.name LIKE :name')->orderBy("m.id", "desc")
+                             ->setParameter('name', '%' . $query . '%');
+
+        $query     = $queryBuilder->getQuery()->setFirstResult(($page - 1) * $pageSize)->setMaxResults($pageSize);
+        $paginator = new Paginator($query, $fetchJoinCollection = true);
+
+        $result["query"]["count"]     = $paginator->count();
+        $result["query"]["pageSize"]  = $pageSize;
+        $result["query"]["page"]      = $page;
+        $result["query"]["pageCount"] = ceil((1.0) * $paginator->count() / $pageSize);
+        $result["query"]["items"]     = [];
+
+        foreach ($paginator as $item) {
+            $result["query"]["items"][] = $item->toArray();
+        }
+
+        return $result;
+
     }
 
 }
