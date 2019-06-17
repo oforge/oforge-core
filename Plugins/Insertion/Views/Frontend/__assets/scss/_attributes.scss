@@ -1,0 +1,22 @@
+.attribute-group {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+@media screen and (min-width: $screen-large) {
+    .title--attribute-group {
+        width: 100%;
+    }
+    .attribute-group {
+        justify-content: space-between;
+        .form__control {
+            margin-bottom: $size-large;
+            flex: 0 1 32%;
+        }
+
+        .form__control + .form__control {
+            margin-top: 0;
+        }
+    }
+}
