@@ -1,0 +1,24 @@
+{% block pagecontent %}
+    {% if result == 'success' %}
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h4><i class="icon fa fa-check"></i>{{ i18n('success') }}</h4>
+            {{ i18n('success_update_text') }}
+        </div>
+    {%  else %}
+        <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h4><i class="icon fa fa-ban"></i> {{ i18n('error') }}</h4>
+            {{ i18n('error_update_text') }}
+        </div>
+    {% endif %}
+
+    <script>
+        window.setTimeout(function() {
+            $(".alert").fadeOut(500, function(){
+                $(".alert").remove();
+            });
+        }, 3000);
+    </script>
+
+{% endblock pagecontent %}

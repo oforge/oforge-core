@@ -117,14 +117,6 @@ class Bootstrap extends AbstractBootstrap {
             'path'     => 'backend_content_elements',
             'position' => 'sidebar',
         ]);
-        $sidebarNavigation->put([
-            'name'     => 'backend_content_types',
-            'order'    => 1,
-            'parent'   => 'backend_content',
-            'icon'     => 'fa fa-cog',
-            'path'     => 'backend_content_types',
-            'position' => 'sidebar',
-        ]);
 
         /**
          * @var $templateRenderer TemplateRenderService
