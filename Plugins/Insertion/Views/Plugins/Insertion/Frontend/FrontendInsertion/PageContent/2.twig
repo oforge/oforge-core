@@ -3,30 +3,39 @@
     {% for attributeGroup in attributes %}
         {% if attributeGroup.items|length > 0 and attributeGroup.name == 'features' %}
             <div class="attribute-group">
-                <h2>{{ i18n(attributeGroup.name) }}</h2>
-                <div>
-                    {% for attribute in attributeGroup.items %}
-                        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': attribute.required } %}
-                    {% endfor %}
-                </div>
+                <h2 class="title title--attribute-group">{{ i18n(attributeGroup.name) }}</h2>
+                {% for attribute in attributeGroup.items %}
+                    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': attribute.required } %}
+                {% endfor %}
             </div>
         {% endif %}
     {% endfor %}
 
-    <div class="form__control form-group">
-        <label for="price" class="form__label">{{ i18n('price') }}</label>
-        <input name="price" value="{{ data['price'] }}" type="number" class="form__input form-control" data-required="" required="">
+    <div class="form__control">
+        <label for="price"
+               class="form__label">{{ i18n('price') }}</label>
+        <label for="price"
+               class="form__input form__input--inside-label">
+            <input type="number"
+                   name="price"
+                   id="price"
+                   value="{{ data['price'] }}"
+                   class="form__input" />
+            {% if i18nExists('unit_price') %}
+                <span class="input__unit">
+                    {{ i18n('unit_price') }}
+                </span>
+            {% endif %}
+        </label>
     </div>
 
     {% for attributeGroup in attributes %}
         {% if attributeGroup.items|length > 0 and not  (attributeGroup.name == 'features' or attributeGroup.name == 'main' or attributeGroup.name == 'contact') %}
             <div class="attribute-group">
-                <h2>{{ i18n(attributeGroup.name) }}</h2>
-                <div>
-                    {% for attribute in attributeGroup.items %}
-                        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': attribute.required } %}
-                    {% endfor %}
-                </div>
+                <h2 class="title title--attribute-group">{{ i18n(attributeGroup.name) }}</h2>
+                {% for attribute in attributeGroup.items %}
+                    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': attribute.required } %}
+                {% endfor %}
             </div>
         {% endif %}
     {% endfor %}
