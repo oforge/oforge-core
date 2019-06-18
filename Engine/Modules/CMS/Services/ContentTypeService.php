@@ -2,6 +2,7 @@
 
 namespace Oforge\Engine\Modules\CMS\Services;
 
+use Oforge\Engine\Modules\CMS\Abstracts\AbstractContentType;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentTypeGroup;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
@@ -102,6 +103,7 @@ class ContentTypeService extends AbstractDatabaseAccess {
                     $data["columns"][$key]["data"] = $this->getContentDataArray($column["id"], $column["typeId"]);
                 }
             }
+
             return $data;
         }
 
@@ -124,11 +126,19 @@ class ContentTypeService extends AbstractDatabaseAccess {
         if ($contentTypeEntity && $contentEntity) {
             $contentTypeClassPath = $contentTypeEntity->getClassPath();
 
+            /**
+             * @var $content AbstractContentType
+             */
             $content = new $contentTypeClassPath();
 
             $content->load($id);
 
-            $content->setEditData($data);
+            if (isset($data['name']) && isset($data["css"])) {
+                $content->setContentName($data['name']);
+                $content->setContentCssClass($data['css']);
+            } else {
+                $content->setEditData($data);
+            }
 
             $content->save();
 

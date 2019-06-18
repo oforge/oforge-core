@@ -1,0 +1,25 @@
+<div>
+    <div class="cms-page-builder-content" id="cms_page_builder_content">
+        <div class="cms-content-type-editor-wrapper" id="cms_content_type_editor_wrapper">
+            {% if post.cms_page_selected_element is empty or contents.isContainer %}
+                <div class="cms-content-type-editor-container">
+                    {% if contents.type %}
+                        {% include contents.type with {'data': contents} only %}
+                    {% else %}
+                        {% for data in contents %}
+                            {% if data.type %}
+                                {% set order = data.order %}
+                                {% include 'ContentTypes/PageBuilderPlaceholder.twig' %}
+                                {% include data.type %}
+                            {% endif %}
+                        {% endfor %}
+                        {% set order = 999999999 %}
+                        {% include 'ContentTypes/PageBuilderPlaceholder.twig' %}
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            {% include 'Backend/Pages/PageBuilderForm.twig' %}
+        </div>
+    </div>
+</div>

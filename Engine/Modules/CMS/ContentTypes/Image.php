@@ -25,13 +25,13 @@ class Image extends AbstractContentType {
      * @return array
      */
     public function getEditData() {
-        $data           = [];
-        $data["id"]     = $this->getContentId();
-        $data["type"]   = $this->getId();
-        $data["name"]   = $this->getContentName();
-        $data["css"]    = $this->getContentCssClass();
-        $data["url"]    = $this->getContentData();
-        
+        $data         = [];
+        $data["id"]   = $this->getContentId();
+        $data["type"] = $this->getId();
+        $data["name"] = $this->getContentName();
+        $data["css"]  = $this->getContentCssClass();
+        $data["url"]  = $this->getContentData();
+
         return $data;
     }
 
@@ -42,20 +42,10 @@ class Image extends AbstractContentType {
      *
      * @return Image $this
      */
-    public function setEditData($data)
-    {
-        if (isset($_FILES["image"])) {
-
-            /** @var MediaService $configService */
-            $configService = Oforge()->Services()->get('media');
-            $media = $configService->add($_FILES["image"]);
-            if(isset($media)) {
-                $this->setContentData($media->getPath());
-            }
+    public function setEditData($data) {
+        if (isset($data["image"])) {
+            $this->setContentData($data["image"]);
         }
-
-        $this->setContentName($data['name']);
-        $this->setContentCssClass($data['css']);
 
         return $this;
     }
