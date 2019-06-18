@@ -197,6 +197,7 @@ class BackendInsertionController extends BaseCrudController {
         } else {
             $types           = $service->getInsertionTypeTree();
             $result["types"] = $types;
+            $result["all_attributes"] = $service->getInsertionTypeAttributeMap();
 
             $result["users"] = $userService->getUsers();
         }
