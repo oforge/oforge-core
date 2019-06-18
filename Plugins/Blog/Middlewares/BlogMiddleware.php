@@ -46,7 +46,7 @@ class BlogMiddleware {
                     } else {
                         Oforge()->View()->assign(['stopNext' => true]);
 
-                        return RedirectHelper::redirect($response, $route['name'], $route['params']);
+                        return RedirectHelper::redirect($response, 'frontend_blog_view', $route['params']);
                     }
 
                 }
@@ -65,8 +65,7 @@ class BlogMiddleware {
      * @return bool
      */
     private function isValidPermission(?array $user, ?array $permissions) : bool {
-        return !isset($permissions['role']) || $permissions['role'] === BlogPermission::PUBLIC
-               || (isset($user['type']) && $user['type'] === $permissions['type']);
+        return !isset($permissions['role']) || $permissions['role'] === BlogPermission::PUBLIC || isset($user);
     }
 
 }

@@ -187,9 +187,9 @@ class BlogController extends SecureFrontendController {
     public function createCommentAction(Request $request, Response $response, array $args) {
         $postData = $request->getParsedBody();
         if ($request->isPost() && !empty($postData)) {
-            $userID  = ArrayHelper::get($postData, 'userID');
+            $userID = ArrayHelper::get($postData, 'userID');
             $comment = ArrayHelper::get($postData, 'comment');
-            if (!empty($userID) && !empty($comment) && $userID == Oforge()->View()->get('user.id')) {
+            if (!empty($userID) && !empty($comment) && $userID == Oforge()->View()->get('current_user.id')) {
                 $twigFlash = Oforge()->View()->Flash();
                 try {
                     $this->commentService->createComment([
@@ -292,7 +292,7 @@ class BlogController extends SecureFrontendController {
             foreach ($posts as $post) {
                 $postData = $post->toArray(2, $excludeProperties);
                 $this->ratingService->evaluateRating($postData);
-                $postsData[]         = $postData;
+                $postsData[] = $postData;
             }
             Oforge()->View()->assign([
                 'blog.posts' => $postsData,
