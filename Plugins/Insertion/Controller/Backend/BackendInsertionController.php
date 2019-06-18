@@ -216,7 +216,7 @@ class BackendInsertionController extends BaseCrudController {
      * @param Response $response
      *
      * @return Response
-     * @EndpointAction()
+     * @EndpointAction(path="/update/{id:\d+}")
      */
     public function updateAction(Request $request, Response $response, $args) {
         $id = $args["id"];
