@@ -23,5 +23,11 @@
 
 .panel--insertions {
     padding: $size-large;
+    transition: padding .2s ease;
 }
 
+@media screen and (min-width: $screen-large) {
+    .panel--insertions {
+        padding: $size-large * 3 $size-large * 5;
+    }
+}

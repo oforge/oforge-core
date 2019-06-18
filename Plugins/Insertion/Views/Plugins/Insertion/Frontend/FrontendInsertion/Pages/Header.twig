@@ -1,7 +1,7 @@
 {% block step_header %}
     {% if page != 1 %}<a href="{{ url('insertions_createSteps', { type : type.id, page: page - 1}) }}"
-               class="form__input form__input--submit button">
-            BACK
+               class="button button--primary">
+            {{ i18n('back') }}
         </a>
     {% endif %}
 
