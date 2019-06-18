@@ -81,9 +81,6 @@ class Row extends AbstractContentType
      */
     public function setEditData($data)
     {
-        $this->setContentName($data['name']);
-        $this->setContentCssClass($data['css']);
-        
         return $this;
     }
     

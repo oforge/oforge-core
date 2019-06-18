@@ -1,178 +1,203 @@
 .cms-content-type-list-container {
- 	border-left-style: solid;
- 	border-left-width: 1px;
- 	border-left-color: #000;
+    overflow: auto;
 }
 
 .cms-content-type-list {
- 	overflow: hidden;
- 	overflow-y: auto;
- 	
- 	.row {
- 		margin: 0px;
- 	}
+    overflow: hidden;
+    overflow-y: auto;
+
+    .row {
+        margin: 0px;
+    }
 }
 
 .content-type-group-header {
- 	border-style: solid;
- 	border-width: 1px;
- 	border-color: #000;
+    display: block;
+    padding: 3px 10px;
+    color: #FFF;
+    margin-bottom: 10px;
+    background-color: #708f2b;
+
+    .caret {
+        float: right;
+        margin-top: 7px;
+    }
 }
 
 .content-type-selector {
-	border-style: solid;
-	border-width: 1px;
-	border-color: #000;
-	background-color: #fff;
-	text-align: center;
-	margin: 5px 0px;
-	padding: 5px;
-	min-width: 75px;
-	max-width: 75px;
-	width: 75px;
-	cursor: grab;
-	
-	:active {
-		cursor: grabbing;
-	}
-	
-	.content-type-description {
-		text-align: center;
-	}
-	
-	.content-type-icon {
-		text-align: center;
-		width: 70%;
-	}
+    border-style: solid;
+    border-width: 1px;
+    border-color: #CCC;
+    text-align: center;
+    margin: 0 0 10px 0;
+    padding: 10px;
+    cursor: grab;
+    width: calc(50% - 5px);
+    float: left;
+
+    &:nth-child(even) {
+        margin-left: 5px;
+
+    }
+
+    &:nth-child(odd) {
+        margin-right: 5px;
+    }
+
+    :active {
+        cursor: grabbing;
+    }
+
+    .content-type-description {
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .content-type-icon {
+        text-align: center;
+        max-width: 70%;
+        max-height: 45px;
+    }
 }
 
 .content-type-edit-placeholder {
-	border-style: dashed;
-	border-radius: 15px;
-	border-width: 1px;
-	border-color: #999;
-	font-size: 5rem;
-	color: #999;
-	text-align: center;
-	vertical-align: middle;
-	margin: 16px 0px;
-	width: 100%;
-	height: 8rem;
+    border-style: dashed;
+    border-radius: 0px;
+    border-width: 1px;
+    border-color: #999;
+    font-size: 5rem;
+    color: #999;
+    text-align: center;
+    vertical-align: middle;
+    margin: 16px 0px;
+    width: 100%;
+    height: 8rem;
+
+    &.content-type-edit-placeholder-drag-over {
+        background: #708f2b;
+        border-color: #708f2b;
+        color: #FFF;
+    }
 }
 
-.content-type-edit-placeholder-drag-over {
-	border-width: 2px !important;
-	border-color: #0f0 !important;
-}
 
 .content-type-edit-selector {
-	position: relative;
-	border-style: dashed;
-	border-radius: 15px;
-	border-width: 1px;
-	border-color: #000;
-	text-align: center;
-	vertical-align: middle;
-	margin: 16px 0px;
-	padding: 16px;
-	width: 100%;
-	cursor: pointer;
+    position: relative;
+    border-style: dashed;
+    border-radius: 0px;
+    border-width: 1px;
+    border-color: #FFF;
+    text-align: center;
+    vertical-align: middle;
+    margin: 16px 0px;
+    padding: 16px;
+    width: 100%;
+    cursor: pointer;
+
+    &.cms-page-builder-selected-element {
+        border-color: #ccc;
+
+        .content-type-delete-button {
+            opacity: 1;
+        }
+    }
+
+    .content-type-delete-button {
+        opacity: 0.1;
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        width: 30px;
+        z-index: 1337;
+        -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+        filter: grayscale(100%);
+
+        &:hover {
+            -webkit-filter: grayscale(0%); /* Safari 6.0 - 9.0 */
+            filter: grayscale(0%);
+        }
+    }
 }
 
-.content-type-delete-button {
-	position: absolute;
-	top: -10px;
-	right: -10px;
-	width: 30px;
-	z-index: 1337;
-	-webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
-	filter: grayscale(100%);
-	
-	&:hover {
-		-webkit-filter: grayscale(0%); /* Safari 6.0 - 9.0 */
-		filter: grayscale(0%);		
-	}
-}
 
 .content-type-edit-image-wrapper {
-	height: 15rem;
+    height: 15rem;
 }
 
 .content-type-edit-richtext-wrapper {
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	align-items: center;
-	width: 100%;
-	height: 15rem;
-	overflow: hidden;
-	overflow-y: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 15rem;
+    overflow: hidden;
 }
 
 .content-type-edit-row-wrapper {
-	text-align: center;
-	vertical-align: middle;
-	width: 100%;
+    text-align: center;
+    vertical-align: middle;
+    width: 100%;
 }
 
 .content-type-edit-form-image {
-	justify-content: space-evenly;
-	margin: 50px 0;
-	
-	.spacer {
-		height: 2rem; 
-		line-height: 2rem; 
-	}
-	
-	input[type="text"] {
-		width: 40rem;
-	}
+    justify-content: space-evenly;
+    margin: 50px 0;
+
+    .spacer {
+        height: 2rem;
+        line-height: 2rem;
+    }
+
+    input[type="text"] {
+        width: 40rem;
+    }
 }
 
 .ql-toolbar.ql-snow {
-	width: 69rem;
+    width: 69rem;
 }
 
 .content-type-edit-form-richtext {
-	margin: 50px 0;
-	
-	.editor {
-		border-style: solid;
-		border-width: 1px;
-		border-color: #aaa;
-		width: 69rem;
-		height: 200px; 
-	}
-	
-	.spacer {
-		height: 2rem; 
-		line-height: 2rem; 
-	}
-	
-	input {
-		width: 40rem;
-	}
+    .editor {
+        border-style: solid;
+        border-width: 1px;
+        border-color: #aaa;
+        width: 69rem;
+        height: 200px;
+    }
+
+    .spacer {
+        height: 2rem;
+        line-height: 2rem;
+    }
+
+    input {
+        width: 40rem;
+    }
 }
 
 .content-type-edit-form-row {
-	justify-content: space-evenly;
-	margin: 50px 0;
-	
-	.spacer {
-		height: 2rem; 
-		line-height: 2rem; 
-	}
-	
-	input[type="text"] {
-		width: 40rem;
-	}
+    justify-content: space-evenly;
+    margin: 50px 0;
+
+    .spacer {
+        height: 2rem;
+        line-height: 2rem;
+    }
+
+    input[type="text"] {
+        width: 40rem;
+    }
 }
- 
+
 .of-row {
-	display: flex;
-	flex-direction: row;
-	flex-wrap: nowrap;
-	justify-content: flex-start;
-	align-items: stretch;
-	align-content: stretch;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: stretch;
 }

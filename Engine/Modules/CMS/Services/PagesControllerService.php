@@ -428,6 +428,9 @@ class PagesControllerService extends AbstractDatabaseAccess {
     {
         $pageTreeService    = OForge()->Services()->get("page.tree.service");
         $pageBuilderService = OForge()->Services()->get("page.builder.service");
+        /**
+         * @var $contentTypeService ContentTypeService
+         */
         $contentTypeService = OForge()->Services()->get("content.type.service");
         
         $selectedPage              = isset($post["cms_page_jstree_selected_page"])          && $post["cms_page_jstree_selected_page"] > 0               ? $post["cms_page_jstree_selected_page"]          : 0;
@@ -449,8 +452,6 @@ class PagesControllerService extends AbstractDatabaseAccess {
         ];
 
 
-
-
         if ($selectedPage)
         {
             $pageArray        = $pageBuilderService->getPageArray($selectedPage);
@@ -462,12 +463,8 @@ class PagesControllerService extends AbstractDatabaseAccess {
                 
                 $selectedElementIdArray = explode("-", $selectedElement);
                 $selectedElementId = end($selectedElementIdArray);
-                
-                $data["__selectedElement"] = $selectedElement; // TODO: just used as development info
-                $data["__selectedElementId"] = $selectedElementId; // TODO: just used as development info
-                $data["__selectedElementTypeId"] = $data["contents"]["typeId"]; // TODO: just used as development info
-                $data["__selectedAction"] = $selectedAction; // TODO: just used as development info
-                
+
+
                 if (is_numeric($selectedElementId) && $selectedElementId > 0)
                 {
                     $selectedElementTypeId = $data["contents"]["typeId"];
@@ -476,7 +473,7 @@ class PagesControllerService extends AbstractDatabaseAccess {
                     {
                         $selectedElementTypeId = 0;
                     }
-                    
+
                     switch ($selectedAction)
                     {
                         case "create":

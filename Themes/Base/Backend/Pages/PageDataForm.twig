@@ -1,22 +1,40 @@
 {% block cms_page_data_form %}
-	<form id="cms_page_data_form" action={{ url('backend_content_pages') }} method="post" enctype="multipart/form-data">
- 		<input name="cms_form" type="hidden" value="cms_page_data_form">
- 		<input name="cms_page_jstree_selected_page" type="hidden" value="{{ post.cms_page_jstree_selected_page }}">
- 		<input name="cms_page_selected_language" type="hidden" value="{{ post.cms_page_selected_language }}">
-		<div class="url-language-row">
-			<div>Url: <input name="cms_page_data_page_path" type="text" value="{{ pages[post["cms_page_jstree_selected_page"]-1].paths[post["cms_page_selected_language"] - 1].path }}">&nbsp;<input type="submit" value="{{ i18n('backend_crud_save') }}"></div>
-			<div>
-				{{ i18n('cms_page_builder_content_language_selection') }}:&nbsp;
-                <select id="cms_page_builder_language_selector">
-                    <option value="0" {% if post.cms_page_selected_language == 0 %}selected{% endif %}>{{ i18n('cms_page_builder_select_language') }}</option>
-                	{% for language in languages %}
-                    <option value="{{ language.id }}" {% if post.cms_page_selected_language == language.id %}selected{% endif %}>{{ language.name }}</option>
-                	{% endfor %}
-                </select>     				
-			</div>
-		</div>
-		<div>
-			<p><input name="cms_page_data_page_active" type="checkbox">&nbsp;{{ i18n('cms_page_builder_content_page_active_checkbox_label') }}</p>
-		</div>
- 	</form> 
+    <form id="cms_page_data_form" action={{ url('backend_content_pages') }} method="post" enctype="multipart/form-data">
+        <input name="cms_form" type="hidden" value="cms_page_data_form">
+        <input name="cms_page_jstree_selected_page" type="hidden" value="{{ post.cms_page_jstree_selected_page }}">
+        <input name="cms_page_selected_language" type="hidden" value="{{ post.cms_page_selected_language }}">
+        <div class="url-language-row">
+
+            <div class="form-group">
+                <label for="cms_page_data_page_path">{{ i18n('url') }}</label>
+                <input id="cms_page_data_page_path" type="text" name="cms_page_data_page_path"
+                       value="{{ pageBuilderData.paths[post["cms_page_selected_language"]].path }}"
+                       class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label for="cms_page_builder_language_selector">{{ i18n('url') }}</label>
+                <select id="cms_page_builder_language_selector" name="cms_page_builder_language_selector"
+                        class="form-control">
+                    {% for language in languages %}
+                        <option value="{{ language.id }}"
+                                {% if post.cms_page_selected_language == language.id %}selected{% endif %}>{{ language.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="cms_page_data_page_active">
+                    {{ i18n('cms_page_data_page_active', 'Active') }}
+                </label>
+                <div>
+                    {% include 'Backend/Components/Form/Switch.twig' with {
+                        id: 'cms_page_data_page_active',
+                        name: 'cms_page_data_page_active'
+                    } only %}
+                </div>
+            </div>
+
+            <input type="submit" class="btn btn-primary" value="{{ i18n('backend_crud_save') }}"></div>
+    </form>
 {% endblock cms_page_data_form %}
