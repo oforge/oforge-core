@@ -42,8 +42,6 @@ class RichText extends AbstractContentType
      */
     public function setEditData($data)
     {
-        $this->setContentName($data['name']);
-        $this->setContentCssClass($data['css']);
         $this->setContentData($data['text']);
         
         return $this;

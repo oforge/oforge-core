@@ -46,8 +46,6 @@ class NavigationEntry extends AbstractContentType {
      * @return NavigationEntry $this
      */
     public function setEditData($data) {
-        $this->setContentName($data['name']);
-        $this->setContentCssClass($data['css']);
         $this->setContentData(serialize($data));
 
         return $this;
