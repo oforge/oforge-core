@@ -3,7 +3,7 @@
            class="form__label">{{ i18n(attribute.name) }}</label>
 
     <div class="form__input form__input--select" data-required>
-        <select class="form__input form__input--select" data-required name="{{ attribute.name }}">
+        <select class="form__input form__input--no-input" data-required name="{{ attribute.name }}">
             {% for value in attribute.values %}
                 <option value="{{ value.id }}"
                         {% if value.id == search.filter[attribute.name] %}selected="selected"{% endif %}>

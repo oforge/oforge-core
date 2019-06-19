@@ -1,21 +1,21 @@
 (function ($) {
     $('.modal--delete').on('show.bs.modal', function (event) {
         // Values to fill
-        let button = $(event.relatedTarget); // Button that triggered the modal
-        let target = button.data('target');
-        let dataId = button.data('query-id');
-        let dataName = button.data('name');
-        let dataTitle = button.data('title');
-        let dataLabel = button.data('label');
-        let dataUrl = button.data('url');
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var target = button.data('target');
+        var dataId = button.data('query-id');
+        var dataName = button.data('name');
+        var dataTitle = button.data('title');
+        var dataLabel = button.data('label');
+        var dataUrl = button.data('url');
 
 
         // Elements to be filled
-        let titleElem = $(target + ' [data-element=title]');
-        let labelElem = $(target + ' [data-element=label]');
-        let nameElem = $(target + ' [data-element=name]');
-        let queryIdElem = $(target + ' [data-element=query-id]');
-        let deleteForm = $('#form_delete');
+        var titleElem = $(target + ' [data-element=title]');
+        var labelElem = $(target + ' [data-element=label]');
+        var nameElem = $(target + ' [data-element=name]');
+        var queryIdElem = $(target + ' [data-element=query-id]');
+        var deleteForm = $('#form_delete');
 
         titleElem.text(dataTitle);
         labelElem.text(dataLabel);
