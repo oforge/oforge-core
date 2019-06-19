@@ -1,3 +1,6 @@
+{# block comment_list__entry #}
+
+{% block entry %}
 <div class="blog-post-comment">
     <div class="blog-post-comment-title">
         {{ blogPostComment.title }}
@@ -8,7 +11,7 @@
     <div class="blog-post-comment-author-image">
         {#TODO ALEX blog category user.detail.image #}
         {% if blogPostComment.author.detail.image %}
-            <img src="{{ media(blogPostComment.author.detail.image) }}" />
+            <img src="{{ media(blogPostComment.author.detail.image) }}"/>
         {% else %}
             DEFAULT_IMAGE
         {% endif %}
@@ -20,3 +23,4 @@
         {{ blogPostComment.content }}
     </div>
 </div>
+{% endblock entry %}

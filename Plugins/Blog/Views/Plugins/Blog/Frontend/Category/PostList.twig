@@ -8,7 +8,7 @@
         </div>
         <div id="blog-posts-container" data-masonry="true">
             {% for index,blogPost in blog.posts %}
-                {% if index > 1 %}
+                {% if index > 0 %}
                     {% include 'Plugins/Blog/Frontend/Category/PostEntry.twig' %}
                 {% endif %}
             {% endfor %}
