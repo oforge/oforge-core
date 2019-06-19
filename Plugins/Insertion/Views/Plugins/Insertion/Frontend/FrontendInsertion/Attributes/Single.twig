@@ -10,7 +10,7 @@
     <div class="form__input form__input--select"
          {% if required %}data-required{% endif %}>
         <select name="insertion[{{ attribute.id }}]"
-                class="form__input form__input--no-input form-control"
+                class="form__input form__input--no-input"
                 {% if required %}required{% endif %}
                 data-sub-attribute-select="true">
             <option disabled selected>{{ i18n(attribute.name) }}</option>

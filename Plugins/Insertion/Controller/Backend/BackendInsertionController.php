@@ -161,6 +161,8 @@ class BackendInsertionController extends BaseCrudController {
             $result["type"]       = $type->toArray();
             $typeAttributes       = $service->getInsertionTypeAttributeTree($typeId);
             $result["attributes"] = $typeAttributes;
+            $result["all_attributes"] = $service->getInsertionTypeAttributeMap();
+
             /**
              * @var $createService InsertionCreatorService
              */
@@ -193,11 +195,11 @@ class BackendInsertionController extends BaseCrudController {
 
                 $data           = $formsService->getProcessedData($typeId);
                 $result["data"] = $data;
+                $result["all_attributes"] = $service->getInsertionTypeAttributeMap();
             }
         } else {
             $types           = $service->getInsertionTypeTree();
             $result["types"] = $types;
-            $result["all_attributes"] = $service->getInsertionTypeAttributeMap();
 
             $result["users"] = $userService->getUsers();
         }
@@ -244,6 +246,8 @@ class BackendInsertionController extends BaseCrudController {
         $typeAttributes       = $insertionTypeService->getInsertionTypeAttributeTree($insertion->getInsertionType()->getId());
         $result["attributes"] = $typeAttributes;
         $result["keys"]       = [];
+        $result["all_attributes"] = $insertionTypeService->getInsertionTypeAttributeMap();
+
         /**
          * @var $attribute InsertionTypeAttribute
          */
