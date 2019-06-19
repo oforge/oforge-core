@@ -1,11 +1,13 @@
 if (typeof Oforge !== 'undefined') {
     Oforge.Media = {
-        open: function (options) {
+        open: function (options, event) {
+            if (event) {
+                event.preventDefault();
+            }
             $.get("/backend/media", function (data) {
                 $("body").append($(data));
                 Oforge.Media._init();
             });
-
 
             this.__options = options;
             return false;
@@ -14,7 +16,7 @@ if (typeof Oforge !== 'undefined') {
             this.__query = "";
             this.__page = 1;
 
-            this.__modalElement = $("#media-chooser");
+            this.__modalElement = $("#media-chooser").remove();
             this.__overlay = this.__modalElement.find(".overlay");
             this.__imageContainer = this.__modalElement.find("#image-container");
             this.__searchField = this.__modalElement.find("#search-media");
@@ -97,35 +99,47 @@ if (typeof Oforge !== 'undefined') {
                 self.__overlay.hide();
             });
         }
-    }
-
+    };
 
     Oforge.register({
         name: 'mediaUpload',
         selector: '[data-media-upload]',
         init: function () {
-            var $target = $(this.target);
-            $target.each(function () {
-                $(this).on("click", function () {
-                    $this = $(this);
+            $(this.target).each(function () {
+                $(this).on('click', function (event) {
+                    var $this = $(this);
                     Oforge.Media.open({
                         emitter: $this,
-                        preview: $this.parent().children("img"),
-                        target: $this.parent().children("input")
-                    })
+                        preview: $this.parent().children('img'),
+                        target: $this.parent().children('input')
+                    }, event)
                 });
             });
         }
     });
 
+    Oforge.register({
+        name: 'mediaUploadField',
+        selector: '.image-field',
+        init: function () {
+            $(this.target).each(function () {
+                $(this).on('click', function (event) {
+                    var $this = $(this);
+                    Oforge.Media.open({
+                        emitter: $this,
+                        preview: $this.find('*[data-preview]'),
+                        target: $this.find('input')
+                    }, event)
+                });
+            });
+        }
+    });
 
     /* Quill module: BindFormField */
     (function ($, Quill) {
         if (!Quill) {
             return;
         }
-
-
         class ImageUpload {
             constructor(quill, field){
                 this.quill = quill;
@@ -135,14 +149,7 @@ if (typeof Oforge !== 'undefined') {
             }
 
         }
-
         Quill.register('modules/imageUpload', ImageUpload);
-
-
-        //Quill.register('modules/BindFormField', BindFormField);
-
-
     })(jQuery, Quill);
-
 
 }
