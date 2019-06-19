@@ -79,7 +79,7 @@
                                             data-label="attribute_group">
                                             <select name="select">
                                                 {% for attributeGroup in content.attributeGroupList %}
-                                                    <option value="{{ attributeGroup.name }}">{{ attributeGroup.name }}</option>
+                                                    <option value="{{ attributeGroup.id }}">{{ attributeGroup.name }}</option>
                                                 {% endfor %}
                                             </select>
                                         </td>
@@ -115,8 +115,8 @@
                                                 data-label="attribute_group">
                                                 <select class="form-control select2">
                                                     {% for attributeGroup in content.attributeGroupList %}
-                                                        <option value="{{ attributeGroup.name }}"
-                                                                {% if value.id is defined and value.id == attributeGroup.id %}
+                                                        <option value="{{ attributeGroup.id }}"
+                                                                {% if value.attributeGroup.id is defined and value.attributeGroup.id == attributeGroup.id %}
                                                                     selected
                                                                 {% endif %}
                                                         >{{ attributeGroup.name }}</option>
