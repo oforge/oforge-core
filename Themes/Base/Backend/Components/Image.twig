@@ -1,7 +1,7 @@
-<a href="#" onclick="Oforge.Media.open({'preview': 'img[data-preview=\'{{ name }}\']', 'target': 'input[name=\'{{ name }}\']'})">
+<a href="#" class="image-field">
     <div class="preview-image">
-        <img data-preview="{{ name }}" src="{% if not data is null %}{{ media(data, 200) }}{% else %}/Themes/Base/ContentTypes/__assets/img/image.png{% endif %}" width="200" title="{{ data }}" />
+        <img data-preview="{{ name }}" width="200" title="{{ data }}"
+             src="{% if not data is null %}{{ media(data, 200) }}{% else %}/Themes/Base/ContentTypes/__assets/img/image.png{% endif %}" />
     </div>
-
     <input type="hidden" name="{{ name }}" />
 </a>

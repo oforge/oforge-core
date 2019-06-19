@@ -1,9 +1,4 @@
-{% include 'Backend/Components/Form/SingleImageUploader/Field.twig' with {
-    singleImageUploader: {
-        id: 'image-uploader-' ~ (crud.context == 'index' ? (item.id ~ '-') : '') ~ property.name,
-        name: 'data[' ~ (crud.context == 'index' ? (item.id ~ '][') : '') ~ property.name ~ ']',
-        value: item[property.name] ? media(item[property.name], 300) : null,
-    }
-}%}
-
-
+{% include 'Backend/Components/Image.twig' with {
+    name: 'data[' ~ (crud.context == 'index' ? (item.id ~ '][') : '') ~ property.name ~ ']',
+    data: item[property.name],
+} only %}
