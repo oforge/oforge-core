@@ -45,6 +45,9 @@
             font-size: $font-size-6;
         }
     }
+    &.form__control--hidden {
+        display: none;
+    }
 }
 
 .form__control + .form__control {
@@ -89,6 +92,11 @@
     color: $color-primary;
     -webkit-appearance: none;
     -moz-appearance: none;
+
+    &[type='number'] {
+        text-align: right;
+        direction: rtl;
+    }
 
     &.form__input--inside-label {
         display: inline-flex;
@@ -232,58 +240,12 @@
     }
 }
 
-@supports (--css: variables) {
-    .range-slider {
-        position: relative;
-        display: block;
-        width: 100%;
-    }
-
-    input[type="range"].multirange {
-        padding: 0;
-        margin: 0;
-        display: inline-block;
-        vertical-align: top;
-        width: 100%;
-    }
-
-    input[type="range"].multirange.original {
-        position: absolute;
-    }
-
-    input[type="range"].multirange.original::-webkit-slider-thumb {
-        position: relative;
-        z-index: 2;
-    }
-
-    input[type="range"].multirange.original::-moz-range-thumb {
-        transform: scale(1); /* FF doesn't apply position it seems */
-        z-index: 1;
-    }
-
-    input[type="range"].multirange::-moz-range-track {
-        border: none;
-        background: $color-primary;
-        height: .6rem;
-        border-top: 2px solid $color-primary;
-    }
-
-    input[type="range"].multirange.ghost {
-        position: relative;
-        background: var(--track-background);
-        --track-background: linear-gradient(to right,
-                transparent var(--low), var(--range-color) 0,
-                var(--range-color) var(--high), transparent 0
-        ) no-repeat 0 45% / 100% 40%;
-        --range-color: $color-secondary;
-    }
-
-    input[type="range"].multirange.ghost::-webkit-slider-runnable-track {
-        background: var(--track-background);
-    }
-
-    input[type="range"].multirange.ghost::-moz-range-track {
-        background: var(--track-background);
-        border-top: 0;
+@media screen and (min-width: $screen-medium) {
+    .form__input {
+        &.form__input--submit {
+            width: auto;
+            padding-left: $size-large;
+            padding-right: $size-large;
+        }
     }
 }
