@@ -11,6 +11,7 @@ use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\TemplateEngine\Core\Twig\CustomTwig;
 use Oforge\Engine\Modules\TemplateEngine\Extensions\Twig\AccessExtension;
+use phpDocumentor\Reflection\Types\String_;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use Twig_Error_Loader;
@@ -45,7 +46,7 @@ class MailService {
 
                 /** Set Server Settings */
                 $mail->isSMTP();
-                $mail->setFrom($configService->get("mailer_from"));
+                $mail->setFrom($this->getSenderAddress($options['from']));
                 $mail->Host       = $configService->get("mailer_host");
                 $mail->Username   = $configService->get("mailer_username");
                 $mail->Port       = $configService->get("mailer_port");
@@ -163,6 +164,29 @@ class MailService {
         $twig->addExtension(new AccessExtension());
 
         return $twig->fetch($template = $options['template'], $data = $templateData);
+    }
+
+    /**
+     * Looks up mailer backend options for custom sender and host information.
+     *
+     * @param string $key
+     *
+     * @return string
+     * @throws ConfigElementNotFoundException
+     * @throws ServiceNotFoundException
+     */
+    public function getSenderAddress($key = 'info') {
+
+        $configService = Oforge()->Services()->get("config");
+
+        $host          = $configService->get('mailer_from_host');
+        if(!$host) {
+            throw new InvalidArgumentException("Error: Host is not set");
+        }
+        $sender        = $configService->get('mailer_from_' . $key);
+
+        $senderAddress = $sender . '@' . $host;
+        return $senderAddress;
     }
 
     public function batchSend() {
