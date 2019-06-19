@@ -1,24 +1,34 @@
 {% block product_panel %}
     <div class="panel panel--product product">
-        <a href="{{ url("insertions_detail", {id: item.id}) }}" class="product__image">
-            {% if item.media is defined and item.media|length > 0 and item.media[0].content is defined %}
-                <img src="{{ media(item.media[0].content, 300) }}" alt="{{ item.content[0].name }}"
-                     class="image">
-            {% else %}
-                <!-- TODO add dummy image -->
-                <img src="https://placeponi.es/300/300" alt="ponie" class="image">
-            {% endif %}
-            <div class="badge badge--image badge--top-left"></div>
-            <div class="label label--image label--top-right"></div>
-        </a>
-        <div class="product__attributes product__attributes--main">
+        {% block product__image %}
+            <a href="{{ url("insertions_detail", {id: item.id}) }}" class="product__image">
+                {% if item.media is defined and item.media|length > 0 and item.media[0].content is defined %}
+                    <img src="{{ media(item.media[0].content, 300) }}" alt="{{ item.content[0].name }}"
+                         class="image">
+                {% else %}
+                    <!-- TODO add dummy image -->
+                    <img src="https://placeponi.es/300/300" alt="ponie" class="image">
+                {% endif %}
+                <div class="badge badge--image badge--top-left"></div>
+                <div class="label label--image label--top-right"></div>
+            </a>
+        {% endblock product__image %}
 
-            {% for topvalue in item.topvalues|slice(0,3) %}
-                {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
-            {% endfor %}
+        <div class="product__attributes product__attributes--main">
+            {% block attributes__main %}
+
+                {% for topvalue in item.topvalues|slice(0,3) %}
+                    {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
+                {% endfor %}
+
+            {% endblock attributes__main %}
         </div>
+
+        {% block product__content %}
         <div class="product__content">
-            <h3 class="product__title">{{ item.content[0].title }}</h3>
+            {% block content__title %}
+                <h3 class="product__title">{{ item.content[0].title }}</h3>
+            {% endblock content__title %}
             <div class="product__attributes product__attributes--top">
                 <div class="product__attribute">
                     <span class="product__label">{{ i18n('insertion_name') }}</span>
@@ -29,18 +39,23 @@
                 {% endfor %}
             </div>
             <div class="product__attributes product__attributes--bottom">
+                {% block attributes__bottom %}
 
-                {% for topvalue in item.topvalues|slice(3,3) %}
-                    {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
-                {% endfor %}
+                    {% for topvalue in item.topvalues|slice(3,3) %}
+                        {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
+                    {% endfor %}
+                {% endblock attributes__bottom %}
             </div>
             <div class="product__meta">
-                <span class="product__number">{{ item.id }}</span>
-                <div class="product__pricing">
-                    <span class="product__label">price</span>
-                    <span class="product__value">{{ item.price }}€</span>
-                </div>
+                {% block product__meta %}
+                    <span class="product__number">{{ item.id }}</span>
+                    <div class="product__pricing">
+                        <span class="product__label">price</span>
+                        <span class="product__value">{{ item.price }}€</span>
+                    </div>
+                {% endblock product__meta %}
             </div>
+            {% endblock product__content %}
         </div>
     </div>
 {% endblock %}
