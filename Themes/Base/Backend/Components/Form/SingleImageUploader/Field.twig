@@ -1,3 +1,10 @@
+{% include 'Backend/Components/Image.twig' with {
+    name: singleImageUploader.name,
+    data: singleImageUploader.value
+} only %}
+
+
+
 <div class="form-single-image-uploader">
     {% if singleImageUploader.name is not defined or singleImageUploader.id is not defined or singleImageUploader.value is not defined %}
         <div><strong>Missing field parameter:</strong>
