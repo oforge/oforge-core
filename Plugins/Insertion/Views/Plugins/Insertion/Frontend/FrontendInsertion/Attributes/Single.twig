@@ -26,8 +26,6 @@
     </div>
 </div>
 
-{{ o_dump(subAttributes) }}
-
 {% for subAttributeItem in subAttributes %}
-    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ all_attributes[subAttributeItem.id].type|capitalize  ~ '.twig'  with {'attribute': all_attributes[subAttributeItem.id], hidden: true, subAttribute: subAttributeItem } %}
+    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ all_attributes[subAttributeItem.id].type|capitalize  ~ '.twig'  with {'attribute': all_attributes[subAttributeItem.id], hidden: true, required: false, subAttribute: subAttributeItem } %}
 {% endfor %}

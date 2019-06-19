@@ -8,7 +8,7 @@
             {% if logo.url is defined %}
                 <img class="logo__img" src="{{ media( logo.url, 300) }}" alt="{{ i18n('logo') }}" />
             {% else %}
-                {% include 'Frontend/Components/Header/LogoClaim.twig' %}
+                {% include 'Frontend/Components/Header/LogoClaim.twig' with {link: false} %}
             {% endif %}
         </a>
     </div>
