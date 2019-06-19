@@ -1,5 +1,6 @@
 <div class="form__control form-group">
 
+    <label for="insertion[{{ attribute.id }}]"  class="form__label {{ label_class }}"> {{  i18n(attribute.name) }}</label>
     <input type="checkbox"
            class="form__input form__input--checkbox"
            name="insertion[{{ attribute.id }}]"
@@ -7,6 +8,4 @@
                 checked="checked"
            {% endif %}
            {% if required %}required{% endif %}>
-    <label for="insertion[{{ attribute.id }}]"> {{  i18n(attribute.name) }}</label>
-
 </div>

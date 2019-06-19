@@ -17,6 +17,7 @@ class InsertionTypeService extends AbstractDatabaseAccess {
             'default'                => InsertionType::class,
             'insertionTypeAttribute' => InsertionTypeAttribute::class,
             'group'                  => InsertionTypeGroup::class,
+            'attributeKey'           => AttributeKey::class,
         ]);
     }
 
@@ -80,6 +81,17 @@ class InsertionTypeService extends AbstractDatabaseAccess {
         return $tree;
     }
 
+    public function getInsertionTypeAttributeMap() {
+        $attributes = $this->repository("attributeKey")->findAll();
+
+        $result = [];
+        foreach ($attributes as $attribute) {
+            $result[$attribute->getId()] = $attribute->toArray();
+        }
+
+        return $result;
+    }
+
     /**
      * @return array
      * @throws ORMException
@@ -112,7 +124,6 @@ class InsertionTypeService extends AbstractDatabaseAccess {
                 $result[$map[$groupName]]["items"][] = $attr->toArray(3);
             }
         }
-
 
         return $result;
     }

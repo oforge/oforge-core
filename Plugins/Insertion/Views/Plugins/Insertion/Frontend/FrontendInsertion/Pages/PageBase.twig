@@ -10,12 +10,11 @@
                   {% endif %}"
               method="post"
               enctype="multipart/form-data">
-            <div class="form-controls">
 
                 {% block page_content %}
-
                 {% endblock page_content %}
 
+            <div class="form-controls">
                 <div class="form__control">
                     <input type="hidden" name="token" value="{{ token() }}">
                     <input type="hidden" name="current_page" value="{{ page }}">
