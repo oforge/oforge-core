@@ -7,7 +7,7 @@
             name: 'rangeSlider',
             selector: '[data-range-slider]:not(.ghost)',
             init: function () {
-                let self = this;
+                var self = this;
                 const rangeSliderList = document.querySelectorAll(self.selector);
 
                 rangeSliderList.forEach(function (rangeSlider, index) {
