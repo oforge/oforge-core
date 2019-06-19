@@ -7,6 +7,16 @@
 
             init: function () {
                 var self = this;
+                var subAttributeSelectors = document.querySelectorAll(self.selector);
+                subAttributeSelectors.forEach(function (item, index) {
+                    var parent = item.closest('[data-attribute-id]');
+                    var selector = '[data-parent="' + parent.dataset.attributeId + '"][data-value="' + item[item.selectedIndex].value + '"]';
+                    var elementToUnhide = document.querySelector(selector);
+                    if (elementToUnhide) {
+                        elementToUnhide.classList.remove('form__control--hidden');
+                    }
+                });
+
                 document.addEventListener('change', function (e) {
                     var element = e.target;
                     var elementToUnhide = null;
@@ -25,12 +35,8 @@
                         elementsToHide.forEach(function (item) {
                             item.classList.add('form__control--hidden');
                             var elementToReset = item.querySelector(self.selector);
-                            var options = elementToReset.options;
-                            options.forEach(function (elem, index) {
-                               if (elementToReset[index].defaultSelected) {
-                                   elementToReset.selectedIndex = index;
-                               }
-                            });
+                            elementToReset.selectedIndex = 0;
+                            elementToReset[0].value = '';
                         });
 
                         if (elementToUnhide !== null) {
