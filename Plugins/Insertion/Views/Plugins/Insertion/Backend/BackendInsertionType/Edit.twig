@@ -116,7 +116,7 @@
                                                 <select class="form-control select2">
                                                     {% for attributeGroup in content.attributeGroupList %}
                                                         <option value="{{ attributeGroup.name }}"
-                                                                {% if value.id is defined and value.id == attribute.id %}
+                                                                {% if value.id is defined and value.id == attributeGroup.id %}
                                                                     selected
                                                                 {% endif %}
                                                         >{{ attributeGroup.name }}</option>
