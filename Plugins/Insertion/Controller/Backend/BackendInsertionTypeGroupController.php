@@ -44,7 +44,7 @@ class BackendInsertionTypeGroupController extends BaseCrudController{
             ],
         ],
         [
-            'name'     => 'accountEmail',
+            'name'     => 'order',
             'type'     => CrudDataTypes::INT,
             'label'    => ['key' => 'plugin_insertion_type_group_property_group_order', 'default' => 'Order'],
             'crud'     => [
