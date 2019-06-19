@@ -1,0 +1,29 @@
+{% block pagecontent %}
+    {% for index, image in media.query.items %}
+        {% if index % 3 == 0 %} <div class="row row-eq-height" >{% endif %}
+        <div class="col-xs-4 media-item" data-media-id="{{ image.id }}" data-media-path="{{ image.path }}" data-media-name="{{ image.name }}">
+            <img class="img-thumbnail" src="{{ media(image.id, 400) }}" />
+            <span>{{ image.name }}</span>
+        </div>
+        {% if index % 3 == 2 or loop.last %} </div>{% endif %}
+    {% endfor %}
+
+    {% if media.query.pageCount > 1 %}
+        <ul class="pagination pagination-sm no-margin pull-right">
+            {% if media.query.page > 1 %}
+                <li><a href="#" class="pagination-item" data-page="{{ media.query.page - 1 }}">«</a></li>
+            {% endif %}
+            {% for i in -2..2 %}
+                {% if media.query.page + i >= 1 and media.query.page + i <= media.query.pageCount %}
+                    <li {% if i == 0 %}class="active"{% endif %}><a href="#" class="pagination-item"
+                                                                    data-page="{{ media.query.page + i }}">{{ media.query.page + i }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if media.query.page < media.query.pageCount %}
+                <li><a class="pagination-item" href="#" data-page="{{ media.query.pageCount }}">»</a></li>
+            {% endif %}
+        </ul>
+    {% endif %}
+{% endblock %}
