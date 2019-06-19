@@ -43,9 +43,8 @@ class Image extends AbstractContentType {
      * @return Image $this
      */
     public function setEditData($data) {
-        if (isset($data["image"])) {
-            $this->setContentData($data["image"]);
-        }
+
+        $this->setContentData($data["image"]);
 
         return $this;
     }

@@ -2,13 +2,10 @@
     <div class="form-group">
         <label>{{ i18n('type_image', 'Image') }}</label>
 
-        <a href="#" onclick="Oforge.Media.open({'preview': '.preview-image img', 'target': 'input[name=image]'})">
-            <div class="preview-image">
-                <img src="{% if not data.url is null %}{{ media(data.url, 200) }}{% else %}/Themes/Base/ContentTypes/__assets/img/image.png{% endif %}" width="200" title="{{ data.url }}" />
-            </div>
-
-            <input type="hidden" name="image" />
-        </a>
+        {% include 'Backend/Components/Image.twig' with {
+            name: 'image',
+            data: data.url
+        } only %}
 
     </div>
 
