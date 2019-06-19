@@ -8,6 +8,7 @@ use FrontendUserManagement\Abstracts\SecureFrontendController;
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\FrontendUserService;
 use FrontendUserManagement\Services\UserDetailsService;
+use FrontendUserManagement\Services\UserService;
 use Insertion\Models\InsertionType;
 use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Services\InsertionBookmarkService;
@@ -23,6 +24,7 @@ use Oforge\Engine\Modules\CMS\Bootstrap;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Helper\StringHelper;
+use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
@@ -114,6 +116,20 @@ class FrontendUsersInsertionController extends SecureFrontendController {
      * @throws \Doctrine\ORM\ORMException
      */
     public function disableAction(Request $request, Response $response, $args) {
+        /** @var User $user */
+        /** @var UserService $frontendUserService */
+        $user = Oforge()->View()->get('user');
+        $mailService = Oforge()->Services()->get('mail');
+
+        // TODO: add email snippets
+        $mailOptions  = [
+            'to'       => $user->getEmail(),
+            'from'     => 'no-reply@local.host', // TODO: From settings
+            'subject'  => I18N::translate('email_subject_password_reset', 'Oforge | Your password reset!'),
+            'template' => 'ResetPassword.twig',
+        ];
+
+        $mailService->send($mailOptions);
         return $this->modifyInsertion($request, $response, $args, 'disable');
     }
 

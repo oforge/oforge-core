@@ -5,12 +5,18 @@ namespace Messenger\Controller\Frontend;
 use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Abstracts\SecureFrontendController;
 use FrontendUserManagement\Models\User;
+use FrontendUserManagement\Services\UserDetailsService;
+use FrontendUserManagement\Services\UserService;
 use Helpdesk\Services\HelpdeskMessengerService;
 use Messenger\Models\Conversation;
 use Messenger\Services\FrontendMessengerService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\I18n\Helper\I18N;
+use Oforge\Engine\Modules\I18n\Services\InternationalizationService;
+use Oforge\Engine\Modules\I18n\Services\LanguageService;
+use Oforge\Engine\Modules\Mailer\Services\MailService;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
@@ -35,6 +41,7 @@ class MessengerController extends SecureFrontendController {
      */
     public function indexAction(Request $request, Response $response, array $args) {
         /** @var FrontendMessengerService $frontendMessengerService */
+        /** @var User $user */
         $frontendMessengerService = Oforge()->Services()->get('frontend.messenger');
         $user = Oforge()->View()->get('user');
 
@@ -56,11 +63,31 @@ class MessengerController extends SecureFrontendController {
                 $message  = $request->getParsedBody()['message'];
 
                 /** @var FrontendMessengerService $frontendMessengerService */
+                /** @var MailService $mailService */
+                /** @var UserService $frontendUserService */
                 $frontendMessengerService = Oforge()->Services()->get('frontend.messenger');
+                $mailService = Oforge()->Services()->get('mail');
+                $frontendUserService = Oforge()->Services()->get('frontend.user.management.user');
 
+                /** @var Conversation $conversation */
                 $conversation = $frontendMessengerService->getConversation($conversationId, $senderId);
-
                 $frontendMessengerService->sendMessage($conversation['id'], 'frontend', $senderId, $message);
+
+                $targetUserId = 0;
+                if ($conversation->getRequested() === $user->getId()) {
+                    $targetUserId = $conversation->getRequester();
+                } else {
+                    $targetUserId = $conversation->getRequested();
+                }
+
+                $targetIdMail = $frontendUserService->getUserById($targetUserId)->getEmail();
+                $mailOptions = [
+                    'to' => $targetIdMail,
+                    'from' => 'no-reply@local.host', // TODO: From settings
+                    'subject' => I18N::translate('email_subject_new_message', 'New private message'), // TODO: i18n
+                    'template' => 'NewMessage.twig'
+                ];
+                $mailService->send($mailOptions);
 
                 $uri = $router->pathFor('frontend_account_messages');
 
