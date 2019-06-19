@@ -5,6 +5,7 @@ if (typeof Oforge !== 'undefined') {
                 event.preventDefault();
             }
             $.get("/backend/media", function (data) {
+                $("#media-chooser").remove();
                 $("body").append($(data));
                 Oforge.Media._init();
             });
@@ -16,7 +17,7 @@ if (typeof Oforge !== 'undefined') {
             this.__query = "";
             this.__page = 1;
 
-            this.__modalElement = $("#media-chooser").remove();
+            this.__modalElement = $("#media-chooser");
             this.__overlay = this.__modalElement.find(".overlay");
             this.__imageContainer = this.__modalElement.find("#image-container");
             this.__searchField = this.__modalElement.find("#search-media");
@@ -28,7 +29,23 @@ if (typeof Oforge !== 'undefined') {
         },
         __bindDynamicItemsClickEvents: function () {
             this.__modalElement.find(".media-item").on("click", this, this.__mediaClicked);
+            this.__modalElement.find(".no-media-item").on("click", this, this.__noMediaClicked);
             this.__modalElement.find(".pagination-item").on("click", this, this.__paginationClicked);
+        },
+        __noMediaClicked: function(e) {
+            var self = e.data;
+            if (self.__options != null) {
+                if (self.__options.preview != null) {
+                    $(self.__options.preview).attr("src", '');
+                }
+                if (self.__options.target != null) {
+                    $(self.__options.target).val('');
+                }
+                self.__modalElement.modal('hide');
+                self.__modalElement.remove();
+            } else {
+                alert("No options given");
+            }
         },
         __mediaClicked: function (e) {
             var target = $(this), self = e.data;
