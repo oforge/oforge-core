@@ -9,6 +9,10 @@
     overflow: hidden;
     z-index: 1337;
 
+    &__header-link {
+        text-decoration: none;
+    }
+
     .main-nav__header {
         height: 10rem;
         display: flex;

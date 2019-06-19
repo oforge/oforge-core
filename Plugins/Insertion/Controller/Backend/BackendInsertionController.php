@@ -197,6 +197,7 @@ class BackendInsertionController extends BaseCrudController {
         } else {
             $types           = $service->getInsertionTypeTree();
             $result["types"] = $types;
+            $result["all_attributes"] = $service->getInsertionTypeAttributeMap();
 
             $result["users"] = $userService->getUsers();
         }
@@ -216,7 +217,7 @@ class BackendInsertionController extends BaseCrudController {
      * @param Response $response
      *
      * @return Response
-     * @EndpointAction()
+     * @EndpointAction(path="/update/{id:\d+}")
      */
     public function updateAction(Request $request, Response $response, $args) {
         $id = $args["id"];
