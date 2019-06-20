@@ -9,6 +9,10 @@
     overflow: hidden;
     z-index: 1337;
 
+    &.main-nav--hidden {
+        display: none;
+    }
+
     &__header-link {
         text-decoration: none;
     }
