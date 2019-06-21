@@ -3,9 +3,9 @@
     <div class="account__user">
         <div class="user__picture">
             {% if current_user.detail %}
-                <img src="{{ media(current_user.detail.image) }}" alt="{{ current_user.detail.name }}">
+                <img class="img-profile" src="{{ media(current_user.detail.image) }}" alt="{{ current_user.detail.name }}">
             {% else %}
-                <img src="http://placeimg.com/640/640/people" alt="{{ user.detail.name }}">
+                <img class="img-profile" src="http://placeimg.com/640/640/people" alt="{{ user.detail.name }}">
             {% endif %}
         </div>
         <div class="user-info">
