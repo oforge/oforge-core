@@ -13,6 +13,7 @@ use Helpdesk\Models\IssueTypes;
 use Helpdesk\Models\Ticket;
 use Helpdesk\Services\HelpdeskMessengerService;
 use Helpdesk\Services\HelpdeskTicketService;
+use Helpdesk\Widgets\HelpdeskCountWidgetHandler;
 use Helpdesk\Widgets\HelpdeskWidgetHandler;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\DashboardWidgetsService;
@@ -139,6 +140,29 @@ class Bootstrap extends AbstractBootstrap {
             'name'         => 'frontend_widget_helpdesk',
             'cssClass'     => 'box-success',
             'templateName' => 'Helpdesk',
+        ]);
+
+        $dashboardWidgetsService->register([
+            'position'     => 'top',
+            'action'       => HelpdeskCountWidgetHandler::class,
+            'title'        => 'frontend_widget_helpdesk_count_title',
+            'name'         => 'frontend_widget_helpdesk_count',
+            'cssClass'     => 'bg-red',
+            'templateName' => 'HelpdeskCount',
+        ]);
+
+    }
+
+    public function load(){
+        $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
+
+        $dashboardWidgetsService->register([
+            'position'     => 'top',
+            'action'       => HelpdeskCountWidgetHandler::class,
+            'title'        => 'frontend_widget_helpdesk_count_title',
+            'name'         => 'frontend_widget_helpdesk_count',
+            'cssClass'     => 'bg-red',
+            'templateName' => 'HelpdeskCount',
         ]);
     }
 

@@ -6,6 +6,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
+use Oforge\Engine\Modules\AdminBackend\Core\Services\DashboardWidgetsService;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
@@ -55,7 +56,42 @@ class DashboardController extends SecureBackendController {
      * @EndpointAction()
      */
     public function buildAction(Request $request, Response $response) {
-        Oforge()->Services()->get('assets.template')->build(Oforge()->View()->get('meta')['route']['assetScope']);
+        Oforge()->Services()->get('assets.template')->build("", Oforge()->View()->get('meta')['route']['assetScope']);
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @EndpointAction()
+     */
+    public function widgetsAction(Request $request, Response $response) {
+        if ($_POST && isset($_POST["data"])) {
+            $data = json_decode($_POST["data"], true);
+
+            $auth = null;
+            if (isset($_SESSION['auth'])) {
+                $auth = $_SESSION['auth'];
+            }
+
+            /** @var AuthService $authService */
+            $authService = Oforge()->Services()->get('auth');
+            $user        = $authService->decode($auth);
+
+            if ($user != null) {
+                /** @var AuthService $authService */
+                $authService = Oforge()->Services()->get('auth');
+                $user        = $authService->decode($auth);
+
+                /**
+                 * @var DashboardWidgetsService $dashboardWidgetsService
+                 */
+                $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
+                $dashboardWidgetsService->updateUserWidgets($user["id"], $data);
+            }
+
+            Oforge()->View()->assign(["json" => $data]);
+        }
+
     }
 
     /**
@@ -134,6 +170,7 @@ class DashboardController extends SecureBackendController {
     public function initPermissions() {
         $this->ensurePermissions('indexAction', BackendUser::class, BackendUser::ROLE_MODERATOR);
         $this->ensurePermissions('buildAction', BackendUser::class, BackendUser::ROLE_ADMINISTRATOR);
+        $this->ensurePermissions('widgetsAction', BackendUser::class, BackendUser::ROLE_MODERATOR);
         $this->ensurePermissions('testAction', BackendUser::class, BackendUser::ROLE_ADMINISTRATOR);
     }
 
