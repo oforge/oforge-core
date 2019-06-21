@@ -13,7 +13,7 @@
                         <form action="{{ url('frontend_account_insertions_profile') }}" method="post"
                               enctype="multipart/form-data">
                             <h3 class="account__title">{{ i18n('my_profile') }}</h3>
-                            <div class="background"
+                            <div class="background img-background"
                                  style="background-image: url('{% if profile.background is defined %}{{ media(profile.background.id) }}'){% endif %};">
 
                             </div>

@@ -1,5 +1,5 @@
 /**
- * Updates the src-attribute for specified elements if the file-input changes
+ * Updates the background image for specified elements if the file-input changes
  *
  * Usage: Input elements will become triggers for media updates if they have: data-update="<element-class>"
  * Changing such input element will result in an update for elements with <element-class>
@@ -14,9 +14,11 @@
                 const triggers = document.querySelectorAll('[data-update]');
                 triggers.forEach(function (trigger) {
                     trigger.addEventListener('change', function () {
+                        console.log(trigger.dataset.update);
                         let items = document.getElementsByClassName(trigger.dataset.update);
+                        console.log(items);
                         items.forEach(function (item) {
-                            item.src = URL.createObjectURL(trigger.files[0]);
+                            item.style.backgroundImage = "url('" + URL.createObjectURL(trigger.files[0]) + "')";
                         })
                     })
                 });
