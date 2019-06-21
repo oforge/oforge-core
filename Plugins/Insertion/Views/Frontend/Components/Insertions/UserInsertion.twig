@@ -1,112 +1,92 @@
-{#{% block product_panel %}#}
-{#    <div class="panel panel--product product">#}
-{#        <a href="{{ url("insertions_detail", {id: insertion.id}) }}" class="product__image">#}
-{#            {% if insertion.media is defined and insertion.media|length > 0 and insertion.media[0].content is defined %}#}
-{#                <img src="{{ media(insertion.media[0].content, 300) }}" alt="{{ insertion.content[0].name }}"#}
-{#                     class="image">#}
-{#            {% else %}#}
-{#                <!-- TODO add dummy image -->#}
-{#                <img src="https://placeponi.es/300/300" alt="ponie" class="image">#}
-{#            {% endif %}#}
-{#            <div class="badge badge--image badge--top-left"></div>#}
-{#            <div class="label label--image label--top-right"></div>#}
-{#        </a>#}
-{#        <div class="product__title">#}
-{#            <h3>{{ insertion.content[0].title }}</h3>#}
+{% extends 'Plugins/Insertion/Frontend/Components/Content/ProductPanel.twig' %}
 
-{#        </div>#}
-{#        <div class="product__attributes product__attributes--top">#}
-{#            <div class="wrapper">#}
-{#                <div class="product__attribute">#}
-{#                    <span class="product__label">{{ i18n('insertion_name') }}</span>#}
-{#                    <span class="product__value">{{ insertion.content[0].name }}</span>#}
-{#                </div>#}
-{#                <div class="product__attribute">#}
-{#                    <span class="product__label">{{ i18n('insertion_price') }}</span>#}
-{#                    <span class="product__value">{{ insertion.price }} € {% if (insertion.tax) %} (Netto) {% else %} (Brutto){% endif %}</span>#}
+{% block attributes__main %}
+    <div class="product__attribute">
+        <span class="product__label">{{ i18n('name') }}</span>
+        <span class="product__value">{{ item.content[0].name }}</span>
+    </div>
+    <div class="product__attribute">
+        <span class="product__label">{{ i18n('price') }}</span>
+        <span class="product__value">{{ item.price }} € {% if (item.tax) %} (Netto) {% else %} (Brutto){% endif %}</span>
+        <!-- TODO: Snippify -->
+    </div>
+    <div class="product__attribute">
+        <span class="product__label">{{ i18n('duration') }}</span>
+        <span class="product__value">Unlimited</span>
+    </div>
+{% endblock attributes__main %}
 
-{#                </div>#}
-{#                <div class="product__attribute">#}
-{#                    <span class="product__label">{{ i18n('insertion_duration') }}</span>#}
-{#                    <span class="product__value">Unlimited</span>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{#        <div class="product__actions">#}
-{#            <a class="button button--primary edit" href="{{ url('insertions_edit', {id: insertion.id}) }}"><span>Inserat bearbeiten</span>#}
-{#            </a>#}
-
-{#            <a class="button button--primary highlight" href="#"><span>Inserat hervorheben</span><i#}
-{#                        class="icon icon--inverted"></i></a>#}
-{#            {% if insertion.active %}#}
-{#                <a class="button button--primary disable"#}
-{#                   href="{{ url('frontend_account_insertions_disable', {id: insertion.id}) }}"><span>Inserat deaktivieren</span></a>#}
-{#            {% else %}#}
-{#                <a class="button button--primary activate"#}
-{#                   href="{{ url('frontend_account_insertions_activate', {id: insertion.id}) }}"><span>Inserat aktivieren</span></a>#}
-{#            {% endif %}#}
-{#            <a class="button button--primary delete"#}
-{#               href="{{ url('frontend_account_insertions_delete', {id: insertion.id}) }}"><span>Inserat löschen</span></a>#}
-
-{#            <div class="mobile-buttons">#}
-{#                <a class="mobile-button" href="{{ url('insertions_edit', {id: insertion.id}) }}"><i class="icon"></i></a>#}
-{#                {% if insertion.active %}#}
-{#                    <a class="mobile-button" href="{{ url('frontend_account_insertions_disable', {id: insertion.id}) }}"><i#}
-{#                                class="icon"></i></a>#}
-{#                {% else %}#}
-{#                    <a class="mobile-button" href="{{ url('frontend_account_insertions_activate', {id: insertion.id}) }}"><i#}
-{#                                class="icon"></i></a>#}
-{#                {% endif %}#}
-{#                <a class="mobile-button" href="{{ url('frontend_account_insertions_delete', {id: insertion.id}) }}"><i#}
-{#                            class="icon"></i></a>#}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
-{#{% endblock %}#}
-
-{% block product_panel %}
-    <div class="panel panel--product product">
-        <a href="{{ url("insertions_detail", {id: item.id}) }}" class="product__image">
-            {% if item.media is defined and item.media|length > 0 and item.media[0].content is defined %}
-                <img src="{{ media(item.media[0].content, 300) }}" alt="{{ item.content[0].name }}"
-                     class="image">
-            {% else %}
-                <!-- TODO add dummy image -->
-                <img src="https://placeponi.es/300/300" alt="ponie" class="image">
-            {% endif %}
-            <div class="badge badge--image badge--top-left"></div>
-            <div class="label label--image label--top-right"></div>
+{% block attributes__bottom %}
+    <div class="product__actions">
+        <a class="button button--primary edit"
+           href="{{ url('insertions_edit', {id: item.id}) }}">
+            <span>{{ i18n('edit') }}</span>
+            <i class="icon icon--inverted"></i>
         </a>
-        <div class="product__attributes product__attributes--main">
 
-            {% for topvalue in item.topvalues|slice(0,3) %}
-                {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
-            {% endfor %}
-        </div>
-        <div class="product__content">
-            <h3 class="product__title">{{ item.content[0].title }}</h3>
-            <div class="product__attributes product__attributes--top">
-                <div class="product__attribute">
-                    <span class="product__label">{{ i18n('insertion_name') }}</span>
-                    <span class="product__value">{{ item.content[0].name }}</span>
-                </div>
-                {% for topvalue in item.topvalues|slice(1,2) %}
-                    {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
-                {% endfor %}
-            </div>
-            <div class="product__attributes product__attributes--bottom">
+        <a class="button button--primary highlight" href="#">
+            <span>{{ i18n('highlight') }}</span>
+            <i class="icon icon--inverted"></i>
+        </a>
+        {% if insertion.active %}
+            <a class="button button--primary disable"
+               href="{{ url('frontend_account_insertions_disable', {id: item.id}) }}">
+                <span>{{ i18n('disable') }}</span>
+                <i class="icon icon--inverted"></i></a>
+            </a>
+        {% else %}
+            <a class="button button--primary activate"
+               href="{{ url('frontend_account_insertions_activate', {id: item.id}) }}">
+                <span>{{ i18n('activate') }}</span>
+                <i class="icon icon--inverted"></i>
+        {% endif %}
+        <a class="button button--primary delete"
+           href="{{ url('frontend_account_insertions_delete', {id: item.id}) }}">
+            <span>{{ i18n('delete') }}</span>
+            <i class="icon icon--inverted"></i>
+        </a>
 
-                {% for topvalue in item.topvalues|slice(3,3) %}
-                    {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
-                {% endfor %}
-            </div>
-            <div class="product__meta">
-                <span class="product__number">{{ item.id }}</span>
-                <div class="product__pricing">
-                    <span class="product__label">price</span>
-                    <span class="product__value">{{ item.price }}€</span>
-                </div>
-            </div>
+        <div class="mobile-buttons">
+            <a class="mobile-button" href="{{ url('insertions_edit', {id: item.id}) }}">
+                <i class="icon"></i>
+            </a>
+            {% if insertion.active %}
+                <a class="mobile-button"
+                   href="{{ url('frontend_account_insertions_disable', {id: item.id}) }}">
+                    <i class="icon"></i>
+                </a>
+            {% else %}
+                <a class="mobile-button"
+                   href="{{ url('frontend_account_insertions_activate', {id: item.id}) }}">
+                    <i class="icon"></i>
+                </a>
+            {% endif %}
+            <a class="mobile-button" href="{{ url('frontend_account_insertions_delete', {id: item.id}) }}">
+                <i class="icon"></i>
+            </a>
         </div>
     </div>
-{% endblock %}
+{% endblock attributes__bottom %}
+
+{% block attributes__top %}
+    <div class="product__attributes product__attributes--top">
+        <div class="product__attribute">
+            <span class="product__label">{{ i18n('insertion_name') }}</span>
+            <span class="product__value">{{ item.content[0].name }}</span>
+        </div>
+        <div class="product__attribute">
+            <span class="product__label">{{ i18n('insertion_price') }}</span>
+            <span class="product__value">{{ item.price }} € {% if (item.tax) %} (Netto) {% else %} (Brutto){% endif %}</span>
+            <!-- TODO: Snippify -->
+
+        </div>
+        <div class="product__attribute">
+            <span class="product__label">{{ i18n('insertion_duration') }}</span>
+            <span class="product__value">Unlimited</span>
+        </div>
+    </div>
+{% endblock attributes__top %}
+
+{% block product__meta %}
+{% endblock product__meta %}
+

@@ -65,7 +65,7 @@ class CronjobService extends AbstractDatabaseAccess {
         }
         //Check if the element is already within the system
         foreach ($cronjobs as $cronjob) {
-            $element = $this->repository()->findOneBy(['id' => $cronjob->getId()]);
+            $element = $this->repository()->findOneBy(['name' => $cronjob->getName()]);
             if (!isset($element)) {
                 try {
                     $this->entityManager()->create($cronjob, false);
@@ -356,12 +356,12 @@ class CronjobService extends AbstractDatabaseAccess {
     /**
      * Get full path for cronjob log file.
      *
-     * @param string $cronjobID
+     * @param string $cronjobName
      *
      * @return string
      */
-    protected function getLogFilePath(string $cronjobID) : string {
-        return CronjobStatics::CRONJOB_LOGS_DIR_ABS . DIRECTORY_SEPARATOR . str_replace(':', '_', $cronjobID) . LoggerManager::FILE_EXTENSION;
+    protected function getLogFilePath(string $cronjobName) : string {
+        return CronjobStatics::CRONJOB_LOGS_DIR_ABS . DIRECTORY_SEPARATOR . str_replace(':', '_', $cronjobName) . LoggerManager::FILE_EXTENSION;
     }
 
 }
