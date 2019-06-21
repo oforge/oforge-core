@@ -217,6 +217,7 @@ class ModuleManager {
             $instance->activate();
 
             $this->entityManger()->flush();
+            $instance->load();
         }
     }
 
