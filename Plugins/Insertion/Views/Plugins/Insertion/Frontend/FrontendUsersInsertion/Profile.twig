@@ -18,16 +18,22 @@
 
                             </div>
                             <div class="profile-upload upload-background">
-                                <label for="background">
+                                <label class="upload__label" for="input__background">
+                                    <span>{{ i18n('change_title_img') }}</span>
                                     <svg class="icon icon--primary">
                                         <use xlink:href="#fade_in"></use>
                                     </svg>
-                                    <input data-update="img-background" type="file" name="background" accept="image/*">
                                 </label>
+                                    <input id="input__background" data-update="img-background" type="file" name="background" accept="image/*">
                             </div>
                             <div class="profile-upload">
-                                <label for="profile"></label>
-                                <input data-update="img-profile" type="file" name="profile" accept="image/*">
+                                <label class="upload__label" for="input__profile">
+                                    <span>{{ i18n('change_profile_img') }}</span>
+                                    <svg class="icon icon--primary">
+                                        <use xlink:href="#fade_in"></use>
+                                    </svg>
+                                </label>
+                                <input id="input__profile" data-update="img-profile" type="file" name="profile" accept="image/*">
                             </div>
                             <div class="profile-link">
                                 <a href="{{ url('insertions_profile', {id: profile.id }) }}">
