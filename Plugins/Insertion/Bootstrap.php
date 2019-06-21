@@ -3,6 +3,7 @@
 namespace Insertion;
 
 use FrontendUserManagement\Services\AccountNavigationService;
+use Insertion\Commands\ReminderCommand;
 use Insertion\Controller\Backend\BackendAttributeController;
 use Insertion\Controller\Backend\BackendInsertionController;
 use Insertion\Controller\Backend\BackendInsertionTypeController;
@@ -10,6 +11,7 @@ use Insertion\Controller\Backend\BackendInsertionTypeGroupController;
 use Insertion\Controller\Frontend\FrontendInsertionController;
 use Insertion\Controller\Frontend\FrontendInsertionSupplierController;
 use Insertion\Controller\Frontend\FrontendUsersInsertionController;
+use Insertion\Cronjobs\Reminder14DaysCronjob;
 use Insertion\Models\AttributeKey;
 use Insertion\Models\AttributeValue;
 use Insertion\Models\Insertion;
@@ -98,6 +100,14 @@ class Bootstrap extends AbstractBootstrap {
             \FrontendUserManagement\Bootstrap::class,
             \Messenger\Bootstrap::class,
             \Helpdesk\Bootstrap::class,
+        ];
+
+        $this->commands = [
+            ReminderCommand::class,
+        ];
+
+        $this->cronjobs = [
+            Reminder14DaysCronjob::class,
         ];
     }
 
