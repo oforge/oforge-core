@@ -2,6 +2,7 @@
 
 namespace Insertion\Services;
 
+use DateTime;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Services\UserService;
@@ -87,11 +88,9 @@ class InsertionService extends AbstractDatabaseAccess {
                     }
                     $result = $result->andWhere($orX);
                     break;
-
                 case 'range':
                     $result = $result->andWhere($queryBuilder->expr()->between('i.' . $criteriaKey, $criteriaValue['min'], $criteriaValue['max']));
                     break;
-
                 case 'single':
                     $result = $result->andWhere($queryBuilder->expr()->eq('i.' . $criteriaKey, $criteriaValue));
                     break;
@@ -143,4 +142,21 @@ class InsertionService extends AbstractDatabaseAccess {
         return $insertionAttributeValue;
     }
 
+    /**
+     * @param DateTime $from
+     * @param DateTime $to
+     *
+     * @return Insertion[]
+     */
+    public function getInsertionByDays(DateTime $from, DateTime $to) {
+        $queryBuilder = $this->entityManager()->createQueryBuilder();
+        $queryBuilder
+            ->select(['i'])->from(Insertion::class, 'i')
+                           ->where('i.createdAt BETWEEN :from AND :to')
+                           ->setParameter('from', $from)
+                           ->setParameter('to', $to);
+        /** @var Insertion[] $result */
+        $result = $queryBuilder->getQuery()->getResult();
+        return $result;
+    }
 }
