@@ -83,6 +83,9 @@
         }
         .upload__label {
             display: flex;
+            &:hover {
+                cursor: pointer;
+            }
         }
     }
 
