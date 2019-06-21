@@ -1,19 +1,23 @@
-{% for item in bookmarks %}
+<div class="user--bookmarks">
+    {% for item in bookmarks %}
+        {% set item = item.insertion %}
+        {% include 'Frontend/Components/Insertions/UserBookmarks.twig' with {item : item } %}
+        {#    <div>#}
+        {#        <a href="{{ url("insertions_detail", {id: item.insertion.id}) }}" class="product__image">#}
+        {#            {% if item.insertion.media is defined and item.insertion.media|length > 0 and item.insertion.media[0].content is defined %}#}
+        {#                <img src="{{ media(item.insertion.media[0].content, 300) }}" alt="{{ item.insertion.content[0].name }}"#}
+        {#                     class="image">#}
+        {#            {% else %}#}
+        {#                <!-- TODO add dummy image -->#}
+        {#                <img src="https://placeponi.es/300/300" alt="ponie" class="image">#}
+        {#            {% endif %}#}
 
-    <div>
-        <a href="{{ url("insertions_detail", {id: item.insertion.id}) }}" class="product__image">
-            {% if item.insertion.media is defined and item.insertion.media|length > 0 and item.insertion.media[0].content is defined %}
-                <img src="{{ media(item.insertion.media[0].content, 300) }}" alt="{{ item.insertion.content[0].name }}"
-                     class="image">
-            {% else %}
-                <!-- TODO add dummy image -->
-                <img src="https://placeponi.es/300/300" alt="ponie" class="image">
-            {% endif %}
+        {#            {{ item.insertion.content[0].title }}#}
+        {#        </a>#}
+        {#        <a href="{{ url('frontend_account_insertions_toggleBookmark', {'insertionId': item.insertion.id }) }}" class="button button--secondary">{% if hasBookmark(item.insertion.id) %} Remove from wishlist {% else %}Add to wishlist{% endif %}</a>#}
 
-            {{ item.insertion.content[0].title }}
-        </a>
-        <a href="{{ url('frontend_account_insertions_toggleBookmark', {'insertionId': item.insertion.id }) }}" class="button button--secondary">{% if hasBookmark(item.insertion.id) %} Remove from wishlist {% else %}Add to wishlist{% endif %}</a>
+        {#    </div>#}
+    {% endfor %}
 
-    </div>
 
-{% endfor %}
+</div>
