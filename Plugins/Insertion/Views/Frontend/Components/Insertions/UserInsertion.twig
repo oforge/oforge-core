@@ -3,11 +3,11 @@
 {% block attributes__main %}
     <div class="product__attribute">
         <span class="product__label">{{ i18n('name') }}</span>
-        <span class="product__value">{{ insertion.content[0].name }}</span>
+        <span class="product__value">{{ item.content[0].name }}</span>
     </div>
     <div class="product__attribute">
         <span class="product__label">{{ i18n('price') }}</span>
-        <span class="product__value">{{ insertion.price }} € {% if (insertion.tax) %} (Netto) {% else %} (Brutto){% endif %}</span>
+        <span class="product__value">{{ item.price }} € {% if (item.tax) %} (Netto) {% else %} (Brutto){% endif %}</span>
         <!-- TODO: Snippify -->
     </div>
     <div class="product__attribute">
@@ -19,7 +19,7 @@
 {% block attributes__bottom %}
     <div class="product__actions">
         <a class="button button--primary edit"
-           href="{{ url('insertions_edit', {id: insertion.id}) }}">
+           href="{{ url('insertions_edit', {id: item.id}) }}">
             <span>{{ i18n('edit') }}</span>
             <i class="icon icon--inverted"></i>
         </a>
@@ -30,38 +30,38 @@
         </a>
         {% if insertion.active %}
             <a class="button button--primary disable"
-               href="{{ url('frontend_account_insertions_disable', {id: insertion.id}) }}">
+               href="{{ url('frontend_account_insertions_disable', {id: item.id}) }}">
                 <span>{{ i18n('disable') }}</span>
                 <i class="icon icon--inverted"></i></a>
             </a>
         {% else %}
             <a class="button button--primary activate"
-               href="{{ url('frontend_account_insertions_activate', {id: insertion.id}) }}">
+               href="{{ url('frontend_account_insertions_activate', {id: item.id}) }}">
                 <span>{{ i18n('activate') }}</span>
                 <i class="icon icon--inverted"></i>
         {% endif %}
         <a class="button button--primary delete"
-           href="{{ url('frontend_account_insertions_delete', {id: insertion.id}) }}">
+           href="{{ url('frontend_account_insertions_delete', {id: item.id}) }}">
             <span>{{ i18n('delete') }}</span>
             <i class="icon icon--inverted"></i>
         </a>
 
         <div class="mobile-buttons">
-            <a class="mobile-button" href="{{ url('insertions_edit', {id: insertion.id}) }}">
+            <a class="mobile-button" href="{{ url('insertions_edit', {id: item.id}) }}">
                 <i class="icon"></i>
             </a>
             {% if insertion.active %}
                 <a class="mobile-button"
-                   href="{{ url('frontend_account_insertions_disable', {id: insertion.id}) }}">
+                   href="{{ url('frontend_account_insertions_disable', {id: item.id}) }}">
                     <i class="icon"></i>
                 </a>
             {% else %}
                 <a class="mobile-button"
-                   href="{{ url('frontend_account_insertions_activate', {id: insertion.id}) }}">
+                   href="{{ url('frontend_account_insertions_activate', {id: item.id}) }}">
                     <i class="icon"></i>
                 </a>
             {% endif %}
-            <a class="mobile-button" href="{{ url('frontend_account_insertions_delete', {id: insertion.id}) }}">
+            <a class="mobile-button" href="{{ url('frontend_account_insertions_delete', {id: item.id}) }}">
                 <i class="icon"></i>
             </a>
         </div>
@@ -72,11 +72,11 @@
     <div class="product__attributes product__attributes--top">
         <div class="product__attribute">
             <span class="product__label">{{ i18n('insertion_name') }}</span>
-            <span class="product__value">{{ insertion.content[0].name }}</span>
+            <span class="product__value">{{ item.content[0].name }}</span>
         </div>
         <div class="product__attribute">
             <span class="product__label">{{ i18n('insertion_price') }}</span>
-            <span class="product__value">{{ insertion.price }} € {% if (insertion.tax) %} (Netto) {% else %} (Brutto){% endif %}</span>
+            <span class="product__value">{{ item.price }} € {% if (item.tax) %} (Netto) {% else %} (Brutto){% endif %}</span>
             <!-- TODO: Snippify -->
 
         </div>
