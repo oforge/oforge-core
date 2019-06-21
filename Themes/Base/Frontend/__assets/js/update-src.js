@@ -14,9 +14,7 @@
                 const triggers = document.querySelectorAll('[data-update]');
                 triggers.forEach(function (trigger) {
                     trigger.addEventListener('change', function () {
-                        console.log(trigger.dataset.update);
                         let items = document.getElementsByClassName(trigger.dataset.update);
-                        console.log(items);
                         items.forEach(function (item) {
                             item.style.backgroundImage = "url('" + URL.createObjectURL(trigger.files[0]) + "')";
                         })
