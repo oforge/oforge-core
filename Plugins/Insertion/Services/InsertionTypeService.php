@@ -27,7 +27,6 @@ class InsertionTypeService extends AbstractDatabaseAccess {
      *
      * @return InsertionType
      * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function createNewInsertionType($name, $parent = null) {
         /** @var InsertionType $insertionType */
@@ -153,25 +152,22 @@ class InsertionTypeService extends AbstractDatabaseAccess {
      * @param InsertionType $insertionType
      * @param AttributeKey $attributeKey
      * @param $isTop
-     * @param string $attributeGroup
+     * @param int $insertionTypeGroup
      * @param bool $required
      *
      * @throws ORMException
      */
-    public function addAttributeToInsertionType($insertionType, $attributeKey, $isTop, $attributeGroup = 'main', $required = false) {
-        $group = $this->repository("group")->findOneBy(["name" => $attributeGroup]);
-        if (!isset($group)) {
-            $group = InsertionTypeGroup::create(["name" => $attributeGroup]);
-            $this->entityManager()->create($group);
-        }
+    public function addAttributeToInsertionType($insertionType, $attributeKey, $isTop, $insertionTypeGroup, $required = false) {
+        /** @var InsertionTypeGroup $group */
+        $group = $this->repository("group")->find($insertionTypeGroup);
 
         $insertionTypeAttribute = new InsertionTypeAttribute();
         $insertionTypeAttribute->setInsertionType($insertionType)->setAttributeKey($attributeKey)->setIsTop($isTop)->setAttributeGroup($group)
                                ->setRequired($required);
 
-        $this->entityManager()->create($insertionTypeAttribute);
-
         $insertionType->setAttributes([$attributeKey]);
+        $this->entityManager()->update($insertionTypeAttribute);
+
         // $insertionType->addAttribute()
     }
 
@@ -202,7 +198,6 @@ class InsertionTypeService extends AbstractDatabaseAccess {
         foreach ($insertionType->getAttributes() as $attribute) {
             $this->deleteInsertionTypeAttribute($attribute->getId());
         }
-        $this->entityManager()->flush();
         $this->entityManager()->remove($insertionType);
     }
 
@@ -233,7 +228,6 @@ class InsertionTypeService extends AbstractDatabaseAccess {
      *
      * @return object|null
      * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function updateInsertionType($id, $name, $parent) {
         /** @var InsertionType $insertionType */
@@ -241,8 +235,7 @@ class InsertionTypeService extends AbstractDatabaseAccess {
         $insertionType->setName($name);
         $insertionType->setParent($parent);
 
-        $this->entityManager()->update($insertionType, false);
-        $this->entityManager()->flush();
+        $this->entityManager()->update($insertionType);
 
         return $insertionType;
     }
@@ -251,26 +244,24 @@ class InsertionTypeService extends AbstractDatabaseAccess {
      * @param $id
      * @param $attributeKey
      * @param $top
-     * @param $attributeGroup
+     * @param $insertionTypeGroup
      * @param $required
      *
      * @return InsertionTypeAttribute
      * @throws ORMException
-     * @throws OptimisticLockException
      */
-    public function updateInsertionTypeAttribute($id, $attributeKey, $top, $attributeGroup, $required) {
+    public function updateInsertionTypeAttribute($id, $attributeKey, $top, $insertionTypeGroup, $required) {
         /** @var InsertionTypeAttribute $insertionTypeAttribute */
         $insertionTypeAttribute = $this->repository('insertionTypeAttribute')->find($id);
         /** @var InsertionTypeGroup $group */
-        $group = $this->repository('group')->findOneBy(['name' => $attributeGroup]);
+        $group = $this->repository('group')->findOneBy(['id' => $insertionTypeGroup]);
 
         $insertionTypeAttribute->setAttributeKey($attributeKey);
         $insertionTypeAttribute->setIsTop($top);
         $insertionTypeAttribute->setAttributeGroup($group);
         $insertionTypeAttribute->setRequired($required);
 
-        $this->entityManager()->update($insertionTypeAttribute, false);
-        $this->entityManager()->flush();
+        $this->entityManager()->update($insertionTypeAttribute);
 
         return $insertionTypeAttribute;
     }
@@ -284,6 +275,5 @@ class InsertionTypeService extends AbstractDatabaseAccess {
     public function deleteInsertionTypeAttribute($id) {
         $insertionTypeAttribute = $this->repository('insertionTypeAttribute')->find($id);
         $this->entityManager()->remove($insertionTypeAttribute);
-        $this->entityManager()->flush();
     }
 }

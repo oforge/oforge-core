@@ -3,7 +3,7 @@
 
     {% set navigation = content('main_navigation') %}
 
-    <nav class="main-nav{% if navigation.columns is defined and navigation.columns.length > 0 %} main-nav--no-border {% endif %}">
+    <nav class="main-nav{% if navigation.columns is defined and navigation.columns.length > 0 %} main-nav--no-border {% endif %}" data-main-nav="true">
         {% block main_nav_title %}
             {% include 'Frontend/Components/Header/LogoClaim.twig' with {link: true} %}
         {% endblock main_nav_title %}

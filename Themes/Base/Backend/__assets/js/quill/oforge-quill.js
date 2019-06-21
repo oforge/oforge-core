@@ -20,11 +20,11 @@ var OforgeQuill = (function ($) {
     const initFormFields = function () {
         const formFieldSelector = '.oforge-quill-editable';
         $(formFieldSelector).each(function (index, field) {
-            let $inputField = $(field).hide();
-            let $editorContentContainer = $('<div></div>').html($inputField.val());
-            let $editorWrapper = $('<div></div>').addClass('html-editor-wrapper')
+            var $inputField = $(field).hide();
+            var $editorContentContainer = $('<div></div>').html($inputField.val());
+            var $editorWrapper = $('<div></div>').addClass('html-editor-wrapper')
                 .append($editorContentContainer).insertAfter($inputField);
-            let quill = new Quill($editorContentContainer.get(0), {
+            var quill = new Quill($editorContentContainer.get(0), {
                 modules: {
                     imageResize: {
                         displaySize: true
@@ -51,12 +51,8 @@ var OforgeQuill = (function ($) {
                     }
                 });
             });
-
-
         });
     };
-
-
 
     const init = function () {
         initFormFields();

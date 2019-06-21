@@ -82,6 +82,18 @@ class CronjobController extends BaseCrudController {
         parent::__construct();
     }
 
+    /** @EndpointAction(create=false) */
+    public function createAction(Request $request, Response $response) {
+    }
+
+    /** @EndpointAction(create=false) */
+    public function updateAction(Request $request, Response $response, array $args) {
+    }
+
+    /** @EndpointAction(create=false) */
+    public function deleteAction(Request $request, Response $response, array $args) {
+    }
+
     /**
      * @param Request $request
      * @param Response $response

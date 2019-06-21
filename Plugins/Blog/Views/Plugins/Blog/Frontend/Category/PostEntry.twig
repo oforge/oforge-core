@@ -1,3 +1,6 @@
+{# endblock blog_posts__post_entry #}
+
+{% block post_entry %}
 <div class="blog-posts-entry" title="{{ blogPost.headerTitle }}">
     <div class="blog-posts-entry-content" data-masonry-content="true">
         <div class="blog-post-entry-image">
@@ -16,3 +19,4 @@
            title="{{ blogPost.headerTitle }}">LINK</a>
     </div>
 </div>
+{% endblock post_entry %}
