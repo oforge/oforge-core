@@ -8,8 +8,10 @@
         </div>
         <div id="blog-posts-container" data-masonry="true">
             {% for index,blogPost in blog.posts %}
-                {% if index > 1 %}
+                {% if index > 0 %}
+                    {% block blog_posts__post_entry %}
                     {% include 'Plugins/Blog/Frontend/Category/PostEntry.twig' %}
+                    {% endblock blog_posts__post_entry %}
                 {% endif %}
             {% endfor %}
         </div>

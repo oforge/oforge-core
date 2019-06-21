@@ -3,13 +3,14 @@
 namespace Oforge\Engine\Modules\CMS\ContentTypes;
 
 use Oforge\Engine\Modules\CMS\Abstracts\AbstractContentType;
-use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
 use Oforge\Engine\Modules\CMS\Models\Content\Content;
-use Oforge\Engine\Modules\Core\Helper\Statics;
-use Oforge\Engine\Modules\Media\Models\Media;
-use Oforge\Engine\Modules\Media\Services\MediaService;
 
-class Image extends AbstractContentType {
+/**
+ * Class Text
+ *
+ * @package Oforge\Engine\Modules\CMS\ContentTypes
+ */
+class Text extends AbstractContentType {
     /**
      * Return whether or not content type is a container type like a row
      *
@@ -26,11 +27,11 @@ class Image extends AbstractContentType {
      */
     public function getEditData() {
         $data         = [];
-        $data["id"]   = $this->getContentId();
-        $data["type"] = $this->getId();
-        $data["name"] = $this->getContentName();
-        $data["css"]  = $this->getContentCssClass();
-        $data["url"]  = $this->getContentData();
+        $data['id']   = $this->getContentId();
+        $data['type'] = $this->getId();
+        $data['name'] = $this->getContentName();
+        $data['css']  = $this->getContentCssClass();
+        $data['text'] = $this->getContentData();
 
         return $data;
     }
@@ -40,11 +41,10 @@ class Image extends AbstractContentType {
      *
      * @param $data
      *
-     * @return Image $this
+     * @return Text $this
      */
     public function setEditData($data) {
-
-        $this->setContentData($data["image"]);
+        $this->setContentData($data['text']);
 
         return $this;
     }
@@ -56,13 +56,12 @@ class Image extends AbstractContentType {
      */
     public function getRenderData() {
         $data                = [];
-        $data["form"]        = "ContentTypes/" . $this->getPath() . "/PageBuilderForm.twig";
-        $data["type"]        = "ContentTypes/" . $this->getPath() . "/PageBuilder.twig";
-        $data["typeId"]      = $this->getId();
-        $data["isContainer"] = $this->isContainer();
-        $data["css"]         = $this->getContentCssClass();
-        $data["url"]         = $this->getContentData();
-        $data["alt"]         = $this->getContentData();
+        $data['form']        = 'ContentTypes/' . $this->getPath() . '/PageBuilderForm.twig';
+        $data['type']        = 'ContentTypes/' . $this->getPath() . '/PageBuilder.twig';
+        $data['typeId']      = $this->getId();
+        $data['isContainer'] = $this->isContainer();
+        $data['css']         = $this->getContentCssClass();
+        $data['text']        = $this->getContentData();
 
         return $data;
     }
@@ -73,7 +72,7 @@ class Image extends AbstractContentType {
      * @param Content $contentEntity
      * @param int $order
      *
-     * @return Image $this
+     * @return Text $this
      */
     public function createChild($contentEntity, $order) {
         return $this;
@@ -85,7 +84,7 @@ class Image extends AbstractContentType {
      * @param Content $contentEntity
      * @param int $order
      *
-     * @return Image $this
+     * @return Text $this
      */
     public function deleteChild($contentEntity, $order) {
         return $this;

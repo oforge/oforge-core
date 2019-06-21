@@ -30,6 +30,10 @@
   &.box-default {
     border-top-color: $gray;
   }
+  &.box-blue {
+    border-top-color: $blue;
+  }
+
 
   // collapsed mode
   &.collapsed-box {

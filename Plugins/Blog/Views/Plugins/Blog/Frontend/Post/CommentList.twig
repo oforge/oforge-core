@@ -3,7 +3,9 @@
     {% if blog.comments %}
         <div id="blog-post-comments-container">
             {% for blogPostComment in blog.comments %}
-                {% include 'Plugins/Blog/Frontend/Post/CommentEntry.twig' %}
+                {% block comment_list__entry %}
+                    {% include 'Plugins/Blog/Frontend/Post/CommentEntry.twig' %}
+                {% endblock comment_list__entry %}
             {% endfor %}
         </div>
         {% if blog.comments|length >= blog.commentsPerPage %}

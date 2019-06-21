@@ -67,6 +67,7 @@ class PluginStateService extends AbstractDatabaseAccess {
                 $endpointService = Oforge()->Services()->get('endpoint');
                 $endpointService->install($endpoints);//TODO coreRafactoring
                 $endpointService->activate($endpoints);//TODO coreRafactoring
+             //   $instance->load();
             }
         }
     }
@@ -285,6 +286,7 @@ class PluginStateService extends AbstractDatabaseAccess {
             $plugin->setActive(true);
             $this->entityManager()->update($plugin);
         }
+        $instance->load();
         /** @var TemplateManagementService $templateManagementService */
         $templateManagementService = Oforge()->Services()->get('template.management');
         $templateManagementService->build();

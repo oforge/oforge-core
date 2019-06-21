@@ -9,7 +9,7 @@
 
                 <div class="row collapse in" id="contenttypegroup_{{ contentTypeGroup.id }}">
                     {% for type in contentTypeGroup.types %}
-                        <div class="content-type-selector jstree_draggable" data-ct-id="{{ type.id }}">
+                        <div class="content-type-selector jstree_draggable" data-ct-id="{{ type.id }}" title="{{ type.description }}">
                             <div draggable="false"><img class="content-type-icon" src="{{ type.icon }}"
                                                         draggable="false">
                             </div>
