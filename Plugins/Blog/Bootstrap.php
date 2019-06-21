@@ -112,11 +112,11 @@ class Bootstrap extends AbstractBootstrap {
         /** @var DashboardWidgetsService $dashboardWidgetsService */
         $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
         $dashboardWidgetsService->register([
-            'position'     => 'top',
+            'position'     => 'right',
             'action'       => BlogOverviewWidget::class,
             'title'        => 'plugin_blog_dashboard_widget_overview_title',
             'name'         => 'plugin_blog_dashboard_widget_overview_name',
-            'cssClass'     => 'bg-blue',
+            'cssClass'     => 'box-blue',
             'templateName' => 'BlogOverview',
         ]);
 

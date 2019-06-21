@@ -67,7 +67,7 @@ class PluginStateService extends AbstractDatabaseAccess {
                 $endpointService = Oforge()->Services()->get('endpoint');
                 $endpointService->install($endpoints);//TODO coreRafactoring
                 $endpointService->activate($endpoints);//TODO coreRafactoring
-                $instance->load();
+             //   $instance->load();
             }
         }
     }
