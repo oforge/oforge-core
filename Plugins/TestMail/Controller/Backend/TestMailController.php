@@ -31,8 +31,6 @@ class TestMailController extends AbstractController {
         $sendMailLink               = $router->pathFor('backend_sendmail');
         Oforge()->View()->assign(['showMailLink' => $showMailLink, 'sendMailLink' => $sendMailLink]);
 
-        return $response;
-
     }
 
     public function sendAction(Request $request, Response $response) {
