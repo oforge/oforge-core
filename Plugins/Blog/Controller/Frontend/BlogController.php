@@ -20,7 +20,6 @@ use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
-use Oforge\Engine\Modules\Core\Helper\DateTimeFormatter;
 use Oforge\Engine\Modules\Core\Helper\RedirectHelper;
 use Oforge\Engine\Modules\Core\Models\Endpoint\EndpointMethod;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
@@ -187,7 +186,7 @@ class BlogController extends SecureFrontendController {
     public function createCommentAction(Request $request, Response $response, array $args) {
         $postData = $request->getParsedBody();
         if ($request->isPost() && !empty($postData)) {
-            $userID = ArrayHelper::get($postData, 'userID');
+            $userID  = ArrayHelper::get($postData, 'userID');
             $comment = ArrayHelper::get($postData, 'comment');
             if (!empty($userID) && !empty($comment) && $userID == Oforge()->View()->get('current_user.id')) {
                 $twigFlash = Oforge()->View()->Flash();
@@ -254,9 +253,8 @@ class BlogController extends SecureFrontendController {
             $comments     = $this->commentService->getComments($postID, $page);
             $commentsData = [];
             foreach ($comments as $comment) {
-                $data            = $comment->toArray(2, ['author' => ['*', '!detail'], 'post']);
-                $data['created'] = DateTimeFormatter::datetime($comment->getCreated());
-                $commentsData[]  = $data;
+                $data           = $comment->toArray(2, ['author' => ['*', '!detail'], 'post']);
+                $commentsData[] = $data;
             }
             Oforge()->View()->assign([
                 'blog.comments' => $commentsData,
