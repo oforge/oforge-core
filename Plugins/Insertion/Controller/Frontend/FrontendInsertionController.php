@@ -260,6 +260,45 @@ class FrontendInsertionController extends SecureFrontendController {
     /**
      * @param Request $request
      * @param Response $response
+     * @EndpointAction(path="/detailsearch/{type}")
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws ServiceNotFoundException
+     */
+    public function detailSearchAction(Request $request, Response $response, $args) {
+        $typeIdOrName = $args["type"];
+        /** @var $service InsertionTypeService */
+        $insertionTypeService = Oforge()->Services()->get("insertion.type");
+
+        /** @var $type InsertionType */
+        $type = $insertionTypeService->getInsertionTypeByName($typeIdOrName);
+        if ($type == null) {
+            $type = $insertionTypeService->getInsertionTypeById($typeIdOrName);
+        }
+
+        if (!isset($type) || $type == null) {
+            return $response->withRedirect("/404", 301);
+        }
+
+        $typeAttributes       = $insertionTypeService->getInsertionTypeAttributeTree($type->getId());
+        $result["attributes"] = $typeAttributes;
+        $result["keys"]       = [];
+        $result["typeId"]     = $args["type"];
+        /**
+         * @var $attribute InsertionTypeAttribute
+         */
+        foreach ($type->getAttributes() as $attribute) {
+            $key                             = $attribute->getAttributeKey();
+            $result["keys"][$key->getName()] = $key->toArray(0);
+        }
+
+        Oforge()->View()->assign($result);
+    }
+
+
+    /**
+     * @param Request $request
+     * @param Response $response
      * @EndpointAction(path="/detail/{id}")
      */
     public function detailAction(Request $request, Response $response, $args) {
