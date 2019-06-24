@@ -7,8 +7,17 @@
     }
 
     .background {
+        height: 52rem;
         margin: -$size-large;
         margin-bottom: 0;
+        background-size: cover;
+        background-position: center top;
+        background-repeat: no-repeat;
+    }
+    .user__picture {
+        background-size: contain;
+        background-position: center center;
+        background-repeat: no-repeat;
     }
 
     .profile-pic {
@@ -64,8 +73,19 @@
     }
 
     .profile-upload {
+        display: flex;
         &.upload-background {
             text-align: right;
+            justify-content: right;
+        }
+        #input__background, #input__profile {
+            display: none;
+        }
+        .upload__label {
+            display: flex;
+            &:hover {
+                cursor: pointer;
+            }
         }
     }
 
@@ -86,7 +106,7 @@
             margin: -3rem -3rem 0 -3rem;
         }
         .profile-pic {
-            top: -22rem;
+            top: -23rem;
             margin-bottom: -16rem;
 
             .user__picture {
