@@ -1,0 +1,85 @@
+<div class="form">
+    <div class="form-group">
+        <label>{{ i18n('type_gallery', 'Gallery') }}</label>
+        <div class="gallery-sortables">
+            <div>
+                <span class="btn btn-primary gallery--add">
+                    <i class="fa fa-plus"></i>
+                </span>
+            </div>
+            {% for dataImage in data.images %}
+{#                 background-image: url({{ media(dataImage, 200) }});background-repeat: no-repeat;
+                    width: 200px;
+                    height: 200px;
+                    background-size: contain;#}
+                <div class="gallery-sortable-item">
+                    <span class="gallery-sortable-item--close"><i class="fa fa-close"></i></span>
+                    <span class="gallery-sortable-item--edit"><i class="fa fa-edit"></i></span>
+                    <input type="hidden" name="images[]" value="{{ dataImage }}" />
+                    <img src="{{ media(dataImage) }}" alt="{{ dataImage }}" width="200" />
+                </div>
+            {% endfor %}
+            <div class="gallery-sortable-item">
+                <span class="gallery-sortable-item--close"><i class="fa fa-close"></i></span>
+                <span class="gallery-sortable-item--edit"><i class="fa fa-edit"></i></span>
+                <input type="hidden" name="images[]" value="" />
+                <img src="" alt="" width="200" />
+            </div>
+        </div>
+        <style>
+            .gallery-sortable-item--sortable-placeholder {
+                display: inline-block;
+                background-color: orange;
+                width: 200px;
+                height: 200px;
+            }
+            .gallery-sortable-item {
+                width: 200px;
+                height: 200px;
+                display: inline-block;
+                vertical-align: top;
+            }
+        </style>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                setTimeout(ready, 1000);
+            });
+
+            function ready() {
+                (function ($) {
+                        var $galleryWrapper = $('.gallery-sortables');
+                        var $hiddenAdd = $galleryWrapper.find('.gallery-sortable-item:last').detach();
+
+                        $galleryWrapper.on('click', '.gallery--add', function (event) {
+                            Oforge.Media.open({
+                                emitter: $(this),
+                                preview: $hiddenAdd.find('img'),
+                                //target: $hiddenAdd.find('input'),
+                                callback: function(data) {
+                                    if (data &&  data.path) {
+                                        var $clone = $hiddenAdd.clone();
+                                        $clone.find().find('input').val(data.id);
+                                        $galleryWrapper.append($clone);
+                                    }
+                                }
+                            }, event);
+                        }).on('click', '.gallery-sortable-item--close', function (event) {
+                            $(this).parent().remove();
+                        }).on('click', '.gallery-sortable-item--edit', function (event) {
+                            var $self = $(this);
+                            Oforge.Media.open({
+                                emitter: $self,
+                                preview: $self.parent().find('img'),
+                                target: $self.parent().find('input')
+                            }, event);
+                        }).sortable({
+                            placeholder: "gallery-sortable-item--sortable-placeholder"
+                        }).disableSelection();
+                    }
+
+                )
+                (jQuery);
+            }
+        </script>
+    </div>
+</div>
