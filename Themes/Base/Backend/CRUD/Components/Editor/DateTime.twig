@@ -1,8 +1,19 @@
 <div class="form-group">
-    <div class="input-group oforge-datetime-picker">
-        <input type="text" class="form-control" />
-        <span class="input-group-addon">
-            <span class="fa fa-calendar"></span>
+    {% set dateTimePicker = {
+        id: fieldID ~ '_picker',
+        type: fieldType|default('datetime'),
+    } %}
+    <div id="{{ dateTimePicker.id }}" class="input-group oforge-{{ dateTimePicker.type }}-picker"
+         data-configuration="{{ {format: config('system_datetimepicker_format_' ~ dateTimePicker.type)}|json_encode }}"
+         data-target-input="nearest">
+        <span class="input-group-addon" data-target="#{{ dateTimePicker.id }}" data-toggle="datetimepicker">
+            {% if dateTimePicker.type != 'time' %}
+                <span class="fa fa-calendar"></span>
+            {% endif %}
+            {% if dateTimePicker.type != 'date' %}
+                <span class="fa fa-clock-o"></span>
+            {% endif %}
         </span>
+        <input id="{{ fieldID }}" type="text" class="form-control" data-target="#{{ dateTimePicker.id }}" />
     </div>
 </div>
