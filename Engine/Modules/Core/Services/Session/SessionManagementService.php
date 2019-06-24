@@ -25,6 +25,7 @@ class SessionManagementService {
     public function sessionStart($lifetimeSeconds = 0, $path = '/', $domain = null, $secure = null)
     {
         $sessionStatus = session_status();
+
         if ($sessionStatus != PHP_SESSION_ACTIVE) {
              session_name( "oforge_session" );
             if ( ! empty( $_SESSION['deleted_time'] ) &&

@@ -37,7 +37,6 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
     {
         return [
             new Twig_Function('getInserationValues', [$this, 'getInserationValues']),
-
             new Twig_Function('hasBookmark', [$this, 'hasBookmark']),
             new Twig_Function('hasSearchBookmark', [$this, 'hasSearchBookmark']),
             new Twig_Function('getInsertionSliderContent', [$this, 'getInsertionSliderContent']),

@@ -7,6 +7,8 @@ use Insertion\Models\AttributeKey;
 use Insertion\Models\InsertionType;
 use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Services\AttributeService;
+use Insertion\Services\InsertionListService;
+use Insertion\Services\InsertionService;
 use Insertion\Services\InsertionTypeService;
 use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
@@ -64,6 +66,35 @@ class BackendInsertionTypeController extends SecureBackendController {
     /**
      * @param Request $request
      * @param Response $response
+     *
+     * @throws ServiceNotFoundException
+     * @throws ORMExceptionAlias
+     */
+    public function blubAction(Request $request, Response $response) {
+        $start = microtime(true) * 1000;
+
+        /** @var InsertionTypeService $attributeService */
+        $attributeService = Oforge()->Services()->get('insertion.type');
+
+        /** @var InsertionListService $insertionService */
+        $insertionService = Oforge()->Services()->get('insertion.list');
+
+        $list = $attributeService->getInsertionTypeList(30, 0);
+        for ($i = 0; $i < 1000; $i++) {
+            foreach ($list as $item) {
+                $insertionService->search($item->getId(), []);
+            }
+        }
+
+        $end = microtime(true) * 1000;
+
+        print_r($end - $start);
+        die();
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
      * @EndpointAction(path="/edit")
      *
      * @return Response
@@ -87,7 +118,7 @@ class BackendInsertionTypeController extends SecureBackendController {
                 $insertionType = $insertionTypeService->updateInsertionType($insertionTypeId, $body['name'], $parent);
                 /** @var InsertionTypeAttribute[] $insertionTypeAttributes */
                 $insertionTypeAttributes = $insertionType->getAttributes();
-                $idList = [];
+                $idList                  = [];
                 foreach ($insertionTypeAttributes as $value) {
                     $idList[] = $value->getId();
                 }
@@ -95,9 +126,9 @@ class BackendInsertionTypeController extends SecureBackendController {
                 foreach ($body['values'] as $attribute) {
                     /** @var AttributeKey $attributeKey */
                     $attributeKey = $attributeService->getAttribute($attribute['attribute_key']);
-                    if(isset($attribute['id'])) {
-                        $insertionTypeService->updateInsertionTypeAttribute($attribute['id'], $attributeKey, $attribute['is_top'], $attribute['attribute_group'],
-                            $attribute['is_required']);
+                    if (isset($attribute['id'])) {
+                        $insertionTypeService->updateInsertionTypeAttribute($attribute['id'], $attributeKey, $attribute['is_top'],
+                            $attribute['attribute_group'], $attribute['is_required']);
                         $idList = array_diff($idList, [$attribute['id']]);
                     } else {
                         $insertionTypeService->addAttributeToInsertionType($insertionType, $attributeKey, $attribute['is_top'], $attribute['attribute_group'],

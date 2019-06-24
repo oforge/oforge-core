@@ -7,6 +7,7 @@ use Oforge\Engine\Modules\Core\Forge\ForgeDatabase;
 use Oforge\Engine\Modules\Core\Forge\ForgeSettings;
 use Oforge\Engine\Modules\Core\Forge\ForgeSlimApp;
 use Oforge\Engine\Modules\Core\Manager\Bootstrap\BootstrapManager;
+use Oforge\Engine\Modules\Core\Manager\Cache\CacheManager;
 use Oforge\Engine\Modules\Core\Manager\Logger\LoggerManager;
 use Oforge\Engine\Modules\Core\Manager\Modules\ModuleManager;
 use Oforge\Engine\Modules\Core\Manager\Plugins\PluginManager;
@@ -103,6 +104,13 @@ class BlackSmith {
     private $viewManager = null;
 
     /**
+     * CacheManager
+     *
+     * @var CacheManager $cacheManager
+     */
+    private $cacheManager = null;
+
+    /**
      * BlackSmith constructor.
      */
     protected function __construct() {
@@ -165,6 +173,15 @@ class BlackSmith {
         }
 
         return $this->logger;
+    }
+
+    /** @return CacheManager */
+    public function Cache() : CacheManager {
+        if (!isset($this->cacheManager)) {
+            throw new RuntimeException(self::INIT_RUNTIME_EXCEPTION_MESSAGE);
+        }
+
+        return $this->cacheManager;
     }
 
     /** @return ModuleManager */
@@ -259,6 +276,10 @@ class BlackSmith {
         $this->forgeSlimApp = ForgeSlimApp::getInstance();
         $this->container    = $this->App()->getContainer();
 
+        if ($this->forgeSlimApp->returnCachedResult()) {
+            return;
+        }
+
         // Init modules and plugins
         $this->bootstrapManager = BootstrapManager::getInstance();
         $this->bootstrapManager->init();
@@ -270,6 +291,14 @@ class BlackSmith {
         // Init and load plugins
         $this->pluginManager = PluginManager::getInstance();
         $this->pluginManager->init();
+
+        // Init and load cache manager
+        $this->cacheManager = CacheManager::getInstance();
+
+
+     //   if ($this->settings->isProductionMode()) {
+            $this->services->initCaching();
+       // }
 
         // Init slim route manager
         $this->slimRouteManagager = SlimRouteManager::getInstance();
