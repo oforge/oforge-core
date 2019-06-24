@@ -13,31 +13,27 @@
                         <form action="{{ url('frontend_account_insertions_profile') }}" method="post"
                               enctype="multipart/form-data">
                             <h3 class="account__title">{{ i18n('my_profile') }}</h3>
-                            <div class="background">
-                                <img id="background"
-                                     src="{% if profile.background is defined %}{{ media(profile.background.id) }}{% endif %}" />
+                            <div class="background img-background"
+                                 style="background-image: url('{% if profile.background is defined %}{{ media(profile.background.id) }}'){% endif %};">
 
-                                <!-- TODO: move this code -->
-                                <script>
-                                    var loadFile = function (event, id) {
-                                        var output = document.getElementById(id);
-                                        output.src = URL.createObjectURL(event.target.files[0]);
-                                    };
-                                </script>
                             </div>
                             <div class="profile-upload upload-background">
-                                <label for="background">
+                                <label class="upload__label" for="input__background">
+                                    <span>{{ i18n('change_title_img') }}</span>
                                     <svg class="icon icon--primary">
                                         <use xlink:href="#fade_in"></use>
                                     </svg>
-                                    <input id="background" type="file" name="background" accept="image/*"
-                                           onchange="loadFile(event, 'background')">
                                 </label>
+                                    <input id="input__background" data-update="img-background" type="file" name="background" accept="image/*">
                             </div>
                             <div class="profile-upload">
-                                <label for="profile"></label>
-                                <input id="profile" type="file" name="profile" accept="image/*"
-                                       onchange="loadFile(event, 'profile')">
+                                <label class="upload__label" for="input__profile">
+                                    <span>{{ i18n('change_profile_img') }}</span>
+                                    <svg class="icon icon--primary">
+                                        <use xlink:href="#fade_in"></use>
+                                    </svg>
+                                </label>
+                                <input id="input__profile" data-update="img-profile" type="file" name="profile" accept="image/*">
                             </div>
                             <div class="profile-link">
                                 <a href="{{ url('insertions_profile', {id: profile.id }) }}">
@@ -57,7 +53,8 @@
                                 <div class="description--edit">
                                     <h3 class="form__title">{{ i18n('account_profile_text') }}</h3>
                                     <textarea name="description"
-                                              class="form__input">{{ profile.description }}</textarea>
+                                              class="form__input">{{ profile.description }}
+                                    </textarea>
                                 </div>
                                 <div class="impress--edit">
                                     <h3 class="form__title">{{ i18n('legal_rights') }}</h3>

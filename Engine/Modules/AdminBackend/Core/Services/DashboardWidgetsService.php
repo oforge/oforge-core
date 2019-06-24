@@ -92,10 +92,11 @@ class DashboardWidgetsService extends AbstractDatabaseAccess {
 
         $position = 0;
         foreach ($widgets as $widget) {
-            $userWidget = UserDashboardWidgets::create(["userId"   => $userId,
-                                                        "widgetId" => $widget->getId(),
-                                                        "order"    => $position++,
-                                                        "position" => $widget->getPosition(),
+            $userWidget = UserDashboardWidgets::create([
+                "userId"   => $userId,
+                "widgetId" => $widget->getId(),
+                "order"    => $position++,
+                "position" => $widget->getPosition(),
             ]);
             $this->entityManager()->create($userWidget, false);
         }
@@ -103,6 +104,24 @@ class DashboardWidgetsService extends AbstractDatabaseAccess {
         if (count($widgets) > 0) {
             $this->entityManager()->flush();
         }
+    }
+
+    public function updateUserWidgets($userId, $data) {
+        //remove and add currently not possible
+        $widgets = $this->repository("users")->findBy(["userId" => $userId], ['order' => 'ASC']);
+
+        /**
+         * @var $widget UserDashboardWidgets
+         */
+        foreach ($widgets as $widget) {
+            $id = $widget->getWidgetId();
+            if (isset($data[$id]) && isset($data[$id]["site"]) && isset($data[$id]["order"])) {
+                $widget->setPosition($data[$id]["site"]);
+                $widget->setOrder($data[$id]["order"]);
+                $this->entityManager()->update($widget);
+            }
+        }
+
     }
 
     /**

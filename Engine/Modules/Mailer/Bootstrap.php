@@ -120,13 +120,31 @@ class Bootstrap extends AbstractBootstrap {
             'order'    => 7,
         ]);
         $configService->add([
-            'name'     => 'mailer_from',
+            'name'     => 'mailer_from_host',
             'type'     => ConfigType::STRING,
             'group'    => 'mailer',
             'default'  => '',
-            'label'    => 'config_mailer_smtp_secure',
+            'label'    => 'config_mailer_from_host',
             'required' => true,
             'order'    => 8,
+        ]);
+        $configService->add([
+            'name'     => 'mailer_from_info',
+            'type'     => ConfigType::STRING,
+            'group'    => 'mailer',
+            'default'  => 'info',
+            'label'    => 'config_mailer_from_info',
+            'required' => false,
+            'order'    => 9,
+        ]);
+        $configService->add([
+            'name'     => 'mailer_from_no_reply',
+            'type'     => ConfigType::STRING,
+            'group'    => 'mailer',
+            'default'  => 'no-reply',
+            'label'    => 'config_mailer_from_no_reply',
+            'required' => false,
+            'order'    => 10,
         ]);
     }
 

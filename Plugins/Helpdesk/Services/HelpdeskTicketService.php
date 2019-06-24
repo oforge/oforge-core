@@ -58,6 +58,16 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
     }
 
     /**
+     * @param string $status
+     *
+     * @return int
+     * @throws ORMException
+     */
+    public function count($status = 'open') {
+        return $this->repository()->count(['status' => $status]);
+    }
+
+    /**
      * @param int $opener
      * @param string $status
      *

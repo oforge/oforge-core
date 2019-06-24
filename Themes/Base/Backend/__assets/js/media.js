@@ -152,21 +152,4 @@ if (typeof Oforge !== 'undefined') {
         }
     });
 
-    /* Quill module: BindFormField */
-    (function ($, Quill) {
-        if (!Quill) {
-            return;
-        }
-        class ImageUpload {
-            constructor(quill, field){
-                this.quill = quill;
-                this.field = field;
-
-                console.log(this.quill);
-            }
-
-        }
-        Quill.register('modules/imageUpload', ImageUpload);
-    })(jQuery, Quill);
-
 }
