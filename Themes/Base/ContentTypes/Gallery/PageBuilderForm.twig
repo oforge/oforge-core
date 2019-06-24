@@ -1,0 +1,28 @@
+<div class="form">
+    <div class="form-group">
+        <label>{{ i18n('type_gallery', 'Gallery') }}</label>
+        <div class="gallery__editor">
+            <p>
+                <span class="btn btn-primary gallery__editor--add">
+                    <i class="fa fa-plus"></i>
+                </span>
+            </p>
+            <div class="gallery__items">
+                {% for dataImage in data.images %}
+                    <div class="gallery__item">
+                        <span class="btn btn-primary btn-xs gallery__item--close"><i class="fa fa-close"></i></span>
+                        <span class="btn btn-primary btn-xs gallery__item--edit"><i class="fa fa-edit"></i></span>
+                        <input type="hidden" name="images[]" value="{{ dataImage }}" />
+                        <img src="{{ media(dataImage) }}" alt="{{ dataImage }}" />
+                    </div>
+                {% endfor %}
+                <div class="gallery__item" style="display: none">
+                    <span class="btn btn-primary btn-xs gallery__item--close"><i class="fa fa-close"></i></span>
+                    <span class="btn btn-primary btn-xs gallery__item--edit"><i class="fa fa-edit"></i></span>
+                    <input type="hidden" name="images[]" value="" />
+                    <img src="" alt="" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
