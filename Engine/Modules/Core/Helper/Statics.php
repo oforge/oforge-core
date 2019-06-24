@@ -21,6 +21,8 @@ class Statics {
     public const PUBLIC_DIR         = DIRECTORY_SEPARATOR . Statics::VAR_DIR . DIRECTORY_SEPARATOR . "public";
     public const IMAGES_DIR         = Statics::PUBLIC_DIR . DIRECTORY_SEPARATOR . "images";
     public const CACHE_DIR          = DIRECTORY_SEPARATOR . Statics::VAR_DIR . DIRECTORY_SEPARATOR . "cache";
+    public const RESULT_CACHE_DIR    = Statics::CACHE_DIR . DIRECTORY_SEPARATOR . "result";
+    public const FUNCTION_CACHE_DIR    = Statics::CACHE_DIR . DIRECTORY_SEPARATOR . "functions";
     public const THEME_CACHE_DIR    = Statics::PUBLIC_DIR . DIRECTORY_SEPARATOR . "theme";
     public const DB_CACHE_DIR       = Statics::CACHE_DIR . DIRECTORY_SEPARATOR . "db";
     public const ENDPOINT_CACHE_DIR = ROOT_PATH . self::CACHE_DIR . DIRECTORY_SEPARATOR . 'endpoints';

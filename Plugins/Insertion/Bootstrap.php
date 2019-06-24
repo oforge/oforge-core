@@ -2,6 +2,7 @@
 
 namespace Insertion;
 
+use Doctrine\DBAL\Cache\QueryCacheProfile;
 use FrontendUserManagement\Services\AccountNavigationService;
 use Insertion\Commands\ReminderCommand;
 use Insertion\Controller\Backend\BackendAttributeController;
@@ -118,6 +119,8 @@ class Bootstrap extends AbstractBootstrap {
         $templateRenderer = Oforge()->Services()->get("template.render");
 
         $templateRenderer->View()->addExtension(new InsertionExtensions());
+
+        new QueryCacheProfile(0, "asd");
     }
 
     public function activate() {
