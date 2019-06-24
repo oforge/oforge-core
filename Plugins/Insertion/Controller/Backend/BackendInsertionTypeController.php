@@ -7,8 +7,6 @@ use Insertion\Models\AttributeKey;
 use Insertion\Models\InsertionType;
 use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Services\AttributeService;
-use Insertion\Services\InsertionListService;
-use Insertion\Services\InsertionService;
 use Insertion\Services\InsertionTypeService;
 use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
@@ -66,35 +64,6 @@ class BackendInsertionTypeController extends SecureBackendController {
     /**
      * @param Request $request
      * @param Response $response
-     *
-     * @throws ServiceNotFoundException
-     * @throws ORMExceptionAlias
-     */
-    public function blubAction(Request $request, Response $response) {
-        $start = microtime(true) * 1000;
-
-        /** @var InsertionTypeService $attributeService */
-        $attributeService = Oforge()->Services()->get('insertion.type');
-
-        /** @var InsertionListService $insertionService */
-        $insertionService = Oforge()->Services()->get('insertion.list');
-
-        $list = $attributeService->getInsertionTypeList(30, 0);
-        for ($i = 0; $i < 1000; $i++) {
-            foreach ($list as $item) {
-                $insertionService->search($item->getId(), []);
-            }
-        }
-
-        $end = microtime(true) * 1000;
-
-        print_r($end - $start);
-        die();
-    }
-
-    /**
-     * @param Request $request
-     * @param Response $response
      * @EndpointAction(path="/edit")
      *
      * @return Response
@@ -111,11 +80,13 @@ class BackendInsertionTypeController extends SecureBackendController {
         if ($request->isPost()) {
             $body           = $request->getParsedBody();
             $body['values'] = json_decode($body['values'], true);
+            $body['insertionTypeQuickSearch'] = $body['insertionTypeQuickSearch'] ? true : false;
+
             /** @var InsertionType $parent */
             $parent = $insertionTypeService->getInsertionTypeById($body['parent']);
             if (isset($request->getQueryParams()['id'])) {
                 /** @var InsertionType $insertionType */
-                $insertionType = $insertionTypeService->updateInsertionType($insertionTypeId, $body['name'], $parent);
+                $insertionType = $insertionTypeService->updateInsertionType($insertionTypeId, $body['name'], $parent, $body['insertionTypeQuickSearch']);
                 /** @var InsertionTypeAttribute[] $insertionTypeAttributes */
                 $insertionTypeAttributes = $insertionType->getAttributes();
                 $idList                  = [];
@@ -128,11 +99,11 @@ class BackendInsertionTypeController extends SecureBackendController {
                     $attributeKey = $attributeService->getAttribute($attribute['attribute_key']);
                     if (isset($attribute['id'])) {
                         $insertionTypeService->updateInsertionTypeAttribute($attribute['id'], $attributeKey, $attribute['is_top'],
-                            $attribute['attribute_group'], $attribute['is_required']);
+                            $attribute['attribute_group'], $attribute['is_required'], $attribute['is_quick_search_filter']);
                         $idList = array_diff($idList, [$attribute['id']]);
                     } else {
                         $insertionTypeService->addAttributeToInsertionType($insertionType, $attributeKey, $attribute['is_top'], $attribute['attribute_group'],
-                            $attribute['is_required']);
+                            $attribute['is_required'], $attribute['is_quick_search_filter']);
                     }
                 }
 
@@ -141,11 +112,11 @@ class BackendInsertionTypeController extends SecureBackendController {
                 }
             } else {
                 /** @var InsertionType $insertionType */
-                $insertionType = $insertionTypeService->createNewInsertionType($body['name'], $parent);
+                $insertionType = $insertionTypeService->createNewInsertionType($body['name'], $parent, $body['insertionTypeQuickSearch']);
                 foreach ($body['values'] as $attribute) {
                     $attributeKey = $attributeService->getAttribute($attribute['attribute_key']);
                     $insertionTypeService->addAttributeToInsertionType($insertionType, $attributeKey, $attribute['is_top'], $attribute['attribute_group'],
-                        $attribute['is_required']);
+                        $attribute['is_required'], $attribute['is_quick_search_filter']);
                 }
             }
             /** @var Router $router */

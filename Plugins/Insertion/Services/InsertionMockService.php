@@ -94,8 +94,8 @@ class InsertionMockService {
         $insertionType = $insertionTypeService->createNewInsertionType('eSports', $rootType);
 
         foreach ($attributes as $attribute) {
-            $insertionTypeService->addAttributeToInsertionType($insertionType, $attribute, false);
-            $insertionTypeService->addAttributeToInsertionType($insertionType2, $attribute, false);
+            $insertionTypeService->addAttributeToInsertionType($insertionType, $attribute, false,true);
+            $insertionTypeService->addAttributeToInsertionType($insertionType2, $attribute, false, true);
         }
         array_push($insertionTypes, $insertionType);
 
