@@ -37,9 +37,6 @@ class Gallery extends AbstractContentType {
 
         return $data;
     }
-public function getContentData() {
-        return [1,2];
-}
 
     /**
      * Set edit data for page builder of content type
