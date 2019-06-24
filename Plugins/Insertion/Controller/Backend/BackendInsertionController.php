@@ -19,6 +19,7 @@ use Oforge\Engine\Modules\Core\Forge\ForgeEntityManager;
 use Oforge\Engine\Modules\Core\Helper\SessionHelper;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
+use Oforge\Engine\Modules\CRUD\Enum\CrudFilterType;
 use Oforge\Engine\Modules\CRUD\Enum\CrudGroubByOrder;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Slim\Http\Request;
@@ -124,6 +125,23 @@ class BackendInsertionController extends BaseCrudController {
             ],
         ],
     ];
+
+
+    /** @var array $indexFilter */
+    protected $indexFilter = [
+        'moderation' => [
+            'type'  => CrudFilterType::SELECT,
+            'label' => ['key' => 'plugin_insertion_filter_moderation', 'default' => 'Choose Moderation'],
+            'list'  => 'getModeration',
+        ]
+    ];
+
+    public function getModeration(){
+        return [
+            "1" => I18N::translate("moderation_done"),
+            "0" => I18N::translate("moderation_needed")
+        ];
+    }
 
     /** @var array $indexOrderBy */
     protected $indexOrderBy = [
