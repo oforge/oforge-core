@@ -148,6 +148,30 @@ class Bootstrap extends AbstractBootstrap {
             'label'    => 'config_system_format_time',
             'required' => true,
         ]);
+        $configService->add([
+            'name'     => 'system_datetimepicker_format_datetime',
+            'type'     => ConfigType::STRING,
+            'group'    => 'date_format',
+            'default'  => 'DD.MM.YYYY HH:mm',
+            'label'    => 'config_system_format_datetime',
+            'required' => true,
+        ]);
+        $configService->add([
+            'name'     => 'system_datetimepicker_format_date',
+            'type'     => ConfigType::STRING,
+            'group'    => 'date_format',
+            'default'  => 'DD.MM.YYYY',
+            'label'    => 'config_system_format_date',
+            'required' => true,
+        ]);
+        $configService->add([
+            'name'     => 'system_datetimepicker_format_time',
+            'type'     => ConfigType::STRING,
+            'group'    => 'date_format',
+            'default'  => 'HH:mm',
+            'label'    => 'config_system_format_time',
+            'required' => true,
+        ]);
     }
 
 }
