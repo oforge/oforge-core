@@ -82,7 +82,6 @@ class BackendInsertionTypeController extends SecureBackendController {
             $body['values'] = json_decode($body['values'], true);
             $body['insertionTypeQuickSearch'] = $body['insertionTypeQuickSearch'] ? true : false;
 
-            print_r($body);
             /** @var InsertionType $parent */
             $parent = $insertionTypeService->getInsertionTypeById($body['parent']);
             if (isset($request->getQueryParams()['id'])) {
