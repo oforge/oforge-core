@@ -1,0 +1,7 @@
+{% block gallery %}
+    <div class="gallery {{ data.css }}">
+        {% for dataImage in data.images %}
+            <img class="gallery__item" src="{{ media(dataImage, 200) }}" alt="{{ dataImage }}" />
+        {% endfor %}
+    </div>
+{% endblock image %}
