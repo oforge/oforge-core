@@ -43,6 +43,11 @@
                                         {% endfor %}
                                     </select>
                                 </div>
+                                <div>
+                                    <label for="insertionTypeQuickSearch">{{ i18n("insertion_type_quick_search", "Show in quick search") }}</label>
+                                    <input type="checkbox" id="insertionTypeQuickSearch" name="insertionTypeQuickSearch"
+                                           value="true" {% if content.insertionType.quickSearch %}checked{% endif %}>
+                                </div>
                             </div>
 
                             <div data-editable-table class="table-editable">
@@ -52,7 +57,8 @@
                                     <tr>
                                         <th>{{ i18n("attribute_key", "Attribute Key") }}</th>
                                         <th>{{ i18n("required", "Is required") }}</th>
-                                        <th>{{ i18n("is_top", "Is Top") }}</th>
+                                        <th>{{ i18n("is_top", "Is top") }}</th>
+                                        <th>{{ i18n("is_quick_search_filter", "Is quick search filter") }}</th>
                                         <th>{{ i18n("attribute_group", "Attribute group") }}</th>
                                         <th><i class="fa fa-user-times"></i> {{ i18n("delete") }}</th>
                                     </tr>
@@ -73,6 +79,10 @@
                                         </td>
                                         <td data-type="checkbox"
                                             data-label="is_top">
+                                            <input type="checkbox" name="checkbox" value="true">
+                                        </td>
+                                        <td data-type="checkbox"
+                                            data-label="is_quick_search_filter">
                                             <input type="checkbox" name="checkbox" value="true">
                                         </td>
                                         <td data-type="select"
@@ -110,6 +120,10 @@
                                             <td data-type="checkbox"
                                                 data-label="is_top">
                                                 <input type="checkbox" {% if value.top %}checked{% endif %}>
+                                            </td>
+                                            <td data-type="checkbox"
+                                                data-label="is_quick_search_filter">
+                                                <input type="checkbox" {% if value.quickSearchFilter %}checked{% endif %}>
                                             </td>
                                             <td data-type="select"
                                                 data-label="attribute_group">
