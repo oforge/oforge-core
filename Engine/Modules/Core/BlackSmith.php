@@ -139,6 +139,11 @@ class BlackSmith {
         return $this->forgeSlimApp;
     }
 
+    /** @return bool */
+    public function isAppReady() : bool {
+        return isset($this->forgeSlimApp);
+    }
+
     /** @return BootstrapManager */
     public function getBootstrapManager() : BootstrapManager {
         if (!isset($this->bootstrapManager)) {
@@ -272,15 +277,14 @@ class BlackSmith {
         // Start service manager
         $this->services = ServiceManager::getInstance();
 
-
         if ($start) {
             // Start slim application
             $this->forgeSlimApp = ForgeSlimApp::getInstance();
-            $this->container = $this->App()->getContainer();
+            $this->container    = $this->App()->getContainer();
 
             $this->forgeSlimApp->sessionStart();
 
-            if($this->forgeSlimApp->returnCachedResult()) {
+            if ($this->forgeSlimApp->returnCachedResult()) {
                 return;
             }
         }

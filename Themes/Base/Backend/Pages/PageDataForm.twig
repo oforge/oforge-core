@@ -23,6 +23,16 @@
                 </select>
             </div>
 
+
+            <div class="form-group">
+                <label for="cms_page_data_page_name">
+                    {{ i18n('cms_page_data_page_name', 'Name') }}
+                </label>
+                <input id="cms_page_data_page_name" type="text" name="cms_page_data_page_name"
+                       value="{{ pageBuilderData.paths[post["cms_page_selected_language"]].title }}"
+                       class="form-control" />
+            </div>
+
             <div class="form-group">
                 <label for="cms_page_data_page_active">
                     {{ i18n('cms_page_data_page_active', 'Active') }}
@@ -30,7 +40,8 @@
                 <div>
                     {% include 'Backend/Components/Form/Switch.twig' with {
                         id: 'cms_page_data_page_active',
-                        name: 'cms_page_data_page_active'
+                        name: 'cms_page_data_page_active',
+                        checked: pageBuilderData.paths[post["cms_page_selected_language"]].active
                     } only %}
                 </div>
             </div>
