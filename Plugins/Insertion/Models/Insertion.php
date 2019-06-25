@@ -50,6 +50,7 @@ class Insertion extends AbstractModel {
      * @var InsertionMedia[]
      * @ORM\OneToMany(targetEntity="InsertionMedia", mappedBy="insertion", cascade={"all"}, fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="id", referencedColumnName="insertion_id")
+     * @ORM\OrderBy({"isMain" = "DESC"})
      */
     private $media;
 
