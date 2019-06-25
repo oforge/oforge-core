@@ -272,12 +272,17 @@ class BlackSmith {
         // Start service manager
         $this->services = ServiceManager::getInstance();
 
-        // Start slim application
-        $this->forgeSlimApp = ForgeSlimApp::getInstance();
-        $this->container    = $this->App()->getContainer();
 
-        if ($this->forgeSlimApp->returnCachedResult()) {
-            return;
+        if ($start) {
+            // Start slim application
+            $this->forgeSlimApp = ForgeSlimApp::getInstance();
+            $this->container = $this->App()->getContainer();
+
+            $this->forgeSlimApp->sessionStart();
+
+            if($this->forgeSlimApp->returnCachedResult()) {
+                return;
+            }
         }
 
         // Init modules and plugins
@@ -295,10 +300,9 @@ class BlackSmith {
         // Init and load cache manager
         $this->cacheManager = CacheManager::getInstance();
 
-
-     //   if ($this->settings->isProductionMode()) {
+        if ($start && $this->settings->isProductionMode()) {
             $this->services->initCaching();
-       // }
+        }
 
         // Init slim route manager
         $this->slimRouteManagager = SlimRouteManager::getInstance();

@@ -81,7 +81,7 @@ TAG;
      * @param null $domain
      * @param null $secure
      */
-    private function sessionStart($lifetimeSeconds = 0, $path = '/', $domain = null, $secure = null)
+    public function sessionStart($lifetimeSeconds = 0, $path = '/', $domain = null, $secure = null)
     {
         $sessionStatus = session_status();
 
@@ -105,8 +105,6 @@ TAG;
     }
 
     public function returnCachedResult($silent = false) : bool {
-        $this->sessionStart();
-
         /**
          * @var $response ResponseInterface
          */
@@ -125,8 +123,6 @@ TAG;
         if ($mode != "development") {
             if ($userNotLoggedIn) {
                 $files = glob(ROOT_PATH . Statics::RESULT_CACHE_DIR . DIRECTORY_SEPARATOR . $filename . "*");
-
-
 
                 foreach ($files as $file) {
 
