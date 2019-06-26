@@ -1,6 +1,6 @@
 {% extends "@parent/Frontend/Layout.twig" %}
 {% block content %}
-<div class="panel panel--insertions">
+<div class="panel panel--insertions" data-confetti="">
     <ul class="steps">
         {% for i in range(1, 5) %}
             <li class="step {% if i < 4 %}step--done{% endif %}{% if i == 5 %}step--feedback{% endif %}">
