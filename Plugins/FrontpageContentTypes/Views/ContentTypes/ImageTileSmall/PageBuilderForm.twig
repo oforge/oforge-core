@@ -1,14 +1,5 @@
 {% block image_tile_small_form %}
 <div class="form">
-    {% block image_tile_small_name %}
-        <div class="form-group">
-            <label>{{ i18n('content_name', 'Name') }}</label>
-            <input type="text" class="form-control" name="name" value="{{ data.name }}" required>
-        </div>
-    {% endblock image_tile_small_name %}
-
-    <div class="spacer">&nbsp</div>
-
     {% block image_tile_small_image %}
         <div class="form-group">
             <label>{{ i18n('type_image', 'Image') }}</label>
@@ -57,11 +48,6 @@
             <label>{{ i18n('font_color', 'Schriftfarbe') }}</label>
             <input type="color" name="fontcolor"
                    value="{% if data.fontcolor %}{{ data.fontcolor }}{% else %}#6f8e2b{% endif %}">
-        </div>
-
-        <div class="form-group">
-            <label>{{ i18n('css_class', 'CSS Klasse') }}</label>
-            <input class="form-control" type="text" name="css" value="{{ data.css }}">
         </div>
     {% endblock image_tile_small_appearance_form %}
 </div>
