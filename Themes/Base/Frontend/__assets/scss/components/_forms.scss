@@ -15,6 +15,18 @@
 
 .form-controls {
     width: 100%;
+
+    &.form-controls--row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        flex-wrap: wrap;
+
+        .form__control {
+            flex: 0 0 49%;
+            margin-top: $size-large;
+        }
+    }
 }
 
 .form-controls + .form-controls {
@@ -30,6 +42,7 @@
 .form__control {
     display: block;
     width: 100%;
+    position: relative;
 
     &.flex {
         display: flex;
@@ -78,6 +91,10 @@
     border-left: 1px solid $color-primary;
     font-size: 1.6rem;
     min-width: 6rem;
+
+    &.input__unit--small {
+        min-width: 2rem;
+    }
 }
 
 .form__input {

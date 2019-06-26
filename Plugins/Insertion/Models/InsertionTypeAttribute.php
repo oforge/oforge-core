@@ -154,7 +154,7 @@ class InsertionTypeAttribute extends AbstractModel {
     /**
      * @return bool
      */
-    public function isQuickSearchFilter() : bool {
+    public function isQuickSearchFilter() : ?bool {
         return $this->isQuickSearchFilter;
     }
 

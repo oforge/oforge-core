@@ -1,0 +1,9 @@
+<div class="content-type-edit-selector" data-pb-id="{{ data.id }}" data-pb-se="{{ data.se }}" data-pb-order="{{ order }}">
+    <div class="content-type-edit-gallery-wrapper">
+        <div class="gallery {{ data.css }}">
+            {% for dataImage in data.images %}
+                <img class="gallery__item" src="{{ media(dataImage, 200) }}" alt="{{ dataImage }}" width="200"/>
+            {% endfor %}
+        </div>
+    </div>
+</div>

@@ -6,6 +6,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Controller\Frontend\NotFoundController;
+use Oforge\Engine\Modules\Core\Controller\Frontend\ServerErrorController;
 use Oforge\Engine\Modules\Core\Models\Config\Config;
 use Oforge\Engine\Modules\Core\Models\Config\ConfigType;
 use Oforge\Engine\Modules\Core\Models\Config\Value;
@@ -35,6 +36,7 @@ class Bootstrap extends AbstractBootstrap {
     public function __construct() {
         $this->endpoints = [
             NotFoundController::class,
+            ServerErrorController::class,
         ];
 
         $this->models = [
@@ -145,6 +147,30 @@ class Bootstrap extends AbstractBootstrap {
             'type'     => ConfigType::STRING,
             'group'    => 'date_format',
             'default'  => 'H:i:s',
+            'label'    => 'config_system_format_time',
+            'required' => true,
+        ]);
+        $configService->add([
+            'name'     => 'system_datetimepicker_format_datetime',
+            'type'     => ConfigType::STRING,
+            'group'    => 'date_format',
+            'default'  => 'DD.MM.YYYY HH:mm',
+            'label'    => 'config_system_format_datetime',
+            'required' => true,
+        ]);
+        $configService->add([
+            'name'     => 'system_datetimepicker_format_date',
+            'type'     => ConfigType::STRING,
+            'group'    => 'date_format',
+            'default'  => 'DD.MM.YYYY',
+            'label'    => 'config_system_format_date',
+            'required' => true,
+        ]);
+        $configService->add([
+            'name'     => 'system_datetimepicker_format_time',
+            'type'     => ConfigType::STRING,
+            'group'    => 'date_format',
+            'default'  => 'HH:mm',
             'label'    => 'config_system_format_time',
             'required' => true,
         ]);

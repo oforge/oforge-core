@@ -45,7 +45,7 @@
                                 {% for variable in scssVariables %}
                                     {% if 'Themes\\' ~ template.name ~ '\\Template' == variable.context %}
                                     <label>${{ variable.name }}</label>
-                                    <div class="input-group my-colorpicker2 colorpicker-element">
+                                    <div class="input-group oforge-color-picker colorpicker-element">
                                         <input name="{{ variable.id }}|{{ variable.name }}" type="text" class="form-control" value="{{ variable.value }}" />
 
                                         <div class="input-group-addon">

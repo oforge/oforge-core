@@ -11,7 +11,16 @@ use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Models\InsertionTypeGroup;
 use Insertion\Models\InsertionZipCoordinates;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
+use Oforge\Engine\Modules\Core\Annotation\Cache\Cache;
+use Oforge\Engine\Modules\Core\Annotation\Cache\CacheInvalidation;
+use Oforge\Engine\Modules\Core\Helper\Statics;
 
+/**
+ * Class InsertionListService
+ * @Cache()
+ *
+ * @package Insertion\Services
+ */
 class InsertionListService extends AbstractDatabaseAccess {
     public function __construct() {
         parent::__construct([
@@ -22,6 +31,16 @@ class InsertionListService extends AbstractDatabaseAccess {
             'group'                  => InsertionTypeGroup::class,
         ]);
     }
+
+    /**
+     * @param $typeId
+     * @param $params
+     *
+     * @Cache(slot="insertion", duration="2D")
+     * @return array|null
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     */
 
     public function search($typeId, $params) : ?array {
         $page     = isset($params["page"]) ? $params["page"] : 1;
@@ -244,9 +263,6 @@ class InsertionListService extends AbstractDatabaseAccess {
 
             $result["query"]["items"][] = $data;
         }
-
-        //TODO price range
-        //TODO range
 
         return $result;
     }

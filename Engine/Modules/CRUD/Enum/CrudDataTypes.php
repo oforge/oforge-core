@@ -24,6 +24,24 @@ class CrudDataTypes {
      */
     public const CUSTOM = 'custom';
     /**
+     * For DateTimeInterface values only!
+     * Renderer: Div.<br/>
+     * Editor: Date-Picker.<br/>
+     */
+    public const DATE = 'date';
+    /**
+     * For DateTimeInterface values only!
+     * Renderer: Div.<br/>
+     * Editor: Datetime-Picker.<br/>
+     */
+    public const DATETIME = 'dateTime';
+    /**
+     * For DateTimeInterface values only!
+     * Renderer: Div.<br/>
+     * Editor: Time-Picker.<br/>
+     */
+    public const TIME = 'time';
+    /**
      * Renderer: Div with default right alinment.<br/>
      * Editor: Number input with step = 0.01.<br/>
      */
@@ -75,6 +93,7 @@ class CrudDataTypes {
     public const URL = 'url';
 
     private function __construct() {
+        // prevent instance
     }
 
 }
