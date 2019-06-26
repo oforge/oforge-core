@@ -37,6 +37,12 @@ class InsertionTypeAttribute extends AbstractModel {
     private $isTop = false;
 
     /**
+     * @var boolean
+     * @ORM\Column(name="is_quick_search_filter", type="boolean")
+     */
+    private $isQuickSearchFilter;
+
+    /**
      * @var InsertionTypeGroup
      * @ORM\ManyToOne(targetEntity="InsertionTypeGroup", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="attribute_group", referencedColumnName="id")
@@ -141,6 +147,24 @@ class InsertionTypeAttribute extends AbstractModel {
      */
     public function setAttributeGroup(InsertionTypeGroup $attributeGroup) : InsertionTypeAttribute {
         $this->attributeGroup = $attributeGroup;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isQuickSearchFilter() : ?bool {
+        return $this->isQuickSearchFilter;
+    }
+
+    /**
+     * @param bool $isQuickSearchFilter
+     *
+     * @return InsertionTypeAttribute
+     */
+    public function setIsQuickSearchFilter(bool $isQuickSearchFilter) : InsertionTypeAttribute {
+        $this->isQuickSearchFilter = $isQuickSearchFilter;
 
         return $this;
     }

@@ -7,7 +7,6 @@ use Blog\Models\Category;
 use Blog\Models\Post;
 use Blog\Services\PostService;
 use Blog\Services\RatingService;
-use DateTimeImmutable;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
@@ -16,7 +15,6 @@ use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Forge\ForgeEntityManager;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
-use Oforge\Engine\Modules\Core\Helper\DateTimeFormatter;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
@@ -40,7 +38,7 @@ class PostController extends BaseCrudController {
     protected $modelProperties = [
         [
             'name'  => 'created',
-            'type'  => CrudDataTypes::STRING,
+            'type'  => CrudDataTypes::DATETIME,
             'label' => ['key' => 'plugin_blog_property_post_created', 'default' => 'Created'],
             'crud'  => [
                 'index'  => 'readonly',
@@ -52,7 +50,7 @@ class PostController extends BaseCrudController {
         ],# created
         [
             'name'  => 'updated',
-            'type'  => CrudDataTypes::STRING,
+            'type'  => CrudDataTypes::DATETIME,
             'label' => ['key' => 'plugin_blog_property_post_updated', 'default' => 'Updated'],
             'crud'  => [
                 'index'  => 'readonly',
@@ -307,10 +305,6 @@ class PostController extends BaseCrudController {
                 }
             }
             $data['comments'] = ArrayHelper::get($this->filterSelectData['commentsPerPost'], $data['id'], 0);
-
-            /** @var DateTimeImmutable $dateTime */
-            $data['created'] = DateTimeFormatter::datetime($data['created']);
-            $data['updated'] = DateTimeFormatter::datetime($data['updated']);
 
             $data['author']   = $data['author']['id'];
             $data['category'] = $data['category']['id'];

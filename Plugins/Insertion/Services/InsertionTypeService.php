@@ -10,7 +10,13 @@ use Insertion\Models\InsertionType;
 use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Models\InsertionTypeGroup;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
+use Oforge\Engine\Modules\Core\Annotation\Cache\Cache;
 
+/**
+ * Class InsertionTypeService
+ *
+ * @package Insertion\Services
+ */
 class InsertionTypeService extends AbstractDatabaseAccess {
     public function __construct() {
         parent::__construct([
@@ -24,15 +30,17 @@ class InsertionTypeService extends AbstractDatabaseAccess {
     /**
      * @param $name
      * @param null $parent
+     * @param bool $quickSearch
      *
      * @return InsertionType
      * @throws ORMException
      */
-    public function createNewInsertionType($name, $parent = null) {
+    public function createNewInsertionType($name, $parent = null, $quickSearch = false) {
         /** @var InsertionType $insertionType */
         $insertionType = new InsertionType();
         $insertionType->setName($name);
         $insertionType->setParent($parent);
+        $insertionType->setQuickSearch($quickSearch);
 
         $this->entityManager()->create($insertionType);
 
@@ -68,6 +76,7 @@ class InsertionTypeService extends AbstractDatabaseAccess {
     }
 
     /**
+     *
      * @return array
      * @throws ORMException
      */
@@ -154,16 +163,22 @@ class InsertionTypeService extends AbstractDatabaseAccess {
      * @param $isTop
      * @param int $insertionTypeGroup
      * @param bool $required
+     * @param bool $isQuickSearchFilter
      *
      * @throws ORMException
      */
-    public function addAttributeToInsertionType($insertionType, $attributeKey, $isTop, $insertionTypeGroup, $required = false) {
+    public function addAttributeToInsertionType($insertionType, $attributeKey, $isTop, $insertionTypeGroup, $required = false, $isQuickSearchFilter = false) {
         /** @var InsertionTypeGroup $group */
         $group = $this->repository("group")->find($insertionTypeGroup);
 
         $insertionTypeAttribute = new InsertionTypeAttribute();
-        $insertionTypeAttribute->setInsertionType($insertionType)->setAttributeKey($attributeKey)->setIsTop($isTop)->setAttributeGroup($group)
-                               ->setRequired($required);
+        $insertionTypeAttribute
+            ->setInsertionType($insertionType)
+            ->setAttributeKey($attributeKey)
+            ->setIsTop($isTop)
+            ->setAttributeGroup($group)
+            ->setRequired($required)
+            ->setIsQuickSearchFilter($isQuickSearchFilter);
 
         $insertionType->setAttributes([$attributeKey]);
         $this->entityManager()->update($insertionTypeAttribute);
@@ -225,15 +240,17 @@ class InsertionTypeService extends AbstractDatabaseAccess {
      * @param $id
      * @param $name
      * @param $parent
+     * @param $quickSearch
      *
      * @return object|null
      * @throws ORMException
      */
-    public function updateInsertionType($id, $name, $parent) {
+    public function updateInsertionType($id, $name, $parent, $quickSearch) {
         /** @var InsertionType $insertionType */
         $insertionType = $this->repository()->find($id);
         $insertionType->setName($name);
         $insertionType->setParent($parent);
+        $insertionType->setQuickSearch($quickSearch);
 
         $this->entityManager()->update($insertionType);
 
@@ -246,11 +263,12 @@ class InsertionTypeService extends AbstractDatabaseAccess {
      * @param $top
      * @param $insertionTypeGroup
      * @param $required
+     * @param $isQuickSearchFilter
      *
      * @return InsertionTypeAttribute
      * @throws ORMException
      */
-    public function updateInsertionTypeAttribute($id, $attributeKey, $top, $insertionTypeGroup, $required) {
+    public function updateInsertionTypeAttribute($id, $attributeKey, $top, $insertionTypeGroup, $required, $isQuickSearchFilter) {
         /** @var InsertionTypeAttribute $insertionTypeAttribute */
         $insertionTypeAttribute = $this->repository('insertionTypeAttribute')->find($id);
         /** @var InsertionTypeGroup $group */
@@ -260,6 +278,7 @@ class InsertionTypeService extends AbstractDatabaseAccess {
         $insertionTypeAttribute->setIsTop($top);
         $insertionTypeAttribute->setAttributeGroup($group);
         $insertionTypeAttribute->setRequired($required);
+        $insertionTypeAttribute->setIsQuickSearchFilter($isQuickSearchFilter);
 
         $this->entityManager()->update($insertionTypeAttribute);
 
@@ -275,5 +294,13 @@ class InsertionTypeService extends AbstractDatabaseAccess {
     public function deleteInsertionTypeAttribute($id) {
         $insertionTypeAttribute = $this->repository('insertionTypeAttribute')->find($id);
         $this->entityManager()->remove($insertionTypeAttribute);
+    }
+
+    /**
+     * @return array
+     * @throws ORMException
+     */
+    public function getQuickSearchInsertions() {
+        return $this->repository()->findBy(['quickSearch' => true]);
     }
 }

@@ -39,8 +39,9 @@ class Bootstrap extends AbstractBootstrap {
     protected $order = 0;
 
     public function load() {
-        Oforge()->App()->add(new SeoMiddleware());
-
+        if (Oforge()->isAppReady()) {
+            Oforge()->App()->add(new SeoMiddleware());
+        }
         /**
          * @var $templateRenderer TemplateRenderService
          */
