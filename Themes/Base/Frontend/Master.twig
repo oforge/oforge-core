@@ -8,7 +8,8 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{% block title %}Default Title{% endblock title %}</title>
+    <title>{% block title %}{{ meta.title }}{% endblock title %}</title>
+    <meta name="description" content="{% block description %}{{ meta.description }}{% endblock description %}" />
     <link rel="shortcut icon" href="var/public/__assets/Frontend/img/favicon.ico">
 
     {% block master__additional_meta %}
@@ -16,11 +17,11 @@
 
     {% block master__styles %}
         {% if assets.css %}
-            <link rel="stylesheet" href="{{ assets.css }}"/>
+            <link rel="stylesheet" href="{{ assets.css }}" />
         {% endif %}
     {% endblock master__styles %}
 </head>
-<body class="{% block body_class %}controller-{{ meta.route.parentName|lower}} module-{{ meta.route.context|lower}} action-{{ meta.route.name|lower }} {{ meta.body_class|lower }} {% endblock body_class %}" >
+<body class="{% block body_class %}controller-{{ meta.route.parentName|lower }} module-{{ meta.route.context|lower }} action-{{ meta.route.name|lower }} {{ meta.body_class|lower }} {% endblock body_class %}">
 
 {% if debug.console %}
     {{ o_dump() }}
@@ -52,6 +53,7 @@
                 line-height: 1.4;
                 word-break: break-all;
             }
+
             .meta * {
                 white-space: pre-wrap;
             }

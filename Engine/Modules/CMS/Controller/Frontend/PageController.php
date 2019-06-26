@@ -68,7 +68,7 @@ class PageController extends AbstractController {
             Oforge()->View()->assign([
                 'content' => $cmsContent,
                 "cms"     => $pagePath->toArray(),
-                'meta'    => ["header_class" => "cms cms-page " . $pagePath->getPage()->getName()],
+                'meta'    => ["header_class" => "cms cms-page " . $pagePath->getPage()->getName(), "title" => $pagePath->getTitle(), "description" => $pagePath->getDescription()],
                 'cache-for' => '2D'
             ]);
 
