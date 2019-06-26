@@ -43,6 +43,12 @@ class InsertionType extends AbstractModel {
      */
     private $attributes;
 
+    /**
+     * @var boolean
+     * @ORM\Column(name="insertion_type_quick_search", type="boolean", nullable=false)
+     */
+    private $quickSearch;
+
     public function __construct() {
         $this->attributes = new ArrayCollection();
     }
@@ -102,6 +108,24 @@ class InsertionType extends AbstractModel {
      */
     public function setAttributes($attributes) : InsertionType {
         $this->attributes = $attributes;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isQuickSearch() : ?bool {
+        return $this->quickSearch;
+    }
+
+    /**
+     * @param bool $quickSearch
+     *
+     * @return InsertionType
+     */
+    public function setQuickSearch(bool $quickSearch) : InsertionType {
+        $this->quickSearch = $quickSearch;
+
         return $this;
     }
 }

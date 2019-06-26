@@ -55,6 +55,13 @@ class PagePath extends AbstractModel
 
 
     /**
+     * @var bool
+     * @ORM\Column(name="active", type="boolean", nullable=true)
+     */
+    private $active;
+
+
+    /**
      * @var PageContent[]
      * @ORM\OneToMany(targetEntity="Oforge\Engine\Modules\CMS\Models\Page\PageContent", mappedBy="pagePath", cascade={"all"}, fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="id", referencedColumnName="page_path_id")
@@ -161,4 +168,19 @@ class PagePath extends AbstractModel
         $this->title = $title;
         return $this;
     }
+
+    /**
+     * @return bool
+     */
+    public function isActive() : ?bool {
+        return $this->active;
+    }
+
+    /**
+     * @param bool $active
+     */
+    public function setActive(bool $active) : void {
+        $this->active = $active;
+    }
+
 }

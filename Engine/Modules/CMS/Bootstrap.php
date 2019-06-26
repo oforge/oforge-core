@@ -10,6 +10,7 @@ namespace Oforge\Engine\Modules\CMS;
 
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\CMS\ContentTypes\EntryList;
+use Oforge\Engine\Modules\CMS\ContentTypes\Gallery;
 use Oforge\Engine\Modules\CMS\ContentTypes\Image;
 use Oforge\Engine\Modules\CMS\ContentTypes\NavigationEntry;
 use Oforge\Engine\Modules\CMS\ContentTypes\RichText;
@@ -181,6 +182,14 @@ class Bootstrap extends AbstractBootstrap {
             'description' => 'Image',
             'group'       => $ctgMediaID,
             'classPath'   => Image::class,
+        ]);
+        $managementService->put([
+            'name'        => 'gallery',
+            'path'        => 'Gallery',
+            'icon'        => '/Themes/Base/ContentTypes/__assets/img/gallery.png',
+            'description' => 'Gallery',
+            'group'       => $ctgMediaID,
+            'classPath'   => Gallery::class,
         ]);
 
         $ctgNavigationID = $contentTypeGroupManagementService->put([

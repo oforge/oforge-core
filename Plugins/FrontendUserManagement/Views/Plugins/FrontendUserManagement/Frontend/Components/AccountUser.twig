@@ -1,12 +1,8 @@
 {# block sidebar__account_user #}
 {% block account_user %}
     <div class="account__user">
-        <div class="user__picture">
-            {% if current_user.detail %}
-                <img class="img-profile" src="{{ media(current_user.detail.image) }}" alt="{{ current_user.detail.name }}">
-            {% else %}
-                <img class="img-profile" src="http://placeimg.com/640/640/people" alt="{{ user.detail.name }}">
-            {% endif %}
+        <div class="user__picture img-profile"
+             style="background-image: url('{% if current_user.detail %}{{ media(current_user.detail.image) }}{% else %}http://placeimg.com/640/640/people{% endif %}');">
         </div>
         <div class="user-info">
             {% if current_user.detail %}
