@@ -35,10 +35,10 @@ class FrontendHelpdeskController extends SecureFrontendController {
 
         /** @var HelpdeskTicketService $helpdeskTicketService */
         $helpdeskTicketService = Oforge()->Services()->get('helpdesk.ticket');
-        $issueTypes            = $helpdeskTicketService->getIssueTypes();
+        $issueTypes            = $helpdeskTicketService->getIssueTypesByGroup('support');
         $tickets               = $helpdeskTicketService->getTicketsByOpener($user['id']);
         Oforge()->View()->assign([
-            'issueTypes' => $issueTypes,
+            'supportTypes' => $issueTypes,
             'tickets'    => $tickets,
         ]);
     }
