@@ -215,6 +215,7 @@ class PageBuilderService extends AbstractDatabaseAccess {
             $path["language"]    = $this->getLanguageArray($pathEntity->getLanguage());
             $path["path"]        = $pathEntity->getPath();
             $path["title"]       = $pathEntity->getTitle();
+            $path["description"] = $pathEntity->getDescription();
             $path["active"]      = $pathEntity->isActive();
             $path["pageContent"] = $this->getPageContentArray($path["id"]);
 
