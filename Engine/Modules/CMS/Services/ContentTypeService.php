@@ -98,9 +98,11 @@ class ContentTypeService extends AbstractDatabaseAccess {
 
             $data = $content->getEditData();
 
+            $data["path"] = $contentTypeEntity->getPath();
             if (isset($data["columns"])) {
+                $data["childs"] = [];
                 foreach ($data["columns"] as $key => $column) {
-                    $data["columns"][$key]["data"] = $this->getContentDataArray($column["id"], $column["typeId"]);
+                    $data["childs"][$key] = $this->getContentDataArray($column["id"], $column["typeId"]);
                 }
             }
 
