@@ -32,15 +32,17 @@ class ForgeSlimApp extends SlimApp {
     public function __construct() {
         parent::__construct();
         $container = $this->getContainer();
+        $errorHandler = null;
 
-        $errorHandler = function ($container) {
-            return function (Request $request, Response $response, $exception) use ($container) {
-                /** @var Exception|Error $exception */
-                $message = $exception->getMessage();
-                $trace   = str_replace("\n", "<br />\n", $exception->getTraceAsString());
-                $file    = $exception->getFile();
-                $line    = $exception->getLine();
-                $html    = <<<TAG
+        if (Oforge()->Settings()->isDevelopmentMode()) {
+            $errorHandler = function ($container) {
+                return function (Request $request, Response $response, $exception) use ($container) {
+                    /** @var Exception|Error $exception */
+                    $message = $exception->getMessage();
+                    $trace   = str_replace("\n", "<br />\n", $exception->getTraceAsString());
+                    $file    = $exception->getFile();
+                    $line    = $exception->getLine();
+                    $html    = <<<TAG
 <h1>Exception: $message</h1>
 <dl>
     <dt><strong>File</strong></dt><dd>$file</dd>
@@ -48,10 +50,19 @@ class ForgeSlimApp extends SlimApp {
     <dt><strong>Trace</strong></dt><dd>$trace</dd>
 </dl>
 TAG;
-
-                return $response->withStatus(500)->withHeader('Content-Type', 'text/html')->write($html);
+                    return $response->withStatus(500)->withHeader('Content-Type', 'text/html')->write($html);
+                };
             };
-        };
+        } else {
+            $errorHandler = function ($container) {
+                return function (Request $request, Response $response, $exception) use ($container) {
+
+                    Oforge()->Logger()->get()->error($exception->getMessage(), $exception->getTrace());
+
+                    return $response->withRedirect("/500", 307);
+                };
+            };
+        }
 
         $container['errorHandler']    = $errorHandler;
         $container['phpErrorHandler'] = $errorHandler;
@@ -72,7 +83,6 @@ TAG;
         return self::$instance;
     }
 
-
     /**
      * Start the session
      *
@@ -81,24 +91,23 @@ TAG;
      * @param null $domain
      * @param null $secure
      */
-    public function sessionStart($lifetimeSeconds = 0, $path = '/', $domain = null, $secure = null)
-    {
+    public function sessionStart($lifetimeSeconds = 0, $path = '/', $domain = null, $secure = null) {
         $sessionStatus = session_status();
 
         if ($sessionStatus != PHP_SESSION_ACTIVE) {
-            session_name( "oforge_session" );
-            if ( ! empty( $_SESSION['deleted_time'] ) &&
-                 $_SESSION['deleted_time'] < time() - 180 ) {
+            session_name("oforge_session");
+            if (!empty($_SESSION['deleted_time'])
+                && $_SESSION['deleted_time'] < time() - 180) {
                 session_destroy();
             }
             // Set the domain to default to the current domain.
-            $domain = isset( $domain ) ? $domain : $_SERVER['SERVER_NAME'];
+            $domain = isset($domain) ? $domain : $_SERVER['SERVER_NAME'];
 
             // Set the default secure value to whether the site is being accessed with SSL
-            $secure = isset( $secure ) ? $secure : isset( $_SERVER['HTTPS'] ) ? true : false;
+            $secure = isset($secure) ? $secure : isset($_SERVER['HTTPS']) ? true : false;
 
             // Set the cookie settings and start the session
-            session_set_cookie_params( $lifetimeSeconds, $path, $domain, $secure, true );
+            session_set_cookie_params($lifetimeSeconds, $path, $domain, $secure, true);
             session_start();
             $_SESSION['created_time'] = time();
         }
@@ -125,7 +134,6 @@ TAG;
                 $files = glob(ROOT_PATH . Statics::RESULT_CACHE_DIR . DIRECTORY_SEPARATOR . $filename . "*");
 
                 foreach ($files as $file) {
-
                     //TODO add timestamp
                     if (strpos($file, "##") === false) {
                         $output = file_get_contents($file);
@@ -209,6 +217,5 @@ TAG;
 
         return $response;
     }
-
 
 }

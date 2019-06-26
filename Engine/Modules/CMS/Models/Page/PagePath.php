@@ -53,6 +53,11 @@ class PagePath extends AbstractModel
      */
     private $title;
 
+    /**
+     * @var string|null
+     * @ORM\Column(name="description", type="string", nullable=true)
+     */
+    private $description;
 
     /**
      * @var bool
@@ -181,6 +186,20 @@ class PagePath extends AbstractModel
      */
     public function setActive(bool $active) : void {
         $this->active = $active;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDescription() : ?string {
+        return $this->description;
+    }
+
+    /**
+     * @param string|null $description
+     */
+    public function setDescription(?string $description) : void {
+        $this->description = $description;
     }
 
 }
