@@ -73,22 +73,24 @@ class MessengerController extends SecureFrontendController {
                 $conversation = $frontendMessengerService->getConversation($conversationId, $senderId);
                 $frontendMessengerService->sendMessage($conversation['id'], 'frontend', $senderId, $message);
 
-                $targetUserId = 0;
-                if ($conversation->getRequested() === $user->getId()) {
-                    $targetUserId = $conversation->getRequester();
-                } else {
-                    $targetUserId = $conversation->getRequested();
+                /* Only send mails for classified advert */
+                if($conversation['type'] === 'classified_advert') {
+                    $targetUserId = 0;
+                    if ($conversation->getRequested() === $user->getId()) {
+                        $targetUserId = $conversation->getRequester();
+                    } else {
+                        $targetUserId = $conversation->getRequested();
+                    }
+
+                    $targetIdMail = $frontendUserService->getUserById($targetUserId)->getEmail();
+                    $mailOptions = [
+                        'to' => $targetIdMail,
+                        'from' => 'no-reply@local.host', // TODO: From settings
+                        'subject' => I18N::translate('email_subject_new_message', 'New private message'),
+                        'template' => 'NewMessage.twig'
+                    ];
+                    $mailService->send($mailOptions);
                 }
-
-                $targetIdMail = $frontendUserService->getUserById($targetUserId)->getEmail();
-                $mailOptions = [
-                    'to' => $targetIdMail,
-                    'from' => 'no-reply@local.host', // TODO: From settings
-                    'subject' => I18N::translate('email_subject_new_message', 'New private message'), // TODO: i18n
-                    'template' => 'NewMessage.twig'
-                ];
-                $mailService->send($mailOptions);
-
                 $uri = $router->pathFor('frontend_account_messages');
 
                 return $response->withRedirect($uri . '/' . $conversation['id'], 302);
