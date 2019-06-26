@@ -2,8 +2,12 @@
 {% block content %}
     <div class="404 content">
         <div class="panel">
-            <h1>{{ i18n('Oopsie!') }}</h1>
-            <p>{{ i18n('The page you requested could not be found. Maybe some cowboy bandits stole it... The sheriff is on it!') }}</p>
+            {% set content = content('not_found_' ~ meta.language) %}
+            {% if content %}
+                <div class="content">
+                    {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
+                </div>
+            {% endif %}
         </div>
     </div>
 {% endblock content %}

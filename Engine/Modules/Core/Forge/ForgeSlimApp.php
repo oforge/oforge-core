@@ -53,14 +53,13 @@ TAG;
                     return $response->withStatus(500)->withHeader('Content-Type', 'text/html')->write($html);
                 };
             };
-
         } else {
             $errorHandler = function ($container) {
                 return function (Request $request, Response $response, $exception) use ($container) {
 
                     Oforge()->Logger()->get()->error($exception->getMessage(), $exception->getTrace());
 
-                    return $response->withRedirect("/500", 301);
+                    return $response->withRedirect("/500", 307);
                 };
             };
         }

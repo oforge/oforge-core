@@ -3,10 +3,11 @@
     <div class="500 content">
         <div class="panel">
             {% set content = content('server_error' ~ meta.language) %}
-            {% if content is defined %}
+            {% if content %}
+                <div class="content">
+                    {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
+                </div>
             {% endif %}
-            <h1>{{ i18n('Oopsie!') }}</h1>
-            <p>{{ i18n('The page you requested could not be found. Maybe some cowboy bandits stole it... The sheriff is on it!') }}</p>
         </div>
     </div>
 {% endblock content %}
