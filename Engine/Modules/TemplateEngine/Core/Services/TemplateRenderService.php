@@ -88,8 +88,7 @@ class TemplateRenderService {
                     }
                     $index++;
                 }
-
-                $templatePath .= DIRECTORY_SEPARATOR . $controllerName . DIRECTORY_SEPARATOR . ucwords($fileName) . '.twig';
+                $templatePath .= DIRECTORY_SEPARATOR . $controllerName . DIRECTORY_SEPARATOR . ucfirst($fileName) . '.twig';
 
                 $data = ArrayHelper::dotSet($data, 'meta.template.path', $templatePath);
             }
@@ -100,6 +99,13 @@ class TemplateRenderService {
 
             if ($this->hasTemplate($templatePath)) {
                 return $this->renderTemplate($request, $response, $templatePath, $data);
+            } elseif (isset($fileName) && isset($data['crud'])) {
+                $templatePath = '/Backend/CRUD/' . ucfirst($fileName) . '.twig';
+                if ($this->hasTemplate($templatePath)) {
+                    $data['meta']['template']['path'] = $templatePath;
+
+                    return $this->renderTemplate($request, $response, $templatePath, $data);
+                }
             }
         }
 
@@ -151,7 +157,7 @@ class TemplateRenderService {
                 }
             }
 
-            $paths['parent'][]                = $defaultThemePath;
+            $paths['parent'][]                  = $defaultThemePath;
             $paths[self::TWIG_MAIN_NAMESPACE][] = $defaultThemePath;
 
             $this->view = new CustomTwig($paths, [
