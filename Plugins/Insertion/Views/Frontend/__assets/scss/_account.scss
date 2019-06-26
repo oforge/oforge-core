@@ -12,8 +12,21 @@
         background-size: cover;
         background-position: center top;
         background-repeat: no-repeat;
+
     }
 
+    .center__label {
+        justify-content: center;
+        .icon {
+            width: 4rem;
+            height: 4rem;
+            opacity: .5;
+            fill: grey;
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    }
 
     .profile-pic {
         width: 30%;
@@ -76,8 +89,12 @@
         #input__background, #input__profile {
             display: none;
         }
+        .center__label {
+
+        }
         .upload__label {
             display: flex;
+            margin-left: $size-large;
             &:hover {
                 cursor: pointer;
             }
@@ -107,6 +124,12 @@
             .user__picture {
                 width: 16rem;
                 height: 16rem;
+            }
+        }
+        .center__label {
+            .icon {
+                width: 6rem;
+                height: 6rem;
             }
         }
     }
