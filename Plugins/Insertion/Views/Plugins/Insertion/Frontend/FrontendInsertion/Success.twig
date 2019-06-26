@@ -1,4 +1,9 @@
 {% extends "@parent/Frontend/Layout.twig" %}
 {% block content %}
-    SUCCESS
+    {% set content = content("success_content_de") %}
+    {% if content %}
+        <div class="content">
+            {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
+        </div>
+    {% endif %}
 {% endblock content %}
