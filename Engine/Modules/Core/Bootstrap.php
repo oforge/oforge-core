@@ -6,6 +6,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Controller\Frontend\NotFoundController;
+use Oforge\Engine\Modules\Core\Controller\Frontend\ServerErrorController;
 use Oforge\Engine\Modules\Core\Models\Config\Config;
 use Oforge\Engine\Modules\Core\Models\Config\ConfigType;
 use Oforge\Engine\Modules\Core\Models\Config\Value;
@@ -35,6 +36,7 @@ class Bootstrap extends AbstractBootstrap {
     public function __construct() {
         $this->endpoints = [
             NotFoundController::class,
+            ServerErrorController::class,
         ];
 
         $this->models = [

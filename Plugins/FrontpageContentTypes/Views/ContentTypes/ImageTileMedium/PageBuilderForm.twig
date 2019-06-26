@@ -1,14 +1,5 @@
 {% block image_tile_medium_form %}
 <div class="form">
-    {% block image_tile_medium_name %}
-        <div class="form-group">
-            <label>{{ i18n('content_name', 'Name') }}</label>
-            <input type="text" class="form-control" name="name" value="{{ data.name }}" required>
-        </div>
-    {% endblock image_tile_medium_name %}
-
-    <div class="spacer">&nbsp</div>
-
     {% block image_tile_medium_image %}
         <div class="form-group">
             <label>{{ i18n('type_image', 'Image') }}</label>
@@ -18,7 +9,7 @@
                 </div>
             {% endif %}
 
-            <input class="form-control" name="image" type="file" accept="image/*" required>
+            <input class="form-control" name="image" type="file" accept="image/*" >
         </div>
     {% endblock image_tile_medium_image %}
 
@@ -57,11 +48,6 @@
             <label>{{ i18n('font_color', 'Schriftfarbe') }}</label>
             <input type="color" name="fontcolor"
                    value="{% if data.fontcolor %}{{ data.fontcolor }}{% else %}#6f8e2b{% endif %}">
-        </div>
-
-        <div class="form-group">
-            <label>{{ i18n('css_class', 'CSS Klasse') }}</label>
-            <input class="form-control" type="text" name="css" value="{{ data.css }}">
         </div>
     {% endblock image_tile_medium_appearance_form %}
 </div>
