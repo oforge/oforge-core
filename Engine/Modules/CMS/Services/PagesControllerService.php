@@ -245,9 +245,17 @@ class PagesControllerService extends AbstractDatabaseAccess {
                     $pagePathEntity->setPage($pageEntity);
                     $pagePathEntity->setLanguage($languageEntity);
                     $pagePathEntity->setPath($pagePath);
+                    $pagePathEntity->setTitle($post["cms_page_data_page_name"]);
+                    $pagePathEntity->setActive($post["cms_page_data_page_active"]);
+
                     $this->forgeEntityManager->create($pagePathEntity);
                 } else {
                     $pagePathEntity->setPath($pagePath);
+
+                    $pagePathEntity->setTitle($post["cms_page_data_page_name"]);
+                    $pagePathEntity->setActive($post["cms_page_data_page_active"]);
+
+
                     $this->forgeEntityManager->update($pagePathEntity);
                 }
             }

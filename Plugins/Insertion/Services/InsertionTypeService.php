@@ -10,7 +10,13 @@ use Insertion\Models\InsertionType;
 use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Models\InsertionTypeGroup;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
+use Oforge\Engine\Modules\Core\Annotation\Cache\Cache;
 
+/**
+ * Class InsertionTypeService
+ *
+ * @package Insertion\Services
+ */
 class InsertionTypeService extends AbstractDatabaseAccess {
     public function __construct() {
         parent::__construct([
@@ -70,6 +76,7 @@ class InsertionTypeService extends AbstractDatabaseAccess {
     }
 
     /**
+     *
      * @return array
      * @throws ORMException
      */

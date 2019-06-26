@@ -18,7 +18,7 @@ use Oforge\Engine\Modules\Auth\Services\BackendLoginService;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Tests\TestCase;
 
-final class BackendLoginServiceTest extends TestCase {
+final class BackendLoginServiceTest extends TestCase {m
     /**
      * @var $em EntityManager
      */

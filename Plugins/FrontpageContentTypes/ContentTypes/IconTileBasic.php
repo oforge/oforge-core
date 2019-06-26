@@ -75,8 +75,6 @@ class IconTileBasic extends AbstractContentType
 
 
         $this->setContentData($contentData);
-        $this->setContentName($data['name']);
-        $this->setContentCssClass($data['css']);
 
         return $this;
     }

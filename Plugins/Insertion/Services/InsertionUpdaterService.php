@@ -50,9 +50,9 @@ class InsertionUpdaterService extends AbstractDatabaseAccess {
         if ($insertion->getMedia() != null) {
             foreach ($insertion->getMedia() as $media) {
                 if ($media->getContent() != null) {
-                    $imageData          = $media->getContent()->toArray(0);
-                    $imageData["id"]    = $media->getId();
-                    $imageData["main"]  = $media->isMain();
+                    $imageData = $media->getContent()->toArray(0);
+                    //  $imageData["id"]    = $media->getId();
+                    $imageData["main"] = $media->isMain();
                     $result["images"][] = $imageData;
                 }
             }

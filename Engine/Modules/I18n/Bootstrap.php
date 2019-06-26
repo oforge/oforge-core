@@ -54,10 +54,10 @@ class Bootstrap extends AbstractBootstrap {
         /** @var LanguageService $languageService */
         $languageService = Oforge()->Services()->get('i18n.language');
         $languageService->create([
-            'iso'    => 'en',
-            'name'   => 'English',
-            'active' => true,
-            'default' => true
+            'iso'     => 'en',
+            'name'    => 'English',
+            'active'  => true,
+            'default' => true,
         ]);
 
         /** @var BackendNavigationService $sidebarNavigation */
@@ -93,7 +93,9 @@ class Bootstrap extends AbstractBootstrap {
     }
 
     public function activate() {
-        Oforge()->App()->add(new I18nMiddleware());
+        if (Oforge()->isAppReady()) {
+            Oforge()->App()->add(new I18nMiddleware());
+        }
     }
 
 }

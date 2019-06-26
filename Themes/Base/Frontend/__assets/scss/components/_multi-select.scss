@@ -2,10 +2,11 @@
     position: relative;
     display: inline-block;
     cursor: pointer;
-    height: 3.2rem;
+    height: 3.6rem;
     width: 100%;
     overflow: hidden;
     border: 1px solid $color-primary;
+    background: $color-light;
 
     &__search {
         appearance: none;
@@ -19,7 +20,7 @@
         color: $color-primary;
         margin: 0;
         padding: .4rem;
-        height: 3.2rem;
+        height: 3.6rem;
         width: calc(100% - 2rem);
         display: block;
         text-overflow: ellipsis;
@@ -30,6 +31,10 @@
     &.multi-select--is-open {
         height: auto;
         overflow: auto;
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 2;
     }
 
     &:after {
@@ -42,7 +47,7 @@
         border-width: 8px 6px 0 6px;
         border-color: $color-primary transparent transparent transparent;
         right: 4px;
-        top: calc((3.2rem / 2) - 4px);
+        top: calc((3.6rem / 2) - 4px);
         z-index: 0;
     }
 
@@ -85,6 +90,10 @@
             }
         }
     }
+}
+
+.form__label + .multi-select.multi-select--is-open {
+    top: 2.4rem;
 }
 
 .multi-select__item {
