@@ -1,9 +1,30 @@
 {% extends "@parent/Frontend/Layout.twig" %}
 {% block content %}
-    {% set content = content("success_content_de") %}
-    {% if content %}
-        <div class="content">
-            {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
-        </div>
-    {% endif %}
+<div class="panel panel--insertions" data-confetti="">
+    <ul class="steps">
+        {% for i in range(1, 5) %}
+            <li class="step {% if i < 4 %}step--done{% endif %}{% if i == 5 %}step--feedback{% endif %}">
+                <a href="{{ url('insertions_createSteps', { type : type.id, page: i}) }}"
+                   class="step__link">
+                    {{ i }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+    <h2 class="feedback__title">{{ i18n('insertion_success_title') }}</h2>
+
+    <div class="success__icon flex flex--row">
+        <svg class="icon icon--secondary">
+            <use xlink:href="#check"></use>
+        </svg>
+    </div>
+
+    <h3 class="feedback__title">{{ i18n('insertion_success_next') }}</h3>
+
+    <div class="success__buttons flex">
+        <a class="button button--primary" href="#">{{ i18n('create_new_insertion') }}</a>
+        <a class="button button--primary" href="#">{{ i18n('view_insertions') }}</a>
+    </div>
+</div>
+
 {% endblock content %}
