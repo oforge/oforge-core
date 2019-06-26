@@ -1,6 +1,7 @@
 {% extends "@parent/Frontend/Layout.twig" %}
 {% block content %}
-    {% set content = content("success_content_de") %}
+
+    {% set content = content("success_content_" ~ meta.language) %}
     {% if content %}
         <div class="content">
             {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
