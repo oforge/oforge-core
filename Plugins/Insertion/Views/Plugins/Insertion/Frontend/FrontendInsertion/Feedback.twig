@@ -11,16 +11,58 @@
                 <div class="form-controls">
 
                     {% block page_content %}
-                        <input name="feedback_rating" type="number" min="1" max="5" />
-                        <textarea name="feedback_text"  >Lorem Ipsum</textarea>
+                        <div class="panel panel--insertions">
+                            <ul class="steps">
+                                {% for i in range(1, 5) %}
+                                    <li class="step {% if i < 4 %}step--done{% endif %}{% if i == 5 %}step--feedback{% endif %}">
+                                        <a href="{{ url('insertions_createSteps', { type : type.id, page: i}) }}"
+                                           class="step__link">
+                                            {{ i }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <h2 class="feedback__title">{{ i18n('insertion_feedback_title') }}</h2>
+
+                            <div class="feedback__rating flex flex--row">
+
+                                <div class="rating__button flex flex--column">
+                                    <input type="radio" name="feedback_rating" value="1" checked>
+                                    <label for="1">{{ i18n('insertion_feedback_good') }}</label>
+                                </div>
+                                <div class="rating__button flex flex--column">
+                                    <input type="radio" name="feedback_rating" value="2">
+                                    <label for="2"></label>
+                                </div>
+                                <div class="rating__button flex flex--column">
+                                    <input type="radio" name="feedback_rating" value="3">
+                                    <label for="3">{{ i18n('insertion_feedback_average') }}</label>
+                                </div>
+                                <div class="rating__button flex flex--column">
+                                    <input type="radio" name="feedback_rating" value="4">
+                                    <label for="4"></label>
+                                </div>
+                                <div class="rating__button flex flex--column">
+                                    <input type="radio" name="feedback_rating" value="5">
+                                    <label for="5">{{ i18n('insertion_feedback_bad') }}</label>
+                                </div>
+                            </div>
+
+                            <div class="feedback__description">
+                                <h3 class="form__title" >{{ i18n('help_us_improve') }}</h3>
+                                <textarea class="form__input" name="feedback_text">Lorem Ipsum</textarea>
+                            </div>
+
+                            <div class="form__control">
+                                <input type="hidden" name="token" value="{{ token() }}">
+                                <input type="submit"
+                                       value="{{ i18n('insertion_feedback_submit') }}"
+                                       class="form__input form__input--submit button">
+                            </div>
+                        </div>
                     {% endblock page_content %}
 
-                    <div class="form__control">
-                        <input type="hidden" name="token" value="{{ token() }}">
-                        <input type="submit"
-                               value="{{ i18n('insertion_feedback_submit') }}"
-                               class="form__input form__input--submit button">
-                    </div>
+
                 </div>
             </form>
 
