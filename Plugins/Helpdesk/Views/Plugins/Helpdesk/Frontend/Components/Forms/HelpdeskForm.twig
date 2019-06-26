@@ -17,7 +17,7 @@
                         name="helpdesk_request"
                         class="form__input form__input--select"
                         required>
-                    {% for issueType in issueTypes %}
+                    {% for issueType in supportTypes.issueTypes %}
                         <option value="{{ issueType.id }}">{{ issueType.issueTypeName }}</option>
                     {% endfor %}
                 </select>
