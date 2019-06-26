@@ -66,14 +66,7 @@
     &.form__control--hidden {
         display: none;
     }
-    &.form__control--xs {
-        width: 50%;
-        margin: 0 auto;
-    }
-    &.form__control--s {
-        width: 65%;
-        margin: 0 auto;
-    }
+
     &.form__control--end {
         display: flex;
         flex-direction: column;
@@ -102,6 +95,9 @@
 
     &.form__label--checkbox {
         max-width: calc(100% - 4rem);
+    }
+    &.form__label--title {
+        text-align: center;
     }
 }
 
@@ -280,6 +276,16 @@
 }
 
 @media screen and (min-width: $screen-medium) {
+    .form__control {
+        &.form__control--xs {
+            width: 50%;
+            margin: 0 auto;
+        }
+        &.form__control--s {
+            width: 65%;
+            margin: 0 auto;
+        }
+    }
     .form__input {
         &.form__input--submit {
             width: auto;
