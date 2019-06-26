@@ -81,11 +81,13 @@ class BackendHelpdeskController extends SecureBackendController {
     /**
      * @param Request $request
      * @param Response $response
-     * @EndpointAction(path="/messenger/{id}")
+     * @param array $args
      *
+     * @return Response
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws ServiceNotFoundException
+     * @EndpointAction(path="/messenger/{id}")
      */
     public function messengerAction(Request $request, Response $response, array $args) {
         /** @var Router $router */
@@ -116,8 +118,8 @@ class BackendHelpdeskController extends SecureBackendController {
 
                 $helpdeskMessengerService->sendMessage($conversation['id'], 'helpdesk', $senderId, $message);
 
-                $uri = $router->pathFor('backend_helpdesk_messenger');
-                return $response->withRedirect($uri . '/' . $args['id'], 302);
+                $uri = $router->pathFor('backend_helpdesk_messenger', ['id' => $args['id']]);
+                return $response->withRedirect($uri , 302);
             }
 
             /** @var HelpdeskTicketService $helpdeskTicketService */
