@@ -47,11 +47,32 @@
 }
 .feedback__rating {
     justify-content: space-around;
-    margin-bottom: 3rem;
+    margin: 3rem 0;
 }
 .feedback__title {
     color: $color-primary;
-    margin-bottom: 3rem;
+    margin: 3rem 0;
 }
-
+.success__icon {
+    justify-content: center;
+    .icon {
+        width: auto;
+        height: auto;
+    }
+}
+.success__buttons {
+    flex-direction: column;
+    .button:first-child {
+        margin-bottom: $size-large;
+    }
+}
+@media screen and (min-width: $screen-medium) {
+    .success__buttons {
+        flex-direction: row;
+        .button:first-child {
+            margin-bottom: 0;
+            margin-right: $size-large;
+        }
+    }
+}
 
