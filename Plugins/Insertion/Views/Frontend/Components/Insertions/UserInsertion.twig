@@ -21,50 +21,68 @@
         <a class="button button--primary edit"
            href="{{ url('insertions_edit', {id: item.id}) }}">
             <span>{{ i18n('edit') }}</span>
-            <i class="icon icon--inverted"></i>
+            <svg class="icon icon--light">
+                <use xlink:href="#edit"></use>
+            </svg>
         </a>
 
         <a class="button button--primary highlight" href="#">
             <span>{{ i18n('highlight') }}</span>
-            <i class="icon icon--inverted"></i>
+            <svg class="icon icon--light">
+                <use xlink:href="#professional_plus_abo"></use>
+            </svg>
         </a>
         {% if insertion.active %}
-            <a class="button button--primary disable"
-               href="{{ url('frontend_account_insertions_disable', {id: item.id}) }}">
-                <span>{{ i18n('disable') }}</span>
-                <i class="icon icon--inverted"></i></a>
-            </a>
-        {% else %}
-            <a class="button button--primary activate"
-               href="{{ url('frontend_account_insertions_activate', {id: item.id}) }}">
-                <span>{{ i18n('activate') }}</span>
-                <i class="icon icon--inverted"></i>
-        {% endif %}
-        <a class="button button--primary delete"
-           href="{{ url('frontend_account_insertions_delete', {id: item.id}) }}">
-            <span>{{ i18n('delete') }}</span>
-            <i class="icon icon--inverted"></i>
+        <a class="button button--primary disable"
+           href="{{ url('frontend_account_insertions_disable', {id: item.id}) }}">
+            <span>{{ i18n('disable') }}</span>
+            <svg class="icon icon--light">
+                <use xlink:href="#deactivate"></use>
+            </svg>
         </a>
-
-        <div class="mobile-buttons">
-            <a class="mobile-button" href="{{ url('insertions_edit', {id: item.id}) }}">
-                <i class="icon"></i>
-            </a>
-            {% if insertion.active %}
-                <a class="mobile-button"
-                   href="{{ url('frontend_account_insertions_disable', {id: item.id}) }}">
-                    <i class="icon"></i>
-                </a>
-            {% else %}
-                <a class="mobile-button"
-                   href="{{ url('frontend_account_insertions_activate', {id: item.id}) }}">
-                    <i class="icon"></i>
-                </a>
+        {% else %}
+        <a class="button button--primary activate"
+           href="{{ url('frontend_account_insertions_activate', {id: item.id}) }}">
+            <span>{{ i18n('activate') }}</span>
+            <svg class="icon icon--light">
+                <use xlink:href="#fade_in"></use>
+            </svg>
             {% endif %}
-            <a class="mobile-button" href="{{ url('frontend_account_insertions_delete', {id: item.id}) }}">
-                <i class="icon"></i>
+            <a class="button button--primary delete"
+               href="{{ url('frontend_account_insertions_delete', {id: item.id}) }}">
+                <span>{{ i18n('delete') }}</span>
+                <svg class="icon icon--light">
+                    <use xlink:href="#delete"></use>
+                </svg>
             </a>
-        </div>
+
+            <div class="mobile-buttons">
+                <a class="mobile-button" href="{{ url('insertions_edit', {id: item.id}) }}">
+                    <svg class="icon icon--primary">
+                        <use xlink:href="#edit"></use>
+                    </svg>
+                </a>
+                {% if insertion.active %}
+                    <a class="mobile-button"
+                       href="{{ url('frontend_account_insertions_disable', {id: item.id}) }}">
+                        <svg class="icon icon--primary">
+                            <use xlink:href="#deactivate"></use>
+                        </svg>
+                    </a>
+                {% else %}
+                    <a class="mobile-button"
+                       href="{{ url('frontend_account_insertions_activate', {id: item.id}) }}">
+                        <svg class="icon icon--primary">
+                            <use xlink:href="#fade_in"></use>
+                        </svg>
+                    </a>
+                {% endif %}
+                <a class="mobile-button" href="{{ url('frontend_account_insertions_delete', {id: item.id}) }}">
+                    <svg class="icon icon--primary">
+                        <use xlink:href="#delete"></use>
+                    </svg>
+                </a>
+            </div>
     </div>
 {% endblock attributes__bottom %}
 
