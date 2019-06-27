@@ -30,6 +30,20 @@
                                            value="{{ content.insertionType.name }}">
                                 </div>
                                 <div class="form-group">
+                                    <label for="insertion_type_description">{{ i18n("insertion_type_description", "Insertion Type Description Key") }}</label>
+                                    <input name="description" type="text" class="form-control" id="insertion_type_description"
+                                           value="{{ content.insertionType.description }}">
+                                </div>
+
+                                <div class="form-group">
+                                    {% include 'Backend/Components/Image.twig' with {
+                                        name: 'image',
+                                        data: content.insertionType.image.id
+                                    } only %}
+                                </div>
+
+
+                                <div class="form-group">
                                     <label for="attributeType">{{ i18n("insertion_type_parent", "Parent Type") }}</label>
                                     <select name="parent" id="attributeType" class="form-control select2">
                                         <option value="0">None</option>
