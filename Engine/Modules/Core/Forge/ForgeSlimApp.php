@@ -210,7 +210,7 @@ TAG;
         $cache = Oforge()->View()->get("cache-for");
 
         if ($userNotLoggedIn && $cache != null && is_string($cache) && $mode != "development") {
-            @mkdir(ROOT_PATH . Statics::RESULT_CACHE_DIR, 0777, true);
+            @mkdir(ROOT_PATH . Statics::RESULT_CACHE_DIR, 0755, true);
 
             file_put_contents(ROOT_PATH . Statics::RESULT_CACHE_DIR . DIRECTORY_SEPARATOR . $filename . "##" . $cache, $response->getBody()->__toString());
         }
