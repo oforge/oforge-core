@@ -48,31 +48,49 @@ class Bootstrap extends AbstractBootstrap {
         $configService = Oforge()->Services()->get('config');
 
         $configService->add([
-            'name'     => 'mailer_smtp_debug',
-            'type'     => ConfigType::INTEGER,
-            'group'    => 'mailer',
-            'default'  => 2,
-            'label'    => 'config_mailer_smtp_debug',
-            'required' => true,
-            'order'    => 0,
-        ]);
-        $configService->add([
             'name'     => 'mailer_host',
             'type'     => ConfigType::STRING,
             'group'    => 'mailer',
             'default'  => '',
             'label'    => 'config_mailer_host',
             'required' => true,
-            'order'    => 1,
+            'order'    => 0,
         ]);
         $configService->add([
             'name'     => 'mailer_port',
             'type'     => ConfigType::INTEGER,
             'group'    => 'mailer',
-            'default'  => 587,
+            'default'  => 25,
             'label'    => 'config_mailer_port',
             'required' => true,
+            'order'    => 1,
+        ]);
+        $configService->add([
+            'name'     => 'mailer_smtp_username',
+            'type'     => ConfigType::STRING,
+            'group'    => 'mailer',
+            'default'  => '',
+            'label'    => 'config_mailer_smtp_username',
+            'required' => true,
             'order'    => 2,
+        ]);
+        $configService->add([
+            'name'     => 'mailer_smtp_password',
+            'type'     => ConfigType::PASSWORD,
+            'group'    => 'mailer',
+            'default'  => '',
+            'label'    => 'config_mailer_smtp_password',
+            'required' => true,
+            'order'    => 3,
+        ]);
+        $configService->add([
+            'name'     => 'mailer_smtp_secure',
+            'type'     => ConfigType::STRING,
+            'group'    => 'mailer',
+            'default'  => 'ssl',
+            'label'    => 'config_mailer_smtp_secure',
+            'required' => true,
+            'order'    => 4,
         ]);
         $configService->add([
             'name'     => 'mailer_smtp_auth',
@@ -81,16 +99,16 @@ class Bootstrap extends AbstractBootstrap {
             'default'  => true,
             'label'    => 'config_mailer_smtp_auth',
             'required' => true,
-            'order'    => 3,
+            'order'    => 5,
         ]);
         $configService->add([
-            'name'     => 'mailer_smtp_secure',
-            'type'     => ConfigType::STRING,
+            'name'     => 'mailer_smtp_debug',
+            'type'     => ConfigType::INTEGER,
             'group'    => 'mailer',
-            'default'  => '',
-            'label'    => 'config_mailer_smtp_secure',
+            'default'  => 2,
+            'label'    => 'config_mailer_smtp_debug',
             'required' => true,
-            'order'    => 4,
+            'order'    => 6,
         ]);
         $configService->add([
             'name'     => 'mailer_exceptions',
@@ -98,24 +116,6 @@ class Bootstrap extends AbstractBootstrap {
             'group'    => 'mailer',
             'default'  => true,
             'label'    => 'config_mailer_exceptions',
-            'required' => true,
-            'order'    => 5,
-        ]);
-        $configService->add([
-            'name'     => 'mailer_username',
-            'type'     => ConfigType::STRING,
-            'group'    => 'mailer',
-            'default'  => '',
-            'label'    => 'config_mailer_username',
-            'required' => true,
-            'order'    => 6,
-        ]);
-        $configService->add([
-            'name'     => 'mailer_smtp_password',
-            'type'     => ConfigType::PASSWORD,
-            'group'    => 'mailer',
-            'default'  => '',
-            'label'    => 'config_mailer_smtp_password',
             'required' => true,
             'order'    => 7,
         ]);
@@ -147,5 +147,4 @@ class Bootstrap extends AbstractBootstrap {
             'order'    => 10,
         ]);
     }
-
 }
