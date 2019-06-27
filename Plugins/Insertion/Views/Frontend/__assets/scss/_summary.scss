@@ -36,13 +36,103 @@
     }
 }
 
-.title.title--price-summary {
-    background: $color-secondary;
-    color: $color-light;
-    font-weight: bold;
-    padding: $size-small;
+.price-summary {
+    margin: 0 0 $size-large 0;
 }
 
-.price-summary {
+.preview {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin-bottom: $size-large;
 
+    &__content {
+        word-break: break-word;
+        width: 100%;
+    }
+    &__item {
+        display: table;
+        width: 100%;
+    }
+    &__key {
+        display: table-cell;
+    }
+    &__value {
+        display: table-cell;
+        min-width: 30%;
+        padding-left: $size-large;
+    }
+}
+
+.title {
+    &.title--summary {
+        margin-bottom: $size-large;
+        color: $color-primary;
+    }
+    &.title--price-summary {
+        background: $color-secondary;
+        color: $color-light;
+        font-weight: bold;
+        padding: $size-medium $size-large;
+        margin-bottom: $size-large;
+    }
+    &.title--preview {
+        color: $color-primary;
+        font-size: $font-size-4;
+        font-weight: bold;
+        margin: $size-large 0;
+    }
+}
+
+.sum {
+    text-align: right;
+    &__title,
+    &__price {
+        font-weight: bold;
+    }
+}
+
+@media screen and (min-width: $screen-medium) {
+    .preview {
+        flex-direction: row;
+
+        &__images {
+            flex: 0 0 300px;
+        }
+        &__content {
+            margin-left: $size-large;
+        }
+        &__value {
+            width: 45%;
+        }
+    }
+    .title {
+        &.title--preview {
+            margin-top: 0;
+        }
+    }
+}
+
+@media screen and (min-width: $screen-large) {
+    .summary {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    .preview {
+        flex: 1 0 60%;
+
+        &__images {
+            flex: 0 0 240px;
+        }
+    }
+    .price-summary {
+        flex: 0 0 calc(40% - #{$size-large});
+        margin: 0 0 $size-large $size-large;
+    }
+    .title {
+        &.title--summary {
+            flex: 0 0 100%;
+        }
+    }
 }
