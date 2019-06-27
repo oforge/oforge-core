@@ -24,6 +24,7 @@ class SendMailController extends AbstractController {
             'subject'    => $request->getQueryParam('template'),
             'attachment' => [],
             'template'   => $request->getQueryParam('template'),
+            'from'       => 'info',
         ];
 
         $mailservice->send($testOptions, []);
