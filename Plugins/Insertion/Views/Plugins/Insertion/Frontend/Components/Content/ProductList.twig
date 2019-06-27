@@ -1,5 +1,11 @@
 {% block product_list %}
     <div class="insertion__content">
+        {% block seo_content %}
+            {% set content = content('seo_content_type_' ~ meta.language ~ '_' ~  meta.language) %}
+            {% if content %}
+                {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
+            {% endif %}
+        {% endblock seo_content %}
         {% block product_list__filter %}
             {% include 'Plugins/Insertion/Frontend/Components/Content/Filter.twig' %}
         {% endblock product_list__filter %}
