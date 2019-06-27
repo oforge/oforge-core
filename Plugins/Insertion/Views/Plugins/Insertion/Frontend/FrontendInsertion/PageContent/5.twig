@@ -3,30 +3,68 @@
 
     {% block summary %}
         <div class="summary">
-            <div class="preview"></div>
+            <h2 class="title title--summary">{{ i18n('summary') }}</h2>
+            <div class="preview">
+                {% if data.images %}
+                <div class="preview__images">
+                    <img src="{{ data.images[0].path }}" alt="{{ data.images[0].name }}" class="preview__image">
+                </div>
+                {% endif %}
+                <div class="preview__content">
+                    <h3 class="title title--preview">{{ data.insertion_title }}</h3>
+                    <ul class="preview__summary-list">
+                        <li class="preview__item">
+                            <span class="preview__key">{{ i18n('price') }}</span>
+                            <span class="preview__value">{{ data.price }}</span>
+                        </li>
+                        <li class="preview__item">
+                            <span class="preview__key">{{ i18n('insertion_type') }}</span>
+                            <span class="preview__value">{{ type.name }}</span>
+                        </li>
+                        <li class="preview__item">
+                            <span class="preview__key">{{ i18n('insertion_runtime') }}</span>
+                            <span class="preview__value">{{ i18n('infinite') }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
             <div class="price-summary">
                 <h3 class="title title--price-summary">{{ i18n('summary') }}</h3>
                 <ul class="summary__list">
                     <li class="summary__item">
-                        <span class="summary__key"><svg class="icon icon--small icon--secondary"><use xlink:href="#check"></use></svg>Key</span><span class="summary__value">Value</span>
+                        <span class="summary__key">
+                            <svg class="icon icon--small icon--secondary">
+                                <use xlink:href="#check"></use>
+                            </svg>{{ i18n('insertion') }}</span>
+                        <span class="summary__value">0,00 €</span>
                     </li>
                     <li class="summary__item">
-                        <span class="summary__key"><svg class="icon icon--small icon--secondary"><use xlink:href="#check"></use></svg>Key</span><span class="summary__value">Value</span>
+                        <span class="summary__key">
+                            <svg class="icon icon--small icon--secondary">
+                                <use xlink:href="#check"></use>
+                            </svg>{{ i18n('preview_image') }}</span>
+                        <span class="summary__value">0,00 €</span>
                     </li>
                     <li class="summary__item">
-                        <span class="summary__key"><svg class="icon icon--small icon--secondary"><use xlink:href="#check"></use></svg>Key</span><span class="summary__value">Value</span>
+                        <span class="summary__key">
+                            <svg class="icon icon--small icon--secondary">
+                                <use xlink:href="#check"></use>
+                            </svg>{{ i18n('top_insertion') }}</span>
+                        <span class="summary__value">{{ i18n('coming_soon') }}</span>
                     </li>
                     <li class="summary__item">
-                        <span class="summary__key"><svg class="icon icon--small icon--secondary"><use xlink:href="#check"></use></svg>Key</span><span class="summary__value">Value</span>
-                    </li>
-                    <li class="summary__item">
-                        <span class="summary__key"><svg class="icon icon--small icon--secondary"><use xlink:href="#check"></use></svg>Key</span><span class="summary__value">Value</span>
+                        <span class="summary__key">
+                            <svg class="icon icon--small icon--secondary">
+                                <use xlink:href="#check"></use>
+                            </svg>{{ i18n('homepage_gallery') }}</span>
+                        <span class="summary__value">0,00 €</span>
                     </li>
                 </ul>
+                <div class="separator separator--small separator--double"></div>
                 <div class="sum">
                     <span class="sum__title">{{ i18n('sum_total') }}</span>
-                    <span class="sum__prefix">{{ i18n('once') }}</span>
-                    <span class="sum_price">27,96 €</span>
+                    {% if sum_prefix %}<span class="sum__prefix">{{ i18n('once') }}</span>{% endif %}
+                    <span class="sum__price">0,00 €</span>
                 </div>
             </div>
         </div>
