@@ -184,7 +184,7 @@ class RegistrationController extends AbstractController {
         // TODO: add email snippets
         $mailOptions  = [
             'to'       => [$user['email'] => $user['email']],
-            'from'     => 'no-reply@local.host', // TODO: From settings
+            'from'     => 'info', // TODO: From settings
             'subject'  => I18N::translate('email_subject_registration', 'Oforge | Your registration!'),
             'template' => 'RegisterConfirm.twig',
         ];
