@@ -28,7 +28,7 @@
                             {% elseif property.name == 'id' %}
                                 {% set fieldLabel = 'ID' %}
                             {% else %}
-                                {% set fieldLabel = property.name|capitalize %}
+                                {% set fieldLabel = property.name|ucfirst %}
                             {% endif %}
                             {% set fieldID = ['form', crud.context, crud.model|lower, property.name]|join('_') %}
                             <label for="{{ fieldID }}">{{ fieldLabel }}</label>
