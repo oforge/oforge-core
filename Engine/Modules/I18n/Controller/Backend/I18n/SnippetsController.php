@@ -77,7 +77,12 @@ class SnippetsController extends BaseCrudController {
         ],
         'name'  => [
             'type'    => CrudFilterType::TEXT,
-            'label'   => ['key' => 'module_i18n_sfilter_nippet_name', 'default' => 'Search in name'],
+            'label'   => ['key' => 'module_i18n_filter_snippet_name', 'default' => 'Search in name'],
+            'compare' => CrudFilterComparator::LIKE,
+        ],
+        'value'  => [
+            'type'    => CrudFilterType::TEXT,
+            'label'   => ['key' => 'module_i18n_filter_snippet_value', 'default' => 'Search in value'],
             'compare' => CrudFilterComparator::LIKE,
         ],
     ];
