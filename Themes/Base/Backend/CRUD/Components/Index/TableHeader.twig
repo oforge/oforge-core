@@ -10,7 +10,7 @@
             {% elseif property.name == 'id' %}
                 {{ 'ID' }}
             {% else %}
-                {{ property.name|capitalize }}
+                {{ property.name|ucfirst }}
             {% endif %}
         </th>
     {% endfor %}
