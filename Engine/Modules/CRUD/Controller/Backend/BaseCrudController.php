@@ -94,7 +94,7 @@ class BaseCrudController extends SecureBackendController {
      *          'delete'    => true, // enable delete button and view
      *      ];
      *
-     * @var array $crudActions Keys of 'add|edit|delete'
+     * @var array $crudActions
      */
     protected $crudActions = [
         'index'  => true,
