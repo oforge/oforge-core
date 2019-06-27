@@ -70,6 +70,24 @@
             background: $color-secondary;
         }
     }
+
+    &__description {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin: $size-large 0;
+    }
+
+    &__main-icon {
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        background: $color-secondary;
+    }
+}
+
+.description.description--upload {
+    margin-left: $size-large;
 }
 
 .upload__item + .upload__item {
@@ -118,6 +136,7 @@
         }
     }
 }
+
 
 @media screen and (min-width: $screen-large) {
     .upload {
