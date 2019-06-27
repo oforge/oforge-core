@@ -24,25 +24,25 @@
                             </ul>
                             <h2 class="feedback__title">{{ i18n('insertion_feedback_title') }}</h2>
 
-                            <div class="feedback__rating flex flex--row">
+                            <div class="feedback__rating">
 
-                                <div class="rating__button flex flex--column">
+                                <div class="rating__button">
                                     <input type="radio" name="feedback_rating" value="1" checked>
                                     <label for="1">{{ i18n('insertion_feedback_good') }}</label>
                                 </div>
-                                <div class="rating__button flex flex--column">
+                                <div class="rating__button">
                                     <input type="radio" name="feedback_rating" value="2">
                                     <label for="2"></label>
                                 </div>
-                                <div class="rating__button flex flex--column">
+                                <div class="rating__button">
                                     <input type="radio" name="feedback_rating" value="3">
                                     <label for="3">{{ i18n('insertion_feedback_average') }}</label>
                                 </div>
-                                <div class="rating__button flex flex--column">
+                                <div class="rating__button">
                                     <input type="radio" name="feedback_rating" value="4">
                                     <label for="4"></label>
                                 </div>
-                                <div class="rating__button flex flex--column">
+                                <div class="rating__button">
                                     <input type="radio" name="feedback_rating" value="5">
                                     <label for="5">{{ i18n('insertion_feedback_bad') }}</label>
                                 </div>
@@ -61,8 +61,6 @@
                             </div>
                         </div>
                     {% endblock page_content %}
-
-
                 </div>
             </form>
 
