@@ -97,7 +97,7 @@ class Bootstrap extends AbstractBootstrap {
         /** @var BackendNavigationService $sidebarNavigation */
         $sidebarNavigation = Oforge()->Services()->get('backend.navigation');
         $sidebarNavigation->put([
-            'name'     => 'content',
+            'name'     => 'backend_content',
             'order'    => 1,
             'position' => 'sidebar',
         ]);
@@ -106,28 +106,5 @@ class Bootstrap extends AbstractBootstrap {
             'order'    => 99,
             'position' => 'sidebar',
         ]);
-        /*
-        $sidebarNavigation->put([
-            'name' => 'help',
-            'order' => 99,
-            'parent' => 'admin',
-            'icon' => 'ion-help'
-        ]);
-        $sidebarNavigation->put([
-            'name' => 'ionicons',
-            'order' => 2,
-            'parent' => 'help',
-            'icon' => 'ion-nuclear',
-            'path' => 'backend_dashboard_ionicons'
-        ]);
-        $sidebarNavigation->put([
-            'name' => 'fontAwesome',
-            'order' => 1,
-            'parent' => 'help',
-            'icon' => 'fa fa-fort-awesome',
-            'path' => 'backend_dashboard_fontAwesome'
-        ]);
-        */
     }
-
 }
