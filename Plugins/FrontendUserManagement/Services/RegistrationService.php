@@ -40,6 +40,17 @@ class RegistrationService extends AbstractDatabaseAccess {
     /**
      * @param array $user
      *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function unregister(array $user) {
+        $user = $this->repository()->findOneBy(['email' => $user['email']]);
+        $this->entityManager()->remove($user);
+    }
+
+    /**
+     * @param array $user
+     *
      * @return string
      */
     public function generateActivationLink(array $user) :string {
@@ -73,6 +84,7 @@ class RegistrationService extends AbstractDatabaseAccess {
             unset($user["password"]);
             $user["type"] = User::class;
         }
+
         return $user;
 
     }
