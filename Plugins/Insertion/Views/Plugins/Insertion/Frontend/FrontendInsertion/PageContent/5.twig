@@ -2,7 +2,34 @@
     {# summary #}
 
     {% block summary %}
-        SUMMARY TODO
+        <div class="summary">
+            <div class="preview"></div>
+            <div class="price-summary">
+                <h3 class="title title--price-summary">{{ i18n('summary') }}</h3>
+                <ul class="summary__list">
+                    <li class="summary__item">
+                        <span class="summary__key"><svg class="icon icon--small icon--secondary"><use xlink:href="#check"></use></svg>Key</span><span class="summary__value">Value</span>
+                    </li>
+                    <li class="summary__item">
+                        <span class="summary__key"><svg class="icon icon--small icon--secondary"><use xlink:href="#check"></use></svg>Key</span><span class="summary__value">Value</span>
+                    </li>
+                    <li class="summary__item">
+                        <span class="summary__key"><svg class="icon icon--small icon--secondary"><use xlink:href="#check"></use></svg>Key</span><span class="summary__value">Value</span>
+                    </li>
+                    <li class="summary__item">
+                        <span class="summary__key"><svg class="icon icon--small icon--secondary"><use xlink:href="#check"></use></svg>Key</span><span class="summary__value">Value</span>
+                    </li>
+                    <li class="summary__item">
+                        <span class="summary__key"><svg class="icon icon--small icon--secondary"><use xlink:href="#check"></use></svg>Key</span><span class="summary__value">Value</span>
+                    </li>
+                </ul>
+                <div class="sum">
+                    <span class="sum__title">{{ i18n('sum_total') }}</span>
+                    <span class="sum__prefix">{{ i18n('once') }}</span>
+                    <span class="sum_price">27,96 €</span>
+                </div>
+            </div>
+        </div>
     {% endblock summary %}
 
     {% if not user_logged_in %}

@@ -1,0 +1,48 @@
+.summary {
+    display: flex;
+    flex-direction: column;
+    &__item {
+        display: table;
+        width: 100%;
+    }
+
+    &__key {
+        display: table-cell;
+        position: relative;
+        overflow: hidden;
+
+        &:after {
+            content: '';
+            position: absolute;
+            border-bottom: 2px dotted $color-secondary;
+            width: 100%;
+            bottom: 4px;
+            margin-left: 1rem;
+        }
+
+        .icon {
+            display: inline-flex;
+            margin-right: $size-medium;
+            vertical-align: middle;
+        }
+    }
+    &__value {
+        display: table-cell;
+        width: 1%;
+        white-space: nowrap;
+        text-align: right;
+        padding-left: 1rem;
+        vertical-align: bottom;
+    }
+}
+
+.title.title--price-summary {
+    background: $color-secondary;
+    color: $color-light;
+    font-weight: bold;
+    padding: $size-small;
+}
+
+.price-summary {
+
+}
