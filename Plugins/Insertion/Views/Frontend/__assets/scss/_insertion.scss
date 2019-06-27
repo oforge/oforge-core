@@ -243,3 +243,8 @@
     }
 }
 
+.action-insertions_createsteps {
+    .form-controls .form__control + .form__control {
+        margin-top: $size-large;
+    }
+}
