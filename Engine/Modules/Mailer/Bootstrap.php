@@ -76,7 +76,7 @@ class Bootstrap extends AbstractBootstrap {
         ]);
         $configService->add([
             'name'     => 'mailer_smtp_password',
-            'type'     => ConfigType::PASSWORD,
+            'type'     => ConfigType::STRING,
             'group'    => 'mailer',
             'default'  => '',
             'label'    => 'config_mailer_smtp_password',
