@@ -47,8 +47,15 @@
     }
 }
 .feedback__rating {
+    display: flex;
+    flex-direction: column;
     justify-content: space-around;
     margin: 3rem 0;
+    .rating__button {
+        display: flex;
+        flex-direction: row;
+        margin-bottom: $size-large;
+    }
 }
 .feedback__title {
     color: $color-primary;
@@ -67,6 +74,11 @@
         margin-bottom: $size-large;
     }
 }
+#particle-canvas {
+    position: fixed;
+    top: 0;
+    pointer-events: none;
+}
 @media screen and (min-width: $screen-medium) {
     .success__buttons {
         flex-direction: row;
@@ -75,9 +87,12 @@
             margin-right: $size-large;
         }
     }
+    .feedback__rating {
+        flex-direction: row;
+        .rating__button {
+            flex-direction: column;
+            margin-bottom: 0;
+        }
+    }
 }
-#particle-canvas {
-    position: absolute;
-    top: 0;
-    pointer-events: none;
-}
+

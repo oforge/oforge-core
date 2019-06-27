@@ -1,8 +1,15 @@
 {# block sidebar__account_user #}
 {% block account_user %}
     <div class="account__user">
-        <div class="user__picture img-profile"
+        <div class="user__picture img-profile {% if label %}flex {% endif %}"
              style="background-image: url('{% if current_user.detail %}{{ media(current_user.detail.image) }}{% else %}http://placeimg.com/640/640/people{% endif %}');">
+            {% if label %}
+                <label class="center__label flex flex--row" for="input__profile">
+                    <svg class="icon icon--light">
+                        <use xlink:href="#camera"></use>
+                    </svg>
+                </label>
+            {% endif %}
         </div>
         <div class="user-info">
             {% if current_user.detail %}

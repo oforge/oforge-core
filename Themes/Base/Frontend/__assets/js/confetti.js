@@ -88,9 +88,6 @@
                     canvas.height = height;
                     document.body.appendChild( canvas );
 
-                    // change body bg color
-
-
                     // update canvas size
                     const updateSize = () => {
                         width = window.innerWidth;
@@ -102,11 +99,11 @@
                     // create confetti particles
                     const createParticles = () => {
                         particles = [];
-                        let total = 100;
+                        let total = 50;
 
-                        if ( width > 1080 ) { total = 400; } else
-                        if ( width > 760 )  { total = 300; } else
-                        if ( width > 520 )  { total = 200; }
+                        if ( width > 1280 ) { total = 200; } else
+                        if ( width > 960 )  { total = 150; } else
+                        if ( width > 640 )  { total = 100; }
 
                         for ( let i = 0; i < total; ++i ) {
                             particles.push( new ConfettiParticle( context, width, height ) );
@@ -116,7 +113,6 @@
                     // animation loop function
                     const animationFunc = () => {
                         requestAnimationFrame( animationFunc );
-                        if ( Math.random() > 0.98 ) changeBgColor();
                         context.clearRect( 0, 0, width, height );
 
                         for ( let p of particles ) {
