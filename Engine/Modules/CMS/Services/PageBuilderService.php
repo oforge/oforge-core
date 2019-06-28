@@ -154,7 +154,7 @@ class PageBuilderService extends AbstractDatabaseAccess {
      * @return array|NULL Array filled with available page contents
      * @throws ORMException
      */
-    private function getPageContentArray(int $pathId) {
+    public function getPageContentArray(int $pathId) {
         $pageContentEntities = $this->getPageContentEntities($pathId);
 
         if (!$pageContentEntities) {

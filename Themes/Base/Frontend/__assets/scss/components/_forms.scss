@@ -23,10 +23,6 @@
         align-items: flex-start;
         flex-wrap: wrap;
 
-        &:not(:last-child) {
-            min-height: 4.8rem;
-        }
-
         .form__control {
             flex: 0 0 calc(50% - .6rem);
             margin-top: $size-large;
@@ -76,6 +72,10 @@
     .form-controls .form__control {
         margin-top: 0;
     }
+
+    &.form__control--multi {
+        min-height: 3.6rem;
+    }
 }
 
 .form__control + .form__control {
@@ -95,6 +95,7 @@
 
     &.form__label--checkbox {
         max-width: calc(100% - 4rem);
+        vertical-align: middle;
     }
     &.form__label--title {
         text-align: center;
@@ -162,6 +163,7 @@
     // dirrty hack :/
     &.form__input--checkbox {
         width: 3.6rem;
+        vertical-align: middle;
 
         &:checked {
             background-color: $color-secondary;
@@ -174,6 +176,7 @@
     &.form__input--checkbox-small {
         width: 2rem;
         height: 2rem;
+        vertical-align: middle;
 
         & + label {
             font-size: $font-size-6;
