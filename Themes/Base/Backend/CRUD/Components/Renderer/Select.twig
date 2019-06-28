@@ -15,14 +15,14 @@
     {% if not found %}
         <div>
             <i class="fa fa-exclamation-triangle"
-               title="{{ i18n('backend_crud_missing_select_value', 'Value not in select list') }}"></i>
+               title="{{ i18n('backend_crud_missing_select_value', {en: 'Value not in select list', de: 'Wert nicht in Select-Liste'}) }}"></i>
             {{ item[property.name] }}
         </div>
     {% endif %}
 {% elseif property.list[item[property.name]] is not defined %}
     <div>
         <i class="fa fa-exclamation-triangle"
-           title="{{ i18n('backend_crud_missing_select_value', 'Value not in select list') }}"></i>
+           title="{{ i18n('backend_crud_missing_select_value', {en: 'Value not in select list', de: 'Value not in select list'}) }}"></i>
         {{ item[property.name] }}
     </div>
 {% else %}

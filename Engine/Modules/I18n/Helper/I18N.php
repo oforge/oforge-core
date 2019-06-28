@@ -22,24 +22,44 @@ class I18N {
      * Internationalization of text or labels.
      *
      * @param string $key
-     * @param string|null $defaultValue
+     * @param string|array|null $defaultValue
      * @param string|null $language
      *
      * @return string
      */
-    public static function translate(string $key, ?string $defaultValue = null, ?string $language = null) : string {
+    public static function translate(string $key, $defaultValue = null, ?string $language = null) : string {
         try {
-            if (!isset($language)) {
-                $language = self::getCurrentLanguage([]);
-            }
             if (!isset(self::$i18nService)) {
                 /** @var InternationalizationService $service */
                 self::$i18nService = Oforge()->Services()->get('i18n');
             }
+            if (!isset($language)) {
+                $language = self::getCurrentLanguage([]);
+            }
+            if (is_array($defaultValue)) {
+                if (empty($defaultValue)) {
+                    return $key;
+                }
+                $result = null;
+                if (isset($defaultValue[$language])) {
+                    $result = self::$i18nService->get($key, $language, $defaultValue[$language]);
+                }
+                foreach ($defaultValue as $languageIso => $languageDefaultValue) {
+                    if ($language === $languageIso) {
+                        continue;
+                    }
+                    $tmpResult = self::$i18nService->get($key, $languageIso, $defaultValue[$languageIso]);
+                    if ($result === null) {
+                        $result = $tmpResult;
+                    }
+                }
+
+                return $result;
+            }
 
             return self::$i18nService->get($key, $language, $defaultValue);
         } catch (Exception $exception) {
-            Oforge()->Logger()->get()->error($exception->getMessage(), $exception->getTrace());
+            Oforge()->Logger()->logException($exception);
         }
 
         return self::translateFallback($key, $defaultValue);
@@ -50,18 +70,18 @@ class I18N {
      *
      * @param array $context
      * @param string $key
-     * @param string|null $defaultValue
+     * @param string|array|null $defaultValue
      *
      * @return string
      */
-    public static function twigTranslate($context, string $key, ?string $defaultValue = null) : string {
+    public static function twigTranslate($context, string $key, $defaultValue = null) : string {
         try {
             return self::translate($key, $defaultValue, self::getCurrentLanguage($context));
         } catch (Exception $exception) {
             Oforge()->Logger()->get()->error($exception->getMessage(), $exception->getTrace());
         }
 
-        return self::translateFallback($key, $defaultValue);
+        return self::translateFallback($key);
     }
 
     /**
