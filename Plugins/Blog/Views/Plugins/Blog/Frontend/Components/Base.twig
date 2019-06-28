@@ -1,15 +1,6 @@
 {% extends '@parent/Frontend/Layout.twig' %}
 
-{% block title %}
-    {{ config('system_project_name') }} >
-    {{ i18n('plugin_blog_frontend_blog_home', 'Blog') }}
-    {% if blog.category %}
-        > {{ blog.category.name }}
-    {% endif %}
-    {% if blog.post %}
-        > {{ blog.post.headerTitle }}
-    {% endif %}
-{% endblock title %}
+{% block title %}{% if blog.post %}{{ blog.post.headerTitle }}{% elseif blog.category %}{{ blog.category.name }}{% else %}{{ i18n('plugin_blog_frontend_blog_home', 'Blog') }}{% endif %} {{ i18n('by', 'by') }} {{ config('system_project_name') }}{% endblock title %}
 
 
 {% block content %}

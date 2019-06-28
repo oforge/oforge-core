@@ -42,13 +42,16 @@ class MailService {
                  * @var $configService ConfigService
                  */
                 $configService = Oforge()->Services()->get("config");
-                $mail          = new PHPMailer(true);
+                $exceptions    = $configService->get("mailer_exceptions");
 
-                /** Set Server Settings */
+                /** @var  $mail */
+                $mail          = new PHPMailer($exceptions);
+
+                /**  Mailer Settings */
                 $mail->isSMTP();
                 $mail->setFrom($this->getSenderAddress($options['from']));
                 $mail->Host       = $configService->get("mailer_host");
-                $mail->Username   = $configService->get("mailer_username");
+                $mail->Username   = $configService->get("mailer_smtp_username");
                 $mail->Port       = $configService->get("mailer_port");
                 $mail->SMTPAuth   = $configService->get("mailer_smtp_auth");
                 $mail->Password   = $configService->get("mailer_smtp_password");
@@ -83,7 +86,6 @@ class MailService {
                 }
 
                 /** Render HTML */
-
                 $renderedTemplate = $this->renderMail($options,$templateData);
 
 

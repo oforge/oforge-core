@@ -15,7 +15,7 @@
                 {% endblock page_content %}
 
             <div class="form-controls">
-                <div class="form__control{% if page != pagecount %} form__control--end{% endif %}">
+                <div class="form__control form__control--end">
                     <input type="hidden" name="token" value="{{ token() }}">
                     <input type="hidden" name="current_page" value="{{ page }}">
                     <input type="submit"

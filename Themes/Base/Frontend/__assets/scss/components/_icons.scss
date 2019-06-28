@@ -24,6 +24,10 @@
     &.icon--light {
         fill: $color-light;
     }
+    &.icon--small {
+        width: 1.6rem;
+        height: 1.6rem;
+    }
     &.icon--large {
         width: 6rem;
         height: 6rem;

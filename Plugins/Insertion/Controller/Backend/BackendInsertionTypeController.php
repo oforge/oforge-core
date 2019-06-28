@@ -86,7 +86,14 @@ class BackendInsertionTypeController extends SecureBackendController {
             $parent = $insertionTypeService->getInsertionTypeById($body['parent']);
             if (isset($request->getQueryParams()['id'])) {
                 /** @var InsertionType $insertionType */
-                $insertionType = $insertionTypeService->updateInsertionType($insertionTypeId, $body['name'], $parent, $body['insertionTypeQuickSearch']);
+                $data = [
+                    'name' => $body['name'],
+                    'parent' => $parent,
+                    'insertionTypeQuickSearch' => $body['insertionTypeQuickSearch'],
+                    'description' => $body['description'],
+                    'image' => $body['image']
+                ];
+                $insertionType = $insertionTypeService->updateInsertionType($insertionTypeId, $data);
                 /** @var InsertionTypeAttribute[] $insertionTypeAttributes */
                 $insertionTypeAttributes = $insertionType->getAttributes();
                 $idList                  = [];

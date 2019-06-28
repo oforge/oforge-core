@@ -5,6 +5,7 @@ namespace Insertion\Models;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
+use Oforge\Engine\Modules\Media\Models\Media;
 
 /**
  * @ORM\Table(name="oforge_insertion_type")
@@ -26,10 +27,18 @@ class InsertionType extends AbstractModel {
     private $name;
 
     /**
-     * TODO: Media
-     * @var string
-     * @ORM\Column(name="insertion_type_icon", type="string", nullable=true)
+     * @var Media|null
+     * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\Media\Models\Media", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="image_id", referencedColumnName="id")
      */
+
+    private $image;
+
+    /**
+     * @var string|null
+     * @ORM\Column(name="insertion_type_description", type="string", nullable=true)
+     */
+    private $description;
 
     /**
      * @ORM\ManyToOne(targetEntity="InsertionType")
@@ -75,6 +84,7 @@ class InsertionType extends AbstractModel {
      */
     public function setName(string $name) : InsertionType {
         $this->name = $name;
+
         return $this;
     }
 
@@ -92,6 +102,7 @@ class InsertionType extends AbstractModel {
      */
     public function setParent($parent) : InsertionType {
         $this->parent = $parent;
+
         return $this;
     }
 
@@ -109,6 +120,7 @@ class InsertionType extends AbstractModel {
      */
     public function setAttributes($attributes) : InsertionType {
         $this->attributes = $attributes;
+
         return $this;
     }
 
@@ -126,6 +138,40 @@ class InsertionType extends AbstractModel {
      */
     public function setQuickSearch(bool $quickSearch) : InsertionType {
         $this->quickSearch = $quickSearch;
+
+        return $this;
+    }
+
+    /**
+     * @return Media|null
+     */
+    public function getImage() : ?Media {
+        return $this->image;
+    }
+
+    /**
+     * @param Media|null $image
+     * @return InsertionType
+     */
+    public function setImage(?Media $image) : InsertionType {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDescription() : ?string {
+        return $this->description;
+    }
+
+    /**
+     * @param string|null $description
+     * @return InsertionType
+     */
+    public function setDescription(?string $description) : InsertionType {
+        $this->description = $description;
 
         return $this;
     }
