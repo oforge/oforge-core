@@ -84,7 +84,7 @@ class MessengerController extends SecureFrontendController {
 
                     $targetIdMail = $frontendUserService->getUserById($targetUserId)->getEmail();
                     $mailOptions = [
-                        'to' => $targetIdMail,
+                        'to' => [$targetIdMail],
                         'from' => 'no_reply',
                         'subject' => I18N::translate('email_subject_new_message', 'New private message'),
                         'template' => 'NewMessage.twig'
