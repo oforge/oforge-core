@@ -1,5 +1,5 @@
 {% block icontilebasic %}
-    <a href="{% if data.link %}{{ data.link }}{% endif %}" class="{{ data.css }} icon-tile--text"
+    <a href="{% if data.link %}{{ url(data.link) }}{% endif %}" class="{{ data.css }} icon-tile--text"
        style="background-color:{{ data.backgroundcolor }};">
         <div class="content">
             <img src="{{ media(data.url, 300) }}" alt="brr">

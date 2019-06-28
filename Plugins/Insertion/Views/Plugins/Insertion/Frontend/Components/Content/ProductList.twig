@@ -1,7 +1,9 @@
 {% block product_list %}
     <div class="insertion__content">
         {% block seo_content %}
-            {% set content = content('seo_content_type_' ~ meta.language ~ '_' ~  meta.language) %}
+
+            <span class="hidden">{{ 'seo_content_type_' ~ type.name ~ '_' ~  meta.language }}</span>
+            {% set content = content('seo_content_type_' ~ type.name ~ '_' ~  meta.language) %}
             {% if content %}
                 {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
             {% endif %}

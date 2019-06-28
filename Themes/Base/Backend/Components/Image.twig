@@ -3,5 +3,5 @@
         <img data-preview="{{ name }}" width="200" title="{{ data }}"
              src="{% if not data is null %}{{ media(data, 200) }}{% else %}/Themes/Base/ContentTypes/__assets/img/image.png{% endif %}" />
     </div>
-    <input type="hidden" name="{{ name }}" />
+    <input type="hidden" name="{{ name }}" value="{{ data }}"/>
 </a>
