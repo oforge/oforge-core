@@ -40,6 +40,7 @@ class InsertionType extends AbstractModel {
     /**
      * @ORM\OneToMany(targetEntity="InsertionTypeAttribute", mappedBy="insertionType")
      * @ORM\JoinColumn(name="insertion_type", referencedColumnName="id")
+     * @ORM\OrderBy({"quickSearchOrder" = "ASC"})
      */
     private $attributes;
 

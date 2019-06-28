@@ -54,6 +54,9 @@ $BTN.click(function () {
 
             if (type != null) {
                 switch (type) {
+                    case "number":
+                        h[label] = $td.find("input[type=number]").val();
+                        break;
                     case "text":
                         h[label] = $td.text();
                         break;
@@ -62,11 +65,7 @@ $BTN.click(function () {
                         break;
                     case "checkbox":
                         var ele = $td.find("input[type=checkbox]:checked");
-                        if(ele.length>0) {
-                            h[label] = true;
-                        } else {
-                            h[label] = false;
-                        }
+                        h[label] = ele.length > 0;
                         break;
                 }
             }
