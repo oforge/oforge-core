@@ -16,7 +16,6 @@
 @media (min-width: $screen-large) {
     .flex.insertions {
         flex-direction: row;
-        flex-wrap: nowrap;
     }
     .insertion {
         &__sidebar {
