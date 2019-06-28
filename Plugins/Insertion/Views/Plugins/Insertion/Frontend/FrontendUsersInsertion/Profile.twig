@@ -13,26 +13,31 @@
                         <form action="{{ url('frontend_account_insertions_profile') }}" method="post"
                               enctype="multipart/form-data">
                             <h3 class="account__title">{{ i18n('my_profile') }}</h3>
+                            <label class="center__label" for="input__background">
+
                             <div class="background img-background flex flex--column-center"
-                                 style="background-image: url('{% if profile.background is defined %}{{ media(profile.background.id) }}'){% endif %};">
-                                <label class="center__label flex flex--row" for="input__background">
-                                    <svg class="icon icon--light">
+                                    {% if profile.background %}style="background-image: url('{{ media(profile.background.id) }}')"{% endif %}>
+                                <div class="flex flex--center">
+                                    <svg class="icon icon--primary">
                                         <use xlink:href="#camera"></use>
                                     </svg>
-                                </label>
+                                </div>
                             </div>
+                            </label>
+
                             <div class="profile-upload upload-background">
                                 <span>{{ i18n('change_title_img') }}</span>
                                 <label class="upload__label" for="input__background">
-                                    <svg class="icon icon--primary">
-                                        <use xlink:href="#edit"></use>
-                                    </svg>
+                                    <div class="flex fleflex--center">
+                                        <svg class="icon icon--primary">
+                                            <use xlink:href="#edit"></use>
+                                        </svg>
+                                    </div>
                                 </label>
                                 <input id="input__background" data-update="img-background" type="file" name="background"
                                        accept="image/*">
                             </div>
                             <div class="profile-upload">
-
                                 <span>{{ i18n('change_profile_img') }}</span>
                                 <label class="upload__label" for="input__profile">
                                     <svg class="icon icon--primary">
