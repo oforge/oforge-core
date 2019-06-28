@@ -4,9 +4,6 @@
 
     {% set subAttributes = [] %}
 
-    <label for="{{ attribute.name }}"
-           class="form__label {{ label_class }}">{{ i18n(attribute.name) }}</label>
-
     <div class="form__input form__input--select"
          {% if required %}data-required{% endif %}>
         <select name="{{ attribute.name }}"
