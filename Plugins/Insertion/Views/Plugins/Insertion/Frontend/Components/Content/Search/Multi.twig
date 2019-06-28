@@ -1,6 +1,6 @@
-<div class="form__control">
+<div class="form__control form__control--multi">
     <div class="multi-select"
-         data-multi-select="insertion[{{ attribute.id }}][]"
+         data-multi-select="{{ attribute.name }}[]"
          {% if required %}data-required{% endif %}>
         <p class="multi-select__search"
            data-multi-select-search
@@ -8,7 +8,7 @@
         <ul class="multi-select__list"
             data-multi-select-list>
             {% for value in attribute.values %}
-                <li class="multi-select__item {% if value.id in data['insertion'][attribute.id] %}multi-select__item--checked{% endif %}"
+                <li class="multi-select__item {% if value.id in search.filter[attribute.name] %}multi-select__item--checked{% endif %}"
                     data-multi-select-item="{{ value.id }}">
                     {{ i18n(value.value) }}
                 </li>
