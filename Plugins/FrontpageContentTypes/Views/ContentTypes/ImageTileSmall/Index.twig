@@ -1,5 +1,5 @@
 {% block imagetilesmall %}
     <div class="{{ data.css }} image-tile--small">
-        {% include('ContentTypes/Components/ImageTileContent.twig')  %}
+        {% include('ContentTypes/Components/ImageTileContent.twig') with {'imagewidth': 400 }  %}
     </div>
 {% endblock imagetilesmall %}

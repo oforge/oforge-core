@@ -240,6 +240,7 @@ class FrontendInsertionController extends SecureFrontendController {
         $result['attributes'] = $typeAttributes;
         $result['keys']       = [];
         $result['typeId']     = $args['type'];
+        $result['type']       = $type->toArray(0);
         /**
          * @var $attribute InsertionTypeAttribute
          */
