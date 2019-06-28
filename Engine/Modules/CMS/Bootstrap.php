@@ -72,7 +72,7 @@ class Bootstrap extends AbstractBootstrap {
             ContentType::class,
             ContentParent::class,
             Content::class,
-            Row::class,
+            \Oforge\Engine\Modules\CMS\Models\ContentTypes\Row::class,
             Page::class,
             PagePath::class,
             PageContent::class,
