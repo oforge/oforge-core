@@ -8,7 +8,7 @@
             <div class="form-controls">
                 {% for attributeGroup in attributes %}
                     {% for attribute in attributeGroup.items %}
-                        {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey } %}
+                        {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ attribute.attributeKey.filterType|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey } %}
                     {% endfor %}
                 {% endfor %}
             </div>

@@ -3,8 +3,10 @@
     grid-template-columns: repeat($columns, 1fr);
     grid-gap: $gap;
 }
+
 .grid-boxes {
     @include createGridColumns();
+
     &.grid-boxes--2 {
         @include createGridColumns(2);
     }
@@ -12,6 +14,9 @@
 
 .grid-box {
     padding: $size-large;
+    @media screen and (min-width: $screen-medium) {
+        padding: $size-large * 3;
+    }
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -47,8 +52,10 @@
     &__sub-items {
         margin: 0 auto 0 0;
     }
+
     &__sub-item {
         color: $text-light;
         font-size: $font-size-6;
+        text-align: left;
     }
 }
