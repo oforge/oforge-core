@@ -164,10 +164,11 @@ class InsertionTypeService extends AbstractDatabaseAccess {
      * @param int $insertionTypeGroup
      * @param bool $required
      * @param bool $isQuickSearchFilter
+     * @param $quickSearchOrder
      *
      * @throws ORMException
      */
-    public function addAttributeToInsertionType($insertionType, $attributeKey, $isTop, $insertionTypeGroup, $required = false, $isQuickSearchFilter = false) {
+    public function addAttributeToInsertionType($insertionType, $attributeKey, $isTop, $insertionTypeGroup, $required = false, $isQuickSearchFilter = false, $quickSearchOrder) {
         /** @var InsertionTypeGroup $group */
         $group = $this->repository("group")->find($insertionTypeGroup);
 
@@ -178,7 +179,8 @@ class InsertionTypeService extends AbstractDatabaseAccess {
             ->setIsTop($isTop)
             ->setAttributeGroup($group)
             ->setRequired($required)
-            ->setIsQuickSearchFilter($isQuickSearchFilter);
+            ->setIsQuickSearchFilter($isQuickSearchFilter)
+            ->setQuickSearchOrder($quickSearchOrder);
 
         $insertionType->setAttributes([$attributeKey]);
         $this->entityManager()->update($insertionTypeAttribute);
@@ -263,11 +265,12 @@ class InsertionTypeService extends AbstractDatabaseAccess {
      * @param $insertionTypeGroup
      * @param $required
      * @param $isQuickSearchFilter
+     * @param $quickSearchOrder
      *
      * @return InsertionTypeAttribute
      * @throws ORMException
      */
-    public function updateInsertionTypeAttribute($id, $attributeKey, $top, $insertionTypeGroup, $required, $isQuickSearchFilter) {
+    public function updateInsertionTypeAttribute($id, $attributeKey, $top, $insertionTypeGroup, $required, $isQuickSearchFilter, $quickSearchOrder) {
         /** @var InsertionTypeAttribute $insertionTypeAttribute */
         $insertionTypeAttribute = $this->repository('insertionTypeAttribute')->find($id);
         /** @var InsertionTypeGroup $group */
@@ -278,6 +281,7 @@ class InsertionTypeService extends AbstractDatabaseAccess {
         $insertionTypeAttribute->setAttributeGroup($group);
         $insertionTypeAttribute->setRequired($required);
         $insertionTypeAttribute->setIsQuickSearchFilter($isQuickSearchFilter);
+        $insertionTypeAttribute->setQuickSearchOrder($quickSearchOrder);
 
         $this->entityManager()->update($insertionTypeAttribute);
 
