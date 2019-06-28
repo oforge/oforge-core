@@ -76,16 +76,16 @@ class MessengerController extends SecureFrontendController {
                 /* Only send mails for classified advert */
                 if($conversation['type'] === 'classified_advert') {
                     $targetUserId = 0;
-                    if ($conversation->getRequested() === $user->getId()) {
-                        $targetUserId = $conversation->getRequester();
+                    if ($conversation['requested'] === $user->getId()) {
+                        $targetUserId = $conversation['requester'];
                     } else {
-                        $targetUserId = $conversation->getRequested();
+                        $targetUserId = $conversation['requested'];
                     }
 
                     $targetIdMail = $frontendUserService->getUserById($targetUserId)->getEmail();
                     $mailOptions = [
                         'to' => $targetIdMail,
-                        'from' => 'no-reply@local.host', // TODO: From settings
+                        'from' => 'no_reply',
                         'subject' => I18N::translate('email_subject_new_message', 'New private message'),
                         'template' => 'NewMessage.twig'
                     ];
