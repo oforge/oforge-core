@@ -5,7 +5,7 @@
     {% if slider['insertions']|length > 0 %}
         <div class="slider slider--top">
             {% for insertion in slider.insertions %}
-                <a href="/insertions/detail/{{ insertion.id }}">
+                <a href="/insertions/detail/{{ insertion.id }}" class="slider__link">
                     <div class="slide">
                         {#
                         <div class="badge is--new">
@@ -15,7 +15,7 @@
                         </div>
                         #}
                         {% if insertion.media is defined and insertion.media|length > 0 and insertion.media[0].content is defined %}
-                            <img src="{{ media(insertion.media[0].content.id, 200) }}"
+                            <img src="{{ media(insertion.media[0].content.id, 300) }}"
                                  alt="{{ insertion.content[0].name }}"
                                  class="image">
                         {% else %}
