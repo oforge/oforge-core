@@ -14,9 +14,13 @@
 
                             <a href="{% if type.children is defined %}{{ url('insertions_createType', { type : type.id}) }}{% else %}{{ url('insertions_createSteps', { type : type.id, page: 1}) }}{% endif %}"
                                class="grid-box__content flex flex--center flex--justify">
-                                <svg class="icon icon--large icon--light">
-                                    <use xlink:href="#top_inserat"></use>
-                                </svg>
+                                {% if type.image.id is defined %}
+                                    <img class="icon icon--large icon--light" src="{{ media(type.image.id, 300) }}" />
+                                {% else %}
+                                    <svg class="icon icon--large icon--light">
+                                        <use xlink:href="#top_inserat"></use>
+                                    </svg>
+                                {% endif %}
                                 <span class="grid-box__text">{{ type.name }}</span>
                                 <ul class="grid-box__sub-items">
                                     {% for child in type.children %}

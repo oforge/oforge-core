@@ -4,7 +4,7 @@
     {% endif %}
     <div class="content" style="background-color:{{ data.backgroundcolor }}">
         <div class="image-container">
-            <img src="{{ data.url }}" alt="{{ data.caption }}">
+            <img src="{{ media(data.url, imagewidth) }}" alt="{{ data.caption }}">
         </div>
         <div class="text-container" style="background-color:{{ data.backgroundcolor }}">
             <h2 style="color:{{ data.fontcolor }};">{{ data.caption }}</h2>

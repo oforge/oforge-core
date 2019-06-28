@@ -245,12 +245,11 @@ class InsertionTypeService extends AbstractDatabaseAccess {
      * @return object|null
      * @throws ORMException
      */
-    public function updateInsertionType($id, $name, $parent, $quickSearch) {
+    public function updateInsertionType($id, $data) {
         /** @var InsertionType $insertionType */
         $insertionType = $this->repository()->find($id);
-        $insertionType->setName($name);
-        $insertionType->setParent($parent);
-        $insertionType->setQuickSearch($quickSearch);
+
+        $insertionType->fromArray($data);
 
         $this->entityManager()->update($insertionType);
 
