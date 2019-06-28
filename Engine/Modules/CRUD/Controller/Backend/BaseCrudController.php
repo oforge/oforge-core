@@ -285,12 +285,17 @@ class BaseCrudController extends SecureBackendController {
                 $this->handleFileUploads($data, 'create');
                 $data = $this->convertData($data, 'create');
                 $this->crudService->create($this->model, $data);
-                Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_create_success', 'Entity successfully created.'));
+                Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_create_success', [
+                    'en' => 'Entity successfully created.',
+                    'de' => 'Das Element wurde erfolgreich erstellt.',
+                ]));
 
                 return $this->redirect($response, 'index');
             } catch (Exception $exception) {
-                Oforge()->View()->Flash()
-                        ->addExceptionMessage('error', I18N::translate('backend_crud_msg_create_failed', 'Entity creation failed.'), $exception);
+                Oforge()->View()->Flash()->addExceptionMessage('error', I18N::translate('backend_crud_msg_create_failed', [
+                    'en' => 'Entity creation failed.',
+                    'de' => 'Die Erstellung des Elements ist fehlgeschlagen.',
+                ]), $exception);
                 Oforge()->View()->Flash()->setData($this->moduleModelName, $data);
 
                 return $this->redirect($response, 'create');
@@ -359,9 +364,15 @@ class BaseCrudController extends SecureBackendController {
                 $this->handleFileUploads($data, 'update');
                 $data = $this->convertData($data, 'update');
                 $this->crudService->update($this->model, $data);
-                Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_update_success', 'Entity successfully updated.'));
+                Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_update_success', [
+                    'en' => 'Entity successfully updated.',
+                    'de' => 'Entity successfully updated.',
+                ]));
             } catch (Exception $exception) {
-                Oforge()->View()->Flash()->addExceptionMessage('error', I18N::translate('backend_crud_msg_update_failed', 'Entity update failed.'), $exception);
+                Oforge()->View()->Flash()->addExceptionMessage('error', I18N::translate('backend_crud_msg_update_failed', [
+                    'en' => 'Entity update failed.',
+                    'de' => 'Entity update failed.',
+                ]), $exception);
                 Oforge()->View()->Flash()->setData($this->moduleModelName, $data);
             }
 
@@ -490,11 +501,17 @@ class BaseCrudController extends SecureBackendController {
     protected function handleDeleteAction(Response $response, string $entityID) {
         try {
             $this->crudService->delete($this->model, $entityID);
-            Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_delete_success', 'Entity successfully delete.'));
+            Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_delete_success', [
+                'en' => 'Entity successfully delete.',
+                'de' => 'Element erfolgreich gelöscht.',
+            ]));
 
             return $this->redirect($response, 'index');
         } catch (Exception $exception) {
-            Oforge()->View()->Flash()->addExceptionMessage('error', I18N::translate('backend_crud_msg_delete_failed', 'Entity delete failed.'), $exception);
+            Oforge()->View()->Flash()->addExceptionMessage('error', I18N::translate('backend_crud_msg_delete_failed', [
+                'en' => 'Entity deletion failed.',
+                'de' => 'Löschen des Elements fehlgeschlagen.',
+            ]), $exception);
 
             return $this->redirect($response, 'delete', ['id' => $entityID]);
         }
@@ -514,10 +531,15 @@ class BaseCrudController extends SecureBackendController {
         $postData['data'] = $list;
         try {
             $this->crudService->update($this->model, $postData);
-            Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_bulk_update_success', 'Entities successfully bulk updated.'));
+            Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_bulk_update_success', [
+                'en' => 'Entities successfully bulk updated.',
+                'de' => 'Alle Elemente wurden erfolgreich aktualisiert.',
+            ]));
         } catch (Exception $exception) {
-            Oforge()->View()->Flash()
-                    ->addExceptionMessage('error', I18N::translate('backend_crud_msg_bulk_update_failed', 'Entities bulk update failed.'), $exception);
+            Oforge()->View()->Flash()->addExceptionMessage('error', I18N::translate('backend_crud_msg_bulk_update_failed', [
+                'en' => 'Entities bulk update failed.',
+                'de' => 'Aktualisierung der Elemente fehlgeschlagen.',
+            ]), $exception);
             Oforge()->View()->Flash()->setData($this->moduleModelName, $postData['data']);
         }
     }
@@ -768,10 +790,16 @@ class BaseCrudController extends SecureBackendController {
                 if (isset($media)) {
                     $entityData[$propertyName] = $media->getId();
                 } else {
-                    Oforge()->View()->Flash()->addMessage('error', I18N::translate('backend_crud_image_upload_failed', 'Image upload failed.'));
+                    Oforge()->View()->Flash()->addMessage('error', I18N::translate('backend_crud_image_upload_failed', [
+                        'en' => 'Image upload failed.',
+                        'de' => 'Hochladen des Bilds fehlgeschlagen.',
+                    ]));
                 }
             } catch (Exception $exception) {
-                Oforge()->View()->Flash()->addMessage('error', I18N::translate('backend_crud_image_upload_failed', 'Image upload failed.'));
+                Oforge()->View()->Flash()->addMessage('error', I18N::translate('backend_crud_image_upload_failed', [
+                    'en' => 'Image upload failed.',
+                    'de' => 'Hochladen des Bilds fehlgeschlagen.',
+                ]));
                 Oforge()->Logger()->logException($exception);
             }
         } elseif ($fileData['action'] === 'chooser') {
@@ -783,12 +811,18 @@ class BaseCrudController extends SecureBackendController {
                     $entityData[$propertyName] = $media->getId();
                 } else {
                     Oforge()->View()->Flash()->addMessage('error', sprintf(#
-                        I18N::translate('backend_crud_media_not_found', 'Media entity with ID "%s" file not found.'),#
+                        I18N::translate('backend_crud_media_not_found', [
+                            'en' => 'Media entity with ID "%s" not found.',
+                            'de' => 'Medienelement mit ID "%s" nicht gefunden.',
+                        ]),#
                         $mediaID#
                     ));
                 }
             } catch (Exception $exception) {
-                Oforge()->View()->Flash()->addMessage('error', I18N::translate('backend_crud_image_replace_failed', 'Image replace failed.'));
+                Oforge()->View()->Flash()->addMessage('error', I18N::translate('backend_crud_image_replace_failed', [
+                    'en' => 'Image replace failed.',
+                    'de' => 'Bildersetzung fehlgeschlagen.',
+                ]));
                 Oforge()->Logger()->logException($exception);
             }
         }
