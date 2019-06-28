@@ -52,6 +52,7 @@ class RegistrationService extends AbstractDatabaseAccess {
      * @param array $user
      *
      * @return string
+     * @throws \Doctrine\ORM\ORMException
      */
     public function generateActivationLink(array $user) :string {
         /** @var Router $router */
@@ -86,7 +87,6 @@ class RegistrationService extends AbstractDatabaseAccess {
         }
 
         return $user;
-
     }
 
     private function userExists(string $email) {

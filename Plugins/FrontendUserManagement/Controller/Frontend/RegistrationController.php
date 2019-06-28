@@ -192,10 +192,10 @@ class RegistrationController extends AbstractController {
         ];
 
         /**
-         * Registration Mail has not been sent
+         * Registration Mail could not be sent
          */
         if(!$mailService->send($mailOptions, $templateData)) {
-            Oforge()->View()->Flash()->addMessage('error', I18N::translate('registration_mail_error', 'Registration mail has not been sent'));
+            Oforge()->View()->Flash()->addMessage('error', I18N::translate('registration_mail_error', 'Your registration mail could not be sent'));
             $registrationService->unregister($user);
 
             return $response->withRedirect($uri, 302);
@@ -204,7 +204,7 @@ class RegistrationController extends AbstractController {
         if (!isset($referrer)) {
             $uri = $router->pathFor('frontend_login');
         }
-        Oforge()->View()->Flash()->addMessage('success', I18N::translate('registration_success_mail_send',
+        Oforge()->View()->Flash()->addMessage('success', I18N::translate('registration_mail_success',
             'Registration successful. You will receive an email with information about you account activation.'));
 
         return $response->withRedirect($uri, 302);
