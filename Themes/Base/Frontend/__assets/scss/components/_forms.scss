@@ -109,11 +109,7 @@
     padding: $size-medium;
     border-left: 1px solid $color-primary;
     font-size: 1.6rem;
-    min-width: 6rem;
-
-    &.input__unit--small {
-        min-width: 2rem;
-    }
+    min-width: 1rem;
 }
 
 .form__input {
