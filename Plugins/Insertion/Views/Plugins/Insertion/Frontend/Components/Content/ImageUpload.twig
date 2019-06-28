@@ -8,7 +8,11 @@
             data-upload-images
             data-text-snippet="{{ i18n('delete') }}">
             <li class="upload__item upload__item--placeholder">
-                <div class="upload__image"></div>
+                <div class="upload__image">
+                    <svg class="icon icon--secondary">
+                        <use xlink:href="#camera"></use>
+                    </svg>
+                </div>
             </li>
             {% for image in data['images'] %}
             <li class="upload__item"
