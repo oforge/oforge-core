@@ -1,8 +1,11 @@
-<div class="form__control flex flex--row flex--center space-up">
+<div class="form__control">
+    <label for="insertion[{{ attribute.id }}]" class="form__label form__label--checkbox {{ label_class }}"> {{  i18n(attribute.name) }}</label>
     <input type="checkbox"
-           id="key4"
-           name="{{ attribute.name }}"
-           {% if search.filter[attribute.name] == 'on' %}checked="checked"{% endif %}
-           class="form__input form__input--checkbox form__input--checkbox-small">
-    <label for="{{ attribute.name }}" class="space-left">{{ i18n(attribute.name) }}</label>
+           class="form__input form__input--checkbox-small"
+           name="insertion[{{ attribute.id }}]"
+           id="insertion[{{ attribute.id }}]"
+            {% if data['insertion'][attribute.id] == 'on' %}
+                checked="checked"
+            {% endif %}
+    >
 </div>
