@@ -76,7 +76,7 @@ class MessengerController extends SecureFrontendController {
                 /* Only send mails for classified advert */
                 if($conversation['type'] === 'classified_advert') {
                     $targetUserId = 0;
-                    if ($conversation['requested'] === $user->getId()) {
+                    if ($conversation['requested'] === $user['id']) {
                         $targetUserId = $conversation['requester'];
                     } else {
                         $targetUserId = $conversation['requested'];
