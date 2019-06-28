@@ -238,6 +238,7 @@ class FrontendInsertionController extends SecureFrontendController {
 
         $typeAttributes       = $service->getInsertionTypeAttributeTree($type->getId());
         $result['attributes'] = $typeAttributes;
+        $result["all_attributes"] = $service->getInsertionTypeAttributeMap();
         $result['keys']       = [];
         $result['typeId']     = $args['type'];
         $result['type']       = $type->toArray(0);
