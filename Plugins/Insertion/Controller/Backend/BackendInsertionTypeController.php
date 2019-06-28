@@ -78,8 +78,8 @@ class BackendInsertionTypeController extends SecureBackendController {
         $insertionTypeId      = $request->getQueryParams()['id'];
 
         if ($request->isPost()) {
-            $body           = $request->getParsedBody();
-            $body['values'] = json_decode($body['values'], true);
+            $body                             = $request->getParsedBody();
+            $body['values']                   = json_decode($body['values'], true);
             $body['insertionTypeQuickSearch'] = $body['insertionTypeQuickSearch'] ? true : false;
 
             /** @var InsertionType $parent */
@@ -97,13 +97,16 @@ class BackendInsertionTypeController extends SecureBackendController {
                 foreach ($body['values'] as $attribute) {
                     /** @var AttributeKey $attributeKey */
                     $attributeKey = $attributeService->getAttribute($attribute['attribute_key']);
+                    if ($attribute['quick_search_order'] === '') {
+                        $attribute['quick_search_order'] = null;
+                    }
                     if (isset($attribute['id'])) {
                         $insertionTypeService->updateInsertionTypeAttribute($attribute['id'], $attributeKey, $attribute['is_top'],
-                            $attribute['attribute_group'], $attribute['is_required'], $attribute['is_quick_search_filter']);
+                            $attribute['attribute_group'], $attribute['is_required'], $attribute['is_quick_search_filter'], $attribute['quick_search_order']);
                         $idList = array_diff($idList, [$attribute['id']]);
                     } else {
                         $insertionTypeService->addAttributeToInsertionType($insertionType, $attributeKey, $attribute['is_top'], $attribute['attribute_group'],
-                            $attribute['is_required'], $attribute['is_quick_search_filter']);
+                            $attribute['is_required'], $attribute['is_quick_search_filter'], $attribute['quick_search_order']);
                     }
                 }
 
@@ -114,9 +117,12 @@ class BackendInsertionTypeController extends SecureBackendController {
                 /** @var InsertionType $insertionType */
                 $insertionType = $insertionTypeService->createNewInsertionType($body['name'], $parent, $body['insertionTypeQuickSearch']);
                 foreach ($body['values'] as $attribute) {
+                    if ($attribute['quick_search_order'] === '') {
+                        $attribute['quick_search_order'] = null;
+                    }
                     $attributeKey = $attributeService->getAttribute($attribute['attribute_key']);
                     $insertionTypeService->addAttributeToInsertionType($insertionType, $attributeKey, $attribute['is_top'], $attribute['attribute_group'],
-                        $attribute['is_required'], $attribute['is_quick_search_filter']);
+                        $attribute['is_required'], $attribute['is_quick_search_filter'], $attribute['quick_search_order']);
                 }
             }
             /** @var Router $router */

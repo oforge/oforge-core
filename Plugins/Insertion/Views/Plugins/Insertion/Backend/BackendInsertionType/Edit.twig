@@ -59,6 +59,7 @@
                                         <th>{{ i18n("required", "Is required") }}</th>
                                         <th>{{ i18n("is_top", "Is top") }}</th>
                                         <th>{{ i18n("is_quick_search_filter", "Is quick search filter") }}</th>
+                                        <th>{{ i18n("quick_search_order", "Quick search order") }}</th>
                                         <th>{{ i18n("attribute_group", "Attribute group") }}</th>
                                         <th><i class="fa fa-user-times"></i> {{ i18n("delete") }}</th>
                                     </tr>
@@ -84,6 +85,10 @@
                                         <td data-type="checkbox"
                                             data-label="is_quick_search_filter">
                                             <input type="checkbox" name="checkbox" value="true">
+                                        </td>
+                                        <td data-type="number"
+                                            data-label="quick_search_order">
+                                            <input type="number">
                                         </td>
                                         <td data-type="select"
                                             data-label="attribute_group">
@@ -124,6 +129,10 @@
                                             <td data-type="checkbox"
                                                 data-label="is_quick_search_filter">
                                                 <input type="checkbox" {% if value.quickSearchFilter %}checked{% endif %}>
+                                            </td>
+                                            <td data-type="number"
+                                                data-label="quick_search_order">
+                                                <input type="number" value="{{ value.quickSearchOrder }}">
                                             </td>
                                             <td data-type="select"
                                                 data-label="attribute_group">
