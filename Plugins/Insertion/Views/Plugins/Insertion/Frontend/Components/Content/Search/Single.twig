@@ -25,5 +25,5 @@
 </div>
 
 {% for subAttributeItem in subAttributes %}
-    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ all_attributes[subAttributeItem.id].filterType|capitalize  ~ '.twig'  with {'attribute': all_attributes[subAttributeItem.id], hidden: true, required: false, subAttribute: subAttributeItem } %}
+    {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ all_attributes[subAttributeItem.id].filterType|capitalize  ~ '.twig'  with {'attribute': all_attributes[subAttributeItem.id], hidden: true, required: false, subAttribute: subAttributeItem } %}
 {% endfor %}

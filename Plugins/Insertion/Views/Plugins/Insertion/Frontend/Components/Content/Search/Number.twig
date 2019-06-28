@@ -8,9 +8,10 @@
                class="form__input"
                placeholder="{{ i18n(attribute.name) }}"
         />
-        {% if i18nExists('unit_' ~  attribute.name) %}
+        {% set unit = i18n('unit_' ~  attribute.name, '') %}
+        {% if unit is not empty %}
             <span class="input__unit">
-                {{ i18n('unit_' ~  attribute.name) }}
+                {{ unit }}
             </span>
         {% endif %}
     </label>
