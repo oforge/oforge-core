@@ -27,10 +27,9 @@ class InternationalizationService extends AbstractDatabaseAccess {
      *
      * @return string
      * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function get(string $key, string $language, ?string $defaultValue = null) : string {
-        if (!isset($this->cache[$key])) {
+        if (!isset($this->cache[$language][$key])) {
             /** @var Snippet $snippet */
             $snippet = $this->repository()->findOneBy([
                 'name'  => $key,
@@ -44,12 +43,14 @@ class InternationalizationService extends AbstractDatabaseAccess {
                 ]);
                 $this->entityManager()->create($snippet);
             }
-            $this->cache[$key] = $snippet->getValue();
+            if (!isset($this->cache[$language])) {
+                $this->cache[$language] = [];
+            }
+            $this->cache[$language][$key] = $snippet->getValue();
         }
 
-        return $this->cache[$key];
+        return $this->cache[$language][$key];
     }
-
 
     /**
      * @param string $key

@@ -14,7 +14,7 @@
                     {% endif %}
                     {% include 'Backend/CRUD/Components/Index/FilterType/' ~ filterConfig.type|ucfirst ~ '.twig' ignore missing %}
                 {% endfor %}
-                <button class="btn btn-default" type="submit">{{ i18n('backend_crud_btn_filter_submit', 'Filter') }}</button>
+                <button class="btn btn-default" type="submit">{{ i18n('backend_crud_btn_filter_submit', {en: 'Filter', de: 'Filtern'}) }}</button>
             </form>
         </div>
     </div>
