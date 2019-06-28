@@ -304,6 +304,12 @@ class InsertionTypeService extends AbstractDatabaseAccess {
      * @throws ORMException
      */
     public function getQuickSearchInsertions() {
-        return $this->repository()->findBy(['quickSearch' => true]);
+        $result = [];
+        $entries =  $this->repository()->findBy(['quickSearch' => true]);
+
+        foreach ($entries as $entry) {
+            $result[] = $entry->toArray();
+         }
+        return $result;
     }
 }
