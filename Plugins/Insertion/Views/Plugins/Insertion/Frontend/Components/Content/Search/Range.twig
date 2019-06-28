@@ -1,11 +1,11 @@
 <div class="form__control form__control--half-medium">
 
-    <label for="insertion[{{ attribute.id }}]-from"
+    <label for="{{ attribute.name }}-from"
            class="form__input form__input--inside-label">
         <input type="number"
-               name="insertion[{{ attribute.id }}]"
-               id="insertion[{{ attribute.id }}]-from"
-               value=""
+               name="{{ attribute.name }}[]"
+               id="insertion[{{ attribute.name }}]-from"
+               value="{{ search.filter[attribute.name][0] }}"
                step="1"
                min="0"
                placeholder="{{ i18n('from') }}"
@@ -17,12 +17,12 @@
         {% endif %}
     </label>
 
-    <label for="insertion[{{ attribute.id }}]-to"
+    <label for="{{ attribute.name }}-to"
            class="form__input form__input--inside-label">
         <input type="number"
-               name="insertion[{{ attribute.id }}]"
-               id="insertion[{{ attribute.id }}]-to"
-               value=""
+               name="{{ attribute.name }}[]"
+               id="{{ attribute.name }}]-to"
+               value="{{ search.filter[attribute.name][1] }}"
                step="1"
                min="0"
                placeholder="{{ i18n('to') }}"
