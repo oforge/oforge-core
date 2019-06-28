@@ -37,7 +37,9 @@
 
 {% block svg_icons %}
     {% include 'Frontend/Components/SVG.twig' %}
-    {% include 'Frontend/Components/TestIcons.twig' %}
+    {% if debug %}
+        {% include 'Frontend/Components/TestIcons.twig' %}
+    {% endif %}
 {% endblock svg_icons %}
 
 {% block master__meta %}

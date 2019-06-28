@@ -39,6 +39,9 @@ class AccessExtension extends Twig_Extension implements Twig_ExtensionInterface 
             new Twig_Filter('formatTime', [DateTimeFormatter::class, 'time'], [
                 'is_safe' => ['html'],
             ]),
+            new Twig_Filter('ucfirst', 'ucfirst', [
+                'is_safe' => ['html'],
+            ]),
         ];
     }
 

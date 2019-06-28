@@ -5,7 +5,7 @@
     ] %}
 {% else %}
     {% set rendererTemplate = [
-        'Backend/CRUD/Components/Editor/' ~ property.type|capitalize ~'.twig',
+        'Backend/CRUD/Components/Editor/' ~ property.type|ucfirst ~'.twig',
         'Backend/CRUD/Components/Editor/String.twig',
     ] %}
 {% endif %}

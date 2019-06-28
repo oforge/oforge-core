@@ -1,11 +1,24 @@
 .panel--account {
     flex-direction: column;
     padding: 0;
-
 }
 
 .panel--detail {
     padding: $size-large;
+}
+
+.panel--edit {
+    .account__content {
+        .user__mail {
+            width: 100%;
+            margin-bottom: $size-large;
+            padding-bottom: $size-large;
+            border-bottom: 1px solid $color-primary;
+            .form__title:nth-child(2) {
+                margin-left: $size-large;
+            }
+        }
+    }
 }
 
 .account {
@@ -71,8 +84,15 @@
     margin-top: 1rem;
 }
 
-.account__content {
-    //padding: $size-large;
+.mobile-padding {
+    padding: $size-large;
+}
+@media screen and (min-width: $screen-medium) {
+    .panel--edit {
+        .form--change-password-reset {
+            width: 60%;
+        }
+    }
 }
 
 @media screen and (min-width: $screen-large) {
@@ -80,6 +100,15 @@
         flex-direction: row;
         align-items: flex-start;
         padding: $size-large 0;
+    }
+
+    .panel--edit {
+        .account__content {
+            .user__mail {
+                padding-top: $size-large;
+                border-top: 1px solid $color-primary;
+            }
+        }
     }
 
     .account {

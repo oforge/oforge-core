@@ -146,7 +146,7 @@ class EndpointService extends AbstractDatabaseAccess {
         class_exists(EndpointClass::class);
         class_exists(EndpointAction::class);
         if (!file_exists(Statics::ENDPOINT_CACHE_DIR)) {
-            @mkdir(Statics::ENDPOINT_CACHE_DIR, 0777, true);
+            @mkdir(Statics::ENDPOINT_CACHE_DIR, 0755, true);
         }
 
         $reader = new IndexedReader(new AnnotationReader());

@@ -23,7 +23,6 @@ class Bootstrap extends AbstractBootstrap {
     }
 
     public function activate() {
-        I18N::translate('backend_key_value_store', 'Key-Value Store');
         /** @var BackendNavigationService $backendNavigation */
         $backendNavigation = Oforge()->Services()->get('backend.navigation');
         $backendNavigation->put([

@@ -150,7 +150,7 @@ class FileSystemHelper {
      * @param int $mode
      * @param resource|null $context
      */
-    public static function mkdir(string $path, bool $recursive = true, int $mode = 0777, $context = null) {
+    public static function mkdir(string $path, bool $recursive = true, int $mode = 0755, $context = null) {
         if (isset($context)) {
             @mkdir($path, $mode, $recursive, $context);
         } else {
