@@ -59,7 +59,7 @@ class FrontendInsertionController extends SecureFrontendController {
 
         $types = $service->getInsertionTypeTree();
 
-        Oforge()->View()->assign(['types' => $types]);
+        Oforge()->View()->assign(['types' => $types ]);
     }
 
     /**

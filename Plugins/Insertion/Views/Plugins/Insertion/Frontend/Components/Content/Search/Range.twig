@@ -1,22 +1,36 @@
-<div class="form__control">
-    <label for="price[]" class="form__label">
-        {{ i18n('price_filter') }}
+<div class="form__control form__control--half-medium">
+
+    <label for="insertion[{{ attribute.id }}]-from"
+           class="form__input form__input--inside-label">
+        <input type="number"
+               name="insertion[{{ attribute.id }}]"
+               id="insertion[{{ attribute.id }}]-from"
+               value=""
+               step="1"
+               min="0"
+               placeholder="{{ i18n('from') }}"
+               class="form__input" />
+        {% if i18nExists('unit_' ~  attribute.name) %}
+            <span class="input__unit">
+                {{ i18n('unit_' ~  attribute.name) }}
+            </span>
+        {% endif %}
     </label>
-    <div class="range-slider"
-         data-range-slider="true">
-        <input name="price[]"
-               data-range-name="price-from"
-               data-range-from="true"
-               type="range"
+
+    <label for="insertion[{{ attribute.id }}]-to"
+           class="form__input form__input--inside-label">
+        <input type="number"
+               name="insertion[{{ attribute.id }}]"
+               id="insertion[{{ attribute.id }}]-to"
+               value=""
+               step="1"
                min="0"
-               max="2000"
-               value="{% if search.filter['price'] is defined %}{{ search.filter['price'][0] }}{% else %}0{% endif %}">
-        <input name="price[]"
-               data-range-name="price-to"
-               data-range-to="true"
-               type="range"
-               min="0"
-               max="2000"
-               value="{% if search.filter['price'] is defined %}{{ search.filter['price'][1] }}{% else %}2000{% endif %}">
-    </div>
+               placeholder="{{ i18n('to') }}"
+               class="form__input" />
+        {% if i18nExists('unit_' ~  attribute.name) %}
+            <span class="input__unit">
+                {{ i18n('unit_' ~  attribute.name) }}
+            </span>
+        {% endif %}
+    </label>
 </div>

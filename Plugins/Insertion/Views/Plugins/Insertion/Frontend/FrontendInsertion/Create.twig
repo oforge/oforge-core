@@ -21,11 +21,11 @@
                                         <use xlink:href="#top_inserat"></use>
                                     </svg>
                                 {% endif %}
-                                <span class="grid-box__text">{{ type.name }}</span>
+                                <span class="grid-box__text">{{ i18n(type.name)}}</span>
                                 <ul class="grid-box__sub-items">
                                     {% for child in type.children %}
                                         <li class="grid-box__sub-item">
-                                            {{ child.name }}
+                                            {{ i18n(child.name) }}
                                         </li>
                                     {% endfor %}
                                 </ul>
