@@ -141,8 +141,6 @@
         margin: 0;
         padding: 0;
 
-
-
         .form__input {
             -webkit-appearance: none;
             -moz-appearance: none;
@@ -177,6 +175,13 @@
         width: 2rem;
         height: 2rem;
         vertical-align: middle;
+
+        &:checked {
+            background-color: $color-secondary;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23ffffff' viewBox='0 0 24 24'%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
 
         & + label {
             font-size: $font-size-6;
@@ -278,6 +283,10 @@
     }
 }
 
+.form__input--inside-label + .form__input--inside-label {
+    margin-top: $size-large;
+}
+
 @media screen and (min-width: $screen-medium) {
     .form__control {
         &.form__control--xs {
@@ -296,11 +305,19 @@
             padding-right: $size-large;
         }
     }
-    .form-controls {
-        .form__control {
-            &.form__control--half-medium {
-                flex: 0 0 calc(25% - .9rem);
+    .form__control {
+        &.form__control--half-medium {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+
+            > * {
+                flex: 0 0 49%;
             }
         }
+    }
+    .form__input--inside-label + .form__input--inside-label {
+        margin-top: 0;
     }
 }
