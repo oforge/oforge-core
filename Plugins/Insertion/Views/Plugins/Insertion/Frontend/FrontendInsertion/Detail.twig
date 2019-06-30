@@ -2,9 +2,9 @@
 
 {% block content %}
     {% if not insertion.moderation %}
-      <div class="message">
-           {{ i18n('insertion_needs_moderation') }}
-      </div>
+        <div class="message">
+            {{ i18n('insertion_needs_moderation') }}
+        </div>
     {% endif %}
 
     <div class="content content--insertion flex">
@@ -27,23 +27,25 @@
                 </div>
             </div>
 
+            {% set values = insertion.values %}
             <div class="panel panel--product-attributes">
-                <div class="attribute">
-                    <span class="attribute-label">Label</span>
-                    <span class="attribute-value">Value</span>
-                </div>
-                <div class="attribute">
-                    <span class="attribute-label">Label</span>
-                    <span class="attribute-value">Value</span>
-                </div>
-                <div class="attribute">
-                    <span class="attribute-label">Label</span>
-                    <span class="attribute-value">Value</span>
-                </div>
-                <div class="attribute">
-                    <span class="attribute-label">Label</span>
-                    <span class="attribute-value">Value</span>
-                </div>
+                {#
+                {% for value in values %}
+                    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes/' ~ value.attributeKey.type|capitalize  ~ '.twig'  with {'value': value} %}
+                {% endfor %}
+                #}
+                {% for attributeGroup in attributes %}
+                    {% if attributeGroup.items|length > 0 and not  (attributeGroup.name == 'main' or attributeGroup.name == 'contact') %}
+                        <div class="attribute-group">
+                            <h2>{{ i18n(attributeGroup.name) }}</h2>
+                            <div>
+                                {% for attribute in attributeGroup.items %}
+                                    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey} %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
             </div>
 
             {% if extended %}
@@ -99,8 +101,10 @@
                 <div class="contact__name">Rachel Müller</div>
                 <div class="contact__address">12345 Velgast</div>
                 <div class="contact__phone">Tel.: +49(0)231 1234567890</div>
-                <a href="{{ url("insertions_contact", {id: insertion.id}) }}" class="button button--secondary">Contact me</a>
-                <a href="{{ url('frontend_account_insertions_toggleBookmark', {'insertionId': insertion.id }) }}" class="button button--secondary">{% if hasBookmark(insertion.id) %} Japs vorhanden {% else %}Add to wishlist{% endif %}</a>
+                <a href="{{ url("insertions_contact", {id: insertion.id}) }}" class="button button--secondary">Contact
+                    me</a>
+                <a href="{{ url('frontend_account_insertions_toggleBookmark', {'insertionId': insertion.id }) }}"
+                   class="button button--secondary">{% if hasBookmark(insertion.id) %} Japs vorhanden {% else %}Add to wishlist{% endif %}</a>
             </div>
 
             <div class="panel panel--map map">

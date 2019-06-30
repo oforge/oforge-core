@@ -1,0 +1,18 @@
+<div class="form__control">
+
+    <label for="insertion[{{ attribute.id }}]"
+           class="form__label {{ label_class }}">{{ i18n(attribute.name) }}</label>
+
+    <label for="insertion[{{ attribute.id }}"
+           class="form__input form__input--inside-label">
+        <input type="number"
+               name="insertion[{{ attribute.id }}]"
+               value="{{ data['insertion'][attribute.id] }}"
+               class="form__input" />
+        {% if i18nExists('unit_' ~  attribute.name) %}
+            <span class="input__unit">
+                {{ i18n('unit_' ~  attribute.name) }}
+            </span>
+        {% endif %}
+    </label>
+</div>

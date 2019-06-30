@@ -318,8 +318,6 @@ class FrontendInsertionController extends SecureFrontendController {
             return $response->withRedirect("/404", 301);
         }
 
-        Oforge()->View()->assign(["insertion" => $insertion->toArray(3, ['user' => ['*', 'id']])]);
-
         if (!($insertion->isActive() && $insertion->isModeration())) {
             $auth = "";
             if (isset($_SESSION['auth'])) {
@@ -334,6 +332,17 @@ class FrontendInsertionController extends SecureFrontendController {
                 return $response->withRedirect("/404", 301);
             }
         }
+
+        Oforge()->View()->assign(["insertion" => $insertion->toArray(3, ['user' => ['*', 'id']])]);
+
+        /** @var $service InsertionTypeService */
+        $insertionTypeService = Oforge()->Services()->get("insertion.type");
+
+        $typeAttributes       = $insertionTypeService->getInsertionTypeAttributeTree($insertion->getInsertionType()->getId());
+
+        Oforge()->View()->assign(["attributes" => $typeAttributes]);
+        Oforge()->View()->assign(["all_attributes" => $insertionTypeService->getInsertionTypeAttributeMap()]);
+
 
     }
 
