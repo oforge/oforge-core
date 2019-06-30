@@ -142,7 +142,7 @@ class BootstrapManager {
         $this->collectBootstrapData();
 
         if (!file_exists($dir = dirname(self::FILE_PATH))) {
-            @mkdir($dir, 0777, true);
+            @mkdir($dir, 0755, true);
         }
 
         if (!ArrayPhpFileStorage::write(self::FILE_PATH, $this->bootstrapData)) {

@@ -2,9 +2,8 @@
 
 {% block content %}
     {% if not insertion.moderation %}
-        <div class="message">
             {{ i18n('insertion_needs_moderation') }}
-        </div>
+            {% include 'Frontend/Components/FlashMessages.twig' with { ... } %}
     {% endif %}
 
     <div class="content content--insertion flex">

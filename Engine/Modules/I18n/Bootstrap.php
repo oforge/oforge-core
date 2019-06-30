@@ -12,11 +12,12 @@ use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\I18n\Controller\Backend\I18n\LanguageController;
 use Oforge\Engine\Modules\I18n\Controller\Backend\I18n\SnippetsController;
+use Oforge\Engine\Modules\I18n\Helper\I18N;
+use Oforge\Engine\Modules\I18n\Middleware\I18nMiddleware;
 use Oforge\Engine\Modules\I18n\Models\Language;
 use Oforge\Engine\Modules\I18n\Models\Snippet;
 use Oforge\Engine\Modules\I18n\Services\InternationalizationService;
 use Oforge\Engine\Modules\I18n\Services\LanguageService;
-use Oforge\Engine\Modules\I18n\Middleware\I18nMiddleware;
 
 /**
  * Class Bootstrap
@@ -59,6 +60,10 @@ class Bootstrap extends AbstractBootstrap {
             'active'  => true,
             'default' => true,
         ]);
+
+        I18N::translate('backend_i18n', ['en' => 'Internationalization', 'de' => 'Internationalisierung']);
+        I18N::translate('backend_i18n_language', ['en' => 'Language', 'de' => 'Sprache']);
+        I18N::translate('backend_i18n_snippets', ['en' => 'Text snippets', 'de' => 'Textschnipsel']);
 
         /** @var BackendNavigationService $sidebarNavigation */
         $sidebarNavigation = Oforge()->Services()->get('backend.navigation');

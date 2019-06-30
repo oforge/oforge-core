@@ -46,7 +46,7 @@
         {% endif %}
 
         {% if contents.type and not contents.isContainer %}
-            <button class="btn btn-danger" id="cms-page-builder-cancel"
+            <button type="button" class="btn btn-danger" id="cms-page-builder-cancel"
                     data-pb-se="{{ post.cms_page_selected_element }}">{{ i18n('back') }}</button>
 
             <input type="submit" class="btn btn-primary" data-pb-se="{{ post.cms_page_selected_element }}"

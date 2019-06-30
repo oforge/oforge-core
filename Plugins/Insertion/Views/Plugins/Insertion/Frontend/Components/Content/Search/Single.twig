@@ -1,15 +1,29 @@
-<div class="form__control">
-    <label for="{{ attribute.name }}"
-           class="form__label">{{ i18n(attribute.name) }}</label>
+<div class="form__control {{ hidden ? 'form__control--hidden' : '' }}"
+        {{ subAttribute ? 'data-sub-attribute='~subAttribute.id~' data-parent='~subAttribute.parent~' data-value='~subAttribute.value : ''}}
+     data-attribute-id="{{ attribute.id }}">
 
-    <div class="form__input form__input--select" data-required>
-        <select class="form__input form__input--no-input" data-required name="{{ attribute.name }}">
+    {% set subAttributes = [] %}
+
+    <div class="form__input form__input--select"
+         {% if required %}data-required{% endif %}>
+        <select name="{{ attribute.name }}"
+                id="{{ attribute.name }}"
+                class="form__input form__input--no-input"
+                {% if required %}required{% endif %}
+                data-sub-attribute-select="true">
+            <option disabled selected>{{ i18n(attribute.name) }}</option>
             {% for value in attribute.values %}
-                <option value="{{ value.id }}"
-                        {% if value.id == search.filter[attribute.name] %}selected="selected"{% endif %}>
+                {% if value.subAttributeKey is not null %}
+                    {% set subAttributes = subAttributes|merge([{id: value.subAttributeKey, parent: attribute.id, value: value.id}]) %}
+                {% endif %}
+                <option value="{{ value.id }}" {% if value.id == search.filter[attribute.name] %}selected="selected"{% endif %}>
                     {{ i18n(value.value) }}
                 </option>
             {% endfor %}
         </select>
     </div>
 </div>
+
+{% for subAttributeItem in subAttributes %}
+    {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ all_attributes[subAttributeItem.id].filterType|capitalize  ~ '.twig'  with {'attribute': all_attributes[subAttributeItem.id], hidden: true, required: false, subAttribute: subAttributeItem } %}
+{% endfor %}

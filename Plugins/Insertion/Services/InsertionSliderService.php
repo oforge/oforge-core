@@ -37,12 +37,19 @@ class InsertionSliderService extends AbstractDatabaseAccess {
         //Get all insertion IDs
         $ids = array_column($query->getScalarResult(), "id");
 
-        //Select a bunch of random insertions from the Database
-        $randomKeys = array_rand($ids, sizeof($ids) < self::MAX_INSERTIONS ? sizeof($ids) : self::MAX_INSERTIONS);
-        foreach ($randomKeys as $randomKey) {
-            $insertion = $this->repository()->findOneBy(["id" => $ids[$randomKey], "deleted" => false, "active" => true, "moderation" => "true"], null, 1);
-            if ($insertion != null) {
-                array_push($result, $insertion->toArray(3));
+        if (sizeof($ids) > 0) {
+            //Select a bunch of random insertions from the Database
+            $randomKeys = array_rand($ids, sizeof($ids) < self::MAX_INSERTIONS ? sizeof($ids) : self::MAX_INSERTIONS);
+            // If theres only one item, array_rand returns the key which is 0.
+            // Make this an array element so that foreach still works...
+            if ($randomKeys === 0) {
+                $randomKeys = [0];
+            }
+            foreach ($randomKeys as $randomKey) {
+                $insertion = $this->repository()->findOneBy(["id" => $ids[$randomKey], "deleted" => false, "active" => true, "moderation" => "true"], null, 1);
+                if ($insertion != null) {
+                    array_push($result, $insertion->toArray(3));
+                }
             }
         }
 

@@ -1,17 +1,17 @@
 <div class="form__control">
-
-    <label for="insertion[{{ attribute.id }}]"
-           class="form__label">{{ i18n(attribute.name) }}</label>
-
-    <label for="insertion[{{ attribute.id }}"
+    <label for="{{ attribute.name }}"
            class="form__input form__input--inside-label">
         <input type="number"
-               name="insertion[{{ attribute.id }}]"
-               value="{{ data['insertion'][attribute.id] }}"
-               class="form__input" />
-        {% if i18nExists('unit_' ~  attribute.name) %}
+               name="{{ attribute.name }}"
+               id="{{ attribute.name }}"
+               value="{{ search.filter[attribute.name] }}"
+               class="form__input"
+               placeholder="{{ i18n(attribute.name) }}"
+        />
+        {% set unit = i18n('unit_' ~  attribute.name, '') %}
+        {% if unit is not empty %}
             <span class="input__unit">
-                {{ i18n('unit_' ~  attribute.name) }}
+                {{ unit }}
             </span>
         {% endif %}
     </label>

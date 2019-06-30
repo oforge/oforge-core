@@ -16,7 +16,6 @@
 @media (min-width: $screen-large) {
     .flex.insertions {
         flex-direction: row;
-        flex-wrap: nowrap;
     }
     .insertion {
         &__sidebar {
@@ -26,7 +25,7 @@
         &__content {
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
             margin-left: $size-large;
             width: calc(100% - 30rem - #{$size-large});
         }
@@ -37,6 +36,7 @@
 @import "product-list";
 @import "tag";
 @import "insertion";
+@import "insertion-sidebar";
 @import "steps";
 @import "forms";
 @import "account";
@@ -44,3 +44,4 @@
 @import "supplier";
 @import "header/header";
 @import "attributes";
+@import "summary";

@@ -1,7 +1,7 @@
 {% extends "@parent/Frontend/Layout.twig" %}
 {% block content %}
-    <div class="content content--insertion flex">
-        <div class="main">
+    <div class="content content--insertions">
+        <div class="panel panel--insertions">
             <form class="form form--insertion"
                   action="{{ url('insertions_edit', { id : data.id}) }}"
                   method="post"
@@ -9,109 +9,9 @@
                 <div class="form-controls">
 
                     {% block page_content %}
-
-
-                    {#  Seite 1 #}
-                        <div class="form__control">
-                            <label for="insertion_name"
-                                   class="form__label">{{ i18n('insertion_name' ) }}</label>
-                            <input name="insertion_name"
-                                   value="{{ data['insertion_name'] }}"
-                                   type="text"
-                                   class="form__input"
-                                   placeholder="{{ i18n('insertion_name_placeholder') }}"
-                                   data-required
-                                   required>
-                        </div>
-
-                        {% for attributeGroup in attributes %}
-                            {% if attributeGroup.items|length > 0 and attributeGroup.name == 'main' %}
-                                {% for attribute in attributeGroup.items %}
-                                    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': attribute.required } %}
-                                {% endfor %}
-                            {% endif %}
-                        {% endfor %}
-
-                        <div class="form__control">
-                            <label for="insertion_name"
-                                   class="form__label">{{ i18n('insertion_title') }}</label>
-                            <input name="insertion_title"
-                                   value="{{ data['insertion_title'] }}"
-                                   type="text"
-                                   class="form__input"
-                                   placeholder="{{ i18n('insertion_name_placeholder') }}"
-                                   data-required
-                                   required>
-                        </div>
-
-                        <ul class="image-upload">
-                            {% for image in data['images'] %}
-                                <li>
-                                    <img width="300" src="{{ media(image.path, 300) }}" alt="{{ image.name }}" />
-                                    <!--input type="hidden" name="images_interactions[{{ image.id }}]" value="delete" /-->
-                                </li>
-                            {% endfor %}
-
-                            <li>
-                                <input type="file" name="images[0]" accept="image/*" onchange="loadFile(event, 0)">
-                                <img id="output0" width="300" />
-                            </li>
-
-                            <script>
-                                var loadFile = function (event, index) {
-                                    var output = document.getElementById('output' + index);
-                                    output.src = URL.createObjectURL(event.target.files[0]);
-                                };
-                            </script>
-                        </ul>
-
-
-                        {# Seite 2#}
-
-                        {# Main attributes #}
-                        {% for attributeGroup in attributes %}
-                            {% if attributeGroup.items|length > 0 and not  (attributeGroup.name == 'main' or attributeGroup.name == 'contact') %}
-                                <div class="attribute-group">
-                                    <h2>{{ i18n(attributeGroup.name) }}</h2>
-                                    <div>
-                                        {% for attribute in attributeGroup.items %}
-                                            {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': attribute.required } %}
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                            {% endif %}
-                        {% endfor %}
-
-
-                        {# Seite 3#}
-
-                        {# contact information #}
-                        <textarea name="insertion_description">{{ data['insertion_description'] }}</textarea>
-                        {# contact attributes #}
-                        {% for attributeGroup in attributes %}
-                            {% if attributeGroup.items|length > 0 and attributeGroup.name == 'contact' %}
-                                <div class="attribute-group">
-                                    <h2>{{ i18n(attributeGroup.name) }}</h2>
-                                    <div>
-                                        {% for attribute in attributeGroup.items %}
-                                            {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': attribute.required } %}
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                            {% endif %}
-                        {% endfor %}
-
-                        <input type="text" name="contact_name" value="{{ data['contact_name'] }}" />
-                        <input type="email" name="contact_email" value="{{ data['contact_email'] }}" />
-                        <input type="tel" name="contact_phone" value="{{ data['contact_phone'] }}" />
-                        <input type="text" name="contact_zip" value="{{ data['contact_zip'] }}" />
-                        <input type="text" name="contact_city" value="{{ data['contact_city'] }}" />
-
-                        <label>
-                            Klick mich
-                            <input type="checkbox" name="contact_visible"
-                                   {% if  data['contact_visible'] %}selected="selected"{% endif %} />
-                        </label>
+                        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/PageContent/1.twig' %}
+                        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/PageContent/2.twig' %}
+                        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/PageContent/3.twig' %}
                     {% endblock page_content %}
 
                     <div class="form__control">

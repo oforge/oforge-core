@@ -2,7 +2,7 @@
 {% block content %}
     <div class="500 content">
         <div class="panel">
-            {% set content = content('server_error' ~ meta.language) %}
+            {% set content = content('server_error_' ~ meta.language) %}
             {% if content %}
                 <div class="content">
                     {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}

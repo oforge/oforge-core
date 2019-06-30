@@ -23,10 +23,11 @@ class MailService {
     /**
      * Initialises PHP Mailer Instance with specified Mailer Settings, Options and TemplateData.
      * Options = ['to' => [], 'cc' => [], 'bcc' => [], 'replyTo' => [], 'attachment' => [], "subject" => string "html" => bool
-     *
+
      * @param array $options
-     * @param array $templateData Associative Array
+     * @param array $templateData
      *
+     * @return bool
      * @throws ConfigElementNotFoundException
      * @throws ConfigOptionKeyNotExistException
      * @throws ServiceNotFoundException
@@ -34,7 +35,6 @@ class MailService {
      * @throws Twig_Error_Runtime
      * @throws Twig_Error_Syntax
      */
-
     public function send(array $options, array $templateData = []) {
         if ($this->isValid($options)) {
             try {
@@ -42,18 +42,22 @@ class MailService {
                  * @var $configService ConfigService
                  */
                 $configService = Oforge()->Services()->get("config");
-                $mail          = new PHPMailer(true);
+                $exceptions    = $configService->get("mailer_exceptions");
 
-                /** Set Server Settings */
+                /** @var  $mail */
+                $mail          = new PHPMailer($exceptions);
+
+                /**  Mailer Settings */
                 $mail->isSMTP();
                 $mail->setFrom($this->getSenderAddress($options['from']));
                 $mail->Host       = $configService->get("mailer_host");
-                $mail->Username   = $configService->get("mailer_username");
+                $mail->Username   = $configService->get("mailer_smtp_username");
                 $mail->Port       = $configService->get("mailer_port");
                 $mail->SMTPAuth   = $configService->get("mailer_smtp_auth");
                 $mail->Password   = $configService->get("mailer_smtp_password");
                 $mail->SMTPSecure = $configService->get("mailer_smtp_secure");
-                $mail->charSet = "UTF-8";
+                $mail->Encoding = 'base64';
+                $mail->CharSet = 'UTF-8';
 
                 /** Add Recipients ({to,cc,bcc}Addresses) */
                 foreach ($options["to"] as $key => $value) {
@@ -83,7 +87,6 @@ class MailService {
                 }
 
                 /** Render HTML */
-
                 $renderedTemplate = $this->renderMail($options,$templateData);
 
 
@@ -91,14 +94,15 @@ class MailService {
                 $mail->isHTML(ArrayHelper::get($options, 'html', true));
                 $mail->Subject = $options["subject"];
                 $mail->Body    = $renderedTemplate;
-                if(!$mail->send()) {
-                    echo "Mailer Error:" . $mail->ErrorInfo;
-                    }
-                else echo "Mail has been sent";
+
+                $mail->send();
 
                 Oforge()->Logger()->get("mailer")->info("Message has been sent", $options);
+                return true;
+
             } catch (Exception $e) {
                 Oforge()->Logger()->get("mailer")->error("Message has not been sent", [$mail->ErrorInfo]);
+                return false;
             }
         }
     }
