@@ -33,7 +33,13 @@ class SnippetsController extends BaseCrudController {
         [
             'name'  => 'scope',
             'type'  => CrudDataTypes::SELECT,
-            'label' => ['key' => 'module_i18n_snippet_scope', 'default' => 'Scope'],
+            'label' => [
+                'key'     => 'module_i18n_snippet_scope',
+                'default' => [
+                    'en' => 'Language',
+                    'de' => 'Sprache',
+                ],
+            ],
             'crud'  => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
@@ -46,7 +52,13 @@ class SnippetsController extends BaseCrudController {
         [
             'name'  => 'name',
             'type'  => CrudDataTypes::STRING,
-            'label' => ['key' => 'module_i18n_snippet_name', 'default' => 'Name'],
+            'label' => [
+                'key'     => 'module_i18n_snippet_name',
+                'default' => [
+                    'en' => 'Name',
+                    'de' => 'Name',
+                ],
+            ],
             'crud'  => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
@@ -58,7 +70,13 @@ class SnippetsController extends BaseCrudController {
         [
             'name'  => 'value',
             'type'  => CrudDataTypes::STRING,
-            'label' => ['key' => 'module_i18n_snippet_value', 'default' => 'Value'],
+            'label' => [
+                'key'     => 'module_i18n_snippet_value',
+                'default' => [
+                    'en' => 'Value',
+                    'de' => 'Wert',
+                ],
+            ],
             'crud'  => [
                 'index'  => 'editable',
                 'view'   => 'readonly',
@@ -72,12 +90,35 @@ class SnippetsController extends BaseCrudController {
     protected $indexFilter = [
         'scope' => [
             'type'  => CrudFilterType::SELECT,
-            'label' => ['key' => 'module_i18n_filter_snippet_scope', 'default' => 'Select scope'],
+            'label' => [
+                'key'     => 'module_i18n_filter_snippet_scope',
+                'default' => [
+                    'en' => 'Select scope',
+                    'de' => 'Sprache auswählen',
+                ],
+            ],
             'list'  => 'getSelectLanguages',
         ],
         'name'  => [
             'type'    => CrudFilterType::TEXT,
-            'label'   => ['key' => 'module_i18n_sfilter_nippet_name', 'default' => 'Search in name'],
+            'label'   => [
+                'key'     => 'module_i18n_filter_snippet_name',
+                'default' => [
+                    'en' => 'Search in name',
+                    'de' => 'Suche in Name',
+                ],
+            ],
+            'compare' => CrudFilterComparator::LIKE,
+        ],
+        'value' => [
+            'type'    => CrudFilterType::TEXT,
+            'label'   => [
+                'key'     => 'module_i18n_filter_snippet_value',
+                'default' => [
+                    'en' => 'Search in value',
+                    'de' => 'Suche in Wert',
+                ],
+            ],
             'compare' => CrudFilterComparator::LIKE,
         ],
     ];

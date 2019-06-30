@@ -61,6 +61,21 @@ class BackendFrontendUserManagementController extends BaseCrudController {
             ],
         ],
         [
+            'name'  => 'image_id',
+            'type'  => CrudDataTypes::CUSTOM,
+            'lable' => ['key' => 'plugin_frontend_user_management_property_profile_image', 'default' => 'Profile image'],
+            'crud'     => [
+                'index'  => 'off',
+                'view'   => 'readonly',
+                'create' => 'off',
+                'update' => 'off',
+                'delete' => 'readonly',
+            ],
+            'renderer' => [
+                'custom' => 'Plugins/FrontendUserManagement/Backend/BackendFrontendUserManagement/CRUD/RenderProfileImage.twig',
+            ],
+        ],
+        [
             'name'     => 'firstName',
             'type'     => CrudDataTypes::CUSTOM,
             'label'    => ['key' => 'plugin_frontend_user_management_property_first_name', 'default' => 'First name'],

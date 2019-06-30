@@ -4,7 +4,7 @@
         <h2 class="title">{{ i18n }}</h2>
     </div>
     <div class="form-controls">
-        <div class="form__control">
+        <div class="form__control form__control--xs">
             <label for="insertion_name"
                    class="form__label form__label--title">{{ i18n('insertion_name' ) }}</label>
             <input name="insertion_name"
@@ -21,14 +21,16 @@
         {% for attributeGroup in attributes %}
             {% if attributeGroup.items|length > 0 and attributeGroup.name == 'main' %}
                 {% for attribute in attributeGroup.items %}
-                    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': attribute.required, 'label_class': 'form__label--title' } %}
+                    <div class="form__control form__control--s">
+                        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': attribute.required, 'label_class': 'form__label--title' } %}
+                    </div>
                 {% endfor %}
             {% endif %}
         {% endfor %}
     </div>
 
     <div class="form-controls">
-        <div class="form__control">
+        <div class="form__control form__control--s">
             <label for="insertion_title"
                    class="form__label form__label--title">{{ i18n('insertion_title') }}</label>
             <input name="insertion_title"

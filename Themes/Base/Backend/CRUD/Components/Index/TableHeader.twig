@@ -10,11 +10,11 @@
             {% elseif property.name == 'id' %}
                 {{ 'ID' }}
             {% else %}
-                {{ property.name|capitalize }}
+                {{ property.name|ucfirst }}
             {% endif %}
         </th>
     {% endfor %}
     {% if crud.hasRowActions %}
-        <th class="text-center">{{ i18n('backend_crud_table_column_rowactions', 'Row actions') }}</th>
+        <th class="text-center">{{ i18n('backend_crud_table_column_rowactions', {en: 'Row actions', de: 'Zeilenaktionen'}) }}</th>
     {% endif %}
 </tr>

@@ -45,7 +45,7 @@ class BackendFaqController extends BaseCrudController {
         ],
         [
             'name'  => 'answer',
-            'type'  => CrudDataTypes::TEXT,
+            'type'  => CrudDataTypes::HTML,
             'label' => ['key' => 'plugin_frontend_faq_property_answer', 'default' => 'Answer'],
             'crud'  => [
                 'index'  => 'readonly',

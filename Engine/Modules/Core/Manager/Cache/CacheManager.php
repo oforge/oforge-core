@@ -69,7 +69,7 @@ class CacheManager {
      */
     public function set(string $slot, string $className, string $functionName, $arguments, $result) {
         $dirName = $this->getDirName($slot, $className, $functionName);
-        @mkdir($dirName, 0777, true);
+        @mkdir($dirName, 0755, true);
 
         $fileName = $this->getFileName($slot, $className, $functionName, $arguments);
 

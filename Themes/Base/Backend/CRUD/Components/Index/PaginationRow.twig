@@ -1,6 +1,6 @@
 <div class="row">
-    <div class="col-xs-12 col-md-4" title="{{ i18n('backend_crud_label_epp', 'Entities per page') }}">
-        {#{{ i18n('backend_crud_label_epp', 'Entities per page') }}:#}
+    <div class="col-xs-12 col-md-4" title="{{ i18n('backend_crud_label_epp', {en: 'Entities per page', de: 'Elemente pro Seite'}) }}">
+        {#{{ i18n('backend_crud_label_epp', {en: 'Entities per page', de: 'Elemente pro Seite'}) }}:#}
         {% for buttonValue in pagination.buttons.values %}
             {% set buttonDisabled = pagination.buttons.current == buttonValue %}
             {% set buttonHref = url(route.name, [], route.query|merge({(queryKeys.entitiesPerPage) : buttonValue})) %}
@@ -24,7 +24,7 @@
         <a href="{{ hrefPrev }}" class="btn btn-default {% if buttonsLeftDisabled %}disabled{% endif %}">
             <i class="fa fa-fw fa-angle-left"></i>
         </a>
-        {{ i18n('backend_crud_label_paginator', '%1$s of %2$s')|format(pagination.page.current, pagination.page.max) }}
+        {{ i18n('backend_crud_label_paginator', {en: '%1$s of %2$s', de: '%1$s von %2$s'})|format(pagination.page.current, pagination.page.max) }}
         <a href="{{ hrefNext }}" class="btn btn-default {% if buttonsRightDisabled %}disabled{% endif %}">
             <i class="fa fa-fw fa-angle-right"></i>
         </a>

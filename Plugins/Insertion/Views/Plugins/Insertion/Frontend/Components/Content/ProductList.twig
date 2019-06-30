@@ -13,4 +13,14 @@
             {% endfor %}
         </div>
     </div>
+
+    {% block seo_content %}
+        {% set content = content('seo_content_type_' ~ type.name ~ '_' ~  meta.language) %}
+        {% if content %}
+            <div class="panel panel--seo">
+                {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
+            </div>
+        {% endif %}
+    {% endblock seo_content %}
+
 {% endblock product_list %}
