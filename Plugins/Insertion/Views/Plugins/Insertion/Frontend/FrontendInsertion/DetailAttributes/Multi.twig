@@ -1,0 +1,22 @@
+<div class="form__control form-group">
+
+    <label for="insertion[{{ attribute.id }}][]"
+           class="form__label {{ label_class }}">{{ i18n(attribute.name) }}</label>
+
+    <div class="multi-select form-control"
+         data-multi-select="insertion[{{ attribute.id }}][]"
+         {% if required %}data-required{% endif %}>
+        <p class="multi-select__search"
+           data-multi-select-search
+           data-placeholder="{{ i18n(attribute.name) }}"></p>
+        <ul class="multi-select__list"
+            data-multi-select-list>
+            {% for value in attribute.values %}
+                <li class="multi-select__item {% if value.id in data['insertion'][attribute.id] %}multi-select__item--checked{% endif %}"
+                    data-multi-select-item="{{ value.id }}">
+                    {{ i18n(value.value) }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
