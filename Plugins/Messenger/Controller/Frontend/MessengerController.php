@@ -12,6 +12,8 @@ use Messenger\Models\Conversation;
 use Messenger\Services\FrontendMessengerService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\I18n\Services\InternationalizationService;
@@ -20,6 +22,9 @@ use Oforge\Engine\Modules\Mailer\Services\MailService;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
+use Twig_Error_Loader;
+use Twig_Error_Runtime;
+use Twig_Error_Syntax;
 
 /**
  * Class MessengerController
@@ -37,6 +42,12 @@ class MessengerController extends SecureFrontendController {
      * @return Response
      * @throws ServiceNotFoundException
      * @throws ORMException
+     * @throws ServiceNotFoundException
+     * @throws ConfigElementNotFoundException
+     * @throws ConfigOptionKeyNotExistException
+     * @throws Twig_Error_Loader
+     * @throws Twig_Error_Runtime
+     * @throws Twig_Error_Syntax
      * @EndpointAction(path="[/{id:.*}]", name="messages")
      */
     public function indexAction(Request $request, Response $response, array $args) {
@@ -54,12 +65,18 @@ class MessengerController extends SecureFrontendController {
 
         /* Get a conversation: /messages/conversationId */
         if (isset($args) && isset($args['id'])) {
+            $conversationId = $args['id'];
+            $senderId = $user['id'];
+            /** @var Conversation $conversation */
+            $conversation = $frontendMessengerService->getConversation($conversationId, $senderId);
+
+            /* Check for permission of conversation */
+            if(!($conversation['requested'] == $user['id'] || $conversation['requester'] == $user['id'])) {
+                return $response->withRedirect("/404", 301);
+            }
+
             /* Create a new message for a given conversation */
-
             if ($request->isPost()) {
-                $conversationId = $args['id'];
-
-                $senderId = $request->getParsedBody()['sender'];
                 $message  = $request->getParsedBody()['message'];
 
                 /** @var FrontendMessengerService $frontendMessengerService */
@@ -69,20 +86,18 @@ class MessengerController extends SecureFrontendController {
                 $mailService = Oforge()->Services()->get('mail');
                 $frontendUserService = Oforge()->Services()->get('frontend.user.management.user');
 
-                /** @var Conversation $conversation */
-                $conversation = $frontendMessengerService->getConversation($conversationId, $senderId);
-                $frontendMessengerService->sendMessage($conversation['id'], 'frontend', $senderId, $message);
+                $frontendMessengerService->sendMessage($conversation['id'], $senderId, $message);
 
                 /* Only send mails for classified advert */
-                if($conversation['type'] === 'classified_advert') {
-                    $targetUserId = 0;
-                    if ($conversation['requested'] === $user['id']) {
+                if($conversation['type'] === 'classified_advert' && end($conversation['messages'])['sender'] != $user['id']) {
+                    if ($conversation['requested'] == $user['id']) {
                         $targetUserId = $conversation['requester'];
                     } else {
                         $targetUserId = $conversation['requested'];
                     }
 
                     $targetIdMail = $frontendUserService->getUserById($targetUserId)->getEmail();
+
                     $mailOptions = [
                         'to' => [$targetIdMail => $targetIdMail],
                         'from' => 'no_reply',
@@ -96,7 +111,6 @@ class MessengerController extends SecureFrontendController {
                 return $response->withRedirect($uri . '/' . $conversation['id'], 302);
             }
 
-            $conversation = $frontendMessengerService->getConversation($args['id'], $user['id']);
             Oforge()->View()->assign(['conversation' => $conversation]);
         } else {
             if (sizeof($conversationList) > 0) {

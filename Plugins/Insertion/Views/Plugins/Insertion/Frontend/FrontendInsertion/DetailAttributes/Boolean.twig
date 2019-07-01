@@ -1,0 +1,10 @@
+<div class="attribute">
+    {% if values[attribute.attributeKey.id].value == "on" %}
+        <span class="attribute-label" style="font-weight: 700;">{{ attribute.attributeKey.name }}</span>
+        <span class="attribute-value">
+            <svg class="icon icon--secondary">
+            <use xlink:href="#check"></use>
+            </svg>
+        </span>
+    {% endif %}
+</div>
