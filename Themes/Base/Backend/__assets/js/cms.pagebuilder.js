@@ -14,7 +14,7 @@ var pbIsForeignDND = false;
 var pbContentTypeParentForeignDND = false;
 
 // drag 'n drop event listeners for jsTree foreign objects
-$(document).bind("dnd_start.vakata", function(event, data) {
+$(document).bind("dnd_start.vakata", function (event, data) {
     console.log("jsTree - Start dnd");
     console.log("Data:");
     console.log(jsonStringify(data.data.jstree));
@@ -22,48 +22,48 @@ $(document).bind("dnd_start.vakata", function(event, data) {
     console.log(jsonStringify(data.data.nodes));
     console.log("------------------");
 })
-.bind("dnd_stop.vakata", function(event, data) {
-    console.log("jsTree - Stop dnd");
-    console.log("Data:");
-    console.log(jsonStringify(data.data.jstree));
-    console.log(jsonStringify(data.data.obj));
-    console.log(jsonStringify(data.data.nodes));
-    console.log("this was a foreign operation: " + pbIsForeignDND);
-    console.log("------------------");
+    .bind("dnd_stop.vakata", function (event, data) {
+        console.log("jsTree - Stop dnd");
+        console.log("Data:");
+        console.log(jsonStringify(data.data.jstree));
+        console.log(jsonStringify(data.data.obj));
+        console.log(jsonStringify(data.data.nodes));
+        console.log("this was a foreign operation: " + pbIsForeignDND);
+        console.log("------------------");
 
-    var pbDndContentTypeId = data.data;
+        var pbDndContentTypeId = data.data;
 
-    if (pbIsForeignDND && pbContentTypeParentForeignDND) {
-        if (data && data.data && data.data.nodes &&  data.data.nodes.length > 0) {
-            var node = data.data.nodes[0];
-    
-            if (node && node.data_ct_id) {
-                $('#cms_edit_element_id').val(node.data_ct_id);
-                $('#cms_edit_element_parent_id').val(pbContentTypeParentForeignDND);
-                $('#cms_edit_element_action').val('dnd');
-                $('#cms_element_jstree_form').submit();
+        if (pbIsForeignDND && pbContentTypeParentForeignDND) {
+            if (data && data.data && data.data.nodes && data.data.nodes.length > 0) {
+                var node = data.data.nodes[0];
+
+                if (node && node.data_ct_id) {
+                    $('#cms_edit_element_id').val(node.data_ct_id);
+                    $('#cms_edit_element_parent_id').val(pbContentTypeParentForeignDND);
+                    $('#cms_edit_element_action').val('dnd');
+                    $('#cms_element_jstree_form').submit();
+                }
             }
         }
-    }
-});
+    });
 
 // make foreign objects draggable to jsTree
 $('.jstree_draggable').on('mousedown', function (event) {
     console.log("pagebuilder - starting to drag .jstree-draggable");
 
-    $(this).wrap( "<div id='jstree-drag-element'></div>" );
+    $(this).wrap("<div id='jstree-drag-element'></div>");
     var dragHelper = '<div id="jstree-dnd" class="jstree-default"><i class="jstree-icon jstree-er"></i>' + $('#jstree-drag-element').html() + '<ins class="jstree-copy" style="display:none;">+</ins></div>';
     $(this).unwrap();
 
     return $.vakata.dnd.start(
         event,
         {
-            'jstree' : true,
-            'obj' 	 : $(this),
-            'nodes'  : [{
-                'icon'		 : 'jstree-file',
-                'text'		 : 'New Content Element',
-                'data_ct_id' : $(this).attr('data-ct-id')
+            'jstree': true,
+            'obj': $(this),
+            'nodes': [{
+                'icon': 'jstree-file',
+                'text': 'New Content Element',
+                'data_ct_id': $(this).attr('data-ct-id')
             }]
         },
         dragHelper
@@ -105,35 +105,23 @@ $(document).on('mouseup', function (event) {
             $('#cms_page_create_content_at_order_index').val(pbDndPlaceholderOrderIndex);
             $('#cms_page_selected_action').val('create');
             $('#cms_page_builder_form').submit();
-    
+
             console.log("pagebuilder - Dropped on placeholder with order: " + pbDndPlaceholderOrderIndex + " and data: " + pbDndContentTypeId);
         } else {
             console.log("pagebuilder - Dropped outside of any placeholder!");
+
         }
     }
-    
+
     pbDndContentTypeId = undefined;
     pbDndPlaceholderOrderIndex = undefined;
     pbDndActive = false;
 });
 
-// bind quill richtext editor
-if ($('#cms_page_builder_form').length && $('#cms_page_richtext_editor').length) {
-    $('#cms_page_builder_form').submit(
-        function() {
-           // $('#cms_page_richtext_text').val(quill.root.innerHTML);
-        }
-    );
-
-    /*
-    const quill = new Quill('#cms_page_richtext_editor', {
-        theme: 'snow'
-    }); */
-}
 
 // on edit cancel button event
 $('#cms-page-builder-cancel').click(
-    function() {
+    function () {
         var lastElementIdPosition = $(this).attr('data-pb-se').lastIndexOf('-');
         var newSelectedElementId = '';
 
@@ -148,7 +136,7 @@ $('#cms-page-builder-cancel').click(
 
 // on edit submit button event
 $('#cms-page-builder-submit').click(
-    function() {
+    function () {
         var lastElementIdPosition = $(this).attr('data-pb-se').lastIndexOf('-');
         var newSelectedElementId = '';
 
@@ -173,3 +161,66 @@ function deleteContentType(event, element) {
     $('#cms_page_selected_action').val('delete');
     $('#cms_page_builder_form').submit();
 }
+
+
+// Make the dashboard widgets sortable Using jquery UI
+$('.cms-content-sortable').sortable({
+    containment: $('.cms-content-sortable'),
+    placeholder: 'sort-highlight',
+    handle: '.sort-handle',
+    forcePlaceholderSize: true,
+    zIndex: 999999,
+    stop: function (event, ui) {
+
+        var container = $(this);
+
+        var placeholder = container.find(".content-type-edit-placeholder");
+        var elements = container.find(".content-type-edit-selector");
+
+        var elementId = $('#cms_page_selected_element').val();
+        var pageId = $('#cms_page_jstree_selected_page').val();
+
+
+        var languageId = $('#cms_page_selected_language').val();
+
+        var data = {"element": elementId, "page": pageId, "language": languageId, "order": []};
+
+        if (elements.length == placeholder.length - 1) {
+            elements.each(function (index) {
+                var element = $(this);
+                element.data("pb-order", index + 1);
+                if (index == 0) {
+                    placeholder.eq(0).data("pb-order", index + 1);
+                    placeholder.eq(0).insertBefore(element);
+                }
+                data.order.push({"order": index + 1, "id": element.data("pb-id"), 'se': element.data("pb-se")})
+
+                placeholder.eq(index + 1).data("pb-order", index + 2);
+                placeholder.eq(index + 1).insertAfter(element);
+            });
+        }
+
+        window.setTimeout(function () {
+            $.ajax
+            ({
+                type: "POST",
+                url: "/backend/cms/ajax/order",
+                async: false,
+                data: {"data": JSON.stringify(data)},
+                success: function () {
+                }
+            })
+        }, 500);
+
+
+        placeholder.slideDown();
+
+        window.setTimeout(function () {
+            ui.item.data("click-false", false);
+        }, 0);
+    },
+    start: function (event, ui) {
+        ui.item.data("click-false", true);
+        $(this).find(".content-type-edit-placeholder").slideUp();
+    }
+});
