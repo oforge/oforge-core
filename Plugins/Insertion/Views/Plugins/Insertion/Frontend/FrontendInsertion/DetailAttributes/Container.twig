@@ -1,0 +1,15 @@
+{%  block detail__container %}
+    <div class="form__control form-group">
+
+        <label class="form__label {{ label_class }}">{{ i18n(attribute.name) }}</label>
+        {% set values = getInsertionValues(attribute.id) %}
+
+        {% block container_attributes %}
+            <div>
+                {% for value in values.values %}
+                    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ value.subAttributeKey.type|capitalize  ~ '.twig'  with {'attribute': value.subAttributeKey }  %}
+                {% endfor %}
+            </div>
+        {% endblock container_attributes %}
+    </div>
+{% endblock detail__container %}

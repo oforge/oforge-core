@@ -92,6 +92,11 @@ var cmsPagesControllerModule = (function() {
 				// select element in page builder on mouse click
 				$(this).click(
 					function() {
+						var target = $(this).data("click-false");
+						if(target){
+							return;
+						}
+
 						$('#cms_page_selected_element').val($(this).attr('data-pb-id'));
 						$('#cms_page_builder_form').submit();
 					}
