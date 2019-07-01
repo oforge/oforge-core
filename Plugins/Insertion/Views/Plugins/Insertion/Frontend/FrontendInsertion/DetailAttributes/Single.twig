@@ -1,0 +1,8 @@
+<div class="attribute-label">
+    <span class="attribute-label">{{ value.attributeKey.name }}</span>
+    <span class="attribute-value">{{ value.value }}</span>
+</div>
+
+{% for subAttributeItem in subAttributes %}
+    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ all_attributes[subAttributeItem.id].type|capitalize  ~ '.twig'  with {'attribute': all_attributes[subAttributeItem.id], hidden: true, required: false, subAttribute: subAttributeItem } %}
+{% endfor %}
