@@ -1,0 +1,17 @@
+{% block detail_attributes %}
+    {% set values = insertion.values %}
+    <div class="panel panel--product-attributes">
+        {% for attributeGroup in attributes %}
+            {% if attributeGroup.items|length > 0 and not  (attributeGroup.name == 'main' or attributeGroup.name == 'contact') %}
+                <div class="attribute-group">
+                    <h2>{{ i18n(attributeGroup.name) }}</h2>
+                    <div>
+                        {% for attribute in attributeGroup.items %}
+                            {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey} %}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock detail_attributes %}
