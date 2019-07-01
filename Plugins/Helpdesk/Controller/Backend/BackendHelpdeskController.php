@@ -116,7 +116,7 @@ class BackendHelpdeskController extends SecureBackendController {
                     $conversation = $conversation[0];
                 }
 
-                $helpdeskMessengerService->sendMessage($conversation['id'], 'helpdesk', $senderId, $message);
+                $helpdeskMessengerService->sendMessage($conversation['id'], $senderId, $message);
 
                 $uri = $router->pathFor('backend_helpdesk_messenger', ['id' => $args['id']]);
                 return $response->withRedirect($uri , 302);
