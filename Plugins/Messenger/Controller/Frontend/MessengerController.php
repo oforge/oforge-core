@@ -12,6 +12,8 @@ use Messenger\Models\Conversation;
 use Messenger\Services\FrontendMessengerService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\I18n\Services\InternationalizationService;
@@ -20,6 +22,9 @@ use Oforge\Engine\Modules\Mailer\Services\MailService;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
+use Twig_Error_Loader;
+use Twig_Error_Runtime;
+use Twig_Error_Syntax;
 
 /**
  * Class MessengerController
@@ -37,6 +42,12 @@ class MessengerController extends SecureFrontendController {
      * @return Response
      * @throws ServiceNotFoundException
      * @throws ORMException
+     * @throws ServiceNotFoundException
+     * @throws ConfigElementNotFoundException
+     * @throws ConfigOptionKeyNotExistException
+     * @throws Twig_Error_Loader
+     * @throws Twig_Error_Runtime
+     * @throws Twig_Error_Syntax
      * @EndpointAction(path="[/{id:.*}]", name="messages")
      */
     public function indexAction(Request $request, Response $response, array $args) {
@@ -71,11 +82,10 @@ class MessengerController extends SecureFrontendController {
 
                 /** @var Conversation $conversation */
                 $conversation = $frontendMessengerService->getConversation($conversationId, $senderId);
-                $frontendMessengerService->sendMessage($conversation['id'], 'frontend', $senderId, $message);
+                $frontendMessengerService->sendMessage($conversation['id'], $senderId, $message);
 
                 /* Only send mails for classified advert */
-                if($conversation['type'] === 'classified_advert') {
-                    $targetUserId = 0;
+                if($conversation['type'] === 'classified_advert' && end($conversation['messages'])['sender'] != $user['id']) {
                     if ($conversation['requested'] == $user['id']) {
                         $targetUserId = $conversation['requester'];
                     } else {
@@ -83,6 +93,7 @@ class MessengerController extends SecureFrontendController {
                     }
 
                     $targetIdMail = $frontendUserService->getUserById($targetUserId)->getEmail();
+
                     $mailOptions = [
                         'to' => [$targetIdMail => $targetIdMail],
                         'from' => 'no_reply',

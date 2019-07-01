@@ -34,7 +34,7 @@ class FrontendMessengerService extends AbstractMessengerService {
         parent::entityManager()->create($conversation);
         $this->entityManager()->flush();
 
-        parent::sendMessage($conversation->getId(), $conversationType, $requester, $firstMessage);
+        parent::sendMessage($conversation->getId(), $requester, $firstMessage);
 
         return $conversation;
     }
@@ -49,9 +49,9 @@ class FrontendMessengerService extends AbstractMessengerService {
         $queryBuilder = $this->entityManager()->createQueryBuilder();
         $query        = $queryBuilder->select('c')->from(Conversation::class, 'c')->where($queryBuilder->expr()->andX($queryBuilder->expr()
                                                                                                                                    ->eq('c.requester', $userId),
-                $queryBuilder->expr()->eq('c.type', '?1')))->orWhere($queryBuilder->expr()->andX($queryBuilder->expr()->eq('c.requested', $userId),
-                $queryBuilder->expr()->eq('c.type', '?2')))->orWhere($queryBuilder->expr()->andX($queryBuilder->expr()->eq('c.requester', $userId),
-                $queryBuilder->expr()->eq('c.type', '?3')))->setParameters([1 => 'classified_advert', 2 => 'classified_advert', 3 => 'helpdesk_inquiry'])
+            $queryBuilder->expr()->eq('c.type', '?1')))->orWhere($queryBuilder->expr()->andX($queryBuilder->expr()->eq('c.requested', $userId),
+            $queryBuilder->expr()->eq('c.type', '?2')))->orWhere($queryBuilder->expr()->andX($queryBuilder->expr()->eq('c.requester', $userId),
+            $queryBuilder->expr()->eq('c.type', '?3')))->setParameters([1 => 'classified_advert', 2 => 'classified_advert', 3 => 'helpdesk_inquiry'])
                                      ->getQuery();
         /** @var Conversation[] $conversations */
         $conversations = $query->execute();
@@ -110,10 +110,10 @@ class FrontendMessengerService extends AbstractMessengerService {
      */
     public function checkForConversation($requester, $requested, $conversationType, $targetId) {
         $conversation = $this->repository('conversation')->findOneBy([
-            'requester'        => $requester,
-            'requested'        => $requested,
-            'type' => $conversationType,
-            'targetId'         => $targetId,
+            'requester' => $requester,
+            'requested' => $requested,
+            'type'      => $conversationType,
+            'targetId'  => $targetId,
         ]);
 
         return $conversation;
