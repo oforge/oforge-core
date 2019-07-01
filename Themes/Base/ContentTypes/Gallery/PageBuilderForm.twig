@@ -1,4 +1,5 @@
 <div class="form">
+    {% set imagePlaceholder = '/Themes/Base/ContentTypes/__assets/img/image.png' %}
     <div class="form-group">
         <label>{{ i18n('type_gallery', 'Gallery') }}</label>
         <div class="gallery__editor">
@@ -9,18 +10,20 @@
             </p>
             <div class="gallery__items">
                 {% for dataImage in data.images %}
+                    {% set dataImageUrl = (dataImage is null or dataImage == '' ? imagePlaceholder : media(dataImage, 200)) %}
                     <div class="gallery__item">
                         <span class="btn btn-primary btn-xs gallery__item--close"><i class="fa fa-close"></i></span>
                         <span class="btn btn-primary btn-xs gallery__item--edit"><i class="fa fa-edit"></i></span>
-                        <input type="hidden" name="images[]" value="{{ dataImage }}" />
-                        <img src="{{ media(dataImage) }}" alt="{{ dataImage }}" />
+                        <input type="hidden" name="images[]" value="{{ dataImage }}" data-current="{{ dataImage }}" />
+                        <img src="{{ dataImageUrl }}" alt="{{ dataImage }}" data-current="{{ dataImageUrl }}"
+                             data-placeholder="{{ imagePlaceholder }}" />
                     </div>
                 {% endfor %}
                 <div class="gallery__item" style="display: none">
                     <span class="btn btn-primary btn-xs gallery__item--close"><i class="fa fa-close"></i></span>
                     <span class="btn btn-primary btn-xs gallery__item--edit"><i class="fa fa-edit"></i></span>
-                    <input type="hidden" name="images[]" value="" />
-                    <img src="" alt="" />
+                    <input type="hidden" name="images[]" value="" data-current="{{ null }}" />
+                    <img src="" alt="" data-current="{{ null }}" data-placeholder="{{ imagePlaceholder }}" />
                 </div>
             </div>
         </div>

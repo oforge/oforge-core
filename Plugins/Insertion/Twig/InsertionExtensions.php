@@ -65,12 +65,14 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
         if (count($vars) == 1) {
             /** @var $authService AuthService */
             $authService = Oforge()->Services()->get("auth");
-            $user        = $authService->decode($_SESSION["auth"]);
-            if (isset($user) && isset($user['id'])) {
-                /** @var InsertionBookmarkService $bookmarkService */
-                $bookmarkService = Oforge()->Services()->get("insertion.bookmark");
+            if (isset($_SESSION["auth"])) {
+                $user = $authService->decode($_SESSION["auth"]);
+                if (isset($user) && isset($user['id'])) {
+                    /** @var InsertionBookmarkService $bookmarkService */
+                    $bookmarkService = Oforge()->Services()->get("insertion.bookmark");
 
-                return $bookmarkService->hasBookmark($vars[0], $user['id']);
+                    return $bookmarkService->hasBookmark($vars[0], $user['id']);
+                }
             }
         }
 
@@ -87,12 +89,14 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
         if (count($vars) == 2) {
             /** @var $authService AuthService */
             $authService = Oforge()->Services()->get("auth");
-            $user        = $authService->decode($_SESSION["auth"]);
-            if (isset($user) && isset($user['id'])) {
-                /** @var InsertionSearchBookmarkService $bookmarkService */
-                $bookmarkService = Oforge()->Services()->get("insertion.search.bookmark");
+            if (isset($_SESSION["auth"])) {
+                $user = $authService->decode($_SESSION["auth"]);
+                if (isset($user) && isset($user['id'])) {
+                    /** @var InsertionSearchBookmarkService $bookmarkService */
+                    $bookmarkService = Oforge()->Services()->get("insertion.search.bookmark");
 
-                return $bookmarkService->hasBookmark($vars[0], $user['id'], $vars[1]);
+                    return $bookmarkService->hasBookmark($vars[0], $user['id'], $vars[1]);
+                }
             }
         }
 
@@ -122,6 +126,6 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
         $insertionTypeService = Oforge()->Services()->get('insertion.type');
         $quickSearch          = $insertionTypeService->getQuickSearchInsertions();
 
-        return ['types' => $quickSearch, 'attributes' =>  $insertionTypeService->getInsertionTypeAttributeMap()];;
+        return ['types' => $quickSearch, 'attributes' => $insertionTypeService->getInsertionTypeAttributeMap()];;
     }
 }

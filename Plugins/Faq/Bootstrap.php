@@ -3,6 +3,7 @@
 namespace Faq;
 
 use Faq\Controller\Backend\BackendFaqController;
+use Faq\Controller\Frontend\FrontendAccountFaqController;
 use Faq\Controller\Frontend\FrontendFaqController;
 use Faq\Models\FaqModel;
 use FrontendUserManagement\Services\AccountNavigationService;
@@ -17,6 +18,7 @@ class Bootstrap extends AbstractBootstrap {
         $this->endpoints = [
             BackendFaqController::class,
             FrontendFaqController::class,
+            FrontendAccountFaqController::class,
         ];
 
         $this->models = [

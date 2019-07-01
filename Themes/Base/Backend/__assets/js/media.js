@@ -30,13 +30,46 @@ if (typeof Oforge !== 'undefined') {
         __bindDynamicItemsClickEvents: function () {
             this.__modalElement.find(".media-item").on("click", this, this.__mediaClicked);
             this.__modalElement.find(".no-media-item").on("click", this, this.__noMediaClicked);
+            this.__modalElement.find(".media-chooser-reset").on("click", this, this.__resetClicked);
             this.__modalElement.find(".pagination-item").on("click", this, this.__paginationClicked);
+            var config = {};
+            if (this.__options.config) {
+                config = this.__options.config;
+            }
+            if (this.__options.emitter) {
+                var tmpConfig = $(this.__options.emitter).data('config');
+                config = $.extend({}, config, tmpConfig);
+            }
+            if (config.hasOwnProperty('clear') && !config.clear) {
+                this.__modalElement.find(".no-media-item").hide();
+            }
+            if (config.hasOwnProperty('reset') && !config.reset) {
+                this.__modalElement.find(".media-chooser-reset").hide();
+            }
         },
-        __noMediaClicked: function(e) {
+        __resetClicked: function (e) {
             var self = e.data;
             if (self.__options != null) {
                 if (self.__options.preview != null) {
-                    $(self.__options.preview).attr("src", '');
+                    var $preview = $(self.__options.preview);
+                    $preview.attr('src', $preview.data('current'));
+                }
+                if (self.__options.target != null) {
+                    var $input = $(self.__options.target);
+                    $input.val($input.data('current'));
+                }
+                self.__modalElement.modal('hide');
+                self.__modalElement.remove();
+            } else {
+                alert("No options given");
+            }
+        },
+        __noMediaClicked: function (e) {
+            var self = e.data;
+            if (self.__options != null) {
+                if (self.__options.preview != null) {
+                    var $preview = $(self.__options.preview);
+                    $preview.attr('src', $preview.data('placeholder'));
                 }
                 if (self.__options.target != null) {
                     $(self.__options.target).val('');
