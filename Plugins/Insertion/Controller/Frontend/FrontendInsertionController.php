@@ -65,6 +65,23 @@ class FrontendInsertionController extends SecureFrontendController {
     /**
      * @param Request $request
      * @param Response $response
+     * @EndpointAction(path="/search")
+     */
+    public function listAllAction(Request $request, Response $response) {
+        /**
+         * @var $service InsertionTypeService
+         */
+        $service = Oforge()->Services()->get('insertion.type');
+
+        $types = $service->getInsertionTypeTree();
+
+        Oforge()->View()->assign(['types' => $types ]);
+    }
+
+
+    /**
+     * @param Request $request
+     * @param Response $response
      * @EndpointAction(path="/create/{type}/{page}")
      *
      * @throws \Doctrine\ORM\ORMException
