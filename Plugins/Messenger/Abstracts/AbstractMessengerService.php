@@ -49,7 +49,6 @@ abstract class AbstractMessengerService extends AbstractDatabaseAccess {
      * @param $userId
      *
      * @return array
-     * @throws ORMException
      */
     public function getConversationsByTarget($targetId, $userId) {
 
@@ -101,14 +100,13 @@ abstract class AbstractMessengerService extends AbstractDatabaseAccess {
      * @param $messageContent
      *
      * @throws ORMException
-     * @throws OptimisticLockException
      */
-    public function sendMessage($conversationId, $senderType, $sender, $messageContent) {
+    public function sendMessage($conversationId, $sender, $messageContent) {
         /** @var Conversation $conversation */
         $conversation = $this->repository('conversation')->findOneBy(['id' => $conversationId]);
 
         $messageObject = new Message();
-        $messageObject->setSender($senderType . '_' . $sender);
+        $messageObject->setSender($sender);
         $messageObject->setMessage($messageContent);
         $messageObject->setConversationId($conversationId);
         $this->entityManager()->create($messageObject);
@@ -123,7 +121,6 @@ abstract class AbstractMessengerService extends AbstractDatabaseAccess {
      * @param $newStatus
      *
      * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function changeConversationState($conversationId, $newStatus) {
         /** @var Conversation $conversation */
