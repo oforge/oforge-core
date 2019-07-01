@@ -73,7 +73,7 @@ class Conversation extends AbstractModel {
      * @throws \Exception
      */
     public function onPrePersist() {
-        $this->id = $this->type . '_' . $this->requester . '_' . $this->requested . '_' . $this->targetId;
+        $this->id = hash('md5', $this->type . '_' . $this->requester . '_' . $this->requested . '_' . $this->targetId);
     }
 
     /**
