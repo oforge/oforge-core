@@ -10,9 +10,10 @@
                min="0"
                placeholder="{{ i18n('from') }}"
                class="form__input" />
-        {% if i18nExists('unit_price') %}
+        {% set unit = i18n('unit_price','') %}
+        {% if unit is not empty %}
             <span class="input__unit">
-                {{ i18n('unit_price') }}
+                {{ unit }}
             </span>
         {% endif %}
     </label>
@@ -27,9 +28,10 @@
                min="0"
                placeholder="{{ i18n('to') }}"
                class="form__input" />
-        {% if i18nExists('unit_price') %}
+        {% set unit = i18n('unit_price','') %}
+        {% if unit is not empty %}
             <span class="input__unit">
-                {{ i18n('unit_price') }}
+                {{ unit }}
             </span>
         {% endif %}
     </label>

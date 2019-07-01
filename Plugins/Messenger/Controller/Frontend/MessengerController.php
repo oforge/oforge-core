@@ -40,6 +40,7 @@ class MessengerController extends SecureFrontendController {
      * @param array $args
      *
      * @return Response
+     * @throws ServiceNotFoundException
      * @throws ORMException
      * @throws ServiceNotFoundException
      * @throws ConfigElementNotFoundException
@@ -119,6 +120,7 @@ class MessengerController extends SecureFrontendController {
     }
 
     /**
+     * @throws ServiceNotFoundException
      */
     public function initPermissions() {
         $this->ensurePermissions("indexAction", User::class);

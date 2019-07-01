@@ -5,5 +5,5 @@
              src="{{ media(item[property.name], property.renderer.width|default(0)) }}" title=" {{ imagePath }}" />
     </a>
 {% else %}
-    {{ i18n('backend_crud_no_image', 'no image') }}
+    {{ i18n('backend_crud_no_image', {en: 'no image', de: 'kein Bild'}) }}
 {% endif %}
