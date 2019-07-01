@@ -315,11 +315,20 @@ class FrontendInsertionController extends SecureFrontendController {
          */
         $insertion = $service->getInsertionById(intval($id));
 
+
         if (!isset($insertion) || $insertion == null) {
             return $response->withRedirect('/404', 301);
         }
 
+        $values = [];
+
+        foreach ($insertion->toArray()['values'] as $value) {
+            $id = $value['attributeKey'];
+            $values = $values + [$id => $value];
+        }
+
         Oforge()->View()->assign(['insertion' => $insertion->toArray(3, ['user' => ['*', 'id']])]);
+        Oforge()->View()->assign(['values' => $values]);
 
         if (!($insertion->isActive() && $insertion->isModeration())) {
             $auth = '';
@@ -345,7 +354,6 @@ class FrontendInsertionController extends SecureFrontendController {
 
         Oforge()->View()->assign(["attributes" => $typeAttributes]);
         Oforge()->View()->assign(["all_attributes" => $insertionTypeService->getInsertionTypeAttributeMap()]);
-
 
     }
 
