@@ -89,7 +89,7 @@ class InternationalizationService extends AbstractDatabaseAccess {
             };
             fclose($handle);
 
-            return $entitiesCreated . ' snippet(s) added, ' . $entitiesUpdated . ' snippet(s) updated.';
+            return $entitiesCreated . ' snippet(s) added, ' . $entitiesUpdated . ' snippet(s) updated';
         }
         return false;
     }
