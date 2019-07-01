@@ -14,9 +14,9 @@ use Slim\Http\Request;
  * Class AccountController
  *
  * @package FrontendUserManagement\Controller\Frontend
- * @EndpointClass(path="/faqs", name="frontend_faq", assetScope="Frontend")
+ * @EndpointClass(path="/account/faq", name="frontend_account_faq", assetScope="Frontend")
  */
-class FrontendFaqController {
+class FrontendAccountFaqController {
 
     /**
      * @param Request $request

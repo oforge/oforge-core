@@ -36,6 +36,11 @@ var cmsElementsControllerModule = (function() {
 						var contentElements = $(this).attr('data-pb-id').split('-');
 
 						if (contentElements && contentElements.length > 0) {
+							var target = $(this).data("click-false");
+							if(target){
+								return;
+							}
+
 							$('#cms_edit_element_id').val(contentElements[contentElements.length - 1]);
 							$('#cms_edit_element_action').val('edit');
 							$('#cms_element_jstree_form').submit();

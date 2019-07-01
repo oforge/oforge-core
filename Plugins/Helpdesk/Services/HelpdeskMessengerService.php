@@ -21,7 +21,6 @@ class HelpdeskMessengerService extends AbstractMessengerService {
      *
      * @return Conversation
      * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function createNewConversation($requester, $requested, $conversationType, $targetId, $title, $firstMessage) {
         $conversation = new Conversation();
@@ -34,7 +33,7 @@ class HelpdeskMessengerService extends AbstractMessengerService {
 
         $this->entityManager()->create($conversation);
 
-        parent::sendMessage($conversation->getId(), 'frontend', $requester, $firstMessage);
+        parent::sendMessage($conversation->getId(), $requester, $firstMessage);
 
         return $conversation;
     }
@@ -43,7 +42,6 @@ class HelpdeskMessengerService extends AbstractMessengerService {
      * @param $userId
      *
      * @return Collection
-     * @throws ORMException
      */
     public function getConversationList($userId) {
         $queryBuilder = $this->entityManager()->createQueryBuilder();

@@ -5,12 +5,13 @@
     <div class="account content">
         {% block account %}
             <div class="panel panel--account flex">
-                {% block account__sidebar %}
-                    {% include 'Plugins/FrontendUserManagement/Frontend/Components/Sidebar.twig' %}
-                {% endblock account__sidebar %}
-
+                {% if sidebar_navigation is defined %}
+                    {% block account__sidebar %}
+                        {% include 'Plugins/FrontendUserManagement/Frontend/Components/Sidebar.twig' %}
+                    {% endblock account__sidebar %}
+                {% endif %}
                 {% block account__content %}
-                    <div class="account__content flex">
+                    <div class="account__content flex  {% if sidebar_navigation is not defined %}content__faq{% endif %}">
                         <h3 class="account__title">{{ i18n('faqs') }}</h3>
                         <div class="collapse--container">
                             {% for value in faq %}
@@ -23,7 +24,7 @@
                                         </svg>
                                     </div>
                                 </div>
-                                <div class="collapse--item collapsed">{{ value.answer | raw  }}</div>
+                                <div class="collapse--item collapsed">{{ value.answer | raw }}</div>
                             {% endfor %}
                         </div>
                     </div>
