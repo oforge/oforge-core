@@ -50,6 +50,53 @@ class InternationalizationService extends AbstractDatabaseAccess {
         return $this->cache[$key];
     }
 
+    /**
+     * Creates / Updates Text-Snippets from given .csv file.
+     * A Text-Snippet consists of three values: Scope, Name and Value
+     * Therefore a line in the .csv file should consist of exactly three entries:
+     * scope|name|value ( no whitespace ), where '|' acts as the separator.
+     *
+     * As of this point, this function can only be called from the console
+     * ( i.e. 'php /bin/console oforge:service:run i18n:insertFromCsv mysnippets.csv' ).
+     *
+     * @param string $fileName
+     *
+     * @return bool|string
+     * @throws ORMException
+     */
+    public function insertFromCsv($fileName = '') {
+        if ($handle = fopen($fileName, 'r')) {
+            $entitiesCreated = 0;
+            $entitiesUpdated  = 0;
+            while ($row = fgetcsv($handle, 0, '|')) {
+                $snippet = $this->repository()->findOneBy([
+                    'scope' => $row[0],
+                    'name'  => $row[1],
+                ]);
+                if (!isset($snippet)) {
+                    $entitiesCreated += 1;
+                    $snippet = Snippet::create([
+                        'scope' => $row[0],
+                        'name'  => $row[1],
+                        'value' => $row[2],
+                    ]);
+                    $this->entityManager()->create($snippet);
+                } else {
+                    $entitiesUpdated += 1;
+                    $snippet->setValue($row[2]);
+                    $this->entityManager()->flush();
+                }
+            };
+            fclose($handle);
+
+            return $entitiesCreated . ' snippet(s) added, ' . $entitiesUpdated . ' snippet(s) updated.';
+        }
+        return false;
+    }
+
+    public function showParams($param) {
+        return $param;
+    }
 
     /**
      * @param string $key
