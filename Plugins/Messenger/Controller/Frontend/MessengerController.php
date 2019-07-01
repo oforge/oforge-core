@@ -65,12 +65,18 @@ class MessengerController extends SecureFrontendController {
 
         /* Get a conversation: /messages/conversationId */
         if (isset($args) && isset($args['id'])) {
+            $conversationId = $args['id'];
+            $senderId = $user['id'];
+            /** @var Conversation $conversation */
+            $conversation = $frontendMessengerService->getConversation($conversationId, $senderId);
+
+            /* Check for permission of conversation */
+            if(!($conversation['requested'] == $user['id'] || $conversation['requester'] == $user['id'])) {
+                return $response->withRedirect("/404", 301);
+            }
+
             /* Create a new message for a given conversation */
-
             if ($request->isPost()) {
-                $conversationId = $args['id'];
-
-                $senderId = $request->getParsedBody()['sender'];
                 $message  = $request->getParsedBody()['message'];
 
                 /** @var FrontendMessengerService $frontendMessengerService */
@@ -80,8 +86,6 @@ class MessengerController extends SecureFrontendController {
                 $mailService = Oforge()->Services()->get('mail');
                 $frontendUserService = Oforge()->Services()->get('frontend.user.management.user');
 
-                /** @var Conversation $conversation */
-                $conversation = $frontendMessengerService->getConversation($conversationId, $senderId);
                 $frontendMessengerService->sendMessage($conversation['id'], $senderId, $message);
 
                 /* Only send mails for classified advert */
@@ -107,7 +111,6 @@ class MessengerController extends SecureFrontendController {
                 return $response->withRedirect($uri . '/' . $conversation['id'], 302);
             }
 
-            $conversation = $frontendMessengerService->getConversation($args['id'], $user['id']);
             Oforge()->View()->assign(['conversation' => $conversation]);
         } else {
             if (sizeof($conversationList) > 0) {
