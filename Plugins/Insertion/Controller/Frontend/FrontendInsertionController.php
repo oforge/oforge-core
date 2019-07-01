@@ -344,7 +344,6 @@ class FrontendInsertionController extends SecureFrontendController {
             $values = $values + [$id => $value];
         }
 
-        Oforge()->View()->assign(['insertion' => $insertion->toArray(3, ['user' => ['*', 'id']])]);
         Oforge()->View()->assign(['values' => $values]);
 
         if (!($insertion->isActive() && $insertion->isModeration())) {
