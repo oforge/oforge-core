@@ -11,19 +11,11 @@
             <div class="panel panel--product-view">
                 <h3 class="title title--product">{{ insertion.content[1].title }}</h3>
 
-                <div class="product-view__images">
-                    <div class="thumbnails thumbnails--product">
-                        <div class="thumbnail">
-                            {% for item in insertion.media %}
-                                <img src="{{ item.content.path }}" alt="{{ item.content.name }}"
-                                     class="thumbnail__image">
-                            {% endfor %}
-                        </div>
-                        <div class="product-view__image">
-                            <img src="https://placeponi.es/400/300" alt="" class="image">
-                        </div>
-                    </div>
-                </div>
+
+                {% block insertion_detail__images %}
+                    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/ProductImages.twig' %}
+                {% endblock insertion_detail__images %}
+
                 <span class="product-view__price"><span
                             class="price-label">{{ i18n('insertion_detail_price', 'Preis') }}</span> <span
                             class="price-value">{{ insertion.price }}</span></span>
@@ -44,38 +36,38 @@
                 {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes.twig' %}
             {% endblock insertion_detail__attributes %}
 
-                {% if extended %}
-                    <div class="panel panel--product-attributes attributes--extended">
-                        <h3 class="title title--attributes">Details</h3>
-                        <div class="attribute">
-                            <span class="attribute-label">Label</span>
-                            <span class="attribute-value">Value</span>
-                        </div>
-                        <div class="attribute">
-                            <span class="attribute-label">Label</span>
-                            <span class="attribute-value">Value</span>
-                        </div>
-                        <div class="attribute">
-                            <span class="attribute-label">Label</span>
-                            <span class="attribute-value">Value</span>
-                        </div>
-                        <div class="attribute">
-                            <span class="attribute-label">Label</span>
-                            <span class="attribute-value">Value</span>
-                        </div>
+            {% if extended %}
+                <div class="panel panel--product-attributes attributes--extended">
+                    <h3 class="title title--attributes">Details</h3>
+                    <div class="attribute">
+                        <span class="attribute-label">Label</span>
+                        <span class="attribute-value">Value</span>
                     </div>
-                {% endif %}
+                    <div class="attribute">
+                        <span class="attribute-label">Label</span>
+                        <span class="attribute-value">Value</span>
+                    </div>
+                    <div class="attribute">
+                        <span class="attribute-label">Label</span>
+                        <span class="attribute-value">Value</span>
+                    </div>
+                    <div class="attribute">
+                        <span class="attribute-label">Label</span>
+                        <span class="attribute-value">Value</span>
+                    </div>
+                </div>
+            {% endif %}
 
-                    <div class="panel panel--product-description description">
-                        <div class="description__head">
-                            <h4 class="title">{{ i18n('insertion_detail_description_title', 'Beschreibung zum Pferd') }}</h4>
-                            <div class="language-switch"></div>
-                        </div>
-                        <div class="description__body">
-                            {{ insertion.content[0].description }}
-                        </div>
-                    </div>
-                {% block insertion_detail__pedigree %}
+            <div class="panel panel--product-description description">
+                <div class="description__head">
+                    <h4 class="title">{{ i18n('insertion_detail_description_title', 'Beschreibung zum Pferd') }}</h4>
+                    <div class="language-switch"></div>
+                </div>
+                <div class="description__body">
+                    {{ insertion.content[0].description }}
+                </div>
+            </div>
+            {% block insertion_detail__pedigree %}
             {% endblock insertion_detail__pedigree %}
         </div>
 
