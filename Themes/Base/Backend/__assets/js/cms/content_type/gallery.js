@@ -17,9 +17,14 @@ if (typeof Oforge !== 'undefined') {
                         callback: function (data) {
                             if (data && data.path) {
                                 var $clone = $hiddenAdd.clone();
-                                $clone.find().find('input').val(data.id);
+                                var $image = $clone.find('img');
+                                $image.data('current', $image.attr('src'));
+                                $clone.find('input').val(data.id).data('current', data.id);
                                 $galleryItemWrapper.append($clone);
                             }
+                        },
+                        config: {
+                            clear: false,
                         }
                     }, event);
                 }).on('click', '.gallery__item--close', function (event) {
@@ -29,7 +34,10 @@ if (typeof Oforge !== 'undefined') {
                     Oforge.Media.open({
                         emitter: $self,
                         preview: $self.parent().find('img'),
-                        target: $self.parent().find('input')
+                        target: $self.parent().find('input'),
+                        config: {
+                            clear: false,
+                        }
                     }, event);
                 });
                 $galleryItemWrapper.sortable({
