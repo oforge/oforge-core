@@ -1,47 +1,81 @@
 .cms-page-builder-headline {
-	font-size: 24px;
-	font-weight: bolder;
-	color: #000;
-	background-color: #ccc;
-	margin: 0px;
-	margin-bottom: 15px;
-	padding: 0px 15px;
+    font-size: 24px;
+    font-weight: bolder;
+    color: #000;
+    background-color: #ccc;
+    margin: 0px;
+    margin-bottom: 15px;
+    padding: 0px 15px;
 }
 
 .cms-cancel-submit-row {
-	display: flex;
-	justify-content: space-between;
-	margin-top: 25px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 25px;
 }
 
 .cms-cancel-button {
-	background-color: #f00;
-	color: #fff;
-	font-weight: bolder;
-	text-align: center;
-	vertical-align: middle;
-	width: 150px;
-	height: 2.5rem;
-	line-height: 2.5rem;
-	outline: none;
-	border-style: solid;
-	border-width: 1px;
-	border-color: #000;;
-	margin: 0 50px;
+    background-color: #f00;
+    color: #fff;
+    font-weight: bolder;
+    text-align: center;
+    vertical-align: middle;
+    width: 150px;
+    height: 2.5rem;
+    line-height: 2.5rem;
+    outline: none;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #000;;
+    margin: 0 50px;
 }
 
 .cms-submit-button {
-	background-color: #0f0;
-	color: #fff;
-	font-weight: bolder;
-	text-align: center;
-	vertical-align: middle;
-	width: 150px;
-	height: 2.5rem;
-	line-height: 2.5rem;
-	outline: none;
-	border-style: solid;
-	border-width: 1px;
-	border-color: #000;;
-	margin: 0 50px;
+    background-color: #0f0;
+    color: #fff;
+    font-weight: bolder;
+    text-align: center;
+    vertical-align: middle;
+    width: 150px;
+    height: 2.5rem;
+    line-height: 2.5rem;
+    outline: none;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #000;;
+    margin: 0 50px;
 }
+
+
+#vakata-dnd {
+    .content-type-selector {
+        background: #FFF;
+        min-width: 150px;
+    }
+
+    #jstree-dnd.jstree-default .jstree-er {
+        display: none;
+    }
+}
+
+.cms-content-type-editor-container {
+    .sort-handle {
+        height: 100%;
+        float: left;
+        width: 40px;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .cms-page-builder-selected-element, .ui-sortable-helper {
+        border-color: #ccc;
+        background: #FFF;
+
+        .sort-handle {
+            background-color: #ccc;
+            cursor: n-resize;
+        }
+    }
+}
+

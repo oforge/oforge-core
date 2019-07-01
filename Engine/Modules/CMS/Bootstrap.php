@@ -16,6 +16,7 @@ use Oforge\Engine\Modules\CMS\ContentTypes\NavigationEntry;
 use Oforge\Engine\Modules\CMS\ContentTypes\RichText;
 use Oforge\Engine\Modules\CMS\ContentTypes\Row;
 use Oforge\Engine\Modules\CMS\ContentTypes\Text;
+use Oforge\Engine\Modules\CMS\Controller\Backend\AjaxController;
 use Oforge\Engine\Modules\CMS\Controller\Backend\ElementsController;
 use Oforge\Engine\Modules\CMS\Controller\Backend\PagesController;
 use Oforge\Engine\Modules\CMS\Controller\Backend\TypesController;
@@ -30,6 +31,7 @@ use Oforge\Engine\Modules\CMS\Models\Page\Page;
 use Oforge\Engine\Modules\CMS\Models\Page\PageContent;
 use Oforge\Engine\Modules\CMS\Models\Page\PagePath;
 use Oforge\Engine\Modules\CMS\Models\Site\Site;
+use Oforge\Engine\Modules\CMS\Services\CmsOrderService;
 use Oforge\Engine\Modules\CMS\Services\ContentTypeGroupManagementService;
 use Oforge\Engine\Modules\CMS\Services\ContentTypeManagementService;
 use Oforge\Engine\Modules\CMS\Services\ContentTypeService;
@@ -62,6 +64,7 @@ class Bootstrap extends AbstractBootstrap {
             TypesController::class,
             ElementsController::class,
             PageController::class,
+            AjaxController::class,
         ];
 
         $this->models = [
@@ -90,6 +93,7 @@ class Bootstrap extends AbstractBootstrap {
             'element.tree.service'          => ElementTreeService::class,
             'named.content'                 => NamedContentService::class,
             'content.type.management'       => ContentTypeManagementService::class,
+            'cms.order'                     => CmsOrderService::class,
             'content.type.group.management' => ContentTypeGroupManagementService::class,
         ];
     }
