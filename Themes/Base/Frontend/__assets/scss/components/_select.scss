@@ -5,20 +5,22 @@
     overflow: hidden;
     height: 3.6rem;
     border: 1px solid $color-primary;
+    border-radius: $border-radius;
     background: $color-light;
     cursor: pointer;
 
     &.select--is-open {
         height: auto;
-        overflow: auto;
+        position: absolute;
+        z-index: 2;
 
-        .select__text {
+        .select--is-open {
+            position: relative;
+        }
+
+        > .select__text {
             border-bottom: 1px solid $color-primary;
         }
-    }
-
-    &.select--is-sub {
-        display: none;
     }
 
     &__text {
@@ -58,7 +60,6 @@
     }
     &__list {
         height: auto;
-        max-height: auto;
         list-style: none;
         margin: 0 .4rem 0 0;
         padding: 0;
@@ -84,7 +85,7 @@
             &:after {
                 position: absolute;
                 left: 1.1rem;
-                top: 1rem;
+                top: 1.2rem;
                 content: ' ';
                 display: block;
                 width: .6rem;
@@ -94,10 +95,15 @@
                 transform: rotate(45deg);
             }
 
-            .select--is-sub {
+            > .sub-attribute-container {
                 display: block;
+                flex: 0 0 100%;
                 margin-top: 1rem;
             }
         }
     }
+}
+
+.sub-attribute-container {
+    display: none;
 }

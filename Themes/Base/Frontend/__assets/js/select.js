@@ -27,9 +27,9 @@
                 function addHiddenInputToCheckItem(check) {
                     var input = document.createElement('input');
                     input.setAttribute('type', 'hidden');
-                    input.setAttribute('name', check.closest(self.selector).dataset.multiSelect);
-                    input.setAttribute('data-select-input', check.dataset.multiSelectItem);
-                    input.setAttribute('value', check.dataset.multiSelectItem);
+                    input.setAttribute('name', check.closest(self.selector).dataset.select);
+                    input.setAttribute('data-select-input', check.dataset.valueId);
+                    input.setAttribute('value', check.dataset.valueId);
                     check.closest(self.selector).appendChild(input);
                 }
 
@@ -60,12 +60,11 @@
                     if (selectItem) {
                         parentSelect = selectItem.closest(self.selector);
 
-                        console.log(parentSelect);
-
                         if (parentSelect.dataset.selectType === 'single') {
                             unselectAllExceptCurrent(selectItem);
                         }
                         toggleState = selectItem.classList.toggle(classNames.selectItemIsChecked);
+                        selectItem.dataset.selected = toggleState.toString();
 
                         if (toggleState) {
                             addHiddenInputToCheckItem(selectItem);
@@ -75,9 +74,10 @@
                             valueIndex = parentSelect.checkedValues.indexOf(valueId);
                             parentSelect.checkedValues.splice(valueIndex, 1);
                             parentSelect.checkedNames.splice(valueIndex, 1);
-                            input = parentSelect.querySelector('[data-multi-select-input][value="'+valueId+'"]');
+                            input = parentSelect.querySelector('[data-select-input][value="'+valueId+'"]');
                             input.remove();
                         }
+                        console.log(parentSelect.checkedValues, parentSelect.checkedNames);
                     }
                 }
 
@@ -95,22 +95,7 @@
                     item.classList.remove(classNames.se);
                 }
 
-                selectList.forEach(function(select) {
-                    select.checkedValues = [];
-                    select.checkedNames  = [];
-
-                    var selectText = select.querySelector('[data-select-text]');
-                    var selectList = select.querySelector('[data-select-list]');
-
-                    selectText.innerHTML = select.dataset.placeholder;
-                    if (typeof SimpleBar !== 'undefined') {
-                        new SimpleBar(selectList, {
-                            autoHide: true
-                        });
-                    }
-                });
-
-                document.addEventListener('click', function(evt) {
+                function fireClick(evt) {
                     if (evt.target.matches(selectors.selectText)) {
                         var select = evt.target.closest(self.selector);
                         if (select) {
@@ -125,6 +110,26 @@
                         var selectItem = evt.target.closest(selectors.selectItem);
                         toggleOneItem(selectItem);
                     }
+                }
+
+                selectList.forEach(function(select) {
+                    select.checkedValues = [];
+                    select.checkedNames  = [];
+
+                    var selectText = select.querySelector('[data-select-text]');
+                    var selectList = select.querySelector('[data-select-list]');
+
+                    selectText.innerHTML = select.dataset.placeholder;
+                });
+
+                document.addEventListener('click', function(evt) {
+                    if (evt.button === 0) {
+                        fireClick(evt);
+                    }
+                });
+
+                document.addEventListener('touchend', function (evt) {
+                    fireClick(evt);
                 });
             }
         })
