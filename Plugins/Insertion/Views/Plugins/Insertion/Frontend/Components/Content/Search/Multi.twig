@@ -1,19 +1,98 @@
+{#
 <div class="form__control  form__control--multi">
-    <div class="multi-select"
-         data-sub-attribute-select="true"
-         data-multi-select="{{ attribute.name }}[]"
-         {% if required %}data-required{% endif %}>
-        <p class="multi-select__search"
-           data-multi-select-search
-           data-placeholder="{{ i18n(attribute.name) }}"></p>
-        <ul class="multi-select__list"
-            data-multi-select-list>
-            {% for value in attribute.values %}
-                <li class="multi-select__item {% if value.id in search.filter[attribute.name] %}multi-select__item--checked{% endif %}"
-                    data-multi-select-item="{{ value.id }}">
-                    {{ i18n(value.value) }}
+<div class="multi-select"
+data-sub-attribute-select="true"
+data-multi-select="{{ attribute.name }}[]"
+{% if required %}data-required{% endif %}>
+<p class="multi-select__search"
+data-multi-select-search
+data-placeholder="{{ i18n(attribute.name) }}"></p>
+<ul class="multi-select__list"
+data-multi-select-list>
+{% for value in attribute.values %}
+<li class="multi-select__item {% if value.id in search.filter[attribute.name] %}multi-select__item--checked{% endif %}"
+data-multi-select-item="{{ value.id }}">
+{{ i18n(value.value) }}
+</li>
+{% endfor %}
+</ul>
+</div>
+</div>
+#}
+
+<div class="form__control form__control--new-select form__control--multi">
+
+    <div class="form__control form__control--new-select">
+        <div class="select"
+             data-select-type="multi"
+             data-placeholder="choose stuff">
+            <p class="select__text"
+               data-select-text=""></p>
+            <ul class="select__list"
+                data-select-list="">
+                <li class="select__item"
+                    data-selected="false"
+                    data-index="0"
+                    data-value-id="0">
+                    <span class="select__value">
+                    Val0
+                    </span>
+                    <div class="container">
+                        <div class="select select--is-sub"
+                             data-select-type="single"
+                             data-placeholder="select sub"
+                             data-sub-select="">
+                            <p class="select__text"
+                               data-select-text=""></p>
+                            <ul class="select__list"
+                                data-select-list="">
+                                <li class="select__item select__item--checked"
+                                    data-selected="false"
+                                    data-index="0"
+                                    data-value-id="0-0">
+                                    <span class="select__value">
+                                    Val0 - 0
+                                    </span>
+                                </li>
+                                <li class="select__item select__item--checked"
+                                    data-selected="false"
+                                    data-index="1"
+                                    data-value-id="0-1">
+                                    <span class="select__value">
+                                    Val0 - 1
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="select select--is-sub"
+                             data-select-type="single"
+                             data-placeholder="select sub">
+                            <p class="select__text"
+                               data-select-text=""></p>
+                            <ul class="select__list"
+                                data-select-list="">
+                                <li class="select__item select__item--checked"
+                                    data-selected="false"
+                                    data-index="123"
+                                    data-value-id="123-0">>
+                                    <span class="select__value">
+                                    Val123 - 0
+                                    </span>
+                                </li>
+                                <li class="select__item select__item--checked"
+                                    data-selected="false"
+                                    data-index="1"
+                                    data-value-id="124"
+                                    data-value-id="124-1">
+                                    <span class="select__value">
+                                    Val124 - 1
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </li>
-            {% endfor %}
-        </ul>
+            </ul>
+        </div>
     </div>
 </div>
