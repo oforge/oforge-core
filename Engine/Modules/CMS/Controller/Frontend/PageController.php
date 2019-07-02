@@ -69,7 +69,7 @@ class PageController extends AbstractController {
                 'content' => $cmsContent,
                 "cms"     => $pagePath->toArray(),
                 'meta'    => ["header_class" => "cms cms-page " . $pagePath->getPage()->getName(), "title" => $pagePath->getTitle(), "description" => $pagePath->getDescription()],
-                'cache-for' => '2D'
+                'cache-for' => '1D'
             ]);
 
             return $response;

@@ -363,7 +363,7 @@ class FrontendInsertionController extends SecureFrontendController {
 
         Oforge()->View()->assign(["insertion" => $insertion->toArray(3, ['user' => ['*', 'id']])]);
 
-        /** @var $service InsertionTypeService */
+        /** @var $insertionTypeService InsertionTypeService */
         $insertionTypeService = Oforge()->Services()->get("insertion.type");
 
         $typeAttributes       = $insertionTypeService->getInsertionTypeAttributeTree($insertion->getInsertionType()->getId());
