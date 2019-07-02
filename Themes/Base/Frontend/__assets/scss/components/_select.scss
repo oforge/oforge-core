@@ -1,0 +1,103 @@
+
+.select {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    height: 3.6rem;
+    border: 1px solid $color-primary;
+    background: $color-light;
+    cursor: pointer;
+
+    &.select--is-open {
+        height: auto;
+        overflow: auto;
+
+        .select__text {
+            border-bottom: 1px solid $color-primary;
+        }
+    }
+
+    &.select--is-sub {
+        display: none;
+    }
+
+    &__text {
+        position: relative;
+        margin: 0;
+        padding: .4rem;
+        height: 3.6rem;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid transparent;
+        user-select: none;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+
+        &::before {
+            content: '';
+            position: absolute;
+            right: 2rem;
+            border-left: 1px solid $color-primary;
+            height: 100%;
+            display: block;
+        }
+
+        &::after {
+            content: ' ';
+            position: absolute;
+            display: block;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 8px 6px 0 6px;
+            border-color: $color-primary transparent transparent transparent;
+            right: .4rem;
+            top: calc(50% - .4rem);
+            z-index: 0;
+        }
+    }
+    &__list {
+        height: auto;
+        max-height: auto;
+        list-style: none;
+        margin: 0 .4rem 0 0;
+        padding: 0;
+    }
+    &__item {
+        position: relative;
+        padding: 1rem .2rem 0 .6rem;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+
+        &::before {
+            content: ' ';
+            display: inline-block;
+            width: 1.6rem;
+            height: 1.6rem;
+            margin-right: .6rem;
+            border: 1px solid $color-primary;
+        }
+
+        &.select__item--is-checked {
+            &:after {
+                position: absolute;
+                left: 1.1rem;
+                top: 1rem;
+                content: ' ';
+                display: block;
+                width: .6rem;
+                height: 1.2rem;
+                border: solid $color-primary;
+                border-width: 0 .2rem .2rem 0;
+                transform: rotate(45deg);
+            }
+
+            .select--is-sub {
+                display: block;
+                margin-top: 1rem;
+            }
+        }
+    }
+}
