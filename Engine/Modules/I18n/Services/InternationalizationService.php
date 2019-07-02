@@ -52,11 +52,11 @@ class InternationalizationService extends AbstractDatabaseAccess {
 
     /**
      * Creates / Updates Text-Snippets from given .csv file.
-     * A Text-Snippet consists of three values: Scope, Name and Value
-     * Therefore a line in the .csv file should consist of exactly three entries:
+     * A Text-Snippet consists of three parameters: Scope, Name and Value
+     * Therefore a line in the .csv file should look like this:
      * scope|name|value ( no whitespace ), where '|' acts as the separator.
      *
-     * As of this point, this function can only be called from the console
+     * As of this point, the function can only be called from the console
      * ( i.e. 'php /bin/console oforge:service:run i18n:insertFromCsv mysnippets.csv' ).
      *
      * @param string $fileName
@@ -66,9 +66,16 @@ class InternationalizationService extends AbstractDatabaseAccess {
      */
     public function insertFromCsv($fileName = '') {
         if ($handle = fopen($fileName, 'r')) {
-            $entitiesCreated = 0;
+            $entitiesCreated  = 0;
             $entitiesUpdated  = 0;
+            $line             = 0;
+
             while ($row = fgetcsv($handle, 0, '|')) {
+                $line += 1;
+                if(sizeof($row) != 3) {
+                    print 'warning: cannot parse line ' . $line . "\n";
+                    continue;
+                }
                 $snippet = $this->repository()->findOneBy([
                     'scope' => $row[0],
                     'name'  => $row[1],
@@ -78,10 +85,10 @@ class InternationalizationService extends AbstractDatabaseAccess {
                     $snippet = Snippet::create([
                         'scope' => $row[0],
                         'name'  => $row[1],
-                        'value' => $row[2],
+                        'value' => $row[2] != '' ? $row[2] : $row[1],
                     ]);
                     $this->entityManager()->create($snippet);
-                } else {
+                } else if($row[2] != '') {
                     $entitiesUpdated += 1;
                     $snippet->setValue($row[2]);
                     $this->entityManager()->flush();
