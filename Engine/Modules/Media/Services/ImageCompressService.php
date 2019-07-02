@@ -82,13 +82,46 @@ class ImageCompressService {
     public function compress(Media $media, int $width, string $cacheUrl) : bool {
         try {
             if (extension_loaded('imagick')) {
-                $image = new Imagick(ROOT_PATH . $media->getPath());
+                $imagick = new Imagick(ROOT_PATH . $media->getPath());
 
-                $widthCurrent  = $image->getImageWidth();
-                $heightCurrent = $image->getImageHeight();
+                $widthCurrent  = $imagick->getImageWidth();
+                $heightCurrent = $imagick->getImageHeight();
 
-                $image->scaleImage($width, (int) (1.0 * $width / $widthCurrent * $heightCurrent));
-                $image->writeImage(ROOT_PATH . $cacheUrl);
+                $image_types = getimagesize(ROOT_PATH . $media->getPath());
+
+                $imagick->scaleImage($width, (int) (1.0 * $width / $widthCurrent * $heightCurrent));
+                // Compress image
+
+                // Set image as based its own type
+                if ($image_types[2] === IMAGETYPE_JPEG)
+                {
+                    $imagick->setImageFormat('jpeg');
+                    $imagick->setImageCompressionQuality(40);
+                    $imagick->setSamplingFactors(array('2x2', '1x1', '1x1'));
+
+                    $profiles = $imagick->getImageProfiles("icc", true);
+
+                    $imagick->stripImage();
+
+                    if(!empty($profiles)) {
+                        $imagick->profileImage('icc', $profiles['icc']);
+                    }
+
+                    $imagick->setInterlaceScheme(Imagick::INTERLACE_JPEG);
+                    $imagick->setColorspace(Imagick::COLORSPACE_SRGB);
+                }
+                else if ($image_types[2] === IMAGETYPE_PNG)
+                {
+
+                    $imagick->setImageCompressionQuality(60);
+                    $imagick->setImageFormat('png');
+                }
+                else if ($image_types[2] === IMAGETYPE_GIF)
+                {
+                    $imagick->setImageFormat('gif');
+                }
+
+                $imagick->writeImage(ROOT_PATH . $cacheUrl);
 
                 return true;
             }
