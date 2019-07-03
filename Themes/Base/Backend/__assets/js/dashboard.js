@@ -8,8 +8,6 @@
         forcePlaceholderSize: true,
         zIndex: 999999,
         stop: function (event, ui) {
-
-
             var data = {};
             var container = $('.connectedSortable');
             window.setTimeout(function () {

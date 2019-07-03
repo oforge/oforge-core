@@ -11,7 +11,7 @@
                                 <p class="btn-group" role="group">
                                     {% block crud_actions_group %}
                                         <a href="{{ url(meta.route.name  ~ '_create') }}"
-                                           title="{{ i18n('backend_crud_btn_create', 'create') }}"
+                                           title="{{ i18n('backend_crud_btn_create', {en: 'create', de: 'erstellen'}) }}"
                                            class="btn btn-primary {% if not crud.actions.create %}disabled{% endif %}">
                                             <i class="fa fa-plus"></i>
                                         </a>
@@ -24,7 +24,8 @@
                             route: meta.route
                         } only %}
                         {% if crud.hasEditors %}
-                        <form action="{{ url(meta.route.name, {}, meta.route.query|default({})) }}" method="post" enctype="multipart/form-data">
+                        <form action="{{ url(meta.route.name, {}, meta.route.query|default({})) }}" method="post"
+                              enctype="multipart/form-data">
                             {% endif %}
                             {#{% include 'Backend/CRUD/Components/Index/PaginationRow.twig' with {#}
                             {#    pagination: crud.pagination,#}
@@ -47,8 +48,8 @@
                                     <div class="form-group">
                                         <input type="hidden" name="action" value="update" />
                                         <input type="submit" class="btn btn-primary"
-                                               value="{{ i18n('backend_crud_btn_update', 'update') }}"
-                                               title="{{ i18n('backend_crud_btn_update', 'update') }}">
+                                               value="{{ i18n('backend_crud_btn_update', {en: 'update', de: 'aktualisieren'}) }}"
+                                               title="{{ i18n('backend_crud_btn_update', {en: 'update', de: 'aktualisieren'}) }}">
                                     </div>
                                 </div>
                             </div>

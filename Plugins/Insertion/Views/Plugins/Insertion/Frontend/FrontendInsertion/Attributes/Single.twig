@@ -18,7 +18,9 @@
                 {% if value.subAttributeKey is not null %}
                     {% set subAttributes = subAttributes|merge([{id: value.subAttributeKey, parent: attribute.id, value: value.id}]) %}
                 {% endif %}
-                <option value="{{ value.id }}" {% if value.id == data['insertion'][attribute.id] %}selected="selected"{% endif %}>
+                <option value="{{ value.id }}"
+                        {% if value.id == data['insertion'][attribute.id] %}selected="selected"{% endif %}
+                        data-index="{{ loop.index0 }}">
                     {{ i18n(value.value) }}
                 </option>
             {% endfor %}

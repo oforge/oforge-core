@@ -431,12 +431,13 @@ class FrontendUsersInsertionController extends SecureFrontendController {
 
                 $userDetailsService = Oforge()->Services()->get('frontend.user.management.user.details');
 
-                $userDetailsService->updateImage($user, $_FILES["profile"]);
+                $user = $userDetailsService->updateImage($user, $_FILES["profile"]);
             }
 
         }
 
         $result = $service->get($user->getId());
+
         Oforge()->View()->assign(["profile" => $result != null ? $result->toArray() : null, "user" => $user->toArray()]);
     }
 

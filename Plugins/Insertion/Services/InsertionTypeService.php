@@ -11,10 +11,11 @@ use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Models\InsertionTypeGroup;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Annotation\Cache\Cache;
+use Oforge\Engine\Modules\Core\Annotation\Cache\CacheInvalidation;
 
 /**
  * Class InsertionTypeService
- *
+ * @Cache(enabled=true)
  * @package Insertion\Services
  */
 class InsertionTypeService extends AbstractDatabaseAccess {
@@ -77,6 +78,7 @@ class InsertionTypeService extends AbstractDatabaseAccess {
 
     /**
      *
+     * @Cache(slot="insertion", duration="2D")
      * @return array
      * @throws ORMException
      */
@@ -89,6 +91,11 @@ class InsertionTypeService extends AbstractDatabaseAccess {
         return $tree;
     }
 
+    /**
+     * @Cache(slot="insertion", duration="2D")
+     * @return array
+     * @throws ORMException
+     */
     public function getInsertionTypeAttributeMap() {
         $attributes = $this->repository("attributeKey")->findAll();
 
@@ -166,6 +173,7 @@ class InsertionTypeService extends AbstractDatabaseAccess {
      * @param bool $isQuickSearchFilter
      * @param $quickSearchOrder
      *
+     * @CacheInvalidation(slot="insertion")
      * @throws ORMException
      */
     public function addAttributeToInsertionType($insertionType, $attributeKey, $isTop, $insertionTypeGroup, $required = false, $isQuickSearchFilter = false, $quickSearchOrder) {
@@ -192,6 +200,7 @@ class InsertionTypeService extends AbstractDatabaseAccess {
      * @param $insertionTypeId
      * @param $attributeId
      *
+     * @CacheInvalidation(slot="insertion")
      * @throws ORMException
      */
     public function removeAttributeFromInsertionType($insertionTypeId, $attributeId) {
@@ -204,7 +213,7 @@ class InsertionTypeService extends AbstractDatabaseAccess {
 
     /**
      * @param $id
-     *
+     * @CacheInvalidation(slot="insertion")
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -240,12 +249,12 @@ class InsertionTypeService extends AbstractDatabaseAccess {
 
     /**
      * @param $id
-     * @param $name
-     * @param $parent
-     * @param $quickSearch
+     * @param $data
      *
+     * @CacheInvalidation(slot="insertion")
      * @return object|null
      * @throws ORMException
+     * @throws \ReflectionException
      */
     public function updateInsertionType($id, $data) {
         /** @var InsertionType $insertionType */

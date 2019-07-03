@@ -2,7 +2,9 @@
 
 namespace Messenger\Models;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 
 /**
@@ -32,7 +34,7 @@ class Message extends AbstractModel {
     private $message;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      * @ORM\Column(name="timestamp", type="datetime", nullable=false);
      */
     private $timestamp;
@@ -47,10 +49,10 @@ class Message extends AbstractModel {
      * Triggered on insert
      *
      * @ORM\PrePersist
-     * @throws \Exception
+     * @throws Exception
      */
     public function onPrePersist() {
-        $this->timestamp = new \DateTime("now");
+        $this->timestamp = new DateTime("now");
     }
 
     /**
@@ -89,9 +91,9 @@ class Message extends AbstractModel {
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
-    public function getTimestamp() : \DateTime {
+    public function getTimestamp() : DateTime {
         return $this->timestamp;
     }
 
@@ -103,10 +105,13 @@ class Message extends AbstractModel {
     }
 
     /**
-     * @param string $message
+     * @param string $conversationId
+     *
+     * @return Message
      */
     public function setConversationId(string $conversationId) : Message {
         $this->conversationId = $conversationId;
+
         return $this;
     }
 

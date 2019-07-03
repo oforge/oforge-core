@@ -32,7 +32,13 @@ class LanguageController extends BaseCrudController {
         [
             'name'  => 'iso',
             'type'  => CrudDataTypes::STRING,
-            'label' => ['key' => 'module_i18n_language_iso', 'default' => 'ISO'],
+            'label' => [
+                'key'     => 'module_i18n_language_iso',
+                'default' => [
+                    'en' => 'ISO',
+                    'de' => 'ISO',
+                ],
+            ],
             'crud'  => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
@@ -44,7 +50,13 @@ class LanguageController extends BaseCrudController {
         [
             'name'  => 'name',
             'type'  => CrudDataTypes::STRING,
-            'label' => ['key' => 'module_i18n_language_name', 'default' => 'Name'],
+            'label' => [
+                'key'     => 'module_i18n_language_name',
+                'default' => [
+                    'en' => 'Name',
+                    'de' => 'Name',
+                ],
+            ],
             'crud'  => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
@@ -56,7 +68,13 @@ class LanguageController extends BaseCrudController {
         [
             'name'  => 'active',
             'type'  => CrudDataTypes::BOOL,
-            'label' => ['key' => 'module_i18n_language_active', 'default' => 'Active'],
+            'label' => [
+                'key'     => 'module_i18n_language_active',
+                'default' => [
+                    'en' => 'Active',
+                    'de' => 'Aktiv',
+                ],
+            ],
             'crud'  => [
                 'index'  => 'editable',
                 'view'   => 'editable',
@@ -68,7 +86,13 @@ class LanguageController extends BaseCrudController {
         [
             'name'  => 'default',
             'type'  => CrudDataTypes::BOOL,
-            'label' => ['key' => 'module_i18n_language_default', 'default' => 'Standard'],
+            'label' => [
+                'key'     => 'module_i18n_language_default',
+                'default' => [
+                    'en' => 'Standard',
+                    'de' => 'Standard',
+                ],
+            ],
             'crud'  => [
                 'index'  => 'editable',
                 'view'   => 'editable',
@@ -80,7 +104,13 @@ class LanguageController extends BaseCrudController {
         [
             'name'     => 'action',
             'type'     => CrudDataTypes::CUSTOM,
-            'label'    => 'backend_i18n_snippets',
+            'label'    => [
+                'key'     => 'backend_i18n_snippets',
+                'default' => [
+                    'en' => 'Text snippets',
+                    'de' => 'Textschnipsel',
+                ],
+            ],
             'crud'     => [
                 'index' => 'readonly',
             ],

@@ -1,6 +1,18 @@
 {% extends "@parent/Frontend/Layout.twig" %}
 {% block content %}
-    {% for group in  attributes %}
-        <p>{{ group.name }}</p>
-    {% endfor %}
+    <div class="content content--insertion">
+        <div class="panel panel--insertion">
+            <form class="form" method="get"
+                  action="{{ url('insertions_listing', {'type': search.id }  ) }}">
+                {% for group in attributes %}
+                    <h3 class="title title--attribute-group">{{ group.name }}</h3>
+                    <div class="form-controls">
+                        {% for attributeContent in group.items %}
+                            {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ attributeContent.attributeKey.filterType|capitalize  ~ '.twig'  with {'attribute': attributeContent.attributeKey } %}
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </form>
+        </div>
+    </div>
 {% endblock %}

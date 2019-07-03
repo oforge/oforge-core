@@ -66,21 +66,30 @@ class UserDetailsService extends AbstractDatabaseAccess {
         $mediaService = Oforge()->Services()->get('media');
         $media        = $mediaService->add($file);
 
-        if ($media != null && $user != null && $user->getDetail() != null) {
-            $oldId = null;
+        if ($media != null && $user != null) {
+            if ($user->getDetail() != null) {
+                $oldId = null;
 
-            if ($user->getDetail()->getImage() != null) {
-                $oldId = $user->getDetail()->getImage()->getId();
-            }
+                if ($user->getDetail()->getImage() != null) {
+                    $oldId = $user->getDetail()->getImage()->getId();
+                }
 
-            $user->getDetail()->setImage($media);
-            $this->entityManager()->update($user->getDetail());
+                $user->getDetail()->setImage($media);
+                $this->entityManager()->update($user->getDetail());
 
-            if ($oldId != null) {
-                $mediaService->delete($oldId);
+                if ($oldId != null) {
+                    $mediaService->delete($oldId);
+                }
+            } else {
+                $detail = new UserDetail();
+                $detail->setUser($user);
+                $detail->setImage($media);
+
+                $this->entityManager()->create($detail);
+                $user->setDetail($detail);
             }
         }
 
+        return $user;
     }
-
 }
