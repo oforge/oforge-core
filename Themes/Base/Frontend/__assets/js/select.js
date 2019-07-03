@@ -42,7 +42,7 @@
                     var allSubItems = null;
                     if (subSelect) {
                         allSubItems = subSelect.querySelectorAll(selectors.selectItem);
-                        allSubItems.forEach(function(item) {
+                        allSubItems.forEach(function (item) {
                             unselectItem(item);
                             if (hasSubSelect(item)) {
                                 resetSubSelect(item);
@@ -82,7 +82,7 @@
                 function unselectAllExceptCurrent(selectItem) {
                     var allItems = selectItem.parentNode.children;
 
-                    allItems.forEach(function(item) {
+                    allItems.forEach(function (item) {
                         if (item !== selectItem) {
                             unselectItem(item)
                         }
@@ -91,7 +91,7 @@
 
                 function unselectItem(selectItem) {
                     var parentSelect = selectItem.closest(self.selector);
-                    var input = parentSelect.querySelector('[data-select-input][value="'+selectItem.dataset.valueId+'"]');
+                    var input = parentSelect.querySelector('[data-select-input][value="' + selectItem.dataset.valueId + '"]');
                     var valueIndex = parentSelect.checkedValues.indexOf(selectItem.dataset.valueId);
                     selectItem.classList.remove(classNames.selectItemIsChecked);
                     if (valueIndex) {
@@ -109,23 +109,32 @@
                 function fireClick(evt) {
                     if (evt.target.matches(selectors.selectText)) {
                         var select = evt.target.closest(self.selector);
+
+                        var parentSelectList = document.querySelectorAll('.select:not(.select--is-sub)');
+
                         if (select) {
+                            parentSelectList.forEach(function (selectElement) {
+                                if (selectElement !== select && !select.classList.contains('select--is-sub')) {
+                                    selectElement.classList.remove(classNames.selectIsOpen);
+                                }
+                            });
                             select.classList.toggle(classNames.selectIsOpen);
                         }
-                    }
-
-                    if (evt.target.matches(selectors.selectItem)) {
+                    } else if (evt.target.matches(selectors.selectItem)) {
                         toggleOneItem(evt.target);
-                    }
-                    if (evt.target.matches(selectors.selectValue)) {
+                    } else if (evt.target.matches(selectors.selectValue)) {
                         var selectItem = evt.target.closest(selectors.selectItem);
                         toggleOneItem(selectItem);
+                    } else {
+                        selectList.forEach(function (select) {
+                            select.classList.remove(classNames.selectIsOpen);
+                        });
                     }
                 }
 
-                selectList.forEach(function(select) {
+                selectList.forEach(function (select) {
                     select.checkedValues = [];
-                    select.checkedNames  = [];
+                    select.checkedNames = [];
 
                     var selectText = select.querySelector('[data-select-text]');
                     var selectList = select.querySelector('[data-select-list]');
@@ -133,7 +142,7 @@
                     selectText.innerHTML = select.dataset.placeholder;
                 });
 
-                document.addEventListener('click', function(evt) {
+                document.addEventListener('click', function (evt) {
                     if (evt.button === 0) {
                         fireClick(evt);
                     }
