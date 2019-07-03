@@ -1,0 +1,38 @@
+{% block product_images %}
+
+    <div class="product-images">
+        <div class="product-view__image">
+            <div class="slider slider--detail-for">
+                {% for item in insertion.media %}
+                    <div class="slide thumbnail">
+                        {% if item is defined and item.content|length > 0 and item.content.path is defined %}
+                            <img src="{{ item.content.path }}" alt="{{ item.content.name }}"
+                                 class="thumbnail__image">
+                        {% else %}
+                            <!-- TODO add dummy image -->
+                            <img src="https://placeponi.es/300/300" alt="{{ insertion.content[0].title }}"
+                                 title="{{ insertion.content[0].title }}" class="image">
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="thumbnails thumbnails--product">
+            <div class="slider slider--detail-nav">
+                {% for item in insertion.media %}
+                    <div class="slide thumbnail">
+                        {% if item is defined and item.content|length > 0 and item.content.path is defined %}
+                            <img src="{{ item.content.path }}" alt="{{ item.content.name }}"
+                                 class="thumbnail__image">
+                        {% else %}
+                            <!-- TODO add dummy image -->
+                            <img src="https://placeponi.es/300/300" alt="{{ insertion.content[0].title }}"
+                                 title="{{ insertion.content[0].title }}" class="image">
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+{% endblock product_images %}

@@ -138,10 +138,9 @@ class AccessExtension extends Twig_Extension implements Twig_ExtensionInterface 
                     $defaultValue = $key['default'];
                     $key          = $key['key'];
                 } else {
-                    return $result;
+                    return $key;
                 }
             }
-
             $result = I18N::twigTranslate($context, $key, $defaultValue);
         }
 
