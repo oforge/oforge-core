@@ -3,7 +3,7 @@
     <div class="content content--insertion">
         <div class="panel panel--insertion">
             <form class="form" method="get"
-                  action="{{ url('insertions_listing', {'type': search.id }  ) }}">
+                  action="{{ url('insertions_listing', {'type': typeId }  ) }}">
                 {% for group in attributes %}
                     <h3 class="title title--attribute-group">{{ group.name }}</h3>
                     <div class="form-controls">
@@ -12,6 +12,9 @@
                         {% endfor %}
                     </div>
                 {% endfor %}
+                <div class="form-controls">
+                    <div class="form__control"><input type="submit" class="form__input button button--primary" value="{{ i18n('submit') }}"></div>
+                </div>
             </form>
         </div>
     </div>
