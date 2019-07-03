@@ -1,6 +1,6 @@
 {% block mail_form %}
     <form class="form" action="{{ showMailLink }}">
-        <h3 class="form__title">{{ mail_preview }}</h3>
+        <h3 class="form__title">Show Mail</h3>
         <select name="template">
             <option value ="AutoDeactivationConfirm.twig">AutoDeactivationConfirm</option>
             <option value ="DeactivationConfirm.twig">DeactivationConfirm</option>
@@ -13,14 +13,13 @@
         </select>
 
         <div class="form__control">
-            <input type="submit"
-                   value="Show Mail"
+            <input type="submit" value="Show Mail"
                    class="form__input form__input--submit button">
         </div>
     </form>
 
     <form class="form" action="{{ sendMailLink }}">
-        <h3 class="form_title">{{ mail_send }}</h3>
+        <h3 class="form_title">Send Mail</h3>
         <select name="template">
             <option value ="AutoDeactivationConfirm.twig">AutoDeactivationConfirm</option>
             <option value ="DeactivationConfirm.twig">DeactivationConfirm</option>
@@ -32,14 +31,11 @@
             <option value ="ResetPassword.twig">ResetPassword</option>
         </select>
         <div>
-            <input type="email"
-                   name="to"
-                   placeholder="{{ i18n('email') }}"
-                   required>
+            <input type="text" name="to">
         </div>
-        <div>
-            <input type="submit"
-                   value="Send Mail">
+        <div class="form__control">
+            <input type="submit" value="Send Mail"
+                   class="form__input form__input--submit button">
         </div>
     </form>
 {% endblock mail_form %}
