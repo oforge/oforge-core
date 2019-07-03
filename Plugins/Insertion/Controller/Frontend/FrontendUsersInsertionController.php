@@ -363,31 +363,17 @@ class FrontendUsersInsertionController extends SecureFrontendController {
      * @return Response
      * @throws \Doctrine\ORM\ORMException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @EndpointAction(path="/removeBookmark/{id}")
      */
     public function removeBookmarkAction(Request $request, Response $response, $args) {
-        $id = $args["insertionId"];
-        /**
-         * @var $service InsertionService
-         */
-        $service   = Oforge()->Services()->get("insertion");
-        $bookmark = $service->getInsertionById(intval($id));
-        // If insertion doesn't exist anymore, remove and throw message
-        // if (!isset($insertion) || $insertion == null) {
-        //     return $response->withRedirect("/404", 301);
-        // }
-
-        /**
-         * @var $userService FrontendUserService
-         */
-        $userService = Oforge()->Services()->get("frontend.user");
-        $user        = $userService->getUser();
-
         /**
          * @var $bookmarkService InsertionBookmarkService
          */
         $bookmarkService = Oforge()->Services()->get("insertion.bookmark");
+        $id = $args["id"];
 
-        $bookmarkService->remove($bookmark->getId()); //
+        $bookmarkService->remove($id);
+        Oforge()->View()->Flash()->addMessage('success', I18n::translate('remove_bookmark_success'));
 
         /** @var Router $router */
         $router = Oforge()->App()->getContainer()->get('router');
@@ -454,5 +440,6 @@ class FrontendUsersInsertionController extends SecureFrontendController {
         $this->ensurePermissions('toggleBookmarkAction', User::class);
         $this->ensurePermissions('toggleSearchBookmarkAction', User::class);
         $this->ensurePermissions('profileAction', User::class);
+        $this->ensurePermissions('removeBookmarkAction', User::class);
     }
 }
