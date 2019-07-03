@@ -120,11 +120,10 @@ class FrontendUsersInsertionController extends SecureFrontendController {
         /** @var UserService $frontendUserService */
         $user = Oforge()->View()->get('user');
         $mailService = Oforge()->Services()->get('mail');
-
-        // TODO: add email snippets
+        $targetMail  = $user->getEmail();
         $mailOptions  = [
-            'to'       => $user->getEmail(),
-            'from'     => 'no-reply@local.host', // TODO: From settings
+            'to'       => [$targetMail => $targetMail],
+            'from'     => 'no_reply',
             'subject'  => I18N::translate('email_subject_password_reset', 'Oforge | Your password reset!'),
             'template' => 'ResetPassword.twig',
         ];
