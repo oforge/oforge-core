@@ -19,7 +19,7 @@
 {% block attributes__bottom %}
     <div class="product__actions">
         <a class="button button--primary open"
-           href="{{ url('frontend_account_insertions_disable', {id: item.id}) }}">
+           href="{{ url('', {id: item.id}) }}">
             <span>{{ i18n('open_insertion') }}</span>
             <svg class="icon icon--light">
                 <use xlink:href="#preview"></use>
@@ -27,7 +27,7 @@
         </a>
         </a>
         <a class="button button--primary remove"
-           href="{{ url('frontend_account_insertions_disable', {id: item.id}) }}">
+           href="{{ url('frontend_account_insertions_toggleBookmark', {id: item.id}) }}">
             <span>{{ i18n('remove_bookmark') }}</span>
             <svg class="icon icon--light">
                 <use xlink:href="#delete"></use>
