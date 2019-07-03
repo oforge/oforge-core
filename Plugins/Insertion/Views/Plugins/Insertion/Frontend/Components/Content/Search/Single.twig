@@ -1,6 +1,6 @@
 <div class="form__control form__control--new-select form__control--{{ attribute.filterType }} {{ isSubAttribute ? 'form__control--is-sub' : '' }}">
 
-    <div class="select"
+    <div class="select {{ isSubAttribute ? 'select--is-sub' : '' }}"
          data-select-type="{{ attribute.filterType }}"
          data-placeholder="{{ i18n(attribute.name) }}"
          data-select="{{ attribute.name }}[]">
@@ -18,7 +18,7 @@
                     {{ i18n(value.value) }}
                     </span>
                 {% if value.subAttributeKey is not null %}
-                    <div class="sub-attribute-container" data-sub-select="">
+                    <div class="sub-attribute-container">
 
                         {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ all_attributes[value.subAttributeKey].filterType|capitalize  ~ '.twig'  with {'attribute': all_attributes[value.subAttributeKey], hidden: true, required: false, isSubAttribute: true} %}
 
