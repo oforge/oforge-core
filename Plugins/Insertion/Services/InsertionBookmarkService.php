@@ -6,6 +6,7 @@ use FrontendUserManagement\Models\User;
 use Insertion\Models\Insertion;
 use Insertion\Models\InsertionUserBookmark;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
+use phpDocumentor\Reflection\Types\Integer;
 
 class InsertionBookmarkService extends AbstractDatabaseAccess {
     public function __construct() {
@@ -26,6 +27,14 @@ class InsertionBookmarkService extends AbstractDatabaseAccess {
         return false;
     }
 
+    /**
+     * @param Integer $id
+     *
+     * @return bool
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     *
+     */
     public function remove(int $id) : bool {
         $bookmark = $this->repository("user")->find($id);
         if (isset($bookmark)) {
