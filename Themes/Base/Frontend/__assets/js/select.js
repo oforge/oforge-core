@@ -44,6 +44,9 @@
                         allSubItems = subSelect.querySelectorAll(selectors.selectItem);
                         allSubItems.forEach(function(item) {
                             unselectItem(item);
+                            if (hasSubSelect(item)) {
+                                resetSubSelect(item);
+                            }
                         });
 
                         subSelect.classList.remove(classNames.selectIsOpen);
@@ -55,7 +58,6 @@
                     var toggleState = false;
                     var valueId = selectItem.dataset.valueId;
                     var valueName = selectItem.querySelector(selectors.selectValue).innerHTML;
-                    var valueIndex = null;
 
                     if (selectItem) {
                         parentSelect = selectItem.closest(self.selector);
@@ -71,11 +73,7 @@
                             parentSelect.checkedValues.push(valueId);
                             parentSelect.checkedNames.push(valueName);
                         } else {
-                            valueIndex = parentSelect.checkedValues.indexOf(valueId);
-                            parentSelect.checkedValues.splice(valueIndex, 1);
-                            parentSelect.checkedNames.splice(valueIndex, 1);
-                            input = parentSelect.querySelector('[data-select-input][value="'+valueId+'"]');
-                            input.remove();
+                            unselectItem(selectItem);
                         }
                         console.log(parentSelect.checkedValues, parentSelect.checkedNames);
                     }
@@ -86,13 +84,26 @@
 
                     allItems.forEach(function(item) {
                         if (item !== selectItem) {
-                            item.classList.remove();
+                            unselectItem(item)
                         }
                     });
                 }
 
-                function unselectItem(item) {
-                    item.classList.remove(classNames.se);
+                function unselectItem(selectItem) {
+                    var parentSelect = selectItem.closest(self.selector);
+                    var input = parentSelect.querySelector('[data-select-input][value="'+selectItem.dataset.valueId+'"]');
+                    var valueIndex = parentSelect.checkedValues.indexOf(selectItem.dataset.valueId);
+                    selectItem.classList.remove(classNames.selectItemIsChecked);
+                    if (valueIndex) {
+                        parentSelect.checkedValues.splice(valueIndex, 1);
+                        parentSelect.checkedNames.splice(valueIndex, 1);
+                    }
+                    if (input) {
+                        input.remove();
+                    }
+                    if (hasSubSelect(selectItem)) {
+                        resetSubSelect(selectItem);
+                    }
                 }
 
                 function fireClick(evt) {
