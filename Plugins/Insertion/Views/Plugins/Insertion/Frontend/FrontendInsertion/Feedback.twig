@@ -25,38 +25,38 @@
                             <h2 class="feedback__title">{{ i18n('insertion_feedback_title') }}</h2>
 
                             <div class="feedback__rating">
-
-                                <div class="rating__button">
-                                    <div class="input__container">
-                                        <input type="radio" name="feedback_rating" value="1" checked>
-                                    </div>
-
-                                    <label for="1">{{ i18n('insertion_feedback_good') }}</label>
-                                </div>
-                                <div class="rating__button">
-                                    <div class="input__container">
-                                        <input type="radio" name="feedback_rating" value="2">
-                                    </div>
-                                    <label for="2"></label>
-                                </div>
-                                <div class="rating__button">
-                                    <div class="input__container">
-                                        <input type="radio" name="feedback_rating" value="3">
-                                    </div>
-                                    <label for="3">{{ i18n('insertion_feedback_average') }}</label>
-                                </div>
-                                <div class="rating__button">
-                                    <div class="input__container">
-                                        <input type="radio" name="feedback_rating" value="4">
-                                    </div>
-                                    <label for="4"></label>
-                                </div>
-                                <div class="rating__button">
-                                    <div class="input__container">
-                                        <input type="radio" name="feedback_rating" value="5">
-                                    </div>
-                                    <label for="5">{{ i18n('insertion_feedback_bad') }}</label>
-                                </div>
+                                <fieldset class="rating">
+                                    <input type="radio" id="star5" name="feedback_rating" value="5" />
+                                    <label class="full" for="star5" >
+                                        <svg class="icon icon--secondary">
+                                            <use xlink:href="#star"></use>
+                                        </svg>
+                                    </label>
+                                    <input type="radio" id="star4" name="feedback_rating" value="4" />
+                                    <label class = "full" for="star4" >
+                                        <svg class="icon icon--secondary">
+                                            <use xlink:href="#star"></use>
+                                        </svg>
+                                    </label>
+                                    <input type="radio" id="star3" name="feedback_rating" value="3" />
+                                    <label class = "full" for="star3" >
+                                        <svg class="icon icon--secondary">
+                                            <use xlink:href="#star"></use>
+                                        </svg>
+                                    </label>
+                                    <input type="radio" id="star2" name="feedback_rating" value="2" />
+                                    <label class = "full" for="star2" >
+                                        <svg class="icon icon--secondary">
+                                            <use xlink:href="#star"></use>
+                                        </svg>
+                                    </label>
+                                    <input type="radio" id="star1" name="feedback_rating" value="1" />
+                                    <label class = "full" for="star1" >
+                                        <svg class="icon icon--secondary">
+                                            <use xlink:href="#star"></use>
+                                        </svg>
+                                    </label>
+                                </fieldset>
                             </div>
 
                             <div class="feedback__description">
