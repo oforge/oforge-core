@@ -7,7 +7,7 @@
 
             <h3 class="form__title">{{ i18n('user_data', 'User data') }}</h3>
 
-            <div class="form__control">
+            <div class="form__control form__control--half-medium">
                 {% block user_details_label_first_name %}
                 {% endblock user_details_label_first_name %}
                 <input id="frontend_account_details_first_name"
@@ -17,9 +17,7 @@
                        placeholder="{{ i18n('first_name') }}"
                        required
                        {% if (userDetails) %}value="{{ userDetails.firstName }}"{% endif %}>
-            </div>
 
-            <div class="form__control">
                 {% block user_details_label_last_name %}
                 {% endblock user_details_label_last_name %}
                 <input id="frontend_account_details_last_name"
@@ -30,8 +28,8 @@
                        required
                        {% if (userDetails) %}value="{{ userDetails.lastName }}"{% endif %}>
             </div>
-
-            <div class="form__control">
+        </div>
+            <div class="form__control form__control--half-medium">
                 {% block user_details_label_nick_name %}
                 {% endblock user_details_label_nick_name %}
                 <input id="frontend_account_details_nick_name"
@@ -43,7 +41,6 @@
                        {% if (userDetails) %}value="{{ userDetails.nickName }}"{% endif %}>
             </div>
 
-        </div>
 
         {% block user_details_data_separator %}
             <div class="separator"></div>
