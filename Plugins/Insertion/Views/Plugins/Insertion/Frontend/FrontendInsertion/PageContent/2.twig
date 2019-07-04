@@ -1,17 +1,6 @@
 {% block page_content %}
     {# Main attributes #}
-    <div class="form-controls">
-        {% for attributeGroup in attributes %}
-            {% if attributeGroup.items|length > 0 and attributeGroup.name == 'features' %}
-                <div class="attribute-group">
-                    <h2 class="title title--attribute-group">{{ i18n(attributeGroup.name) }}</h2>
-                    {% for attribute in attributeGroup.items %}
-                        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': attribute.required } %}
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endfor %}
-    </div>
+
     <div class="form-controls">
         <div class="attribute-group">
             <label for="price"
@@ -33,7 +22,32 @@
                     {% endif %}
                 </label>
             </div>
+
+            <div class="form__control">
+                <label for="{{ i18n('tax') }}" class="form__label form__label--checkbox"> {{  i18n('tax') }}</label>
+                <input type="checkbox"
+                       class="form__input form__input--checkbox"
+                       name="{{ data['tax'] }}"
+                       id="tax"
+                   {% if data['tax'] == 'on' %}
+                       checked="checked"
+                   {% endif %}>
+            </div>
         </div>
+    </div>
+
+
+    <div class="form-controls">
+        {% for attributeGroup in attributes %}
+            {% if attributeGroup.items|length > 0 and attributeGroup.name == 'features' %}
+                <div class="attribute-group">
+                    <h2 class="title title--attribute-group">{{ i18n(attributeGroup.name) }}</h2>
+                    {% for attribute in attributeGroup.items %}
+                        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': attribute.required } %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endfor %}
     </div>
 
     <div class="form-controls">
