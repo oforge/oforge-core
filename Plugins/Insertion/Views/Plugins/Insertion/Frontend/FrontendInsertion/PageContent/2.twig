@@ -24,7 +24,8 @@
                            id="price"
                            min="0"
                            value="{{ data['price'] }}"
-                           class="form__input" />
+                           class="form__input"
+                           required/>
                     {% if i18nExists('unit_price') %}
                         <span class="input__unit">
                         {{ i18n('unit_price') }}

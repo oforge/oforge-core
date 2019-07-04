@@ -1,29 +1,31 @@
-<div class="form__control {{ hidden ? 'form__control--hidden' : '' }}"
-        {{ subAttribute ? 'data-sub-attribute='~subAttribute.id~' data-parent='~subAttribute.parent~' data-value='~subAttribute.value : ''}}
-     data-attribute-id="{{ attribute.id }}">
+<div class="form__control form__control--new-select form__control--{{ attribute.filterType }} {{ isSubAttribute ? 'form__control--is-sub' : '' }}">
 
-    {% set subAttributes = [] %}
+    <div class="select {{ isSubAttribute ? 'select--is-sub' : '' }}"
+         data-select-type="{{ attribute.filterType }}"
+         data-placeholder="{{ i18n(attribute.name) }}"
+         data-select="{{ attribute.name }}[]">
+        <p class="select__text"
+           data-select-text=""></p>
+        <ul class="select__list"
+            data-select-list="">
 
-    <div class="form__input form__input--select"
-         {% if required %}data-required{% endif %}>
-        <select name="{{ attribute.name }}"
-                id="{{ attribute.name }}"
-                class="form__input form__input--no-input"
-                {% if required %}required{% endif %}
-                data-sub-attribute-select="true">
-            <option disabled selected>{{ i18n(attribute.name) }}</option>
             {% for value in attribute.values %}
-                {% if value.subAttributeKey is not null %}
-                    {% set subAttributes = subAttributes|merge([{id: value.subAttributeKey, parent: attribute.id, value: value.id}]) %}
-                {% endif %}
-                <option value="{{ value.id }}" {% if value.id == search.filter[attribute.name] %}selected="selected"{% endif %}>
+            <li class="select__item {% if value.id in search.filter[attribute.name] %}select__item--is-checked{% endif %}"
+                data-selected="false"
+                data-index="{{ loop.index0 }}"
+                data-value-id="{{ value.id }}">
+                    <span class="select__value">
                     {{ i18n(value.value) }}
-                </option>
+                    </span>
+                {% if value.subAttributeKey is not null %}
+                    <div class="sub-attribute-container">
+
+                        {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ all_attributes[value.subAttributeKey].filterType|capitalize  ~ '.twig'  with {'attribute': all_attributes[value.subAttributeKey], hidden: true, required: false, isSubAttribute: true} %}
+
+                    </div>
+                {% endif %}
+            </li>
             {% endfor %}
-        </select>
+        </ul>
     </div>
 </div>
-
-{% for subAttributeItem in subAttributes %}
-    {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ all_attributes[subAttributeItem.id].filterType|capitalize  ~ '.twig'  with {'attribute': all_attributes[subAttributeItem.id], hidden: true, required: false, subAttribute: subAttributeItem } %}
-{% endfor %}
