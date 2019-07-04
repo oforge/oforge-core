@@ -6,14 +6,14 @@
                   action="{{ url('insertions_edit', { id : data.id}) }}"
                   method="post"
                   enctype="multipart/form-data">
+
+                {% block page_content %}
+                    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/PageContent/1.twig' %}
+                    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/PageContent/2.twig' %}
+                    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/PageContent/3.twig' %}
+                {% endblock page_content %}
+
                 <div class="form-controls">
-
-                    {% block page_content %}
-                        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/PageContent/1.twig' %}
-                        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/PageContent/2.twig' %}
-                        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/PageContent/3.twig' %}
-                    {% endblock page_content %}
-
                     <div class="form__control">
                         <input type="hidden" name="token" value="{{ token() }}">
                         <input type="hidden" name="current_page" value="{{ page }}">
