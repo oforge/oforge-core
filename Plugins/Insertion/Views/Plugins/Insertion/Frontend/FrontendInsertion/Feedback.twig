@@ -27,30 +27,41 @@
                             <div class="feedback__rating">
 
                                 <div class="rating__button">
-                                    <input type="radio" name="feedback_rating" value="1" checked>
+                                    <div class="input__container">
+                                        <input type="radio" name="feedback_rating" value="1" checked>
+                                    </div>
+
                                     <label for="1">{{ i18n('insertion_feedback_good') }}</label>
                                 </div>
                                 <div class="rating__button">
-                                    <input type="radio" name="feedback_rating" value="2">
+                                    <div class="input__container">
+                                        <input type="radio" name="feedback_rating" value="2">
+                                    </div>
                                     <label for="2"></label>
                                 </div>
                                 <div class="rating__button">
-                                    <input type="radio" name="feedback_rating" value="3">
+                                    <div class="input__container">
+                                        <input type="radio" name="feedback_rating" value="3">
+                                    </div>
                                     <label for="3">{{ i18n('insertion_feedback_average') }}</label>
                                 </div>
                                 <div class="rating__button">
-                                    <input type="radio" name="feedback_rating" value="4">
+                                    <div class="input__container">
+                                        <input type="radio" name="feedback_rating" value="4">
+                                    </div>
                                     <label for="4"></label>
                                 </div>
                                 <div class="rating__button">
-                                    <input type="radio" name="feedback_rating" value="5">
+                                    <div class="input__container">
+                                        <input type="radio" name="feedback_rating" value="5">
+                                    </div>
                                     <label for="5">{{ i18n('insertion_feedback_bad') }}</label>
                                 </div>
                             </div>
 
                             <div class="feedback__description">
                                 <h3 class="form__title" >{{ i18n('help_us_improve') }}</h3>
-                                <textarea class="form__input" name="feedback_text">Lorem Ipsum</textarea>
+                                <textarea class="form__input" name="feedback_text">({{ i18n('optional') }})</textarea>
                             </div>
 
                             <div class="form__control">

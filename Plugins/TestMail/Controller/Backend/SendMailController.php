@@ -4,8 +4,10 @@ namespace TestMail\Controller\Backend;
 
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
+use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Slim\Router;
 
 /**
  * Class ShowMailController
@@ -28,5 +30,13 @@ class SendMailController extends AbstractController {
         ];
 
         $mailservice->send($testOptions, []);
+        Oforge()->View()->Flash()->addMessage('success', I18N::translate( 'mail_send_success'));
+
+        /** @var Router $router */
+        $router = Oforge()->App()->getContainer()->get('router');
+
+        $url    = $router->pathFor('backend_testmail');
+
+        return $response->withRedirect($url, 301);
     }
 }
