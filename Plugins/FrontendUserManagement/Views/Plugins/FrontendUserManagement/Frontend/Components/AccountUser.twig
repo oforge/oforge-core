@@ -4,8 +4,8 @@
         {% set userimage = user is defined ? user.detail.image.id : current_user.detail.image %}
         {% if label %}
             <label class="center__label flex flex--row" for="input__profile">
-                <div class="user__picture img-profile flex"
-                     {% if userimage is defined %}style="background-image: url('{{ media(userimage, 300) }}'){% endif %};">
+                <div class="user__picture"
+                     {% if userimage is defined %}style="background-image: url('{{ media(userimage, 300) }}');"{% endif %}>
                     <div class="flex flex--center">
                         <svg class="icon icon--primary">
                             <use xlink:href="#camera"></use>
@@ -15,7 +15,7 @@
             </label>
         {% else %}
             <div class="user__picture img-profile flex"
-                 {% if userimage %}style="background-image: url('{{ media(userimage, 300) }}'){% endif %};">
+                 {% if userimage %}style="background-image: url('{{ media(userimage, 300) }}');"{% endif %}>
             </div>
         {% endif %}
         <div class="user-info">
