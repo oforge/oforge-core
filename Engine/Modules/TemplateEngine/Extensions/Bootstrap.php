@@ -8,6 +8,7 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\Template\TemplateNotFoundException;
 use Oforge\Engine\Modules\TemplateEngine\Core\Services\TemplateRenderService;
+use Oforge\Engine\Modules\TemplateEngine\Extensions\Services\UrlService;
 use Oforge\Engine\Modules\TemplateEngine\Extensions\Twig\AccessExtension;
 use Oforge\Engine\Modules\TemplateEngine\Extensions\Twig\BackendExtension;
 use Oforge\Engine\Modules\TemplateEngine\Extensions\Twig\SlimExtension;
@@ -24,6 +25,9 @@ class Bootstrap extends AbstractBootstrap {
      * Bootstrap constructor.
      */
     public function __construct() {
+        $this->services = [
+            "url" => UrlService::class
+        ];
     }
 
     /**

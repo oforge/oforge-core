@@ -61,6 +61,19 @@ class ServiceManager {
     }
 
     /**
+     * Set a specific service instance by name.
+     *
+     * @param $name
+     * @param $instance
+     *
+     * @return mixed
+     */
+    public function set($name, $instance) {
+        $this->services[$name] = $instance;
+    }
+
+
+    /**
      * Get all (unsorted) service names.
      *
      * @return string[]

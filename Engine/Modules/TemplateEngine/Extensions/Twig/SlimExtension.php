@@ -38,20 +38,9 @@ class SlimExtension extends Twig_Extension {
      * @param mixed ...$vars
      *
      * @return string
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
     public function getSlimUrl(...$vars) {
-        if (!isset($this->router)) {
-            $this->router = Oforge()->App()->getContainer()->get('router');
-        }
-        $name        = ArrayHelper::get($vars, 0);
-        $namedParams = ArrayHelper::get($vars, 1, []);
-        $queryParams = ArrayHelper::get($vars, 2, []);
-        try {
-            $result = $this->router->pathFor($name, $namedParams, $queryParams);
-        } catch (Exception $e) {
-            $result = $name;
-        }
-
-        return $result;
+        return Oforge()->Services()->get("url")->getSlimUrl(...$vars);
     }
 }
