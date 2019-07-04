@@ -4,7 +4,7 @@
         <div class="form-group">
             <label>{{ i18n('type_icon', 'Icon') }}</label>
             {% if data.url %}
-                <div class="preview-image">
+                <div class="preview-image" {% if data.backgroundcolor %}style="background-color: {{ data.backgroundcolor }}"{% endif %}>
                     <img src="{{ media(data.url, 200) }}" width="200" title="{{ data.url }}"/>
                 </div>
             {% endif %}

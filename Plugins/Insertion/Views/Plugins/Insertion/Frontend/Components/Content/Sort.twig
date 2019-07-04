@@ -1,7 +1,7 @@
 {% block product_list_sort %}
     <div class="panel panel--sort flex flex--row flex--center flex--between">
         <div class="result">
-            <h3 class="result__text">{{ search.query.count }} {{  i18n('insertion_' ~ insertionType.name ~ 'count', i18n('insertion_count' ,'insertions found')) }}</h3>
+            <h3 class="result__text">{{ search.query.count }} {{  i18n('insertion_' ~ type.name ~ '_count', i18n('insertion_count' ,'insertions found')) }}</h3>
         </div>
         <div class="sort">
             <select onchange="window.location.href = Oforge.updateQueryString('order', this.value)"
