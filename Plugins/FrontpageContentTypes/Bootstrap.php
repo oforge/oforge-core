@@ -65,6 +65,53 @@ class Bootstrap extends AbstractBootstrap
             '/Themes/Base/ContentTypes/__assets/img/imagetile.png',
             'Image Tile Large',
             'FrontpageContentTypes\\ContentTypes\\ImageTileLarge');
+
+        $registerContentTypeService->registerContentType('other',
+            'texticonprefix',
+            'TextIconPrefix',
+            '/Themes/Base/ContentTypes/__assets/img/imagetile.png',
+            'Text with icon prefix',
+            'FrontpageContentTypes\\ContentTypes\\TextIconPrefix');
+
+        $registerContentTypeService->registerContentType('other',
+            'fullwidthslider',
+            'FullWidthSlider',
+            '/Themes/Base/ContentTypes/__assets/img/imagetile.png',
+            'Full width slider',
+            'FrontpageContentTypes\\ContentTypes\\FullWidthSlider');
+
+        $registerContentTypeService->registerContentType('other',
+            'customers',
+            'Customers',
+            '/Themes/Base/ContentTypes/__assets/img/imagetile.png',
+            'Customers',
+            'FrontpageContentTypes\\ContentTypes\\Customers');
+    }
+
+    public function load(){
+        /** @var RegisterContentTypeService $registerContentTypeService */
+        $registerContentTypeService = Oforge()->Services()->get("frontpage.content.types.register.contenttype");
+
+        $registerContentTypeService->registerContentType('other',
+            'texticonprefix',
+            'TextIconPrefix',
+            '/Themes/Base/ContentTypes/__assets/img/imagetile.png',
+            'Text with icon prefix',
+            'FrontpageContentTypes\\ContentTypes\\TextIconPrefix');
+
+        $registerContentTypeService->registerContentType('other',
+            'fullwidthslider',
+            'FullWidthSlider',
+            '/Themes/Base/ContentTypes/__assets/img/imagetile.png',
+            'Full width slider',
+            'FrontpageContentTypes\\ContentTypes\\FullWidthSlider');
+
+        $registerContentTypeService->registerContentType('other',
+            'customers',
+            'Customers',
+            '/Themes/Base/ContentTypes/__assets/img/imagetile.png',
+            'Customers',
+            'FrontpageContentTypes\\ContentTypes\\Customers');
     }
 
     public function uninstall()
