@@ -13,6 +13,7 @@ use Insertion\Controller\Frontend\FrontendInsertionController;
 use Insertion\Controller\Frontend\FrontendInsertionSupplierController;
 use Insertion\Controller\Frontend\FrontendUsersInsertionController;
 use Insertion\Cronjobs\Reminder14DaysCronjob;
+use Insertion\Middleware\InsertionDetailMiddleware;
 use Insertion\Models\AttributeKey;
 use Insertion\Models\AttributeValue;
 use Insertion\Models\Insertion;
@@ -41,6 +42,7 @@ use Insertion\Services\InsertionService;
 use Insertion\Services\InsertionSliderService;
 use Insertion\Services\InsertionTypeService;
 use Insertion\Services\InsertionUpdaterService;
+use Insertion\Services\InsertionUrlService;
 use Insertion\Services\InsertionZipService;
 use Insertion\Twig\InsertionExtensions;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
@@ -59,7 +61,7 @@ class Bootstrap extends AbstractBootstrap {
             BackendAttributeController::class,
             BackendInsertionController::class,
             BackendInsertionTypeController::class,
-            BackendInsertionTypeGroupController::class
+            BackendInsertionTypeGroupController::class,
         ];
 
         $this->services = [
@@ -120,6 +122,18 @@ class Bootstrap extends AbstractBootstrap {
 
         $templateRenderer->View()->addExtension(new InsertionExtensions());
 
+        if (Oforge()->isAppReady()) {
+            Oforge()->App()->add(new InsertionDetailMiddleware());
+        }
+
+
+        $urlService = Oforge()->Services()->get("url");
+
+        $seoUrlService = new InsertionUrlService($urlService);
+        Oforge()->Services()->set("url", $seoUrlService);
+
+
+        //what is this??
         new QueryCacheProfile(0, "asd");
     }
 
