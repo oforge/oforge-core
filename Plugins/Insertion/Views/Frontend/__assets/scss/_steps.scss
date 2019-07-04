@@ -8,6 +8,7 @@
     border-bottom: .8rem solid $color-secondary;
     position: relative;
 }
+
 .step {
     padding: 0 .4rem .2rem;
     background: $color-primary;
@@ -25,6 +26,7 @@
         bottom: -0.5rem;
         transform: rotate(-10deg);
     }
+
     &.step--feedback:after {
         margin-left: 0;
     }
@@ -40,68 +42,98 @@
     }
 
 }
+
 .feedback__description {
     margin-bottom: $size-large;
+
     .form__input {
         height: 20rem;
     }
 }
+
 .feedback__rating {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    margin: 3rem 0;
-    .rating__button {
+    margin-bottom: 3rem;
+
+    fieldset, label {
+        margin: 0;
+        padding: 0;
+    }
+
+    .rating {
+        border: none;
+        width: 18rem;
         display: flex;
-        flex-direction: row;
-        margin-bottom: $size-large;
-        .input__container {
-            margin-right: $size-large;
-        }
+        flex-direction: row-reverse;
+        justify-content: space-between;
+
+    }
+
+    .rating > label:hover {
+        cursor: pointer;
+    }
+
+    .rating > input {
+        display: none;
+    }
+
+    .rating > label > .icon {
+        fill: $color-secondary-lighter;
+    }
+
+    .rating > input#star3:checked ~ label > .icon {
+        fill: $color-secondary;
+    }
+
+    .rating > input#star4:checked ~ label > .icon {
+        fill: $color-secondary;
+    }
+
+    .rating > input#star5:checked ~ label > .icon {
+        fill: $color-secondary;
+    }
+
+    .rating > input:checked ~ label > .icon,
+    .rating:not(:checked) > label:hover > .icon,
+    .rating:not(:checked) > label:hover ~ label > .icon {
+        fill: $color-secondary-light;
     }
 }
+
 .feedback__title {
     color: $color-primary;
     margin: 3rem 0;
 }
+
 .success__icon {
     justify-content: center;
+
     .icon {
         width: auto;
         height: auto;
     }
 }
+
 .success__buttons {
     flex-direction: column;
+
     .button:first-child {
         margin-bottom: $size-large;
     }
 }
+
 #particle-canvas {
     position: fixed;
     top: 0;
     pointer-events: none;
 }
+
 @media screen and (min-width: $screen-medium) {
     .success__buttons {
         flex-direction: row;
+
         .button:first-child {
             margin-bottom: 0;
             margin-right: $size-large;
-        }
-    }
-    .feedback__rating {
-        flex-direction: row;
-        .rating__button {
-            flex-direction: column;
-            margin-bottom: 0;
-            .input__container {
-                margin-right: 0;
-                margin-bottom: $size-large;
-                display: flex;
-                flex-direction: row;
-                justify-content: center;
-            }
         }
     }
 }

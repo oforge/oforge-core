@@ -26,15 +26,15 @@
                         <ul class="toggle-nav toggle-nav--account">
                             {% for nav_item in sidebar_navigation %}
                                 <li class="nav-account__item">
-                                    <a href="{{ url(nav_item.path) }}">
-                                    <span class="nav-account__text">
-                                        {{ i18n(nav_item.name) }}
-                                    </span>
+                                    <a class="flex flex--row" href="{{ url(nav_item.path) }}">
                                         {% if nav_item.icon %}
                                             <svg class="icon">
                                                 <use xlink:href="#{{ nav_item.icon }}"></use>
                                             </svg>
                                         {% endif %}
+                                        <span class="nav-account__text">
+                                        {{ i18n(nav_item.name) }}
+                                    </span>
                                     </a>
                                 </li>
                             {% endfor %}
