@@ -14,7 +14,6 @@ class InsertionDetailMiddleware {
         //Split path into chunks
         $pathChunks = explode("/", $path);
 
-        print_r($pathChunks);
         if (sizeof($pathChunks) == 4) {
             if (is_numeric($pathChunks[3])) {
                 /**
@@ -32,6 +31,7 @@ class InsertionDetailMiddleware {
                     if ($typeTitle == $pathChunks[1]) {
                         if ($title != $pathChunks[2]) {
                             $url = "/" . urlencode($typeTitle) . "/" . urlencode($title) . "/" . $insertion->getId();
+
                             return $response->withRedirect($url, 301);
                         }
 
