@@ -1,4 +1,4 @@
-<div class="form__control form-group">
+<div class="form__control">
 
     <label for="insertion[{{ attribute.id }}]"
            class="form__label {{ label_class }}">{{ i18n(attribute.name) }}</label>
@@ -6,5 +6,6 @@
     <input type="text"
            name="insertion[{{ attribute.id }}]"
            value="{{ data['insertion'][attribute.id] }}"
-           class="form__input form-control" />
+           class="form__input form-control"
+           placeholder="{{ i18n(attribute.name) }}"/>
 </div>
