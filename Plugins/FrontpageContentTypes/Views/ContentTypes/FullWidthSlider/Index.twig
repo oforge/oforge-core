@@ -1,0 +1,7 @@
+{% block row %}
+    <div class="cms-slider {{ data.css }}" data-single-slider="true">
+        {% for child in data.childs %}
+            {% include 'ContentTypes/' ~ child.path ~ '/Index.twig' with {'data': child} %}
+        {% endfor %}
+    </div>
+{% endblock row %}
