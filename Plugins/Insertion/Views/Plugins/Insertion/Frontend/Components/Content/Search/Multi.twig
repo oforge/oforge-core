@@ -9,23 +9,22 @@
         <ul class="select__list"
             data-select-list="">
 
-
             {% for value in attribute.values %}
-            <li class="select__item {% if value.id in search.filter[attribute.name] %}select__item--is-checked{% endif %}"
-                data-selected="false"
-                data-index="{{ loop.index0 }}"
-                data-value-id="{{ value.id }}">
-                    <span class="select__value">
-                    {{ i18n(value.value) }}
-                    </span>
-                {% if value.subAttributeKey is not null %}
-                    <div class="sub-attribute-container" data-sub-select="">
+                <li class="select__item {% if value.id in search.filter[attribute.name] %}select__item--is-checked{% endif %}"
+                    data-selected="false"
+                    data-index="{{ loop.index0 }}"
+                    data-value-id="{{ value.id }}">
+                        <span class="select__value">
+                        {{ i18n(value.value) }}
+                        </span>
+                    {% if value.subAttributeKey is not null %}
+                        <div class="sub-attribute-container" data-sub-select="">
 
-                        {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ all_attributes[value.subAttributeKey].filterType|capitalize  ~ '.twig'  with {'attribute': all_attributes[value.subAttributeKey], hidden: true, required: false, isSubAttribute: true} %}
+                            {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ all_attributes[value.subAttributeKey].filterType|capitalize  ~ '.twig'  with {'attribute': all_attributes[value.subAttributeKey], hidden: true, required: false, isSubAttribute: true} %}
 
-                    </div>
-                {% endif %}
-            </li>
+                        </div>
+                    {% endif %}
+                </li>
             {% endfor %}
         </ul>
     </div>
