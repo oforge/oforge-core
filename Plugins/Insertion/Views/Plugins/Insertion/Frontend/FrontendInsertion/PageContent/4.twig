@@ -2,7 +2,7 @@
     {# premium information #}
     <div class="premium__information">
         <h3>{{ i18n('premium_information_basic_title') }}</h3>
-        <div class="information__basic flex flex--row">
+        <div class="information__basic">
             <div class="icon__container">
                 <div>
                     <svg class="icon icon--primary icon--profil">
@@ -36,6 +36,7 @@
         </div>
 
         <h3>{{ i18n('premium_information_add_features') }}</h3>
+
         <div class="features__select">
             <div class="selection">
                 <div class="selection__title">
@@ -43,7 +44,7 @@
                     <svg class="icon icon--secondary">
                         <use xlink:href="#check"></use>
                     </svg>
-                    <div class="name">Vorschau-Bild</div>
+                    <h3 class="product__title">{{ i18n('preview_image') }}</h3>
                 </div>
                 <div class="selection__description">
                     Beschreibungstext Lorem ipsum dolor sit amet,
@@ -54,6 +55,65 @@
                 </div>
             </div>
         </div>
+
+        <div class="features__select">
+            <div class="selection">
+                <div class="selection__title">
+                    <div class="checkbox"></div>
+                    <svg class="icon icon--secondary">
+                        <use xlink:href="#check"></use>
+                    </svg>
+                    <h3 class="product__title">{{ i18n('top_insertion') }}</h3>
+                </div>
+                <div class="selection__description">
+                    Beschreibungstext Lorem ipsum dolor sit amet,
+                    consetetur sadipscing elitr, sed diam.
+                </div>
+                <div class="selection__price">
+                    4,99 €
+                </div>
+            </div>
+        </div>
+
+        <div class="features__select">
+            <div class="selection">
+                <div class="selection__title">
+                    <div class="checkbox"></div>
+                    <svg class="icon icon--secondary">
+                        <use xlink:href="#check"></use>
+                    </svg>
+                    <h3 class="product__title">{{ i18n('frontpage_galery') }}</h3>
+                </div>
+                <div class="selection__description">
+                    Beschreibungstext Lorem ipsum dolor sit amet,
+                    consetetur sadipscing elitr, sed diam.
+                </div>
+                <div class="selection__price">
+                    4,99 €
+                </div>
+            </div>
+        </div>
+
+        <div class="features__select">
+            <div class="selection">
+                <div class="selection__title">
+                    <div class="checkbox"></div>
+                    <svg class="icon icon--secondary">
+                        <use xlink:href="#check"></use>
+                    </svg>
+                    <h3 class="product__title">{{ i18n('facebook_newsletter') }}</h3>
+                </div>
+                <div class="selection__description">
+                    Beschreibungstext Lorem ipsum dolor sit amet,
+                    consetetur sadipscing elitr, sed diam.
+                </div>
+                <div class="selection__price">
+                    4,99 €
+                </div>
+            </div>
+        </div>
+
+        <h3>{{ i18n('premiom_information_professional_title') }}</h3>
     </div>
 
 {% endblock page_content %}
