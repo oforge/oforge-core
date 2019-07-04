@@ -15,14 +15,14 @@
                             <h3 class="account__title">{{ i18n('my_profile') }}</h3>
                             <label class="center__label" for="input__background">
 
-                            <div class="background img-background flex flex--column-center"
-                                    {% if profile.background %}style="background-image: url('{{ media(profile.background.id) }}')"{% endif %}>
-                                <div class="flex flex--center">
-                                    <svg class="icon icon--primary">
-                                        <use xlink:href="#camera"></use>
-                                    </svg>
+                                <div class="background img-background flex flex--column-center"
+                                     {% if profile.background %}style="background-image: url('{{ media(profile.background.id) }}')"{% endif %}>
+                                    <div class="flex flex--center">
+                                        <svg class="icon icon--primary">
+                                            <use xlink:href="#camera"></use>
+                                        </svg>
+                                    </div>
                                 </div>
-                            </div>
                             </label>
 
                             <div class="profile-upload upload-background">
@@ -40,9 +40,11 @@
                             <div class="profile-upload">
                                 <span>{{ i18n('change_profile_img') }}</span>
                                 <label class="upload__label" for="input__profile">
-                                    <svg class="icon icon--primary">
-                                        <use xlink:href="#edit"></use>
-                                    </svg>
+                                    <div class="flex fleflex--center">
+                                        <svg class="icon icon--primary">
+                                            <use xlink:href="#edit"></use>
+                                        </svg>
+                                    </div>
                                 </label>
                                 <input id="input__profile" data-update="img-profile" type="file" name="profile"
                                        accept="image/*">
