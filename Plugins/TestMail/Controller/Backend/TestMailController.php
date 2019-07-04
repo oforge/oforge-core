@@ -2,9 +2,9 @@
 
 namespace TestMail\Controller\Backend;
 
-use Exception;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
+use Oforge\Engine\Modules\Core\Helper\FileSystemHelper;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -29,6 +29,7 @@ class TestMailController extends AbstractController {
         $router                     = Oforge()->Container()->get('router');
         $showMailLink               = $router->pathFor('backend_showmail');
         $sendMailLink               = $router->pathFor('backend_sendmail');
+        // TODO: get all template files in active template
         Oforge()->View()->assign(['showMailLink' => $showMailLink, 'sendMailLink' => $sendMailLink]);
 
     }

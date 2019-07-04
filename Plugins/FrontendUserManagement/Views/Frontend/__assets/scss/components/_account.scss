@@ -83,6 +83,26 @@
 .account-nav__link + .account-nav__link {
     margin-top: 1rem;
 }
+.nav-account {
+    &__item {
+        padding: $size-medium;
+        a {
+            text-decoration: none;
+        }
+        .icon {
+            margin-right: $size-large;
+            fill: $color-light;
+        }
+        &:hover {
+            background-color: $color-secondary;
+        }
+    }
+    &__text {
+        color: $color-light;
+        text-decoration: none;
+    }
+}
+
 
 .mobile-padding {
     padding: $size-large;
