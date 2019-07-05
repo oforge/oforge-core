@@ -11,6 +11,13 @@
                                    class="close"></a>
                                 <span class="tag__text">{{ i18n(f) }} {{ value[0] }} {{ i18n(f ~ '_between') }} {{ value[1] }}</span>
                             </div>
+                        {% elseif f is same as ("radius") %}
+                            <div class="tag" data-key="{{ f }}">
+                                <a href="#"
+                                   onclick="window.location.href = Oforge.updateQueryString('zip_range', '', Oforge.updateQueryString('zip', ''))"
+                                   class="close"></a>
+                                <span class="tag__text">{{ i18n(f) }} {{ value[0] }} {{ i18n(value.country) }}, {{ value.zip }} {{ i18n('zip_range_' ~ value.zip_range) }}</span>
+                            </div>
                         {% elseif value is iterable %}
                             {% for v in value %}
                                 <div class="tag" data-key="{{ f }}" data-value="{{ v }}">

@@ -46,7 +46,7 @@ class InsertionSliderService extends AbstractDatabaseAccess {
                 $randomKeys = [0];
             }
             foreach ($randomKeys as $randomKey) {
-                $insertion = $this->repository()->findOneBy(["id" => $ids[$randomKey], "deleted" => false, "active" => true, "moderation" => "true"], null, 1);
+                $insertion = $this->repository()->findOneBy(["id" => $ids[$randomKey], "deleted" => false, "active" => true, "moderation" => true], null, 1);
                 if ($insertion != null) {
                     array_push($result, $insertion->toArray(3));
                 }
