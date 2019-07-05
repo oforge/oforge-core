@@ -7,9 +7,8 @@
 
             <h3 class="form__title">{{ i18n('address', 'Address') }}</h3>
 
-            <div class="form__control">
+            <div class="form__control form__control--half-medium">
                 {% block user_address_label_street_name %}
-
                 {% endblock user_address_label_street_name %}
                 <input id="user_address_street_name"
                        name="user_address_street_name"
@@ -18,11 +17,8 @@
                        placeholder="{{ i18n('street_name') }}"
                        required
                        {% if (userAddress) %}value="{{ userAddress.streetName }}"{% endif %}>
-            </div>
 
-            <div class="form__control">
                 {% block user_address_label_street_number %}
-
                 {% endblock user_address_label_street_number %}
                 <input id="user_address_street_number"
                        name="user_address_street_number"
@@ -33,7 +29,8 @@
                        {% if (userAddress) %}value="{{ userAddress.streetNumber }}"{% endif %}>
             </div>
 
-            <div class="form__control">
+
+            <div class="form__control form__control--half-medium">
                 {% block user_address_label_post_code %}
 
                 {% endblock user_address_label_post_code %}
@@ -44,11 +41,8 @@
                        placeholder="{{ i18n('post_code') }}"
                        required
                        {% if (userAddress) %}value="{{ userAddress.postCode }}"{% endif %}>
-            </div>
 
-            <div class="form__control">
                 {% block user_address_label_city %}
-
                 {% endblock user_address_label_city %}
                 <input id="user_address_city"
                        name="user_address_city"
@@ -58,6 +52,7 @@
                        required
                        {% if (userAddress) %}value="{{ userAddress.city }}"{% endif %}>
             </div>
+
             <div class="form__control">
                 <input type="hidden" name="token" value="{{ token() }}">
                 <input type="submit"

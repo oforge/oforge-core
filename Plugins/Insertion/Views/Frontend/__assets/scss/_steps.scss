@@ -54,18 +54,14 @@
 .feedback__rating {
     margin-bottom: 3rem;
 
-    fieldset, label {
-        margin: 0;
-        padding: 0;
-    }
-
     .rating {
         border: none;
         width: 18rem;
         display: flex;
         flex-direction: row-reverse;
         justify-content: space-between;
-
+        margin: 0;
+        padding: 0;
     }
 
     .rating > label:hover {
@@ -126,6 +122,109 @@
     top: 0;
     pointer-events: none;
 }
+/** Step 4  */
+.premium__information {
+    margin-bottom: 3rem;
+    .text-light {
+        color: $color-light;
+    }
+    .title {
+        color: $color-primary;
+        margin: $size-large 0;
+        &__center {
+            text-align: center;
+        }
+    }
+    .information__basic {
+        padding: $size-large;
+        background-color: $color-secondary-lighter;
+        .icon__container {
+            flex: 0 20%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: $size-large;
+            border-bottom: 2px solid $color-primary;
+            .icon {
+                margin: 0 auto;
+                width: 6rem;
+                height: 6rem;
+            }
+            .text-light {
+                text-align: center;
+            }
+        }
+        .features__container {
+            padding: $size-large;
+            flex: 0 80%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            .feature {
+                display: flex;
+                flex-direction: row;
+                span {
+                    flex: 1 1;
+                }
+
+                .icon {
+                    width: 2rem;
+                    margin-right:$size-large;
+                }
+            }
+        }
+    }
+    .features__select {
+        margin-bottom: $size-small;
+        .selection {
+            .selection__title {
+                margin-bottom: $size-small;
+                display: flex;
+                flex-direction: row;
+
+                .checkbox {
+                    height: 2.4rem;
+                    width: 2.4rem;
+                    border: 2px solid $color-primary;
+                    border-radius: .3rem;
+                    &.unchecked {
+                        margin-right: 3rem;
+                    }
+                }
+                .unchecked + .icon {
+                    display: none;
+                }
+
+                .icon {
+                    position: relative;
+                    left: -2.2rem;
+                    bottom: .8rem;
+                }
+                .product__title {
+                    flex: 1 1;
+                }
+            }
+            .selection__price {
+                text-align: right;
+            }
+        }
+    }
+    .information__professional {
+        display: flex;
+
+        .banner {
+        flex: 0 0 50%;
+
+            background-color: $color-secondary-light;
+
+            &__plus {
+                background-color: $color-secondary;
+            }
+
+        }
+
+    }
+}
 
 @media screen and (min-width: $screen-medium) {
     .success__buttons {
@@ -136,5 +235,19 @@
             margin-right: $size-large;
         }
     }
+    /** Step 4  */
+    .premium__information {
+        .information__basic {
+            display: flex;
+            .icon__container {
+                border-bottom: none;
+                border-right: 2px solid $color-primary;
+                > div {
+                    text-align: center;
+                }
+            }
+        }
+    }
 }
+
 
