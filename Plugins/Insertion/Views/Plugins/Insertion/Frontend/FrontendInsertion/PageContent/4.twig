@@ -1,16 +1,16 @@
 {% block page_content %}
     {# premium information #}
     <div class="premium__information">
-        <h3>{{ i18n('premium_information_basic_title') }}</h3>
+        <h3 class="title title__center">{{ i18n('premium_information_basic_title') }}</h3>
         <div class="information__basic">
             <div class="icon__container">
                 <div>
                     <svg class="icon icon--primary icon--profil">
-                        <use xlink:href="#star"></use>
+                        <use xlink:href="#professional_plus_abo"></use>
                     </svg>
                 </div>
                 <div class="text-light">
-                    {{ i18n('premium_basic') }}
+                    {{ i18n('professional') }}
                 </div>
             </div>
             <div class="features__container">
@@ -27,15 +27,15 @@
                     <span>{{ i18n('ninety_days_runtime') }}</span>
                 </div>
                 <div class="feature text-light">
-                    <svg class="icon icon--red">
-                        <use xlink:href="#close"></use>
+                    <svg class="icon icon--secondary">
+                        <use xlink:href="#check"></use>
                     </svg>
                     <span>{{ i18n('highlight_incl') }}</span>
                 </div>
             </div>
         </div>
 
-        <h3>{{ i18n('premium_information_add_features') }}</h3>
+        <h3 class="title">{{ i18n('premium_information_add_features') }}</h3>
 
         <div class="features__select">
             <div class="selection">
@@ -47,11 +47,10 @@
                     <h3 class="product__title">{{ i18n('preview_image') }}</h3>
                 </div>
                 <div class="selection__description">
-                    Beschreibungstext Lorem ipsum dolor sit amet,
-                    consetetur sadipscing elitr, sed diam.
+                    {{ i18n('preview_image_description') }}
                 </div>
                 <div class="selection__price">
-                    4,99 €
+                    {{ i18n('free_of_charge') }}
                 </div>
             </div>
         </div>
@@ -66,11 +65,10 @@
                     <h3 class="product__title">{{ i18n('top_insertion') }}</h3>
                 </div>
                 <div class="selection__description">
-                    Beschreibungstext Lorem ipsum dolor sit amet,
-                    consetetur sadipscing elitr, sed diam.
+                    {{ i18n('top_insertion_description') }}
                 </div>
                 <div class="selection__price">
-                    4,99 €
+                    {{ i18n('free_of_charge') }}
                 </div>
             </div>
         </div>
@@ -85,11 +83,10 @@
                     <h3 class="product__title">{{ i18n('frontpage_galery') }}</h3>
                 </div>
                 <div class="selection__description">
-                    Beschreibungstext Lorem ipsum dolor sit amet,
-                    consetetur sadipscing elitr, sed diam.
+                    {{ i18n('homepage_gallery_description') }}
                 </div>
                 <div class="selection__price">
-                    4,99 €
+                    {{ i18n('free_of_charge') }}
                 </div>
             </div>
         </div>
@@ -104,16 +101,37 @@
                     <h3 class="product__title">{{ i18n('facebook_newsletter') }}</h3>
                 </div>
                 <div class="selection__description">
-                    Beschreibungstext Lorem ipsum dolor sit amet,
-                    consetetur sadipscing elitr, sed diam.
+                    {{ i18n('facebook_newsletter_description') }}
                 </div>
                 <div class="selection__price">
-                    4,99 €
+                    {{ i18n('free_of_charge') }}
                 </div>
             </div>
         </div>
 
-        <h3>{{ i18n('premiom_information_professional_title') }}</h3>
+        {# Keep this for another day #}
+        {#
+        <h3 class="title title__center">{{ i18n('premium_information_professional_title') }}</h3>
+        <div class="information__professional">
+            <div class="banner">
+                <svg class="icon icon--primary">
+                    <use xlink:href="#professional_plus_abo"></use>
+                </svg>
+                <div class="price"></div>
+                <div class="cycle"></div>
+                <div class="button button--primary">{{ i18n('choose') }}</div>
+            </div>
+
+            <div class="banner banner__plus">
+                <svg class="icon icon--primary">
+                    <use xlink:href="#professional_plus_abo"></use>
+                </svg>
+                <div class="price"></div>
+                <div class="cycle"></div>
+                <div class="button button--primary">{{ i18n('choose') }}</div>
+            </div>
+        </div>
+        #}
     </div>
 
 {% endblock page_content %}
