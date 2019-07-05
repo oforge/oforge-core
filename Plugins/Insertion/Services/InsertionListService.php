@@ -319,7 +319,7 @@ class InsertionListService extends AbstractDatabaseAccess {
         /**
          * filter by distance
          */
-        if (isset($params["zip"]) && isset($params["zip_range"]) && !empty($params["zip"]) && $params["zip_range"]) {
+        if (isset($params["zip"]) && isset($params["zip_range"])) {
             $current = ["zip" => $params["zip"], "zip_range" => $params["zip_range"], "country" => ($params['country'] ? : "germany")];
 
             setcookie($name, json_encode($current), time() + 60 * 60 * 24 * 2);
