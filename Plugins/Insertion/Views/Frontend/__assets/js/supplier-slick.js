@@ -1,6 +1,8 @@
 var prevArrow = "<button class='slick-prev slick-arrow' aria-label='Previous' type='button'><svg class='icon icon--profil'><use xlink:href='#slider'></use></svg></button>";
 var nextArrow = "<button class='slick-next slick-arrow' aria-label='Previous' type='button'><svg class='icon icon--profil'><use xlink:href='#slider'></use></svg></button>";
 
+
+
 $(document).ready(function () {
     $('.slider--supplier').slick({
         slidesToShow: 1,

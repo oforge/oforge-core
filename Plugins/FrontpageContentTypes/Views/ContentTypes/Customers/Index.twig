@@ -1,0 +1,8 @@
+{% block customers %}
+    <div class="cms-customers">
+        <span class="cms-customer-image" style="background-image: url({{  media( data.image, 200 ) }}" >
+
+        </span>
+        <span>{{ data.text }}</span>
+    </div>
+{% endblock customers %}
