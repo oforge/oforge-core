@@ -1,4 +1,139 @@
 {% block page_content %}
     {# premium information #}
-    premium tu es
+    <div class="premium__information">
+        <h3 class="title title__center">{{ i18n('premium_information_basic_title') }}</h3>
+        <div class="information__basic">
+            <div class="icon__container">
+                <div>
+                    <svg class="icon icon--primary icon--profil">
+                        <use xlink:href="#professional_plus_abo"></use>
+                    </svg>
+                </div>
+                <div class="text-light">
+                    {{ i18n('professional') }}
+                </div>
+            </div>
+            <div class="features__container">
+                <div class="feature text-light">
+                    <svg class="icon icon--secondary">
+                        <use xlink:href="#check"></use>
+                    </svg>
+                    <span>{{ i18n('two_insertions_incl') }}</span>
+                </div>
+                <div class="feature text-light">
+                    <svg class="icon icon--secondary">
+                        <use xlink:href="#check"></use>
+                    </svg>
+                    <span>{{ i18n('ninety_days_runtime') }}</span>
+                </div>
+                <div class="feature text-light">
+                    <svg class="icon icon--secondary">
+                        <use xlink:href="#check"></use>
+                    </svg>
+                    <span>{{ i18n('highlight_incl') }}</span>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="title">{{ i18n('premium_information_add_features') }}</h3>
+
+        <div class="features__select">
+            <div class="selection">
+                <div class="selection__title">
+                    <div class="checkbox"></div>
+                    <svg class="icon icon--secondary">
+                        <use xlink:href="#check"></use>
+                    </svg>
+                    <h3 class="product__title">{{ i18n('preview_image') }}</h3>
+                </div>
+                <div class="selection__description">
+                    {{ i18n('preview_image_description') }}
+                </div>
+                <div class="selection__price">
+                    {{ i18n('free_of_charge') }}
+                </div>
+            </div>
+        </div>
+
+        <div class="features__select">
+            <div class="selection">
+                <div class="selection__title">
+                    <div class="checkbox"></div>
+                    <svg class="icon icon--secondary">
+                        <use xlink:href="#check"></use>
+                    </svg>
+                    <h3 class="product__title">{{ i18n('top_insertion') }}</h3>
+                </div>
+                <div class="selection__description">
+                    {{ i18n('top_insertion_description') }}
+                </div>
+                <div class="selection__price">
+                    {{ i18n('free_of_charge') }}
+                </div>
+            </div>
+        </div>
+
+        <div class="features__select">
+            <div class="selection">
+                <div class="selection__title">
+                    <div class="checkbox"></div>
+                    <svg class="icon icon--secondary">
+                        <use xlink:href="#check"></use>
+                    </svg>
+                    <h3 class="product__title">{{ i18n('frontpage_galery') }}</h3>
+                </div>
+                <div class="selection__description">
+                    {{ i18n('homepage_gallery_description') }}
+                </div>
+                <div class="selection__price">
+                    {{ i18n('free_of_charge') }}
+                </div>
+            </div>
+        </div>
+
+        <div class="features__select">
+            <div class="selection">
+                <div class="selection__title">
+                    <div class="checkbox"></div>
+                    <svg class="icon icon--secondary">
+                        <use xlink:href="#check"></use>
+                    </svg>
+                    <h3 class="product__title">{{ i18n('facebook_newsletter') }}</h3>
+                </div>
+                <div class="selection__description">
+                    {{ i18n('facebook_newsletter_description') }}
+                </div>
+                <div class="selection__price">
+                    {{ i18n('free_of_charge') }}
+                </div>
+            </div>
+        </div>
+
+        {# Keep this for another day #}
+        {#
+        <h3 class="title title__center">{{ i18n('premium_information_professional_title') }}</h3>
+        <div class="information__professional">
+            <div class="banner">
+                <svg class="icon icon--primary">
+                    <use xlink:href="#professional_plus_abo"></use>
+                </svg>
+                <div class="price"></div>
+                <div class="cycle"></div>
+                <div class="button button--primary">{{ i18n('choose') }}</div>
+            </div>
+
+            <div class="banner banner__plus">
+                <svg class="icon icon--primary">
+                    <use xlink:href="#professional_plus_abo"></use>
+                </svg>
+                <div class="price"></div>
+                <div class="cycle"></div>
+                <div class="button button--primary">{{ i18n('choose') }}</div>
+            </div>
+        </div>
+        #}
+    </div>
+
 {% endblock page_content %}
+
+
