@@ -82,13 +82,15 @@ class InsertionListService extends AbstractDatabaseAccess {
 
             $args["min"] = $min;
             $args["max"] = $max;
+
+            $result['filter']['price'] = [$min, $max];
         }
 
         /**
          * filter by distance
          */
         if (isset($params["zip"]) && isset($params["zip_range"]) && !empty($params["zip"]) && $params["zip_range"]) {
-            $country = $params['country'] ?: "germany";
+            $country = $params['country'] ? : "germany";
 
             $coordinates = Oforge()->Services()->get("insertion.zip")->get($params["zip"], $country);
             if ($coordinates != null) {
@@ -100,7 +102,14 @@ class InsertionListService extends AbstractDatabaseAccess {
                 $args["lng"] = $coordinates->getLng();
                 $args["lat"] = $coordinates->getLat();
                 $args["zip"] = $params["zip_range"];
+
             }
+
+            $result['filter']['radius'] = [
+                'zip'       => $params["zip"],
+                'zip_range' => $params["zip_range"],
+                'country'   => $params["country"],
+            ];
         }
 
         if (sizeof($keys) > 0) {
@@ -229,7 +238,7 @@ class InsertionListService extends AbstractDatabaseAccess {
         $findIds = [];
 
         for ($i = ($page - 1) * $pageSize; $i < $page * $pageSize; $i++) {
-            if(sizeof($ids) > $i) {
+            if (sizeof($ids) > $i) {
                 $findIds[] = $ids[$i]["id"];
             }
         }
@@ -297,5 +306,25 @@ class InsertionListService extends AbstractDatabaseAccess {
         }
 
         return $result;
+    }
+
+    public function saveSearchRadius($params) {
+        $name    = "insertion_search_radius";
+        $current = [];
+
+        try {
+            $current = json_decode($_COOKIE[$name], true);
+        } catch (\Exception $e) {
+        }
+        /**
+         * filter by distance
+         */
+        if (isset($params["zip"]) && isset($params["zip_range"]) && !empty($params["zip"]) && $params["zip_range"]) {
+            $current = ["zip" => $params["zip"], "zip_range" => $params["zip_range"], "country" => ($params['country'] ? : "germany")];
+
+            setcookie($name, json_encode($current), time() + 60 * 60 * 24 * 2);
+        }
+
+        return $current;
     }
 }
