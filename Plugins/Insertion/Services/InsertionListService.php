@@ -2,6 +2,8 @@
 
 namespace Insertion\Services;
 
+use Doctrine\ORM\Query\ResultSetMapping;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Insertion\Enum\AttributeType;
 use Insertion\Models\AttributeKey;
@@ -35,8 +37,8 @@ class InsertionListService extends AbstractDatabaseAccess {
     /**
      * @param $typeId
      * @param $params
+     * @Cache(slot="insertion", duration="T15M")
      *
-     * @Cache(slot="insertion", duration="2D")
      * @return array|null
      * @throws \Doctrine\ORM\ORMException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
@@ -49,110 +51,28 @@ class InsertionListService extends AbstractDatabaseAccess {
         $attributeKeys = array_keys($_GET);
         $keys          = $this->repository("key")->findBy(["name" => $attributeKeys]);
 
-        $result = ["filter" => [], "query" => [], 'order' => $_GET["order"]];
+        $result = ["filter" => [], "query" => [], 'order' => $params["order"]];
 
-        $queryBuilder = $this->entityManager()->createQueryBuilder()#
-                             ->select('i')->from(Insertion::class, "i")#
-                             ->where("i.insertionType = :type and i.active = true and i.moderation = true");
-        $queryBuilder->setParameter("type", $typeId);
+        $args = [];
 
-        if (isset($_GET["zip"]) && isset($_GET["zip_range"]) && !empty($_GET["zip"]) && $_GET["zip_range"]) {
-            $coordinates = Oforge()->Services()->get("insertion.zip")->get($_GET["zip"]);
-            if ($coordinates != null) {
-                $queryBuilder->leftJoin("i.contact", "c");
-                $queryBuilder->leftJoin(InsertionZipCoordinates::class, "zip", \Doctrine\ORM\Query\Expr\Join::WITH, 'zip.zip = c.zip');
-                $queryBuilder->andWhere("zip.country = :country and ST_Distance_Sphere(POINT(zip.lng, zip.lat), POINT(:lng,:lat)) / 1000 < :zip_distance");
-                $queryBuilder->setParameter("country", 'germany');
-                $queryBuilder->setParameter("lat", $coordinates->getLat());
-                $queryBuilder->setParameter("lng", $coordinates->getLng());
-                $queryBuilder->setParameter("zip_distance", $_GET["zip_range"]);
-            } else {
-            }
-        }
+        $sqlQuery = "select i.id from oforge_insertion i";
 
-        $keyCount       = 1;
-        $attributeCount = 1;
-        if (sizeof($result) > 0) {
-            foreach ($keys as $attributeKey) {
-                if (isset($_GET[$attributeKey->getName()])) {
-                    $value                                      = $_GET[$attributeKey->getName()];
-                    $result['filter'][$attributeKey->getName()] = $value;
+        $sqlQueryWhere = " where i.active = 1 and i.moderation = 1 and i.insertion_type_id = :type";
 
-                    if (is_array($value)) { //should always be a multi selection or a range component
+        $args["type"] = intval($typeId);
 
-                        switch ($attributeKey->getFilterType()) {
-                            case AttributeType::RANGE:
-                                if (sizeof($value) == 2) {
-                                    $queryBuilder->leftJoin("i.values", "v$attributeCount");
+        // filter order
+        // - price
+        // - distance
+        // - attributes
+        /**
+         * filter by price
+         */
+        if (isset($params["price"]) && is_array($params["price"]) && sizeof($params["price"]) == 2) {
+            $sqlQueryWhere .= " and i.price between :min and :max ";
 
-                                    $query = "v$attributeCount.attributeKey = ?" . $keyCount . " and v$attributeCount.value between ?" . ($keyCount + 1)
-                                             . " and " . ($keyCount + 2);
-
-                                    $queryBuilder->andWhere($query);
-
-                                    $queryBuilder->setParameter($keyCount++, $attributeKey->getId());
-
-                                    $min = $value[0];
-                                    $max = $value[1];
-
-                                    if ($min > $max) {
-                                        $t   = $min;
-                                        $min = $max;
-                                        $max = $t;
-                                    }
-
-                                    $queryBuilder->setParameter($keyCount++, $min);
-                                    $queryBuilder->setParameter($keyCount++, $max);
-
-                                    $attributeCount++;
-                                }
-                                break;
-                            default:
-                                $firstV = true;
-                                foreach ($value as $v) {
-                                    $queryBuilder->leftJoin("i.values", "v$attributeCount");
-
-                                    $query = "v$attributeCount.attributeKey = ?" . $keyCount . " and v$attributeCount.value = ?" . ($keyCount + 1);
-
-                                    if ($firstV) {
-                                        $firstV = false;
-                                        $queryBuilder->andWhere($query);
-
-                                    } else {
-                                        $queryBuilder->orWhere($query);
-                                    }
-
-                                    $queryBuilder->setParameter($keyCount++, $attributeKey->getId());
-                                    $queryBuilder->setParameter($keyCount++, $v);
-
-                                    $attributeCount++;
-                                }
-
-                                break;
-
-                        }
-
-                    } else {
-                        $queryBuilder->leftJoin("i.values", "v$attributeCount");
-
-                        $queryBuilder->andWhere("v$attributeCount.attributeKey = ?" . $keyCount . " and v$attributeCount.value = ?" . ($keyCount + 1) . "");
-
-                        $queryBuilder->setParameter($keyCount++, $attributeKey->getId());
-                        $queryBuilder->setParameter($keyCount++, $value);
-
-                        $attributeCount++;
-                    }
-                }
-            }
-        }
-
-        if (isset($_GET["price"]) && is_array($_GET["price"]) && sizeof($_GET["price"]) == 2) {
-            $query = "i.price between ?" . ($keyCount) . " and ?" . ($keyCount + 1);
-
-            $queryBuilder->andWhere($query);
-
-            $min = $_GET["price"][0];
-            $max = $_GET["price"][1];
+            $min = $params["price"][0];
+            $max = $params["price"][1];
 
             if ($min > $max) {
                 $t   = $min;
@@ -160,35 +80,102 @@ class InsertionListService extends AbstractDatabaseAccess {
                 $max = $t;
             }
 
-            $queryBuilder->setParameter($keyCount++, $min);
-            $queryBuilder->setParameter($keyCount++, $max);
-
-            $result['filter']["price"] = [$min, $max];
+            $args["min"] = $min;
+            $args["max"] = $max;
         }
 
-        if (isset($_GET["order"])) {
-            switch ($_GET["order"]) {
-                case 'price_asc':
-                    $queryBuilder->orderBy("i.price ", "ASC");
-                    break;
-                case 'price_desc':
-                    $queryBuilder->orderBy("i.price ", "desc");
-                    break;
-                case 'date_asc':
-                    $queryBuilder->orderBy("i.createdAt", "ASC");
-                    break;
-                case  'date_desc';
-                    $queryBuilder->orderBy("i.createdAt", "desc");
-                    break;
+        /**
+         * filter by distance
+         */
+        if (isset($params["zip"]) && isset($params["zip_range"]) && !empty($params["zip"]) && $params["zip_range"]) {
+            $country = $params['country'] ?: "germany";
+
+            $coordinates = Oforge()->Services()->get("insertion.zip")->get($params["zip"], $country);
+            if ($coordinates != null) {
+                $sqlQuery .= " left join oforge_insertion_contact contact on contact.insertion_id = i.id";
+                $sqlQuery .= " left join oforge_insertion_zip_coordinates zip on zip.country = contact.country and zip.zip = contact.zip";
+
+                $sqlQueryWhere .= " and ST_Distance_Sphere(POINT(zip.lng, zip.lat), POINT(:lng,:lat)) / 1000 <= :zip";
+
+                $args["lng"] = $coordinates->getLng();
+                $args["lat"] = $coordinates->getLat();
+                $args["zip"] = $params["zip_range"];
             }
         }
-        $query     = $queryBuilder->getQuery()->setFirstResult(($page - 1) * $pageSize)->setMaxResults($pageSize);
-        $paginator = new Paginator($query, $fetchJoinCollection = true);
 
-        $result["query"]["count"]     = $paginator->count();
+        if (sizeof($keys) > 0) {
+            $attributeCount = 0;
+
+            foreach ($keys as $attributeKey) {
+                if (isset($params[$attributeKey->getName()])) {
+                    $value                                      = $_GET[$attributeKey->getName()];
+                    $result['filter'][$attributeKey->getName()] = $value;
+
+                    if (is_array($value)) { //should always be a multi selection or a range component
+                        $sqlQuery                             .= " left join oforge_insertion_insertion_attribute_value v$attributeCount on v$attributeCount.insertion_id = i.id and v$attributeCount.attribute_key = :v"
+                                                                 . $attributeCount . "key";
+                        $args[":v" . $attributeCount . "key"] = $attributeKey->getId();
+
+                        switch ($attributeKey->getFilterType()) {
+                            case AttributeType::RANGE:
+                                $sqlQueryWhere .= " and v$attributeCount.attribute_key = :v" . $attributeCount
+                                                  . "key and v$attributeCount.insertion_attribute_value between :v" . $attributeCount . "value and :v"
+                                                  . $attributeCount . "value2";
+
+                                $min = $value[0];
+                                $max = $value[1];
+
+                                if ($min > $max) {
+                                    $t   = $min;
+                                    $min = $max;
+                                    $max = $t;
+                                }
+
+                                $args[":v" . $attributeCount . "value"]  = $min;
+                                $args[":v" . $attributeCount . "value2"] = $max;
+
+                                break;
+                            default: //multi
+
+                                $sqlQueryWhere .= " and v$attributeCount.attribute_key = :v" . $attributeCount . "key and (";
+
+                                foreach ($value as $key => $v) {
+                                    if ($key > 0) {
+                                        $sqlQueryWhere .= " or ";
+                                    }
+
+                                    $sqlQueryWhere                                .= ":v" . $attributeCount . "value" . $key;
+                                    $args["v" . $attributeCount . "value" . $key] = $v;
+                                }
+
+                                $sqlQueryWhere .= ")";
+                        }
+
+                        $attributeCount++;
+                    } else {
+                        $sqlQuery .= " left join oforge_insertion_insertion_attribute_value v$attributeCount on v$attributeCount . insertion_id = i . id and v$attributeCount
+                                                                                                                                                              . attribute_key = :v"
+                                     . $attributeCount . "key and v$attributeCount . insertion_attribute_value = :v" . $attributeCount . "value";
+
+                        $sqlQueryWhere                          .= " and v$attributeCount . attribute_key = :v" . $attributeCount
+                                                                   . "key and v$attributeCount . insertion_attribute_value = :v" . $attributeCount . "value";
+                        $args[":v" . $attributeCount . "key"]   = $attributeKey->getId();
+                        $args[":v" . $attributeCount . "value"] = $value;
+
+                        $attributeCount++;
+                    }
+                }
+            }
+        }
+
+        $sqlResult = $this->entityManager()->getEntityManager()->getConnection()->executeQuery($sqlQuery . $sqlQueryWhere, $args);
+
+        $ids = $sqlResult->fetchAll();
+
+        $result["query"]["count"]     = sizeof($ids);
         $result["query"]["pageSize"]  = $pageSize;
         $result["query"]["page"]      = $page;
-        $result["query"]["pageCount"] = ceil((1.0) * $paginator->count() / $pageSize);
+        $result["query"]["pageCount"] = ceil((1.0) * sizeof($ids) / $pageSize);
         $result["query"]["items"]     = [];
 
         /**
@@ -215,9 +202,43 @@ class InsertionListService extends AbstractDatabaseAccess {
             }
         }
 
+        $order    = "id";
+        $orderDir = "desc";
+
+        if (isset($params["order"])) {
+            switch ($params["order"]) {
+                case 'price_asc':
+                    $order    = "price";
+                    $orderDir = "asc";
+                    break;
+                case 'price_desc':
+                    $order    = "price";
+                    $orderDir = "desc";
+                    break;
+                case 'date_asc':
+                    $order    = "createdAt";
+                    $orderDir = "asc";
+                    break;
+                case  'date_desc';
+                    $order    = "createdAt";
+                    $orderDir = "desc";
+                    break;
+            }
+        }
+
+        $findIds = [];
+
+        for ($i = ($page - 1) * $pageSize; $i < $page * $pageSize; $i++) {
+            if(sizeof($ids) > $i) {
+                $findIds[] = $ids[$i]["id"];
+            }
+        }
+
+        $items = $this->repository()->findBy(["id" => $findIds], [$order => $orderDir]);
+
         $result["values"] = $valueMap;
 
-        foreach ($paginator as $item) {
+        foreach ($items as $item) {
             $data = [
                 "id"        => $item->getId(),
                 "contact"   => $item->getContact() != null ? $item->getContact()->toArray(0) : [],

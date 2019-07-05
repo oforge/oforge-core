@@ -57,6 +57,12 @@ class InsertionContact extends AbstractModel {
     private $city;
 
     /**
+     * @var string|null
+     * @ORM\Column(name="country", type="string", nullable=true)
+     */
+    private $country;
+
+    /**
      * @var boolean
      * @ORM\Column(name="visible", type="boolean", nullable=true)
      */
@@ -83,6 +89,7 @@ class InsertionContact extends AbstractModel {
      */
     public function setInsertion(Insertion $insertion) : InsertionContact {
         $this->insertion = $insertion;
+
         return $this;
     }
 
@@ -100,6 +107,7 @@ class InsertionContact extends AbstractModel {
      */
     public function setName(?string $name) : InsertionContact {
         $this->name = $name;
+
         return $this;
     }
 
@@ -117,6 +125,7 @@ class InsertionContact extends AbstractModel {
      */
     public function setEmail(?string $email) : InsertionContact {
         $this->email = $email;
+
         return $this;
     }
 
@@ -134,6 +143,7 @@ class InsertionContact extends AbstractModel {
      */
     public function setPhone(?string $phone) : InsertionContact {
         $this->phone = $phone;
+
         return $this;
     }
 
@@ -151,6 +161,7 @@ class InsertionContact extends AbstractModel {
      */
     public function setZip(?string $zip) : InsertionContact {
         $this->zip = $zip;
+
         return $this;
     }
 
@@ -168,6 +179,7 @@ class InsertionContact extends AbstractModel {
      */
     public function setCity(?string $city) : InsertionContact {
         $this->city = $city;
+
         return $this;
     }
 
@@ -185,6 +197,21 @@ class InsertionContact extends AbstractModel {
      */
     public function setVisible(bool $visible) : InsertionContact {
         $this->visible = $visible;
+
         return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCountry() : ?string {
+        return $this->country;
+    }
+
+    /**
+     * @param string|null $country
+     */
+    public function setCountry(?string $country) : void {
+        $this->country = $country;
     }
 }
