@@ -5,7 +5,7 @@
               method="get">
             <h3 class="form__title">{{ i18n('adjust_search', 'Adjust your search') }}</h3>
 
-            <div class="form-controls">
+            <div class="form-controls form-controls--row">
                 {% for attributeGroup in attributes %}
                     {% for attribute in attributeGroup.items %}
                         {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ attribute.attributeKey.filterType|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey } %}
@@ -13,13 +13,13 @@
                 {% endfor %}
             </div>
 
-            <div class="form-controls form-controls--with-separator flex flex--row flex--wrap flex--center flex--between">
+            <div class="form-controls form-controls--row form-controls--with-separator">
                 {% include 'Plugins/Insertion/Frontend/Components/Content/Search/Price.twig' %}
             </div>
 
 
 
-            <div class="form-controls form-controls--with-separator">
+            <div class="form-controls form-controls--row form-controls--with-separator">
                 <div class="form__control">
                     <input type="text"
                            name="zip"
@@ -44,7 +44,7 @@
                 </div>
             </div>
 
-            <div class="form-controls">
+            <div class="form-controls form-controls--row">
                 <div class="form__control">
                     <input type="submit"
                            value="{{ i18n('apply_filter') }}"
