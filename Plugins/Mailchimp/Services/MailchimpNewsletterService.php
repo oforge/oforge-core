@@ -40,10 +40,11 @@ class MailchimpNewsletterService extends AbstractDatabaseAccess
     /**
      * @param string $email_address
      * @param int|null $userId
+     * @param array|null $tags
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function addListMember(string $email_address, int $userId = null)
+    public function addListMember(string $email_address, int $userId = null, $tags = null)
     {
         $this->updateParams();
         $emailMd5 = md5(strtolower($email_address));
@@ -56,6 +57,10 @@ class MailchimpNewsletterService extends AbstractDatabaseAccess
             'email_address' => $email_address,
             'status' => 'pending',
         ];
+
+        if($tags != null) {
+            $data['tags'] = $tags;
+        }
 
         $result = $this->apiraven->put($emailMd5, $data);
 
