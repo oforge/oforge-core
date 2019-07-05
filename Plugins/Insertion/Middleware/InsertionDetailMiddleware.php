@@ -29,7 +29,8 @@ class InsertionDetailMiddleware {
                     $title     = str_replace(" ", "-", strtolower($insertion->getContent()[0]->getTitle()));
 
                     if ($typeTitle == $pathChunks[1]) {
-                        if ($title != $pathChunks[2]) {
+                        if (urlencode($title) != $pathChunks[2]) {
+
                             $url = "/" . urlencode($typeTitle) . "/" . urlencode($title) . "/" . $insertion->getId();
 
                             return $response->withRedirect($url, 301);
