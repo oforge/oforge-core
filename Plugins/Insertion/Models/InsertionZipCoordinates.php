@@ -101,7 +101,7 @@ class InsertionZipCoordinates extends AbstractModel {
     /**
      * @param string $country
      */
-    public function setCountry(string $country) : void {
+    public function setCountry(?string $country) : void {
         $this->country = $country;
     }
 
