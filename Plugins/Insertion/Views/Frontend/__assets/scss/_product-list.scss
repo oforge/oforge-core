@@ -84,7 +84,7 @@
     }
 }
 
-@media (min-width: 640px) {
+@media screen and (min-width: $screen-medium) {
     .product {
         &__image {
             flex: 0 0 300px;
@@ -92,9 +92,11 @@
             flex-direction: column;
             align-items: flex-start;
             justify-content: center;
+            width: 300px;
+            height: 300px;
 
             .image {
-                max-width: 300px;
+                // max-width: 300px;
             }
         }
 

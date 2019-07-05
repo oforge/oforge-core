@@ -2,17 +2,20 @@
 {% block content %}
     <div class="content content--insertion">
         <div class="panel panel--insertion">
-            <form class="form" method="get"
+            <form class="form form--detail-search" method="get"
                   action="{{ url('insertions_listing', {'type': typeId }  ) }}">
                 {% for group in attributes %}
-                    <h3 class="title title--attribute-group">{{ group.name }}</h3>
-                    <div class="form-controls">
-                        {% for attributeContent in group.items %}
-                            {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ attributeContent.attributeKey.filterType|capitalize  ~ '.twig'  with {'attribute': attributeContent.attributeKey } %}
-                        {% endfor %}
-                    </div>
+                    {# TODO: fix this part. Better not check for group names... #}
+                    {% if group.name != 'main' and group.name != 'contact' %}
+                        <h3 class="title title--attribute-group">{{ group.name }}</h3>
+                        <div class="form-controls form-controls--row">
+                            {% for attributeContent in group.items %}
+                                {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ attributeContent.attributeKey.filterType|capitalize  ~ '.twig'  with {'attribute': attributeContent.attributeKey } %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
                 {% endfor %}
-                <div class="form-controls">
+                <div class="form-controls form-controls--row">
                     <div class="form__control"><input type="submit" class="form__input button button--primary" value="{{ i18n('submit') }}"></div>
                 </div>
             </form>

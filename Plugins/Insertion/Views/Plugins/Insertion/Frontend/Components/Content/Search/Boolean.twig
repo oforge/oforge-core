@@ -1,11 +1,10 @@
-<div class="form__control">
+<div class="form__control form__control--row-end">
     <label for="{{ attribute.name }}" class="form__label form__label--checkbox {{ label_class }}"> {{  i18n(attribute.name) }}</label>
     <input type="checkbox"
-           class="form__input form__input--checkbox-small"
+           class="form__input form__input--checkbox"
            name="{{ attribute.name }}"
            id="{{ attribute.name }}"
             {% if data['insertion'][attribute.id] == 'on' %}
                 checked="checked"
-            {% endif %}
-    >
+            {% endif %}>
 </div>
