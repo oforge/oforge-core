@@ -6,7 +6,7 @@
                   action="{{ url('insertions_listing', {'type': typeId }  ) }}">
                 {% for group in attributes %}
                     {# TODO: fix this part. Better not check for group names... #}
-                    {% if group.name != 'main' and group.name != 'contact' %}
+                    {% if group.name != 'main' and group.name != 'contact' and group.name != 'default' %}
                         <h3 class="title title--attribute-group">{{ group.name }}</h3>
                         <div class="form-controls form-controls--row">
                             {% for attributeContent in group.items %}
