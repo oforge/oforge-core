@@ -124,8 +124,16 @@
 }
 /** Step 4  */
 .premium__information {
+    margin-bottom: 3rem;
     .text-light {
         color: $color-light;
+    }
+    .title {
+        color: $color-primary;
+        margin: $size-large 0;
+        &__center {
+            text-align: center;
+        }
     }
     .information__basic {
         padding: $size-large;
@@ -179,7 +187,14 @@
                     width: 2.4rem;
                     border: 2px solid $color-primary;
                     border-radius: .3rem;
+                    &.unchecked {
+                        margin-right: 3rem;
+                    }
                 }
+                .unchecked + .icon {
+                    display: none;
+                }
+
                 .icon {
                     position: relative;
                     left: -2.2rem;
@@ -193,6 +208,21 @@
                 text-align: right;
             }
         }
+    }
+    .information__professional {
+        display: flex;
+
+        .banner {
+        flex: 0 0 50%;
+
+            background-color: $color-secondary-light;
+
+            &__plus {
+                background-color: $color-secondary;
+            }
+
+        }
+
     }
 }
 
