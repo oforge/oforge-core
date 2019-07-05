@@ -1,8 +1,10 @@
 .insertion__sidebar {
+    width: 100%;
     .form__control {
         transition: flex .2s ease;
     }
 }
+
 @media screen and (min-width: $screen-medium) {
     .insertion__sidebar {
         padding: $size-large;
@@ -23,6 +25,8 @@
 }
 @media screen and (min-width: $screen-large) {
     .insertion__sidebar {
+        margin-top: 0;
+        width: 30rem;
         .form-controls {
             flex-direction: column;
             align-items: flex-start;

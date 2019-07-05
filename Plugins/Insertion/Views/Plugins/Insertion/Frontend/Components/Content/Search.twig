@@ -5,7 +5,7 @@
               method="get">
             <h3 class="form__title">{{ i18n('adjust_search', 'Adjust your search') }}</h3>
 
-            <div class="form-controls">
+            <div class="form-controls form-controls--row">
                 {% for attributeGroup in attributes %}
                     {% for attribute in attributeGroup.items %}
                         {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ attribute.attributeKey.filterType|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey } %}
@@ -13,36 +13,15 @@
                 {% endfor %}
             </div>
 
-            <div class="form-controls form-controls--with-separator flex flex--row flex--wrap flex--center flex--between">
+            <div class="form-controls form-controls--row form-controls--with-separator">
                 {% include 'Plugins/Insertion/Frontend/Components/Content/Search/Price.twig' %}
             </div>
 
-            <div class="form-controls form-controls--with-separator">
-                <div class="form__control">
-                    <input type="text"
-                           name="zip"
-                           placeholder="{{ i18n('zip') }}"
-                           class="form__input"
-                    />
-                </div>
-                <div class="form__control">
-                    <div class="form__input form__input--select">
-                        <select class="form__input form__input--no-input" name="zip_range">
-                            <option value="1">{{ i18n('exact') }}</option>
-                            <option value="5">{{ i18n('zip_range_5', '5 km') }}</option>
-                            <option value="10">{{ i18n('zip_range_10', '10 km') }}</option>
-                            <option value="20">{{ i18n('zip_range_20', '20 km') }}</option>
-                            <option value="30">{{ i18n('zip_range_30', '30 km') }}</option>
-                            <option value="50">{{ i18n('zip_range_50', '50 km') }}</option>
-                            <option value="100">{{ i18n('zip_range_100', '100 km') }}</option>
-                            <option value="150">{{ i18n('zip_range_150', '150 km') }}</option>
-                            <option value="200">{{ i18n('zip_range_200', '200 km') }}</option>
-                        </select>
-                    </div>
-                </div>
+            <div class="form-controls form-controls--row form-controls--with-separator">
+                {% include 'Plugins/Insertion/Frontend/Components/Content/Search/Distance.twig' %}
             </div>
 
-            <div class="form-controls">
+            <div class="form-controls form-controls--row">
                 <div class="form__control">
                     <input type="submit"
                            value="{{ i18n('apply_filter') }}"
