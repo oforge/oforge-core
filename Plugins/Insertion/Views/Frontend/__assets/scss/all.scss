@@ -17,19 +17,6 @@
     .flex.insertions {
         flex-direction: row;
     }
-    .insertion {
-        &__sidebar {
-            margin-top: 0;
-            width: 30rem;
-        }
-        &__content {
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            margin-left: $size-large;
-            width: calc(100% - 30rem - #{$size-large});
-        }
-    }
 }
 
 @import "panel";
