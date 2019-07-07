@@ -5,7 +5,7 @@ namespace Oforge\Engine\Modules\Auth\Middleware;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Auth\Services\PermissionService;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
-use Oforge\Engine\Modules\Core\Helper\RedirectHelper;
+use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -63,7 +63,7 @@ class SecureMiddleware {
                 Oforge()->View()->assign(['stopNext' => true]);
 
                 if (!empty($this->urlPathName)) {
-                    return RedirectHelper::redirect($response, $this->urlPathName);
+                    return RouteHelper::redirect($response, $this->urlPathName);
                 }
 
                 return $response = $response->withRedirect('/', 302);
