@@ -10,7 +10,7 @@ use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
-use Oforge\Engine\Modules\Core\Helper\RedirectHelper;
+use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Oforge\Engine\Modules\Core\Models\Config\Config;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
@@ -67,7 +67,7 @@ class SystemSettingsController extends SecureBackendController {
                     Oforge()->View()->Flash()->setData(self::class, $formData);
                 }
 
-                return RedirectHelper::redirect($response, null, ['group' => $args['group']]);
+                return RouteHelper::redirect($response, null, ['group' => $args['group']]);
             }
             $groupConfigs = $configService->getGroupConfigs($args['group']);
             $groupConfigs = array_map(function($config) {
