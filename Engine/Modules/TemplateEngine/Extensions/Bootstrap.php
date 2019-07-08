@@ -26,7 +26,7 @@ class Bootstrap extends AbstractBootstrap {
      */
     public function __construct() {
         $this->services = [
-            "url" => UrlService::class
+            'url' => UrlService::class
         ];
     }
 
@@ -38,15 +38,13 @@ class Bootstrap extends AbstractBootstrap {
      * @throws Twig_Error_Loader
      */
     public function activate() {
-        /**
-         * @var $templateRenderer TemplateRenderService
-         */
-        $templateRenderer = Oforge()->Services()->get("template.render");
+        /** @var TemplateRenderService $templateRenderer */
+        $templateRenderer = Oforge()->Services()->get('template.render');
 
         $templateRenderer->View()->addExtension(new AccessExtension());
         $templateRenderer->View()->addExtension(new SlimExtension());
         $templateRenderer->View()->addExtension(new BackendExtension());
         $templateRenderer->View()->addExtension(new TokenExtension());
-
     }
+
 }
