@@ -1,9 +1,8 @@
 {% block search_container %}
     {% set values = getInsertionValues(attribute.id) %}
-
     {% block container_attributes %}
         {% for value in values.values %}
-            {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ value.subAttributeKey.filterType|capitalize  ~ '.twig'  with {'attribute': value.subAttributeKey } %}
+            {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ value.subAttributeKey.filterType|capitalize  ~ '.twig'  with {'attribute': all_attributes[value.subAttributeKey.id] } %}
         {% endfor %}
     {% endblock container_attributes %}
 {% endblock search_container %}
