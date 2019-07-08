@@ -171,10 +171,6 @@
                         fireClick(evt);
                     }
                 });
-
-                document.addEventListener('touchstart', function (evt) {
-                    fireClick(evt);
-                });
             }
         })
     }
