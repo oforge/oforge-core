@@ -18,7 +18,7 @@
                 </span>
                 {% set unit2 = i18n('unit_' ~ attribute.name ~ '_filter','') %}
                 {% if unit2 is not empty %}
-                    <input type="hidden" name=" name="{{ attribute.name }}_type" value="{{ unit2 }} />
+                    <input type="hidden" name="{{ attribute.name }}_type" value="{{ unit2 }}" />
                 {% endif %}
             {% endif %}
         </label>
