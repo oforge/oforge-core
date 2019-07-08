@@ -1,6 +1,6 @@
 <div class="form__control form__control--checkbox form__control__boolean">
     {% if i18nExists('attribute_hint_' ~ attribute.id ) %}
-        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/Hint.twig' with {
+        {% include 'Frontend/Components/Insertions/Hint.twig' with {
             hint: i18n('attribute_hint_' ~ attribute.id)
         } %}
     {% endif %}
