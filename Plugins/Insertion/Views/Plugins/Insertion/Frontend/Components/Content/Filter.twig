@@ -41,9 +41,12 @@
                     {% endfor %}
                 </div>
             </div>
-            <div class="button button--filter-search">
-                <i class="icon"></i><span class="filter-search-text">{{ i18n('edit_search', 'Edit search') }}</span>
-            </div>
+            <a href="#form-search-sidebar" class="button button--filter-search">
+                <svg class="icon icon--secondary">
+                    <use xlink:href="#magnifier"></use>
+                </svg>
+                <span class="filter-search-text">{{ i18n('edit_search', 'Edit search') }}</span>
+            </a>
         </div>
     {% endif %}
 {% endblock product_filter %}
