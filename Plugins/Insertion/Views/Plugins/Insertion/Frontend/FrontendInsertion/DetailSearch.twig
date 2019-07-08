@@ -7,7 +7,7 @@
                 {% for group in attributes %}
                     {# TODO: fix this part. Better not check for group names... #}
                     {% if group.name != 'main' and group.name != 'contact' and group.name != 'default' %}
-                        <h3 class="title title--attribute-group">{{ group.name }}</h3>
+                        <h3 class="title title--attribute-group">{{ i18n('attribute_group_' ~ group.name)  }}</h3>
                         <div class="form-controls form-controls--row">
                             {% for attributeContent in group.items %}
                                 {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ attributeContent.attributeKey.filterType|capitalize  ~ '.twig'  with {'attribute': attributeContent.attributeKey } %}

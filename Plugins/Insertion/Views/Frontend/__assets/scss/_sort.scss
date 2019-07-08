@@ -11,7 +11,20 @@
 }
 
 .form__input.form__input--sort {
-    max-width: 10rem;
+    max-width: 18rem;
+    margin-left: auto;
+}
+
+.panel.panel--filter + .panel.panel--sort {
+    margin-top: 0;
+}
+.panel--sort {
+    flex-wrap: wrap;
+}
+.form.form--sort {
+    flex: 0 0 100%;
+    text-align: right;
+    margin-top: $size-small;
 }
 
 @media screen and (min-width: $screen-medium) {
