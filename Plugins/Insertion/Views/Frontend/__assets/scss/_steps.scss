@@ -250,4 +250,11 @@
     }
 }
 
+.form__input.form__input--textarea {
+    &.form__input--textarea-description {
+        min-height: 29.3rem;
+        max-width: 100%;
+    }
+}
+
 

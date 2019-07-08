@@ -1,2 +1,18 @@
 .row {
 }
+
+
+.form__control--row-half {
+    @media (min-width: $screen-medium) {
+        float: left;
+        width: 50%;
+
+        &:nth-child(2n+1) {
+            padding-right: 10px;
+        }
+
+        &:nth-child(2n) {
+            padding-left: 10px;
+        }
+    }
+}
