@@ -1,5 +1,5 @@
 <div class="form__control form__control--new-select form__control--{{ attribute.filterType }} {{ isSubAttribute ? 'form__control--is-sub' : '' }}">
-
+    <label class="form__label">{{ i18n(attribute.name) }}</label>
     <div class="select {{ isSubAttribute ? 'select--is-sub' : '' }}"
          data-select-type="{{ attribute.type }}"
          data-placeholder="{{ i18n(attribute.name) }}"

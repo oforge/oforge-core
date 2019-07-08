@@ -1,5 +1,5 @@
 <div class="form__control form__control--new-select form__control--{{ attribute.filterType }} {{ isSubAttribute ? 'form__control--is-sub' : '' }}">
-    <label class="form__label">{{ i18n(attribute.name) }}</label>
+    {% if omitLabel is not defined %}<label class="form__label">{{ i18n(attribute.name) }}</label>{% endif %}
 
     <div class="select {{ isSubAttribute ? 'select--is-sub' : '' }}"
          data-select-type="{{ attribute.filterType }}"
@@ -19,7 +19,7 @@
                     {% if value.subAttributeKey is not null and not noSub %}
                         <div class="sub-attribute-container" data-sub-select="">
                             <em class="sub-attribute-container__text">{{ i18n('please_choose') }}</em>
-                            {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ all_attributes[value.subAttributeKey].filterType|capitalize  ~ '.twig'  with {'attribute': all_attributes[value.subAttributeKey], hidden: true, required: false, isSubAttribute: true} %}
+                            {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ all_attributes[value.subAttributeKey].filterType|capitalize  ~ '.twig'  with {'attribute': all_attributes[value.subAttributeKey], hidden: true, required: false, isSubAttribute: true, omitLabel: true} %}
                         </div>
                     {% endif %}
                 </li>
