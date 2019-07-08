@@ -15,8 +15,9 @@
                     data-index="{{ loop.index0 }}"
                     data-value-id="{{ value.id }}">
                     <span class="select__value">{{ i18n(value.value) }}</span>
-                    {% if value.subAttributeKey is not null %}
+                    {% if value.subAttributeKey is not null and not noSub %}
                         <div class="sub-attribute-container">
+                            <em class="sub-attribute-container__text">{{ i18n('please_choose') }}</em>
                             {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ all_attributes[value.subAttributeKey].filterType|capitalize  ~ '.twig'  with {'attribute': all_attributes[value.subAttributeKey], hidden: true, required: false, isSubAttribute: true} %}
                         </div>
                     {% endif %}
