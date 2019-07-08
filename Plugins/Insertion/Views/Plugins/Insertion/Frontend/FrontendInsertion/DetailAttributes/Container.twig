@@ -7,7 +7,7 @@
         {% block container_attributes %}
             <div>
                 {% for value in values.values %}
-                    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ value.subAttributeKey.type|capitalize  ~ '.twig'  with {'attribute': value.subAttributeKey }  %}
+                    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ value.subAttributeKey.type|capitalize  ~ '.twig'  with {'attribute': all_attributes[value.subAttributeKey.id], hidden: true, required: false, isSubAttribute: true} %}
                 {% endfor %}
             </div>
         {% endblock container_attributes %}
