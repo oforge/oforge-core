@@ -56,12 +56,20 @@ class NewsletterSubscriptionController extends AbstractController
         $email                      = $body['frontend_newsletter_email'];
         $uri                        = $router->pathFor('frontend_newsletter_subscription');
 
+
+        $tags = [$body['subscriber_type']];
+
+        if($body['participant'] == 'on') {
+            array_push($tags, 'participant');
+        }
+
         if (!$email) {
             Oforge()->View()->Flash()->addMessage('warning', I18N::translate('form_invalid_data', 'Invalid form data.'));
 
             return $response->withRedirect($uri, 302);
         } else {
-            $mailchimpNewsletterService->addListMember("$email");
+            $mailchimpNewsletterService->addListMember($email, null, $tags);
+
             return $response->withRedirect($uri, 302);
         }
     }
