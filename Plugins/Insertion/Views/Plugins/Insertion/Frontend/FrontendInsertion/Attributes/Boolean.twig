@@ -1,4 +1,9 @@
 <div class="form__control form__control--checkbox">
+    {% if i18nExists('attribute_hint_' ~ attribute.id ) %}
+        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/Hint.twig' with {
+            hint: i18n('attribute_hint_' ~ attribute.id)
+        } %}
+    {% endif %}
     <label for="{{ attribute.name }}"  class="form__label form__label--checkbox"> {{  i18n(attribute.name) }}</label>
     <input type="checkbox"
            class="form__input form__input--checkbox"
