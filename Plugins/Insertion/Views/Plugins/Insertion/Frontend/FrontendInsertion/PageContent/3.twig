@@ -15,7 +15,7 @@
             {% for attributeGroup in attributes %}
                 {% if attributeGroup.items|length > 0 and attributeGroup.name == 'contact' %}
                     <div class="attribute-group">
-                        <h2>{{ i18n(attributeGroup.name) }}</h2>
+                        <h2>{{ i18n('attribute_group_' ~ attributeGroup.name)  }}</h2>
                         <div>
                             {% for attribute in attributeGroup.items %}
                                 {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': attribute.required } %}
