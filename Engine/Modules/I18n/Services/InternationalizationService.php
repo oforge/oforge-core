@@ -5,6 +5,7 @@ namespace Oforge\Engine\Modules\I18n\Services;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
+use Oforge\Engine\Modules\Core\Helper\CsvHelper;
 use Oforge\Engine\Modules\I18n\Models\Snippet;
 
 /**
@@ -52,62 +53,66 @@ class InternationalizationService extends AbstractDatabaseAccess {
         return $this->cache[$language][$key];
     }
 
-
     /**
-     * Creates / Updates Text-Snippets from given .csv file.
-     * A Text-Snippet consists of three parameters: Scope, Name and Value
-     * Therefore a line in the .csv file should look like this:
-     * scope|name|value ( no whitespace ), where '|' acts as the separator.
+     * Creates / Updates Text-Snippets from given .csv file.<br>
+     * A Text-Snippet consists of three parameters: Scope, Name and Value.<br>
+     * Therefore a line in the .csv file should look like this (optional enclosure): "scope";"name";"value".<br>
+     * As of this point, the function can only be called from the console<br>
+     * ( i.e. 'php /bin/console oforge:service:run i18n:importFromCsv mysnippets.csv' ).
      *
-     * As of this point, the function can only be called from the console
-     * ( i.e. 'php /bin/console oforge:service:run i18n:insertFromCsv mysnippets.csv' ).
+     * @param string $filepath Absolute path to file.
+     * @param array $options Optional csv reader config, see CsvHelper::DEFAULT_CONFIG.
      *
-     * @param string $fileName
-     *
-     * @return bool|string
-     * @throws ORMException
+     * @return array Statistics array with lines (number of processed lines), skipped (skipped lines with errors), created & updated (created or updated snippets)
+     * @see CsvHelper::DEFAULT_CONFIG for config keys.
      */
-    public function insertFromCsv($fileName = '') {
-        if ($handle = fopen($fileName, 'r')) {
-            $entitiesCreated  = 0;
-            $entitiesUpdated  = 0;
-            $line             = 0;
+    public function importFromCsv(string $filepath, array $options = []) : array {
+        $statistics  = [
+            'lines'   => 0,
+            'skipped' => 0,
+            'created' => 0,
+            'updated' => 0,
+        ];
+        $rowCallable = function ($row) use ($statistics) {
+            if (!is_array($row) || empty($row) || count($row) !== 3) {
+                $statistics['skipped']++;
 
-            while ($row = fgetcsv($handle, 0, '|')) {
-                $line += 1;
-                if(sizeof($row) != 3) {
-                    print 'warning: cannot parse line ' . $line . "\n";
-                    continue;
+                return;
+            }
+            $statistics['lines']++;
+            $languageIso = $row[0];
+            $key         = $row[1];
+            $value       = $row[2];
+
+            $snippet = $this->repository()->findOneBy([
+                'scope' => $languageIso,
+                'name'  => $key,
+            ]);
+            if (!isset($snippet)) {
+                if (empty($value) && $value !== 0) {
+                    $value = $key;
                 }
-                $snippet = $this->repository()->findOneBy([
-                    'scope' => $row[0],
-                    'name'  => $row[1],
+                $snippet = Snippet::create([
+                    'scope' => $languageIso,
+                    'name'  => $key,
+                    'value' => $value,
                 ]);
-                if (!isset($snippet)) {
-                    $entitiesCreated += 1;
-                    $snippet = Snippet::create([
-                        'scope' => $row[0],
-                        'name'  => $row[1],
-                        'value' => $row[2] != '' ? $row[2] : $row[1],
-                    ]);
-                    $this->entityManager()->create($snippet);
-                } else if($row[2] != '') {
-                    $entitiesUpdated += 1;
-                    $snippet->setValue($row[2]);
-                    $this->entityManager()->flush();
-                }
-            };
-            fclose($handle);
-
-            return $entitiesCreated . ' snippet(s) added, ' . $entitiesUpdated . ' snippet(s) updated';
+                $this->entityManager()->create($snippet);
+                $statistics['created']++;
+            } elseif (!empty($value)) {
+                $snippet->setValue($value);
+                $this->entityManager()->update($snippet);
+                $statistics['updated']++;
+            }
+        };
+        try {
+            CsvHelper::read($filepath, $rowCallable, $options);
+        } catch (\Exception $exception) {
+            Oforge()->Logger()->logException($exception);
         }
-        return false;
-    }
 
-    public function showParams($param) {
-        return $param;
+        return $statistics;
     }
-
 
     /**
      * @param string $key
