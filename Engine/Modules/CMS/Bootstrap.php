@@ -195,7 +195,14 @@ class Bootstrap extends AbstractBootstrap {
             'group'       => $ctgMediaID,
             'classPath'   => Gallery::class,
         ]);
-
+        $managementService->put([
+            'name'        => 'video_youtube',
+            'path'        => 'VideoYoutube',
+            'icon'        => '/Themes/Base/ContentTypes/__assets/img/video_youtube.png',
+            'description' => 'Youtube video',
+            'group'       => $ctgMediaID,
+            'classPath'   => VideoYoutube::class,
+        ]);
         $ctgNavigationID = $contentTypeGroupManagementService->put([
             'name'        => 'navigation',
             'description' => 'Navigation',
