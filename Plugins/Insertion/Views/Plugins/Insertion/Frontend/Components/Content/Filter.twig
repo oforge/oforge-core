@@ -9,7 +9,7 @@
                                 <a href="#"
                                    onclick="window.location.href = Oforge.updateQueryString(encodeURIComponent('{{ f }}[]'))"
                                    class="close"></a>
-                                <span class="tag__text">{{ i18n(f) }} {{ value[0] }} {{ i18n(f ~ '_between') }}   {{ value[1] }}</span>
+                                <span class="tag__text">{{ i18n(f) }} {{ value[0]|number_format(0, ',', '.') }} {{ i18n(f ~ '_between') }}   {{ value[1]|number_format(0, ',', '.') }}</span>
                             </div>
                         {% elseif f is same as ("radius") %}
                             <div class="tag" data-key="{{ f }}">
