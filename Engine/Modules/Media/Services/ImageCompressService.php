@@ -93,31 +93,25 @@ class ImageCompressService {
                 // Compress image
 
                 // Set image as based its own type
-                if ($image_types[2] === IMAGETYPE_JPEG)
-                {
+                if ($image_types[2] === IMAGETYPE_JPEG) {
                     $imagick->setImageFormat('jpeg');
                     $imagick->setImageCompressionQuality(40);
-                    $imagick->setSamplingFactors(array('2x2', '1x1', '1x1'));
+                    $imagick->setSamplingFactors(['2x2', '1x1', '1x1']);
 
                     $profiles = $imagick->getImageProfiles("icc", true);
 
                     $imagick->stripImage();
 
-                    if(!empty($profiles)) {
+                    if (!empty($profiles)) {
                         $imagick->profileImage('icc', $profiles['icc']);
                     }
 
                     $imagick->setInterlaceScheme(Imagick::INTERLACE_JPEG);
                     $imagick->setColorspace(Imagick::COLORSPACE_SRGB);
-                }
-                else if ($image_types[2] === IMAGETYPE_PNG)
-                {
-
+                } elseif ($image_types[2] === IMAGETYPE_PNG) {
                     $imagick->setImageCompressionQuality(60);
                     $imagick->setImageFormat('png');
-                }
-                else if ($image_types[2] === IMAGETYPE_GIF)
-                {
+                } elseif ($image_types[2] === IMAGETYPE_GIF) {
                     $imagick->setImageFormat('gif');
                 }
 

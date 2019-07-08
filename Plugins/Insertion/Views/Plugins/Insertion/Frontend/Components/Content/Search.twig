@@ -6,17 +6,18 @@
             <h3 class="form__title">{{ i18n('adjust_search', 'Adjust your search') }}</h3>
 
             <div class="form-controls form-controls--row">
-                {% for attributeGroup in attributes %}
-                    {% for attribute in attributeGroup.items %}
-                        {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ attribute.attributeKey.filterType|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey } %}
-                    {% endfor %}
-                {% endfor %}
-            </div>
-
-            <div class="form-controls form-controls--row form-controls--with-separator">
                 <h3 class="title">{{ i18n('price') }}</h3>
                 {% include 'Plugins/Insertion/Frontend/Components/Content/Search/Price.twig' %}
             </div>
+
+            {% for attributeGroup in attributes %}
+                <div class="form-controls form-controls--row form-controls--with-separator">
+                    {% for attribute in attributeGroup.items %}
+                        {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ attribute.attributeKey.filterType|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey } %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
 
             <div class="form-controls form-controls--row form-controls--with-separator">
                 <h3 class="title">{{ i18n('distance') }}</h3>
