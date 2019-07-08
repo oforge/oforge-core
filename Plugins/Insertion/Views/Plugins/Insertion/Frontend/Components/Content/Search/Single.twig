@@ -14,9 +14,7 @@
                     data-selected="false"
                     data-index="{{ loop.index0 }}"
                     data-value-id="{{ value.id }}">
-                    <span class="select__value">
-                    {{ i18n(value.value) }}
-                    </span>
+                    <span class="select__value">{{ i18n(value.value) }}</span>
                     {% if value.subAttributeKey is not null %}
                         <div class="sub-attribute-container">
 
