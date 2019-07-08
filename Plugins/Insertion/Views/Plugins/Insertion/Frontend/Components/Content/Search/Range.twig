@@ -1,5 +1,5 @@
 <div class="form__control form__control__range">
-    <label class="form__label">{{ i18n(attribute.name) }}</label>
+    {% if omitLabel is not defined %}<label class="form__label">{{ i18n(attribute.name) }}</label>{% endif %}
     <div class="form__control form__control--half-medium">
         <label for="{{ attribute.name }}-from"
                class="form__input form__input--inside-label">
