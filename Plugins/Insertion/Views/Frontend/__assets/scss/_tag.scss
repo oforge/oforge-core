@@ -9,17 +9,20 @@
     align-items: center;
     justify-content: space-between;
     border-radius: 0;
-    border-left: 2px solid $color-secondary;
+    border-left: 1px solid $color-secondary;
     display: flex;
     margin-left: $size-small;
-    width: 12rem;
+    width: 15rem;
+    cursor: pointer;
 
     .icon {
-        width: 2rem;
-        height: 2rem;
+        width: 3rem;
+        height: 3rem;
+        transform: rotate3d(0, 1, 0, 180deg);
     }
     .filter-search-text {
         font-size: $font-size-6;
+        color: $color-secondary;
     }
 }
 .tag-list {

@@ -36,7 +36,15 @@
     &.button--header {
         font-size: 1.2rem;
     }
+
     &.button--flat {
         border-radius: 0;
+    }
+    &.button--small {
+        font-size: $font-size-5;
+    }
+    &.button--save-result {
+        width: 18rem;
+        max-width: 18rem;
     }
 }
