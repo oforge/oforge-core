@@ -171,10 +171,6 @@
                         fireClick(evt);
                     }
                 });
-
-                document.addEventListener('touchend', function (evt) {
-                    fireClick(evt);
-                });
             }
         })
     }
