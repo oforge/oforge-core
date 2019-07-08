@@ -39,22 +39,9 @@
 
     <div class="form-controls">
         {% for attributeGroup in attributes %}
-            {% if attributeGroup.items|length > 0 and attributeGroup.name == 'features' %}
+            {% if attributeGroup.items|length > 0 and not  (attributeGroup.name == 'main' or attributeGroup.name == 'contact') %}
                 <div class="attribute-group">
-                    <h2 class="title title--attribute-group">{{ i18n(attributeGroup.name) }}</h2>
-                    {% for attribute in attributeGroup.items %}
-                        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': attribute.required } %}
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endfor %}
-    </div>
-
-    <div class="form-controls">
-        {% for attributeGroup in attributes %}
-            {% if attributeGroup.items|length > 0 and not  (attributeGroup.name == 'features' or attributeGroup.name == 'main' or attributeGroup.name == 'contact') %}
-                <div class="attribute-group">
-                    <h2 class="title title--attribute-group">{{ i18n(attributeGroup.name) }}</h2>
+                    <h2 class="title title--attribute-group">{{i18n('attribute_group_' ~ attributeGroup.name)  }}</h2>
                     {% for attribute in attributeGroup.items %}
                         {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': attribute.required } %}
                     {% endfor %}
