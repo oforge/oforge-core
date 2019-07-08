@@ -1,7 +1,7 @@
 (function () {
     if (typeof Oforge !== 'undefined') {
         Oforge.register({
-            name: 'subAttributes',
+            name: 'selectTypes',
             selector: '[data-select-type]',
             init: function () {
                 var self = this;
