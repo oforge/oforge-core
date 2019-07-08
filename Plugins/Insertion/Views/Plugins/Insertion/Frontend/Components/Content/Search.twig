@@ -2,6 +2,7 @@
     <div class="insertion__sidebar">
         <form class="form form--search-filter"
               action=""
+              id="form-search-sidebar"
               method="get">
             <h3 class="form__title">{{ i18n('adjust_search', 'Adjust your search') }}</h3>
 
@@ -11,11 +12,13 @@
             </div>
 
             {% for attributeGroup in attributes %}
-                <div class="form-controls form-controls--row form-controls--with-separator">
-                    {% for attribute in attributeGroup.items %}
-                        {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ attribute.attributeKey.filterType|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey } %}
-                    {% endfor %}
-                </div>
+                {% if attributeGroup.items|length > 0 and attributeGroup.name != 'main' %}
+                    <div class="form-controls form-controls--row form-controls--with-separator">
+                        {% for attribute in attributeGroup.items %}
+                            {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ attribute.attributeKey.filterType|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey } %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
             {% endfor %}
 
 

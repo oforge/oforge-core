@@ -1,7 +1,7 @@
 <div class="form__control form__control--new-select form__control--{{ attribute.filterType }} {{ isSubAttribute ? 'form__control--is-sub' : '' }}">
-
+    <label class="form__label">{{ i18n(attribute.name) }}</label>
     <div class="select {{ isSubAttribute ? 'select--is-sub' : '' }}"
-         data-select-type="{{ attribute.filterType }}"
+         data-select-type="{{ attribute.type }}"
          data-placeholder="{{ i18n(attribute.name) }}"
          data-select="insertion[{{ attribute.id }}]">
         <p class="select__text"
@@ -19,7 +19,7 @@
                     </span>
                     {% if value.subAttributeKey is not null %}
                         <div class="sub-attribute-container">
-
+                            <em class="sub-attribute-container__text">{{ i18n('please_choose') }}</em>
                             {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ all_attributes[value.subAttributeKey].filterType|capitalize  ~ '.twig'  with {'attribute': all_attributes[value.subAttributeKey], hidden: true, required: false, isSubAttribute: true} %}
 
                         </div>

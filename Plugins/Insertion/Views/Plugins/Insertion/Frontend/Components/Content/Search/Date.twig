@@ -1,35 +1,38 @@
 <div class="form__control form__control__range">
     {% if omitLabel is not defined %}<label class="form__label">{{ i18n(attribute.name) }}</label>{% endif %}
     <div class="form__control form__control--half-medium">
-        <label for="{{ attribute.name }}-from"
+        <label for="{{ attribute.name }}_0"
                class="form__input form__input--inside-label">
             <input type="number"
                    name="{{ attribute.name }}[]"
-                   id="insertion[{{ attribute.name }}]-from"
-                   value="{{ search.filter[attribute.name][0] }}"
+                   id="{{ attribute.name }}_0"
+                   value="{% if search.filter[attribute.name] is defined %}{{ search.filter[attribute.name][0]  }}{% else %}0{% endif %}"
                    step="1"
                    min="0"
                    placeholder="{{ i18n('from') }}"
                    class="form__input" />
-            {% set unit = i18n('unit_' ~  attribute.name, '') %}
+            {% set unit = i18n('unit_' ~ attribute.name,'') %}
             {% if unit is not empty %}
                 <span class="input__unit">
                 {{ unit }}
-            </span>
+                </span>
+                {% set unit2 = i18n('unit_' ~ attribute.name ~ '_filter','') %}
+                {% if unit2 is not empty %}
+                    <input type="hidden" name="{{ attribute.name }}_type" value="{{ unit2 }}" />
+                {% endif %}
             {% endif %}
         </label>
-
-        <label for="{{ attribute.name }}-to"
+        <label for="{{ attribute.name }}_1"
                class="form__input form__input--inside-label">
             <input type="number"
                    name="{{ attribute.name }}[]"
-                   id="{{ attribute.name }}]-to"
-                   value="{{ search.filter[attribute.name][1] }}"
+                   id="{{ attribute.name }}_1"
+                   value="{% if search.filter[attribute.name] is defined %}{{ search.filter[attribute.name][1] }}{% else %}100{% endif %}"
                    step="1"
                    min="0"
                    placeholder="{{ i18n('to') }}"
                    class="form__input" />
-            {% set unit = i18n('unit_' ~  attribute.name, '') %}
+            {% set unit = i18n('unit_' ~ attribute.name,'') %}
             {% if unit is not empty %}
                 <span class="input__unit">
                 {{ unit }}
@@ -37,5 +40,4 @@
             {% endif %}
         </label>
     </div>
-
 </div>
