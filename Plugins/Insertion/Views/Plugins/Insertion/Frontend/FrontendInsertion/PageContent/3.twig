@@ -10,7 +10,6 @@
                           class="form__input form__input--textarea form__input--textarea-description form-control" placeholder="{{ i18n('description') }}">{{  data.insertion_description }}</textarea>
             </div>
 
-            {{ o_dump() }}
             {# contact attributes #}
             {% for attributeGroup in attributes %}
                 {% if attributeGroup.items|length > 0 and attributeGroup.name == 'contact' %}
