@@ -28,6 +28,9 @@
             flex: 0 0 100%;
             margin-top: $size-large;
         }
+        .form__control--is-sub {
+            margin-top: 0;
+        }
     }
 }
 

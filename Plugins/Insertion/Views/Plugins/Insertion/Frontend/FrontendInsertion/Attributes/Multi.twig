@@ -19,7 +19,7 @@
                     </span>
                     {% if value.subAttributeKey is not null %}
                         <div class="sub-attribute-container" data-sub-select="">
-
+                            <em class="sub-attribute-container__text">{{ i18n('please_choose') }}</em>
                             {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ all_attributes[value.subAttributeKey].filterType|capitalize  ~ '.twig'  with {'attribute': all_attributes[value.subAttributeKey], hidden: true, required: false, isSubAttribute: true} %}
 
                         </div>
