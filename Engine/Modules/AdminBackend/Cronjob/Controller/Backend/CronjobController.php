@@ -5,7 +5,7 @@ namespace Oforge\Engine\Modules\AdminBackend\Cronjob\Controller\Backend;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
-use Oforge\Engine\Modules\Core\Helper\RedirectHelper;
+use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Oforge\Engine\Modules\Cronjob\Models\AbstractCronjob;
 use Oforge\Engine\Modules\Cronjob\Services\CronjobService;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
@@ -108,6 +108,6 @@ class CronjobController extends BaseCrudController {
         $cronjobService = Oforge()->Services()->get('cronjob');
         $cronjobService->run($args['name']);
 
-        return RedirectHelper::redirect($response, 'backend_cronjob');
+        return RouteHelper::redirect($response, 'backend_cronjob');
     }
 }
