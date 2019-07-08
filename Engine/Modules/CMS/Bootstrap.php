@@ -16,6 +16,7 @@ use Oforge\Engine\Modules\CMS\ContentTypes\NavigationEntry;
 use Oforge\Engine\Modules\CMS\ContentTypes\RichText;
 use Oforge\Engine\Modules\CMS\ContentTypes\Row;
 use Oforge\Engine\Modules\CMS\ContentTypes\Text;
+use Oforge\Engine\Modules\CMS\ContentTypes\VideoYoutube;
 use Oforge\Engine\Modules\CMS\Controller\Backend\AjaxController;
 use Oforge\Engine\Modules\CMS\Controller\Backend\ElementsController;
 use Oforge\Engine\Modules\CMS\Controller\Backend\PagesController;
@@ -203,6 +204,7 @@ class Bootstrap extends AbstractBootstrap {
             'group'       => $ctgMediaID,
             'classPath'   => VideoYoutube::class,
         ]);
+
         $ctgNavigationID = $contentTypeGroupManagementService->put([
             'name'        => 'navigation',
             'description' => 'Navigation',
