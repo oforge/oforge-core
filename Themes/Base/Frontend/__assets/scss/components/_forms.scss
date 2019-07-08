@@ -150,7 +150,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: $size-medium;
+    padding: $size-medium $size-large;
     border-left: 1px solid $color-primary;
     font-size: 1.6rem;
     min-width: 1rem;
@@ -401,7 +401,7 @@
     }
 }
 
-.form-controls.form-controls--row {
+.form-controls.form-controls--row, .attribute-group {
     .form__control.form__control__boolean {
         margin-top: 0.6rem;
         flex-direction: row-reverse;
