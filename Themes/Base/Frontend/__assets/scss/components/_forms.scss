@@ -84,6 +84,13 @@
     &.form__control--multi {
         min-height: 3.6rem;
     }
+
+    &.form__control--checkbox {
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        justify-content: flex-end;
+    }
 }
 
 .form__control + .form__control {
@@ -114,6 +121,14 @@
 
 .form__label--checkbox + .form__input {
     margin-left: $size-medium;
+}
+
+.form__control--checkbox .form__label--checkbox {
+    margin-left: $size-medium;
+
+    + .form__input {
+        margin-left: 0;
+    }
 }
 
 .input__unit {
