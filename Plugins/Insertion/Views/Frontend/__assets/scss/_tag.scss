@@ -8,8 +8,8 @@
 .button.button--filter-search {
     align-items: center;
     justify-content: space-between;
-    border-radius: $border-radius;
-    border-left: 1px solid $color-secondary;
+    border-radius: 0;
+    border-left: 2px solid $color-secondary;
     display: flex;
     margin-left: $size-small;
     width: 12rem;
