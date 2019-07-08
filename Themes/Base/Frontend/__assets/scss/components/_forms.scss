@@ -86,8 +86,9 @@
         margin-top: 0;
     }
 
-    &.form__control--multi {
-        min-height: 3.6rem;
+    &.form__control--multi:not(.form__control--is-sub),
+    &.form__control--new-select:not(.form__control--is-sub) {
+        min-height: 6rem;
     }
 
     &.form__control--checkbox {
@@ -96,6 +97,10 @@
         align-items: center;
         justify-content: flex-end;
     }
+}
+
+.form--search .form__control.form__control--new-select {
+    min-height: 3.6rem;
 }
 
 .form__control + .form__control {

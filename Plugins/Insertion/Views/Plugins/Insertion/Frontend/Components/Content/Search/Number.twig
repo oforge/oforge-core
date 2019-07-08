@@ -1,5 +1,5 @@
 <div class="form__control">
-    <label class="form__label" for="{{ attribute.name }}">{{ i18n(attribute.name) }}</label>
+    {% if omitLabel is not defined %}<label for="{{ attribute.name }}" class="form__label">{{ i18n(attribute.name) }}</label>{% endif %}
     <label for="{{ attribute.name }}"
            class="form__input form__input--inside-label">
         <input type="number"
