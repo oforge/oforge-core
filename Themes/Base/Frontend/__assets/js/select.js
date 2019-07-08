@@ -12,6 +12,7 @@
                     selectItem: 'select__item',
                     selectItemIsChecked: 'select__item--is-checked',
                     selectValue: 'select__value',
+                    subSelect: 'form__control--is-sub'
                 };
                 var selectors = {
                     select: '.' + classNames.select,
@@ -72,6 +73,7 @@
                             addHiddenInputToCheckItem(selectItem);
                             parentSelect.checkedValues.push(valueId);
                             parentSelect.checkedNames.push(valueName);
+                            parentSelect.querySelector(selectors.selectText).innerHTML = parentSelect.checkedNames.join(', ');
                         } else {
                             unselectItem(selectItem);
                         }
@@ -103,6 +105,15 @@
                     }
                     if (hasSubSelect(selectItem)) {
                         resetSubSelect(selectItem);
+                    }
+
+
+
+                    if (! parentSelect.classList.contains(classNames.subSelect)) {
+                        parentSelect.querySelector(selectors.selectText).innerHTML = parentSelect.checkedNames.join(', ');
+                    }
+                    if (parentSelect.checkedNames.length < 1) {
+                        parentSelect.querySelector(selectors.selectText).innerHTML = parentSelect.dataset.placeholder;
                     }
                 }
 
@@ -138,8 +149,17 @@
 
                     var selectText = select.querySelector('[data-select-text]');
                     var selectList = select.querySelector('[data-select-list]');
+                    var checkedElements = selectList.querySelectorAll(selectors.selectItemIsChecked);
 
                     selectText.innerHTML = select.dataset.placeholder;
+                    checkedElements.forEach(function (checkedElement) {
+                        select.checkedValues.push(checkedElement.dataset.valueId);
+                        select.checkedNames.push(checkedElement.querySelector(selectors.selectValue).innerHTML);
+                        addHiddenInputToCheckItem(checkedElement);
+                    });
+                    if (select.checkedNames.length > 0) {
+                        selectText.innerHTML = select.checkedNames.join(', ');
+                    }
                 });
 
                 document.addEventListener('click', function (evt) {

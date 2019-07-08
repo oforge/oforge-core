@@ -20,7 +20,7 @@ use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
-use Oforge\Engine\Modules\Core\Helper\RedirectHelper;
+use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Oforge\Engine\Modules\Core\Models\Endpoint\EndpointMethod;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
@@ -206,7 +206,7 @@ class BlogController extends SecureFrontendController {
             }
         }
 
-        return RedirectHelper::redirect($response, 'frontend_blog_view', $args);
+        return RouteHelper::redirect($response, 'frontend_blog_view', $args);
     }
 
     /**
@@ -220,7 +220,7 @@ class BlogController extends SecureFrontendController {
     public function deleteCommentAction(Request $request, Response $response, array $args) {
         // TODO FEATURE/later BlogController#deleteCommentAction
 
-        return RedirectHelper::redirect($response, 'frontend_blog_view', $args);
+        return RouteHelper::redirect($response, 'frontend_blog_view', $args);
     }
 
     /**
@@ -234,7 +234,7 @@ class BlogController extends SecureFrontendController {
     public function reportCommentAction(Request $request, Response $response, array $args) {
         // TODO FEATURE/later BlogController#reportCommentAction
 
-        return RedirectHelper::redirect($response, 'frontend_blog_view', $args);
+        return RouteHelper::redirect($response, 'frontend_blog_view', $args);
     }
 
     /**
@@ -324,7 +324,7 @@ class BlogController extends SecureFrontendController {
             $twigFlash->addMessage('error', I18N::translate('plugin_blog_rating_saving_failed', 'The rating could not be saved.'));
         }
 
-        return RedirectHelper::redirect($response, 'frontend_blog_view', $args);
+        return RouteHelper::redirect($response, 'frontend_blog_view', $args);
     }
 
     /** @return array */

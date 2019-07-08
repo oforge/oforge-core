@@ -80,7 +80,7 @@ class ServiceRunCommand extends AbstractCommand {
             $parameters = $input->getOperand('parameters');
             $return     = call_user_func_array($callable, $parameters);
             if (!empty($return) || is_numeric($return)) {
-                $output->notice($return);
+                $output->notice(is_scalar($return) ? $return : print_r($return, true));
             }
         }
     }

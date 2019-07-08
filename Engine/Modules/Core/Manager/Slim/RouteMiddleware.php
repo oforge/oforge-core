@@ -30,8 +30,9 @@ class RouteMiddleware {
         Oforge()->View()->assign([
             'meta' => [
                 'route' => array_merge($this->endpoint->toArray(), [
-                    'params' => $routeInfo[2],
-                    'query'  => $request->getQueryParams(),
+                    'baseUrl' => $request->getUri()->getBaseUrl(),
+                    'params'  => $routeInfo[2],
+                    'query'   => $request->getQueryParams(),
                 ]),
             ],
         ]);
