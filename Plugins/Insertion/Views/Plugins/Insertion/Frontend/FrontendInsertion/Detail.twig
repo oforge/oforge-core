@@ -1,5 +1,7 @@
 {% extends "@parent/Frontend/Layout.twig" %}
 
+{% block title %}{% set title = insertion.content[0].title ~ i18n('title_separator') ~ i18n(insertion.insertionType.name) %}{{ title|length > 35 ? title|slice(0, 35) : title }}{{ i18n('title_separator') }}{{ config('system_project_name') }}{% endblock title %}
+
 {% block content %}
     {% if not insertion.moderation %}
         {{ i18n('insertion_needs_moderation') }}
@@ -9,25 +11,41 @@
     <div class="content content--insertion flex">
         <div class="main">
             <div class="panel panel--product-view">
-                <h3 class="title title--product">{{ insertion.content[1].title }}</h3>
-
-                <div class="product-view__images">
-                    <div class="thumbnails thumbnails--product">
-                        <div class="thumbnail">
-                            {% for item in insertion.media %}
-                                <img src="{{ item.content.path }}" alt="{{ item.content.name }}"
-                                     class="thumbnail__image">
-                            {% endfor %}
-                        </div>
-                        <div class="product-view__image">
-                            <img src="https://placeponi.es/400/300" alt="" class="image">
-                        </div>
+                {% block insertion_detail__heading %}
+                    <div class="product-view--heading">
+                        <h3 class="title title--3 title--product">{{ insertion.content[0].title }}</h3>
+                        <span class="title title--3 product-view__price"><span class="price-value">{{ insertion.price }}</span></span>
                     </div>
-                </div>
-                <span class="product-view__price"><span
-                            class="price-label">{{ i18n('insertion_detail_price', 'Preis') }}</span> <span
-                            class="price-value">{{ insertion.price }}</span></span>
+                {% endblock insertion_detail__heading %}
 
+                {% block insertion_detail__images %}
+                    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/ProductImages.twig' %}
+                {% endblock insertion_detail__images %}
+            </div>
+
+            <div class="panel panel--top-attributes">
+                <div class="top-attributes">
+                    <div class="product-view__price">
+                        <span class="attribute-label">{{ i18n('insertion_detail_price', 'Preis') }}</span>
+                        <span class="attribute-value">{{ insertion.price }}</span>
+                    </div>
+                    <div class="product-view__name">
+                        <span class="attribute-label">{{ i18n('insertion_detail_name', 'Name') }}</span>
+                        <span class="attribute-value">{{ insertion.content[0].name }}</span>
+                    </div>
+                    {% for attributeGroup in attributes %}
+                        {% if attributeGroup.items|length %}
+                            {% for attribute in attributeGroup.items %}
+                                {% if attribute.top == true %}
+                                    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute, 'values' : values} %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="panel panel--main-attributes">
                 <div class="main-attributes">
                     {% for attributeGroup in attributes %}
                         {% if attributeGroup.items|length > 0 and (attributeGroup.name == 'main') %}
@@ -37,45 +55,43 @@
                         {% endif %}
                     {% endfor %}
                 </div>
-
             </div>
-
             {% block insertion_detail__attributes %}
                 {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes.twig' %}
             {% endblock insertion_detail__attributes %}
 
-                {% if extended %}
-                    <div class="panel panel--product-attributes attributes--extended">
-                        <h3 class="title title--attributes">Details</h3>
-                        <div class="attribute">
-                            <span class="attribute-label">Label</span>
-                            <span class="attribute-value">Value</span>
-                        </div>
-                        <div class="attribute">
-                            <span class="attribute-label">Label</span>
-                            <span class="attribute-value">Value</span>
-                        </div>
-                        <div class="attribute">
-                            <span class="attribute-label">Label</span>
-                            <span class="attribute-value">Value</span>
-                        </div>
-                        <div class="attribute">
-                            <span class="attribute-label">Label</span>
-                            <span class="attribute-value">Value</span>
-                        </div>
+            {% if extended %}
+                <div class="panel panel--product-attributes attributes--extended">
+                    <h3 class="title title--attributes">Details</h3>
+                    <div class="attribute">
+                        <span class="attribute-label">Label</span>
+                        <span class="attribute-value">Value</span>
                     </div>
-                {% endif %}
+                    <div class="attribute">
+                        <span class="attribute-label">Label</span>
+                        <span class="attribute-value">Value</span>
+                    </div>
+                    <div class="attribute">
+                        <span class="attribute-label">Label</span>
+                        <span class="attribute-value">Value</span>
+                    </div>
+                    <div class="attribute">
+                        <span class="attribute-label">Label</span>
+                        <span class="attribute-value">Value</span>
+                    </div>
+                </div>
+            {% endif %}
 
-                    <div class="panel panel--product-description description">
-                        <div class="description__head">
-                            <h4 class="title">{{ i18n('insertion_detail_description_title', 'Beschreibung zum Pferd') }}</h4>
-                            <div class="language-switch"></div>
-                        </div>
-                        <div class="description__body">
-                            {{ insertion.content[0].description }}
-                        </div>
-                    </div>
-                {% block insertion_detail__pedigree %}
+            <div class="panel panel--product-description description">
+                <div class="description__head">
+                    <h4 class="title">{{ i18n('insertion_detail_description_title', 'Beschreibung') }}</h4>
+                    <div class="language-switch"></div>
+                </div>
+                <div class="description__body">
+                    {{ insertion.content[0].description }}
+                </div>
+            </div>
+            {% block insertion_detail__pedigree %}
             {% endblock insertion_detail__pedigree %}
         </div>
 

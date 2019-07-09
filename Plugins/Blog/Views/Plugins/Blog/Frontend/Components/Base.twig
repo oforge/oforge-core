@@ -1,7 +1,6 @@
 {% extends '@parent/Frontend/Layout.twig' %}
 
-{% block title %}{% if blog.post %}{{ blog.post.headerTitle }}{% elseif blog.category %}{{ blog.category.name }}{% else %}{{ i18n('plugin_blog_frontend_blog_home', 'Blog') }}{% endif %} {{ i18n('by', 'by') }} {{ config('system_project_name') }}{% endblock title %}
-
+{% block title %}{% set title = (blog.post is defined ? (blog.post.headerTitle ~ i18n('title_separator') ~ blog.category.name) : (blog.category  is defined ? blog.category.name : i18n('plugin_blog_frontend_blog_home', 'Blog'))) %}{{ title|length > 35 ? title|slice(0, 35) : title }}{{ i18n('title_separator') }}{{ config('system_project_name') }}{% endblock title %}
 
 {% block content %}
     <div class="content">

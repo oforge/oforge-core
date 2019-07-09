@@ -58,6 +58,8 @@
     }
 }
 
+
+
 .cms-content-type-editor-container {
     .sort-handle {
         height: 100%;
@@ -66,16 +68,27 @@
         position: absolute;
         top: 0;
         left: 0;
+
+        &-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            display: none;
+        }
     }
 
     .cms-page-builder-selected-element, .ui-sortable-helper {
         border-color: #ccc;
         background: #FFF;
 
-        .sort-handle {
+        & > .sort-handle {
             background-color: #ccc;
             cursor: n-resize;
         }
+    }
+    .cms-page-builder-selected-element > .sort-handle .sort-handle-icon {
+        display: inherit;
     }
 }
 

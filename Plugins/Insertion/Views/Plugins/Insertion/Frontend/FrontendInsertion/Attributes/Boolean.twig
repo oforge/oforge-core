@@ -1,9 +1,14 @@
-<div class="form__control">
-
-    <label for="insertion[{{ attribute.id }}]"  class="form__label {{ label_class }}"> {{  i18n(attribute.name) }}</label>
+<div class="form__control form__control--checkbox form__control__boolean">
+    {% if i18nExists('attribute_hint_' ~ attribute.id ) %}
+        {% include 'Frontend/Components/Insertions/Hint.twig' with {
+            hint: i18n('attribute_hint_' ~ attribute.id)
+        } %}
+    {% endif %}
+    <label for="{{ attribute.name }}"  class="form__label form__label--checkbox"> {{  i18n(attribute.name) }}</label>
     <input type="checkbox"
            class="form__input form__input--checkbox"
            name="insertion[{{ attribute.id }}]"
+           id="{{ attribute.name }}"
            {% if data['insertion'][attribute.id] == 'on' %}
                 checked="checked"
            {% endif %}

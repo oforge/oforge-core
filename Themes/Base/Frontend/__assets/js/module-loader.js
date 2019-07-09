@@ -62,6 +62,7 @@ var Oforge = (function() {
          *                   - init() (function to initialize the module)
          */
         register: function (moduleData) {
+
             var self = this;
             var moduleElements;
             var moduleName;

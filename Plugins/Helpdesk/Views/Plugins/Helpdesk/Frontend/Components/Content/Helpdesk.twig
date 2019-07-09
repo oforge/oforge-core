@@ -6,10 +6,10 @@
         {% endblock helpdesk_title %}
 
         {% block helpdesk_description %}
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Aliquam, at blanditiis commodi deserunt, eligendi fuga illum, iure libero nam nisi odio quibusdam quidem quod recusandae repellat sapiente
-                sit voluptate voluptatibus! <a href="#">Lorem ipsum</a> dolor sit amet, consectetur adipisicing elit. Facilis maxime molestias officia sed. Accusantium aliquam animi dignissimos illo incidunt modi nesciunt odit vel?
-                Enim eum fugit necessitatibus recusandae voluptatibus? Inventore.</p>
+            {% set content = content('helpdesk_description_' ~  meta.language) %}
+            {% if content %}
+                {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
+            {% endif %}
         {% endblock helpdesk_description %}
 
         {% block helpdesk__form %}

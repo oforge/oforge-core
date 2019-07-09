@@ -9,6 +9,7 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Oforge\Engine\Modules\Core\Exceptions\LoggerAlreadyExistException;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
+use Oforge\Engine\Modules\Core\Helper\FileSystemHelper;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 
 /**
@@ -33,9 +34,10 @@ class CacheManager {
     /**
      * Deletes old cache files
      *
-     * @param int $days
+     * @param $slot
      */
     public function cleanUp($slot) {
+        FileSystemHelper::delete(ROOT_PATH . Statics::FUNCTION_CACHE_DIR . DIRECTORY_SEPARATOR . $slot, true);
     }
 
     /**
@@ -47,7 +49,36 @@ class CacheManager {
         if ($this->exists($slot, $className, $functionName, $arguments)) {
             $fileName = $this->getFileName($slot, $className, $functionName, $arguments);
 
-            return unserialize(file_get_contents($fileName));
+            $output = null;
+            $files  = glob($fileName . "*");
+
+            foreach ($files as $file) {
+                if (strpos($file, "##") === false) {
+                    // file expires in the future
+                    $output = file_get_contents($file);
+                } else {
+                    $split = explode("##", $file);
+                    if (sizeof($split) == 2) {
+                        $durationString = $split[1];
+                        try {
+                            $interval = new \DateInterval('P' . $durationString);
+                            $date     = new \DateTime(date('c', filemtime($file)));
+
+                            $expiresDate = $date->add($interval);
+                            $now         = new \DateTime();
+
+                            if ($expiresDate > $now) {
+                                // file expires in the future
+                                $output = file_get_contents($file);
+                            }
+                        } catch (Exception $exception) {
+                            Oforge()->Logger()->get()->error($exception->getMessage(), $exception->getTrace());
+                        }
+                    }
+                }
+            }
+
+            return $output != null ? unserialize($output) : null;
         }
 
         return null;
@@ -56,22 +87,53 @@ class CacheManager {
     /**
      * Returns cache instance
      *
+     * @param string $slot
+     * @param string $className
+     * @param string $functionName
+     * @param $arguments
+     *
      * @return mixed
      */
     public function exists(string $slot, string $className, string $functionName, $arguments) {
         $fileName = $this->getFileName($slot, $className, $functionName, $arguments);
 
-        return file_exists($fileName);
+        $files = glob($fileName . "*");
+
+        foreach ($files as $file) {
+            if (strpos($file, "##") === false) {
+                return true;
+            } else {
+                $split = explode("##", $file);
+                if (sizeof($split) == 2) {
+                    $durationString = $split[1];
+                    try {
+                        $interval = new \DateInterval('P' . $durationString);
+                        $date     = new \DateTime(date('c', filemtime($file)));
+
+                        $expiresDate = $date->add($interval);
+                        $now         = new \DateTime();
+
+                        if ($expiresDate > $now) {
+                            return true;
+                        }
+                    } catch (Exception $exception) {
+                        Oforge()->Logger()->get()->error($exception->getMessage(), $exception->getTrace());
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
      * Returns cache instance.
      */
-    public function set(string $slot, string $className, string $functionName, $arguments, $result) {
+    public function set(string $slot, string $className, string $functionName, $arguments, $result, $duration = 'T5M') {
         $dirName = $this->getDirName($slot, $className, $functionName);
-        @mkdir($dirName, 0755, true);
 
-        $fileName = $this->getFileName($slot, $className, $functionName, $arguments);
+        @mkdir($dirName, 0755, true);
+        $fileName = $this->getFileName($slot, $className, $functionName, $arguments) . "##" . $duration;
 
         file_put_contents($fileName, serialize($result));
     }

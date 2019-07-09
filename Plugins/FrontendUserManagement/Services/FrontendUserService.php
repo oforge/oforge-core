@@ -24,7 +24,17 @@ class FrontendUserService {
      * @return bool
      */
     public function isLoggedIn() : bool {
-        return isset($_SESSION['user_logged_in']) && $_SESSION['user_logged_in'] === true;
+        if (isset($_SESSION['user_logged_in']) && $_SESSION['user_logged_in'] === true) {
+            return true;
+        }
+
+        if ($this->getUser() != null) {
+            $_SESSION['user_logged_in'] = true;
+
+            return true;
+        }
+
+        return false;
     }
 
     /**

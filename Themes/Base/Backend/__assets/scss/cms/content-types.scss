@@ -96,6 +96,10 @@
     width: 100%;
     cursor: pointer;
 
+    .content-type-edit-selector {
+        border: 0;
+    }
+
     &.cms-page-builder-selected-element {
         border-color: #ccc;
 

@@ -8,8 +8,9 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{% block title %}{{ meta.title }}{% endblock title %}</title>
+    <title>{% block title %}{% if meta.title is defined %}{{ meta.title }}{% else %}{{ config('system_project_name') }}{% endif %}{% endblock title %}</title>
     <meta name="description" content="{% block description %}{{ meta.description }}{% endblock description %}" />
+    {#<base href="{{ meta.route.baseUrl }}" />#}
     <link rel="shortcut icon" href="/var/public/__assets/Frontend/img/favicon.ico">
 
     {% block master__additional_meta %}
@@ -17,7 +18,8 @@
 
     {% block master__styles %}
         {% if assets.css %}
-            <link rel="stylesheet" href="{{ assets.css }}" />
+            <link rel="preload" as="style" href="{{ assets.css }}" onload="this.onload=null;this.rel='stylesheet'">
+            <noscript><link rel="stylesheet" href="{{ assets.css }}"></noscript>
         {% endif %}
     {% endblock master__styles %}
 </head>

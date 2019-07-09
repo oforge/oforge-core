@@ -1,6 +1,6 @@
 .attribute-group {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: 100%;
     grid-gap: $size-large;
 }
 
@@ -15,7 +15,7 @@
 
 @media screen and (min-width: $screen-medium) {
     .attribute-group {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: repeat(2, 50%);
 
         .form__control {
             margin-bottom: $size-large;
@@ -32,7 +32,7 @@
 
 @media screen and (min-width: $screen-large) {
     .attribute-group {
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: repeat(3, 33.3333333333%);
     }
 
     .title--attribute-group {

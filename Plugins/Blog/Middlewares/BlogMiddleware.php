@@ -6,7 +6,7 @@ use Blog\Enums\BlogPermission;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Auth\Services\PermissionService;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
-use Oforge\Engine\Modules\Core\Helper\RedirectHelper;
+use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -46,7 +46,7 @@ class BlogMiddleware {
                     } else {
                         Oforge()->View()->assign(['stopNext' => true]);
 
-                        return RedirectHelper::redirect($response, 'frontend_blog_view', $route['params']);
+                        return RouteHelper::redirect($response, 'frontend_blog_view', $route['params']);
                     }
 
                 }

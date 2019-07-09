@@ -1,6 +1,24 @@
 {% extends "@parent/Frontend/Layout.twig" %}
 {% block content %}
-    {% for group in  attributes %}
-        <p>{{ group.name }}</p>
-    {% endfor %}
+    <div class="content content--insertion">
+        <div class="panel panel--insertion">
+            <form class="form form--detail-search" method="get"
+                  action="{{ url('insertions_listing', {'type': typeId }  ) }}">
+                {% for group in attributes %}
+                    {# TODO: fix this part. Better not check for group names... #}
+                    {% if group.name != 'main' and group.name != 'contact' and group.name != 'default' %}
+                        <h3 class="title title--attribute-group">{{ i18n('attribute_group_' ~ group.name)  }}</h3>
+                        <div class="form-controls form-controls--row">
+                            {% for attributeContent in group.items %}
+                                {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ attributeContent.attributeKey.filterType|capitalize  ~ '.twig'  with {'attribute': attributeContent.attributeKey } %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                <div class="form-controls form-controls--row">
+                    <div class="form__control"><input type="submit" class="form__input button button--primary" value="{{ i18n('submit') }}"></div>
+                </div>
+            </form>
+        </div>
+    </div>
 {% endblock %}

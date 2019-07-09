@@ -1,17 +1,6 @@
 {% block page_content %}
     {# Main attributes #}
-    <div class="form-controls">
-        {% for attributeGroup in attributes %}
-            {% if attributeGroup.items|length > 0 and attributeGroup.name == 'features' %}
-                <div class="attribute-group">
-                    <h2 class="title title--attribute-group">{{ i18n(attributeGroup.name) }}</h2>
-                    {% for attribute in attributeGroup.items %}
-                        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': attribute.required } %}
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endfor %}
-    </div>
+
     <div class="form-controls">
         <div class="attribute-group">
             <label for="price"
@@ -24,7 +13,8 @@
                            id="price"
                            min="0"
                            value="{{ data['price'] }}"
-                           class="form__input" />
+                           class="form__input"
+                           required/>
                     {% if i18nExists('unit_price') %}
                         <span class="input__unit">
                         {{ i18n('unit_price') }}
@@ -32,14 +22,25 @@
                     {% endif %}
                 </label>
             </div>
+
+            <div class="form__control form__control--checkbox">
+                <label for="tax" class="form__label form__label--checkbox"> {{  i18n('tax') }}</label>
+                <input type="checkbox"
+                       class="form__input form__input--checkbox"
+                       name="{{ data['tax'] }}"
+                       id="tax"
+                   {% if data['tax'] == 'on' %}
+                       checked="checked"
+                   {% endif %}>
+            </div>
         </div>
     </div>
 
     <div class="form-controls">
         {% for attributeGroup in attributes %}
-            {% if attributeGroup.items|length > 0 and not  (attributeGroup.name == 'features' or attributeGroup.name == 'main' or attributeGroup.name == 'contact') %}
+            {% if attributeGroup.items|length > 0 and not  (attributeGroup.name == 'main' or attributeGroup.name == 'contact') %}
                 <div class="attribute-group">
-                    <h2 class="title title--attribute-group">{{ i18n(attributeGroup.name) }}</h2>
+                    <h2 class="title title--attribute-group">{{i18n('attribute_group_' ~ attributeGroup.name)  }}</h2>
                     {% for attribute in attributeGroup.items %}
                         {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': attribute.required } %}
                     {% endfor %}

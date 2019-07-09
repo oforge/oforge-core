@@ -7,6 +7,7 @@
         font-weight: normal;
         color: $text-dark;
     }
+
     &__sub-title {
         font-size: $font-size-5;
         font-weight: bold;
@@ -24,8 +25,12 @@
         flex-wrap: wrap;
 
         .form__control {
-            flex: 0 0 calc(50% - .6rem);
+            flex: 0 0 100%;
             margin-top: $size-large;
+        }
+
+        .form__control--is-sub {
+            margin-top: 0;
         }
     }
 }
@@ -59,6 +64,7 @@
             font-size: $font-size-6;
         }
     }
+
     &.form__control--hidden {
         display: none;
     }
@@ -69,18 +75,43 @@
         align-items: flex-end;
     }
 
+    &.form__control--row-end {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
+    }
+
     .form-controls .form__control {
         margin-top: 0;
     }
 
-    &.form__control--multi {
-        min-height: 3.6rem;
+    &.form__control--multi:not(.form__control--is-sub),
+    &.form__control--new-select:not(.form__control--is-sub) {
+        min-height: 6rem;
     }
+
+    &.form__control--checkbox {
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        justify-content: flex-end;
+    }
+}
+
+.form--search .form__control.form__control--new-select {
+    min-height: 3.6rem;
 }
 
 .form__control + .form__control {
     margin-top: $size-large;
 }
+
+.form__control .form__label {
+    font-weight: bold;
+    font-size: $font-size-5;
+}
+
 .flex--row > .form__control + .form__control {
     margin-top: 0;
 
@@ -97,8 +128,21 @@
         max-width: calc(100% - 4rem);
         vertical-align: middle;
     }
+
     &.form__label--title {
         text-align: center;
+    }
+}
+
+.form__label--checkbox + .form__input {
+    margin-left: $size-medium;
+}
+
+.form__control--checkbox .form__label--checkbox {
+    margin-left: $size-medium;
+
+    + .form__input {
+        margin-left: 0;
     }
 }
 
@@ -106,7 +150,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: $size-medium;
+    padding: $size-medium $size-large;
     border-left: 1px solid $color-primary;
     font-size: 1.6rem;
     min-width: 1rem;
@@ -156,7 +200,8 @@
 
     // dirrty hack :/
     &.form__input--checkbox {
-        width: 3.6rem;
+        width: 2.6rem;
+        height: 2.6rem;
         vertical-align: middle;
 
         &:checked {
@@ -269,6 +314,7 @@
             color: $text-light;
         }
     }
+
     &.valid {
         background-color: $color-secondary;
         color: $text-light;
@@ -283,12 +329,32 @@
     margin-top: $size-large;
 }
 
+@media screen and (min-width: 480px) {
+    .form--search {
+        .form-controls {
+            &.form-controls--row {
+                .form__control {
+                    flex: 0 0 calc(50% - .6rem);
+                }
+            }
+        }
+    }
+}
+
 @media screen and (min-width: $screen-medium) {
+    .form-controls {
+        &.form-controls--row {
+            .form__control {
+                flex: 0 0 calc(50% - .6rem);
+            }
+        }
+    }
     .form__control {
         &.form__control--xs {
             width: 50%;
             margin: 0 auto;
         }
+
         &.form__control--s {
             width: 65%;
             margin: 0 auto;
@@ -310,10 +376,49 @@
 
             > * {
                 flex: 0 0 49%;
+                max-width: 49%;
             }
+        }
+
+        &.form__control--third-medium {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+
+
         }
     }
     .form__input--inside-label + .form__input--inside-label {
         margin-top: 0;
+    }
+}
+
+
+.form__control.form__control__range {
+    & > .form__control {
+        margin-top: 0;
+    }
+}
+
+.form-controls.form-controls--row, .attribute-group {
+    .form__control.form__control__boolean {
+        margin-top: 0.6rem;
+        flex-direction: row-reverse;
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        justify-content: flex-end;
+
+        .form__input--checkbox {
+            width: 2rem;
+            height: 2rem;
+            margin-left: 0px;
+            margin-right: .6rem;
+        }
+
+        .form__label--checkbox {
+            font-weight: normal;
+        }
     }
 }

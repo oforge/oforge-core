@@ -5,7 +5,7 @@
     {% if slider['insertions']|length > 0 %}
         <div class="slider slider--top">
             {% for insertion in slider.insertions %}
-                <a href="/insertions/detail/{{ insertion.id }}" class="slider__link">
+                <a href="{{ url('insertions_detail', {id: insertion.id}) }}" class="slider__link">
                     <div class="slide">
                         {#
                         <div class="badge is--new">
