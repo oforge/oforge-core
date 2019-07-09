@@ -3,13 +3,18 @@
 namespace Insertion\Twig;
 
 use Doctrine\ORM\ORMException;
+use FrontendUserManagement\Models\User;
+use FrontendUserManagement\Services\UserService;
+use Insertion\Models\Insertion;
 use Insertion\Services\AttributeService;
 use Insertion\Services\InsertionBookmarkService;
 use Insertion\Services\InsertionSearchBookmarkService;
+use Insertion\Services\InsertionService;
 use Insertion\Services\InsertionSliderService;
 use Insertion\Services\InsertionTypeService;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
 use Twig_Extension;
 use Twig_ExtensionInterface;
 use Twig_Function;
@@ -31,6 +36,7 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
             new Twig_Function('hasSearchBookmark', [$this, 'hasSearchBookmark']),
             new Twig_Function('getInsertionSliderContent', [$this, 'getInsertionSliderContent']),
             new Twig_Function('getQuickSearch', [$this, 'getQuickSearch']),
+            new Twig_Function('getChatPartnerInformation', [$this, 'getChatPartnerInformation']),
         ];
     }
 
@@ -127,5 +133,37 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
         $quickSearch          = $insertionTypeService->getQuickSearchInsertions();
 
         return ['types' => $quickSearch, 'attributes' => $insertionTypeService->getInsertionTypeAttributeMap()];;
+    }
+
+    /**
+     * @param $type
+     * @param $id
+     *
+     * @return array
+     * @throws ORMException
+     * @throws ServiceNotFoundException
+     */
+    public function getChatPartnerInformation($type, $id) {
+        if ($type == 'requester') {
+            /** @var InsertionService $insertionService */
+            $insertionService = Oforge()->Services()->get('insertion');
+            /** @var Insertion $insertion */
+            $insertion = $insertionService->getInsertionById($id);
+
+            return [
+                'imageId' => $insertion->getMedia()[0]->getId(),
+                'title'   => $insertion->getContent()[0]->getTitle(),
+            ];
+        } else {
+            /** @var UserService $userService */
+            $userService = Oforge()->Services()->get('user');
+            /** @var User $user */
+            $user = $userService->getUserById($id);
+
+            return [
+                'imageId' => $user->getDetail()->getImage()->getId(),
+                'title'   => $user->getDetail()->getNickName()
+            ];
+        }
     }
 }

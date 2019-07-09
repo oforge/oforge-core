@@ -11,6 +11,7 @@ use Messenger\Models\Conversation;
 use Messenger\Services\FrontendMessengerService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use ReflectionException;
 
 class HelpdeskTicketService extends AbstractDatabaseAccess {
     public function __construct() {
@@ -30,6 +31,7 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
      * @return Conversation
      * @throws ServiceNotFoundException
      * @throws ORMException
+     * @throws ReflectionException
      */
     public function createNewTicket($opener, $issueType, $title, $message) {
         $ticket = new Ticket();
@@ -44,7 +46,16 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
         /** @var HelpdeskMessengerService $helpdeskMessengerService */
         $helpdeskMessengerService = Oforge()->Services()->get('helpdesk.messenger');
 
-        return $helpdeskMessengerService->createNewConversation($opener, 'helpdesk', 'helpdesk_inquiry', $ticket->getId(), $title, $message);
+        $data = [
+            'requester' => $opener,
+            'requested' => 'helpdesk',
+            'type' => 'helpdesk_inquiry',
+            'targetId' => $ticket->getId(),
+            'title' => $title,
+            'firstMessage' => $message,
+        ];
+
+        return $helpdeskMessengerService->createNewConversation($data);
     }
 
     /**
