@@ -31,6 +31,18 @@ class Conversation extends AbstractModel {
     private $requested;
 
     /**
+     * @var integer
+     * @ORM\Column(name="user_reqeuster_type", type="integer", nullable=false)
+     */
+    private $requesterType;
+
+    /**
+     * @var integer
+     * @ORM\Column(name="user_reqeusted_type", type="integer", nullable=false)
+     */
+    private $requestedType;
+
+    /**
      * @var string
      * @ORM\Column(name="conversation_state", type="string", nullable=false)
      */
@@ -225,5 +237,39 @@ class Conversation extends AbstractModel {
         return $this;
     }
 
+    /**
+     * @return int
+     */
+    public function getRequesterType() : int {
+        return $this->requesterType;
+    }
 
+    /**
+     * @param int $requesterType
+     *
+     * @return Conversation
+     */
+    public function setRequesterType(int $requesterType) : Conversation {
+        $this->requesterType = $requesterType;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRequestedType() : int {
+        return $this->requestedType;
+    }
+
+    /**
+     * @param int $requestedType
+     *
+     * @return Conversation
+     */
+    public function setRequestedType(int $requestedType) : Conversation {
+        $this->requestedType = $requestedType;
+
+        return $this;
+    }
 }

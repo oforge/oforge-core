@@ -8,32 +8,29 @@ use Doctrine\ORM\ORMException;
 use Exception;
 use Messenger\Abstracts\AbstractMessengerService;
 use Messenger\Models\Conversation;
+use ReflectionException;
 
 class HelpdeskMessengerService extends AbstractMessengerService {
 
     /**
-     * @param $requester
-     * @param null $requested
-     * @param $conversationType
-     * @param $targetId
-     * @param $title
-     * @param $firstMessage
+     * @param array $data
      *
      * @return Conversation
      * @throws ORMException
+     * @throws ReflectionException
      */
-    public function createNewConversation($requester, $requested, $conversationType, $targetId, $title, $firstMessage) {
+    public function createNewConversation(array $data) {
         $conversation = new Conversation();
-        $conversation->setRequester($requester);
-        $conversation->setRequested($requested);
-        $conversation->setTargetId($targetId);
-        $conversation->setTitle($title);
-        $conversation->setState('open');
-        $conversation->setType($conversationType);
+
+        $data['state'] = 'open';
+        $data['requesterType'] = 1;
+        $data['requestedType'] = 2;
+
+        $conversation->fromArray($data);
 
         $this->entityManager()->create($conversation);
 
-        parent::sendMessage($conversation->getId(), $requester, $firstMessage);
+        parent::sendMessage($conversation->getId(), $data['requester'], $data['firstMessage']);
 
         return $conversation;
     }
