@@ -329,6 +329,10 @@
     margin-top: $size-large;
 }
 
+.form__input--zip + .form__input--distance {
+    margin-top: $size-large;
+}
+
 @media screen and (min-width: 480px) {
     .form--search {
         .form-controls {
@@ -342,6 +346,11 @@
 }
 
 @media screen and (min-width: $screen-medium) {
+
+    .form__input--zip + .form__input--distance {
+        margin-top: 0;
+    }
+
     .form-controls {
         &.form-controls--row {
             .form__control {
