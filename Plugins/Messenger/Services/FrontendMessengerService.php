@@ -7,34 +7,31 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Messenger\Abstracts\AbstractMessengerService;
 use Messenger\Models\Conversation;
+use ReflectionException;
 
 class FrontendMessengerService extends AbstractMessengerService {
 
     /**
-     * @param $requester
-     * @param $requested
-     * @param $conversationType
-     * @param $targetId
-     * @param $title
-     * @param $firstMessage
+     * @param array $data
      *
      * @return string
      * @throws ORMException
      * @throws OptimisticLockException
+     * @throws ReflectionException
      */
-    public function createNewConversation($requester, $requested, $conversationType, $targetId, $title, $firstMessage) {
+    public function createNewConversation(array $data) {
         $conversation = new Conversation();
-        $conversation->setRequester($requester);
-        $conversation->setRequested($requested);
-        $conversation->setType($conversationType);
-        $conversation->setState('open');
-        $conversation->setTargetId($targetId);
-        $conversation->setTitle($title);
+
+        $data['requesterType'] = 1;
+        $data['requestedType'] = 1;
+        $data['state'] = 'open';
+
+        $conversation->fromArray($data);
 
         parent::entityManager()->create($conversation);
         $this->entityManager()->flush();
 
-        parent::sendMessage($conversation->getId(), $requester, $firstMessage);
+        parent::sendMessage($conversation->getId(), $data['requester'], $data['firstMessage']);
 
         return $conversation;
     }
@@ -43,16 +40,19 @@ class FrontendMessengerService extends AbstractMessengerService {
      * @param $userId
      *
      * @return Collection|array
-     * @throws ORMException
      */
     public function getConversationList($userId) {
         $queryBuilder = $this->entityManager()->createQueryBuilder();
-        $query        = $queryBuilder->select('c')->from(Conversation::class, 'c')->where($queryBuilder->expr()->andX($queryBuilder->expr()
-                                                                                                                                   ->eq('c.requester', $userId),
-            $queryBuilder->expr()->eq('c.type', '?1')))->orWhere($queryBuilder->expr()->andX($queryBuilder->expr()->eq('c.requested', $userId),
-            $queryBuilder->expr()->eq('c.type', '?2')))->orWhere($queryBuilder->expr()->andX($queryBuilder->expr()->eq('c.requester', $userId),
-            $queryBuilder->expr()->eq('c.type', '?3')))->setParameters([1 => 'classified_advert', 2 => 'classified_advert', 3 => 'helpdesk_inquiry'])
-                                     ->getQuery();
+
+        $query = $queryBuilder->select('c')->from(Conversation::class, 'c')
+                    ->where(
+                        $queryBuilder->expr()->andX(
+                            $queryBuilder->expr()->eq('c.requester', $userId),
+                            $queryBuilder->expr()->eq('c.requesterType', '1')))
+                    ->orWhere(
+                        $queryBuilder->expr()->andX(
+                            $queryBuilder->expr()->eq('c.requested', $userId),
+                            $queryBuilder->expr()->eq('c.requestedType', '1')))->getQuery();
         /** @var Conversation[] $conversations */
         $conversations = $query->execute();
         $result        = [];

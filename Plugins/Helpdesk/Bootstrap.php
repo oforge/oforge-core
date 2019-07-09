@@ -59,9 +59,11 @@ class Bootstrap extends AbstractBootstrap {
     }
 
     /**
+     * @throws ConfigElementAlreadyExistException
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws ServiceNotFoundException
+     * @throws \ReflectionException
      */
     public function install() {
         /** @var GenericCrudService $crud */
