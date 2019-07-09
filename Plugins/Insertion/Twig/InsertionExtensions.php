@@ -4,6 +4,7 @@ namespace Insertion\Twig;
 
 use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Models\User;
+use FrontendUserManagement\Services\FrontendUserService;
 use FrontendUserManagement\Services\UserService;
 use Insertion\Models\Insertion;
 use Insertion\Services\AttributeService;
@@ -136,34 +137,44 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
     }
 
     /**
-     * @param $type
-     * @param $id
+     * @param array $vars
      *
-     * @return array
+     * @return array|bool
      * @throws ORMException
      * @throws ServiceNotFoundException
      */
-    public function getChatPartnerInformation($type, $id) {
-        if ($type == 'requester') {
-            /** @var InsertionService $insertionService */
-            $insertionService = Oforge()->Services()->get('insertion');
-            /** @var Insertion $insertion */
-            $insertion = $insertionService->getInsertionById($id);
+    public function getChatPartnerInformation(...$vars) {
+        if (count($vars) === 2) {
+            if ($vars[0] === 'requested') {
 
-            return [
-                'imageId' => $insertion->getMedia()[0]->getId(),
-                'title'   => $insertion->getContent()[0]->getTitle(),
-            ];
-        } else {
-            /** @var UserService $userService */
-            $userService = Oforge()->Services()->get('user');
-            /** @var User $user */
-            $user = $userService->getUserById($id);
+                /** @var InsertionService $insertionService */
+                $insertionService = Oforge()->Services()->get('insertion');
+                /** @var Insertion $insertion */
+                $insertion = $insertionService->getInsertionById($vars[1]);
 
-            return [
-                'imageId' => $user->getDetail()->getImage()->getId(),
-                'title'   => $user->getDetail()->getNickName()
-            ];
+                return [
+                    'imageId' => $insertion->getMedia()[0]->getId(),
+                    'title'   => $insertion->getContent()[0]->getTitle(),
+                ];
+            } else {
+                /** @var UserService $userService */
+                $userService = Oforge()->Services()->get('frontend.user.management.user');
+                /** @var User $user */
+                $user = $userService->getUserById($vars[1]);
+                $userImage = $user->getDetail()->getImage();
+                if($userImage) {
+                    $imageId = $user->getDetail()->getImage()->getId();
+                } else {
+                    $imageId = 'default';
+                }
+
+                return [
+                    'imageId' => $imageId,
+                    'title' => $user->getDetail()->getNickName(),
+                ];
+            }
         }
+
+        return false;
     }
 }
