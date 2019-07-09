@@ -1,0 +1,32 @@
+{% extends "Plugins/Messenger/Frontend/Components/Content/Messenger.twig" %}
+
+{% block messenger_header = get %}
+    {% if conversation.type == "insertion" %}
+        asd
+        {% if conversation.requester == curent_user.id %}
+            {% set partner = getChatPartnerInformation('rquested', conversation.targetId) %}
+        {% else %}
+            {% set partner = getChatPartnerInformation('requester', conversation.requester) %}
+        {% endif %}
+        <img class="" src="{{ media(partner.imageId, 30) }}">
+        <h3 class="title title--chat">{{ partner.title }}</h3>
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock messenger_header %}
+
+{% block messenger_conversation_list %}
+    {% if conversation.type == "insertion" %}
+        {% if conversation.requester == curent_user.id %}
+            {% set partner = getChatPartnerInformation('rquested', conversation.targetId) %}
+        {% else %}
+            {% set partner = getChatPartnerInformation('requester', conversation.requester) %}
+        {% endif %}
+        <img class="" src="{{ media(partner.imageId, 30) }}">
+        <span class="chat__text">
+            {{ partner.title }}
+        </span>
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}

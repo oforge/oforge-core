@@ -1,0 +1,21 @@
+{% extends "Plugins/Messenger/Frontend/Components/Content/Messenger.twig" %}
+
+{% block messenger_header %}
+    {% if conversation.type == "helpdesk_inquiry" %}
+        <i class="logo__image"></i>
+        <h3 class="title title--chat">{{ i18n('support') }} - {{ conversation.title }}</h3>
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock messenger_header %}
+
+{% block messenger_conversation_list %}
+    {% if conversation.type == "helpdesk_inquiry" %}
+        <img class="" src="{{ media(partner.imageId, 30) }}">
+        <span class="chat__text">
+            {{ i18n('support') }} - {{ conversation.title }}
+        </span>
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}

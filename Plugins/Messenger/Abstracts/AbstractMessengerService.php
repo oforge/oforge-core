@@ -18,14 +18,9 @@ abstract class AbstractMessengerService extends AbstractDatabaseAccess {
     }
 
     /**
-     * @param $requester
-     * @param $requested
-     * @param $conversationType
-     * @param $targetId
-     * @param $title
-     * @param $firstMessage
+     * @param array $data
      */
-    public abstract function createNewConversation($requester, $requested, $conversationType, $targetId, $title, $firstMessage);
+    public abstract function createNewConversation(array $data);
 
     /**
      * @param $userId
@@ -95,7 +90,6 @@ abstract class AbstractMessengerService extends AbstractDatabaseAccess {
 
     /**
      * @param $conversationId
-     * @param $senderType
      * @param $sender
      * @param $messageContent
      *
