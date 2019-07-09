@@ -3,6 +3,10 @@
     .form__control {
         transition: flex .2s ease;
     }
+
+    .title {
+        flex: 0 0 100%;
+    }
 }
 
 @media screen and (min-width: $screen-medium) {
