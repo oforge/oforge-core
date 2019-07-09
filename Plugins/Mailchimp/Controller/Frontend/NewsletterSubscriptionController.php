@@ -70,7 +70,7 @@ class NewsletterSubscriptionController extends AbstractController
         } else {
             $mailchimpNewsletterService->addListMember($email, null, $tags);
 
-            return $response->withRedirect($uri, 302);
+            return $response->withRedirect('https://www.allyourhorses.de', 302);
         }
     }
 
