@@ -1,30 +1,32 @@
 {% block distance %}
     <div class="form__control">
         <label class="form__label" for="country">{{ i18n('country') }}</label>
-        <div class="form__input form__input--select">
-            <select class="form__input form__input--no-input" name="country">
-                <option {% if search.filter.radius.country == 'germany' %}selected="selected"{% endif %} value="germany"
-                        selected="selected">{{ i18n('germany') }}</option>
-                <option {% if search.filter.radius.country == 'austria' %}selected="selected"{% endif %}
-                        value="austria">{{ i18n('austria') }}</option>
-                <option {% if search.filter.radius.country == 'switzerland' %}selected="selected"{% endif %}
-                        value="switzerland">{{ i18n('switzerland') }}</option>
-                <option {% if search.filter.radius.country == 'netherlands' %}selected="selected"{% endif %}
-                        value="netherlands">{{ i18n('netherlands') }}</option>
-            </select>
+        <div class="form__control">
+            <div class="form__input form__input--select">
+                <select class="form__input form__input--no-input" name="country">
+                    <option {% if search.filter.radius.country == 'germany' %}selected="selected"{% endif %}
+                            value="germany"
+                            selected="selected">{{ i18n('germany') }}</option>
+                    <option {% if search.filter.radius.country == 'austria' %}selected="selected"{% endif %}
+                            value="austria">{{ i18n('austria') }}</option>
+                    <option {% if search.filter.radius.country == 'switzerland' %}selected="selected"{% endif %}
+                            value="switzerland">{{ i18n('switzerland') }}</option>
+                    <option {% if search.filter.radius.country == 'netherlands' %}selected="selected"{% endif %}
+                            value="netherlands">{{ i18n('netherlands') }}</option>
+                </select>
+            </div>
         </div>
     </div>
     <div class="form__control">
         <label class="form__label" for="country">{{ i18n('range') }}</label>
-
         <div class="form__control form__control--half-medium">
             <input type="text"
                    name="zip"
                    placeholder="{{ i18n('zip') }}"
-                   class="form__input"
+                   class="form__input form__input--zip"
                    value="{{ search.filter.radius.zip }}"
             />
-            <div class="form__input form__input--select">
+            <div class="form__input form__input--select form__input--distance">
                 <select class="form__input form__input--no-input" name="zip_range">
                     <option {% if search.filter.radius.zip_range == 1 %}selected="selected"{% endif %}
                             value="1">{{ i18n('zip_range_1') }}</option>
