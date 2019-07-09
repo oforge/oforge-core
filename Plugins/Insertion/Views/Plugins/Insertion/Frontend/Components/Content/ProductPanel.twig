@@ -28,7 +28,7 @@
         {% block product__content %}
             <div class="product__content">
                 {% block content__title %}
-                    <h3 class="product__title">{{ item.content[0].title }}</h3>
+                    <a href="{{ url("insertions_detail", {id: item.id}) }}"><h3 class="product__title">{{ item.content[0].title }}</h3></a>
                 {% endblock content__title %}
 
                 {% block attributes__top %}
