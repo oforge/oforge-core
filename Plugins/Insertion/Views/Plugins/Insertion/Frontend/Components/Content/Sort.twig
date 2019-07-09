@@ -3,29 +3,27 @@
         <div class="result">
             <h3 class="result__text">{{ search.query.count }} <span class="result__text--mobile">{{ i18n('results') }}</span> <span class="result__text--desktop">{{ i18n('insertion_' ~ type.name ~ '_count', i18n('insertion_count' ,'insertions found')) }}</span></h3>
         </div>
-        <div class="sort-forms">
-            <div class="form__input form__input--select form__input--sort">
-                <select onchange="window.location.href = Oforge.updateQueryString('order', this.value)"
-                        name="product-list-sort"
-                        id="product-list-sort"
-                        class="form__input form__input--no-input">
-                    {% set orderItems = ['price_asc', 'price_desc', 'date_asc', 'date_desc'] %}
-                    {% for orderItem in orderItems %}
-                        <option value="{{ orderItem }}"
-                                {% if search.order is same as(orderItem) %}selected="selected"{% endif %} >{{ i18n(orderItem) }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <form method="post"
-                  class="form form--sort"
-                  action="{{ url('frontend_account_insertions_toggleSearchBookmark', {'typeId': typeId }) }}"
-                  enctype="multipart/form-data">
-                <input type="hidden" name="filter" value="{{ search.filter|json_encode() }}" />
-                <input type="submit"
-                       class="button button--small button--secondary button--save-result"
-                       value="{% if hasSearchBookmark(typeId, search.filter ) %}Remove from wishlist{% else %}Add to wishlist{% endif %}" />
-            </form>
+        <div class="form__input form__input--select form__input--sort">
+            <select onchange="window.location.href = Oforge.updateQueryString('order', this.value)"
+                    name="product-list-sort"
+                    id="product-list-sort"
+                    class="form__input form__input--no-input">
+                {% set orderItems = ['price_asc', 'price_desc', 'date_asc', 'date_desc'] %}
+                {% for orderItem in orderItems %}
+                    <option value="{{ orderItem }}"
+                            {% if search.order is same as(orderItem) %}selected="selected"{% endif %} >{{ i18n(orderItem) }}</option>
+                {% endfor %}
+            </select>
         </div>
+
+        <form method="post"
+              class="form form--sort"
+              action="{{ url('frontend_account_insertions_toggleSearchBookmark', {'typeId': typeId }) }}"
+              enctype="multipart/form-data">
+            <input type="hidden" name="filter" value="{{ search.filter|json_encode() }}" />
+            <input type="submit"
+                   class="button button--large button--secondary button--save-result"
+                   value="{% if hasSearchBookmark(typeId, search.filter ) %}Remove from wishlist{% else %}Add to wishlist{% endif %}" />
+        </form>
     </div>
 {% endblock product_list_sort %}
