@@ -13,7 +13,6 @@
         height: auto;
         position: absolute;
         z-index: 2;
-        padding-bottom: $size-medium;
 
         &.select--is-sub {
             height: auto;
@@ -90,7 +89,7 @@
     }
     &__item {
         position: relative;
-        padding: 1rem .2rem 0 .6rem;
+        padding: .6rem .2rem .6rem .6rem;
         line-height: 1;
         display: flex;
         align-items: center;
@@ -110,7 +109,7 @@
             &:after {
                 position: absolute;
                 left: 1.1rem;
-                top: 1.2rem;
+                top: .8rem;
                 content: ' ';
                 display: block;
                 width: .6rem;
