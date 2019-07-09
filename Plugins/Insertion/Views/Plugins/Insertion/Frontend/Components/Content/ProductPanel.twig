@@ -6,8 +6,9 @@
                     <img src="{{ media(item.media[0].content, 300) }}" alt="{{ item.content[0].name }}"
                          class="image">
                 {% else %}
-                    <!-- TODO add dummy image -->
-                    <img src="https://placeponi.es/300/300" alt="ponie" class="image">
+                    <svg class="icon icon--placeholder">
+                        <use xlink:href="#placeholder-insertion"></use>
+                    </svg>
                 {% endif %}
                 <div class="badge badge--image badge--top-left"></div>
                 <div class="label label--image label--top-right"></div>
@@ -54,10 +55,9 @@
 
                 {% block product__meta %}
                     <div class="product__meta">
-                        <span class="product__number">{{ item.id }}</span>
                         <div class="product__pricing">
                             <span class="product__label">price</span>
-                            <span class="product__value">{{ item.price }}€</span>
+                            <span class="product__value">{{ item.price|number_format(0, ',', '.') }}€</span>
                         </div>
                     </div>
                 {% endblock product__meta %}

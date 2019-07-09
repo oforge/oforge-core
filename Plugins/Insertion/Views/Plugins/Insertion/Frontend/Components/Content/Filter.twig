@@ -9,7 +9,14 @@
                                 <a href="#"
                                    onclick="window.location.href = Oforge.updateQueryString(encodeURIComponent('{{ f }}[]'))"
                                    class="close"></a>
-                                <span class="tag__text">{{ i18n(f) }} {{ value[0] }} {{ i18n(f ~ '_between') }}   {{ value[1] }}</span>
+                                <span class="tag__text">{{ i18n(f) }} {{ value[0]|number_format(0, ',', '.') }} {{ i18n(f ~ '_between') }}   {{ value[1]|number_format(0, ',', '.') }}</span>
+                            </div>
+                        {% elseif f is same as ("radius") %}
+                            <div class="tag" data-key="{{ f }}">
+                                <a href="#"
+                                   onclick="window.location.href = Oforge.updateQueryString('zip_range', '', Oforge.updateQueryString('zip', ''))"
+                                   class="close"></a>
+                                <span class="tag__text">{{ i18n(f) }} {{ value[0] }} {{ i18n(value.country) }}, {{ value.zip }} {{ i18n('zip_range_' ~ value.zip_range) }}</span>
                             </div>
                         {% elseif value is iterable %}
                             {% for v in value %}
@@ -34,9 +41,12 @@
                     {% endfor %}
                 </div>
             </div>
-            <div class="button button--filter-search">
-                <i class="icon"></i><span class="filter-search-text">{{ i18n('edit_search', 'Edit search') }}</span>
-            </div>
+            <a href="#form-search-sidebar" class="button button--filter-search">
+                <svg class="icon icon--secondary">
+                    <use xlink:href="#magnifier"></use>
+                </svg>
+                <span class="filter-search-text">{{ i18n('edit_search', 'Edit search') }}</span>
+            </a>
         </div>
     {% endif %}
 {% endblock product_filter %}

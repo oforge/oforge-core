@@ -62,7 +62,7 @@ class KeyValueStoreController extends BaseCrudController {
         'create' => true,
         'view'   => true,
         'update' => true,
-        'delete' => false,
+        'delete' => true,
     ];
 
 }

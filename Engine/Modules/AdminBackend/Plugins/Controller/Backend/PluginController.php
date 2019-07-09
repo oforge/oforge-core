@@ -15,7 +15,7 @@ use Oforge\Engine\Modules\Core\Exceptions\Plugin\PluginNotActivatedException;
 use Oforge\Engine\Modules\Core\Exceptions\Plugin\PluginNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\Plugin\PluginNotInstalledException;
 use Oforge\Engine\Modules\Core\Exceptions\Template\TemplateNotFoundException;
-use Oforge\Engine\Modules\Core\Helper\RedirectHelper;
+use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Oforge\Engine\Modules\Core\Models\Plugin\Plugin;
 use Oforge\Engine\Modules\Core\Services\PluginStateService;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
@@ -94,7 +94,7 @@ class PluginController extends BaseCrudController {
 
         //TODO Implementation of PluginController#addAction, later
 
-        return RedirectHelper::redirect($response, 'backend_plugins');
+        return RouteHelper::redirect($response, 'backend_plugins');
     }
 
     /**
@@ -108,7 +108,7 @@ class PluginController extends BaseCrudController {
     public function activateAction(Request $request, Response $response, array $args) {
         $this->handleActivate($args);
 
-        return RedirectHelper::redirect($response, 'backend_plugins');
+        return RouteHelper::redirect($response, 'backend_plugins');
     }
 
     /**
@@ -122,7 +122,7 @@ class PluginController extends BaseCrudController {
     public function deactivateAction(Request $request, Response $response, array $args) {
         $this->handleDeactivate($args);
 
-        return RedirectHelper::redirect($response, 'backend_plugins');
+        return RouteHelper::redirect($response, 'backend_plugins');
     }
 
     /**
@@ -138,7 +138,7 @@ class PluginController extends BaseCrudController {
 
         //TODO Implementation of PluginController#deleteAction
 
-        return RedirectHelper::redirect($response, 'backend_plugins');
+        return RouteHelper::redirect($response, 'backend_plugins');
     }
 
     /**
@@ -152,7 +152,7 @@ class PluginController extends BaseCrudController {
     public function installAction(Request $request, Response $response, array $args) {
         $this->handleInstall($args);
 
-        return RedirectHelper::redirect($response, 'backend_plugins');
+        return RouteHelper::redirect($response, 'backend_plugins');
     }
 
     /**
@@ -168,7 +168,7 @@ class PluginController extends BaseCrudController {
             $this->handleActivate($args);
         }
 
-        return RedirectHelper::redirect($response, 'backend_plugins');
+        return RouteHelper::redirect($response, 'backend_plugins');
     }
 
     /**
@@ -194,7 +194,7 @@ class PluginController extends BaseCrudController {
             $twigFlash->addExceptionMessage('error', I18N::translate('crud_plugin_msg_error', 'An error has occurred.'), $exception);
         }
 
-        return RedirectHelper::redirect($response, 'backend_plugins');
+        return RouteHelper::redirect($response, 'backend_plugins');
     }
 
     /**
@@ -213,7 +213,7 @@ class PluginController extends BaseCrudController {
                 $this->handleInstall($args);
             }
 
-            return RedirectHelper::redirect($response, 'backend_plugins');
+            return RouteHelper::redirect($response, 'backend_plugins');
         }
         Oforge()->View()->assign([
             'crud' => [
@@ -242,7 +242,7 @@ class PluginController extends BaseCrudController {
                 }
             }
 
-            return RedirectHelper::redirect($response, 'backend_plugins');
+            return RouteHelper::redirect($response, 'backend_plugins');
         }
         Oforge()->View()->assign([
             'crud' => [
@@ -267,7 +267,7 @@ class PluginController extends BaseCrudController {
             $keepData = (bool) $postData['keep_data'];
             $this->handleUninstall($args, $keepData);
 
-            return RedirectHelper::redirect($response, 'backend_plugins');
+            return RouteHelper::redirect($response, 'backend_plugins');
         }
         Oforge()->View()->assign([
             'crud' => [

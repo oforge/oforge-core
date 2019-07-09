@@ -70,4 +70,11 @@ class User extends BaseUser {
         return $this->address;
     }
 
+    /**
+     * @param UserDetail $detail
+     */
+    public function setDetail(UserDetail $detail) : void {
+        $this->detail = $detail;
+    }
+
 }

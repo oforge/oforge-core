@@ -5,6 +5,20 @@
 
 .panel--detail {
     padding: $size-large;
+
+    .form--user-details, .form--user-address {
+        .form__input + .form__input {
+            margin-top: $size-large;
+        }
+
+        .form__title {
+            margin: 0;
+        }
+
+        .form__control {
+            margin-top: $size-large;
+        }
+    }
 }
 
 .panel--edit {
@@ -14,6 +28,7 @@
             margin-bottom: $size-large;
             padding-bottom: $size-large;
             border-bottom: 1px solid $color-primary;
+
             .form__title:nth-child(2) {
                 margin-left: $size-large;
             }
@@ -84,13 +99,47 @@
     margin-top: 1rem;
 }
 
+.nav-account {
+    &__item {
+        padding: $size-medium;
+
+        a {
+            text-decoration: none;
+        }
+
+        .icon {
+            margin-right: $size-large;
+            fill: $color-light;
+        }
+
+        &:hover {
+            background-color: $color-secondary;
+        }
+    }
+
+    &__text {
+        color: $color-light;
+        text-decoration: none;
+    }
+}
+
+
 .mobile-padding {
     padding: $size-large;
 }
+
 @media screen and (min-width: $screen-medium) {
     .panel--edit {
         .form--change-password-reset {
             width: 60%;
+        }
+    }
+    .panel--detail {
+        .form--user-details, .form--user-address {
+            .form__input + .form__input {
+                margin-top: 0;
+            }
+
         }
     }
 }

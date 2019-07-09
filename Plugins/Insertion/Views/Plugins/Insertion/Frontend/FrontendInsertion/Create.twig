@@ -7,21 +7,29 @@
     <div class="content content--insertions">
         {% block insertions %}
             <div class="panel panel--insertions flex">
-                <div class="grid-boxes grid-boxes--2">
 
+                {% block insertions_content %}
+                    {% set content = content('insertion_create_' ~ meta.language) %}
+                    {% if content %}
+                        {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
+                    {% endif %}
+                {% endblock insertions_content %}
+
+                <div class="grid-boxes grid-boxes--2">
                     {% for type in types %}
                         <div class="grid-box {{ grid_box_classes }}">
 
                             <a href="{% if type.children is defined %}{{ url('insertions_createType', { type : type.id}) }}{% else %}{{ url('insertions_createSteps', { type : type.id, page: 1}) }}{% endif %}"
                                class="grid-box__content flex flex--center flex--justify">
                                 {% if type.image.id is defined %}
-                                    <img class="icon icon--large icon--light icon--inverted" src="{{ media(type.image.id, 300) }}" />
+                                    <img class="icon icon--large icon--light icon--inverted"
+                                         src="{{ media(type.image.id, 300) }}" />
                                 {% else %}
                                     <svg class="icon icon--large icon--light ">
                                         <use xlink:href="#top_inserat"></use>
                                     </svg>
                                 {% endif %}
-                                <span class="grid-box__text">{{ i18n(type.name)}}</span>
+                                <span class="grid-box__text">{{ i18n(type.name) }}</span>
                                 <ul class="grid-box__sub-items">
                                     {% for child in type.children %}
                                         <li class="grid-box__sub-item">

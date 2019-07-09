@@ -1,0 +1,45 @@
+.result {
+    &__text {
+        color: $color-primary;
+        font-weight: normal;
+        font-size: $font-size-4;
+
+        .result__text--desktop {
+            display: none;
+        }
+    }
+}
+
+.form__input.form__input--sort {
+    max-width: 18rem;
+    margin-left: auto;
+}
+
+.panel.panel--filter + .panel.panel--sort {
+    margin-top: 0;
+}
+.panel--sort {
+    flex-wrap: wrap;
+}
+.form.form--sort {
+    flex: 0 0 100%;
+    text-align: right;
+    margin-top: $size-small;
+}
+
+@media screen and (min-width: $screen-medium) {
+    .result {
+        &__text {
+            font-size: $font-size-3;
+            font-weight: bold;
+
+            .result__text--mobile {
+                display: none;
+            }
+
+            .result__text--desktop {
+                display: initial;
+            }
+        }
+    }
+}

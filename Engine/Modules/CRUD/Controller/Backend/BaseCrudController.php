@@ -11,7 +11,7 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
-use Oforge\Engine\Modules\Core\Helper\RedirectHelper;
+use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Oforge\Engine\Modules\Core\Helper\StringHelper;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
 use Oforge\Engine\Modules\CRUD\Enum\CrudFilterComparator;
@@ -607,7 +607,7 @@ class BaseCrudController extends SecureBackendController {
             $routeName .= '_' . $crudAction;
         }
 
-        return RedirectHelper::redirect($response, $routeName, $urlParams, $queryParams);
+        return RouteHelper::redirect($response, $routeName, $urlParams, $queryParams);
     }
 
     /**

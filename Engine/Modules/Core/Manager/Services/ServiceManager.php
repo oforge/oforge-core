@@ -61,6 +61,19 @@ class ServiceManager {
     }
 
     /**
+     * Set a specific service instance by name.
+     *
+     * @param $name
+     * @param $instance
+     *
+     * @return mixed
+     */
+    public function set($name, $instance) {
+        $this->services[$name] = $instance;
+    }
+
+
+    /**
      * Get all (unsorted) service names.
      *
      * @return string[]
@@ -114,11 +127,11 @@ class ServiceManager {
                                             return Oforge()->Cache()->get($annotation->getSlot(),  get_class($this->oldInstance), $functionName, $arguments);
                                         } else {
                                             $result = call_user_func_array([$this->oldInstance, $functionName], $arguments);
-                                            Oforge()->Cache()->set($annotation->getSlot(),  get_class($this->oldInstance), $functionName, $arguments, $result);
+                                            Oforge()->Cache()->set($annotation->getSlot(),  get_class($this->oldInstance), $functionName, $arguments, $result, $annotation->getDuration());
 
                                             return $result;
                                         }
-                                    } elseif ($annotation instanceof Cache) {
+                                    } elseif ($annotation instanceof CacheInvalidation) {
                                         Oforge()->Cache()->cleanUp($annotation->getSlot());
                                     }
                                 }

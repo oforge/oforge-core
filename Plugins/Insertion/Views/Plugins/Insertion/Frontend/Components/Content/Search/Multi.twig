@@ -1,16 +1,27 @@
-<div class="form__control form__control--multi">
-    <div class="multi-select"
-         data-multi-select="{{ attribute.name }}[]"
-         {% if required %}data-required{% endif %}>
-        <p class="multi-select__search"
-           data-multi-select-search
-           data-placeholder="{{ i18n(attribute.name) }}"></p>
-        <ul class="multi-select__list"
-            data-multi-select-list>
+<div class="form__control form__control--new-select form__control--{{ attribute.filterType }} {{ isSubAttribute ? 'form__control--is-sub' : '' }}">
+    {% if omitLabel is not defined %}<label class="form__label">{{ i18n(attribute.name) }}</label>{% endif %}
+
+    <div class="select {{ isSubAttribute ? 'select--is-sub' : '' }}"
+         data-select-type="{{ attribute.filterType }}"
+         data-placeholder="{{ i18n(attribute.name) }}"
+         data-select="{{ attribute.name }}[]">
+        <p class="select__text"
+           data-select-text=""></p>
+        <ul class="select__list"
+            data-select-list="">
+
             {% for value in attribute.values %}
-                <li class="multi-select__item {% if value.id in search.filter[attribute.name] %}multi-select__item--checked{% endif %}"
-                    data-multi-select-item="{{ value.id }}">
-                    {{ i18n(value.value) }}
+                <li class="select__item {% if value.id in search.filter[attribute.name] %}select__item--is-checked{% endif %}"
+                    data-selected="false"
+                    data-index="{{ loop.index0 }}"
+                    data-value-id="{{ value.id }}">
+                        <span class="select__value">{{ i18n(value.value) }}</span>
+                    {% if value.subAttributeKey is not null and not noSub %}
+                        <div class="sub-attribute-container" data-sub-select="">
+                            <em class="sub-attribute-container__text">{{ i18n('please_choose') }}</em>
+                            {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ all_attributes[value.subAttributeKey].filterType|capitalize  ~ '.twig'  with {'attribute': all_attributes[value.subAttributeKey], hidden: true, required: false, isSubAttribute: true, omitLabel: true} %}
+                        </div>
+                    {% endif %}
                 </li>
             {% endfor %}
         </ul>

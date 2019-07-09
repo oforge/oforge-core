@@ -17,12 +17,12 @@
     }
     .contact--links {
         display: flex;
-        justify-content: end;
+        justify-content: flex-end;
         margin-bottom: $size-large;
 
         .contact--icons {
             display: flex;
-            justify-content: end;
+            justify-content: flex-end;
 
             .contact--icon {
                 padding: $size-medium 2.4rem;

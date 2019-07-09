@@ -9,6 +9,7 @@ use Seo\Controller\Backend\BackendSeoUrlController;
 use Seo\Middleware\SeoMiddleware;
 use Seo\Models\SeoUrl;
 use Seo\Services\SeoService;
+use Seo\Services\SeoUrlService;
 use Seo\Twig\SeoExtension;
 
 /**
@@ -42,12 +43,11 @@ class Bootstrap extends AbstractBootstrap {
         if (Oforge()->isAppReady()) {
             Oforge()->App()->add(new SeoMiddleware());
         }
-        /**
-         * @var $templateRenderer TemplateRenderService
-         */
-        $templateRenderer = Oforge()->Services()->get("template.render");
 
-        $templateRenderer->View()->addExtension(new SeoExtension());
+        $urlService = Oforge()->Services()->get("url");
+
+        $seoUrlService = new SeoUrlService($urlService);
+        Oforge()->Services()->set("url", $seoUrlService);
     }
 
     public function activate() {

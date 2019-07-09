@@ -1,0 +1,20 @@
+.text-icon-prefix {
+    float: left;
+    width: 50%;
+
+    svg {
+        display: inline;
+    }
+
+    * {
+        vertical-align: middle;
+        font-size: 13px;
+    }
+}
+
+
+@media screen and (min-width: $screen-large) {
+    .text-icon-prefix {
+        width: 25%;
+    }
+}

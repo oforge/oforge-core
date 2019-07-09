@@ -31,7 +31,7 @@ class ForgeSlimApp extends SlimApp {
      */
     public function __construct() {
         parent::__construct();
-        $container = $this->getContainer();
+        $container    = $this->getContainer();
         $errorHandler = null;
 
         if (Oforge()->Settings()->isDevelopmentMode()) {
@@ -50,13 +50,13 @@ class ForgeSlimApp extends SlimApp {
     <dt><strong>Trace</strong></dt><dd>$trace</dd>
 </dl>
 TAG;
+
                     return $response->withStatus(500)->withHeader('Content-Type', 'text/html')->write($html);
                 };
             };
         } else {
             $errorHandler = function ($container) {
                 return function (Request $request, Response $response, $exception) use ($container) {
-
                     Oforge()->Logger()->get()->error($exception->getMessage(), $exception->getTrace());
 
                     return $response->withRedirect("/500", 307);
@@ -134,10 +134,33 @@ TAG;
                 $files = glob(ROOT_PATH . Statics::RESULT_CACHE_DIR . DIRECTORY_SEPARATOR . $filename . "*");
 
                 foreach ($files as $file) {
-                    //TODO add timestamp
+                    $output = null;
                     if (strpos($file, "##") === false) {
                         $output = file_get_contents($file);
 
+                    } else {
+                        $split = explode("##", $file);
+                        if (sizeof($split) == 2) {
+                            $durationString = $split[1];
+                            try {
+                                $interval = new \DateInterval('P' . $durationString);
+                                $date     = new \DateTime(date('c', filemtime($file)));
+
+                                $expiresDate = $date->add($interval);
+                                $now = new \DateTime();
+
+                                if($expiresDate > $now ) {
+                                    // file expires in the future
+                                    $output = file_get_contents($file);
+                                }
+                            } catch (Exception $exception) {
+                                print_r($exception);
+                                Oforge()->Logger()->get()->error($exception->getMessage(), $exception->getTrace());
+                            }
+                        }
+                    }
+
+                    if ($output != null) {
                         $outputBuffering = $this->getContainer()->get('settings')['outputBuffering'];
                         if ($outputBuffering === 'prepend') {
                             // prepend output buffer content

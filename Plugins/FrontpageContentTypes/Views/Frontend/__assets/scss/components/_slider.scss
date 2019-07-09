@@ -1,0 +1,47 @@
+.cms-slider {
+    background: $color-primary-lighter;
+}
+
+.panel--insertions {
+    .cms-slider {
+        margin: 2rem -6rem 4rem -6rem;
+    }
+}
+
+*[data-single-slider] {
+    .slick-prev {
+        &:before {
+            content: none;
+        }
+
+        .icon {
+            transform: translate(0, -50%) rotate(180deg);
+        }
+
+        left: 80px;
+    }
+
+    .slick-next {
+        &:before {
+            content: none;
+        }
+
+        .icon {
+            transform: translate(0, -50%);
+        }
+
+        right: 80px;
+
+    }
+
+    .slick-next, .slick-prev {
+
+        height: 100%;
+
+        .icon {
+            position: absolute;
+            top: 50%;
+            fill: $color-secondary;
+        }
+    }
+}

@@ -256,3 +256,15 @@
         margin-top: $size-large;
     }
 }
+
+@media screen and (min-width: $screen-large){
+    .insertion {
+        &__content {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            margin-left: $size-large;
+            width: calc(100% - 30rem - #{$size-large});
+        }
+    }
+}

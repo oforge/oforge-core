@@ -11,7 +11,7 @@ use FrontendUserManagement\Services\UserService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
-use Oforge\Engine\Modules\Core\Helper\RedirectHelper;
+use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -146,7 +146,7 @@ class UserDetailsController extends SecureFrontendController {
         if (!$token || !$streetName || !$streetNumber || !$postCode || !$city) {
             Oforge()->View()->Flash()->addMessage('warning', I18N::translate('form_invalid_data', 'Invalid form data.'));
 
-            return RedirectHelper::redirect($response, 'frontend_account_details');
+            return RouteHelper::redirect($response, 'frontend_account_details');
         }
 
         /**
@@ -156,14 +156,14 @@ class UserDetailsController extends SecureFrontendController {
             Oforge()->View()->Flash()->addMessage('warning', I18N::translate('form_invalid_token', 'The data has been sent from an invalid form.'));
             Oforge()->Logger()->get()->addWarning('Someone tried to change the password without a valid form csrf token! Redirecting back to login.');
 
-            return RedirectHelper::redirect($response, 'frontend_account_details');
+            return RouteHelper::redirect($response, 'frontend_account_details');
         }
 
         if (!$_SESSION['auth']) {
             Oforge()->View()->Flash()->addMessage('warning', I18N::translate('missing_session_auth', 'The data has been sent from an invalid form.'));
             Oforge()->Logger()->get()->addWarning('Someone tried to change the password without a valid form csrf token! Redirecting back to login.');
 
-            return RedirectHelper::redirect($response, 'frontend_account_details');
+            return RouteHelper::redirect($response, 'frontend_account_details');
         }
 
         $userAddress = [
@@ -185,7 +185,7 @@ class UserDetailsController extends SecureFrontendController {
             Oforge()->Logger()->get()->addError('UserDetailsController: User address could not be saved.', ['userAddress' => $userAddress]);
         }
 
-        return RedirectHelper::redirect($response, 'frontend_account_details');
+        return RouteHelper::redirect($response, 'frontend_account_details');
     }
 
     public function initPermissions() {

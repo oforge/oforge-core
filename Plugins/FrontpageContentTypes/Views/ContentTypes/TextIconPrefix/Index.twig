@@ -1,0 +1,12 @@
+{% block texticonprefix %}
+    <div class="text-icon-prefix" >
+        {% if data.icon starts with '#' %}
+            <svg class="icon icon--secondary">
+                <use xlink:href="{{ data.icon }}"></use>
+            </svg>
+        {% else %}
+            {{ data.icon|raw }}
+        {% endif %}
+        <span>{{ data.text }}</span>
+    </div>
+{% endblock texticonprefix %}

@@ -30,9 +30,9 @@ use Slim\Http\Response;
 use Slim\Router;
 
 /**
- * Class MessengerController
+ * Class FrontendUsersInsertionController
  *
- * @package Messenger\Controller\Frontend
+ * @package Insertion\Controller\Frontend
  * @EndpointClass(path="/account/insertions", name="frontend_account_insertions", assetScope="Frontend")
  */
 class FrontendUsersInsertionController extends SecureFrontendController {
@@ -40,9 +40,8 @@ class FrontendUsersInsertionController extends SecureFrontendController {
     /**
      * @param Request $request
      * @param Response $response
-     * @EndpointAction()
      *
-     * @throws \Doctrine\ORM\ORMException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
     public function indexAction(Request $request, Response $response) {
         /**
@@ -64,9 +63,8 @@ class FrontendUsersInsertionController extends SecureFrontendController {
     /**
      * @param Request $request
      * @param Response $response
-     * @EndpointAction(path="/page")
      *
-     * @throws \Doctrine\ORM\ORMException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
     public function pageAction(Request $request, Response $response) {
         /**
@@ -89,9 +87,9 @@ class FrontendUsersInsertionController extends SecureFrontendController {
     /**
      * @param Request $request
      * @param Response $response
-     * @EndpointAction(path = "/delete/{id}")
+     * @param $args
      *
-     * @throws \Doctrine\ORM\ORMException
+     * @return Response
      */
     public function deleteAction(Request $request, Response $response, $args) {
         return $this->modifyInsertion($request, $response, $args, 'delete');
@@ -100,9 +98,9 @@ class FrontendUsersInsertionController extends SecureFrontendController {
     /**
      * @param Request $request
      * @param Response $response
-     * @EndpointAction(path = "/activate/{id}")
+     * @param $args
      *
-     * @throws \Doctrine\ORM\ORMException
+     * @return Response
      */
     public function activateAction(Request $request, Response $response, $args) {
         return $this->modifyInsertion($request, $response, $args, 'activate');
@@ -111,20 +109,20 @@ class FrontendUsersInsertionController extends SecureFrontendController {
     /**
      * @param Request $request
      * @param Response $response
-     * @EndpointAction(path = "/disable/{id}")
+     * @param $args
      *
-     * @throws \Doctrine\ORM\ORMException
+     * @return Response
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
     public function disableAction(Request $request, Response $response, $args) {
         /** @var User $user */
         /** @var UserService $frontendUserService */
         $user = Oforge()->View()->get('user');
         $mailService = Oforge()->Services()->get('mail');
-
-        // TODO: add email snippets
+        $targetMail  = $user->getEmail();
         $mailOptions  = [
-            'to'       => $user->getEmail(),
-            'from'     => 'no-reply@local.host', // TODO: From settings
+            'to'       => [$targetMail => $targetMail],
+            'from'     => 'no_reply',
             'subject'  => I18N::translate('email_subject_password_reset', 'Oforge | Your password reset!'),
             'template' => 'ResetPassword.twig',
         ];
@@ -189,7 +187,8 @@ class FrontendUsersInsertionController extends SecureFrontendController {
     /**
      * @param Request $request
      * @param Response $response
-     * @EndpointAction(path = "/bookmarks")
+     *
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
     public function bookmarksAction(Request $request, Response $response) {
         /**
@@ -211,7 +210,9 @@ class FrontendUsersInsertionController extends SecureFrontendController {
     /**
      * @param Request $request
      * @param Response $response
-     * @EndpointAction(path = "/searchbookmarks", )
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
     public function searchBookmarksAction(Request $request, Response $response) {
         /**
@@ -258,7 +259,11 @@ class FrontendUsersInsertionController extends SecureFrontendController {
     /**
      * @param Request $request
      * @param Response $response
-     * @EndpointAction(path = "/bookmarks/toggle/{insertionId}")
+     * @param $args
+     *
+     * @return Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
     public function toggleBookmarkAction(Request $request, Response $response, $args) {
         $id = $args["insertionId"];
@@ -300,12 +305,14 @@ class FrontendUsersInsertionController extends SecureFrontendController {
     /**
      * @param Request $request
      * @param Response $response
-     * @EndpointAction(path = "/searchbookmarks/toggle/{typeId}")
+     * @param $args
      *
+     * @return Response
      * @throws \Doctrine\ORM\ORMException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
     public function toggleSearchBookmarkAction(Request $request, Response $response, $args) {
-        $id = $args["typeId"];
+        $id = 2;
         /**
          * @var $service InsertionTypeService
          */
@@ -351,6 +358,38 @@ class FrontendUsersInsertionController extends SecureFrontendController {
     /**
      * @param Request $request
      * @param Response $response
+     * @param $args
+     *
+     * @return Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @EndpointAction(path="/removeBookmark/{id}")
+     */
+    public function removeBookmarkAction(Request $request, Response $response, $args) {
+        /**
+         * @var $bookmarkService InsertionBookmarkService
+         */
+        $bookmarkService = Oforge()->Services()->get("insertion.bookmark");
+        $id = $args["id"];
+
+        $bookmarkService->remove($id);
+        Oforge()->View()->Flash()->addMessage('success', I18n::translate('remove_bookmark_success'));
+
+        /** @var Router $router */
+        $router = Oforge()->App()->getContainer()->get('router');
+        $url    = $router->pathFor('frontend_account_insertions_bookmarks');
+
+        $refererHeader = $request->getHeader('HTTP_REFERER');
+        if (isset($refererHeader) && sizeof($refererHeader) > 0) {
+            $url = $refererHeader[0];
+        }
+
+        return $response->withRedirect($url, 301);
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
      * @EndpointAction(path = "/profile")
      *
      * @throws \Doctrine\ORM\ORMException
@@ -378,12 +417,13 @@ class FrontendUsersInsertionController extends SecureFrontendController {
 
                 $userDetailsService = Oforge()->Services()->get('frontend.user.management.user.details');
 
-                $userDetailsService->updateImage($user, $_FILES["profile"]);
+                $user = $userDetailsService->updateImage($user, $_FILES["profile"]);
             }
 
         }
 
         $result = $service->get($user->getId());
+
         Oforge()->View()->assign(["profile" => $result != null ? $result->toArray() : null, "user" => $user->toArray()]);
     }
 
@@ -400,5 +440,6 @@ class FrontendUsersInsertionController extends SecureFrontendController {
         $this->ensurePermissions('toggleBookmarkAction', User::class);
         $this->ensurePermissions('toggleSearchBookmarkAction', User::class);
         $this->ensurePermissions('profileAction', User::class);
+        $this->ensurePermissions('removeBookmarkAction', User::class);
     }
 }
