@@ -2,6 +2,7 @@
 
 namespace Messenger\Controller\Frontend;
 
+use Doctrine\DBAL\Schema\View;
 use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Abstracts\SecureFrontendController;
 use FrontendUserManagement\Models\User;
@@ -47,7 +48,8 @@ class MessengerController extends SecureFrontendController {
      * @EndpointAction(path="[/{id:.*}]", name="messages")
      */
     public function indexAction(Request $request, Response $response, array $args) {
-        /** @var FrontendMessengerService $frontendMessengerService */ /** @var User $user */
+        /** @var FrontendMessengerService $frontendMessengerService */
+        /** @var User $user */
         /** @var UserService $frontendUserService */
         $frontendMessengerService = Oforge()->Services()->get('frontend.messenger');
         $user                     = Oforge()->View()->get('user');
@@ -65,10 +67,10 @@ class MessengerController extends SecureFrontendController {
             $conversationId = $args['id'];
 
             /** @var Conversation $conversation */
-            $conversation = $frontendMessengerService->getConversation($conversationId, $user['id']);
-            $isRequester  = ($conversation['requester'] == $user['id']);
+            $activeConversation = $frontendMessengerService->getConversation($conversationId, $user['id']);
+            $isRequester  = ($activeConversation['requester'] == $user['id']);
             /* Check for permission of conversation */
-            if (!($conversation['requested'] == $user['id'] || $conversation['requester'] == $user['id'])) {
+            if (!($activeConversation['requested'] == $user['id'] || $activeConversation['requester'] == $user['id'])) {
                 return $response->withRedirect("/404", 301);
             }
 
@@ -81,12 +83,12 @@ class MessengerController extends SecureFrontendController {
                 $frontendMessengerService = Oforge()->Services()->get('frontend.messenger');
                 $mailService              = Oforge()->Services()->get('mail');
 
-                $frontendMessengerService->sendMessage($conversation['id'], $user['id'], $message);
+                $frontendMessengerService->sendMessage($activeConversation['id'], $user['id'], $message);
 
-                $lastMessageUser = end($conversation['messages'])->toArray()['sender'];
+                $lastMessageUser = end($activeConversation['messages'])->toArray()['sender'];
                 /* Only send mails for classified advert */
-                if ($conversation['requesterType'] == 1 && $conversation['requestedType'] == 1 && $lastMessageUser != $user['id']) {
-                    $targetUserId = ($isRequester) ? $conversation['requested'] : $targetUserId = $conversation['requester'];
+                if ($activeConversation['requesterType'] == 1 && $activeConversation['requestedType'] == 1 && $lastMessageUser != $user['id']) {
+                    $targetUserId = ($isRequester) ? $activeConversation['requested'] : $targetUserId = $activeConversation['requester'];
                     $targetIdMail = $frontendUserService->getUserById($targetUserId)->getEmail();
                     $mailOptions  = [
                         'to'       => [$targetIdMail => $targetIdMail],
@@ -98,8 +100,10 @@ class MessengerController extends SecureFrontendController {
                 }
                 $uri = $router->pathFor('frontend_account_messages');
 
-                return $response->withRedirect($uri . '/' . $conversation['id'], 302);
+                return $response->withRedirect($uri . '/' . $activeConversation['id'], 302);
             }
+            Oforge()->View()->assign(['activeConversation' => $activeConversation]);
+
         } else {
             if (sizeof($conversationList) > 0) {
                 /** @var Router $router */
