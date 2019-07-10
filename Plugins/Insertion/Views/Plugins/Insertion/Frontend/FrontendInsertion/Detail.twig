@@ -14,7 +14,8 @@
                 {% block insertion_detail__heading %}
                     <div class="product-view--heading">
                         <h3 class="title title--3 title--product">{{ insertion.content[0].title }}</h3>
-                        <span class="title title--3 product-view__price"><span class="price-value">{{ insertion.price }}</span></span>
+                        <span class="title title--3 product-view__price"><span
+                                    class="price-value">{{ insertion.price }}</span></span>
                     </div>
                 {% endblock insertion_detail__heading %}
 
@@ -27,7 +28,7 @@
                 <div class="top-attributes">
                     <div class="product-view__price">
                         <span class="attribute-label">{{ i18n('insertion_detail_price', 'Preis') }}</span>
-                        <span class="attribute-value">{{ insertion.price }}</span>
+                        <span class="attribute-value">{{ insertion.price|number_format(0, ',', '.') }}€</span>
                     </div>
                     <div class="product-view__name">
                         <span class="attribute-label">{{ i18n('insertion_detail_name', 'Name') }}</span>
@@ -47,10 +48,14 @@
 
             <div class="panel panel--main-attributes">
                 <div class="main-attributes">
+
                     {% for attributeGroup in attributes %}
                         {% if attributeGroup.items|length > 0 and (attributeGroup.name == 'main') %}
+                            <h2>{{ i18n('attribute_group_' ~ attributeGroup.name) }}</h2>
                             {% for attribute in attributeGroup.items %}
-                                {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute, 'values' : values} %}
+                                {% if attribute.top == false %}
+                                    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute, 'values' : values} %}
+                                {% endif %}
                             {% endfor %}
                         {% endif %}
                     {% endfor %}
@@ -91,8 +96,6 @@
                     {{ insertion.content[0].description }}
                 </div>
             </div>
-            {% block insertion_detail__pedigree %}
-            {% endblock insertion_detail__pedigree %}
         </div>
 
         <div class="sidebar sidebar--insertion">
