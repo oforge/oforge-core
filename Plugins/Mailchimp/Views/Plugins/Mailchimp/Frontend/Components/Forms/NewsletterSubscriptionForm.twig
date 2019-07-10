@@ -3,7 +3,15 @@
           action="{{ subscribeLink }}{% if isSubscribed == true %}/unsubscribe{% elseif isSubscribed == false %}/subscribe{% else %}{{ url('frontend_newsletter_subscription_subscribe') }}{% endif %}"
           method="post">
         <h3 class="form__title">{{ i18n('newsletter', 'Newsletter') }}</h3>
-        <p>{{ subscribeMessage }}</p>
+
+        {% block seo_content %}
+            {% set content = content('newsletter_header_' ~  meta.language) %}
+            {% if content %}
+                {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
+            {% endif %}
+        {% endblock seo_content %}
+
+        <p>{{ subscribeMessage|raw }}</p>
         <div class="form-controls">
             <div class="form__control">
                 <input id="frontend_newsletter_email"
