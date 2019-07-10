@@ -46,7 +46,7 @@ class InsertionListService extends AbstractDatabaseAccess {
 
     public function search($typeId, $params) : ?array {
         $page     = isset($params["page"]) ? $params["page"] : 1;
-        $pageSize = 10;
+        $pageSize = isset($params["pageSize"]) ? $params["pageSize"] : 10;
 
         $attributeKeys = array_keys($_GET);
         $keys          = $this->repository("key")->findBy(["name" => $attributeKeys]);
@@ -211,27 +211,29 @@ class InsertionListService extends AbstractDatabaseAccess {
             }
         }
 
-        $order    = "id";
-        $orderDir = "desc";
+        $order    = 'id';
+        $orderDir = 'desc';
 
-        if (isset($params["order"])) {
-            switch ($params["order"]) {
+        if (isset($params['order'])) {
+            switch ($params['order']) {
                 case 'price_asc':
-                    $order    = "price";
-                    $orderDir = "asc";
+                    $order    = 'price';
+                    $orderDir = 'asc';
                     break;
                 case 'price_desc':
-                    $order    = "price";
-                    $orderDir = "desc";
+                    $order    = 'price';
+                    $orderDir = 'desc';
                     break;
                 case 'date_asc':
-                    $order    = "createdAt";
-                    $orderDir = "asc";
+                    $order    = 'createdAt';
+                    $orderDir = 'asc';
                     break;
-                case  'date_desc';
-                    $order    = "createdAt";
-                    $orderDir = "desc";
+                case  'date_desc':
+                    $order    = 'createdAt';
+                    $orderDir = 'desc';
                     break;
+                case 'rand':
+                    $orderDir = 'RAND()';
             }
         }
 
