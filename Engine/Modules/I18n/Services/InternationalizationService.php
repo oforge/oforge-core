@@ -67,15 +67,26 @@ class InternationalizationService extends AbstractDatabaseAccess {
      * @see CsvHelper::DEFAULT_CONFIG for config keys.
      */
     public function importFromCsv(string $filepath, array $options = []) : array {
-        $statistics  = [
-            'lines'   => 0,
-            'skipped' => 0,
-            'created' => 0,
-            'updated' => 0,
+        $options = array_merge($options, [
+            'header-row' => false,
+        ]);
+
+        $statistics = [
+            'lines'         => 0,
+            'lines_empty'   => 0,
+            'lines_skipped' => 0,
+            'created'       => 0,
+            'updated'       => 0,
         ];
-        $rowCallable = function ($row) use ($statistics) {
-            if (!is_array($row) || empty($row) || count($row) !== 3) {
-                $statistics['skipped']++;
+
+        $rowCallable = function ($row) use (&$statistics) {
+            if (!is_array($row) || empty($row)) {
+                $statistics['lines_empty']++;
+
+                return;
+            }
+            if (count($row) !== 3) {
+                $statistics['lines_skipped']++;
 
                 return;
             }
