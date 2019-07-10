@@ -19,3 +19,6 @@ node_modules
 var
 vendor
 Themes/*.lnk
+/docker/*
+/docker/docker-compose.yml
+/docker/start-docker.sh
