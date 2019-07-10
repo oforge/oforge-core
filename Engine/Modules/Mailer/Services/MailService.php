@@ -9,9 +9,9 @@ use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
+use Oforge\Engine\Modules\Media\Twig\MediaExtension;
 use Oforge\Engine\Modules\TemplateEngine\Core\Twig\CustomTwig;
 use Oforge\Engine\Modules\TemplateEngine\Extensions\Twig\AccessExtension;
-use phpDocumentor\Reflection\Types\String_;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use Twig_Error_Loader;
@@ -164,8 +164,10 @@ class MailService {
             $templatePath = Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . Statics::DEFAULT_THEME . DIRECTORY_SEPARATOR . 'MailTemplates';
         }
 
-        $twig = new CustomTwig($path = $templatePath);
+        $twig = new CustomTwig($templatePath);
+        $twig->addExtension(new \Oforge\Engine\Modules\CMS\Twig\AccessExtension());
         $twig->addExtension(new AccessExtension());
+        $twig->addExtension(new MediaExtension());
 
         return $twig->fetch($template = $options['template'], $data = $templateData);
     }
