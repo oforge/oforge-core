@@ -63,7 +63,7 @@ class FrontendInsertionController extends SecureFrontendController {
 
         $types = $service->getInsertionTypeTree();
 
-        Oforge()->View()->assign(['types' => $types ]);
+        Oforge()->View()->assign(['types' => $types]);
     }
 
     /**
@@ -79,9 +79,8 @@ class FrontendInsertionController extends SecureFrontendController {
 
         $types = $service->getInsertionTypeTree();
 
-        Oforge()->View()->assign(['types' => $types ]);
+        Oforge()->View()->assign(['types' => $types]);
     }
-
 
     /**
      * @param Request $request
@@ -257,12 +256,12 @@ class FrontendInsertionController extends SecureFrontendController {
             return $response->withRedirect('/404', 301);
         }
 
-        $typeAttributes       = $service->getInsertionTypeAttributeTree($type->getId());
-        $result['attributes'] = $typeAttributes;
+        $typeAttributes           = $service->getInsertionTypeAttributeTree($type->getId());
+        $result['attributes']     = $typeAttributes;
         $result["all_attributes"] = $service->getInsertionTypeAttributeMap();
-        $result['keys']       = [];
-        $result['typeId']     = $args['type'];
-        $result['type']       = $type->toArray(0);
+        $result['keys']           = [];
+        $result['typeId']         = $args['type'];
+        $result['type']           = $type->toArray(0);
         /**
          * @var $attribute InsertionTypeAttribute
          */
@@ -274,9 +273,7 @@ class FrontendInsertionController extends SecureFrontendController {
         /**
          * @var $listService InsertionListService
          */
-        $listService      = Oforge()->Services()->get('insertion.list');
-
-
+        $listService = Oforge()->Services()->get('insertion.list');
 
         $radius = $listService->saveSearchRadius($_GET);
 
@@ -341,7 +338,6 @@ class FrontendInsertionController extends SecureFrontendController {
          */
         $insertion = $service->getInsertionById(intval($id));
 
-
         if (!isset($insertion) || $insertion == null) {
             return $response->withRedirect('/404', 301);
         }
@@ -349,7 +345,7 @@ class FrontendInsertionController extends SecureFrontendController {
         $values = [];
 
         foreach ($insertion->toArray()['values'] as $value) {
-            $id = $value['attributeKey'];
+            $id     = $value['attributeKey'];
             $values = $values + [$id => $value];
         }
 
@@ -372,10 +368,20 @@ class FrontendInsertionController extends SecureFrontendController {
 
         Oforge()->View()->assign(["insertion" => $insertion->toArray(3, ['user' => ['*', 'id']])]);
 
+        /**
+         * @var $service InsertionProfileService
+         */
+        $service = Oforge()->Services()->get('insertion.profile');
+
+        $profile = $service->get($insertion->getUser()->getId());
+        if (isset($profile)) {
+            Oforge()->View()->assign(["profile" => $profile->toArray()]);
+        }
+
         /** @var $insertionTypeService InsertionTypeService */
         $insertionTypeService = Oforge()->Services()->get("insertion.type");
 
-        $typeAttributes       = $insertionTypeService->getInsertionTypeAttributeTree($insertion->getInsertionType()->getId());
+        $typeAttributes = $insertionTypeService->getInsertionTypeAttributeTree($insertion->getInsertionType()->getId());
 
         Oforge()->View()->assign(["attributes" => $typeAttributes]);
         Oforge()->View()->assign(["all_attributes" => $insertionTypeService->getInsertionTypeAttributeMap()]);
@@ -446,7 +452,7 @@ class FrontendInsertionController extends SecureFrontendController {
 
             $updateService->update($insertion, $data);
 
-            $insertion = $service->getInsertionById(intval($id));
+            $insertion      = $service->getInsertionById(intval($id));
             $result['data'] = $updateService->getFormData($insertion);
             $formsService->clearProcessedData('insertion' . $insertion->getId());
         }
@@ -532,11 +538,11 @@ class FrontendInsertionController extends SecureFrontendController {
 
             if (is_null($conversation)) {
                 $data = [
-                    'requester' => $user->getId(),
-                    'requested' => $insertion->getUser()->getId(),
-                    'type' => 'insertion',
-                    'targetId' => $insertion->getId(),
-                    'title' => $insertion->getContent()[0]->getTitle(),
+                    'requester'    => $user->getId(),
+                    'requested'    => $insertion->getUser()->getId(),
+                    'type'         => 'insertion',
+                    'targetId'     => $insertion->getId(),
+                    'title'        => $insertion->getContent()[0]->getTitle(),
                     'firstMessage' => $message,
                 ];
 
