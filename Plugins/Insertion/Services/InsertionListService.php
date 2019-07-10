@@ -37,18 +37,19 @@ class InsertionListService extends AbstractDatabaseAccess {
     /**
      * @param $typeId
      * @param $params
-     * @Cache(slot="insertion", duration="T15M")
      *
      * @return array|null
+     * @throws \Doctrine\DBAL\DBALException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @Cache(slot="insertion", duration="T15M")
      */
 
     public function search($typeId, $params) : ?array {
         $page     = isset($params["page"]) ? $params["page"] : 1;
-        $pageSize = 10;
+        $pageSize = isset($params["pageSize"]) ? $params["pageSize"] : 10;;
 
-        $attributeKeys = array_keys($_GET);
+        $attributeKeys = array_keys($params);
         $keys          = $this->repository("key")->findBy(["name" => $attributeKeys]);
 
         $result = ["filter" => [], "query" => [], 'order' => $params["order"]];
