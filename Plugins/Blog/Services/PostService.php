@@ -44,6 +44,21 @@ class PostService extends AbstractDatabaseAccess {
     }
 
     /**
+     * @return Post|null
+     */
+    public function getLatestPost() {
+        $queryBuilder = $this->entityManager()->createQueryBuilder();
+        $query        = $queryBuilder
+            ->select('p')
+            ->from('Post', 'p')
+            ->orderBy('p.created', 'DESC')->setMaxResults(1)
+            ->getQuery();
+        $result = $query->execute()[0];
+
+        return $result;
+    }
+
+    /**
      * @param int $page
      * @param int|null $categoryID
      *
