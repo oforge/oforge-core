@@ -23,7 +23,7 @@
             <input type="hidden" name="filter" value="{{ search.filter|json_encode() }}" />
             <input type="submit"
                    class="button button--large button--secondary button--save-result"
-                   value="{% if hasSearchBookmark(typeId, search.filter ) %}Remove from wishlist{% else %}Add to wishlist{% endif %}" />
+                   value="{% if hasSearchBookmark(typeId, search.filter) %}{{ i18n('wishlist_remove', 'Remove from wishlist') }}{% else %}{{ i18n('wishlist_add', 'Add to wishlist') }}{% endif %}" />
         </form>
     </div>
 {% endblock product_list_sort %}
