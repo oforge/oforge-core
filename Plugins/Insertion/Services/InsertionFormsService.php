@@ -40,10 +40,6 @@ class InsertionFormsService extends AbstractDatabaseAccess {
         if (isset($_POST["current_page"])) {
             $_SESSION['insertion' . $sessionKey] = array_merge($_SESSION['insertion' . $sessionKey], $_POST);
 
-
-
-
-
             /** @var MediaService $mediaService */
             $mediaService = Oforge()->Services()->get('media');
 
@@ -108,6 +104,8 @@ class InsertionFormsService extends AbstractDatabaseAccess {
             if (isset($_SESSION['insertion' . $sessionKey]["images"][$mainIndex])) {
                 $_SESSION['insertion' . $sessionKey]["images"][$mainIndex]["main"] = true;
             }
+
+            $_SESSION['insertion' . $sessionKey]["images_interactions"] = $_POST['images_interactions'];
         }
 
         return $_SESSION['insertion' . $sessionKey];
@@ -147,7 +145,11 @@ class InsertionFormsService extends AbstractDatabaseAccess {
             "media"      => [],
             "attributes" => [],
             "price"      => isset($pageData["price"]) ? $pageData["price"] : 0,
+            "tax"      => isset($pageData["tax"]) ? $pageData["tax"] == "on" : 0,
+            'images_interactions' => $pageData["images_interactions"]
         ];
+
+
 
         if (isset($pageData["images"]) && sizeof($pageData["images"]) > 0) {
             foreach ($pageData["images"] as $image) {

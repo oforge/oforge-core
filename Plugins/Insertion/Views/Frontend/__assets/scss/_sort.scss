@@ -1,4 +1,5 @@
 .result {
+    flex: 0 0 100%;
     &__text {
         color: $color-primary;
         font-weight: normal;
@@ -11,8 +12,9 @@
 }
 
 .form__input.form__input--sort {
-    max-width: 18rem;
-    margin-left: auto;
+    flex: 0 0 18rem;
+    width: 18rem;
+    // margin-left: auto;
 }
 
 .panel.panel--filter + .panel.panel--sort {
@@ -20,11 +22,14 @@
 }
 .panel--sort {
     flex-wrap: wrap;
+    > * {
+        margin-bottom: $size-medium;
+    }
 }
 .form.form--sort {
-    flex: 0 0 100%;
     text-align: right;
-    margin-top: $size-small;
+    //margin-top: $size-small;
+    width: 18rem;
 }
 
 @media screen and (min-width: $screen-medium) {

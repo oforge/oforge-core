@@ -43,6 +43,9 @@
     &.button--small {
         font-size: $font-size-5;
     }
+    &.button--large {
+        height: 3.6rem;
+    }
     &.button--save-result {
         width: 18rem;
         max-width: 18rem;
