@@ -189,6 +189,7 @@ class RegistrationController extends AbstractController {
         ];
         $templateData = [
             'activationLink' => $activationLink,
+            'user_mail'      => $user['email'],
         ];
 
         /**
