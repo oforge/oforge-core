@@ -77,7 +77,6 @@
                         } else {
                             unselectItem(selectItem);
                         }
-                        console.log(parentSelect.checkedValues, parentSelect.checkedNames);
                     }
                 }
 
@@ -140,7 +139,14 @@
                     } else if (evt.target.matches(selectors.selectValue)) {
                         var selectItem = evt.target.closest(selectors.selectItem);
                         toggleOneItem(selectItem);
-                    } else {
+                    } else if (evt.target.matches('.sub-attribute-container')
+                    || evt.target.matches('.sub-attribute-container__text')
+                    || evt.target.matches('.select .form__label')
+                    || evt.target.matches('.select .form__control--is-sub')
+                    || evt.target.matches('.select__list')
+                    ) {
+                    }
+                    else {
                         selectList.forEach(function (select) {
                             select.classList.remove(classNames.selectIsOpen);
                         });
