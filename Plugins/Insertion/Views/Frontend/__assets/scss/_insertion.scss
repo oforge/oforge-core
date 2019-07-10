@@ -1,4 +1,32 @@
+#insertion-container, #bookmarks-container {
+    .product {
+        border: 2px solid $color-secondary;
+
+        &__title-link {
+            border-bottom: 1px solid $color-secondary;
+        }
+    }
+}
+
+.action-frontend_account_insertions {
+    .panel--account {
+        //background: none;
+    }
+}
+
 @media(min-width: $screen-medium) {
+    #insertion-container, #bookmarks-container {
+        .product__title-link {
+            border: none;
+            margin-bottom: 0;
+        }
+        .product {
+            &__attributes.product__attributes--top, &__actions {
+                border-top: 1px solid $color-secondary;
+            }
+        }
+    }
+
     .content--insertion {
         flex-direction: row;
         justify-content: space-between;
@@ -29,29 +57,12 @@
         width: 100%;
     }
 
-    .product__image {
-        order: 0;
-        width: 55%;
-        flex: none;
-    }
-
-    .product__attributes.product__attributes--main {
-        justify-content: space-between;
-        padding: $size-large;
-
-        .product__attribute {
-            width: 100%;
-            margin: 0;
-        }
-    }
-
     .product__attributes.product__attributes--top {
         order: 1;
         display: flex;
         width: 45%;
         margin: 0;
         padding: $size-large;
-        padding-bottom: 0;
         align-items: initial;
 
         .product__attribute {
@@ -80,7 +91,6 @@
             justify-content: space-between;
         }
 
-        padding-bottom: 0;
         order: 3;
         width: 100%;
         margin: 0;
@@ -137,7 +147,7 @@
     }
 
     .product__content {
-        padding: $size-large;
+        padding: $size-large $size-large 0 $size-large;
     }
 
 
@@ -145,9 +155,13 @@
         .product {
             flex-wrap: nowrap;
         }
+        #insertion-container, #bookmarks-container {
+            .product__content {
+                padding: $size-large;
+            }
+        }
 
         .product__content {
-            flex: 1 1 auto;
             flex-direction: row;
             flex-wrap: wrap;
 
@@ -207,7 +221,7 @@
     @media (min-width: $content-max) {
         .product__content {
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: space-evenly;
         }
 
         .product__attributes.product__attributes--top {
