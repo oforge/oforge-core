@@ -441,10 +441,14 @@ class FrontendInsertionController extends SecureFrontendController {
         $formsService = Oforge()->Services()->get('insertion.forms');
 
         if ($request->isPost()) {
-            $data = $formsService->parsePageData($_POST);
+            $data = $formsService->processPostData('insertion' . $insertion->getId());
+            $data = $formsService->parsePageData($data);
 
             $updateService->update($insertion, $data);
+
+            $insertion = $service->getInsertionById(intval($id));
             $result['data'] = $updateService->getFormData($insertion);
+            $formsService->clearProcessedData('insertion' . $insertion->getId());
         }
 
         $result['insertion'] = $insertion->toArray(1);
