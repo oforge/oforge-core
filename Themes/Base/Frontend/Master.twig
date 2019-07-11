@@ -18,8 +18,7 @@
 
     {% block master__styles %}
         {% if assets.css %}
-            <link rel="preload" as="style" href="{{ assets.css }}" onload="this.onload=null;this.rel='stylesheet'">
-            <noscript><link rel="stylesheet" href="{{ assets.css }}"></noscript>
+            <link rel="stylesheet" href="{{ assets.css }}">
         {% endif %}
     {% endblock master__styles %}
 </head>

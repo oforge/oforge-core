@@ -7,9 +7,10 @@
             <input type="number"
                    name="price[]"
                    id="price-from"
-                   value="{% if search.filter['price'] is defined %}{{ search.filter['price'][0] }}{% else %}0{% endif %}"
+                   value="{% if search.filter['price'] is defined %}{{ search.filter['price'][0] }}{% else %}{% endif %}"
                    step="1"
                    min="0"
+                   max="2000000"
                    placeholder="{{ i18n('from') }}"
                    class="form__input" />
             {% set unit = i18n('unit_price','') %}
@@ -25,9 +26,10 @@
             <input type="number"
                    name="price[]"
                    id="price-to"
-                   value="{% if search.filter['price'] is defined %}{{ search.filter['price'][1] }}{% else %}2000000{% endif %}"
+                   value="{% if search.filter['price'] is defined %}{{ search.filter['price'][1] }}{% else %}{% endif %}"
                    step="1"
                    min="0"
+                   max="2000000"
                    placeholder="{{ i18n('to') }}"
                    class="form__input" />
             {% set unit = i18n('unit_price','') %}
