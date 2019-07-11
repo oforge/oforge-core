@@ -3,6 +3,8 @@
         <div class="result">
             <h3 class="result__text">{{ search.query.count }} <span class="result__text--mobile">{{ i18n('results') }}</span> <span class="result__text--desktop">{{ i18n('insertion_' ~ type.name ~ '_count', i18n('insertion_count' ,'insertions found')) }}</span></h3>
         </div>
+    </div>
+    <div class="panel panel--sort flex flex--row flex--center flex--between">
         <div class="form__input form__input--select form__input--sort">
             <select onchange="window.location.href = Oforge.updateQueryString('order', this.value)"
                     name="product-list-sort"
