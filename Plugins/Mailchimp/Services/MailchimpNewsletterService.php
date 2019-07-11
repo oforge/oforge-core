@@ -58,10 +58,9 @@ class MailchimpNewsletterService extends AbstractDatabaseAccess
             'status' => 'pending',
         ];
 
-        if($tags != null) {
+        if($tags !== null && $tags[0] !== null) {
             $data['tags'] = $tags;
         }
-
         $result = $this->apiraven->put($emailMd5, $data);
 
         if ($result != false) {
