@@ -1,8 +1,9 @@
 /**
- * Updates the background image for specified elements if the file-input changes
+ * Updates the background image for specified elements if the file-input changes <br>
  *
- * Usage: Input elements will become triggers for media updates if they have: data-update="<element-class>"
- * Changing such input element will result in an update for elements with <element-class>
+ * Usage: Input elements will become triggers if they have the following attribute: "data-update = <element-class>"
+ * If an image is uploaded via a trigger, every DOM element with <element-class> will get the uploaded image as <br>
+ * it's background image
  */
 
 (function () {

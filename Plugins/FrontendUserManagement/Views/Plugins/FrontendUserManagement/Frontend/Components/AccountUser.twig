@@ -4,9 +4,9 @@
         {% set userimage = current_user.detail.image is defined ? current_user.detail.image : user.detail.image.id %}
         {% if label %}
             <label class="center__label flex flex--row" for="input__profile">
-                <div class="user__picture"
+                <div class="user__picture img-profile"
                      {% if userimage is defined %}style="background-image: url('{{ media(userimage, 300) }}');"{% endif %}>
-                    <div class="flex flex--center">
+                    <div class="flex flex--row flex--center">
                         <svg class="icon icon--primary">
                             <use xlink:href="#camera"></use>
                         </svg>
