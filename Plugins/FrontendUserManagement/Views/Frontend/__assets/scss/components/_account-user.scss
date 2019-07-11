@@ -11,6 +11,7 @@
     overflow: hidden;
     box-shadow: 0 .4rem .8rem rgba(112, 112, 112, 1);
     display: flex;
+    justify-content: center;
     margin-bottom: 3rem;
     &:after {
       content: "";
