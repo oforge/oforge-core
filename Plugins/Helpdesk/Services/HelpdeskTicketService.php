@@ -107,7 +107,7 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
                     'issueType'    => $ticket->getIssueType(),
                     'title'        => $ticket->getTitle(),
                     'conversation' => $conversation,
-                    'created'      => $ticket->getCreated()->format('Y-m-d H:i:s'),
+                    'created'      => $ticket->getCreated(),
                 ]);
         }
 
