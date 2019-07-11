@@ -18,9 +18,13 @@
 
     .center__label {
         .icon {
-            width: 100%;
-            height: 4rem;
-            opacity: .8;
+            width: 6rem;
+            height: 6rem;
+            fill: $color-light;
+            background: $color-primary;
+            padding: $size-small;
+            border-radius: 5px;
+            opacity: .6;
         }
         &:hover {
             cursor: pointer;
@@ -72,7 +76,6 @@
                 margin: $size-medium 0;
             }
         }
-
         .info__business {
             margin-top: $size-medium;
             font-size: 1rem;
@@ -92,9 +95,7 @@
         #input__background, #input__profile {
             display: none;
         }
-        .center__label {
 
-        }
         .upload__label {
             display: flex;
             margin-left: $size-large;
@@ -129,12 +130,6 @@
                 height: 16rem;
             }
         }
-        .center__label {
-            .icon {
-                width: 6rem;
-                height: 6rem;
-            }
-        }
     }
 
     @media screen and (min-width: $screen-large) {
@@ -146,7 +141,6 @@
         }
         .profile-pic {
             padding-left: 3rem;
-            //TODO: Set Size
         }
         .profile--edit {
             flex-wrap: wrap;

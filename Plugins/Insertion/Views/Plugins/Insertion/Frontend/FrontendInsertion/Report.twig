@@ -3,21 +3,20 @@
 {% block content %}
     <div class="content content--insertion flex">
         <div class="panel">
+        <h3 class="title">{{ i18n('insertion_report_title') }}</h3>
+            {% include 'Plugins/Insertion/Frontend/Components/Content/ProductPanel.twig' with {item: insertion } %}
 
-            <div class="main">
-                {% include 'Plugins/Insertion/Frontend/Components/Content/ProductPanel.twig' with {item: insertion } %}
-                <form method="POST">
-                    <label for="issueType">{{ i18n('report_reason', 'Report reason:') }}</label>
-                    <select name="issueType" id="issueType">
-                        {% for reportType in reportTypes.issueTypes %}
-                            <option value="{{ reportType.id }}">{{ reportType.issueTypeName }}</option>
-                        {% endfor %}
-                    </select>
-                    <label for="message"></label>
-                    <input type="text" name="message" id="message">
-                    <button type="submit">send message</button>
-                </form>
-            </div>
+            <form method="POST">
+                <div>{{ i18n('report_reason', 'Report reason:') }}</div>
+                <select name="issueType" id="issueType">
+                    {% for reportType in reportTypes.issueTypes %}
+                        <option value="{{ reportType.id }}">{{ reportType.issueTypeName }}</option>
+                    {% endfor %}
+                </select>
+                <label for="message"></label>
+                <input type="text" name="message" id="message">
+                <button type="submit">send message</button>
+            </form>
         </div>
     </div>
 {% endblock content %}

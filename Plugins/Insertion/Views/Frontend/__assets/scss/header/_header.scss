@@ -1,24 +1,7 @@
-.header--has-image:first-of-type + .content--supplier {
-    margin-top: 0;
-}
-
 .action-insertions_profile {
     .header {
-        height: 58rem;
-        position: relative;
-
         &__image {
-            position: absolute;
-            display: block;
-            width: 100%;
-            height: 58rem;
-            top: 0;
-            background-image: url('../img/header.jpg');
-            background-repeat: no-repeat;
-            background-position: center top;
-            background-size: cover;
-            z-index: 0;
-            margin-top: 0;
+            background-image: url('/Themes/AllYourHorses/Frontend/__assets/img/title_image_placeholder.svg');
         }
     }
 }
