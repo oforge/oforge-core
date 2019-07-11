@@ -145,7 +145,9 @@ class BackendAttributeController extends SecureBackendController {
             AttributeType::RANGE,
             AttributeType::SINGLE,
             AttributeType::TEXT,
-            AttributeType::DATE
+            AttributeType::DATE,
+            AttributeType::DATEYEAR,
+            AttributeType::DATEMONTH
         ];
 
         $attributeList = [];
