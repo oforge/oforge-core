@@ -71,3 +71,11 @@ a {
     color: $color-secondary;
     font-weight: bold;
 }
+
+.rich-text {
+    ol,
+    ul,
+    dl {
+        padding-left: 20px;
+    }
+}
