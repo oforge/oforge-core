@@ -20,7 +20,8 @@
                 {% block insertion_detail__heading %}
                     <div class="product-view--heading">
                         <h3 class="title title--3 title--product">{{ insertion.content[0].title }}</h3>
-                        <span class="title title--3 product-view__price"><span class="price-value">{{ insertion.price }}</span></span>
+                        <span class="title title--3 product-view__price"><span
+                                    class="price-value">{{ insertion.price }}</span></span>
                     </div>
                 {% endblock insertion_detail__heading %}
 
@@ -33,7 +34,7 @@
                 <div class="top-attributes">
                     <div class="product-view__price">
                         <span class="attribute-label">{{ i18n('insertion_detail_price', 'Preis') }}</span>
-                        <span class="attribute-value">{{ insertion.price }}</span>
+                        <span class="attribute-value">{{ insertion.price|number_format(0, ',', '.') }}€</span>
                     </div>
                     <div class="product-view__name">
                         <span class="attribute-label">{{ i18n('insertion_detail_name', 'Name') }}</span>
@@ -53,10 +54,14 @@
 
             <div class="panel panel--main-attributes">
                 <div class="main-attributes">
+
                     {% for attributeGroup in attributes %}
                         {% if attributeGroup.items|length > 0 and (attributeGroup.name == 'main') %}
+                            <h2>{{ i18n('attribute_group_' ~ attributeGroup.name) }}</h2>
                             {% for attribute in attributeGroup.items %}
-                                {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute, 'values' : values} %}
+                                {% if attribute.top == false %}
+                                    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute, 'values' : values} %}
+                                {% endif %}
                             {% endfor %}
                         {% endif %}
                     {% endfor %}
@@ -97,64 +102,10 @@
                     {{ insertion.content[0].description }}
                 </div>
             </div>
-            {% block insertion_detail__pedigree %}
-            {% endblock insertion_detail__pedigree %}
         </div>
 
-        <div class="sidebar sidebar--insertion">
-
-            {% if extended %}
-                <div class="panel panel--provider">
-
-                </div>
-            {% endif %}
-
-            {% set contact = insertion.contact %}
-            <div class="panel panel--contact contact">
-                <div class="contact__name">{{ contact.name }}</div>
-                <div class="contact__address"><span class="adress__zip">{{ contact.zip }}</span> <span
-                            class="adress__city">{{ contact.city }}</span></div>
-                <div class="contact__phone">{{ i18n ('insertion_detail_telephone', 'Tel.:') }} {{ contact.phone }}</div>
-                <a href="{{ url("insertions_contact", {id: insertion.id}) }}"
-                   class="button button--secondary">{{ i18n('insertion_detail_contact_advertiser', 'Anbieter Kontaktieren') }}</a>
-                <a href="{{ url('frontend_account_insertions_toggleBookmark', {'insertionId': insertion.id }) }}"
-                   class="button button--secondary">{% if hasBookmark(insertion.id) %} Japs vorhanden {% else %}{{ i18n('insertion_detail_contact_add_to_wishlist', 'In meinen Stall stellen') }}{% endif %}</a>
-            </div>
-
-            <div class="panel panel--map map">
-                <div class="map__address">
-                    12345 Velgast
-                </div>
-                <div class="map__view">
-
-                </div>
-            </div>
-
-            <div class="panel panel--cross-sell cross-sell">
-                <div class="cross-sell__title">Other insertions</div>
-                <div class="cross-sell__image">
-                    <img src="https://placeponi.es/300/300" alt="" class="image">
-                </div>
-                <div class="cross-sell__description">
-                    <div class="name">Some product</div>
-                    <div class="price">9.000.000 €</div>
-                    <div class="insertion-provider">from Superproducts</div>
-                </div>
-                <div class="buttton button--primary">To the insertion</div>
-            </div>
-
-            <div class="panel panel--cross-sell cross-sell">
-                <div class="cross-sell__title">Some new blog post</div>
-                <div class="cross-sell__image">
-                    <img src="https://placeponi.es/300/300" alt="" class="image">
-                </div>
-                <div class="cross-sell__description">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At eos ex omnis perferendis,
-                        quidem tempora unde. Accusantium autem commodi
-                        excepturi harum, officiis pariatur quasi quidem sint sunt tempora. Animi, non?</p>
-                </div>
-                <a href="#" class="button button--primary">To the blog post</a>
-            </div>
-        </div>
+        {% block insertion_detail__sidebar %}
+            {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailSidebar.twig' %}
+        {% endblock insertion_detail__sidebar %}
     </div>
 {% endblock content %}
