@@ -17,18 +17,25 @@
     // margin-left: auto;
 }
 
-.panel.panel--filter + .panel.panel--sort {
+.panel + .panel.panel--sort {
     margin-top: 0;
 }
 .panel--sort {
     flex-wrap: wrap;
-    > * {
-        margin-bottom: $size-medium;
-    }
 }
+
+.panel--sort + .panel--sort {
+    border-top: 1px solid $header-top;
+    padding-bottom: 0;
+}
+
+.form--sort,
+.form__input--sort {
+    margin-bottom: $size-large;
+}
+
 .form.form--sort {
     text-align: right;
-    //margin-top: $size-small;
     width: 18rem;
 }
 
