@@ -40,31 +40,31 @@
                         <span class="attribute-label">{{ i18n('insertion_detail_name', 'Name') }}</span>
                         <span class="attribute-value">{{ insertion.content[0].name }}</span>
                     </div>
-                    {% for attributeGroup in attributes %}
-                        {% if attributeGroup.items|length %}
-                            {% for attribute in attributeGroup.items %}
-                                {% if attribute.top == true %}
-                                    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute, 'values' : values} %}
-                                {% endif %}
-                            {% endfor %}
-                        {% endif %}
-                    {% endfor %}
+                    {#{% for attributeGroup in attributes %}#}
+                        {#{% if attributeGroup.items|length %}#}
+                            {#{% for attribute in attributeGroup.items %}#}
+                                {#{% if attribute.top == true %}#}
+                                    {#{% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute, 'values' : values} %}#}
+                                {#{% endif %}#}
+                            {#{% endfor %}#}
+                        {#{% endif %}#}
+                    {#{% endfor %}#}
                 </div>
             </div>
 
             <div class="panel panel--main-attributes">
                 <div class="main-attributes">
 
-                    {% for attributeGroup in attributes %}
-                        {% if attributeGroup.items|length > 0 and (attributeGroup.name == 'main') %}
-                            <h2>{{ i18n('attribute_group_' ~ attributeGroup.name) }}</h2>
-                            {% for attribute in attributeGroup.items %}
-                                {% if attribute.top == false %}
-                                    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute, 'values' : values} %}
-                                {% endif %}
-                            {% endfor %}
-                        {% endif %}
-                    {% endfor %}
+                    {#{% for attributeGroup in attributes %}#}
+                        {#{% if attributeGroup.items|length > 0 and (attributeGroup.name == 'main') %}#}
+                            {#<h2>{{ i18n('attribute_group_' ~ attributeGroup.name) }}</h2>#}
+                            {#{% for attribute in attributeGroup.items %}#}
+                                {#{% if attribute.top == false %}#}
+                                    {#{% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute, 'values' : values} %}#}
+                                {#{% endif %}#}
+                            {#{% endfor %}#}
+                        {#{% endif %}#}
+                    {#{% endfor %}#}
                 </div>
             </div>
             {% block insertion_detail__attributes %}
