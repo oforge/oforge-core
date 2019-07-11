@@ -12,6 +12,7 @@ use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\Media\Twig\MediaExtension;
 use Oforge\Engine\Modules\TemplateEngine\Core\Twig\CustomTwig;
 use Oforge\Engine\Modules\TemplateEngine\Extensions\Twig\AccessExtension;
+use Oforge\Engine\Modules\TemplateEngine\Extensions\Twig\SlimExtension;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use Twig_Error_Loader;
@@ -168,6 +169,7 @@ class MailService {
         $twig->addExtension(new \Oforge\Engine\Modules\CMS\Twig\AccessExtension());
         $twig->addExtension(new AccessExtension());
         $twig->addExtension(new MediaExtension());
+        $twig->addExtension(new SlimExtension());
 
         return $twig->fetch($template = $options['template'], $data = $templateData);
     }
