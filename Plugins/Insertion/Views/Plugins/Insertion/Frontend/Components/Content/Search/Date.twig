@@ -1,3 +1,5 @@
+{% set unit = unit is not empty ? unit : i18n('unit_' ~ attribute.name,'') %}
+
 <div class="form__control form__control__range">
     {% if omitLabel is not defined %}<label class="form__label">{{ i18n(attribute.name) }}</label>{% endif %}
     <div class="form__control form__control--half-medium">
@@ -11,15 +13,11 @@
                    min="0"
                    placeholder="{{ i18n('from') }}"
                    class="form__input" />
-            {% set unit = i18n('unit_' ~ attribute.name,'') %}
+
             {% if unit is not empty %}
                 <span class="input__unit">
                 {{ unit }}
                 </span>
-                {% set unit2 = i18n('unit_' ~ attribute.name ~ '_filter','') %}
-                {% if unit2 is not empty %}
-                    <input type="hidden" name="{{ attribute.name }}_type" value="{{ unit2 }}" />
-                {% endif %}
             {% endif %}
         </label>
         <label for="{{ attribute.name }}_1"
@@ -32,7 +30,6 @@
                    min="0"
                    placeholder="{{ i18n('to') }}"
                    class="form__input" />
-            {% set unit = i18n('unit_' ~ attribute.name,'') %}
             {% if unit is not empty %}
                 <span class="input__unit">
                 {{ unit }}
