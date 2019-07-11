@@ -27,6 +27,14 @@ h1,h2,h3,h4,h5,h6 {
     font-weight: bold;
 }
 
+a {
+    color: $color-primary;
+    text-decoration: none;
+
+    &:hover, &:active {
+        text-decoration: none;
+    }
+}
 
 .module-frontendusermanagement,
 [class*="controller-frontend_account"] {
@@ -56,4 +64,10 @@ h1,h2,h3,h4,h5,h6 {
 
 .pad-l-top {
     padding-top: $size-large;
+}
+
+
+.highlight {
+    color: $color-secondary;
+    font-weight: bold;
 }

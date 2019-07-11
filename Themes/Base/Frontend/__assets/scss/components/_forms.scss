@@ -17,6 +17,9 @@
 .form-controls {
     width: 100%;
 
+    &.form-controls--container {
+        overflow: hidden;
+    }
     &.form-controls--row {
         display: flex;
         flex-direction: row;
@@ -49,6 +52,7 @@
     display: block;
     width: 100%;
     position: relative;
+    min-height: 3.6rem;
 
     &.flex {
         display: flex;
@@ -88,7 +92,7 @@
 
     &.form__control--multi:not(.form__control--is-sub),
     &.form__control--new-select:not(.form__control--is-sub) {
-        min-height: 6rem;
+        min-height: 7rem;
     }
 
     &.form__control--checkbox {
@@ -412,10 +416,9 @@
 
 .form-controls.form-controls--row, .attribute-group {
     .form__control.form__control__boolean {
-        margin-top: 0.6rem;
+        // margin-top: 0.6rem;
         flex-direction: row-reverse;
         display: flex;
-        flex-direction: row-reverse;
         align-items: center;
         justify-content: flex-end;
 

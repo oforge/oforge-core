@@ -2,6 +2,12 @@
 
 {% block title %}{% set title = insertion.content[0].title ~ i18n('title_separator') ~ i18n(insertion.insertionType.name) %}{{ title|length > 35 ? title|slice(0, 35) : title }}{{ i18n('title_separator') }}{{ config('system_project_name') }}{% endblock title %}
 
+{% block layout__header %}
+    {% set headerimage = profile.background.id %}
+
+    {{ parent() }}
+{% endblock layout__header %}
+
 {% block content %}
     {% if not insertion.moderation %}
         {{ i18n('insertion_needs_moderation') }}

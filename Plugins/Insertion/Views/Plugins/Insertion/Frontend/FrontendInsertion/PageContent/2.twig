@@ -23,11 +23,12 @@
                 </label>
             </div>
 
+            {{ o_dump() }}
             <div class="form__control form__control--checkbox">
                 <label for="tax" class="form__label form__label--checkbox"> {{  i18n('tax') }}</label>
                 <input type="checkbox"
                        class="form__input form__input--checkbox"
-                       name="{{ data['tax'] }}"
+                       name="tax"
                        id="tax"
                    {% if data['tax'] == 'on' %}
                        checked="checked"
