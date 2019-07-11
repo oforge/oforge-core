@@ -1,8 +1,4 @@
-<div class="attribute-label">
-    <span class="attribute-label">{{ i18n(value.attributeKey.name) }}</span>
-    <span class="attribute-value">{{ value.value }}</span>
+<div class="product__attribute">
+    <span class="product__label">{{ i18n(attribute.name) }}</span>
+    <span class="product__value">{% if value is not empty %}{{ i18n(getInsertionValue(value).value) }}{% else %}{{ i18n('not_available') }}{% endif %}</span>
 </div>
-
-{% for subAttributeItem in subAttributes %}
-    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ all_attributes[subAttributeItem.id].type|capitalize  ~ '.twig'  with {'attribute': all_attributes[subAttributeItem.id], hidden: true, required: false, subAttribute: subAttributeItem } %}
-{% endfor %}

@@ -33,6 +33,8 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
     public function getFunctions() {
         return [
             new Twig_Function('getInsertionValues', [$this, 'getInsertionValues']),
+            new Twig_Function('getInsertionAttribute', [$this, 'getAttribute']),
+            new Twig_Function('getInsertionValue', [$this, 'getValue']),
             new Twig_Function('hasBookmark', [$this, 'hasBookmark']),
             new Twig_Function('hasSearchBookmark', [$this, 'hasSearchBookmark']),
             new Twig_Function('getInsertionSliderContent', [$this, 'getInsertionSliderContent']),
@@ -176,5 +178,37 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
         }
 
         return false;
+    }
+
+
+    /**
+     * @return array
+     * @throws ServiceNotFoundException
+     * @throws ORMException
+     */
+    public function getAttribute(...$vars) {
+        if (count($vars) == 1) {
+            /** @var InsertionTypeService $insertionTypeService */
+            $insertionTypeService = Oforge()->Services()->get('insertion.type');
+            return $insertionTypeService->getAttribute($vars[0]);
+        }
+
+        return null;
+    }
+
+    /**
+     * @return array
+     * @throws ServiceNotFoundException
+     * @throws ORMException
+     */
+    public function getValue(...$vars) {
+        if (count($vars) == 1) {
+            /** @var InsertionTypeService $insertionTypeService */
+            $insertionTypeService = Oforge()->Services()->get('insertion.type');
+
+            return $insertionTypeService->getValue($vars[0]);
+        }
+
+        return null;
     }
 }
