@@ -11,10 +11,10 @@
             {% for key, ticket in tickets %}
                 <div class="ticket">
                     <div class="ticket__title">
-                        <p class="ticket__title-text"><strong>{{ ticket.issueType }}:</strong> {{ ticket.title }}</p>
+                        <p class="ticket__title-text"><strong>{{ i18n(issueTypes[ticket.issueType].issueTypeName) }}:</strong> {{ ticket.title }}</p>
                     </div>
                     <div class="ticket__created">
-                        {{ i18n('created', 'Created at') }} {{ ticket.created }}
+                        {{ i18n('created', 'Created at') }} {{ ticket.created|formatDatetime }}
                     </div>
                     <div class="ticket__buttons flex flex--row flex--center">
                         <div class="ticket__link ticket__view">
