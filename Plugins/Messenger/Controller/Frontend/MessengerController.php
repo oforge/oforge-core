@@ -96,7 +96,10 @@ class MessengerController extends SecureFrontendController {
                         'subject'  => I18N::translate('email_subject_new_message', 'New private message'),
                         'template' => 'NewMessage.twig',
                     ];
-                    $mailService->send($mailOptions);
+                    $templateData = [
+                        'conversationId' => $conversationId,
+                    ];
+                    $mailService->send($mailOptions, $templateData);
                 }
                 $uri = $router->pathFor('frontend_account_messages');
 
