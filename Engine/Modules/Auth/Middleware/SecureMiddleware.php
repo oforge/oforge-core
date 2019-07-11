@@ -62,6 +62,9 @@ class SecureMiddleware {
 
                 Oforge()->View()->assign(['stopNext' => true]);
 
+                $currentPath = $request->getUri()->getPath();
+                $_SESSION["login_redirect_url"] = $currentPath;
+
                 if (!empty($this->urlPathName)) {
                     return RouteHelper::redirect($response, $this->urlPathName);
                 }

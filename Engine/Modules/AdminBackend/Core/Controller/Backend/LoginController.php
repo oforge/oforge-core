@@ -104,7 +104,17 @@ class LoginController extends AbstractController {
 
         $_SESSION['auth'] = $jwt;
 
-        $uri = $router->pathFor('backend_dashboard');
+        $referrer = null;
+        if (isset($_SESSION["login_redirect_url"])) {
+            $referrer = $_SESSION["login_redirect_url"];
+            unset($_SESSION["login_redirect_url"]);
+        }
+
+        if($referrer != null) {
+            $uri = $referrer;
+        } else {
+            $uri = $router->pathFor('backend_dashboard');
+        }
 
         return $response->withRedirect($uri, 302);
     }
