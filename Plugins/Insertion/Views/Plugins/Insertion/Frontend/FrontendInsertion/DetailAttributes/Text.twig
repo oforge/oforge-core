@@ -1,6 +1,6 @@
 {% if values[attribute.attributeKey.id].value %}
 <div class="attribute">
-    <span class="attribute-label">{{ attribute.attributeKey.name }}</span>
+    <span class="attribute-label">{{ i18n(attribute.attributeKey.name) }}</span>
     <span class="attribute-value">{{ values[attribute.attributeKey.id].value }}</span>
 </div>
 {% endif %}

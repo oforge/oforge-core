@@ -54,6 +54,21 @@
     position: relative;
     min-height: 3.6rem;
 
+    &.form__control--half-medium {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+
+        > * {
+            flex: 0 0 49%;
+            max-width: 49%;
+        }
+        .form__input--inside-label + .form__input--inside-label {
+            margin-top: 0;
+        }
+    }
+
     &.flex {
         display: flex;
     }
@@ -381,18 +396,6 @@
         }
     }
     .form__control {
-        &.form__control--half-medium {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
-
-            > * {
-                flex: 0 0 49%;
-                max-width: 49%;
-            }
-        }
-
         &.form__control--third-medium {
             display: flex;
             flex-direction: row;
