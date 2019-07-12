@@ -277,6 +277,8 @@ class FrontendInsertionController extends SecureFrontendController {
 
         $radius = $listService->saveSearchRadius($_GET);
 
+        print_r($_GET);
+
         $result['search'] = $listService->search($type->getId(), array_merge($_GET, $radius));
 
         Oforge()->View()->assign($result);
@@ -381,10 +383,22 @@ class FrontendInsertionController extends SecureFrontendController {
         /** @var $insertionTypeService InsertionTypeService */
         $insertionTypeService = Oforge()->Services()->get("insertion.type");
 
-        $typeAttributes = $insertionTypeService->getInsertionTypeAttributeTree($insertion->getInsertionType()->getId());
-
+        $typeAttributes  = $insertionTypeService->getInsertionTypeAttributeTree($insertion->getInsertionType()->getId());
+        $insertionValues = [];
+        foreach ($insertion->getValues() as $value) {
+            if (isset($insertionValues[$value->getAttributeKey()->getId()])) {
+                if (is_array($insertionValues[$value->getAttributeKey()->getId()])) {
+                    $insertionValues[$value->getAttributeKey()->getId()][] = $value->getValue();
+                } else {
+                    $insertionValues[$value->getAttributeKey()->getId()] = [$insertionValues[$value->getAttributeKey()->getId()], $value->getValue()];
+                }
+            } else {
+                $insertionValues[$value->getAttributeKey()->getId()] = $value->getValue();
+            }
+        }
         Oforge()->View()->assign(["attributes" => $typeAttributes]);
         Oforge()->View()->assign(["all_attributes" => $insertionTypeService->getInsertionTypeAttributeMap()]);
+        Oforge()->View()->assign(["insertion_values" => $insertionValues]);
 
     }
 

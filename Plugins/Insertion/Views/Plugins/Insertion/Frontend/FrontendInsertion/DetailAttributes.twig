@@ -1,13 +1,10 @@
 {% block detail_attributes %}
     {% for attributeGroup in attributes %}
-        {% if attributeGroup.items|length > 0 and not  (attributeGroup.name == 'main' or attributeGroup.name == 'contact') %}
-            <div class="panel panel--product-attributes">
-                <h2>{{ i18n('attribute_group_' ~ attributeGroup.name) }}</h2>
-                <div class="product-attributes">
-                    {% for attribute in attributeGroup.items %}
-                        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute, 'values' : values} %}
-                    {% endfor %}
-                </div>
+        {% if attributeGroup.items|length > 0 %}
+            <div class="product-attributes">
+                {% for attribute in attributeGroup.items %}
+                    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'value' : insertion_values[attribute.attributeKey.id]} %}
+                {% endfor %}
             </div>
         {% endif %}
     {% endfor %}

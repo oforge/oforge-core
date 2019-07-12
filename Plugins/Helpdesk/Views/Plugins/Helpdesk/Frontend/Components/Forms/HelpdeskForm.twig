@@ -18,7 +18,7 @@
                         class="form__input form__input--select"
                         required>
                     {% for issueType in supportTypes.issueTypes %}
-                        <option value="{{ issueType.id }}">{{ issueType.issueTypeName }}</option>
+                        <option value="{{ issueType.id }}">{{ i18n(issueType.issueTypeName) }}</option>
                     {% endfor %}
                 </select>
             </div>
