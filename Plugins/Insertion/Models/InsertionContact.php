@@ -132,7 +132,7 @@ class InsertionContact extends AbstractModel {
     /**
      * @return string
      */
-    public function getPhone() : string {
+    public function getPhone() : ?string {
         return $this->phone;
     }
 

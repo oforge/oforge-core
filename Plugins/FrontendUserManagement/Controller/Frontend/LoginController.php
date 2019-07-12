@@ -131,6 +131,14 @@ class LoginController extends AbstractController {
         $_SESSION['user_logged_in'] = true;
 
         if (!isset($referrer)) {
+            if (isset($_SESSION["login_redirect_url"])) {
+                $referrer = $_SESSION["login_redirect_url"];
+                $uri = $referrer;
+                unset($_SESSION["login_redirect_url"]);
+            }
+        }
+
+        if (!isset($referrer)) {
             $uri = $router->pathFor('frontend_account_dashboard');
         }
         Oforge()->View()->Flash()->addMessage('success', I18N::translate('login_success', 'You have successfully logged in!'));
