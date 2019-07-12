@@ -45,10 +45,12 @@
             </div>
         {% endif %}
 
-        {% if contents.type and not contents.isContainer %}
+        {% if post.cms_page_selected_element %}
             <button type="button" class="btn btn-danger" id="cms-page-builder-cancel"
                     data-pb-se="{{ post.cms_page_selected_element }}">{{ i18n('back') }}</button>
+        {% endif %}
 
+        {% if contents.type and not contents.isContainer %}
             <input type="submit" class="btn btn-primary" data-pb-se="{{ post.cms_page_selected_element }}"
                    value="{{ i18n('backend_crud_save') }}" />
         {% endif %}
