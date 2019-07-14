@@ -93,7 +93,7 @@ class CssAssetService extends BaseAssetService {
         foreach ($importPaths as $importPath) {
             $global .= '@import "' . $importPath . 'all' . '";' . "\n";
         }
-        file_put_contents($fullFolder . DIRECTORY_SEPARATOR . 'all.scss', $global);
+        file_put_contents($fullFolder . DIRECTORY_SEPARATOR . Statics::ASSETS_ALL_SCSS, $global);
 
         // compile css from global import file
         $scss->addImportPath($fullFolder);

@@ -2,20 +2,31 @@
 
 {% block content %}
     <div class="content content--insertion flex">
-        <div class="panel">
-        <h3 class="title">{{ i18n('insertion_report_title') }}</h3>
+        <div class="panel panel--support">
+            <h3 class="title">{{ i18n('insertion_report_title') }}</h3>
             {% include 'Plugins/Insertion/Frontend/Components/Content/ProductPanel.twig' with {item: insertion } %}
 
             <form method="POST">
-                <div>{{ i18n('report_reason', 'Report reason:') }}</div>
-                <select name="issueType" id="issueType">
-                    {% for reportType in reportTypes.issueTypes %}
-                        <option value="{{ reportType.id }}">{{ reportType.issueTypeName }}</option>
-                    {% endfor %}
-                </select>
-                <label for="message"></label>
-                <input type="text" name="message" id="message">
-                <button type="submit">send message</button>
+                <div class="form__control">
+                    <label class="form__label">{{ i18n('report_reason', 'Report reason:') }}</label>
+                        <select class="select"
+                                name="issueType"
+                                id="issueType">
+                            {% for reportType in reportTypes.issueTypes %}
+                                <option value="{{ reportType.id }}">{{ reportType.issueTypeName }}</option>
+                            {% endfor %}
+                        </select>
+                </div>
+
+                <div class="form__control">
+                    <label class="form__label" for="message">{{ i18n('short_description') }}</label><!-- snippify -->
+
+                    <textarea class="form__input form__input--textarea" id="message" name="message"></textarea>
+                </div>
+                <div class="form__control">
+                    <input type="submit" class="button button--primary" value="{{ i18n('send') }}">
+                </div>
+
             </form>
         </div>
     </div>
