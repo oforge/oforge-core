@@ -119,7 +119,7 @@ class LanguageService extends AbstractDatabaseAccess {
             $this->currentLanguageIso = 'en';
             try {
                 /** @var ?Language $language */
-                $language = $this->repository()->findOneBy(['active' => true]);
+                $language = $this->repository()->findOneBy(['active' => true], ['default' => 'DESC']);
                 if (isset($language)) {
                     $this->currentLanguageIso = $language->getIso();
                 }
