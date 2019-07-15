@@ -32,22 +32,22 @@ class Bootstrap extends AbstractBootstrap {
      *
      */
     public function install() {
-        /** @var BackendNavigationService $sidebarNavigation */
+        /** @var BackendNavigationService $backendNavigationService */
         /*
-        $sidebarNavigation = Oforge()->Services()->get('backend.navigation');
-        $sidebarNavigation->put([
+        $backendNavigationService = Oforge()->Services()->get('backend.navigation');
+        $backendNavigationService->add([
             'name'     => 'backend_documentation',
             'order'    => 100,
             'position' => 'sidebar',
         ]);
-        $sidebarNavigation->put([
+        $backendNavigationService->add([
             'name'     => 'backend_ui_elements',
             'order'    => 100,
             'parent'   => 'backend_documentation',
             'icon'     => 'fa fa-laptop',
             'position' => 'sidebar',
         ]);
-        $sidebarNavigation->put([
+        $backendNavigationService->add([
             'name'     => 'backend_documentation_ui_general',
             'order'    => 1,
             'parent'   => 'backend_ui_elements',
@@ -55,7 +55,7 @@ class Bootstrap extends AbstractBootstrap {
             'path'     => 'backend_documentation_ui_general',
             'position' => 'sidebar',
         ]);
-        $sidebarNavigation->put([
+        $backendNavigationService->add([
             'name'     => 'backend_documentation_ui_icons',
             'order'    => 2,
             'parent'   => 'backend_ui_elements',
@@ -63,7 +63,7 @@ class Bootstrap extends AbstractBootstrap {
             'path'     => 'backend_documentation_ui_icons',
             'position' => 'sidebar',
         ]);
-        $sidebarNavigation->put([
+        $backendNavigationService->add([
             'name'     => 'backend_documentation_ui_buttons',
             'order'    => 3,
             'parent'   => 'backend_ui_elements',
@@ -71,7 +71,7 @@ class Bootstrap extends AbstractBootstrap {
             'path'     => 'backend_documentation_ui_buttons',
             'position' => 'sidebar',
         ]);
-        $sidebarNavigation->put([
+        $backendNavigationService->add([
             'name'     => 'backend_documentation_ui_sliders',
             'order'    => 4,
             'parent'   => 'backend_ui_elements',
@@ -79,7 +79,7 @@ class Bootstrap extends AbstractBootstrap {
             'path'     => 'backend_documentation_ui_sliders',
             'position' => 'sidebar',
         ]);
-        $sidebarNavigation->put([
+        $backendNavigationService->add([
             'name'     => 'backend_documentation_ui_timeline',
             'order'    => 5,
             'parent'   => 'backend_ui_elements',
@@ -87,7 +87,7 @@ class Bootstrap extends AbstractBootstrap {
             'path'     => 'backend_documentation_ui_timeline',
             'position' => 'sidebar',
         ]);
-        $sidebarNavigation->put([
+        $backendNavigationService->add([
             'name'     => 'backend_documentation_ui_modals',
             'order'    => 6,
             'parent'   => 'backend_ui_elements',

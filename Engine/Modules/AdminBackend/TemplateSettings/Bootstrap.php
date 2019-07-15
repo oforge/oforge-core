@@ -37,9 +37,9 @@ class Bootstrap extends AbstractBootstrap {
      * @throws ConfigOptionKeyNotExistException
      */
     public function activate() {
-        /** @var BackendNavigationService $backendNavigation */
-        $backendNavigation = Oforge()->Services()->get('backend.navigation');
-        $backendNavigation->put([
+        /** @var BackendNavigationService $backendNavigationService */
+        $backendNavigationService = Oforge()->Services()->get('backend.navigation');
+        $backendNavigationService->add([
             'name'     => 'backend_template_settings',
             'order'    => 98,
             'parent'   => 'admin',

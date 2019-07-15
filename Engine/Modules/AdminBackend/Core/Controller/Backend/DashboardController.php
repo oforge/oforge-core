@@ -131,22 +131,21 @@ class DashboardController extends SecureBackendController {
      * @EndpointAction()
      */
     public function testAction(Request $request, Response $response) {
-        /** @var BackendNavigationService $sidebarNavigation */
-        $sidebarNavigation = Oforge()->Services()->get('backend.navigation');
-
-        $sidebarNavigation->put([
+        /** @var BackendNavigationService $backendNavigationService */
+        $backendNavigationService = Oforge()->Services()->get('backend.navigation');
+        $backendNavigationService->add([
             'name'     => 'admin',
             'order'    => 99,
             'position' => 'sidebar',
         ]);
-        $sidebarNavigation->put([
+        $backendNavigationService->add([
             'name'     => 'help',
             'order'    => 99,
             'parent'   => 'admin',
             'icon'     => 'ion-help',
             'position' => 'sidebar',
         ]);
-        $sidebarNavigation->put([
+        $backendNavigationService->add([
             'name'     => 'ionicons',
             'order'    => 2,
             'parent'   => 'help',
@@ -154,7 +153,7 @@ class DashboardController extends SecureBackendController {
             'path'     => 'backend_dashboard_ionicons',
             'position' => 'sidebar',
         ]);
-        $sidebarNavigation->put([
+        $backendNavigationService->add([
             'name'     => 'fontAwesome',
             'order'    => 1,
             'parent'   => 'help',

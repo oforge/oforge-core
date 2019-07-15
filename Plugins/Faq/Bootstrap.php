@@ -31,9 +31,9 @@ class Bootstrap extends AbstractBootstrap {
     }
 
     public function activate() {
-        /** @var BackendNavigationService $sidebarNavigation */
-        $sidebarNavigation = Oforge()->Services()->get('backend.navigation');
-        $sidebarNavigation->put([
+        /** @var BackendNavigationService $backendNavigationService */
+        $backendNavigationService = Oforge()->Services()->get('backend.navigation');
+        $backendNavigationService->add([
             'name'     => 'backend_faq',
             'order'    => 6,
             'parent'   => 'backend_content',

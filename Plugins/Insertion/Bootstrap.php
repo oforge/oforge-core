@@ -138,21 +138,21 @@ class Bootstrap extends AbstractBootstrap {
     }
 
     public function activate() {
-        /** @var BackendNavigationService $sidebarNavigation */
-        $sidebarNavigation = Oforge()->Services()->get('backend.navigation');
-        $sidebarNavigation->put([
+        /** @var BackendNavigationService $backendNavigationService */
+        $backendNavigationService = Oforge()->Services()->get('backend.navigation');
+        $backendNavigationService->add([
             'name'     => 'backend_content',
             'order'    => 2,
             'position' => 'sidebar',
         ]);
-        $sidebarNavigation->put([
+        $backendNavigationService->add([
             'name'     => 'backend_insertion',
             'order'    => 100,
             'parent'   => 'backend_content',
             'icon'     => 'fa fa-newspaper-o',
             'position' => 'sidebar',
         ]);
-        $sidebarNavigation->put([
+        $backendNavigationService->add([
             'name'     => 'backend_insertion_attribute',
             'order'    => 1,
             'parent'   => 'backend_insertion',
@@ -160,7 +160,7 @@ class Bootstrap extends AbstractBootstrap {
             'path'     => 'backend_insertion_attribute',
             'position' => 'sidebar',
         ]);
-        $sidebarNavigation->put([
+        $backendNavigationService->add([
             'name'     => 'backend_insertion_insertion_type_group',
             'order'    => 2,
             'parent'   => 'backend_insertion',
@@ -168,7 +168,7 @@ class Bootstrap extends AbstractBootstrap {
             'path'     => 'backend_insertion_insertion_type_group',
             'position' => 'sidebar',
         ]);
-        $sidebarNavigation->put([
+        $backendNavigationService->add([
             'name'     => 'backend_insertion_insertion_type',
             'order'    => 3,
             'parent'   => 'backend_insertion',
@@ -176,7 +176,7 @@ class Bootstrap extends AbstractBootstrap {
             'path'     => 'backend_insertion_type',
             'position' => 'sidebar',
         ]);
-        $sidebarNavigation->put([
+        $backendNavigationService->add([
             'name'     => 'backend_insertion_insertion',
             'order'    => 4,
             'parent'   => 'backend_insertion',

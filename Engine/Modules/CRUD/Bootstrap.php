@@ -4,10 +4,11 @@ namespace Oforge\Engine\Modules\CRUD;
 
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
+use Oforge\Engine\Modules\CRUD\Services\GenericCrudService;
+
 // use Oforge\Engine\Modules\CRUD\Controller\Backend\CRUD\Test\ReadController;
 // use Oforge\Engine\Modules\CRUD\Controller\Backend\CRUD\Test\WriteController;
 // use Oforge\Engine\Modules\CRUD\Models\CrudTest;
-use Oforge\Engine\Modules\CRUD\Services\GenericCrudService;
 
 /**
  * Class Bootstrap
@@ -24,23 +25,23 @@ class Bootstrap extends AbstractBootstrap {
         $this->services  = [
             'crud' => GenericCrudService::class,
         ];
-        $this->models    = [
-            // CrudTest::class,
+        $this->models    = [// CrudTest::class,
         ];
     }
 
     /**
      */
     public function install() {
-        /** @var BackendNavigationService $sidebarNavigation */ // $sidebarNavigation = Oforge()->Services()->get('backend.navigation');
-        // $sidebarNavigation->put([
+        /** @var BackendNavigationService $backendNavigationService */
+        $backendNavigationService = Oforge()->Services()->get('backend.navigation');
+        // $backendNavigationService->add([
         //     'name'     => 'backend_crudtest',
         //     'order'    => 100,
         //     'parent'   => 'admin',
         //     'icon'     => 'glyphicon glyphicon glyphicon-th',
         //     'position' => 'sidebar',
         // ]);
-        // $sidebarNavigation->put([
+        // $backendNavigationService->add([
         //     'name'     => 'backend_crudtest_read',
         //     'order'    => 1,
         //     'parent'   => 'backend_crudtest',
@@ -48,7 +49,7 @@ class Bootstrap extends AbstractBootstrap {
         //     'path'     => 'backend_crudtest_read',
         //     'position' => 'sidebar',
         // ]);
-        // $sidebarNavigation->put([
+        // $backendNavigationService->add([
         //     'name'     => 'backend_crudtest_write',
         //     'order'    => 2,
         //     'parent'   => 'backend_crudtest',

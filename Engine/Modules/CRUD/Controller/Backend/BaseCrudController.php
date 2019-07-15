@@ -103,7 +103,7 @@ class BaseCrudController extends SecureBackendController {
         'update' => true,
         'delete' => true,
     ];
-    /** @var array<string,int> $crudPermission */
+    /** @var int|array<string,int> $crudPermission */
     protected $crudPermissions = [
         'index'  => BackendUser::ROLE_MODERATOR,
         'create' => BackendUser::ROLE_MODERATOR,
@@ -438,16 +438,14 @@ class BaseCrudController extends SecureBackendController {
         return $response;
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function initPermissions() {
         $actions         = ['index', 'create', 'view', 'update', 'delete',];
         $crudActions     = $this->crudActions;
         $crudPermissions = $this->crudPermissions;
         foreach ($actions as $action) {
             if (ArrayHelper::get($crudActions, $action, true)) {
-                $actionPermission = ArrayHelper::get($crudPermissions, $action, BackendUser::ROLE_MODERATOR);
+                $actionPermission = is_array($crudPermissions) ? ArrayHelper::get($crudPermissions, $action, BackendUser::ROLE_MODERATOR) : $crudPermissions;
                 $this->ensurePermissions($action . 'Action', BackendUser::class, $actionPermission);
             }
         }

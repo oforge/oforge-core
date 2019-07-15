@@ -23,9 +23,9 @@ class Bootstrap extends AbstractBootstrap {
     }
 
     public function activate() {
-        /** @var BackendNavigationService $backendNavigation */
-        $backendNavigation = Oforge()->Services()->get('backend.navigation');
-        $backendNavigation->put([
+        /** @var BackendNavigationService $backendNavigationService */
+        $backendNavigationService = Oforge()->Services()->get('backend.navigation');
+        $backendNavigationService->add([
             'name'     => 'backend_key_value_store',
             'order'    => 101,
             'parent'   => 'admin',

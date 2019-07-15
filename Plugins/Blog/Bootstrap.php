@@ -123,14 +123,14 @@ class Bootstrap extends AbstractBootstrap {
     }
 
     public function activate() {
-        /** @var BackendNavigationService $sidebarNavigation */
-        $sidebarNavigation = Oforge()->Services()->get('backend.navigation');
-        $sidebarNavigation->put([
+        /** @var BackendNavigationService $backendNavigationService */
+        $backendNavigationService = Oforge()->Services()->get('backend.navigation');
+        $backendNavigationService->add([
             'name'     => 'plugin_blog',
             'order'    => 3,
             'position' => 'sidebar',
         ]);
-        $sidebarNavigation->put([
+        $backendNavigationService->add([
             'name'     => 'plugin_blog_categories',
             'order'    => 1,
             'parent'   => 'plugin_blog',
@@ -138,7 +138,7 @@ class Bootstrap extends AbstractBootstrap {
             'path'     => 'backend_blog_categories',
             'position' => 'sidebar',
         ]);
-        $sidebarNavigation->put([
+        $backendNavigationService->add([
             'name'     => 'plugin_blog_posts',
             'order'    => 2,
             'parent'   => 'plugin_blog',
@@ -146,7 +146,7 @@ class Bootstrap extends AbstractBootstrap {
             'path'     => 'backend_blog_posts',
             'position' => 'sidebar',
         ]);
-        $sidebarNavigation->put([
+        $backendNavigationService->add([
             'name'     => 'plugin_blog_comments',
             'order'    => 3,
             'parent'   => 'plugin_blog',
