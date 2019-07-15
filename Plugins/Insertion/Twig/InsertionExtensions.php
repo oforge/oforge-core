@@ -38,6 +38,7 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
             new Twig_Function('hasBookmark', [$this, 'hasBookmark']),
             new Twig_Function('hasSearchBookmark', [$this, 'hasSearchBookmark']),
             new Twig_Function('getInsertionSliderContent', [$this, 'getInsertionSliderContent']),
+            new Twig_Function('getLatestBlogPostTile', [$this, 'getLatestBlogPostTile']),
             new Twig_Function('getQuickSearch', [$this, 'getQuickSearch']),
             new Twig_Function('getChatPartnerInformation', [$this, 'getChatPartnerInformation']),
         ];
@@ -122,7 +123,17 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
         $insertions             = $insertionSliderService->getRandomInsertions();
 
         return ['insertions' => $insertions];
+    }
 
+    /**
+     * @return array
+     * @throws ServiceNotFoundException
+     */
+    public function getLatestBlogPostTile() {
+        $blogService = Oforge()->Services()->get("blog.post");
+        $blogTile = $blogService->getLatestPost();
+
+        return $blogTile->toArray(3);
     }
 
     /**
