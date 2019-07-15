@@ -104,25 +104,6 @@ class BackendNavigationService extends AbstractDatabaseAccess {
     }
 
     /**
-     * @param array $options
-     *
-     * @throws ConfigElementAlreadyExistException
-     * @throws ConfigOptionKeyNotExistException
-     * @throws ParentNotFoundException
-     * @throws ORMException
-     * @deprecated renamed to add
-     */
-    public function put(array $options) : void {
-        $entity = $this->repository()->findOneBy(['name' => $options['name']]);
-        if (!isset($entity)) {
-            if ($this->isValid($options)) {
-                $entity = BackendNavigation::create($options);
-                $this->entityManager()->create($entity);
-            }
-        }
-    }
-
-    /**
      * @param string $position
      *
      * @return array
@@ -144,7 +125,7 @@ class BackendNavigationService extends AbstractDatabaseAccess {
 
             return [];
         }
-        // TODO: Nested Topbar-Menus
+        // TODO: Nested Topbar-Menus ???
     }
 
     /**
@@ -189,7 +170,7 @@ class BackendNavigationService extends AbstractDatabaseAccess {
             }
         }
         //Check if correct type are set
-        $keys = ['order', 'userPermission'];
+        $keys = ['order'];
         foreach ($keys as $key) {
             if (isset($options[$key]) && !is_integer($options[$key])) {
                 throw new InvalidArgumentException("$key value should be of type integer.");
