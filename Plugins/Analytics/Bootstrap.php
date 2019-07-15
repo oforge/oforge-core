@@ -1,14 +1,17 @@
 <?php
+
 namespace Analytics;
+
 use Analytics\Services\AnalyticsDataService;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\DashboardWidgetsService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
-use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
-use Oforge\Engine\Modules\Core\Services\ConfigService;
-use Oforge\Engine\Modules\Core\Models\Config\ConfigType;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Models\Config\ConfigType;
+use Oforge\Engine\Modules\Core\Services\ConfigService;
+
 /**
  * Class Bootstrap
  *
@@ -16,15 +19,13 @@ use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
  */
 class Bootstrap extends AbstractBootstrap {
     public function __construct() {
-        $this->endpoints = [
+        $this->endpoints   = [
             Controller\Backend\AnalyticsController::class,
         ];
-        $this->middlewares = [
-        ];
-        $this->models = [
-        ];
-        $this->services = [
-            'analytics.data' => AnalyticsDataService::class
+        $this->middlewares = [];
+        $this->models      = [];
+        $this->services    = [
+            'analytics.data' => AnalyticsDataService::class,
         ];
     }
 
@@ -58,12 +59,12 @@ class Bootstrap extends AbstractBootstrap {
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException
      */
     public function activate() {
-
-        /** @var DashboardWidgetsService $dashboardWidgetsService
-         *  @var BackendNavigationService $sidebarNavigation
+        /**
+         * @var DashboardWidgetsService $dashboardWidgetsService
+         * @var BackendNavigationService $backendNavigationService
          */
-        $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
-        $sidebarNavigation       = Oforge()->Services()->get('backend.navigation');
+        $dashboardWidgetsService  = Oforge()->Services()->get('backend.dashboard.widgets');
+        $backendNavigationService = Oforge()->Services()->get('backend.navigation');
 
         $dashboardWidgetsService->register([
             'position'     => 'top',
@@ -74,7 +75,7 @@ class Bootstrap extends AbstractBootstrap {
             'templateName' => 'Analytics',
         ]);
 
-        $sidebarNavigation->add([
+        $backendNavigationService->add([
             'name'     => 'backend_analytics',
             'order'    => 6,
             'parent'   => 'admin',
@@ -91,5 +92,5 @@ class Bootstrap extends AbstractBootstrap {
         /** @var  $dashboardWidgetsService */
         $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
         $dashboardWidgetsService->unregister('analytics');
-   }
+    }
 }

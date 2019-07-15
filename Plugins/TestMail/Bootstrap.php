@@ -24,9 +24,9 @@ class Bootstrap extends AbstractBootstrap {
     }
     public function activate() {
 
-        $sidebarNavigation = Oforge()->Services()->get('backend.navigation');
+        $backendNavigationService = Oforge()->Services()->get('backend.navigation');
 
-        $sidebarNavigation->put([
+        $backendNavigationService->add([
             'name'     => 'backend_testmail',
             'order'    => 5,
             'parent'   => 'backend_content',

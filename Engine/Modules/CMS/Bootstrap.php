@@ -104,17 +104,17 @@ class Bootstrap extends AbstractBootstrap {
 
     public function activate() {
         /**
-         * @var BackendNavigationService $sidebarNavigation
+         * @var BackendNavigationService $backendNavigationService
          * @var ContentTypeGroupManagementService $contentTypeGroupManagementService
          * @var ContentTypeManagementService $managementService
          */
-        $sidebarNavigation = Oforge()->Services()->get('backend.navigation');
-        $sidebarNavigation->put([
+        $backendNavigationService = Oforge()->Services()->get('backend.navigation');
+        $backendNavigationService->add([
             'name'     => 'backend_content',
             'order'    => 2,
             'position' => 'sidebar',
         ]);
-        $sidebarNavigation->put([
+        $backendNavigationService->add([
             'name'     => 'backend_content_pages',
             'order'    => 1,
             'parent'   => 'backend_content',
@@ -122,7 +122,7 @@ class Bootstrap extends AbstractBootstrap {
             'path'     => 'backend_content_pages',
             'position' => 'sidebar',
         ]);
-        $sidebarNavigation->put([
+        $backendNavigationService->add([
             'name'     => 'backend_content_elements',
             'order'    => 1,
             'parent'   => 'backend_content',

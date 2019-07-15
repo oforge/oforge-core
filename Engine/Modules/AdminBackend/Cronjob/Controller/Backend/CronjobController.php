@@ -2,6 +2,7 @@
 
 namespace Oforge\Engine\Modules\AdminBackend\Cronjob\Controller\Backend;
 
+use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
@@ -77,6 +78,8 @@ class CronjobController extends BaseCrudController {
         'update' => false,
         'delete' => false,
     ];
+    /** @var int|array<string,int> $crudPermission */
+    protected $crudPermissions = BackendUser::ROLE_ADMINISTRATOR;
 
     public function __construct() {
         parent::__construct();

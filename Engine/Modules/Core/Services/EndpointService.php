@@ -27,9 +27,23 @@ use ReflectionMethod;
 class EndpointService extends AbstractDatabaseAccess {
     /** @var array $configCache */
     private $configCache = [];
+    /** @var EndpointModel[] */
+    private $activeEndpoints;
 
     public function __construct() {
         parent::__construct(EndpointModel::class);
+    }
+
+    /**
+     * @return EndpointModel[]
+     * @throws ORMException
+     */
+    public function getActiveEndpoints() {
+        if (!isset($this->activeEndpoints)) {
+            $this->activeEndpoints = $this->repository()->findBy(['active' => 1], ['order' => 'ASC']);
+        }
+
+        return $this->activeEndpoints;
     }
 
     /**
