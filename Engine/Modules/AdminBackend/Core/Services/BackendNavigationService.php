@@ -21,28 +21,33 @@ use Oforge\Engine\Modules\Core\Services\EndpointService;
  * @package Oforge\Engine\Modules\AdminBackend\Core\Services
  */
 class BackendNavigationService extends AbstractDatabaseAccess {
+    const KEY_ADMIN         = 'backend_admin';
+    const KEY_CONTENT       = 'backend_content';
+    const KEY_SYSTEM        = 'backend_system';
+    const KEY_DOCUMENTATION = 'backend_documentation';
+
     /** @var array Root-navigation-config for admins */
-    public const ADMIN = [
-        'name'     => 'backend_admin',
+    public const CONFIG_ADMIN = [
+        'name'     => self::KEY_ADMIN,
         'order'    => 100,
         'position' => 'sidebar',
     ];
     /** @var array Root-navigation-config for content */
-    public const CONTENT = [
-        'name'     => 'backend_content',
+    public const CONFIG_CONTENT = [
+        'name'     => self::KEY_CONTENT,
         'order'    => 2,
         'position' => 'sidebar',
     ];
     /** @var array Root-navigation-config for system-admins */
-    public const SYSTEM = [
-        'name'     => 'backend_system',
+    public const CONFIG_SYSTEM = [
+        'name'     => self::KEY_SYSTEM,
         'order'    => 999,
         'position' => 'sidebar',
     ];
     /** @var array Documentation root-navigation-config for system-admins */
-    public const DOCUMENTATION = [
-        'name'     => 'backend_documentation',
-        'parent'   => 'backend_system',
+    public const CONFIG_DOCUMENTATION = [
+        'name'     => self::KEY_DOCUMENTATION,
+        'parent'   => self::KEY_SYSTEM,
         'order'    => 999,
         'icon'     => 'fa fa-file-text-o',
         'position' => 'sidebar',

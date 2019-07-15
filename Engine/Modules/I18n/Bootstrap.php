@@ -67,15 +67,11 @@ class Bootstrap extends AbstractBootstrap {
 
         /** @var BackendNavigationService $backendNavigationService */
         $backendNavigationService = Oforge()->Services()->get('backend.navigation');
-        $backendNavigationService->add([
-            'name'     => 'admin',
-            'order'    => 100,
-            'position' => 'sidebar',
-        ]);
+        $backendNavigationService->add(BackendNavigationService::CONFIG_ADMIN);
         $backendNavigationService->add([
             'name'     => 'backend_i18n',
             'order'    => 100,
-            'parent'   => 'admin',
+            'parent'   => BackendNavigationService::KEY_ADMIN,
             'icon'     => 'glyphicon glyphicon-globe',
             'position' => 'sidebar',
         ]);

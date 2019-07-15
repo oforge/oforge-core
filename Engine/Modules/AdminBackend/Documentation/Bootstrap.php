@@ -35,15 +35,12 @@ class Bootstrap extends AbstractBootstrap {
         /** @var BackendNavigationService $backendNavigationService */
         /*
         $backendNavigationService = Oforge()->Services()->get('backend.navigation');
-        $backendNavigationService->add([
-            'name'     => 'backend_documentation',
-            'order'    => 100,
-            'position' => 'sidebar',
-        ]);
+        $backendNavigationService->add(BackendNavigationService::CONFIG_SYSTEM);
+        $backendNavigationService->add(BackendNavigationService::CONFIG_DOCUMENTATION);
         $backendNavigationService->add([
             'name'     => 'backend_ui_elements',
             'order'    => 100,
-            'parent'   => 'backend_documentation',
+            'parent'   => BackendNavigationService::KEY_DOCUMENTATION,
             'icon'     => 'fa fa-laptop',
             'position' => 'sidebar',
         ]);
