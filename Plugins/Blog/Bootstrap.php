@@ -17,6 +17,7 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Models\Config\ConfigType;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
+use Oforge\Engine\Modules\I18n\Helper\I18N;
 
 /**
  * Class Bootstrap
@@ -61,6 +62,12 @@ class Bootstrap extends AbstractBootstrap {
     }
 
     public function install() {
+        I18N::translate('config_blog_load_more_epp_posts', ['en' => 'Posts per load more page', 'de' => 'Beiträge pro weiterer Seite']);
+        I18N::translate('config_blog_load_more_epp_comments', ['en' => 'Comments per load more page', 'de' => 'Kommentare pro weiterer Seite']);
+        I18N::translate('config_blog_recommend_posts_number', ['en' => 'Number of recommended posts', 'de' => 'Anzahl empfohlener Beiträge']);
+        I18N::translate('config_blog_category_maxlength_name', ['en' => 'Max length of category name', 'de' => 'Maximale Länge des Kategorienamens']);
+        I18N::translate('config_blog_category_icon_default', ['en' => 'Default category icon', 'de' => 'Standard Kategorie-Icon']);
+        I18N::translate('config_blog_post_maxlength_header_title', ['en' => 'Post header title max length', 'de' => 'Maximale Länge des Beitrags-Kopf-Titels']);
         /** @var ConfigService $configService */
         $configService = Oforge()->Services()->get('config');
         $configService->add([
@@ -109,6 +116,7 @@ class Bootstrap extends AbstractBootstrap {
             'label'   => 'config_blog_post_maxlength_header_title',
         ]);
 
+        I18N::translate('plugin_blog_dashboard_widget_overview_title', ['en' => 'Blog statistics', 'de' => 'Blog-Statistiken']);
         /** @var DashboardWidgetsService $dashboardWidgetsService */
         $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
         $dashboardWidgetsService->register([
@@ -123,6 +131,10 @@ class Bootstrap extends AbstractBootstrap {
     }
 
     public function activate() {
+        I18N::translate('plugin_blog', ['en' => 'Blog', 'de' => 'Blog']);
+        I18N::translate('plugin_blog_categories', ['en' => 'Categories', 'de' => 'Kategorien']);
+        I18N::translate('plugin_blog_posts', ['en' => 'Posts', 'de' => 'Beiträge']);
+        I18N::translate('plugin_blog_comments', ['en' => 'Comments', 'de' => 'Kommentare']);
         /** @var BackendNavigationService $backendNavigationService */
         $backendNavigationService = Oforge()->Services()->get('backend.navigation');
         $backendNavigationService->add([
