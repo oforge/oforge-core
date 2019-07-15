@@ -48,6 +48,8 @@
     }
     &.button--save-result {
         width: 18rem;
-        max-width: 18rem;
+        height: auto;
+        min-height: 3.6rem;
+        white-space: normal;
     }
 }
