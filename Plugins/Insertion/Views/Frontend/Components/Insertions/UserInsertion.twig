@@ -7,7 +7,7 @@
     </div>
     <div class="product__attribute">
         <span class="product__label">{{ i18n('price') }}</span>
-        <span class="product__value">{{ item.price }} {{ i18n('unit_price') }} {% if (item.tax) %} ({{ i18n('after_tax') }}) {% else %} ({{ i18n('pre_tax') }}){% endif %}</span>
+        <span class="product__value">{{ item.price }} {{ i18n('unit_price') }} {% if (item.tax) %} ({{ i18n('vat_identificationable') }}){% endif %}</span>
     </div>
     <div class="product__attribute">
         <span class="product__label">{{ i18n('duration') }}</span>
@@ -23,9 +23,7 @@
         </div>
         <div class="product__attribute">
             <span class="product__label">{{ i18n('insertion_price') }}</span>
-            <span class="product__value">{{ item.price }} {{ i18n('unit_price') }} {% if (item.tax) %} ({{ i18n('after_tax') }}) {% else %} ({{ i18n('pre_tax') }}){% endif %}</span>
-            <!-- TODO: Snippify -->
-
+            <span class="product__value">{{ item.price }} {{ i18n('unit_price') }} {% if (item.tax) %} ({{ i18n('vat_identificationable') }}){% endif %}</span>
         </div>
         <div class="product__attribute">
             <span class="product__label">{{ i18n('insertion_duration') }}</span>
