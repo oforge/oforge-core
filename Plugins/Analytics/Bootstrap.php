@@ -75,10 +75,11 @@ class Bootstrap extends AbstractBootstrap {
             'templateName' => 'Analytics',
         ]);
 
+        $backendNavigationService->add(BackendNavigationService::CONFIG_ADMIN);
         $backendNavigationService->add([
             'name'     => 'backend_analytics',
             'order'    => 6,
-            'parent'   => 'admin',
+            'parent'   => BackendNavigationService::KEY_ADMIN,
             'icon'     => 'fa fa-bar-chart',
             'path'     => 'backend_analytics',
             'position' => 'sidebar',

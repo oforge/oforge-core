@@ -39,10 +39,11 @@ class Bootstrap extends AbstractBootstrap {
     public function activate() {
         /** @var BackendNavigationService $backendNavigationService */
         $backendNavigationService = Oforge()->Services()->get('backend.navigation');
+        $backendNavigationService->add(BackendNavigationService::CONFIG_ADMIN);
         $backendNavigationService->add([
             'name'     => 'backend_template_settings',
             'order'    => 98,
-            'parent'   => 'admin',
+            'parent'   => BackendNavigationService::KEY_ADMIN,
             'icon'     => 'fa fa-paint-brush',
             'path'     => 'backend_template_settings',
             'position' => 'sidebar',

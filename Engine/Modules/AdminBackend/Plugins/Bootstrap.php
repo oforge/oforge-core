@@ -40,7 +40,7 @@ class Bootstrap extends AbstractBootstrap {
         $backendNavigationService->add([
             'name'     => 'backend_plugins',
             'order'    => 1,
-            'parent'   => 'admin',
+            'parent'   => BackendNavigationService::KEY_ADMIN,
             'icon'     => 'fa fa-puzzle-piece',
             'path'     => 'backend_plugins',
             'position' => 'sidebar',

@@ -133,15 +133,11 @@ class DashboardController extends SecureBackendController {
     public function testAction(Request $request, Response $response) {
         /** @var BackendNavigationService $backendNavigationService */
         $backendNavigationService = Oforge()->Services()->get('backend.navigation');
-        $backendNavigationService->add([
-            'name'     => 'admin',
-            'order'    => 99,
-            'position' => 'sidebar',
-        ]);
+        $backendNavigationService->add(BackendNavigationService::CONFIG_ADMIN);
         $backendNavigationService->add([
             'name'     => 'help',
             'order'    => 99,
-            'parent'   => 'admin',
+            'parent'   => BackendNavigationService::KEY_ADMIN,
             'icon'     => 'ion-help',
             'position' => 'sidebar',
         ]);

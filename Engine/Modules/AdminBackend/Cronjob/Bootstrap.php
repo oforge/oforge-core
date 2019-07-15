@@ -34,10 +34,11 @@ class Bootstrap extends AbstractBootstrap {
     public function install() {
         /** @var BackendNavigationService $backendNavigationService */
         $backendNavigationService = Oforge()->Services()->get('backend.navigation');
+        $backendNavigationService->add(BackendNavigationService::CONFIG_ADMIN);
         $backendNavigationService->add([
             'name'     => 'backend_cronjob',
             'order'    => 6,
-            'parent'   => 'admin',
+            'parent'   => BackendNavigationService::KEY_ADMIN,
             'icon'     => 'fa fa-history',
             'path'     => 'backend_cronjob',
             'position' => 'sidebar',

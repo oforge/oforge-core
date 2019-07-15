@@ -140,15 +140,11 @@ class Bootstrap extends AbstractBootstrap {
     public function activate() {
         /** @var BackendNavigationService $backendNavigationService */
         $backendNavigationService = Oforge()->Services()->get('backend.navigation');
-        $backendNavigationService->add([
-            'name'     => 'backend_content',
-            'order'    => 2,
-            'position' => 'sidebar',
-        ]);
+        $backendNavigationService->add(BackendNavigationService::CONFIG_CONTENT);
         $backendNavigationService->add([
             'name'     => 'backend_insertion',
             'order'    => 100,
-            'parent'   => 'backend_content',
+            'parent'   => BackendNavigationService::KEY_CONTENT,
             'icon'     => 'fa fa-newspaper-o',
             'position' => 'sidebar',
         ]);

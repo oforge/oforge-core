@@ -108,7 +108,7 @@ class Bootstrap extends AbstractBootstrap {
         $backendNavigationService->add([
             'name'     => 'backend_helpdesk',
             'order'    => 4,
-            'parent'   => 'backend_content',
+            'parent'   => BackendNavigationService::KEY_CONTENT,
             'icon'     => 'fa fa-support',
             'position' => 'sidebar',
         ]);
