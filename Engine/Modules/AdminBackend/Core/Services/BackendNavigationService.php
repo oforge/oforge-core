@@ -47,6 +47,7 @@ class BackendNavigationService extends AbstractDatabaseAccess {
         'icon'     => 'fa fa-file-text-o',
         'position' => 'sidebar',
     ];
+    /** @var array<string, array> $activeEndpointsData */
     private $activeEndpointsData;
 
     public function __construct() {
