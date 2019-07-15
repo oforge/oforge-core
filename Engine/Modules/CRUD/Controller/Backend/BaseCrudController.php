@@ -103,6 +103,14 @@ class BaseCrudController extends SecureBackendController {
         'update' => true,
         'delete' => true,
     ];
+    /** @var array<string,int> $crudPermission */
+    protected $crudPermissions = [
+        'index'  => BackendUser::ROLE_MODERATOR,
+        'create' => BackendUser::ROLE_MODERATOR,
+        'view'   => BackendUser::ROLE_MODERATOR,
+        'update' => BackendUser::ROLE_MODERATOR,
+        'delete' => BackendUser::ROLE_MODERATOR,
+    ];
     /**
      * Configuration of the filters on the index view.
      *      protected $indexFilter = [
@@ -160,8 +168,6 @@ class BaseCrudController extends SecureBackendController {
         'default' => 10,
         'buttons' => [10, 25, 50, 100, 250],
     ];
-    /** @var int $crudPermission */
-    protected $crudPermission = BackendUser::ROLE_MODERATOR;
     /** @var GenericCrudService $crudService */
     protected $crudService;
     /** @var string $moduleModelName */
@@ -436,20 +442,14 @@ class BaseCrudController extends SecureBackendController {
      * @inheritdoc
      */
     public function initPermissions() {
-        if ($this->crudActions['index'] ?? true) {
-            $this->ensurePermissions('indexAction', BackendUser::class, $this->crudPermission);
-        }
-        if ($this->crudActions['create'] ?? true) {
-            $this->ensurePermissions('createAction', BackendUser::class, $this->crudPermission);
-        }
-        if ($this->crudActions['view'] ?? true) {
-            $this->ensurePermissions('viewAction', BackendUser::class, $this->crudPermission);
-        }
-        if ($this->crudActions['update'] ?? true) {
-            $this->ensurePermissions('updateAction', BackendUser::class, $this->crudPermission);
-        }
-        if ($this->crudActions['delete'] ?? true) {
-            $this->ensurePermissions('deleteAction', BackendUser::class, $this->crudPermission);
+        $actions         = ['index', 'create', 'view', 'update', 'delete',];
+        $crudActions     = $this->crudActions;
+        $crudPermissions = $this->crudPermissions;
+        foreach ($actions as $action) {
+            if (ArrayHelper::get($crudActions, $action, true)) {
+                $actionPermission = ArrayHelper::get($crudPermissions, $action, BackendUser::ROLE_MODERATOR);
+                $this->ensurePermissions($action . 'Action', BackendUser::class, $actionPermission);
+            }
         }
     }
 
