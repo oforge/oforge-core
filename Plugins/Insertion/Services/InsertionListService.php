@@ -372,6 +372,7 @@ class InsertionListService extends AbstractDatabaseAccess {
         $current = [];
 
         try {
+            // returns null if it cannot be decoded. See https://php.net/manual/en/function.json-decode.php
             $current = json_decode($_COOKIE[$name], true);
         } catch (\Exception $e) {
         }
@@ -384,6 +385,9 @@ class InsertionListService extends AbstractDatabaseAccess {
             setcookie($name, json_encode($current), time() + 60 * 60 * 24 * 2);
         }
 
+        if ($current === null) {
+            $current = [];
+        }
         return $current;
     }
 }

@@ -285,11 +285,9 @@ class FrontendInsertionController extends SecureFrontendController
          */
         $listService = Oforge()->Services()->get('insertion.list');
 
-        $radius = $listService->saveSearchRadius($_GET);
+        $radius = $listService->saveSearchRadius($request->getQueryParams());
 
-        print_r($_GET);
-
-        $result['search'] = $listService->search($type->getId(), array_merge($_GET, $radius));
+        $result['search'] = $listService->search($type->getId(), array_merge($request->getQueryParams(), $radius));
 
         Oforge()->View()->assign($result);
     }
