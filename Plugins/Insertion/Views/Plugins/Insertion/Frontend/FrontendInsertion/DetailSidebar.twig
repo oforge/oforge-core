@@ -31,22 +31,12 @@
                 12345 Velgast
             </div>
             <div class="map__view">
-
             </div>
         </div>
 
-        <div class="panel panel--cross-sell cross-sell">
-            <div class="cross-sell__title">Other insertions</div>
-            <div class="cross-sell__image">
-                <img src="https://placeponi.es/300/300" alt="" class="image">
-            </div>
-            <div class="cross-sell__description">
-                <div class="name">Some product</div>
-                <div class="price">9.000.000 €</div>
-                <div class="insertion-provider">from Superproducts</div>
-            </div>
-            <div class="buttton button--primary">To the insertion</div>
-        </div>
+        {% block detail_sidebar__cross_sell %}
+            {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailSidebarCrosssell.twig' %}
+        {% endblock detail_sidebar__cross_sell %}
 
         <div class="panel panel--cross-sell cross-sell">
             <div class="cross-sell__title">Some new blog post</div>
