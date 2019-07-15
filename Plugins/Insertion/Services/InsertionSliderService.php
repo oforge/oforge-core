@@ -3,6 +3,7 @@
 namespace Insertion\Services;
 
 use Doctrine\ORM\Query;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\QueryBuilder;
 use Insertion\Models\AttributeKey;
 use Insertion\Models\Insertion;
@@ -52,6 +53,55 @@ class InsertionSliderService extends AbstractDatabaseAccess {
                 }
             }
         }
+
+        return $result;
+    }
+
+    /**
+     * @param int $limit
+     * @param int|null $insertionType
+     *
+     * @return Insertion[]
+     */
+    public function getRandomInsertion(int $limit, int $insertionType = null) {
+        $rsm = new ResultSetMapping();
+        $rsm->addEntityResult(Insertion::class, 'i');
+        $rsm->addFieldResult('i', 'id', 'id');
+        $rsm->addFieldResult('i', 'price', 'price');
+        $rsm->addFieldResult('i', 'created_at', 'createdAt');
+        $rsm->addFieldResult('i', 'updated_at', 'updatedAt');
+        $rsm->addFieldResult('i', 'tax', 'tax');
+        $rsm->addFieldResult('i', 'active', 'deleted');
+        $rsm->addFieldResult('i', 'moderation', 'moderation');
+        $rsm->addMetaResult('i', 'insertion_user', 'insertion_user');
+        $rsm->addMetaResult('i', 'insertion_type_id', 'insertion_type_id');
+
+        if (is_null($insertionType)) {
+            $query = $this->entityManager()->createNativeQuery("
+            SELECT *
+            FROM oforge_insertion 
+            WHERE active IS TRUE AND
+                  deleted IS FALSE AND
+                  moderation IS TRUE
+            ORDER BY RAND()
+            LIMIT ?", $rsm);
+
+            $query->setParameter(1, $limit);
+        } else {
+            $query = $this->entityManager()->createNativeQuery("
+            SELECT *
+            FROM oforge_insertion AS i
+            WHERE active IS TRUE AND
+                  deleted IS FALSE AND
+                  moderation IS TRUE AND 
+                  insertion_type_id = ?
+            ORDER BY RAND()
+            LIMIT ?", $rsm);
+
+            $query->setParameter(1, $insertionType)->setParameter(2, $limit);
+        }
+
+        $result = $query->getResult();
 
         return $result;
     }
