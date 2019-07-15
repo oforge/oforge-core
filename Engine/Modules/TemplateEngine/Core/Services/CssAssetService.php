@@ -23,6 +23,10 @@ class CssAssetService extends BaseAssetService {
     }
 
     /**
+     * Compiles .scss files in the following order:
+     * 1. Base Theme
+     * 2. Plugins
+     * 3. Active Theme (unless it's the Base Theme)
      * @param string $context
      * @param string $scope
      *
@@ -31,6 +35,7 @@ class CssAssetService extends BaseAssetService {
      * @throws OptimisticLockException
      * @throws ServiceNotFoundException
      * @throws TemplateNotFoundException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException
      */
     public function build(string $context, string $scope = TemplateAssetService::DEFAULT_SCOPE) : string {
         parent::build($context);
@@ -38,13 +43,10 @@ class CssAssetService extends BaseAssetService {
         $dirs = $this->getAssetsDirectories();
 
         $fileName = "style." . bin2hex(openssl_random_pseudo_bytes(16));
-
         $folder     = Statics::ASSET_CACHE_DIR . DIRECTORY_SEPARATOR . $scope . DIRECTORY_SEPARATOR . $this->key;
         $fullFolder = ROOT_PATH . $folder;
         $output     = $folder . DIRECTORY_SEPARATOR . $fileName;
         $outputFull = ROOT_PATH . $output;
-
-        $result = "";
 
         if (!file_exists($fullFolder) || (file_exists($fullFolder) && !is_dir($fullFolder))) {
             mkdir($fullFolder, 0750, true);
@@ -60,27 +62,55 @@ class CssAssetService extends BaseAssetService {
         foreach ($dbVariables as $var) {
             $scssVariables[$var->getName()] = $var->getValue();
         }
-
         $scss->setVariables($scssVariables);
 
-        //iterate over all plugins, current theme and base theme
+
+        // check if source mapping is active
+        /** @var  $configService */
+        $configService = Oforge()->Services()->get('config');
+        $sourceMap = $configService->get('css_source_map');
+
+        if($sourceMap) {
+            // source map setup
+            $scss->setSourceMap(Compiler::SOURCE_MAP_INLINE);
+            $scss->setSourceMapOptions(array(
+                'sourceMapBasepath' => ROOT_PATH,
+                'sourceRoot'        => '/',
+            ));
+        }
+
+        // iterate over all plugins, current theme and base theme
+        $importPaths = [];
         foreach ($dirs as $dir) {
-            $folder = $dir . DIRECTORY_SEPARATOR . $scope . DIRECTORY_SEPARATOR . Statics::ASSETS_DIR . DIRECTORY_SEPARATOR . Statics::ASSETS_SCSS
-                      . DIRECTORY_SEPARATOR;
-            if (file_exists($folder) && file_exists($folder . Statics::ASSETS_ALL_SCSS)) {
-                $scss->setImportPaths($folder);
-                $result .= $scss->compile('@import "' . Statics::ASSETS_ALL_SCSS . '";');
+            $scssFolder = $dir . DIRECTORY_SEPARATOR . $scope . DIRECTORY_SEPARATOR . Statics::ASSETS_DIR . DIRECTORY_SEPARATOR . Statics::ASSETS_SCSS
+                          . DIRECTORY_SEPARATOR;
+            if (file_exists($scssFolder) && file_exists($scssFolder . Statics::ASSETS_ALL_SCSS)) {
+                $importPaths[] = $scssFolder;
             }
         }
+        // build global import file to reference all .scss files
+        $global = "";
+        foreach ($importPaths as $importPath) {
+            $global .= '@import "' . $importPath . 'all' . '";' . "\n";
+        }
+        file_put_contents($fullFolder . DIRECTORY_SEPARATOR . Statics::ASSETS_ALL_SCSS, $global);
+
+        // compile css from global import file
+        $scss->addImportPath($fullFolder);
+        $result = $scss->compile('@import "' . Statics::ASSETS_ALL_SCSS . '";');
         $this->removeOldAssets($fullFolder, $fileName, ".css");
 
         file_put_contents($outputFull . ".css", $result);
 
-        $minifier = new CSS($outputFull . ".css");
-        $minifier->minify($outputFull . ".min.css");
+        // only minify if source mapping is not active
+        if(!$sourceMap) {
+            $minifier = new CSS($outputFull . ".css");
+            $minifier->minify($outputFull . ".min.css");
+            $this->store->set($this->getAccessKey($scope), $output . ".min.css");
+            return $output . ".min.css";
+        }
 
-        $this->store->set($this->getAccessKey($scope), $output . ".min.css");
-
-        return $output . ".min.css";
+        $this->store->set($this->getAccessKey($scope), $output . ".css");
+        return $output . ".css";
     }
 }
