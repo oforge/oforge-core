@@ -74,12 +74,12 @@ class Bootstrap extends AbstractBootstrap {
             'templateName' => 'Analytics',
         ]);
 
-        $sidebarNavigation->put([
+        $sidebarNavigation->add([
             'name'     => 'backend_analytics',
             'order'    => 6,
             'parent'   => 'admin',
             'icon'     => 'fa fa-bar-chart',
-            'path'     => 'backend/analytics',
+            'path'     => 'backend_analytics',
             'position' => 'sidebar',
         ]);
     }
