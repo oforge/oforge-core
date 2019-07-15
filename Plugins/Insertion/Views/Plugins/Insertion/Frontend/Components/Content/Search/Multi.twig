@@ -1,5 +1,5 @@
 <div class="form__control form__control--new-select form__control--{{ attribute.filterType }} {{ isSubAttribute ? 'form__control--is-sub' : '' }}">
-    {% if not omitLabel is not defined or not isSubAttribute %}<label class="form__label">{{ i18n(attribute.name) }}</label>{% endif %}
+    {% if (omitLabel is not defined) %}<label class="form__label">{{ i18n(attribute.name) }}</label>{% endif %}
 
     <div class="select {{ isSubAttribute ? 'select--is-sub' : '' }}"
          data-select-type="{{ attribute.filterType }}"

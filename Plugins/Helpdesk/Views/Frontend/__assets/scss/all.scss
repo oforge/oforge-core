@@ -1,6 +1,11 @@
 .ticket-list {
     width: 100%;
 }
+.ticket {
+    padding: $size-small;
+    border-bottom: 1px solid $color-primary;
+
+}
 
 .ticket + .ticket {
     margin-top: $size-large;
@@ -43,5 +48,11 @@
     }
     .ticket + .ticket {
         margin-top: 0;
+    }
+    .ticket__buttons {
+        .icon {
+            height: 2rem;
+            width: 2rem;
+        }
     }
 }
