@@ -2,10 +2,10 @@
     if (typeof Oforge !== 'undefined') {
         Oforge.register({
             name: 'emptyInput',
-            selector: 'form',
+            selector: '#form-search-sidebar',
             init: function () {
                 var self = this;
-                var allForms = document.querySelectorAll(self.selector);
+                var allForms = document.querySelector(self.selector);
 
                 function removeEmptyInputNames(form) {
                     console.log('removing items');
