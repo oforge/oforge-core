@@ -2,8 +2,9 @@
     {# Main details #}
     <div class="form-controls">
         <div class="form__control form__control--xs">
+            {% set label = i18n('insertion_name_' ~ type.name, '' ) is empty ? i18n('insertion_name') :  i18n('insertion_name_' ~ type.name) %}
             <label for="insertion_name"
-                   class="form__label form__label--title">{{ i18n('insertion_name' ) }}</label>
+                   class="form__label form__label--title">{{ label }}</label>
             <input name="insertion_name"
                    value="{{ data['insertion_name'] }}"
                    type="text"

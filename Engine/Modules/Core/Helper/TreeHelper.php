@@ -28,15 +28,19 @@ class TreeHelper {
      */
     public static function modelArrayToTree($array, string $parentKey, string $rootValue, string $elementKey, string $childrenKey = 'children') : array {
         $grouped = [];
-        foreach ($array as $item) {
-            $itemData = $item->toArray();
-            if (!isset($grouped[$itemData[$parentKey]])) {
-                $grouped[$itemData[$parentKey]] = [];
+        if (sizeof($array) > 0) {
+            foreach ($array as $item) {
+                $itemData = $item->toArray();
+                if (!isset($grouped[$itemData[$parentKey]])) {
+                    $grouped[$itemData[$parentKey]] = [];
+                }
+                $grouped[$itemData[$parentKey]][] = $itemData;
             }
-            $grouped[$itemData[$parentKey]][] = $itemData;
+
+            return self::arrayToTreeSub($grouped[$rootValue], $grouped, $elementKey, $childrenKey);
         }
 
-        return self::arrayToTreeSub($grouped[$rootValue], $grouped, $elementKey, $childrenKey);
+        return [];
     }
 
     /**

@@ -48,6 +48,16 @@ class Bootstrap extends AbstractBootstrap {
             'required' => true,
             'order'    => 0,
         ]);
+
+        $configService->add([
+            'name'     => 'analytics_tracking_id',
+            'type'     => ConfigType::STRING,
+            'group'    => 'analytics',
+            'default'  => '',
+            'label'    => 'config_analytics_tracking_id',
+            'required' => true,
+            'order'    => 0,
+        ]);
     }
 
     /**
