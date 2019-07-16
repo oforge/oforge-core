@@ -32,12 +32,13 @@ class Bootstrap extends AbstractBootstrap {
      * @throws ConfigOptionKeyNotExistException
      */
     public function install() {
-        /** @var BackendNavigationService $sidebarNavigation */
-        $sidebarNavigation = Oforge()->Services()->get('backend.navigation');
-        $sidebarNavigation->put([
+        /** @var BackendNavigationService $backendNavigationService */
+        $backendNavigationService = Oforge()->Services()->get('backend.navigation');
+        $backendNavigationService->add(BackendNavigationService::CONFIG_ADMIN);
+        $backendNavigationService->add([
             'name'     => 'backend_cronjob',
             'order'    => 6,
-            'parent'   => 'admin',
+            'parent'   => BackendNavigationService::KEY_ADMIN,
             'icon'     => 'fa fa-history',
             'path'     => 'backend_cronjob',
             'position' => 'sidebar',
