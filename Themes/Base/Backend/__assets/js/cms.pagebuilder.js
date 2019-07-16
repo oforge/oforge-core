@@ -13,6 +13,28 @@ var pbIsForeignDND = false;
 // variable that holds the selected parent for content type dragged to jsTree
 var pbContentTypeParentForeignDND = false;
 
+$(function () {
+    $('#page_builder_container_wrapper [data-toggle="tooltip"]').tooltip();
+
+    $('#cms_content_type_list_filter').keyup(function() {
+        var value = $(this).val().trim().toLowerCase();
+        $('#cms_content_type_list_container .content-type-selector').each(function() {
+            $(this)[value === '' || this.title.toLowerCase().includes(value) ? 'show' : 'hide']();
+        });
+    });
+
+    $('#cms_content_type_list_collapse_all').click(function() {
+        $('#cms_content_type_list_container .row.collapse.in').collapse('hide');
+    });
+
+    $('#cms_content_type_list_open_all').click(function() {
+        $('#cms_content_type_list_container .row.collapse').collapse('show');
+    });
+});
+
+
+
+
 // drag 'n drop event listeners for jsTree foreign objects
 $(document).bind("dnd_start.vakata", function (event, data) {
     console.log("jsTree - Start dnd");

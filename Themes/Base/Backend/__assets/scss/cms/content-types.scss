@@ -34,6 +34,7 @@
     cursor: grab;
     width: calc(50% - 5px);
     float: left;
+    position: relative;
 
     &:nth-child(even) {
         margin-left: 5px;
@@ -48,11 +49,12 @@
         cursor: grabbing;
     }
 
-    .content-type-description {
-        text-align: center;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+    .content-type-hint {
+        position: absolute;
+        top: 0;
+        right: 0;
+        border: 0;
+        background-color: transparent;
     }
 
     .content-type-icon {

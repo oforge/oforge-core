@@ -9,179 +9,165 @@
 namespace Oforge\Engine\Modules\CMS\Models\Content;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 
 /**
- * @ORM\Table(name="oforge_cms_content_type")
  * @ORM\Entity
+ * @ORM\Table(name="oforge_cms_content_type")
  */
-class ContentType extends AbstractModel
-{
+class ContentType extends AbstractModel {
     /**
-     * @var int
+     * @var int $id
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-    
     /**
-     * @var ContentTypeGroup
+     * @var string $name
+     * @ORM\Column(name="content_type_name", type="string", nullable=false, unique=true)
+     */
+    private $name;
+    /**
+     * @var ContentTypeGroup $group
      * @ORM\ManyToOne(targetEntity="Oforge\Engine\Modules\CMS\Models\Content\ContentTypeGroup", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="content_type_group_id", referencedColumnName="id")
      */
     private $group;
-    
     /**
-     * @var string
-     * @ORM\Column(name="content_type_name", type="string", nullable=false, unique=true)
-     */
-    private $name;
-
-    /**
-     * @var string
+     * @var string $path
      * @ORM\Column(name="content_type_path", type="string", nullable=false)
      */
     private $path;
-    
     /**
-     * @var string
+     * @var string $icon
      * @ORM\Column(name="content_type_icon", type="string", nullable=true)
      */
     private $icon;
-    
     /**
-     * @var string
-     * @ORM\Column(name="description", type="string", nullable=false)
-     */
-    private $description;
-    
-    /**
-     * @var string
+     * @var string $classPath
      * @ORM\Column(name="class_path", type="string", nullable=false)
      */
     private $classPath;
-    
+    /**
+     * @var string|null $hint
+     * @ORM\Column(name="hint", type="string", nullable=true, options={"default":null})
+     */
+    private $hint = null;
+
     /**
      * @return int
      */
-    public function getId(): ?int
-    {
+    public function getId() : ?int {
         return $this->id;
     }
-    
+
     /**
      * @return ContentTypeGroup
      */
-    public function getGroup(): ?ContentTypeGroup
-    {
+    public function getGroup() : ContentTypeGroup {
         return $this->group;
     }
-    
+
     /**
      * @param ContentTypeGroup $group
-     * 
+     *
      * @return ContentType
      */
-    public function setGroup(?ContentTypeGroup $group): ContentType
-    {
+    public function setGroup(ContentTypeGroup $group) : ContentType {
         $this->group = $group;
+
         return $this;
     }
-    
+
     /**
      * @return string
      */
-    public function getName(): string
-    {
+    public function getName() : string {
         return $this->name;
     }
-    
+
     /**
      * @param string $name
      *
      * @return ContentType
      */
-    public function setName(string $name): ContentType
-    {
+    public function setName(string $name) : ContentType {
         $this->name = $name;
+
         return $this;
     }
-    
+
     /**
      * @return string
      */
-    public function getPath(): string
-    {
+    public function getPath() : string {
         return $this->path;
     }
-    
+
     /**
      * @param string $path
      *
      * @return ContentType
      */
-    public function setPath(string $path): ContentType
-    {
+    public function setPath(string $path) : ContentType {
         $this->path = $path;
+
         return $this;
     }
-    
+
     /**
      * @return string
      */
-    public function getIcon(): ?string
-    {
+    public function getIcon() : ?string {
         return $this->icon;
     }
-    
+
     /**
      * @param string $icon
-     * 
+     *
      * @return ContentType
      */
-    public function setIcon(?string $icon): ContentType
-    {
+    public function setIcon(?string $icon) : ContentType {
         $this->icon = $icon;
+
         return $this;
     }
-    
+
     /**
      * @return string
      */
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-    
-    /**
-     * @param string $description
-     * 
-     * @return ContentType
-     */
-    public function setDescription(string $description): ContentType
-    {
-        $this->description = $description;
-        return $this;
-    }
-    
-    /**
-     * @return string
-     */
-    public function getClassPath(): string
-    {
+    public function getClassPath() : string {
         return $this->classPath;
     }
-    
+
     /**
      * @param string $classPath
-     * 
+     *
      * @return ContentType
      */
-    public function setClassPath(string $classPath): ContentType
-    {
+    public function setClassPath(string $classPath) : ContentType {
         $this->classPath = $classPath;
+
         return $this;
     }
+
+    /**
+     * @return string|null
+     */
+    public function getHint() : ?string {
+        return $this->hint;
+    }
+
+    /**
+     * @param string|null $hint
+     *
+     * @return ContentType
+     */
+    public function setHint(?string $hint) : ContentType {
+        $this->hint = $hint;
+
+        return $this;
+    }
+
 }
