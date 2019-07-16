@@ -36,7 +36,7 @@ class InsertionType extends AbstractModel {
 
     /**
      * @var string|null
-     * @ORM\Column(name="insertion_type_description", type="string", nullable=true)
+     * @ORM\Column(name="insertion_type_description", type="text", nullable=true)
      */
     private $description;
 
