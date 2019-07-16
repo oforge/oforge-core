@@ -9,13 +9,15 @@
             <form method="POST">
                 <div class="form__control">
                     <label class="form__label">{{ i18n('report_reason', 'Report reason:') }}</label>
-                        <select class="select"
+                    <div class="form__input form__input--select">
+                        <select class="form__input form__input--no-input"
                                 name="issueType"
                                 id="issueType">
                             {% for reportType in reportTypes.issueTypes %}
                                 <option value="{{ reportType.id }}">{{ reportType.issueTypeName }}</option>
                             {% endfor %}
                         </select>
+                    </div>
                 </div>
 
                 <div class="form__control">
