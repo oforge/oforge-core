@@ -120,7 +120,7 @@ class Bootstrap extends AbstractBootstrap {
         $accountNavigationService->put([
             'name'     => 'frontend_account_newsletter',
             'order'    => 1,
-            'icon'     => 'postfach',
+            'icon'     => 'mail_open',
             'path'     => 'frontend_account_newsletter',
             'position' => 'sidebar',
         ]);
