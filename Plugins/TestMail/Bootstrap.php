@@ -2,11 +2,11 @@
 
 namespace TestMail;
 
+use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
+use TestMail\Controller\Backend\SendMailController;
 use TestMail\Controller\Backend\ShowMailController;
 use TestMail\Controller\Backend\TestMailController;
-use TestMail\Controller\Backend\SendMailController;
-
 
 /**
  * Class Bootstrap
@@ -22,14 +22,14 @@ class Bootstrap extends AbstractBootstrap {
             SendMailController::class,
         ];
     }
+
     public function activate() {
-
-        $sidebarNavigation = Oforge()->Services()->get('backend.navigation');
-
-        $sidebarNavigation->put([
+        $backendNavigationService = Oforge()->Services()->get('backend.navigation');
+        $backendNavigationService->add(BackendNavigationService::CONFIG_CONTENT);
+        $backendNavigationService->add([
             'name'     => 'backend_testmail',
             'order'    => 5,
-            'parent'   => 'backend_content',
+            'parent'   => BackendNavigationService::KEY_CONTENT,
             'icon'     => 'fa fa-envelope',
             'path'     => 'backend_testmail',
             'position' => 'sidebar',

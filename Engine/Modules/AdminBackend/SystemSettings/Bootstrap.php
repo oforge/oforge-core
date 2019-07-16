@@ -37,17 +37,18 @@ class Bootstrap extends AbstractBootstrap {
      * @throws ParentNotFoundException
      */
     public function activate() {
-        /** @var BackendNavigationService $backendNavigation */
-        $backendNavigation = Oforge()->Services()->get('backend.navigation');
-        $backendNavigation->put([
+        /** @var BackendNavigationService $backendNavigationService */
+        $backendNavigationService = Oforge()->Services()->get('backend.navigation');
+        $backendNavigationService->add(BackendNavigationService::CONFIG_ADMIN);
+        $backendNavigationService->add([
             'name'     => 'backend_settings',
             'order'    => 100,
-            'parent'   => 'admin',
+            'parent'   => BackendNavigationService::KEY_ADMIN,
             'icon'     => 'fa fa-gears',
             'path'     => 'backend_settings',
             'position' => 'sidebar',
         ]);
-        $backendNavigation->put([
+        $backendNavigationService->add([
             'name'     => 'backend_settings_group',
             'parent'   => 'backend_settings',
             'visible'  => false,

@@ -116,12 +116,13 @@ class Bootstrap extends AbstractBootstrap {
             'templateName' => 'FrontendUsers',
         ]);
 
-        /** @var BackendNavigationService $sidebarNavigation */
-        $sidebarNavigation = Oforge()->Services()->get('backend.navigation');
-        $sidebarNavigation->put([
+        /** @var BackendNavigationService $backendNavigationService */
+        $backendNavigationService = Oforge()->Services()->get('backend.navigation');
+        $backendNavigationService->add(BackendNavigationService::CONFIG_CONTENT);
+        $backendNavigationService->add([
             'name'     => 'backend_frontend_user_management',
             'order'    => 4,
-            'parent'   => 'backend_content',
+            'parent'   => BackendNavigationService::KEY_CONTENT,
             'icon'     => 'fa fa-user',
             'path'     => 'backend_frontend_user_management',
             'position' => 'sidebar',
