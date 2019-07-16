@@ -99,20 +99,20 @@ class Bootstrap extends AbstractBootstrap {
         /**
          * @var AccountNavigationService $accountNavigation
          * @var DashboardWidgetsService $dashboardWidgetsService
-         * @var BackendNavigationService $sidebarNavigation
+         * @var BackendNavigationService $backendNavigationService
          */
-        $accountNavigation       = Oforge()->Services()->get('frontend.user.management.account.navigation');
-        $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
-        $sidebarNavigation       = Oforge()->Services()->get('backend.navigation');
+        $accountNavigation        = Oforge()->Services()->get('frontend.user.management.account.navigation');
+        $dashboardWidgetsService  = Oforge()->Services()->get('backend.dashboard.widgets');
+        $backendNavigationService = Oforge()->Services()->get('backend.navigation');
 
-        $sidebarNavigation->put([
+        $backendNavigationService->add([
             'name'     => 'backend_helpdesk',
             'order'    => 4,
-            'parent'   => 'backend_content',
+            'parent'   => BackendNavigationService::KEY_CONTENT,
             'icon'     => 'fa fa-support',
             'position' => 'sidebar',
         ]);
-        $sidebarNavigation->put([
+        $backendNavigationService->add([
             'name'     => 'backend_helpdesk_tickets',
             'order'    => 1,
             'parent'   => 'backend_helpdesk',
@@ -120,7 +120,7 @@ class Bootstrap extends AbstractBootstrap {
             'path'     => 'backend_helpdesk',
             'position' => 'sidebar',
         ]);
-        $sidebarNavigation->put([
+        $backendNavigationService->add([
             'name'     => 'backend_helpdesk_settings',
             'order'    => 1,
             'parent'   => 'backend_helpdesk',
@@ -155,7 +155,7 @@ class Bootstrap extends AbstractBootstrap {
 
     }
 
-    public function load(){
+    public function load() {
         $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
 
         $dashboardWidgetsService->register([

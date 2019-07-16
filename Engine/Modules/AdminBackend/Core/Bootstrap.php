@@ -94,17 +94,9 @@ class Bootstrap extends AbstractBootstrap {
             'default'  => false,
             'label'    => 'config_backend_sidebar_collapsed_default',
         ]);
-        /** @var BackendNavigationService $sidebarNavigation */
-        $sidebarNavigation = Oforge()->Services()->get('backend.navigation');
-        $sidebarNavigation->put([
-            'name'     => 'backend_content',
-            'order'    => 1,
-            'position' => 'sidebar',
-        ]);
-        $sidebarNavigation->put([
-            'name'     => 'admin',
-            'order'    => 99,
-            'position' => 'sidebar',
-        ]);
+        /** @var BackendNavigationService $backendNavigationService */
+        $backendNavigationService = Oforge()->Services()->get('backend.navigation');
+        $backendNavigationService->add(BackendNavigationService::CONFIG_CONTENT);
+        $backendNavigationService->add(BackendNavigationService::CONFIG_ADMIN);
     }
 }

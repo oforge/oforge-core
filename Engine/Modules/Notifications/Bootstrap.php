@@ -46,9 +46,9 @@ class Bootstrap extends AbstractBootstrap {
      * @throws ParentNotFoundException
      */
     public function activate() {
-        /** @var BackendNavigationService $navigationService */
-        $navigationService = Oforge()->Services()->get('backend.navigation');
-        $navigationService->put([
+        /** @var BackendNavigationService $backendNavigationService */
+        $backendNavigationService = Oforge()->Services()->get('backend.navigation');
+        $backendNavigationService->add([
             'name'     => 'notifications',
             'order'    => 1,
             'position' => 'topbar',
