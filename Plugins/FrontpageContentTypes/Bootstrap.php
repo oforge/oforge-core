@@ -1,121 +1,140 @@
 <?php
 
-
 namespace FrontpageContentTypes;
 
-
+use FrontpageContentTypes\ContentTypes\Customers;
+use FrontpageContentTypes\ContentTypes\FullWidthSlider;
 use FrontpageContentTypes\ContentTypes\IconTileBasic;
-use FrontpageContentTypes\Services\RegisterContentTypeService;
-use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
-use Oforge\Engine\Modules\CMS\Models\Content\ContentTypeGroup;
+use FrontpageContentTypes\ContentTypes\IconTileText;
+use FrontpageContentTypes\ContentTypes\ImageTileLarge;
+use FrontpageContentTypes\ContentTypes\ImageTileMedium;
+use FrontpageContentTypes\ContentTypes\ImageTileSmall;
+use FrontpageContentTypes\ContentTypes\TextIconPrefix;
+use Oforge\Engine\Modules\CMS\Services\ContentTypeGroupManagementService;
+use Oforge\Engine\Modules\CMS\Services\ContentTypeManagementService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 
-class Bootstrap extends AbstractBootstrap
-{
-    public function __construct()
-    {
-        $this->models = [
-            ContentType::class,
-            ContentTypeGroup::class
-        ];
-        $this->services = [
-            "frontpage.content.types.register.contenttype" => RegisterContentTypeService::class
-        ];
+/**
+ * Class Bootstrap
+ *
+ * @package FrontpageContentTypes
+ */
+class Bootstrap extends AbstractBootstrap {
+
+    public function __construct() {
     }
 
-    /**
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
-     */
-    public function activate()
-    {
-        /** @var RegisterContentTypeService $registerContentTypeService */
-        $registerContentTypeService = Oforge()->Services()->get("frontpage.content.types.register.contenttype");
+    public function activate() {
+        /**
+         * @var ContentTypeGroupManagementService $contentTypeGroupManagementService
+         * @var ContentTypeManagementService $contentTypeManagementService
+         */
+        $contentTypeGroupManagementService = Oforge()->Services()->get('content.type.group.management');
+        $contentTypeManagementService      = Oforge()->Services()->get('content.type.management');
 
-        $registerContentTypeService->registerContentType('tiles',
-            'icontilebasic',
-            'IconTileBasic',
-            '/Themes/Base/ContentTypes/__assets/img/icontilebasic.png',
-            'Icon Tile Basic',
-            'FrontpageContentTypes\\ContentTypes\\IconTileBasic');
+        $ctgTilesID = $contentTypeGroupManagementService->add([
+            'name'  => 'tiles',
+            'label' => [
+                'en' => 'Tiles',
+                'de' => 'Kacheln',
+            ],
+        ]);
+        $contentTypeManagementService->add([
+            'name'      => 'icontilebasic',
+            'path'      => 'IconTileBasic',
+            'icon'      => '/Themes/Base/ContentTypes/__assets/img/icontilebasic.png',
+            'group'     => $ctgTilesID,
+            'classPath' => IconTileBasic::class,
+            'label'     => [
+                'en' => 'Icon tile basic',
+                'de' => 'Basis Icon-Kachel',
+            ],
+        ]);
+        $contentTypeManagementService->add([
+            'name'      => 'icontiletext',
+            'path'      => 'IconTileText',
+            'icon'      => '/Themes/Base/ContentTypes/__assets/img/icontilebasic.png',
+            'group'     => $ctgTilesID,
+            'classPath' => IconTileText::class,
+            'label'     => [
+                'en' => 'Icon tile text',
+                'de' => 'Text-Icon-Kachel',
+            ],
+        ]);
+        $contentTypeManagementService->add([
+            'name'      => 'imagetilesmall',
+            'path'      => 'ImageTileSmall',
+            'icon'      => '/Themes/Base/ContentTypes/__assets/img/imagetile.png',
+            'group'     => $ctgTilesID,
+            'classPath' => ImageTileSmall::class,
+            'label'     => [
+                'en' => 'Icon tile small',
+                'de' => 'Kleine Icon-Kachel',
+            ],
+        ]);
+        $contentTypeManagementService->add([
+            'name'      => 'imagetilemedium',
+            'path'      => 'ImageTileMedium',
+            'icon'      => '/Themes/Base/ContentTypes/__assets/img/imagetile.png',
+            'group'     => $ctgTilesID,
+            'classPath' => ImageTileMedium::class,
+            'label'     => [
+                'en' => 'Icon tile medium',
+                'de' => 'Medium Icon-Kachel',
+            ],
+        ]);
+        $contentTypeManagementService->add([
+            'name'      => 'imagetilelarge',
+            'path'      => 'ImageTileLarge',
+            'icon'      => '/Themes/Base/ContentTypes/__assets/img/imagetile.png',
+            'group'     => $ctgTilesID,
+            'classPath' => ImageTileLarge::class,
+            'label'     => [
+                'en' => 'Icon tile large',
+                'de' => 'Große Icon-Kachel',
+            ],
+        ]);
 
-        $registerContentTypeService->registerContentType('tiles',
-            'icontiletext',
-            'IconTileText',
-            '/Themes/Base/ContentTypes/__assets/img/icontilebasic.png',
-            'Icon Tile Text',
-            'FrontpageContentTypes\\ContentTypes\\IconTileText');
-
-        $registerContentTypeService->registerContentType('tiles',
-            'imagetilesmall',
-            'ImageTileSmall',
-            '/Themes/Base/ContentTypes/__assets/img/imagetile.png',
-            'Image Tile Small',
-            'FrontpageContentTypes\\ContentTypes\\ImageTileSmall');
-
-        $registerContentTypeService->registerContentType('tiles',
-            'imagetilemedium',
-            'ImageTileMedium',
-            '/Themes/Base/ContentTypes/__assets/img/imagetile.png',
-            'Image Tile Medium',
-            'FrontpageContentTypes\\ContentTypes\\ImageTileMedium');
-        $registerContentTypeService->registerContentType('tiles',
-            'imagetilelarge',
-            'ImageTileLarge',
-            '/Themes/Base/ContentTypes/__assets/img/imagetile.png',
-            'Image Tile Large',
-            'FrontpageContentTypes\\ContentTypes\\ImageTileLarge');
-
-        $registerContentTypeService->registerContentType('other',
-            'texticonprefix',
-            'TextIconPrefix',
-            '/Themes/Base/ContentTypes/__assets/img/imagetile.png',
-            'Text with icon prefix',
-            'FrontpageContentTypes\\ContentTypes\\TextIconPrefix');
-
-        $registerContentTypeService->registerContentType('other',
-            'fullwidthslider',
-            'FullWidthSlider',
-            '/Themes/Base/ContentTypes/__assets/img/imagetile.png',
-            'Full width slider',
-            'FrontpageContentTypes\\ContentTypes\\FullWidthSlider');
-
-        $registerContentTypeService->registerContentType('other',
-            'customers',
-            'Customers',
-            '/Themes/Base/ContentTypes/__assets/img/imagetile.png',
-            'Customers',
-            'FrontpageContentTypes\\ContentTypes\\Customers');
+        $ctgOtherID = $contentTypeGroupManagementService->add([
+            'name'  => 'other',
+            'label' => [
+                'en' => 'Others',
+                'de' => 'Sonstiges',
+            ],
+        ]);
+        $contentTypeManagementService->add([
+            'name'      => 'texticonprefix',
+            'path'      => 'TextIconPrefix',
+            'icon'      => '/Themes/Base/ContentTypes/__assets/img/imagetile.png',
+            'group'     => $ctgOtherID,
+            'classPath' => TextIconPrefix::class,
+            'label'     => [
+                'en' => 'Text with icon prefix',
+                'de' => 'Text mit Iconpräfix',
+            ],
+        ]);
+        $contentTypeManagementService->add([
+            'name'      => 'fullwidthslider',
+            'path'      => 'FullWidthSlider',
+            'icon'      => '/Themes/Base/ContentTypes/__assets/img/imagetile.png',
+            'group'     => $ctgOtherID,
+            'classPath' => FullWidthSlider::class,
+            'label'     => [
+                'en' => 'Full width slider',
+                'de' => 'Slider in voller Breite',
+            ],
+        ]);
+        $contentTypeManagementService->add([
+            'name'      => 'customers',
+            'path'      => 'Customers',
+            'icon'      => '/Themes/Base/ContentTypes/__assets/img/imagetile.png',
+            'group'     => $ctgOtherID,
+            'classPath' => Customers::class,
+            'label'     => [
+                'en' => 'Customers',
+                'de' => 'Kunden',
+            ],
+        ]);
     }
 
-    public function load(){
-        /** @var RegisterContentTypeService $registerContentTypeService */
-        $registerContentTypeService = Oforge()->Services()->get("frontpage.content.types.register.contenttype");
-
-        $registerContentTypeService->registerContentType('other',
-            'texticonprefix',
-            'TextIconPrefix',
-            '/Themes/Base/ContentTypes/__assets/img/imagetile.png',
-            'Text with icon prefix',
-            'FrontpageContentTypes\\ContentTypes\\TextIconPrefix');
-
-        $registerContentTypeService->registerContentType('other',
-            'fullwidthslider',
-            'FullWidthSlider',
-            '/Themes/Base/ContentTypes/__assets/img/imagetile.png',
-            'Full width slider',
-            'FrontpageContentTypes\\ContentTypes\\FullWidthSlider');
-
-        $registerContentTypeService->registerContentType('other',
-            'customers',
-            'Customers',
-            '/Themes/Base/ContentTypes/__assets/img/imagetile.png',
-            'Customers',
-            'FrontpageContentTypes\\ContentTypes\\Customers');
-    }
-
-    public function uninstall()
-    {
-        parent::uninstall();
-    }
 }
