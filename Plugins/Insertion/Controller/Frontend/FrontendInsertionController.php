@@ -33,6 +33,8 @@ use ReflectionException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
+use Oforge\Engine\Modules\I18n\Helper\I18N;
+
 
 /**
  * Class MessengerController
@@ -149,9 +151,14 @@ class FrontendInsertionController extends SecureFrontendController
         Oforge()->View()->assign($result);
     }
 
+
     /**
      * @param Request $request
      * @param Response $response
+     * @param $args
+     *
+     * @return Response
+     * @throws ServiceNotFoundException
      * @EndpointAction(path="/process/{type}")
      */
     public function processStepsAction(Request $request, Response $response, $args)
@@ -181,7 +188,18 @@ class FrontendInsertionController extends SecureFrontendController
                 try {
                     $processData = $formsService->parsePageData($data);
 
-                    $createService->create($typeId, $user, $processData);
+                    $insertionId = $createService->create($typeId, $user, $processData);
+
+                    $insertionService = Oforge()->Services()->get('insertion');
+
+                    /**
+                     * @var $insertion Insertion
+                     */
+                    $insertion = $insertionService->getInsertionById(intval($insertionId));
+
+                    if (isset($insertion)) {
+                        $this->sendInsertionInfoMail($user, $insertion);
+                    }
 
                     $uri = $router->pathFor('insertions_feedback');
 
@@ -204,6 +222,28 @@ class FrontendInsertionController extends SecureFrontendController
 
             return $response->withRedirect($uri, 301);
         }
+    }
+
+    /**
+     * @param User $user
+     * @param Insertion $insertion
+     *
+     * @throws ServiceNotFoundException
+     */
+    private function sendInsertionInfoMail(User $user, Insertion $insertion) {
+        $mailService = Oforge()->Services()->get("mail");
+        $userMail = $user->getEmail();
+        $mailerOptions = [
+            'to'       => [$userMail => $userMail],
+            'from'     => 'info',
+            'subject'  => I18N::translate('mailer_subject_insertion_created'),
+            'template' => 'InsertionCreated.twig',
+        ];
+        $templateData = [
+            'insertionId'    => $insertion->getId(),
+            'insertionTitle' => $insertion->getContent()->getTitle(),
+        ];
+        $mailService->send($mailerOptions, $templateData);
     }
 
     /**
