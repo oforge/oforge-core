@@ -37,7 +37,7 @@
 
             <div class="panel panel--supplier-description description">
                 <div class="description__head">
-                    <h4 class="title">Rachel Müller</h4>
+                    <h4 class="title">{{ profile.user.detail.firstName }} {{ profile.user.detail.lastName }}</h4>
                     <div class="language-switch"></div>
                 </div>
 
@@ -96,7 +96,10 @@
                     {{ profile.user.address.postCode }} {{ profile.user.address.city }}
                 </div>
                 <div class="map__view">
-
+                    <iframe class="external--content content--iframe"
+                            src="https://www.google.com/maps?ie=UTF8&amp;Iwloc=near&amp;output=embed&amp;t=m&amp;z=15&amp;q={{ profile.user.address.postCode }}+{{ profile.user.address.city }}"
+                            width="100%" height="100%" frameborder="0">
+                    </iframe>
                 </div>
             </div>
 
@@ -120,7 +123,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 {% endblock content %}
