@@ -65,12 +65,13 @@ class PluginAccessService extends AbstractDatabaseAccess {
                     $success = true;
                 }
             }
+
             if(!$success) {
                 echo "TODO THROW EXCEPTION";
             }
         }
 
-        return array_flip($result);
+        return array_reverse($result);
     }
 
 }
