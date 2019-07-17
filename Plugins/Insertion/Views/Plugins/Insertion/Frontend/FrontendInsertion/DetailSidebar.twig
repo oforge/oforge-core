@@ -20,8 +20,9 @@
             {% endif %}
         {% endblock sidebar__panel_provider %}
 
+        {% set contact = insertion.contact %}
+
         {% block sidebar__panel_contact %}
-            {% set contact = insertion.contact %}
             {% if contact.visible == 'true' %}
                 <div class="panel panel--contact contact">
                     <div class="contact__name">{{ contact.name }}</div>
@@ -37,6 +38,7 @@
                 </div>
             {% endif %}
         {% endblock sidebar__panel_contact %}
+
         {% block sidebar__panel_map %}
             <div class="panel panel--map map">
                 <div class="map__address"><span class="adress__zip">{{ contact.zip }}</span> <span
