@@ -1,5 +1,5 @@
 {% block header_image %}
-    {% if headerimage is defined %}
+    {% if headerimage is not empty %}
         <div class="header__image" {% if headerimage > 0 %}style="background-image: url('{{ media(headerimage, 1280) }}')"{% endif %}></div>
     {% endif %}
 {% endblock header_image %}

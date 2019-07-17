@@ -11,7 +11,10 @@
     }
     &.panel--sort {
         width: 100%;
-        padding: $size-small $size-large;
+        padding: $size-large;
+    }
+    &.panel--support {
+        width: 100%;
     }
 }
 

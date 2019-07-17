@@ -60,9 +60,9 @@ class AccountController extends SecureFrontendController {
     public function dashboardAction(Request $request, Response $response) {
         /** @var AccountNavigationService $accountNavigationService */
         $accountNavigationService = Oforge()->Services()->get('frontend.user.management.account.navigation');
-        $sidebarNavigation        = $accountNavigationService->get('sidebar');
+        $backendNavigationService        = $accountNavigationService->get('sidebar');
 
-        Oforge()->View()->assign(['content' => $sidebarNavigation]);
+        Oforge()->View()->assign(['content' => $backendNavigationService]);
     }
 
     /**

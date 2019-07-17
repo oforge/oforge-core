@@ -2,8 +2,9 @@
 
 namespace TestMail\Controller\Backend;
 
+use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
+use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
-use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -15,7 +16,7 @@ use Slim\Router;
  * @package TestMail\Controller\Backend
  * @EndpointClass(path="/backend/sendmail", name="backend_sendmail", assetScope="Backend")
  */
-class SendMailController extends AbstractController {
+class SendMailController extends SecureBackendController {
     public function indexAction(Request $request, Response $response) {
         $mailservice = Oforge()->Services()->get('mail');
         $testOptions = [
@@ -38,5 +39,8 @@ class SendMailController extends AbstractController {
         $url    = $router->pathFor('backend_testmail');
 
         return $response->withRedirect($url, 301);
+    }
+    public function initPermissions() {
+        $this->ensurePermissions('indexAction', BackendUser::class, BackendUser::ROLE_ADMINISTRATOR);
     }
 }

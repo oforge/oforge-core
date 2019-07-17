@@ -52,6 +52,22 @@
     display: block;
     width: 100%;
     position: relative;
+    min-height: 3.6rem;
+
+    &.form__control--half-medium {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+
+        > * {
+            flex: 0 0 49%;
+            max-width: 49%;
+        }
+        .form__input--inside-label + .form__input--inside-label {
+            margin-top: 0;
+        }
+    }
 
     &.flex {
         display: flex;
@@ -91,7 +107,7 @@
 
     &.form__control--multi:not(.form__control--is-sub),
     &.form__control--new-select:not(.form__control--is-sub) {
-        min-height: 6rem;
+        min-height: 7rem;
     }
 
     &.form__control--checkbox {
@@ -155,7 +171,7 @@
     justify-content: center;
     padding: $size-medium $size-large;
     border-left: 1px solid $color-primary;
-    font-size: 1.6rem;
+    font-size: 1rem;
     min-width: 1rem;
 }
 
@@ -333,7 +349,22 @@
 }
 
 .form__input--zip + .form__input--distance {
-    margin-top: $size-large;
+    margin-top: 0;
+}
+
+#floating-button {
+    position: fixed;
+    z-index: 3;
+    bottom: $size-large;
+    width: calc(100% - 1.2rem);
+    transition: bottom .2s ease-in, width .2s ease-in;
+
+    &.position-static {
+        position: static;
+        width: 100%;
+        bottom: 0;
+        box-shadow: none;
+    }
 }
 
 @media screen and (min-width: 480px) {
@@ -350,14 +381,19 @@
 
 @media screen and (min-width: $screen-medium) {
 
-    .form__input--zip + .form__input--distance {
-        margin-top: 0;
+    #floating-button {
+        width: calc(100% - 2.4rem);
     }
 
     .form-controls {
         &.form-controls--row {
             .form__control {
                 flex: 0 0 calc(50% - .6rem);
+
+                &.form__control--floating-button {
+                    flex: 0 0 100%;
+                    width: 100%;
+                }
             }
         }
     }
@@ -380,25 +416,11 @@
         }
     }
     .form__control {
-        &.form__control--half-medium {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
-
-            > * {
-                flex: 0 0 49%;
-                max-width: 49%;
-            }
-        }
-
         &.form__control--third-medium {
             display: flex;
             flex-direction: row;
             align-items: center;
             justify-content: space-between;
-
-
         }
     }
     .form__input--inside-label + .form__input--inside-label {
@@ -415,10 +437,9 @@
 
 .form-controls.form-controls--row, .attribute-group {
     .form__control.form__control__boolean {
-        margin-top: 0.6rem;
+        // margin-top: 0.6rem;
         flex-direction: row-reverse;
         display: flex;
-        flex-direction: row-reverse;
         align-items: center;
         justify-content: flex-end;
 
@@ -431,6 +452,16 @@
 
         .form__label--checkbox {
             font-weight: normal;
+        }
+    }
+}
+
+@media screen and (min-width: $screen-large) {
+    #floating-button {
+        width: 27.6rem;
+
+        &.position-static {
+            width: 27.6rem;
         }
     }
 }

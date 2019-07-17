@@ -48,8 +48,7 @@ class InsertionListService extends AbstractDatabaseAccess {
         $page     = isset($params["page"]) ? $params["page"] : 1;
         $pageSize = isset($params["pageSize"]) ? $params["pageSize"] : 10;
 
-        $attributeKeys = array_keys($_GET);
-        $keys          = $this->repository("key")->findBy(["name" => $attributeKeys]);
+        $keys = $this->repository("key")->findAll();
 
         $result = ["filter" => [], "query" => [], 'order' => $params["order"]];
 
@@ -116,9 +115,12 @@ class InsertionListService extends AbstractDatabaseAccess {
             $attributeCount = 0;
 
             foreach ($keys as $attributeKey) {
-                if (isset($params[$attributeKey->getName()])) {
-                    $value                                      = $_GET[$attributeKey->getName()];
-                    $result['filter'][$attributeKey->getName()] = $value;
+                $name = $attributeKey->getName();
+                $name = str_replace(" ", "_", $name);
+
+                if (isset($params[$name])) {
+                    $value                   = $params[$name];
+                    $result['filter'][$name] = $value;
 
                     if (is_array($value)) { //should always be a multi selection or a range component
                         $sqlQuery                             .= " left join oforge_insertion_insertion_attribute_value v$attributeCount on v$attributeCount.insertion_id = i.id and v$attributeCount.attribute_key = :v"
@@ -130,6 +132,44 @@ class InsertionListService extends AbstractDatabaseAccess {
                                 $sqlQueryWhere .= " and v$attributeCount.attribute_key = :v" . $attributeCount
                                                   . "key and v$attributeCount.insertion_attribute_value between :v" . $attributeCount . "value and :v"
                                                   . $attributeCount . "value2";
+
+                                $min = $value[0];
+                                $max = $value[1];
+
+                                if ($min > $max) {
+                                    $t   = $min;
+                                    $min = $max;
+                                    $max = $t;
+                                }
+
+                                $args[":v" . $attributeCount . "value"]  = $min;
+                                $args[":v" . $attributeCount . "value2"] = $max;
+
+                                break;
+                            case AttributeType::DATEYEAR:
+
+                                $sqlQueryWhere .= " and v$attributeCount.attribute_key = :v" . $attributeCount
+                                                  . "key and YEAR(CURDATE()) - YEAR(v$attributeCount.insertion_attribute_value) - IF(STR_TO_DATE(CONCAT(YEAR(CURDATE()), '-', MONTH(v$attributeCount.insertion_attribute_value), '-', DAY(v$attributeCount.insertion_attribute_value)) ,'%Y-%c-%e') > CURDATE(), 1, 0)  between :v"
+                                                  . $attributeCount . "value and :v" . $attributeCount . "value2";
+
+                                $min = $value[0];
+                                $max = $value[1];
+
+                                if ($min > $max) {
+                                    $t   = $min;
+                                    $min = $max;
+                                    $max = $t;
+                                }
+
+                                $args[":v" . $attributeCount . "value"]  = $min;
+                                $args[":v" . $attributeCount . "value2"] = $max;
+
+                                break;
+                            case AttributeType::DATEMONTH:
+
+                                $sqlQueryWhere .= " and v$attributeCount.attribute_key = :v" . $attributeCount
+                                                  . "key and DATEDIFF(CURDATE(), v$attributeCount.insertion_attribute_value) / 30  between :v" . $attributeCount
+                                                  . "value and :v" . $attributeCount . "value2";
 
                                 $min = $value[0];
                                 $max = $value[1];
@@ -162,16 +202,33 @@ class InsertionListService extends AbstractDatabaseAccess {
 
                         $attributeCount++;
                     } else {
-                        $sqlQuery .= " left join oforge_insertion_insertion_attribute_value v$attributeCount on v$attributeCount . insertion_id = i . id and v$attributeCount
+                        switch ($attributeKey->getFilterType()) {
+                            case AttributeType::TEXT:
+                                $sqlQuery .= " left join oforge_insertion_insertion_attribute_value v$attributeCount on v$attributeCount . insertion_id = i . id and v$attributeCount
                                                                                                                                                               . attribute_key = :v"
-                                     . $attributeCount . "key and v$attributeCount . insertion_attribute_value = :v" . $attributeCount . "value";
+                                             . $attributeCount . "key";
 
-                        $sqlQueryWhere                          .= " and v$attributeCount . attribute_key = :v" . $attributeCount
-                                                                   . "key and v$attributeCount . insertion_attribute_value = :v" . $attributeCount . "value";
-                        $args[":v" . $attributeCount . "key"]   = $attributeKey->getId();
-                        $args[":v" . $attributeCount . "value"] = $value;
+                                $sqlQueryWhere                          .= " and v$attributeCount . attribute_key = :v" . $attributeCount
+                                                                           . "key and v$attributeCount . insertion_attribute_value like :v" . $attributeCount
+                                                                           . "value";
+                                $args[":v" . $attributeCount . "key"]   = $attributeKey->getId();
+                                $args[":v" . $attributeCount . "value"] = "%" . $value . "%";
 
-                        $attributeCount++;
+                                $attributeCount++;
+                                break;
+                            default:
+                                $sqlQuery .= " left join oforge_insertion_insertion_attribute_value v$attributeCount on v$attributeCount . insertion_id = i . id and v$attributeCount
+                                                                                                                                                              . attribute_key = :v"
+                                             . $attributeCount . "key and v$attributeCount . insertion_attribute_value = :v" . $attributeCount . "value";
+
+                                $sqlQueryWhere                          .= " and v$attributeCount . attribute_key = :v" . $attributeCount
+                                                                           . "key and v$attributeCount . insertion_attribute_value = :v" . $attributeCount
+                                                                           . "value";
+                                $args[":v" . $attributeCount . "key"]   = $attributeKey->getId();
+                                $args[":v" . $attributeCount . "value"] = $value;
+
+                                $attributeCount++;
+                        }
                     }
                 }
             }
@@ -315,6 +372,7 @@ class InsertionListService extends AbstractDatabaseAccess {
         $current = [];
 
         try {
+            // returns null if it cannot be decoded. See https://php.net/manual/en/function.json-decode.php
             $current = json_decode($_COOKIE[$name], true);
         } catch (\Exception $e) {
         }
@@ -327,6 +385,9 @@ class InsertionListService extends AbstractDatabaseAccess {
             setcookie($name, json_encode($current), time() + 60 * 60 * 24 * 2);
         }
 
+        if ($current === null) {
+            $current = [];
+        }
         return $current;
     }
 }

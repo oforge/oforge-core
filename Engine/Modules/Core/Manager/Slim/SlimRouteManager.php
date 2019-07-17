@@ -39,9 +39,6 @@ class SlimRouteManager {
      * @throws ORMException
      */
     public function init() {
-        $entityManager      = Oforge()->DB()->getForgeEntityManager();
-        $endpointRepository = $entityManager->getRepository(Endpoint::class);
-
         /** @var ForgeSlimApp $forgeSlimApp */
         $forgeSlimApp = Oforge()->App();
         /** @var ContainerInterface $container */
@@ -50,8 +47,9 @@ class SlimRouteManager {
         $middlewareService = Oforge()->Services()->get('middleware');
         /** @var string[] $activeMiddlewareNames */
         $activeMiddlewareNames = $middlewareService->getAllDistinctActiveNames();
+        $endpointService       = Oforge()->Services()->get('endpoint');
         /** @var Endpoint[] $endpoints */
-        $endpoints = $endpointRepository->findBy(['active' => 1], ['order' => 'ASC']);
+        $endpoints = $endpointService->getActiveEndpoints();
 
         foreach ($endpoints as $endpoint) {
             $httpMethod = $endpoint->getHttpMethod();

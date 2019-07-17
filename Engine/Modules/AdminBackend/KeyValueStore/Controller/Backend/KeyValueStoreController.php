@@ -2,6 +2,7 @@
 
 namespace Oforge\Engine\Modules\AdminBackend\KeyValueStore\Controller\Backend;
 
+use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Models\Store\KeyValue;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
@@ -64,5 +65,7 @@ class KeyValueStoreController extends BaseCrudController {
         'update' => true,
         'delete' => true,
     ];
+    /** @var int|array<string,int> $crudPermission */
+    protected $crudPermissions = BackendUser::ROLE_ADMINISTRATOR;
 
 }
