@@ -2,6 +2,7 @@
 
 namespace Insertion\Twig;
 
+use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Models\User;
@@ -17,6 +18,7 @@ use Insertion\Services\InsertionTypeService;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
+use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Twig_Extension;
 use Twig_ExtensionInterface;
 use Twig_Filter;
@@ -62,9 +64,15 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
      *
      * @return string
      */
-    public function getAge(?string $dateTimeObject, string $type) : string {
-        return "Blub";
+    public function getAge(?string $dateTimeObject, ?string $type) : ?string {
 
+        $bday = DateTime::createFromFormat ('Y-m-d', $dateTimeObject); // Your date of birth
+        $today = new Datetime();
+
+        $diff = $today->diff($bday);
+        $suffix = $type == 'datemonth' ? I18N::translate('month_suffix') : ( $type == 'dateyear' ? I18N::translate('year_suffix') : '');
+
+        return  ($type == 'datemonth' ?  ($diff->y * 12 + $diff->m) : ( $type == 'dateyear' ? $diff->y  : $dateTimeObject)) . ' ' . $suffix;
     }
 
     /**
