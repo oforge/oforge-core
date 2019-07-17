@@ -2,6 +2,7 @@
 
 namespace Insertion\Services;
 
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\QueryBuilder;
@@ -60,21 +61,15 @@ class InsertionSliderService extends AbstractDatabaseAccess {
     /**
      * @param int $limit
      * @param int|null $insertionType
+     * @param int|null $notId
      *
      * @return Insertion[]
+     * @throws ORMException
      */
-    public function getRandomInsertion(int $limit, int $insertionType = null) {
+    public function getRandomInsertion(int $limit, int $insertionType = null, int $notId = null) {
         $rsm = new ResultSetMapping();
         $rsm->addEntityResult(Insertion::class, 'i');
         $rsm->addFieldResult('i', 'id', 'id');
-        $rsm->addFieldResult('i', 'price', 'price');
-        $rsm->addFieldResult('i', 'created_at', 'createdAt');
-        $rsm->addFieldResult('i', 'updated_at', 'updatedAt');
-        $rsm->addFieldResult('i', 'tax', 'tax');
-        $rsm->addFieldResult('i', 'active', 'deleted');
-        $rsm->addFieldResult('i', 'moderation', 'moderation');
-        $rsm->addMetaResult('i', 'insertion_user', 'insertion_user');
-        $rsm->addMetaResult('i', 'insertion_type_id', 'insertion_type_id');
 
         if (is_null($insertionType)) {
             $query = $this->entityManager()->createNativeQuery("
@@ -87,23 +82,44 @@ class InsertionSliderService extends AbstractDatabaseAccess {
             LIMIT ?", $rsm);
 
             $query->setParameter(1, $limit);
+        } elseif (is_null($notId)) {
+            $query = $this->entityManager()->createNativeQuery("
+            SELECT *
+            FROM oforge_insertion AS i
+            WHERE active IS TRUE AND
+                  deleted IS FALSE AND
+                  moderation IS TRUE AND
+                  insertion_type_id = ?
+            ORDER BY RAND()
+            LIMIT ?", $rsm);
+            $query->setParameter(1, $insertionType)->setParameter(2, $limit);
         } else {
             $query = $this->entityManager()->createNativeQuery("
             SELECT *
             FROM oforge_insertion AS i
             WHERE active IS TRUE AND
                   deleted IS FALSE AND
-                  moderation IS TRUE AND 
+                  moderation IS TRUE AND
+                  id != ? AND
                   insertion_type_id = ?
             ORDER BY RAND()
             LIMIT ?", $rsm);
-
-            $query->setParameter(1, $insertionType)->setParameter(2, $limit);
+            $query->setParameter(1, $notId)->setParameter(2, $insertionType)->setParameter(3, $limit);
         }
 
-        $result = $query->getResult();
+        $results = $query->getResult();
 
-        return $result;
+        $data = [];
+        if (sizeof($data) > 0) {
+            foreach ($results as $result) {
+                $insertion = $this->repository()->findOneBy(["id" => $result->getId()]);
+                if ($insertion != null) {
+                    $data[] = $insertion->toArray(3);
+                }
+            }
+        }
+
+        return $data;
     }
 
     public function getPremiumInsertions() {
