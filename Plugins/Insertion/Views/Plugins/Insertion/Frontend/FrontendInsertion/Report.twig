@@ -14,7 +14,7 @@
                                 name="issueType"
                                 id="issueType">
                             {% for reportType in reportTypes.issueTypes %}
-                                <option value="{{ reportType.id }}">{{ reportType.issueTypeName }}</option>
+                                <option value="{{ reportType.id }}">{{ i18n(reportType.issueTypeName) }}</option>
                             {% endfor %}
                         </select>
                     </div>
