@@ -1,13 +1,32 @@
 .insertion__sidebar {
     width: 100%;
-    .form__control {
-        transition: flex .2s ease;
+    .form-controls {
+        > .form__control {
+            transition: flex .2s ease;
+            &:not(.form__control--is-sub):not(.form__control__boolean) {
+                min-height: 8.2rem;
+            }
+        }
     }
+
 
     .title {
         flex: 0 0 100%;
     }
+
+    .form-controls.form-controls--row .form__control.form__control__boolean {
+        margin: 0;
+    }
+    .form__label {
+        display: inline-block;
+        margin-bottom: $size-large;
+
+        + .form__control {
+            margin-top: 0;
+        }
+    }
 }
+
 
 @media screen and (min-width: $screen-medium) {
     .insertion__sidebar {

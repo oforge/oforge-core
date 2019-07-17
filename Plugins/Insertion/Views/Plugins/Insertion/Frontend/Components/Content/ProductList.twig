@@ -12,6 +12,9 @@
                 {% include 'Plugins/Insertion/Frontend/Components/Content/ProductPanel.twig' with {item: item } %}
             {% endfor %}
         </div>
+        {% block product_pagination %}
+            {% include 'Plugins/Insertion/Frontend/Components/Content/ProductPagination.twig' %}
+        {% endblock product_pagination %}
     </div>
 
     {% block seo_content %}
