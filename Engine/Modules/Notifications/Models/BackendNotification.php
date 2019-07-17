@@ -109,9 +109,9 @@ class BackendNotification extends AbstractModel {
     }
 
     /**
-     * @return string
+     * @return \DateTime|null
      */
-    public function getTimestamp() : string {
+    public function getTimestamp() : ?\DateTime {
         return $this->timestamp;
     }
 
