@@ -56,7 +56,7 @@
                 {% block product__meta %}
                     <div class="product__meta">
                         <div class="product__pricing">
-                            <span class="product__label">price</span>
+                            <span class="product__label">{{ i18n('price') }}</span>
                             <span class="product__value">{{ item.price|number_format(0, ',', '.') }}€</span>
                         </div>
                     </div>

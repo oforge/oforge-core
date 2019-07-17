@@ -2,6 +2,7 @@
 
 namespace Insertion\Twig;
 
+use DateTimeInterface;
 use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\FrontendUserService;
@@ -18,6 +19,7 @@ use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
 use Twig_Extension;
 use Twig_ExtensionInterface;
+use Twig_Filter;
 use Twig_Function;
 
 /**
@@ -42,6 +44,27 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
             new Twig_Function('getQuickSearch', [$this, 'getQuickSearch']),
             new Twig_Function('getChatPartnerInformation', [$this, 'getChatPartnerInformation']),
         ];
+    }
+
+    /** @inheritDoc */
+    public function getFilters() {
+        return [
+            new Twig_Filter('age', [$this, 'getAge'], [
+                'is_safe' => ['html'],
+            ]),
+        ];
+    }
+
+    /**
+     * Format DateTimeObjects.
+     *
+     * @param DateTimeInterface|null $dateTimeObject
+     *
+     * @return string
+     */
+    public function getAge(?string $dateTimeObject, string $type) : string {
+        return "Blub";
+
     }
 
     /**
@@ -131,7 +154,7 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
      */
     public function getLatestBlogPostTile() {
         $blogService = Oforge()->Services()->get("blog.post");
-        $blogPost = $blogService->getLatestPost();
+        $blogPost    = $blogService->getLatestPost();
 
         return isset($blogPost) ? $blogPost->toArray(3) : [];
     }
@@ -159,7 +182,6 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
     public function getChatPartnerInformation(...$vars) {
         if (count($vars) === 2) {
             if ($vars[0] === 'requested') {
-
                 /** @var InsertionService $insertionService */
                 $insertionService = Oforge()->Services()->get('insertion');
                 /** @var Insertion $insertion */
@@ -173,9 +195,9 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
                 /** @var UserService $userService */
                 $userService = Oforge()->Services()->get('frontend.user.management.user');
                 /** @var User $user */
-                $user = $userService->getUserById($vars[1]);
+                $user      = $userService->getUserById($vars[1]);
                 $userImage = $user->getDetail()->getImage();
-                if($userImage) {
+                if ($userImage) {
                     $imageId = $user->getDetail()->getImage()->getId();
                 } else {
                     $imageId = 'default';
@@ -183,14 +205,13 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
 
                 return [
                     'imageId' => $imageId,
-                    'title' => $user->getDetail()->getNickName(),
+                    'title'   => $user->getDetail()->getNickName(),
                 ];
             }
         }
 
         return false;
     }
-
 
     /**
      * @return array
@@ -201,6 +222,7 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
         if (count($vars) == 1) {
             /** @var InsertionTypeService $insertionTypeService */
             $insertionTypeService = Oforge()->Services()->get('insertion.type');
+
             return $insertionTypeService->getAttribute($vars[0]);
         }
 
