@@ -286,7 +286,7 @@ class PluginStateService extends AbstractDatabaseAccess {
             $plugin->setActive(true);
             $this->entityManager()->update($plugin);
         }
-        $instance->load();
+        //$instance->load(); TODO: MS testing
         /** @var TemplateManagementService $templateManagementService */
         $templateManagementService = Oforge()->Services()->get('template.management');
         $templateManagementService->build();
