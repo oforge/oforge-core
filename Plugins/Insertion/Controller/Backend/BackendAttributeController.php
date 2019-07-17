@@ -9,6 +9,7 @@ use Insertion\Models\AttributeKey;
 use Insertion\Models\AttributeValue;
 use Insertion\Services\AttributeService;
 use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
+use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
@@ -145,7 +146,9 @@ class BackendAttributeController extends SecureBackendController {
             AttributeType::RANGE,
             AttributeType::SINGLE,
             AttributeType::TEXT,
-            AttributeType::DATE
+            AttributeType::DATE,
+            AttributeType::DATEYEAR,
+            AttributeType::DATEMONTH
         ];
 
         $attributeList = [];
@@ -191,6 +194,10 @@ class BackendAttributeController extends SecureBackendController {
     }
 
     public function initPermissions() {
+        $this->ensurePermissions('deleteAction', BackendUser::class, BackendUser::ROLE_MODERATOR);
+        $this->ensurePermissions('indexAction', BackendUser::class, BackendUser::ROLE_MODERATOR);
+        $this->ensurePermissions('editAction', BackendUser::class, BackendUser::ROLE_MODERATOR);
+
         parent::initPermissions();
     }
 }

@@ -1,17 +1,17 @@
 {% block detail_attributes %}
-    {% set values = insertion.values %}
     <div class="panel panel--product-attributes">
-        {% for attributeGroup in attributes %}
-            {% if attributeGroup.items|length > 0 and not  (attributeGroup.name == 'main' or attributeGroup.name == 'contact') %}
-                <div class="attribute-group">
-                    <h2>{{i18n('attribute_group_' ~ attributeGroup.name)  }}</h2>
-                    <div>
+        <h3 class="panel__header has--bottom-separator">{{ i18n('insertion_detail_attribute_header') }}</h3>
+        <div class="attribute-columns">
+            {% for attributeGroup in attributes %}
+                {% if attributeGroup.items|length > 0 %}
+                    <div class="product-attributes {% if attributeGroup.name == 'other_traits' %}other-traits{% endif %}">
+                        <div class="group__label">{{ i18n('insertion_detail_group_label_' ~ attributeGroup.name) }}</div>
                         {% for attribute in attributeGroup.items %}
-                            {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey} %}
+                            {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'value' : insertion_values[attribute.attributeKey.id]} %}
                         {% endfor %}
                     </div>
-                </div>
-            {% endif %}
-        {% endfor %}
+                {% endif %}
+            {% endfor %}
+        </div>
     </div>
 {% endblock detail_attributes %}

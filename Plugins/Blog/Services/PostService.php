@@ -50,7 +50,7 @@ class PostService extends AbstractDatabaseAccess {
         $queryBuilder = $this->entityManager()->createQueryBuilder();
         $query        = $queryBuilder
             ->select('p')
-            ->from('Post', 'p')
+            ->from(Post::class, 'p')
             ->orderBy('p.created', 'DESC')->setMaxResults(1)
             ->getQuery();
         $result = $query->execute()[0];

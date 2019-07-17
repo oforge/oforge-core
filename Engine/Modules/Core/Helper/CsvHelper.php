@@ -36,8 +36,18 @@ class CsvHelper {
      * @throws \Exception If the file is not readable.
      */
     public static function read(string $filepath, callable $rowCallable, array $options = []) {
+        if (!file_exists($filepath)) {
+            throw new \Exception("File '$filepath' does not exist.");
+        }
         if (!is_readable($filepath)) {
-            throw new \Exception("File '$filepath' is not readable.");
+            throw new \Exception("File '$filepath' is not readable.1");
+        }
+        $filepath = realpath($filepath);
+        if (!file_exists($filepath)) {
+            throw new \Exception("File '$filepath' does not exist.");
+        }
+        if (!is_readable($filepath)) {
+            throw new \Exception("File '$filepath' is not readable.2");
         }
         $options   = array_merge(self::DEFAULT_CONFIG, $options);
         $startLine = $options['header-row'] ? 1 : 0;

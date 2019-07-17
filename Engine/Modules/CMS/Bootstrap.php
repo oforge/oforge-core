@@ -104,41 +104,37 @@ class Bootstrap extends AbstractBootstrap {
 
     public function activate() {
         /**
-         * @var BackendNavigationService $sidebarNavigation
+         * @var BackendNavigationService $backendNavigationService
          * @var ContentTypeGroupManagementService $contentTypeGroupManagementService
-         * @var ContentTypeManagementService $managementService
+         * @var ContentTypeManagementService $contentTypeManagementService
          */
-        $sidebarNavigation = Oforge()->Services()->get('backend.navigation');
-        $sidebarNavigation->put([
-            'name'     => 'backend_content',
-            'order'    => 2,
-            'position' => 'sidebar',
-        ]);
-        $sidebarNavigation->put([
+        $backendNavigationService = Oforge()->Services()->get('backend.navigation');
+        $backendNavigationService->add(BackendNavigationService::CONFIG_CONTENT);
+        $backendNavigationService->add([
             'name'     => 'backend_content_pages',
             'order'    => 1,
-            'parent'   => 'backend_content',
+            'parent'   => BackendNavigationService::KEY_CONTENT,
             'icon'     => 'fa fa-sitemap',
             'path'     => 'backend_content_pages',
             'position' => 'sidebar',
         ]);
-        $sidebarNavigation->put([
+        $backendNavigationService->add([
             'name'     => 'backend_content_elements',
-            'order'    => 1,
-            'parent'   => 'backend_content',
+            'order'    => 2,
+            'parent'   => BackendNavigationService::KEY_CONTENT,
             'icon'     => 'fa fa-folder',
             'path'     => 'backend_content_elements',
             'position' => 'sidebar',
         ]);
 
         $contentTypeGroupManagementService = Oforge()->Services()->get('content.type.group.management');
-        $managementService                 = Oforge()->Services()->get('content.type.management');
+        $contentTypeManagementService      = Oforge()->Services()->get('content.type.management');
 
         $ctgContainerID = $contentTypeGroupManagementService->put([
             'name'        => 'container',
             'description' => 'Container',
         ]);
-        $managementService->put([
+        $contentTypeManagementService->put([
             'name'        => 'row',
             'path'        => 'Row',
             'icon'        => '/Themes/Base/ContentTypes/__assets/img/row.png',
@@ -146,7 +142,7 @@ class Bootstrap extends AbstractBootstrap {
             'group'       => $ctgContainerID,
             'classPath'   => Row::class,
         ]);
-        $managementService->put([
+        $contentTypeManagementService->put([
             'name'        => 'list',
             'path'        => 'List',
             'icon'        => '/Themes/Base/ContentTypes/__assets/img/row.png',
@@ -159,7 +155,7 @@ class Bootstrap extends AbstractBootstrap {
             'name'        => 'basic',
             'description' => 'Basic',
         ]);
-        $managementService->put([
+        $contentTypeManagementService->put([
             'name'        => 'richtext',
             'path'        => 'RichText',
             'icon'        => '/Themes/Base/ContentTypes/__assets/img/richtext.png',
@@ -167,7 +163,7 @@ class Bootstrap extends AbstractBootstrap {
             'group'       => $ctgBasicID,
             'classPath'   => RichText::class,
         ]);
-        $managementService->put([
+        $contentTypeManagementService->put([
             'name'        => 'text',
             'path'        => 'Text',
             'icon'        => '/Themes/Base/ContentTypes/__assets/img/text.png',
@@ -180,7 +176,7 @@ class Bootstrap extends AbstractBootstrap {
             'name'        => 'media',
             'description' => 'Media',
         ]);
-        $managementService->put([
+        $contentTypeManagementService->put([
             'name'        => 'image',
             'path'        => 'Image',
             'icon'        => '/Themes/Base/ContentTypes/__assets/img/image.png',
@@ -188,7 +184,7 @@ class Bootstrap extends AbstractBootstrap {
             'group'       => $ctgMediaID,
             'classPath'   => Image::class,
         ]);
-        $managementService->put([
+        $contentTypeManagementService->put([
             'name'        => 'gallery',
             'path'        => 'Gallery',
             'icon'        => '/Themes/Base/ContentTypes/__assets/img/gallery.png',
@@ -196,10 +192,10 @@ class Bootstrap extends AbstractBootstrap {
             'group'       => $ctgMediaID,
             'classPath'   => Gallery::class,
         ]);
-        $managementService->put([
+        $contentTypeManagementService->put([
             'name'        => 'video_youtube',
             'path'        => 'VideoYoutube',
-            'icon'        => '/Themes/Base/ContentTypes/__assets/img/video_youtube.png',
+            'icon'        => '/Themes/Base/ContentTypes/__assets/img/video_youtube.svg',
             'description' => 'Youtube video',
             'group'       => $ctgMediaID,
             'classPath'   => VideoYoutube::class,
@@ -209,7 +205,7 @@ class Bootstrap extends AbstractBootstrap {
             'name'        => 'navigation',
             'description' => 'Navigation',
         ]);
-        $managementService->put([
+        $contentTypeManagementService->put([
             'name'        => 'entrylist',
             'path'        => 'List',
             'icon'        => '/Themes/Base/ContentTypes/__assets/img/icontilebasic.png',
@@ -217,7 +213,7 @@ class Bootstrap extends AbstractBootstrap {
             'group'       => $ctgNavigationID,
             'classPath'   => EntryList::class,
         ]);
-        $managementService->put([
+        $contentTypeManagementService->put([
             'name'        => 'navigationentry',
             'path'        => 'NavigationEntry',
             'icon'        => '/Themes/Base/ContentTypes/__assets/img/icontilebasic.png',

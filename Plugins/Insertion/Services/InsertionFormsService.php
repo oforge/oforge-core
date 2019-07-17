@@ -37,76 +37,74 @@ class InsertionFormsService extends AbstractDatabaseAccess {
             $_SESSION['insertion' . $sessionKey] = [];
         }
 
-        if (isset($_POST["current_page"])) {
-            $_SESSION['insertion' . $sessionKey] = array_merge($_SESSION['insertion' . $sessionKey], $_POST);
+        $_SESSION['insertion' . $sessionKey] = array_merge($_SESSION['insertion' . $sessionKey], $_POST);
 
-            /** @var MediaService $mediaService */
-            $mediaService = Oforge()->Services()->get('media');
+        /** @var MediaService $mediaService */
+        $mediaService = Oforge()->Services()->get('media');
 
-            if (isset($_FILES["images"])) {
-                if (!isset($_SESSION['insertion' . $sessionKey]["images"])) {
-                    $_SESSION['insertion' . $sessionKey]["images"] = [];
-                }
-
-                foreach ($_FILES["images"]["error"] as $key => $error) {
-                    if ($error == UPLOAD_ERR_OK) {
-                        $file = [];
-
-                        foreach ($_FILES["images"] as $k => $v) {
-                            $file[$k] = $_FILES["images"][$k][$key];
-                        }
-
-                        $media     = $mediaService->add($file);
-                        $imageData = $media->toArray();
-                        if (isset($_POST['images_temp_interactions']) && isset($_POST['images_temp_interactions'][$key])
-                            && $_POST['images_temp_interactions'][$key] == 'main') {
-                            foreach ($_SESSION['insertion' . $sessionKey]["images"] as $imageKey => $value) {
-                                $_SESSION['insertion' . $sessionKey]["images"][$imageKey]["main"] = false;
-                            }
-                            $imageData["main"] = true;
-                        }
-
-                        $_SESSION['insertion' . $sessionKey]["images"][] = $imageData;
-                    }
-                }
+        if (isset($_FILES["images"])) {
+            if (!isset($_SESSION['insertion' . $sessionKey]["images"])) {
+                $_SESSION['insertion' . $sessionKey]["images"] = [];
             }
 
-            $mainIndex = 0;
+            foreach ($_FILES["images"]["error"] as $key => $error) {
+                if ($error == UPLOAD_ERR_OK) {
+                    $file = [];
 
-            if (isset($_POST['images_interactions'])) {
-                $imgs = [];
-
-                //delete images
-                if ($_SESSION['insertion' . $sessionKey]["images"]) {
-                    foreach ($_SESSION['insertion' . $sessionKey]["images"] as $index => $image) {
-                        if (isset($image["id"]) && isset($_POST["images_interactions"][$image["id"]])
-                            && $_POST["images_interactions"][$image["id"]] == "delete") {
-                            $mediaService->delete($image["id"]);
-                        } else {
-                            array_push($imgs, $image);
-                        }
-                    }
-                }
-
-                $_SESSION['insertion' . $sessionKey]["images"] = $imgs;
-                //find main image
-                foreach ($_SESSION['insertion' . $sessionKey]["images"] as $index => $image) {
-                    if (isset($image["id"]) && isset($_POST["images_interactions"][$image["id"]])) {
-                        if ($_POST["images_interactions"][$image["id"]] == "main") {
-                            $mainIndex = $index;
-                        }
+                    foreach ($_FILES["images"] as $k => $v) {
+                        $file[$k] = $_FILES["images"][$k][$key];
                     }
 
-                    $_SESSION['insertion' . $sessionKey]["images"][$index]["main"] = false;
+                    $media     = $mediaService->add($file);
+                    $imageData = $media->toArray();
+                    if (isset($_POST['images_temp_interactions']) && isset($_POST['images_temp_interactions'][$key])
+                        && $_POST['images_temp_interactions'][$key] == 'main') {
+                        foreach ($_SESSION['insertion' . $sessionKey]["images"] as $imageKey => $value) {
+                            $_SESSION['insertion' . $sessionKey]["images"][$imageKey]["main"] = false;
+                        }
+                        $imageData["main"] = true;
+                    }
+
+                    $_SESSION['insertion' . $sessionKey]["images"][] = $imageData;
                 }
             }
-
-            if (isset($_SESSION['insertion' . $sessionKey]["images"][$mainIndex])) {
-                $_SESSION['insertion' . $sessionKey]["images"][$mainIndex]["main"] = true;
-            }
-
-            $_SESSION['insertion' . $sessionKey]["images_interactions"] = $_POST['images_interactions'];
         }
+
+        $mainIndex = 0;
+
+        if (isset($_POST['images_interactions'])) {
+            $imgs = [];
+
+            //delete images
+            if ($_SESSION['insertion' . $sessionKey]["images"]) {
+                foreach ($_SESSION['insertion' . $sessionKey]["images"] as $index => $image) {
+                    if (isset($image["id"]) && isset($_POST["images_interactions"][$image["id"]])
+                        && $_POST["images_interactions"][$image["id"]] == "delete") {
+                        $mediaService->delete($image["id"]);
+                    } else {
+                        array_push($imgs, $image);
+                    }
+                }
+            }
+
+            $_SESSION['insertion' . $sessionKey]["images"] = $imgs;
+            //find main image
+            foreach ($_SESSION['insertion' . $sessionKey]["images"] as $index => $image) {
+                if (isset($image["id"]) && isset($_POST["images_interactions"][$image["id"]])) {
+                    if ($_POST["images_interactions"][$image["id"]] == "main") {
+                        $mainIndex = $index;
+                    }
+                }
+
+                $_SESSION['insertion' . $sessionKey]["images"][$index]["main"] = false;
+            }
+        }
+
+        if (isset($_SESSION['insertion' . $sessionKey]["images"][$mainIndex])) {
+            $_SESSION['insertion' . $sessionKey]["images"][$mainIndex]["main"] = true;
+        }
+
+        $_SESSION['insertion' . $sessionKey]["images_interactions"] = $_POST['images_interactions'];
 
         return $_SESSION['insertion' . $sessionKey];
     }
@@ -123,12 +121,11 @@ class InsertionFormsService extends AbstractDatabaseAccess {
         return $_SESSION['insertion' . $sessionKey] = $data;
     }
 
-
     public function parsePageData(array $pageData) : array {
         $language = $this->repository("language")->findOneBy(["iso" => "de"]);
 
         $data = [
-            "contact"    => [
+            "contact"             => [
                 "name"    => $pageData["contact_name"],
                 "email"   => $pageData["contact_email"],
                 "phone"   => $pageData["contact_phone"],
@@ -136,20 +133,18 @@ class InsertionFormsService extends AbstractDatabaseAccess {
                 "city"    => $pageData["contact_city"],
                 "visible" => isset($pageData["contact_visible"]) && !empty($pageData["contact_visible"]),
             ],
-            "content"    => [
+            "content"             => [
                 "language"    => $language,
                 "name"        => $pageData["insertion_name"],
                 "title"       => $pageData["insertion_title"],
                 "description" => $pageData["insertion_description"],
             ],
-            "media"      => [],
-            "attributes" => [],
-            "price"      => isset($pageData["price"]) ? $pageData["price"] : 0,
-            "tax"      => isset($pageData["tax"]) ? $pageData["tax"] == "on" : 0,
-            'images_interactions' => $pageData["images_interactions"]
+            "media"               => [],
+            "attributes"          => [],
+            "price"               => isset($pageData["price"]) ? $pageData["price"] : 0,
+            "tax"                 => isset($pageData["tax"]) ? $pageData["tax"] == "on" : 0,
+            'images_interactions' => $pageData["images_interactions"],
         ];
-
-
 
         if (isset($pageData["images"]) && sizeof($pageData["images"]) > 0) {
             foreach ($pageData["images"] as $image) {

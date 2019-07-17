@@ -1,8 +1,10 @@
 {% block product_list_sort %}
     <div class="panel panel--sort flex flex--row flex--center flex--between">
         <div class="result">
-            <h3 class="result__text">{{ search.query.count }} <span class="result__text--mobile">{{ i18n('results') }}</span> <span class="result__text--desktop">{{ i18n('insertion_' ~ type.name ~ '_count', i18n('insertion_count' ,'insertions found')) }}</span></h3>
+            <h1 class="result__text">{{ search.query.count }} {{ i18n('insertion_' ~ type.name ~ '_count', i18n('insertion_count' ,'insertions found')) }}</h1>
         </div>
+    </div>
+    <div class="panel panel--sort flex flex--row flex--center flex--between">
         <div class="form__input form__input--select form__input--sort">
             <select onchange="window.location.href = Oforge.updateQueryString('order', this.value)"
                     name="product-list-sort"
@@ -23,7 +25,7 @@
             <input type="hidden" name="filter" value="{{ search.filter|json_encode() }}" />
             <input type="submit"
                    class="button button--large button--secondary button--save-result"
-                   value="{% if hasSearchBookmark(typeId, search.filter ) %}Remove from wishlist{% else %}Add to wishlist{% endif %}" />
+                   value="{% if hasSearchBookmark(typeId, search.filter) %}{{ i18n('remove_from_search_list', 'Remove search from search list') }}{% else %}{{ i18n('save_search', 'Save search') }}{% endif %}" />
         </form>
     </div>
 {% endblock product_list_sort %}

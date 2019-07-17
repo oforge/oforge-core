@@ -1,12 +1,13 @@
 <?php
+
 namespace Analytics\Controller\Backend;
 
-
-use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
-use Slim\Http\Request;
-use Slim\Http\Response;
+use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
+use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 /**
  * Class AnalyticsController
@@ -14,8 +15,7 @@ use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
  * @package Analytics|Controller|Backend
  * @EndpointClass(path="/backend/analytics", name="backend_analytics", assetScope="Backend")
  */
-
-class AnalyticsController extends AbstractController {
+class AnalyticsController extends SecureBackendController {
     /**
      * @param Request $request
      * @param Response $response
@@ -29,7 +29,18 @@ class AnalyticsController extends AbstractController {
         Oforge()->View()->assign(['analyticsData' => $dataService->getData()]);
     }
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     */
     public function refreshAction(Request $request, Response $response) {
         // Update Data
     }
+
+    /** @inheritdoc */
+    public function initPermissions() {
+        $this->ensurePermissions('indexAction', BackendUser::class, BackendUser::ROLE_ADMINISTRATOR);
+        $this->ensurePermissions('refreshAction', BackendUser::class, BackendUser::ROLE_ADMINISTRATOR);
+    }
+
 }

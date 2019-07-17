@@ -1,4 +1,6 @@
-<div class="form__control">
-    <label class="form__label">{{ i18n(attribute.name) }}</label>
-    DATE
-</div>
+{% if value is not empty %}
+    <div class="product__attribute">
+        <span class="product__label">{{ i18n(attribute.name) }}</span>
+        <span class="product__value">{{ value }}</span>
+    </div>
+{% endif %}

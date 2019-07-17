@@ -6,11 +6,12 @@
     background-position: center center;
     background-repeat: no-repeat;
     background-color: $color-primary;
-    background-image: url('/Themes/allyourhorses/Frontend/__assets/img/profile_image_placeholder.svg');
+    background-image: url('/Themes/AllYourHorses/Frontend/__assets/img/profile_image_placeholder.svg');
     border-radius: 50%;
     overflow: hidden;
     box-shadow: 0 .4rem .8rem rgba(112, 112, 112, 1);
     display: flex;
+    justify-content: center;
     margin-bottom: 3rem;
     &:after {
       content: "";

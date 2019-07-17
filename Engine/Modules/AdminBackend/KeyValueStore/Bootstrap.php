@@ -23,12 +23,14 @@ class Bootstrap extends AbstractBootstrap {
     }
 
     public function activate() {
-        /** @var BackendNavigationService $backendNavigation */
-        $backendNavigation = Oforge()->Services()->get('backend.navigation');
-        $backendNavigation->put([
+        /** @var BackendNavigationService $backendNavigationService */
+        I18N::translate('backend_key_value_store', "Key Value Store");
+        $backendNavigationService = Oforge()->Services()->get('backend.navigation');
+        $backendNavigationService->add(BackendNavigationService::CONFIG_ADMIN);
+        $backendNavigationService->add([
             'name'     => 'backend_key_value_store',
             'order'    => 101,
-            'parent'   => 'admin',
+            'parent'   => BackendNavigationService::KEY_ADMIN,
             'icon'     => 'fa fa-gears',
             'path'     => 'backend_key_value_store',
             'position' => 'sidebar',

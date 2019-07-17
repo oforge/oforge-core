@@ -7,7 +7,6 @@
             <h3 class="form__title">{{ i18n('adjust_search', 'Adjust your search') }}</h3>
 
             <div class="form-controls form-controls--row">
-                <h3 class="title">{{ i18n('price') }}</h3>
                 {% include 'Plugins/Insertion/Frontend/Components/Content/Search/Price.twig' %}
             </div>
 
@@ -28,10 +27,11 @@
             </div>
 
             <div class="form-controls form-controls--row">
-                <div class="form__control">
+                <div class="form__control form__control--floating-button">
                     <input type="submit"
+                           id="floating-button"
                            value="{{ i18n('apply_filter') }}"
-                           class="form__input form__input--submit button">
+                           class="form__input button button--primary">
                 </div>
             </div>
         </form>

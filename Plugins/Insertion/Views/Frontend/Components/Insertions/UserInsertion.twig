@@ -7,14 +7,30 @@
     </div>
     <div class="product__attribute">
         <span class="product__label">{{ i18n('price') }}</span>
-        <span class="product__value">{{ item.price }} € {% if (item.tax) %} (Netto) {% else %} (Brutto){% endif %}</span>
-        <!-- TODO: Snippify -->
+        <span class="product__value">{{ item.price }} {{ i18n('unit_price') }} {% if (item.tax) %} ({{ i18n('vat_identificationable') }}){% endif %}</span>
     </div>
     <div class="product__attribute">
         <span class="product__label">{{ i18n('duration') }}</span>
         <span class="product__value">Unlimited</span>
     </div>
 {% endblock attributes__main %}
+
+{% block attributes__top %}
+    <div class="product__attributes product__attributes--top">
+        <div class="product__attribute">
+            <span class="product__label">{{ i18n('insertion_name') }}</span>
+            <span class="product__value">{{ item.content[0].name }}</span>
+        </div>
+        <div class="product__attribute">
+            <span class="product__label">{{ i18n('insertion_price') }}</span>
+            <span class="product__value">{{ item.price }} {{ i18n('unit_price') }} {% if (item.tax) %} ({{ i18n('vat_identificationable') }}){% endif %}</span>
+        </div>
+        <div class="product__attribute">
+            <span class="product__label">{{ i18n('insertion_duration') }}</span>
+            <span class="product__value">Unlimited</span>
+        </div>
+    </div>
+{% endblock attributes__top %}
 
 {% block attributes__bottom %}
     <div class="product__actions">
@@ -32,78 +48,62 @@
                 <use xlink:href="#professional_plus_abo"></use>
             </svg>
         </a>
+
         {% if insertion.active %}
-        <a class="button button--primary disable"
-           href="{{ url('frontend_account_insertions_disable', {id: item.id}) }}">
-            <span>{{ i18n('disable') }}</span>
+            <a class="button button--primary disable"
+               href="{{ url('frontend_account_insertions_disable', {id: item.id}) }}">
+                <span>{{ i18n('disable') }}</span>
+                <svg class="icon icon--light">
+                    <use xlink:href="#deactivate"></use>
+                </svg>
+            </a>
+        {% else %}
+            <a class="button button--primary activate"
+               href="{{ url('frontend_account_insertions_activate', {id: item.id}) }}">
+                <span>{{ i18n('activate') }}</span>
+                <svg class="icon icon--light">
+                    <use xlink:href="#fade_in"></use>
+                </svg>
+            </a>
+        {% endif %}
+        <a class="button button--primary delete"
+           href="{{ url('frontend_account_insertions_delete', {id: item.id}) }}">
+            <span>{{ i18n('delete') }}</span>
             <svg class="icon icon--light">
-                <use xlink:href="#deactivate"></use>
+                <use xlink:href="#delete"></use>
             </svg>
         </a>
-        {% else %}
-        <a class="button button--primary activate"
-           href="{{ url('frontend_account_insertions_activate', {id: item.id}) }}">
-            <span>{{ i18n('activate') }}</span>
-            <svg class="icon icon--light">
-                <use xlink:href="#fade_in"></use>
-            </svg>
+
+        <div class="mobile-buttons">
+            <a class="mobile-button" href="{{ url('insertions_edit', {id: item.id}) }}">
+                <svg class="icon icon--primary">
+                    <use xlink:href="#edit"></use>
+                </svg>
+            </a>
+            {% if insertion.active %}
+                <a class="mobile-button"
+                   href="{{ url('frontend_account_insertions_disable', {id: item.id}) }}">
+                    <svg class="icon icon--primary">
+                        <use xlink:href="#deactivate"></use>
+                    </svg>
+                </a>
+            {% else %}
+                <a class="mobile-button"
+                   href="{{ url('frontend_account_insertions_activate', {id: item.id}) }}">
+                    <svg class="icon icon--primary">
+                        <use xlink:href="#fade_in"></use>
+                    </svg>
+                </a>
             {% endif %}
-            <a class="button button--primary delete"
-               href="{{ url('frontend_account_insertions_delete', {id: item.id}) }}">
-                <span>{{ i18n('delete') }}</span>
-                <svg class="icon icon--light">
+
+            <a class="mobile-button" href="{{ url('frontend_account_insertions_delete', {id: item.id}) }}">
+                <svg class="icon icon--primary">
                     <use xlink:href="#delete"></use>
                 </svg>
             </a>
-
-            <div class="mobile-buttons">
-                <a class="mobile-button" href="{{ url('insertions_edit', {id: item.id}) }}">
-                    <svg class="icon icon--primary">
-                        <use xlink:href="#edit"></use>
-                    </svg>
-                </a>
-                {% if insertion.active %}
-                    <a class="mobile-button"
-                       href="{{ url('frontend_account_insertions_disable', {id: item.id}) }}">
-                        <svg class="icon icon--primary">
-                            <use xlink:href="#deactivate"></use>
-                        </svg>
-                    </a>
-                {% else %}
-                    <a class="mobile-button"
-                       href="{{ url('frontend_account_insertions_activate', {id: item.id}) }}">
-                        <svg class="icon icon--primary">
-                            <use xlink:href="#fade_in"></use>
-                        </svg>
-                    </a>
-                {% endif %}
-                <a class="mobile-button" href="{{ url('frontend_account_insertions_delete', {id: item.id}) }}">
-                    <svg class="icon icon--primary">
-                        <use xlink:href="#delete"></use>
-                    </svg>
-                </a>
-            </div>
+        </div>
     </div>
 {% endblock attributes__bottom %}
-
-{% block attributes__top %}
-    <div class="product__attributes product__attributes--top">
-        <div class="product__attribute">
-            <span class="product__label">{{ i18n('insertion_name') }}</span>
-            <span class="product__value">{{ item.content[0].name }}</span>
-        </div>
-        <div class="product__attribute">
-            <span class="product__label">{{ i18n('insertion_price') }}</span>
-            <span class="product__value">{{ item.price }} € {% if (item.tax) %} (Netto) {% else %} (Brutto){% endif %}</span>
-            <!-- TODO: Snippify -->
-
-        </div>
-        <div class="product__attribute">
-            <span class="product__label">{{ i18n('insertion_duration') }}</span>
-            <span class="product__value">Unlimited</span>
-        </div>
-    </div>
-{% endblock attributes__top %}
 
 {% block product__meta %}
 {% endblock product__meta %}
