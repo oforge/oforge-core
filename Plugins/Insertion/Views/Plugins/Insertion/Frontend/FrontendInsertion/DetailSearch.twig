@@ -2,7 +2,9 @@
 {% block content %}
     <div class="content content--insertion">
         <div class="panel panel--insertion">
-            <form class="form form--detail-search" method="get"
+            <form id="form-search"
+                  class="form form--detail-search"
+                  method="get"
                   action="{{ url('insertions_listing', {'type': typeId }  ) }}">
                 {% for group in attributes %}
                     {# TODO: fix this part. Better not check for group names... #}
