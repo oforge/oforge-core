@@ -31,7 +31,7 @@ if (typeof Oforge !== 'undefined') {
             }
 
             function update() {
-                if (floatingButtonPos > insertionSidebarPos && lastInsertionSidebarPos > insertionSidebarPos) {
+                if (floatingButtonPos > insertionSidebarPos && (lastInsertionSidebarPos === 0 || lastInsertionSidebarPos > insertionSidebarPos)) {
                     floatingButton.classList.add('position-static');
 
                 } else if (floatingButtonPos < insertionSidebarPos && lastInsertionSidebarPos < insertionSidebarPos && insertionSidebarPos > window.innerHeight) {
@@ -43,8 +43,7 @@ if (typeof Oforge !== 'undefined') {
             window.addEventListener('scroll', function (evt) {
                 onScroll();
             });
-
-            update();
+            onScroll();
         }
     });
 } else {
