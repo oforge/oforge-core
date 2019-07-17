@@ -24,7 +24,7 @@ class DateTimeFormatter {
      *
      * @return string
      */
-    public static function date(DateTimeInterface $dateTimeObject) : string {
+    public static function date(?DateTimeInterface $dateTimeObject) : string {
         return self::format($dateTimeObject, 'system_format_date', 'd.m.Y');
     }
 
@@ -33,7 +33,7 @@ class DateTimeFormatter {
      *
      * @return string
      */
-    public static function datetime(DateTimeInterface $dateTimeObject) : string {
+    public static function datetime(?DateTimeInterface $dateTimeObject) : string {
         return self::format($dateTimeObject, 'system_format_datetime', 'd.m.Y H:i:s');
     }
 
@@ -42,7 +42,7 @@ class DateTimeFormatter {
      *
      * @return string
      */
-    public static function time(DateTimeInterface $dateTimeObject) : string {
+    public static function time(?DateTimeInterface $dateTimeObject) : string {
         return self::format($dateTimeObject, 'system_format_time', 'H:i:s');
     }
 
@@ -55,7 +55,7 @@ class DateTimeFormatter {
      *
      * @return string
      */
-    private static function format(DateTimeInterface $dateTimeObject, string $configKey, string $defaultFormat) : string {
+    private static function format(?DateTimeInterface $dateTimeObject, string $configKey, string $defaultFormat) : string {
         if (!isset($dateTimeObject)) {
             return '';
         }

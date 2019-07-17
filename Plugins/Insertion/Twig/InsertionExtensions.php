@@ -146,7 +146,7 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
         $insertionTypeService = Oforge()->Services()->get('insertion.type');
         $quickSearch          = $insertionTypeService->getQuickSearchInsertions();
 
-        return ['types' => $quickSearch, 'attributes' => $insertionTypeService->getInsertionTypeAttributeMap()];;
+        return ['types' => $quickSearch, 'attributes' => $insertionTypeService->getInsertionTypeAttributeMap()];
     }
 
     /**

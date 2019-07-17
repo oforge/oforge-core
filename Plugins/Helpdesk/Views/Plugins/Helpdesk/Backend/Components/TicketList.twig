@@ -51,7 +51,7 @@
                         </td>
                         <td class="mailbox-date">
                             <a href="{{ url('backend_helpdesk_messenger', {'id': ticket.id}) }}">
-                            {{ ticket.timestamp|date }}
+                            {{ ticket.timestamp|formatDate }}
                             </a>
                         </td>
                     </tr>
