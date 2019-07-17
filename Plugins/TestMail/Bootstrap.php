@@ -4,6 +4,7 @@ namespace TestMail;
 
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
+use Oforge\Engine\Modules\I18n\Helper\I18N;
 use TestMail\Controller\Backend\SendMailController;
 use TestMail\Controller\Backend\ShowMailController;
 use TestMail\Controller\Backend\TestMailController;
@@ -24,6 +25,7 @@ class Bootstrap extends AbstractBootstrap {
     }
 
     public function activate() {
+        I18N::translate('backend_testmail', ['en' => 'TestMail', 'de' => 'TestMail']);
         $backendNavigationService = Oforge()->Services()->get('backend.navigation');
         $backendNavigationService->add(BackendNavigationService::CONFIG_CONTENT);
         $backendNavigationService->add([
