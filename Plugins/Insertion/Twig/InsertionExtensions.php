@@ -131,9 +131,9 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
      */
     public function getLatestBlogPostTile() {
         $blogService = Oforge()->Services()->get("blog.post");
-        $blogTile = $blogService->getLatestPost();
+        $blogPost = $blogService->getLatestPost();
 
-        return $blogTile->toArray(3);
+        return isset($blogPost) ? $blogPost->toArray(3) : [];
     }
 
     /**
