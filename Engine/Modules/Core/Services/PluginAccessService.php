@@ -1,8 +1,11 @@
 <?php
+
 namespace Oforge\Engine\Modules\Core\Services;
 
+use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Models\Plugin\Plugin;
+use function PHPSTORM_META\map;
 
 class PluginAccessService extends AbstractDatabaseAccess {
 
@@ -12,13 +15,62 @@ class PluginAccessService extends AbstractDatabaseAccess {
 
     /**
      * @return array|object[]
+     * @throws ORMException
      */
-    public function getActive()
-    {
+    public function getActive() {
         //find all plugins order by "order"
-        $plugins = $this->repository()->findBy(array("active" => 1), array('order' => 'ASC'));
+        /** @var Plugin[] $plugins */
+        $plugins = $this->repository()->findBy(["active" => 1], ['order' => 'ASC']);
         //create working bucket with all plugins that should be started
-        return $plugins;
+
+        $dependencyList = [];
+
+        foreach ($plugins as $plugin) {
+            $classname    = $plugin->getName() . "\\Bootstrap";
+            $instance     = new $classname();
+            $dependencies = array_map(function ($val) {
+                return explode('\\', $val)[0];
+            }, $instance->getDependencies());
+
+            $dependencyList[] = [
+                'name'         => $plugin->getName(),
+                'dependencies' => $dependencies,
+            ];
+        }
+
+        $result = [];
+        $checkedDependencies = [];
+
+        // while not all items are resolved:
+        while(count($dependencyList) > count($result)) {
+            $success = false;
+            foreach($dependencyList as $plugin) {
+                if(isset($checkedDependencies[$plugin['name']])) {
+                    continue;
+                }
+                $resolved = true;
+                if(isset($plugin['dependencies'])) {
+                    foreach($plugin['dependencies'] as $dependency) {
+                        if(!isset($checkedDependencies[$dependency])) {
+                            // there is a dependency that is not met:
+                            $resolved = false;
+                            break;
+                        }
+                    }
+                }
+                if($resolved) {
+                    //all dependencies are met:
+                    $checkedDependencies[$plugin['name']] = true;
+                    $result[] = $plugin;
+                    $success = true;
+                }
+            }
+            if(!$success) {
+                echo "TODO THROW EXCEPTION";
+            }
+        }
+
+        return array_flip($result);
     }
 
 }
