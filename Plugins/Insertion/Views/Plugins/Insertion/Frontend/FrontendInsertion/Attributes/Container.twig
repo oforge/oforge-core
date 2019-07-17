@@ -1,10 +1,10 @@
 {% block edit__container %}
-{#            <label class="form__label {{ label_class }}">{{ i18n(attribute.name) }}</label>#}
-        {% set values = getInsertionValues(attribute.id) %}
+    {#            <label class="form__label {{ label_class }}">{{ i18n(attribute.name) }}</label>#}
+    {% set values = getInsertionValues(attribute.id) %}
 
-        {% block container_attributes %}
-            {% for value in values.values %}
-                {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ value.subAttributeKey.type|capitalize  ~ '.twig'  with {'attribute': all_attributes[value.subAttributeKey.id], hidden: true, required: false, isSubAttribute: true} %}
-            {% endfor %}
-        {% endblock container_attributes %}
+    {% block container_attributes %}
+        {% for value in attributeValues.values %}
+            {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ value.subAttributeKey.type|capitalize  ~ '.twig'  with {'attribute': all_attributes[value.subAttributeKey.id], hidden: true, required: false, isSubAttribute: true} %}
+        {% endfor %}
+    {% endblock container_attributes %}
 {% endblock edit__container %}
