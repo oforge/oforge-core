@@ -20,7 +20,7 @@ class DateTimeFormatter {
     }
 
     /**
-     * @param DateTimeInterface $dateTimeObject
+     * @param DateTimeInterface|null $dateTimeObject
      *
      * @return string
      */
@@ -29,7 +29,7 @@ class DateTimeFormatter {
     }
 
     /**
-     * @param DateTimeInterface $dateTimeObject
+     * @param DateTimeInterface|null $dateTimeObject
      *
      * @return string
      */
@@ -38,7 +38,7 @@ class DateTimeFormatter {
     }
 
     /**
-     * @param DateTimeInterface $dateTimeObject
+     * @param DateTimeInterface|null $dateTimeObject
      *
      * @return string
      */
@@ -49,7 +49,7 @@ class DateTimeFormatter {
     /**
      * Format DateTimeObjects.
      *
-     * @param DateTimeInterface $dateTimeObject
+     * @param DateTimeInterface|null $dateTimeObject
      * @param string $configKey
      * @param string $defaultFormat
      *

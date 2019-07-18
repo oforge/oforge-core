@@ -2,7 +2,9 @@
 
 namespace Insertion\Services;
 
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\QueryBuilder;
 use Insertion\Models\AttributeKey;
 use Insertion\Models\Insertion;
@@ -54,6 +56,70 @@ class InsertionSliderService extends AbstractDatabaseAccess {
         }
 
         return $result;
+    }
+
+    /**
+     * @param int $limit
+     * @param int|null $insertionType
+     * @param int|null $notId
+     *
+     * @return Insertion[]
+     * @throws ORMException
+     */
+    public function getRandomInsertion(int $limit, int $insertionType = null, int $notId = null) {
+        $rsm = new ResultSetMapping();
+        $rsm->addEntityResult(Insertion::class, 'i');
+        $rsm->addFieldResult('i', 'id', 'id');
+
+        if (is_null($insertionType)) {
+            $query = $this->entityManager()->createNativeQuery("
+            SELECT *
+            FROM oforge_insertion 
+            WHERE active IS TRUE AND
+                  deleted IS FALSE AND
+                  moderation IS TRUE
+            ORDER BY RAND()
+            LIMIT ?", $rsm);
+
+            $query->setParameter(1, $limit);
+        } elseif (is_null($notId)) {
+            $query = $this->entityManager()->createNativeQuery("
+            SELECT *
+            FROM oforge_insertion AS i
+            WHERE active IS TRUE AND
+                  deleted IS FALSE AND
+                  moderation IS TRUE AND
+                  insertion_type_id = ?
+            ORDER BY RAND()
+            LIMIT ?", $rsm);
+            $query->setParameter(1, $insertionType)->setParameter(2, $limit);
+        } else {
+            $query = $this->entityManager()->createNativeQuery("
+            SELECT *
+            FROM oforge_insertion AS i
+            WHERE active IS TRUE AND
+                  deleted IS FALSE AND
+                  moderation IS TRUE AND
+                  id != ? AND
+                  insertion_type_id = ?
+            ORDER BY RAND()
+            LIMIT ?", $rsm);
+            $query->setParameter(1, $notId)->setParameter(2, $insertionType)->setParameter(3, $limit);
+        }
+
+        $results = $query->getResult();
+
+        $data = [];
+        if (sizeof($data) > 0) {
+            foreach ($results as $result) {
+                $insertion = $this->repository()->findOneBy(["id" => $result->getId()]);
+                if ($insertion != null) {
+                    $data[] = $insertion->toArray(3);
+                }
+            }
+        }
+
+        return $data;
     }
 
     public function getPremiumInsertions() {

@@ -116,7 +116,7 @@ class BaseAssetService {
         $plugins = $pluginAccessService->getActive();
 
         foreach ($plugins as $plugin) {
-            $viewsDir = ROOT_PATH . DIRECTORY_SEPARATOR . Statics::PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin->getName() . DIRECTORY_SEPARATOR
+            $viewsDir = ROOT_PATH . DIRECTORY_SEPARATOR . Statics::PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin['name'] . DIRECTORY_SEPARATOR
                         . Statics::VIEW_DIR;
 
             if (file_exists($viewsDir)) {
