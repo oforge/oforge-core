@@ -110,6 +110,11 @@
             width: 300px;
             height: 300px;
             overflow: hidden;
+
+            .image {
+                width: 300px;
+                height: 300px;
+            }
         }
 
         &__attributes {
@@ -124,6 +129,7 @@
     .product__title-link {
         border: none;
         margin-bottom: 0;
+        padding-bottom: 0;
     }
 
     .product {
@@ -132,14 +138,6 @@
             flex-direction: column;
             align-items: flex-start;
             justify-content: center;
-            width: 300px;
-            height: 300px;
-            overflow: hidden;
-
-            .image {
-                width: 300px;
-                height: 300px;
-            }
         }
 
         &__content {
@@ -162,11 +160,13 @@
             &.product__attributes--top {
                 display: flex;
                 border-top: 2px solid $color-secondary;
+                padding-bottom: 0;
             }
         }
 
         &__attribute {
             margin-top: $size-large;
+            width: 33.33333333%;
         }
     }
 }
