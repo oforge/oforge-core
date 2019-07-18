@@ -84,7 +84,6 @@
 
                 function unselectAllExceptCurrent(selectItem) {
                     var allItems = selectItem.parentNode.children;
-
                     if (allItems.length > 0) {
                         // HTMLCollection has no forEach
                         [].forEach.call(allItems, function (item) {
