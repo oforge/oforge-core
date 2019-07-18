@@ -55,6 +55,8 @@
 }
 
 .messages {
+    max-height: 60rem;
+    overflow: scroll;
     width: 100%;
     padding: $size-large $size-small;
 }

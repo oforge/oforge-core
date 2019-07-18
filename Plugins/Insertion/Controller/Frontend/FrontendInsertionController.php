@@ -241,7 +241,7 @@ class FrontendInsertionController extends SecureFrontendController
         ];
         $templateData = [
             'insertionId'    => $insertion->getId(),
-            'insertionTitle' => $insertion->getContent()->getTitle(),
+            // 'insertionTitle' => $insertion->getContent()->getTitle(),
         ];
         $mailService->send($mailerOptions, $templateData);
     }
