@@ -43,12 +43,14 @@
                     var allSubItems = null;
                     if (subSelect) {
                         allSubItems = subSelect.querySelectorAll(selectors.selectItem);
-                        allSubItems.forEach(function (item) {
-                            unselectItem(item);
-                            if (hasSubSelect(item)) {
-                                resetSubSelect(item);
-                            }
-                        });
+                        if (allSubItems.length > 0) {
+                            allSubItems.forEach(function (item) {
+                                unselectItem(item);
+                                if (hasSubSelect(item)) {
+                                    resetSubSelect(item);
+                                }
+                            });
+                        }
 
                         subSelect.classList.remove(classNames.selectIsOpen);
                     }
@@ -83,11 +85,14 @@
                 function unselectAllExceptCurrent(selectItem) {
                     var allItems = selectItem.parentNode.children;
 
-                    allItems.forEach(function (item) {
-                        if (item !== selectItem) {
-                            unselectItem(item)
-                        }
-                    });
+                    if (allItems.length > 0) {
+                        // HTMLCollection has no forEach
+                        [].forEach.call(allItems, function (item) {
+                            if (item !== selectItem) {
+                                unselectItem(item)
+                            }
+                        });
+                    }
                 }
 
                 function unselectItem(selectItem) {
@@ -127,11 +132,13 @@
                         var parentSelectList = document.querySelectorAll('.select:not(.select--is-sub)');
 
                         if (select) {
-                            parentSelectList.forEach(function (selectElement) {
-                                if (selectElement !== select && !select.classList.contains('select--is-sub')) {
-                                    selectElement.classList.remove(classNames.selectIsOpen);
-                                }
-                            });
+                            if (parentSelectList.length > 0) {
+                                parentSelectList.forEach(function (selectElement) {
+                                    if (selectElement !== select && !select.classList.contains('select--is-sub')) {
+                                        selectElement.classList.remove(classNames.selectIsOpen);
+                                    }
+                                });
+                            }
                             select.classList.toggle(classNames.selectIsOpen);
                         }
                     } else if (evt.target.matches(selectors.selectItem)) {
@@ -147,30 +154,34 @@
                     ) {
                     }
                     else {
-                        selectList.forEach(function (select) {
-                            select.classList.remove(classNames.selectIsOpen);
-                        });
+                        if (selectList.length > 0) {
+                            selectList.forEach(function (select) {
+                                select.classList.remove(classNames.selectIsOpen);
+                            });
+                        }
                     }
                 }
 
-                selectList.forEach(function (select) {
-                    select.checkedValues = [];
-                    select.checkedNames = [];
+                if (selectList.length > 0) {
+                    selectList.forEach(function (select) {
+                        select.checkedValues = [];
+                        select.checkedNames = [];
 
-                    var selectText = select.querySelector('[data-select-text]');
-                    var selectList = select.querySelector('[data-select-list]');
-                    var checkedElements = selectList.querySelectorAll(selectors.selectItemIsChecked);
+                        var selectText = select.querySelector('[data-select-text]');
+                        var selectList = select.querySelector('[data-select-list]');
+                        var checkedElements = selectList.querySelectorAll(selectors.selectItemIsChecked);
 
-                    selectText.innerHTML = select.dataset.placeholder;
-                    checkedElements.forEach(function (checkedElement) {
-                        select.checkedValues.push(checkedElement.dataset.valueId);
-                        select.checkedNames.push(checkedElement.querySelector(selectors.selectValue).innerHTML);
-                        addHiddenInputToCheckItem(checkedElement);
+                        selectText.innerHTML = select.dataset.placeholder;
+                        checkedElements.forEach(function (checkedElement) {
+                            select.checkedValues.push(checkedElement.dataset.valueId);
+                            select.checkedNames.push(checkedElement.querySelector(selectors.selectValue).innerHTML);
+                            addHiddenInputToCheckItem(checkedElement);
+                        });
+                        if (select.checkedNames.length > 0) {
+                            selectText.innerHTML = select.checkedNames.join(', ');
+                        }
                     });
-                    if (select.checkedNames.length > 0) {
-                        selectText.innerHTML = select.checkedNames.join(', ');
-                    }
-                });
+                }
 
                 document.addEventListener('click', function (evt) {
                     if (evt.button === 0) {

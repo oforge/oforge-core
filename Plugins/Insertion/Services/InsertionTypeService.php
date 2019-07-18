@@ -114,7 +114,7 @@ class InsertionTypeService extends AbstractDatabaseAccess {
      * @throws ORMException
      */
     public function getInsertionTypeAttributeTree($typeId) {
-        $all    = $this->repository("insertionTypeAttribute")->findBy(["insertionType" => $typeId]);
+        $all    = $this->repository("insertionTypeAttribute")->findBy(["insertionType" => $typeId], ["quickSearchOrder" => "asc"]);
         $groups = $this->repository("group")->findBy([], ["order" => "asc"]);
 
         $result = [];

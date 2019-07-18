@@ -1,0 +1,13 @@
+<div class="panel panel--pagination">
+    <div class="button-list">
+        {% if search.query.page > 1 %}
+            {% set query = meta.route.query|merge({'pageSize': search.query.pageSize, 'page': search.query.page - 1}) %}
+            <a href="{{ url('insertions_listing', meta.route.params, query) }}" class="button button--ghost">{{ i18n('previous_page', 'Previous Page') }}</a>
+        {% endif %}
+        <span>{{ i18n('page', 'Page') }} {{ search.query.page }} {{ i18n('of') }} {{ search.query.pageCount }}</span>
+        {% if search.query.page < search.query.pageCount %}
+            {% set query = meta.route.query|merge({'pageSize': search.query.pageSize, 'page': search.query.page + 1}) %}
+            <a href="{{ url('insertions_listing', meta.route.params, query) }}" class="button button--ghost">{{ i18n('next_page', 'Next page') }}</a>
+        {% endif %}
+    </div>
+</div>

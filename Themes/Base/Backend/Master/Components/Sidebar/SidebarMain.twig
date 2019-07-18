@@ -1,16 +1,17 @@
-<!-- Left side column. contains the logo and sidebar -->
+{# Left side column. contains the logo and sidebar #}
 <aside class="main-sidebar">
-    <!-- sidebar: style can be found in sidebar.less -->
+    {# sidebar: style can be found in sidebar.less #}
     <section class="sidebar">
-        <!-- Sidebar Menu -->
+        {# Sidebar Menu #}
         <ul class="sidebar-menu" data-widget="tree">
-            {% set navigation = backend_sidebar_navigation()  %}
+            {% set navigation = backend_sidebar_navigation() %}
+{#            {{ o_dump(navigation) }}#}
 
             {% for item in navigation %}
                 {% include 'Backend/Master/Components/Sidebar/Root.twig' with item %}
             {% endfor %}
         </ul>
-        <!-- /.sidebar-menu -->
+        {# .sidebar-menu#}
     </section>
-    <!-- /.sidebar -->
+    {# .sidebar#}
 </aside>

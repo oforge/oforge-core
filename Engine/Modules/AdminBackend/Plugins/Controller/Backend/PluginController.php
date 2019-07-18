@@ -3,6 +3,7 @@
 namespace Oforge\Engine\Modules\AdminBackend\Plugins\Controller\Backend;
 
 use Exception;
+use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
@@ -76,6 +77,8 @@ class PluginController extends BaseCrudController {
         'update' => false,
         'delete' => false,
     ];
+    /** @var int|array<string,int> $crudPermission */
+    protected $crudPermissions = BackendUser::ROLE_ADMINISTRATOR;
 
     public function __construct() {
         parent::__construct();
@@ -532,6 +535,7 @@ class PluginController extends BaseCrudController {
     /** @inheritDoc */
     protected function prepareItemDataArray(?AbstractModel $entity, string $crudAction) : array {
         $data = parent::prepareItemDataArray($entity, $crudAction);
+
         // TODO include data version, description.long & description.short
         return $data;
     }
