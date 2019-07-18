@@ -18,6 +18,7 @@ $(function () {
 
     $('#cms_content_type_list_filter').keyup(function() {
         var value = $(this).val().trim().toLowerCase();
+        $('#cms_content_type_list_open_all').click();
         $('#cms_content_type_list_container .content-type-selector').each(function() {
             $(this)[value === '' || this.title.toLowerCase().includes(value) ? 'show' : 'hide']();
         });

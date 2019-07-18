@@ -21,7 +21,8 @@
                            data-target="#contenttypegroup_{{ contentTypeGroup.id }}" aria-expanded="false"
                            aria-controls="contenttypegroup_{{ contentTypeGroup.id }}">
                             {{ i18n('cms_content_type_group_label_' ~ contentTypeGroup.name, contentTypeGroup.name) }}
-                            <span class="caret"></span></a>
+                            <span class="content-type-group-header-icon"><i class="fa fa-caret-up"></i></span>
+                        </a>
                     </div>
                     <div class="row collapse in" id="contenttypegroup_{{ contentTypeGroup.id }}">
                         {% for contentType in contentTypeGroup.types %}
