@@ -85,6 +85,8 @@ class InsertionUpdaterService extends AbstractDatabaseAccess {
     }
 
     public function update(Insertion $insertion, array $data) {
+
+
         if ($insertion->getContent() == null || sizeof($insertion->getContent()) == 0) {
             $content = InsertionContent::create($data["content"]);
             $content->setInsertion($insertion);
