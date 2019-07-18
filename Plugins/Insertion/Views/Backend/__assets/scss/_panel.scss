@@ -1,0 +1,43 @@
+.panel {
+    &.panel--product {
+        padding: 0;
+        margin-top: $size-large;
+    }
+    &.panel--filter {
+        display: flex;
+        padding: $size-small $size-large;
+        width: 100%;
+        border-bottom: 1px solid $header-top;
+    }
+    &.panel--sort {
+        width: 100%;
+        padding: $size-large;
+    }
+    &.panel--support {
+        width: 100%;
+    }
+    &.panel--pagination {
+        width: 100%;
+        margin-top: $size-large;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+.content--insertion {
+    .panel + .panel {
+        margin-top: $size-large;
+    }
+}
+
+.panel--insertions {
+    padding: $size-large;
+    transition: padding .2s ease;
+}
+
+@media screen and (min-width: $screen-large) {
+    .panel--insertions {
+        padding: $size-large * 3 $size-large * 5;
+    }
+}

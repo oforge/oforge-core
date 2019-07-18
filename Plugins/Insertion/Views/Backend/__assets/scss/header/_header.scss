@@ -1,0 +1,19 @@
+.action-insertions_profile {
+    .header {
+        &__image {
+            background-image: url('/Themes/AllYourHorses/Frontend/__assets/img/title_image_placeholder.svg');
+            height: 30rem;
+            transition: height .2s ease-in;
+        }
+    }
+}
+
+@media screen and (min-width: $screen-large) {
+    .action-insertions_profile {
+        .header {
+            &__image {
+                height: 58rem;
+            }
+        }
+    }
+}
