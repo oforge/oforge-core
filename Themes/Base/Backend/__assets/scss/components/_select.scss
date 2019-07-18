@@ -12,7 +12,7 @@
     &.select--is-open {
         height: auto;
         position: absolute;
-        z-index: 2;
+        z-index: 4;
 
         &.select--is-sub {
             height: auto;
@@ -55,7 +55,8 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        line-height: 26px;
+        font-size: $font-size-5;
+        line-height: 24px;
 
         &::before {
             content: '';
@@ -86,6 +87,7 @@
         list-style: none;
         margin: 0;
         padding: 0;
+        user-select: none;
     }
     &__item {
         position: relative;
