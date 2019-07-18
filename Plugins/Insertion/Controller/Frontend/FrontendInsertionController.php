@@ -33,6 +33,8 @@ use ReflectionException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
+use Oforge\Engine\Modules\I18n\Helper\I18N;
+
 
 /**
  * Class MessengerController
@@ -55,6 +57,9 @@ class FrontendInsertionController extends SecureFrontendController
     /**
      * @param Request $request
      * @param Response $response
+     *
+     * @throws ORMException
+     * @throws ServiceNotFoundException
      * @EndpointAction(path="/create")
      */
     public function createAction(Request $request, Response $response)
@@ -72,6 +77,9 @@ class FrontendInsertionController extends SecureFrontendController
     /**
      * @param Request $request
      * @param Response $response
+     *
+     * @throws ORMException
+     * @throws ServiceNotFoundException
      * @EndpointAction(path="/search")
      */
     public function listAllAction(Request $request, Response $response)
@@ -89,9 +97,11 @@ class FrontendInsertionController extends SecureFrontendController
     /**
      * @param Request $request
      * @param Response $response
-     * @EndpointAction(path="/create/{type}/{page}")
+     * @param $args
      *
      * @throws ORMException
+     * @throws ServiceNotFoundException
+     * @EndpointAction(path="/create/{type}/{page}")
      */
     public function createStepsAction(Request $request, Response $response, $args)
     {
@@ -133,6 +143,10 @@ class FrontendInsertionController extends SecureFrontendController
     /**
      * @param Request $request
      * @param Response $response
+     * @param $args
+     *
+     * @throws ORMException
+     * @throws ServiceNotFoundException
      * @EndpointAction(path="/create/{type}")
      */
     public function createTypeAction(Request $request, Response $response, $args)
@@ -152,6 +166,10 @@ class FrontendInsertionController extends SecureFrontendController
     /**
      * @param Request $request
      * @param Response $response
+     * @param $args
+     *
+     * @return Response
+     * @throws ServiceNotFoundException
      * @EndpointAction(path="/process/{type}")
      */
     public function processStepsAction(Request $request, Response $response, $args)
@@ -181,7 +199,18 @@ class FrontendInsertionController extends SecureFrontendController
                 try {
                     $processData = $formsService->parsePageData($data);
 
-                    $createService->create($typeId, $user, $processData);
+                    $insertionId = $createService->create($typeId, $user, $processData);
+
+                    $insertionService = Oforge()->Services()->get('insertion');
+
+                    /**
+                     * @var $insertion Insertion
+                     */
+                    $insertion = $insertionService->getInsertionById(intval($insertionId));
+
+                    if (isset($insertion)) {
+                        $this->sendInsertionInfoMail($user, $insertion);
+                    }
 
                     $uri = $router->pathFor('insertions_feedback');
 
@@ -207,8 +236,38 @@ class FrontendInsertionController extends SecureFrontendController
     }
 
     /**
+     * @param User $user
+     * @param Insertion $insertion
+     *
+     * @throws ServiceNotFoundException
+     */
+    private function sendInsertionInfoMail(User $user, Insertion $insertion) {
+        $mailService = Oforge()->Services()->get("mail");
+        $userMail = $user->getEmail();
+        $mailerOptions = [
+            'to'       => [$userMail => $userMail],
+            'from'     => 'info',
+            'subject'  => I18N::translate('mailer_subject_insertion_created'),
+            'template' => 'InsertionCreated.twig',
+        ];
+        $templateData = [
+            'insertionId'    => $insertion->getId(),
+            'insertionTitle' => $insertion->getContent()[0]->getTitle(),
+        ];
+        $mailService->send($mailerOptions, $templateData);
+    }
+
+    /**
      * @param Request $request
      * @param Response $response
+     *
+     */
+    /**
+     * @param Request $request
+     * @param Response $response
+     *
+     * @return Response
+     * @throws ServiceNotFoundException
      * @EndpointAction(path="/feedback")
      */
     public function feedbackAction(Request $request, Response $response)
@@ -240,9 +299,12 @@ class FrontendInsertionController extends SecureFrontendController
     /**
      * @param Request $request
      * @param Response $response
-     * @EndpointAction(path="/search/{type}")
+     * @param $args
      *
+     * @return Response
      * @throws ORMException
+     * @throws ServiceNotFoundException
+     * @EndpointAction(path="/search/{type}")
      */
     public function listingAction(Request $request, Response $response, $args)
     {
@@ -292,13 +354,15 @@ class FrontendInsertionController extends SecureFrontendController
         Oforge()->View()->assign($result);
     }
 
+
     /**
      * @param Request $request
      * @param Response $response
-     * @EndpointAction(path="/detailsearch/{type}")
+     * @param $args
      *
-     * @throws ORMException
+     * @return Response
      * @throws ServiceNotFoundException
+     * @EndpointAction(path="/detailsearch/{type}")
      */
     public function detailSearchAction(Request $request, Response $response, $args)
     {
@@ -336,6 +400,11 @@ class FrontendInsertionController extends SecureFrontendController
     /**
      * @param Request $request
      * @param Response $response
+     * @param $args
+     *
+     * @return Response
+     * @throws ORMException
+     * @throws ServiceNotFoundException
      * @EndpointAction(path="/detail/{id}")
      */
     public function detailAction(Request $request, Response $response, $args)
@@ -434,9 +503,12 @@ class FrontendInsertionController extends SecureFrontendController
     /**
      * @param Request $request
      * @param Response $response
-     * @EndpointAction(path="/edit/{id}")
+     * @param $args
      *
+     * @return Response
      * @throws ORMException
+     * @throws ServiceNotFoundException
+     * @EndpointAction(path="/edit/{id}")
      */
     public function editAction(Request $request, Response $response, $args)
     {
@@ -509,9 +581,12 @@ class FrontendInsertionController extends SecureFrontendController
     /**
      * @param Request $request
      * @param Response $response
-     * @EndpointAction(path="/profile/{id}")
+     * @param $args
      *
+     * @return Response
      * @throws ORMException
+     * @throws ServiceNotFoundException
+     * @EndpointAction(path="/profile/{id}")
      */
     public function profileAction(Request $request, Response $response, $args)
     {
