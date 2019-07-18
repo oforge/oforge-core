@@ -109,7 +109,7 @@
             &:after {
                 position: absolute;
                 left: 1.1rem;
-                top: .8rem;
+                top: 1.1rem;
                 content: ' ';
                 display: block;
                 width: .6rem;
@@ -125,6 +125,14 @@
                 padding-left: 2rem;
             }
         }
+    }
+    &__value {
+        display: inline-block;
+        width: calc(100% - 24px);
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        line-height: 24px;
     }
 }
 
