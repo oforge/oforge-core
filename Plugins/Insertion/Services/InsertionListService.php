@@ -193,7 +193,7 @@ class InsertionListService extends AbstractDatabaseAccess {
                                         $sqlQueryWhere .= " or ";
                                     }
 
-                                    $sqlQueryWhere                                .= ":v" . $attributeCount . "value" . $key;
+                                    $sqlQueryWhere                                .= "v$attributeCount.insertion_attribute_value = :v" . $attributeCount . "value" . $key;
                                     $args["v" . $attributeCount . "value" . $key] = $v;
                                 }
 
@@ -243,7 +243,6 @@ class InsertionListService extends AbstractDatabaseAccess {
         $result["query"]["page"]      = $page;
         $result["query"]["pageCount"] = ceil((1.0) * sizeof($ids) / $pageSize);
         $result["query"]["items"]     = [];
-
         /**
          * @var $type InsertionType
          */

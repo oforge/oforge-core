@@ -13,6 +13,36 @@
     margin: $size-large 0;
 }
 
+@media screen and (min-width: $screen-large) {
+    .form-controls {
+        & > .attribute-group {
+
+
+            & > .title--attribute-group {
+                grid-column: span 3;
+            }
+
+            & > .attribute-container {
+                grid-column: span 3;
+                display: grid;
+                grid-gap: 1.2rem;
+                grid-template-columns: repeat(3, 1fr);
+
+                & > .form__label {
+                    grid-column: span 3;
+                }
+            }
+        }
+    }
+}
+
+.sub-attribute-container__text {
+    font-size: 13px;
+    margin-top: 10px;
+    display: inline-block;
+}
+
+
 @media screen and (min-width: $screen-medium) {
     .attribute-group {
         grid-template-columns: repeat(2, 1fr);

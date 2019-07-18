@@ -455,6 +455,7 @@ class FrontendInsertionController extends SecureFrontendController
                         $topValues[] = [
                             "name" => $attribute['attributeKey']['name'],
                             "type" => $attribute['attributeKey']['type'],
+                            "filterType" => $attribute['attributeKey']['filterType'],
                             "attributeKey" => $attribute['attributeKey']['id'],
                             "value" => $insertionValues[$attribute['attributeKey']['id']]
                         ];

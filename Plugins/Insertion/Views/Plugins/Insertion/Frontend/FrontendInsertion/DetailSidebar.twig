@@ -23,16 +23,20 @@
         {% set contact = insertion.contact %}
 
         {% block sidebar__panel_contact %}
-            <div class="panel panel--contact contact">
-                <div class="contact__name">{{ contact.name }}</div>
-                <div class="contact__address"><span class="adress__zip">{{ contact.zip }}</span> <span
-                            class="adress__city">{{ contact.city }}</span></div>
-                <div class="contact__phone">{{ i18n ('insertion_detail_telephone', 'Tel.:') }} {{ contact.phone }}</div>
-                <a href="{{ url("insertions_contact", {id: insertion.id}) }}"
-                   class="button button--secondary">{{ i18n('insertion_detail_contact_advertiser', 'Anbieter Kontaktieren') }}</a>
-                <a href="{{ url('frontend_account_insertions_toggleBookmark', {'insertionId': insertion.id }) }}"
-                   class="button button--secondary">{% if hasBookmark(insertion.id) %} Japs vorhanden {% else %}{{ i18n('insertion_detail_contact_add_to_wishlist', 'In meinen Stall stellen') }}{% endif %}</a>
-            </div>
+            {% if contact.visible == 'true' %}
+                <div class="panel panel--contact contact">
+                    <div class="contact__name">{{ contact.name }}</div>
+                    <div class="contact__address"><span class="adress__zip">{{ contact.zip }}</span> <span
+                                class="adress__city">{{ contact.city }}</span></div>
+                    {% if contact.phone is not empty %}
+                        <div class="contact__phone">{{ i18n ('insertion_detail_telephone', 'Tel.:') }} {{ contact.phone }}</div>
+                    {% endif %}
+                    <a href="{{ url("insertions_contact", {id: insertion.id}) }}"
+                       class="button button--secondary">{{ i18n('insertion_detail_contact_advertiser', 'Anbieter Kontaktieren') }}</a>
+                    <a href="{{ url('frontend_account_insertions_toggleBookmark', {'insertionId': insertion.id }) }}"
+                       class="button button--secondary">{% if hasBookmark(insertion.id) %} Japs vorhanden {% else %}{{ i18n('insertion_detail_contact_add_to_wishlist', 'In meinen Stall stellen') }}{% endif %}</a>
+                </div>
+            {% endif %}
         {% endblock sidebar__panel_contact %}
 
         {% block sidebar__panel_map %}
@@ -40,7 +44,9 @@
                 <div class="map__address"><span class="adress__zip">{{ contact.zip }}</span> <span
                             class="adress__city">{{ contact.city }}</span></div>
                 <div class="map__view">
-                    <iframe class="external--content content--iframe" src="https://www.google.com/maps?ie=UTF8&amp;Iwloc=near&amp;output=embed&amp;t=m&amp;z=15&amp;q={{ contact.zip }}+{{ contact.city }}" width="100%" height="100%" frameborder="0">
+                    <iframe class="external--content content--iframe"
+                            src="https://www.google.com/maps?ie=UTF8&amp;Iwloc=near&amp;output=embed&amp;t=m&amp;z=15&amp;q={{ contact.zip }}+{{ contact.city }}"
+                            width="100%" height="100%" frameborder="0">
                     </iframe>
                 </div>
             </div>

@@ -5,8 +5,10 @@ namespace Oforge\Engine\Modules\Core\Forge;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NativeQuery;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\QueryBuilder;
 
 /**
@@ -119,6 +121,16 @@ class ForgeEntityManager {
      */
     public function createQueryBuilder() : QueryBuilder {
         return $this->entityManager->createQueryBuilder();
+    }
+
+    /**
+     * @param string $sql
+     * @param ResultSetMapping $rsm
+     *
+     * @return NativeQuery
+     */
+    public function createNativeQuery(string $sql, ResultSetMapping $rsm) {
+        return $this->entityManager->createNativeQuery($sql, $rsm);
     }
 
 }
