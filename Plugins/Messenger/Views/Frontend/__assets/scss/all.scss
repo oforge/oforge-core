@@ -26,6 +26,11 @@
     &__chat {
         width: 100%;
     }
+    .logo__image {
+        flex: 0 0 auto;
+        width: 4rem;
+        height: 4rem;
+    }
 }
 
 .chat-list {
@@ -50,6 +55,8 @@
 }
 
 .messages {
+    max-height: 60rem;
+    overflow: scroll;
     width: 100%;
     padding: $size-large $size-small;
 }
@@ -79,6 +86,10 @@
 @media screen and (min-width: $screen-medium) {
     .messenger {
         flex-direction: row;
+        .logo__image {
+            width: 4rem;
+            height: 4rem;
+        }
     }
     .messages {
         padding: $size-large $size-large * 2;
@@ -96,4 +107,14 @@
     font-size: 1.2rem;
     text-align: right;
     color: #777;
+}
+.form--message {
+    #message {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    .form__input--submit {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
 }

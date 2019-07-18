@@ -104,28 +104,24 @@ class Bootstrap extends AbstractBootstrap {
 
     public function activate() {
         /**
-         * @var BackendNavigationService $sidebarNavigation
+         * @var BackendNavigationService $backendNavigationService
          * @var ContentTypeGroupManagementService $contentTypeGroupManagementService
          * @var ContentTypeManagementService $contentTypeManagementService
          */
-        $sidebarNavigation = Oforge()->Services()->get('backend.navigation');
-        $sidebarNavigation->put([
-            'name'     => 'backend_content',
-            'order'    => 2,
-            'position' => 'sidebar',
-        ]);
-        $sidebarNavigation->put([
+        $backendNavigationService = Oforge()->Services()->get('backend.navigation');
+        $backendNavigationService->add(BackendNavigationService::CONFIG_CONTENT);
+        $backendNavigationService->add([
             'name'     => 'backend_content_pages',
             'order'    => 1,
-            'parent'   => 'backend_content',
+            'parent'   => BackendNavigationService::KEY_CONTENT,
             'icon'     => 'fa fa-sitemap',
             'path'     => 'backend_content_pages',
             'position' => 'sidebar',
         ]);
-        $sidebarNavigation->put([
+        $backendNavigationService->add([
             'name'     => 'backend_content_elements',
-            'order'    => 1,
-            'parent'   => 'backend_content',
+            'order'    => 2,
+            'parent'   => BackendNavigationService::KEY_CONTENT,
             'icon'     => 'fa fa-folder',
             'path'     => 'backend_content_elements',
             'position' => 'sidebar',

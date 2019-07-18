@@ -1,7 +1,12 @@
-.form--insertion {
+.form--insertion,
+.form--detail-search {
     .form__label:not(.form__label--checkbox) {
         display: block;
         font-weight: bold;
         margin: 0 0 $size-large 0;
     }
+}
+
+.form-controls .form__control > .form__control {
+    margin-top: 0;
 }

@@ -2,6 +2,8 @@
 
 namespace Insertion\Twig;
 
+use DateTime;
+use DateTimeInterface;
 use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\FrontendUserService;
@@ -16,8 +18,10 @@ use Insertion\Services\InsertionTypeService;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
+use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Twig_Extension;
 use Twig_ExtensionInterface;
+use Twig_Filter;
 use Twig_Function;
 
 /**
@@ -42,6 +46,33 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
             new Twig_Function('getQuickSearch', [$this, 'getQuickSearch']),
             new Twig_Function('getChatPartnerInformation', [$this, 'getChatPartnerInformation']),
         ];
+    }
+
+    /** @inheritDoc */
+    public function getFilters() {
+        return [
+            new Twig_Filter('age', [$this, 'getAge'], [
+                'is_safe' => ['html'],
+            ]),
+        ];
+    }
+
+    /**
+     * Format DateTimeObjects.
+     *
+     * @param DateTimeInterface|null $dateTimeObject
+     *
+     * @return string
+     */
+    public function getAge(?string $dateTimeObject, ?string $type) : ?string {
+
+        $bday = DateTime::createFromFormat ('Y-m-d', $dateTimeObject); // Your date of birth
+        $today = new Datetime();
+
+        $diff = $today->diff($bday);
+        $suffix = $type == 'datemonth' ? I18N::translate('month_suffix') : ( $type == 'dateyear' ? I18N::translate('year_suffix') : '');
+
+        return  ($type == 'datemonth' ?  ($diff->y * 12 + $diff->m) : ( $type == 'dateyear' ? $diff->y  : $dateTimeObject)) . ' ' . $suffix;
     }
 
     /**
@@ -131,9 +162,9 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
      */
     public function getLatestBlogPostTile() {
         $blogService = Oforge()->Services()->get("blog.post");
-        $blogTile = $blogService->getLatestPost();
+        $blogPost    = $blogService->getLatestPost();
 
-        return $blogTile->toArray(3);
+        return isset($blogPost) ? $blogPost->toArray(3) : [];
     }
 
     /**
@@ -146,7 +177,7 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
         $insertionTypeService = Oforge()->Services()->get('insertion.type');
         $quickSearch          = $insertionTypeService->getQuickSearchInsertions();
 
-        return ['types' => $quickSearch, 'attributes' => $insertionTypeService->getInsertionTypeAttributeMap()];;
+        return ['types' => $quickSearch, 'attributes' => $insertionTypeService->getInsertionTypeAttributeMap()];
     }
 
     /**
@@ -159,7 +190,6 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
     public function getChatPartnerInformation(...$vars) {
         if (count($vars) === 2) {
             if ($vars[0] === 'requested') {
-
                 /** @var InsertionService $insertionService */
                 $insertionService = Oforge()->Services()->get('insertion');
                 /** @var Insertion $insertion */
@@ -173,9 +203,9 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
                 /** @var UserService $userService */
                 $userService = Oforge()->Services()->get('frontend.user.management.user');
                 /** @var User $user */
-                $user = $userService->getUserById($vars[1]);
+                $user      = $userService->getUserById($vars[1]);
                 $userImage = $user->getDetail()->getImage();
-                if($userImage) {
+                if ($userImage) {
                     $imageId = $user->getDetail()->getImage()->getId();
                 } else {
                     $imageId = 'default';
@@ -183,14 +213,13 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
 
                 return [
                     'imageId' => $imageId,
-                    'title' => $user->getDetail()->getNickName(),
+                    'title'   => $user->getDetail()->getNickName(),
                 ];
             }
         }
 
         return false;
     }
-
 
     /**
      * @return array
@@ -201,6 +230,7 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
         if (count($vars) == 1) {
             /** @var InsertionTypeService $insertionTypeService */
             $insertionTypeService = Oforge()->Services()->get('insertion.type');
+
             return $insertionTypeService->getAttribute($vars[0]);
         }
 

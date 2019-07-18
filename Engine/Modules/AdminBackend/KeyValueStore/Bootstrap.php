@@ -4,7 +4,6 @@ namespace Oforge\Engine\Modules\AdminBackend\KeyValueStore;
 
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
-use Oforge\Engine\Modules\I18n\Helper\I18N;
 
 /**
  * Class Bootstrap
@@ -23,16 +22,16 @@ class Bootstrap extends AbstractBootstrap {
     }
 
     public function activate() {
-        /** @var BackendNavigationService $backendNavigation */
-        $backendNavigation = Oforge()->Services()->get('backend.navigation');
-        $backendNavigation->put([
+        /** @var BackendNavigationService $backendNavigationService */
+        $backendNavigationService = Oforge()->Services()->get('backend.navigation');
+        $backendNavigationService->add(BackendNavigationService::CONFIG_ADMIN);
+        $backendNavigationService->add([
             'name'     => 'backend_key_value_store',
             'order'    => 101,
-            'parent'   => 'admin',
+            'parent'   => BackendNavigationService::KEY_ADMIN,
             'icon'     => 'fa fa-gears',
             'path'     => 'backend_key_value_store',
             'position' => 'sidebar',
         ]);
     }
-
 }

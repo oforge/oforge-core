@@ -1,10 +1,10 @@
-{% if value is not empty %}
-    <div class="product__attribute">
+{% if values[attribute.id] is not empty %}
+    <div class="product__attribute product__boolean">
         <span class="product__label">{{ i18n(attribute.name) }}</span>
         <span class="product__value">
         <svg class="icon icon--secondary">
             <use xlink:href="#check"></use>
-            </svg>
+        </svg>
     </span>
     </div>
 {% endif %}

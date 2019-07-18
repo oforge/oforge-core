@@ -1,34 +1,29 @@
 {% if item.visible %}
 
-<li class="{% if backend_has_visible_children(item.children ) %}treeview{% endif %}{% if item.name in breadcrumbsmap|keys %} active{% endif %}">
-    <a href="{% if item.path %}{{ url(item.path) }}{% else %}#{% endif %}">
-        {% if item.icon %}<i class="{{ item.icon }}"></i>{% endif %}
-        <span>{{ i18n(item.name) }}</span>
-        {% if backend_has_visible_children(item.children) %}
-            <span class="pull-right-container">
+    <li class="{% if item.children %}treeview{% endif %}{% if item.name in breadcrumbsmap|keys %} active{% endif %}">
+        <a href="{% if item.path %}{{ url(item.path) }}{% else %}#{% endif %}">
+            {% if item.icon %}<i class="{{ item.icon }}"></i>{% endif %}
+            <span>{{ i18n(item.name) }}</span>
+            {% if item.children %}
+                <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
             </span>
-        {% endif %}
-
-        {#
-        {% set notifications = notification(item.name) %}
-
-        {%  if sizeof(notifications) > 0 %}
-            <span class="pull-right-container">
-                {% for notification in notifications %}
-                    <small class="label pull-right {{ notification.type }}">{{ notification.value }}</small>
+            {% endif %}
+            {#            {% set notifications = notification(item.name) %}#}
+            {#            {%  if sizeof(notifications) > 0 %}#}
+            {#                <span class="pull-right-container">#}
+            {#                    {% for notification in notifications %}#}
+            {#                        <small class="label pull-right {{ notification.type }}">{{ notification.value }}</small>#}
+            {#                    {% endfor %}#}
+            {#                </span>#}
+            {#            {%  endif %}#}
+        </a>
+        {% if item.children %}
+            <ul class="treeview-menu">
+                {% for subitem in item.children %}
+                    {% include 'Backend/Master/Components/Sidebar/Item.twig' with {'item': subitem} %}
                 {% endfor %}
-            </span>
-        {%  endif %}
-        #}
-    </a>
-
-    {% if backend_has_visible_children(item.children) %}
-        <ul class="treeview-menu">
-            {% for subitem in item.children %}
-                {% include 'Backend/Master/Components/Sidebar/Item.twig' with {'item': subitem} %}
-            {% endfor %}
-        </ul>
-    {% endif %}
-</li>
+            </ul>
+        {% endif %}
+    </li>
 {% endif %}
