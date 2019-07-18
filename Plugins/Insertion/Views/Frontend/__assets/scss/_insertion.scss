@@ -49,6 +49,8 @@
     }
 }
 
+/** Account Profile Insertions & Bookmarks */
+
 #insertion-container, #bookmarks-container {
     .button {
         font-size: $font-size-6;
@@ -71,9 +73,7 @@
     }
 
     .product__title {
-        // border?
         margin-bottom: $size-large;
-        padding-bottom: $size-large;
         order: 2;
         width: 100%;
         padding-bottom: 0;
@@ -103,15 +103,16 @@
         }
 
         .highlight {
+            &:hover {
+                cursor: default;
+            }
+            opacity: .5;
             order: 1;
             max-width: 22rem;
             display: flex;
             margin-right: $size-large;
             justify-content: space-between;
 
-            .icon {
-
-            }
         }
 
         .disable {
@@ -139,7 +140,6 @@
     }
 }
 
-/** Account Profile Insertions & Bookmarks */
 
 #insertion-container, #bookmarks-container {
     .product__attributes.product__attributes--top {
