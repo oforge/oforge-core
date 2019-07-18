@@ -42,7 +42,6 @@ class FrontendHelpdeskController extends SecureFrontendController {
             $issueTypesMap[$issueType->getId()] = $issueType->toArray(0);
         }
 
-
         Oforge()->View()->assign([
             'supportTypes' => $issueTypes->toArray(),
             'tickets'      => $tickets,
@@ -110,17 +109,19 @@ class FrontendHelpdeskController extends SecureFrontendController {
     public function closeTicketAction(Request $request, Response $response, $args) {
         $ticketId = $args["id"];
         /** @var  $router */
-        $router       = Oforge()->App()->getContainer()->get('router');
-        $uri          = $router->pathFor('frontend_account_support');
+        $router = Oforge()->App()->getContainer()->get('router');
+        $uri    = $router->pathFor('frontend_account_support');
 
         /** @var  $ticketService */
         $ticketService = Oforge()->Services()->get('helpdesk.ticket');
+        $ticketOpener  = $ticketService->getTicketById($ticketId)->getOpener();
 
-        // make sure that this ticket belongs to the user
         /** @var  $userService */
         $userId = Oforge()->View()->get('user')['id'];
-        if ($ticketService->getTicketOpener($ticketId) != $userId) {
-            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('ticket_closing_violation', "Can't touch that."));
+
+        if ($ticketOpener != $userId) {
+            Oforge()->View()->Flash()->addMessage('error', I18N::translate('ticket_closing_violation', "You don't have permission to close this ticket"));
+
             return $response->withRedirect($uri, 302);
         }
 
@@ -129,8 +130,10 @@ class FrontendHelpdeskController extends SecureFrontendController {
 
         } catch (\Exception $e) {
             Oforge()->View()->Flash()->addMessage('error', I18N::translate('ticket_closing_error', 'Could not close ticket'));
+
             return $response->withRedirect($uri, 302);
         }
+
         Oforge()->View()->Flash()->addMessage('success', I18N::translate('ticket_closing_success', 'Ticket closed'));
 
         return $response->withRedirect($uri, 302);
