@@ -55,8 +55,9 @@ class FrontendHelpdeskController extends SecureFrontendController {
      * @param Response $response
      *
      * @return Response
-     * @throws ServiceNotFoundException
      * @throws ORMException
+     * @throws ServiceNotFoundException
+     * @throws \ReflectionException
      * @EndpointAction()
      */
     public function submitAction(Request $request, Response $response) {
@@ -98,11 +99,47 @@ class FrontendHelpdeskController extends SecureFrontendController {
     }
 
     /**
+     * @param Request $request
+     * @param Response $response
+     * @param $args
+     *
+     * @return Response
      * @throws ServiceNotFoundException
+     * @EndpointAction(path="/close/{id}")
      */
+    public function closeTicketAction(Request $request, Response $response, $args) {
+        $ticketId = $args["id"];
+        /** @var  $router */
+        $router       = Oforge()->App()->getContainer()->get('router');
+        $uri          = $router->pathFor('frontend_account_support');
+
+        /** @var  $ticketService */
+        $ticketService = Oforge()->Services()->get('helpdesk.ticket');
+
+        // make sure that this ticket belongs to the user
+        /** @var  $userService */
+        $userId = Oforge()->View()->get('user')['id'];
+        if ($ticketService->getTicketOpener($ticketId) != $userId) {
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('ticket_closing_violation', "Can't touch that."));
+            return $response->withRedirect($uri, 302);
+        }
+
+        try {
+            $ticketService->changeStatus($ticketId, 'closed');
+
+        } catch (\Exception $e) {
+            Oforge()->View()->Flash()->addMessage('error', I18N::translate('ticket_closing_error', 'Could not close ticket'));
+            return $response->withRedirect($uri, 302);
+        }
+        Oforge()->View()->Flash()->addMessage('success', I18N::translate('ticket_closing_success', 'Ticket closed'));
+
+        return $response->withRedirect($uri, 302);
+    }
+
     public function initPermissions() {
         $this->ensurePermissions('indexAction', User::class);
         $this->ensurePermissions('submitAction', User::class);
+        $this->ensurePermissions('closeTicketAction', User::class);
     }
 
 }
