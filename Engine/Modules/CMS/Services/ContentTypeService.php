@@ -76,6 +76,7 @@ class ContentTypeService extends AbstractDatabaseAccess {
      * @return array|NULL Array filled with all data for the selected content element
      */
     public function getContentDataArray(int $id, int $typeId) {
+        /** @var ContentType|null $contentTypeEntity */
         $contentTypeEntity = $this->repository('contentType')->findOneBy(["id" => $typeId]);
         $contentEntity     = $this->repository('content')->findOneBy(["id" => $id]);
 
@@ -88,7 +89,9 @@ class ContentTypeService extends AbstractDatabaseAccess {
 
             $data = $content->getEditData();
 
-            $data["path"] = $contentTypeEntity->getPath();
+            $data['path'] = $contentTypeEntity->getPath();
+            $data['typeName'] = $contentTypeEntity->getName();
+
             if (isset($data["columns"])) {
                 $data["childs"] = [];
                 foreach ($data["columns"] as $key => $column) {

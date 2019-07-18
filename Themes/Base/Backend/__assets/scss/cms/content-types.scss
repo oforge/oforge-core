@@ -18,9 +18,14 @@
     margin-bottom: 10px;
     background-color: #708f2b;
 
-    .caret {
+    &-icon {
         float: right;
-        margin-top: 7px;
+        margin-top: -1px;
+    }
+
+    &.collapsed &-icon {
+        transform: rotate(180deg);
+        margin-top: 1px;
     }
 }
 
@@ -143,7 +148,7 @@
     overflow: hidden;
 }
 
-.content-type-edit-row-wrapper {
+.content-type-preview-row {
     text-align: center;
     vertical-align: middle;
     width: 100%;
@@ -186,7 +191,7 @@
     }
 }
 
-.content-type-edit-form-row {
+.content-type-form-row {
     justify-content: space-evenly;
     margin: 50px 0;
 
