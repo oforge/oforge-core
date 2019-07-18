@@ -21,119 +21,158 @@
                     <span>Abo endet automatisch (wird in ein kostenloses Basic-Profil geändert)</span>
                 </div>
             </div>
+            <div class="container__banner">
+                <div class="banner__side">
+                    <div class="banner">
+                        <div class="icon__center">
+                            <svg class="icon icon--primary">
+                                <use xlink:href="#star"></use>
+                            </svg>
+                        </div>
+                        <h3 class="banner__title text-light">
+                            {{ i18n('premium_basic') }}
+                        </h3>
+                        <div class="banner__price text-light">
+                            <span>0,</span><span>00</span><span> €</span>
+                        </div>
+                        <div class="banner__cycle text-light">
+                            monatlich
+                        </div>
+                        <div class="button button--primary">{{ i18n('testphase_end') }}</div>
+                    </div>
+                </div>
 
-            <div class="testing-phase__banner banner">
-                <div class="icon__center">
-                    <svg class="icon icon--primary">
-                        <use xlink:href="#professional_plus_abo"></use>
-                    </svg>
+                <div class="testing-phase__banner banner">
+                    <div class="icon__center">
+                        <svg class="icon icon--primary">
+                            <use xlink:href="#professional_plus_abo"></use>
+                        </svg>
+                    </div>
+                    <div class="banner__title text-light">
+                        {{ i18n('professional') }}
+                    </div>
+                    <div class="banner__information text-light">
+                        <div>KOSTENLOS</div>
+                        <div>bis zum 31.01.2020!</div>
+                    </div>
+                    <div class="button button--primary">{{ i18n('chosen') }}</div>
                 </div>
-                <div class="banner__title text-light">
-                    {{ i18n('professional') }}
-                </div>
-                <div class="banner__information text-light">
-                    <div>KOSTENLOS</div>
-                    <div>bis zum 31.01.2020!</div>
-                </div>
-                <div class="button button--primary">{{ i18n('chosen') }}</div>
-            </div>
-        </div>
-
-        <div class="features__select">
-            <div class="selection">
-                <div class="selection__title">
-                    <div class="checkbox"></div>
-                    <svg class="icon icon--secondary">
-                        <use xlink:href="#check"></use>
-                    </svg>
-                    <h3 class="product__title">{{ title }}{{ i18n('preview_image') }}</h3>
-                </div>
-                <div class="selection__description">
-                    {{ description }}
-                    {{ i18n('preview_image_description') }}
-                </div>
-                <div class="selection__price">
-                    {{ price }}
-                    {{ i18n('inclusive') }}
-                </div>
-            </div>
-        </div>
-
-        <div class="features__select">
-            <div class="selection">
-                <div class="selection__title">
-                    <div class="checkbox"></div>
-                    <svg class="icon icon--secondary">
-                        <use xlink:href="#check"></use>
-                    </svg>
-                    <h3 class="product__title">{{ i18n('top_insertion') }}</h3>
-                </div>
-                <div class="selection__description">
-                    {{ i18n('top_insertion_description') }}
-                </div>
-                <div class="selection__price">
-                    {{ i18n('inclusive') }}
-                </div>
-            </div>
-        </div>
-
-        <div class="features__select">
-            <div class="selection">
-                <div class="selection__title">
-                    <div class="checkbox"></div>
-                    <svg class="icon icon--secondary">
-                        <use xlink:href="#check"></use>
-                    </svg>
-                    <h3 class="product__title">{{ i18n('frontpage_galery') }}</h3>
-                </div>
-                <div class="selection__description">
-                    {{ i18n('homepage_gallery_description') }}
-                </div>
-                <div class="selection__price">
-                    {{ i18n('inclusive') }}
+                <div class="banner__side">
+                    <div class="banner banner__plus">
+                        <div class="icon__center">
+                            <svg class="icon icon--primary">
+                                <use xlink:href="#professional_plus_abo"></use>
+                            </svg>
+                        </div>
+                        <div class="banner__title text-light">
+                            {{ i18n('professional_plus') }}
+                        </div>
+                        <div class="banner__price text-light">
+                            <span>79,</span><span>90</span><span> €</span>
+                        </div>
+                        <div class="banner__cycle text-light">
+                            monatlich
+                        </div>
+                        <div class="button button--primary">{{ i18n('testphase_end') }}</div>
+                    </div>
                 </div>
             </div>
         </div>
+        <div class="features__wrapper">
+            <div class="features__select">
+                <div class="selection">
+                    <div class="selection__title">
+                        <div class="checkbox"></div>
+                        <svg class="icon icon--primary">
+                            <use xlink:href="#check"></use>
+                        </svg>
+                        <h3 class="product__title">{{ title }}{{ i18n('preview_image') }}</h3>
+                    </div>
+                    <div class="selection__description">
+                        {{ description }}
+                        {{ i18n('preview_image_description') }}
+                    </div>
+                    <div class="selection__price">
+                        {{ i18n('inclusive') }}
+                    </div>
+                </div>
+            </div>
 
-        <div class="features__select">
-            <div class="selection">
-                <div class="selection__title">
-                    <div class="checkbox"></div>
-                    <svg class="icon icon--secondary">
-                        <use xlink:href="#check"></use>
-                    </svg>
-                    <h3 class="product__title">{{ i18n('premium_information_supplier_page') }}</h3>
+            <div class="features__select">
+                <div class="selection">
+                    <div class="selection__title">
+                        <div class="checkbox"></div>
+                        <svg class="icon icon--primary">
+                            <use xlink:href="#check"></use>
+                        </svg>
+                        <h3 class="product__title">{{ i18n('top_insertion') }}</h3>
+                    </div>
+                    <div class="selection__description">
+                        {{ i18n('top_insertion_description') }}
+                    </div>
+                    <div class="selection__price">
+                        {{ i18n('inclusive') }}
+                    </div>
                 </div>
-                <div class="selection__description">
-                    {{ i18n('supplier_page_description') }}
+            </div>
+
+            <div class="features__select">
+                <div class="selection">
+                    <div class="selection__title">
+                        <div class="checkbox"></div>
+                        <svg class="icon icon--primary">
+                            <use xlink:href="#check"></use>
+                        </svg>
+                        <h3 class="product__title">{{ i18n('frontpage_galery') }}</h3>
+                    </div>
+                    <div class="selection__description">
+                        {{ i18n('homepage_gallery_description') }}
+                    </div>
+                    <div class="selection__price">
+                        {{ i18n('inclusive') }}
+                    </div>
                 </div>
-                <div class="selection__price">
-                    {{ i18n('inclusive') }}
+            </div>
+
+            <div class="features__select">
+                <div class="selection">
+                    <div class="selection__title">
+                        <div class="checkbox"></div>
+                        <svg class="icon icon--primary">
+                            <use xlink:href="#check"></use>
+                        </svg>
+                        <h3 class="product__title">{{ i18n('premium_information_supplier_page') }}</h3>
+                    </div>
+                    <div class="selection__description">
+                        {{ i18n('supplier_page_description') }}
+                    </div>
+                    <div class="selection__price">
+                        {{ i18n('inclusive') }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="features__select">
+                <div class="selection">
+                    <div class="selection__title">
+                        <div class="checkbox"></div>
+                        <svg class="icon icon--primary">
+                            <use xlink:href="#check"></use>
+                        </svg>
+                        <h3 class="product__title">{{ i18n('view_search_requests') }}</h3>
+                    </div>
+                    <div class="selection__description">
+                        {{ i18n('view_search_requests_description') }}
+                    </div>
+                    <div class="selection__price">
+                        {{ i18n('inclusive') }}
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="features__select">
-            <div class="selection">
-                <div class="selection__title">
-                    <div class="checkbox"></div>
-                    <svg class="icon icon--secondary">
-                        <use xlink:href="#check"></use>
-                    </svg>
-                    <h3 class="product__title">{{ i18n('view_search_requests') }}</h3>
-                </div>
-                <div class="selection__description">
-                    {{ i18n('view_search_requests_description') }}
-                </div>
-                <div class="selection__price">
-                    {{ i18n('inclusive') }}
-                </div>
-            </div>
-        </div>
-
-
-        <h3 class="title title__center">{{ i18n('premium_information_upcoming_profiles') }}</h3>
         <div class="information__professional">
+            <h3 class="title title__center">{{ i18n('premium_information_upcoming_profiles') }}</h3>
             <div class="banner">
                 <div class="icon__center">
                     <svg class="icon icon--primary">
