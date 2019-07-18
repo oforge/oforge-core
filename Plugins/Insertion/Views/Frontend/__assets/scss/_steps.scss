@@ -128,9 +128,21 @@
 .premium__information {
     margin-bottom: 3rem;
 
+    .button:hover {
+        cursor: default;
+    }
+
+    .features__wrapper {
+        max-width: 64rem;
+        margin: 0 -($size-large);
+        background-color: $color-secondary;
+        padding: $size-large;
+    }
+
     .banner {
         text-align: center;
         padding: $size-large;
+
         &__title {
             font-size: $font-size-2;
             text-transform: uppercase;
@@ -147,12 +159,16 @@
     }
 
     .title {
+        width: 100%;
         color: $color-primary;
         margin: $size-large 0;
 
         &__center {
             text-align: center;
         }
+    }
+    .banner__side {
+        display: none;
     }
 
     .information__basic {
@@ -202,7 +218,8 @@
     }
 
     .features__select {
-        margin-bottom: $size-medium;
+        margin-bottom: $size-large;
+        border-bottom: 2px dashed $color-primary;
 
         .selection {
             .selection__title {
@@ -215,6 +232,7 @@
                     width: 2.4rem;
                     border: 2px solid $color-primary;
                     border-radius: .3rem;
+                    background-color: $color-light;
 
                     &.unchecked {
                         margin-right: 3rem;
@@ -241,7 +259,7 @@
             }
 
             .selection__price {
-                color: $color-secondary;
+                color: $color-light;
                 font-weight: 700;
                 text-align: right;
             }
@@ -251,7 +269,9 @@
     .information__professional {
         display: flex;
         margin: 0 -($size-large);
-
+        flex-wrap: wrap;
+    }
+    .information__professional, .banner__side {
         .banner {
             flex: 0 0 50%;
             border-right: 2px solid $color-light;
@@ -261,18 +281,22 @@
                 background-color: $color-primary-light;
                 border-left: 2px solid $color-light;
             }
+
             &__title {
                 font-size: $font-size-5;
                 text-transform: uppercase;
             }
+
             &__price {
                 font-size: 4rem;
+
                 span:nth-child(2) {
                     font-size: 2rem;
                     position: relative;
                     bottom: 1.5rem;
                 }
             }
+
             .icon {
                 height: 8rem;
                 width: 8rem;
@@ -284,34 +308,41 @@
     .testing-phase {
         .title {
             margin: 0;
+
             &:first-child {
                 margin-bottom: $size-large;
             }
         }
+
         .icon {
             height: 2rem;
         }
+
         &__information {
             margin: $size-large 0;
+
             .flex--row {
                 max-width: 50rem;
                 margin: 0 auto;
+
                 .icon {
                     flex: 0 0 auto;
                 }
             }
         }
+
         &__banner {
             max-width: 64rem;
             margin: 0 -($size-large);
-            margin-bottom: $size-large;
             padding: $size-large;
+            padding-bottom: 2.4rem;
             background: $color-secondary;
 
             .icon {
                 height: 8rem;
                 width: 8rem;
             }
+
             .banner__information {
                 margin-bottom: $size-large;
 
@@ -347,28 +378,62 @@
                 }
             }
         }
+
         .information__professional {
             margin: 0;
+
             .banner {
                 &__title {
                     font-size: $font-size-2;
                 }
             }
         }
+
         .testing-phase {
             &__banner {
-                margin: 0 auto 3rem auto;
+                margin: 0 auto;
+                width: 64rem;
 
             }
         }
+
+        .features__wrapper {
+            margin: 0 auto;
+        }
+        .container__banner {
+            display: flex;
+            justify-content: center;
+        }
     }
 }
+
 @media screen and (min-width: $screen-large) {
     .premium__information {
         .information__professional {
             margin: 0;
         }
     }
+}
+
+@media screen and(min-width: $content-max) {
+    // render information banner to the side
+    .premium__information {
+        .information__professional {
+            display: none;
+        }
+        .testing-phase__banner {
+            width: 60rem;
+            margin: 0;
+        }
+        .banner__side {
+            display: block;
+            width: 28rem;
+        }
+    }
+    .features__wrapper {
+        width: 60rem;
+    }
+
 }
 
 .form__input.form__input--textarea {
