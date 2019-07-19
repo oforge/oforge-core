@@ -10,9 +10,9 @@
                 <optgroup label="{{ label.label }}">
                     {% for value,label in label.options %}
                         {% if crud.context == 'create' %}
-                            {% set selected = (meta.route.query[property.name]|default('') == value) %}
+                            {% set selected = (meta.route.query[property.name]|default(property.editor.default)|default('') == value) %}
                         {% else %}
-                            {% set selected = (item[property.name]|default(property.editor.default)|default('') == value) %}
+                            {% set selected = (item[property.name]|default('') == value) %}
                         {% endif %}
                         <option {% if selected %}selected{% endif %} value="{{ value }}">
                             {{ label }}
@@ -21,9 +21,9 @@
                 </optgroup>
             {% else %}
                 {% if crud.context == 'create' %}
-                    {% set selected = (meta.route.query[property.name]|default('') == value) %}
+                    {% set selected = (meta.route.query[property.name]|default(property.editor.default)|default('') == value) %}
                 {% else %}
-                    {% set selected = (item[property.name]|default(property.editor.default)|default('') == value) %}
+                    {% set selected = (item[property.name]|default('') == value) %}
                 {% endif %}
                 <option {% if selected %}selected{% endif %} value="{{ value }}">
                     {{ label }}
