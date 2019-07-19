@@ -18,9 +18,14 @@
     margin-bottom: 10px;
     background-color: #708f2b;
 
-    .caret {
+    &-icon {
         float: right;
-        margin-top: 7px;
+        margin-top: -1px;
+    }
+
+    &.collapsed &-icon {
+        transform: rotate(180deg);
+        margin-top: 1px;
     }
 }
 
@@ -34,6 +39,7 @@
     cursor: grab;
     width: calc(50% - 5px);
     float: left;
+    position: relative;
 
     &:nth-child(even) {
         margin-left: 5px;
@@ -48,11 +54,12 @@
         cursor: grabbing;
     }
 
-    .content-type-description {
-        text-align: center;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+    .content-type-hint {
+        position: absolute;
+        top: 0;
+        right: 0;
+        border: 0;
+        background-color: transparent;
     }
 
     .content-type-icon {
@@ -141,7 +148,7 @@
     overflow: hidden;
 }
 
-.content-type-edit-row-wrapper {
+.content-type-preview-row {
     text-align: center;
     vertical-align: middle;
     width: 100%;
@@ -184,7 +191,7 @@
     }
 }
 
-.content-type-edit-form-row {
+.content-type-form-row {
     justify-content: space-evenly;
     margin: 50px 0;
 

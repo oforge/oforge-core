@@ -4,6 +4,13 @@
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">{{ i18n('page_content', 'Content') }}</a></li>
                 <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="false">{{ i18n('page_meta', 'Meta') }}</a></li>
+                <li class="cms-content-type-name pull-right">
+                    {% if contentElementData %}
+                        {{ i18n('cms_content_type_label_' ~ contentElementData.typeName, contentElementData.typeName) }} ({{ contentElementData.name }})
+                    {% else %}
+                        {{ i18n('page', 'page') }} ({{ pageBuilderData.name }})
+                    {% endif %}
+                </li>
             </ul>
 
             <div class="tab-content">
