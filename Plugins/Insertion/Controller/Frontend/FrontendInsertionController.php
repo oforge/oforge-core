@@ -367,7 +367,7 @@ class FrontendInsertionController extends SecureFrontendController
     public function detailSearchAction(Request $request, Response $response, $args)
     {
         $typeIdOrName = $args['type'];
-        /** @var $service InsertionTypeService */
+        /** @var $insertionTypeService InsertionTypeService */
         $insertionTypeService = Oforge()->Services()->get('insertion.type');
 
         /** @var $type InsertionType */
@@ -384,6 +384,7 @@ class FrontendInsertionController extends SecureFrontendController
         $result['attributes'] = $typeAttributes;
         $result['keys'] = [];
         $result['typeId'] = $args['type'];
+        $result['type'] = $type->toArray(0);
         $result['all_attributes'] = $insertionTypeService->getInsertionTypeAttributeMap();
 
         /**

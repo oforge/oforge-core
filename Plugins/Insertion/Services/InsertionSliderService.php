@@ -67,52 +67,62 @@ class InsertionSliderService extends AbstractDatabaseAccess {
      * @throws ORMException
      */
     public function getRandomInsertion(int $limit, int $insertionType = null, int $notId = null) {
-        $rsm = new ResultSetMapping();
-        $rsm->addEntityResult(Insertion::class, 'i');
-        $rsm->addFieldResult('i', 'id', 'id');
-
+        $params = [];
         if (is_null($insertionType)) {
-            $query = $this->entityManager()->createNativeQuery("
-            SELECT *
-            FROM oforge_insertion 
-            WHERE active IS TRUE AND
-                  deleted IS FALSE AND
-                  moderation IS TRUE
-            ORDER BY RAND()
-            LIMIT ?", $rsm);
+            $query = "
+                    SELECT id
+                    FROM oforge_insertion
+                    WHERE active IS TRUE AND
+                          deleted IS FALSE AND
+                          moderation IS TRUE
+                    ORDER BY RAND()
+                    LIMIT ?";
 
-            $query->setParameter(1, $limit);
+            $params[] = $limit;
         } elseif (is_null($notId)) {
-            $query = $this->entityManager()->createNativeQuery("
-            SELECT *
-            FROM oforge_insertion AS i
-            WHERE active IS TRUE AND
-                  deleted IS FALSE AND
-                  moderation IS TRUE AND
-                  insertion_type_id = ?
-            ORDER BY RAND()
-            LIMIT ?", $rsm);
-            $query->setParameter(1, $insertionType)->setParameter(2, $limit);
+            $query = "
+                    SELECT id
+                    FROM oforge_insertion 
+                    WHERE active IS TRUE AND
+                          deleted IS FALSE AND
+                          moderation IS TRUE AND
+                          insertion_type_id = ?
+                    ORDER BY RAND()
+                    LIMIT ?";
+
+            $params[] = $insertionType;
+            $params[] = $limit;
         } else {
-            $query = $this->entityManager()->createNativeQuery("
-            SELECT *
-            FROM oforge_insertion AS i
-            WHERE active IS TRUE AND
-                  deleted IS FALSE AND
-                  moderation IS TRUE AND
-                  id != ? AND
-                  insertion_type_id = ?
-            ORDER BY RAND()
-            LIMIT ?", $rsm);
-            $query->setParameter(1, $notId)->setParameter(2, $insertionType)->setParameter(3, $limit);
+            $query = "
+                    SELECT id
+                    FROM oforge_insertion
+                    WHERE active IS TRUE AND
+                          deleted IS FALSE AND
+                          moderation IS TRUE AND
+                          id != ? AND
+                          insertion_type_id = ?
+                    ORDER BY RAND()
+                    LIMIT " . $limit;
+
+            $params[] = $notId;
+            $params[] = $insertionType;
         }
 
-        $results = $query->getResult();
+
+        $sqlResult = $this->entityManager()->getEntityManager()->getConnection()->executeQuery($query, $params);
+
+        $ids = $sqlResult->fetchAll();
+
+        $findIds = [];
+
+        foreach ($ids as $id) {
+            $findIds[] = $id["id"];
+        }
 
         $data = [];
-        if (sizeof($data) > 0) {
-            foreach ($results as $result) {
-                $insertion = $this->repository()->findOneBy(["id" => $result->getId()]);
+        if (sizeof($findIds) > 0) {
+            $insertions = $this->repository()->findBy(["id" => $findIds]);
+            foreach ($insertions as $insertion) {
                 if ($insertion != null) {
                     $data[] = $insertion->toArray(3);
                 }
