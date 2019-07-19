@@ -16,6 +16,8 @@ class RouteHelper {
     private static $router;
     /** @var string $baseUrl */
     private static $baseUrl;
+    /** @var string $basePath */
+    private static $basePath;
 
     /**
      * Prevent instance.
@@ -44,18 +46,40 @@ class RouteHelper {
     /**
      * Get url of base url & relative path.
      *
-     * @param string $relativePath
+     * @param string $url
      *
      * @return string
      */
-    public static function getFullUrl(string $relativePath) {
-        if (!isset(self::$baseUrl)) {
-            self::$baseUrl = Oforge()->View()->get('meta.route.baseUrl');
-        }
-        $relativePath = str_replace('\\', '/', $relativePath);
-        $relativePath = StringHelper::leading($relativePath, '/');
+    public static function getFullUrl(string $url) {
+        if (StringHelper::startsWith($url, '/')) {
+            if (!isset(self::$baseUrl)) {
+                self::$baseUrl = Oforge()->View()->get('meta.route.baseUrl');
+            }
+            $url = StringHelper::leading($url, '/');
 
-        return self::$baseUrl . $relativePath;
+            return self::$baseUrl . $url;
+        }
+
+        return $url;
+    }
+
+    /**
+     * Get absolute URL based on www root folder.
+     *
+     * @param string $url
+     *
+     * @return string
+     */
+    public static function getUrlWithBasePath(string $url) {
+        if (StringHelper::startsWith($url, '/')) {
+            if (!isset(self::$basePath)) {
+                self::$basePath = Oforge()->View()->get('meta.route.basePath');
+            }
+
+            return self::$basePath . $url;
+        }
+
+        return $url;
     }
 
     /**

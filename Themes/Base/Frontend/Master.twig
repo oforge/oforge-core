@@ -11,14 +11,14 @@
     <title>{% block title %}{% if meta.title is defined %}{{ meta.title }}{% else %}{{ config('system_project_name') }}{% endif %}{% endblock title %}</title>
     <meta name="description" content="{% block description %}{{ meta.description }}{% endblock description %}" />
     {#<base href="{{ meta.route.baseUrl }}" />#}
-    <link rel="shortcut icon" href="/var/public/__assets/Frontend/img/favicon.ico">
+    <link rel="shortcut icon" href="{{ url('/var/public/__assets/Frontend/img/favicon.ico') }}">
 
     {% block master__additional_meta %}
     {% endblock master__additional_meta %}
 
     {% block master__styles %}
         {% if assets.css %}
-            <link rel="stylesheet" href="{{ assets.css }}">
+            <link rel="stylesheet" href="{{ url(assets.css ) }}">
         {% endif %}
     {% endblock master__styles %}
 </head>
