@@ -54,14 +54,32 @@ class GenericCrudService extends AbstractDatabaseAccess {
             foreach ($criteria as $propertyName => $propertyCriteria) {
                 $prefixPropertyName     = 'e.' . $propertyName;
                 $prefixValuePlaceholder = ':' . $propertyName;
-                if ($propertyCriteria['comparator'] == CrudFilterComparator::LIKE) {
-                    $parameters[$propertyName] = '%' . $propertyCriteria['value'] . '%';
+                switch ($propertyCriteria['comparator']) {
+                    case CrudFilterComparator::LIKE:
+                    case CrudFilterComparator::NOT_LIKE:
+                        $parameters[$propertyName] = '%' . $propertyCriteria['value'] . '%';
 
-                    $wheres[] = $queryBuilder->expr()->like($prefixPropertyName, $prefixValuePlaceholder);
-                } else {
-                    $parameters[$propertyName] = $propertyCriteria['value'];
+                        $functionName = $propertyCriteria['comparator'];
 
-                    $wheres[] = $queryBuilder->expr()->eq($prefixPropertyName, $prefixValuePlaceholder);
+                        $wheres[] = $queryBuilder->expr()->$functionName($prefixPropertyName, $prefixValuePlaceholder);
+                        break;
+                    case CrudFilterComparator::GREATER:
+                    case CrudFilterComparator::GREATER_EQUALS:
+                    case CrudFilterComparator::EQUALS:
+                    case CrudFilterComparator::NOT_EQUALS:
+                    case CrudFilterComparator::LESS:
+                    case CrudFilterComparator::LESS_EQUALS:
+                        $parameters[$propertyName] = $propertyCriteria['value'];
+
+                        $functionName = $propertyCriteria['comparator'];
+
+                        $wheres[] = $queryBuilder->expr()->$functionName($prefixPropertyName, $prefixValuePlaceholder);
+                        break;
+                    default:
+                        $parameters[$propertyName] = $propertyCriteria['value'];
+
+                        $wheres[] = $queryBuilder->expr()->eq($prefixPropertyName, $prefixValuePlaceholder);
+                        break;
                 }
             }
             $queryBuilder->where($queryBuilder->expr()->andX()->addMultiple($wheres));
@@ -187,7 +205,7 @@ class GenericCrudService extends AbstractDatabaseAccess {
                 $this->entityManager()->update($entity, false);
             }
         }
-        if($flush) {
+        if ($flush) {
             $this->entityManager()->flush();
             $repository->clear();
         }

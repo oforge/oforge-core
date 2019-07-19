@@ -632,6 +632,7 @@ class BaseCrudController extends SecureBackendController {
                             $comparator = CrudFilterComparator::EQUALS;
                             break;
                         case CrudFilterType::TEXT:
+                        case CrudFilterType::HIDDEN:
                             $comparator = ArrayHelper::get($filterConfig, 'compare', CrudFilterComparator::EQUALS);
                             break;
                         default:
@@ -639,7 +640,13 @@ class BaseCrudController extends SecureBackendController {
                     }
                     switch ($comparator) {
                         case CrudFilterComparator::EQUALS:
+                        case CrudFilterComparator::NOT_EQUALS:
                         case CrudFilterComparator::LIKE:
+                        case CrudFilterComparator::NOT_LIKE:
+                        case CrudFilterComparator::GREATER:
+                        case CrudFilterComparator::GREATER_EQUALS:
+                        case CrudFilterComparator::LESS:
+                        case CrudFilterComparator::LESS_EQUALS:
                             break;
                         default:
                             $comparator = CrudFilterComparator::EQUALS;
