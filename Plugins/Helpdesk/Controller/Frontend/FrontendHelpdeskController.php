@@ -144,5 +144,4 @@ class FrontendHelpdeskController extends SecureFrontendController {
         $this->ensurePermissions('submitAction', User::class);
         $this->ensurePermissions('closeTicketAction', User::class);
     }
-
 }
