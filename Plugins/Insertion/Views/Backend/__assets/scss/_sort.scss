@@ -1,0 +1,57 @@
+.result {
+    flex: 0 0 100%;
+    &__text {
+        color: $color-primary;
+        font-weight: normal;
+        font-size: $font-size-4;
+
+        .result__text--desktop {
+            display: none;
+        }
+    }
+}
+
+.form__input.form__input--sort {
+    flex: 0 0 18rem;
+    width: 18rem;
+    // margin-left: auto;
+}
+
+.panel + .panel.panel--sort {
+    margin-top: 0;
+}
+.panel--sort {
+    flex-wrap: wrap;
+}
+
+.panel--sort + .panel--sort {
+    border-top: 1px solid $header-top;
+    padding-bottom: 0;
+}
+
+.form--sort,
+.form__input--sort {
+    margin-bottom: $size-large;
+}
+
+.form.form--sort {
+    text-align: right;
+    width: 18rem;
+}
+
+@media screen and (min-width: $screen-medium) {
+    .result {
+        &__text {
+            font-size: $font-size-3;
+            font-weight: bold;
+
+            .result__text--mobile {
+                display: none;
+            }
+
+            .result__text--desktop {
+                display: initial;
+            }
+        }
+    }
+}

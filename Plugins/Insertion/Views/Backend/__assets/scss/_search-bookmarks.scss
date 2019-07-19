@@ -1,0 +1,120 @@
+
+.search-bookmarks {
+  h1 {
+    color: $color-primary;
+    margin-bottom: $size-large;
+  }
+}
+
+.search-bookmarks__header {
+  background: $color-secondary-light;
+  padding-left: 3rem;
+
+  h2 {
+    color: $color-light;
+  }
+}
+
+.search__bookmark {
+  border-bottom: 2px $color-primary solid;
+
+  padding: 2rem 0 2rem 2rem;
+
+  .bookmark__title {
+    color: $color-primary;
+    margin-bottom: $size-large;
+  }
+
+  .bookmark__tag {
+    display: inline-flex;
+    background: $color-primary-light;
+  }
+}
+
+.bookmark__actions {
+  display: flex;
+  font-size: $font-size-5;
+  margin-top: 3rem;
+
+  .search-button {
+    display: inline-flex;
+    font-size: $font-size-5;
+    line-height: $font-size-5;
+    margin-right: 2rem;
+    padding: auto $size-medium;
+
+    .icon {
+      fill: $color-light;
+      display: none;
+      width: 2rem;
+      height: 2rem;
+      margin-left: 1rem;
+      position: relative;
+      bottom: 1px;
+
+      transform: scale(1);
+      transition: transform 70ms cubic-bezier(.33, .47, .46, .82);
+    }
+
+    &:hover {
+      .icon {
+        transform: scale(1.2);
+        transition: transform 100ms cubic-bezier(.33, .47, .46, .82);
+      }
+    }
+  }
+
+  .delete-bookmark {
+    *[type=submit] {
+      visibility: hidden;
+      position: absolute;
+    }
+    .icon {
+      transform: scale(1);
+      transition: transform 100ms cubic-bezier(.33, .47, .46, .82);
+    }
+
+    &:hover {
+      transform: scale(1.2);
+      transition: transform 150ms cubic-bezier(.33, .47, .46, .82);
+    }
+  }
+}
+
+
+@media screen and (min-width: $screen-medium) {
+
+  .bookmark__actions {
+    .search-button {
+      .icon {
+        fill: $color-light;
+        display: inline-flex;
+      }
+    }
+  }
+}
+
+
+@media screen and (min-width: $screen-large) {
+  .search-bookmarks {
+    .panel--account {
+      background: $color-light;
+    }
+
+    .search__bookmark {
+      background: none;
+    }
+  }
+  .search-bookmarks__container {
+    .search__bookmark {
+      position: relative;
+    }
+
+    .bookmark__actions {
+      position: absolute;
+      right: 0;
+      top: 2rem;
+      margin-top: 0;
+    }
+  }
+}

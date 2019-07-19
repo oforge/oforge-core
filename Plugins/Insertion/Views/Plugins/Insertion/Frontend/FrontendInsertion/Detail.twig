@@ -34,7 +34,7 @@
             <div class="panel panel--top-attributes">
                 <div class="top-attributes">
                     <div class="product-view__price">
-                        <span class="attribute-label">{{ i18n('insertion_detail_price_' ~ insertion.insertionType.name, 'Price') }}</span>
+                        <span class="attribute-label">{{ i18n('insertion_detail_price_' ~ insertion.insertionType.name, i18n('price')) }}</span>
                         <span class="attribute-value">{{ insertion.price|number_format(0, ',', '.') }}€</span>
                     </div>
                     <div class="product-view__name">
