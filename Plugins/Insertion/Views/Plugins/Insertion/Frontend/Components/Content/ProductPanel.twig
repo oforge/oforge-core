@@ -17,8 +17,11 @@
 
         <div class="product__attributes product__attributes--main">
             {% block attributes__main %}
-
-                {% for topvalue in item.topvalues|slice(0,3) %}
+                <div class="product__attribute">
+                    <span class="product__label">{{ i18n('insertion_name') }}</span>
+                    <span class="product__value">{{ item.content[0].name }}</span>
+                </div>
+                {% for topvalue in item.topvalues|slice(0,2) %}
                     {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
                 {% endfor %}
 
@@ -46,12 +49,10 @@
 
                 {% block attributes__bottom %}
                     <div class="product__attributes product__attributes--bottom">
-
-                        {% for topvalue in item.topvalues|slice(2,3) %}
+                        {% for topvalue in item.topvalues|slice(2) %}
                             {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
                         {% endfor %}
                     </div>
-{{  o_dump()}}
                 {% endblock attributes__bottom %}
 
                 {% block product__meta %}
