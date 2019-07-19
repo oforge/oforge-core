@@ -1,4 +1,4 @@
 <div class="product__attribute">
     <span class="product__label">{{ i18n(attribute.name) }}</span>
-    <span class="product__value">{% if value is not empty %}{{ value }}{% else %}{{ i18n('not_available') }}{% endif %}</span>
+    <span class="product__value" title="{% if value is not empty %}{{ value }}{% else %}{{ i18n('not_available') }}{% endif %}">{% if value is not empty %}{{ value }}{% else %}{{ i18n('not_available') }}{% endif %}</span>
 </div>
