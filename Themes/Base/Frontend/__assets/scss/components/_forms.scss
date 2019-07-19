@@ -371,8 +371,9 @@
     .form--search {
         .form-controls {
             &.form-controls--row {
-                .form__control {
+                > .form__control {
                     flex: 0 0 calc(50% - .6rem);
+                    max-width: calc(50% - .6rem);
                 }
             }
         }
