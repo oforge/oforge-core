@@ -240,7 +240,7 @@ class Bootstrap extends AbstractBootstrap {
             ],
         ]);
         $contentTypeManagementService->add([
-            'name'      => 'entry_list',
+            'name'      => 'navigation_list',
             'path'      => 'List',
             'icon'      => '/Themes/Base/ContentTypes/__assets/img/icontilebasic.png',
             'group'     => $ctgNavigationID,
