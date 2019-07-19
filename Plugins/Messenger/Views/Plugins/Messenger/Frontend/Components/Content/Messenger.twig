@@ -9,7 +9,7 @@
 
                 <ul class="chat-list">
                     {% for conversation in conversationList %}
-                        <li class="chat">
+                        <li class="chat" id="{{ conversation.id }}">
                             <a href="{{ url('frontend_account_messages', {id: conversation.id}) }}"
                                class="chat__link flex flex--row flex--center">
                                 {% block messenger_conversation_list %}
