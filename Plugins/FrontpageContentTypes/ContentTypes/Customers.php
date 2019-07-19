@@ -4,8 +4,7 @@ namespace FrontpageContentTypes\ContentTypes;
 
 use Oforge\Engine\Modules\CMS\Abstracts\AbstractContentType;
 use Oforge\Engine\Modules\CMS\Models\Content\Content;
-use Oforge\Engine\Modules\Media\Models\Media;
-use Oforge\Engine\Modules\Media\Services\MediaService;
+use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 
 class Customers extends AbstractContentType {
     /**
@@ -30,9 +29,9 @@ class Customers extends AbstractContentType {
             'type'          => $this->getId(),
             'name'          => $this->getContentName(),
             'css'           => $this->getContentCssClass(),
-            'customer_name' => $contentData['customer_name'],
-            'image'         => $contentData['image'],
-            'text'          => $contentData['text'],
+            'customer_name' => ArrayHelper::get($contentData, 'customer_name'),
+            'image'         => ArrayHelper::get($contentData, 'image'),
+            'text'          => ArrayHelper::get($contentData, 'text'),
         ];
 
         return $data;
@@ -71,9 +70,9 @@ class Customers extends AbstractContentType {
             'typeId'      => $this->getId(),
             'isContainer' => $this->isContainer(),
 
-            'customer_name' => $contentData['customer_name'],
-            'image'         => $contentData['image'],
-            'text'          => $contentData['text'],
+            'customer_name' => ArrayHelper::get($contentData, 'customer_name'),
+            'image'         => ArrayHelper::get($contentData, 'image'),
+            'text'          => ArrayHelper::get($contentData, 'text'),
         ];
 
         return $data;
