@@ -4,6 +4,7 @@ namespace Oforge\Engine\Modules\TemplateEngine\Extensions\Twig;
 
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
+use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Twig_Extension;
 use Twig_Function;
 
@@ -38,7 +39,7 @@ class SlimExtension extends Twig_Extension {
 
         $urlService = Oforge()->Services()->get('url');
 
-        return $urlService->getUrl($name, $namedParams, $queryParams);
+        return RouteHelper::getUrlWithBasePath($urlService->getUrl($name, $namedParams, $queryParams));
     }
 
 }
