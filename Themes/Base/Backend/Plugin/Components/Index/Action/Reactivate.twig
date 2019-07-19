@@ -1,4 +1,4 @@
-<a href="{{ url('backend_plugins_reactivate', {name: item.name|url_encode}) }}"
+<a href="{{ url('backend_plugins_reactivate', {name: item.name|url_encode}, meta.route.query|default({})) }}"
    title="{{ i18n('backend_crud_plugin_action_reactivate', 'reactivate') }}">
     {{ i18n('backend_crud_plugin_action_reactivate', 'reactivate') }}
 </a>

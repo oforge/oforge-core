@@ -111,7 +111,7 @@ class PluginController extends BaseCrudController {
     public function activateAction(Request $request, Response $response, array $args) {
         $this->handleActivate($args);
 
-        return RouteHelper::redirect($response, 'backend_plugins');
+        return RouteHelper::redirect($response, 'backend_plugins', [], $request->getQueryParams());
     }
 
     /**
@@ -125,7 +125,7 @@ class PluginController extends BaseCrudController {
     public function deactivateAction(Request $request, Response $response, array $args) {
         $this->handleDeactivate($args);
 
-        return RouteHelper::redirect($response, 'backend_plugins');
+        return RouteHelper::redirect($response, 'backend_plugins', [], $request->getQueryParams());
     }
 
     /**
@@ -155,7 +155,7 @@ class PluginController extends BaseCrudController {
     public function installAction(Request $request, Response $response, array $args) {
         $this->handleInstall($args);
 
-        return RouteHelper::redirect($response, 'backend_plugins');
+        return RouteHelper::redirect($response, 'backend_plugins', [], $request->getQueryParams());
     }
 
     /**
@@ -171,7 +171,7 @@ class PluginController extends BaseCrudController {
             $this->handleActivate($args);
         }
 
-        return RouteHelper::redirect($response, 'backend_plugins');
+        return RouteHelper::redirect($response, 'backend_plugins', [], $request->getQueryParams());
     }
 
     /**
@@ -197,7 +197,7 @@ class PluginController extends BaseCrudController {
             $twigFlash->addExceptionMessage('error', I18N::translate('crud_plugin_msg_error', 'An error has occurred.'), $exception);
         }
 
-        return RouteHelper::redirect($response, 'backend_plugins');
+        return RouteHelper::redirect($response, 'backend_plugins', [], $request->getQueryParams());
     }
 
     /**
@@ -216,7 +216,7 @@ class PluginController extends BaseCrudController {
                 $this->handleInstall($args);
             }
 
-            return RouteHelper::redirect($response, 'backend_plugins');
+            return RouteHelper::redirect($response, 'backend_plugins', [], $request->getQueryParams());
         }
         Oforge()->View()->assign([
             'crud' => [
@@ -245,7 +245,7 @@ class PluginController extends BaseCrudController {
                 }
             }
 
-            return RouteHelper::redirect($response, 'backend_plugins');
+            return RouteHelper::redirect($response, 'backend_plugins', [], $request->getQueryParams());
         }
         Oforge()->View()->assign([
             'crud' => [
@@ -270,7 +270,7 @@ class PluginController extends BaseCrudController {
             $keepData = (bool) $postData['keep_data'];
             $this->handleUninstall($args, $keepData);
 
-            return RouteHelper::redirect($response, 'backend_plugins');
+            return RouteHelper::redirect($response, 'backend_plugins', [], $request->getQueryParams());
         }
         Oforge()->View()->assign([
             'crud' => [
