@@ -23,7 +23,7 @@ class SeoUrlService {
     }
 
     /** @see UrlService::getUrl() */
-    public function getUrl(...$vars) {
+    public function getUrl(string $name, array $namedParams = [], array $queryParams = []) : string {
         if (!isset($this->router)) {
             $this->router = Oforge()->App()->getContainer()->get('router');
         }
@@ -32,7 +32,7 @@ class SeoUrlService {
             $this->seoService = Oforge()->Services()->get('seo');
         }
 
-        $result = $this->instance->getUrl(...$vars);
+        $result = $this->instance->getUrl($name, $namedParams, $queryParams);
 
         try {
             $seoObject = $this->seoService->getBySource($result);
