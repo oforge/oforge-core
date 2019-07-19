@@ -45,7 +45,6 @@ class InsertionUrlService {
 
                 return "/" . urlencode($typeTitle) . "/" . urlencode($title) . "/" . $insertion->getId();
             }
-
         }
 
         return $this->instance->getUrl(...$vars);
