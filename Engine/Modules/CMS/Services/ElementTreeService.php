@@ -2,11 +2,12 @@
 
 namespace Oforge\Engine\Modules\CMS\Services;
 
-use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
-use Oforge\Engine\Modules\CMS\Models\Content\ContentTypeGroup;
-use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
-use Oforge\Engine\Modules\CMS\Models\Content\ContentParent;
 use Oforge\Engine\Modules\CMS\Models\Content\Content;
+use Oforge\Engine\Modules\CMS\Models\Content\ContentParent;
+use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
+use Oforge\Engine\Modules\CMS\Models\Content\ContentTypeGroup;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
+use Oforge\Engine\Modules\I18n\Helper\I18N;
 
 class ElementTreeService extends AbstractDatabaseAccess {
     private $entityManager;
@@ -19,66 +20,6 @@ class ElementTreeService extends AbstractDatabaseAccess {
             "contentParent"    => ContentParent::class,
             "content"          => Content::class,
         ]);
-    }
-
-    /**
-     * Returns all available content type group entities
-     *
-     * @return ContentTypeGroup[]|NULL
-     */
-    private function getContentTypeGroupEntities() {
-        $contentTypeGroupEntityArray = $this->repository("contentTypeGroup")->findAll();
-
-        if (isset($contentTypeGroupEntityArray)) {
-            return $contentTypeGroupEntityArray;
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Returns all available content type entities
-     *
-     * @return ContentType[]|NULL
-     */
-    private function getContentTypeEntities() {
-        $contentTypeEntityArray = $this->repository("contentType")->findAll();
-
-        if (isset($contentTypeEntityArray)) {
-            return $contentTypeEntityArray;
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Returns all available content parent entities
-     *
-     * @return ContentParent[]|NULL
-     */
-    private function getContentParentEntities() {
-        $contentParentEntityArray = $this->repository("contentParent")->findAll();
-
-        if (isset($contentParentEntityArray)) {
-            return $contentParentEntityArray;
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Returns all available content entities
-     *
-     * @return Content[]|NULL
-     */
-    private function getContentEntities() {
-        $contentEntityArray = $this->repository("content")->findAll();
-
-        if (isset($contentEntityArray)) {
-            return $contentEntityArray;
-        } else {
-            return null;
-        }
     }
 
     /**
@@ -95,10 +36,9 @@ class ElementTreeService extends AbstractDatabaseAccess {
 
         $contentTypeGroups = [];
         foreach ($contentTypeGroupEntities as $contentTypeGroupEntity) {
-            $contentTypeGroup                = [];
-            $contentTypeGroup["id"]          = $contentTypeGroupEntity->getId();
-            $contentTypeGroup["name"]        = $contentTypeGroupEntity->getName();
-            $contentTypeGroup["description"] = $contentTypeGroupEntity->getDescription();
+            $contentTypeGroup         = [];
+            $contentTypeGroup["id"]   = $contentTypeGroupEntity->getId();
+            $contentTypeGroup["name"] = $contentTypeGroupEntity->getName();
 
             $contentTypeGroups[] = $contentTypeGroup;
         }
@@ -120,11 +60,11 @@ class ElementTreeService extends AbstractDatabaseAccess {
 
         $contentTypes = [];
         foreach ($contentTypeEntities as $contentTypeEntity) {
-            $contentType                = [];
-            $contentType["id"]          = $contentTypeEntity->getId();
-            $contentType["parent"]      = $contentTypeEntity->getGroup()->getName();
-            $contentType["name"]        = $contentTypeEntity->getName();
-            $contentType["description"] = $contentTypeEntity->getDescription();
+            $contentType           = [];
+            $contentType["id"]     = $contentTypeEntity->getId();
+            $contentType["parent"] = $contentTypeEntity->getGroup()->getName();
+            $contentType["name"]   = $contentTypeEntity->getName();
+            $contentType["hint"]   = $contentTypeEntity->getHint();
 
             $contentTypes[] = $contentType;
         }
@@ -207,7 +147,7 @@ class ElementTreeService extends AbstractDatabaseAccess {
                 "id"     => $contentTypeGroup["name"],
                 "icon"   => "jstree-folder",
                 "parent" => "#",
-                "text"   => $contentTypeGroup["description"],
+                "text"   => I18N::translate('cms_content_type_group_label_' . $contentTypeGroup['name'], $contentTypeGroup['name']),
             ];
         }
 
@@ -216,7 +156,7 @@ class ElementTreeService extends AbstractDatabaseAccess {
                 "id"     => $contentType["name"],
                 "icon"   => "jstree-folder",
                 "parent" => $contentType["parent"],
-                "text"   => $contentType["description"],
+                "text"   => I18N::translate('cms_content_type_label_' . $contentType['name'], $contentType['name']),
             ];
         }
 
@@ -240,5 +180,65 @@ class ElementTreeService extends AbstractDatabaseAccess {
         }
 
         return $jsTreeContentElementData;
+    }
+
+    /**
+     * Returns all available content type group entities
+     *
+     * @return ContentTypeGroup[]|NULL
+     */
+    private function getContentTypeGroupEntities() {
+        $contentTypeGroupEntityArray = $this->repository("contentTypeGroup")->findAll();
+
+        if (isset($contentTypeGroupEntityArray)) {
+            return $contentTypeGroupEntityArray;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Returns all available content type entities
+     *
+     * @return ContentType[]|NULL
+     */
+    private function getContentTypeEntities() {
+        $contentTypeEntityArray = $this->repository("contentType")->findAll();
+
+        if (isset($contentTypeEntityArray)) {
+            return $contentTypeEntityArray;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Returns all available content parent entities
+     *
+     * @return ContentParent[]|NULL
+     */
+    private function getContentParentEntities() {
+        $contentParentEntityArray = $this->repository("contentParent")->findAll();
+
+        if (isset($contentParentEntityArray)) {
+            return $contentParentEntityArray;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Returns all available content entities
+     *
+     * @return Content[]|NULL
+     */
+    private function getContentEntities() {
+        $contentEntityArray = $this->repository("content")->findAll();
+
+        if (isset($contentEntityArray)) {
+            return $contentEntityArray;
+        } else {
+            return null;
+        }
     }
 }
