@@ -1,8 +1,11 @@
 /**
  * Adds a simple collapse functionality.
  *
- * Usage: Collapse triggers will have the 'data-collapse' attribute.
+ * Usage: Collapse triggers will have the 'data-collapse' attribute. ( <element data-collapse="" > )
  * The next element on the same level as the trigger will be toggled with the class "collapsed".
+ *
+ * Optional: if 'data-collapse' is set to a value, triggers will only be applied if screen-width < value.
+ *
  */
 
 (function () {
@@ -12,11 +15,16 @@
             selector: '[data-collapse]',
             init: function () {
                 const triggers = document.querySelectorAll('[data-collapse]');
+                // check if this is specified viewport
                 triggers.forEach(function (trigger){
-                    trigger.addEventListener('click', function() {
-                        this.classList.toggle("active");
-                        this.nextElementSibling.classList.toggle("collapsed");
-                    })
+                    let clientWidth = document.documentElement.clientWidth;
+                    let triggerWidth = parseInt(trigger.dataset.collapse);
+                    if (Number.isNaN(triggerWidth) || clientWidth < triggerWidth ) {
+                        trigger.addEventListener('click', function () {
+                            this.classList.toggle("active");
+                            this.nextElementSibling.classList.toggle("collapsed");
+                        });
+                    }
                 });
             }
         });

@@ -16,6 +16,11 @@
         .title {
             color: $color-light;
         }
+        &--sidebar {
+            justify-content: space-between;
+            border-bottom: 2px solid $color-light;
+
+        }
     }
 
     &__sidebar {
@@ -34,9 +39,10 @@
 }
 
 .chat-list {
-    border-top: $size-large solid $color-light;
     background: $color-primary;
-    border-bottom: $size-large solid $color-light;
+    &.collapsed {
+        display: none;
+    }
 }
 .chat {
     padding: $size-large $size-medium;
@@ -119,6 +125,11 @@
             width: 4rem;
             height: 4rem;
         }
+        &__header--sidebar {
+            .icon {
+                display: none;
+            }
+        }
     }
     .message-text {
         font-size: $font-size-5;
@@ -126,6 +137,12 @@
     .messages {
         height: 40rem;
         padding: $size-large $size-large * 2;
+    }
+    .chat-list {
+        background: $color-primary;
+        &.collapsed {
+            display: block;
+        }
     }
 }
 
