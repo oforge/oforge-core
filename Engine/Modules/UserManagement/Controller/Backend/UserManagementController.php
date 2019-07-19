@@ -6,6 +6,7 @@ use Exception;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Auth\Services\PasswordService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
@@ -13,6 +14,8 @@ use Oforge\Engine\Modules\CRUD\Enum\CrudFilterComparator;
 use Oforge\Engine\Modules\CRUD\Enum\CrudFilterType;
 use Oforge\Engine\Modules\CRUD\Enum\CrudGroubByOrder;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 /**
  * Class UserManagementController
@@ -182,6 +185,66 @@ class UserManagementController extends BaseCrudController {
 
     /**
      * @inheritDoc
+     * @EndpointAction(path="/view/{id:\d+}")
+     */
+    public function viewAction(Request $request, Response $response, array $args) {
+        if ($this->checkUserType($args)) {
+            return $this::redirect($response, 'index');
+        }
+
+        return parent::viewAction($request, $response, $args);
+    }
+
+    /**
+     * @inheritDoc
+     * @EndpointAction(path="/update/{id:\d+}")
+     */
+    public function updateAction(Request $request, Response $response, array $args) {
+        if ($this->checkUserType($args)) {
+            return $this::redirect($response, 'index');
+        }
+
+        return parent::updateAction($request, $response, $args);
+    }
+
+    /**
+     * @inheritDoc
+     * @EndpointAction(path="/delete/{id:\d+}")
+     */
+    public function deleteAction(Request $request, Response $response, array $args) {
+        if ($this->checkUserType($args)) {
+            return $this::redirect($response, 'index');
+        }
+
+        return parent::deleteAction($request, $response, $args);
+    }
+
+    /**
+     * Check if user for id ist system user.
+     *
+     * @param array $args
+     *
+     * @return bool
+     * @throws \Doctrine\ORM\ORMException
+     */
+    protected function checkUserType(array $args) {
+        /** @var BackendUser|null $entity */
+        $entity = $this->crudService->getById($this->model, $args['id']);
+
+        if (isset($entity) && $entity->getRole() === BackendUser::ROLE_SYSTEM) {
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('crud_backenduser_no_system_user_edit', [
+                'en' => 'A change of system user data is not allowed via the backend.',
+                'de' => 'Eine Änderung von System Nutzerdaten ist nicht über das Backend erlaubt.',
+            ]));
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @inheritDoc
      * @throws Exception
      */
     protected function convertData(array $data, string $crudAction) : array {
@@ -200,7 +263,7 @@ class UserManagementController extends BaseCrudController {
         return $data;
     }
 
-    /** @inheritDoc */
+    /**  @inheritDoc */
     protected function prepareItemDataArray(?AbstractModel $entity, string $crudAction) : array {
         $data = parent::prepareItemDataArray($entity, $crudAction);
 
