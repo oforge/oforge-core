@@ -42,6 +42,7 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
             new Twig_Function('hasBookmark', [$this, 'hasBookmark']),
             new Twig_Function('hasSearchBookmark', [$this, 'hasSearchBookmark']),
             new Twig_Function('getInsertionSliderContent', [$this, 'getInsertionSliderContent']),
+            new Twig_Function('getSimilarInsertion', [$this, 'getSimilarInsertion']),
             new Twig_Function('getLatestBlogPostTile', [$this, 'getLatestBlogPostTile']),
             new Twig_Function('getQuickSearch', [$this, 'getQuickSearch']),
             new Twig_Function('getChatPartnerInformation', [$this, 'getChatPartnerInformation']),
@@ -65,14 +66,13 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
      * @return string
      */
     public function getAge(?string $dateTimeObject, ?string $type) : ?string {
-
-        $bday = DateTime::createFromFormat ('Y-m-d', $dateTimeObject); // Your date of birth
+        $bday  = DateTime::createFromFormat('Y-m-d', $dateTimeObject); // Your date of birth
         $today = new Datetime();
 
-        $diff = $today->diff($bday);
-        $suffix = $type == 'datemonth' ? I18N::translate('month_suffix') : ( $type == 'dateyear' ? I18N::translate('year_suffix') : '');
+        $diff   = $today->diff($bday);
+        $suffix = $type == 'datemonth' ? I18N::translate('month_suffix') : ($type == 'dateyear' ? I18N::translate('year_suffix') : '');
 
-        return  ($type == 'datemonth' ?  ($diff->y * 12 + $diff->m) : ( $type == 'dateyear' ? $diff->y  : $dateTimeObject)) . ' ' . $suffix;
+        return ($type == 'datemonth' ? ($diff->y * 12 + $diff->m) : ($type == 'dateyear' ? $diff->y : $dateTimeObject)) . ' ' . $suffix;
     }
 
     /**
@@ -154,6 +154,21 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
         $insertions             = $insertionSliderService->getRandomInsertions();
 
         return ['insertions' => $insertions];
+    }
+
+    /**
+     * @param array $vars
+     *
+     * @return array
+     * @throws ORMException
+     * @throws ServiceNotFoundException
+     */
+    public function getSimilarInsertion(...$vars) {
+        /** @var InsertionSliderService $insertionSliderService */
+        $insertionSliderService = Oforge()->Services()->get("insertion.slider");
+        $insertion              = $insertionSliderService->getRandomInsertion(1, $vars[0], $vars[1]);
+
+        return $insertion;
     }
 
     /**

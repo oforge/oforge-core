@@ -34,6 +34,10 @@ class RouteMiddleware {
                     'baseUrl' => $this->getUriBaseUrl($request),
                     'params'  => $routeInfo[2],
                     'query'   => $request->getQueryParams(),
+                    'url'     => [
+                        'path'  => $request->getUri()->getPath(),
+                        'query' => $request->getUri()->getQuery(),
+                    ],
                 ]),
             ],
         ]);

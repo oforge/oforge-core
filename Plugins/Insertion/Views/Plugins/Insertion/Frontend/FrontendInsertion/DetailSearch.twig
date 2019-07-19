@@ -2,14 +2,15 @@
 {% block content %}
     <div class="content content--insertion">
         <div class="panel panel--insertion">
+            <h2>{{ i18n('detail_search_' ~ type.name) }}</h2>
             <form id="form-search"
                   class="form form--detail-search"
                   method="get"
                   action="{{ url('insertions_listing', {'type': typeId }  ) }}">
                 {% for group in attributes %}
                     {# TODO: fix this part. Better not check for group names... #}
-                    {% if group.name != 'main' and group.name != 'contact' and group.name != 'default' %}
-                        <h3 class="title title--attribute-group">{{ i18n('attribute_group_' ~ group.name)  }}</h3>
+                    {% if group.name != 'main' and group.name != 'contact' and group.name != 'default' and group.items|length > 0 %}
+                        {#<h3 class="title title--attribute-group">{{ i18n('attribute_group_' ~ group.name)  }}</h3>#}
                         <div class="form-controls form-controls--row">
                             {% for attributeContent in group.items %}
                                 {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ attributeContent.attributeKey.filterType|capitalize  ~ '.twig'  with {'attribute': attributeContent.attributeKey } %}
@@ -17,8 +18,16 @@
                         </div>
                     {% endif %}
                 {% endfor %}
+
                 <div class="form-controls form-controls--row">
-                    <div class="form__control"><input type="submit" class="form__input button button--primary" value="{{ i18n('submit') }}"></div>
+
+                    {% include 'Plugins/Insertion/Frontend/Components/Content/Search/Price.twig' %}
+                    {% include 'Plugins/Insertion/Frontend/Components/Content/Search/Distance.twig' %}
+                </div>
+
+                <div class="form-controls form-controls--row">
+                    <div class="form__control"><input type="submit" class="form__input button button--primary"
+                                                      value="{{ i18n('submit') }}"></div>
                 </div>
             </form>
         </div>
