@@ -43,7 +43,13 @@ class PluginController extends BaseCrudController {
         [
             'name'     => 'name',
             'type'     => CrudDataTypes::CUSTOM,
-            'label'    => ['key' => 'backend_crud_plugin_property_name', 'default' => 'Plugin name'],
+            'label'    => [
+                'key'     => 'backend_crud_plugin_property_name',
+                'default' => [
+                    'en' => 'Plugin name',
+                    'de' => 'Pluginname',
+                ],
+            ],
             'crud'     => [
                 'index' => 'readonly',
             ],
@@ -54,7 +60,13 @@ class PluginController extends BaseCrudController {
         [
             'name'     => 'dependencies',
             'type'     => CrudDataTypes::CUSTOM,
-            'label'    => ['key' => 'backend_crud_plugin_property_dependencies', 'default' => 'Dependencies'],
+            'label'    => [
+                'key'     => 'backend_crud_plugin_property_dependencies',
+                'default' => [
+                    'en' => 'Dependencies',
+                    'de' => 'Abhängigkeiten',
+                ],
+            ],
             'crud'     => [
                 'index' => 'readonly',
             ],
@@ -65,7 +77,13 @@ class PluginController extends BaseCrudController {
         [
             'name'     => 'action',
             'type'     => CrudDataTypes::CUSTOM,
-            'label'    => ['key' => 'backend_crud_plugin_property_action', 'default' => 'Action'],
+            'label'    => [
+                'key'     => 'backend_crud_plugin_property_action',
+                'default' => [
+                    'en' => 'Action',
+                    'de' => 'Aktion',
+                ],
+            ],
             'crud'     => [
                 'index' => 'readonly',
             ],

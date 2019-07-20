@@ -161,7 +161,7 @@ class UserManagementController extends BaseCrudController {
                 'key'     => 'crud_backenduser_filter_name',
                 'default' => [
                     'en' => 'Search in name',
-                    'de' => 'Suche in Name',
+                    'de' => 'Suche im Namen',
                 ],
             ],
             'compare' => CrudFilterComparator::LIKE,
