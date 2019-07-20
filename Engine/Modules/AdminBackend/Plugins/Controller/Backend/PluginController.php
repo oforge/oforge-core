@@ -17,6 +17,7 @@ use Oforge\Engine\Modules\Core\Exceptions\Plugin\PluginNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\Plugin\PluginNotInstalledException;
 use Oforge\Engine\Modules\Core\Exceptions\Template\TemplateNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\RouteHelper;
+use Oforge\Engine\Modules\Core\Helper\StringHelper;
 use Oforge\Engine\Modules\Core\Models\Plugin\Plugin;
 use Oforge\Engine\Modules\Core\Services\PluginStateService;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
@@ -40,13 +41,6 @@ class PluginController extends BaseCrudController {
     /** @var array $modelProperties */
     protected $modelProperties = [
         [
-            'name' => 'id',
-            'type' => CrudDataTypes::INT,
-            'crud' => [
-                'index' => 'readonly',
-            ],
-        ],
-        [
             'name'     => 'name',
             'type'     => CrudDataTypes::CUSTOM,
             'label'    => ['key' => 'backend_crud_plugin_property_name', 'default' => 'Plugin name'],
@@ -55,6 +49,17 @@ class PluginController extends BaseCrudController {
             ],
             'renderer' => [
                 'custom' => 'Backend/Plugin/Components/Index/NameColumn.twig',
+            ],
+        ],
+        [
+            'name'     => 'dependencies',
+            'type'     => CrudDataTypes::CUSTOM,
+            'label'    => ['key' => 'backend_crud_plugin_property_dependencies', 'default' => 'Dependencies'],
+            'crud'     => [
+                'index' => 'readonly',
+            ],
+            'renderer' => [
+                'custom' => 'Backend/Plugin/Components/Index/DependenciesColumn.twig',
             ],
         ],
         [
@@ -535,6 +540,19 @@ class PluginController extends BaseCrudController {
     /** @inheritDoc */
     protected function prepareItemDataArray(?AbstractModel $entity, string $crudAction) : array {
         $data = parent::prepareItemDataArray($entity, $crudAction);
+
+        $pluginBootstrapClass = $data['name'] . '\\Bootstrap';
+        $bootstrapInstance    = Oforge()->getBootstrapManager()->getBootstrapInstance($pluginBootstrapClass);
+
+        if (isset($bootstrapInstance)) {
+            $dependencies = $bootstrapInstance->getDependencies();
+            if (!empty($dependencies)) {
+                $dependencies         = array_map(function ($dependency) {
+                    return StringHelper::rightTrim($dependency, '\\Bootstrap');
+                }, $dependencies);
+                $data['dependencies'] = $dependencies;
+            }
+        }
 
         // TODO include data version, description.long & description.short
         return $data;
