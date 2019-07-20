@@ -2,7 +2,7 @@
     {% with %}
         {% set crudFieldDisabled = crudProperty.crud[crud.context] != 'editable' %}
         {% if crud.context == 'index' %}
-            {% set crudFieldName = 'data[' ~ crudItem.id ~ '][' ~ crudProperty.name ~ ']' %}
+            {% set crudFieldName = 'data[' ~ item.id ~ '][' ~ crudProperty.name ~ ']' %}
         {% else %}
             {% set crudFieldName = 'data[' ~ crudProperty.name ~ ']' %}
         {% endif %}
@@ -10,7 +10,7 @@
             crudFieldID: crudFieldID,
             name: crudFieldName,
             disabled: crudFieldDisabled,
-            checked: crudItem[crudProperty.name] is defined ? crudItem[crudProperty.name] : crudProperty.editor.default,
+            checked: item[crudProperty.name] is defined ? item[crudProperty.name] : crudProperty.editor.default,
         } only %}
     {% endwith %}
 </div>

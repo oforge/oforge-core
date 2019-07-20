@@ -1,7 +1,7 @@
 <div class="btn-group pull-right">
-    {% if not crudItem.installed %}
+    {% if not item.installed %}
         {% include 'Backend/Plugin/Components/Index/Action/Install.twig' with {isButton: true} %}
-    {% elseif not crudItem.active %}
+    {% elseif not item.active %}
         {% include 'Backend/Plugin/Components/Index/Action/Activate.twig' with {isButton: true} %}
     {% else %}
         {% include 'Backend/Plugin/Components/Index/Action/Deactivate.twig' with {isButton: true} %}
@@ -11,8 +11,8 @@
         <i class="fa fa-caret-down"></i>
     </button>
     <ul class="dropdown-menu">
-        {% if crudItem.installed %}
-            {% if crudItem.active %}
+        {% if item.installed %}
+            {% if item.active %}
                 <li>{% include 'Backend/Plugin/Components/Index/Action/Rebuild.twig' %}</li>
                 <li role="separator" class="divider"></li>
                 <li>{% include 'Backend/Plugin/Components/Index/Action/Reactivate.twig' %}</li>

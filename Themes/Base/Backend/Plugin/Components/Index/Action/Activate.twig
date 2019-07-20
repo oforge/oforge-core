@@ -1,5 +1,5 @@
 <a class="{% if isButton %}btn btn-primary{% endif %}"
-   href="{{ url('backend_plugins_activate', {name: crudItem.name|url_encode}, meta.route.query|default({})) }}"
+   href="{{ url('backend_plugins_activate', {name: item.name|url_encode}, meta.route.query|default({})) }}"
    title="{{ i18n('backend_crud_plugin_action_activate', {en: 'activate', de: 'aktivieren'}) }}">
     {{ i18n('backend_crud_plugin_action_activate', {en: 'activate', de: 'aktivieren'}) }}
 </a>

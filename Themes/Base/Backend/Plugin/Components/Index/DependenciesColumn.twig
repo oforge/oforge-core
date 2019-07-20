@@ -1,7 +1,7 @@
-{% if crudItem.dependencies %}
+{% if item.dependencies %}
     <span class="btn">
         <i class="fa fa-exclamation-circle fa--big text-primary" data-toggle="tooltip"
-           title="{{ crudItem.dependencies|join('\n') }}"></i>
+           title="{{ item.dependencies|join('\n') }}"></i>
     </span>
 {% else %}
     <span class="btn">

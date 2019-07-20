@@ -1,6 +1,6 @@
 {% if crudProperty.list is defined %}
     <select class="form-control" {% if crudFieldID %}id="{{ crudFieldID }}"{% endif %}
-        {% if crudProperty.crud[crud.context] == 'editable' %}name="data[{% if crud.context == 'index' %}{{ crudItem.id }}][{% endif %}{{ crudProperty.name }}]"{% endif %}
+        {% if crudProperty.crud[crud.context] == 'editable' %}name="data[{% if crud.context == 'index' %}{{ item.id }}][{% endif %}{{ crudProperty.name }}]"{% endif %}
         {% if crudProperty.editor.required %}required{% endif %}
         {% if crudProperty.editor.multiple %}multiple{% endif %}
         {% if crudProperty.editor.size %}size="{{ crudProperty.editor.size }}"{% endif %}
@@ -12,7 +12,7 @@
                         {% if crud.context == 'create' %}
                             {% set selected = (meta.route.query[crudProperty.name]|default(crudProperty.editor.default)|default('') == value) %}
                         {% else %}
-                            {% set selected = (crudItem[crudProperty.name]|default('') == value) %}
+                            {% set selected = (item[crudProperty.name]|default('') == value) %}
                         {% endif %}
                         <option {% if selected %}selected{% endif %} value="{{ value }}">
                             {{ label }}
@@ -23,7 +23,7 @@
                 {% if crud.context == 'create' %}
                     {% set selected = (meta.route.query[crudProperty.name]|default(crudProperty.editor.default)|default('') == value) %}
                 {% else %}
-                    {% set selected = (crudItem[crudProperty.name]|default('') == value) %}
+                    {% set selected = (item[crudProperty.name]|default('') == value) %}
                 {% endif %}
                 <option {% if selected %}selected{% endif %} value="{{ value }}">
                     {{ label }}

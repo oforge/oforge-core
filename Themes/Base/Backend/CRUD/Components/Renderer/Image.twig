@@ -1,8 +1,8 @@
-{% if crudItem[crudProperty.name] %}
-    {% set imagePath = media(crudItem[crudProperty.name]) %}
+{% if item[crudProperty.name] %}
+    {% set imagePath = media(item[crudProperty.name]) %}
     <a href="{{ imagePath }}" title="{{ imagePath }}" target="_blank">
         <img width="{{ crudProperty.renderer.width|default(null) }}"
-             src="{{ media(crudItem[crudProperty.name], crudProperty.renderer.width|default(0)) }}" title=" {{ imagePath }}" />
+             src="{{ media(item[crudProperty.name], crudProperty.renderer.width|default(0)) }}" title=" {{ imagePath }}" />
     </a>
 {% else %}
     {{ i18n('backend_crud_no_image', {en: 'no image', de: 'kein Bild'}) }}

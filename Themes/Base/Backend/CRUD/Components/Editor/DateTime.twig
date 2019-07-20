@@ -1,6 +1,6 @@
 <div class="form-group">
     {% set crudDateTimePickerType = crudFieldType|default('datetime') %}
-    {% set crudDateTimePickerValue = crudItem[crudProperty.name]|default(crudProperty.editor.default)|default('') %}
+    {% set crudDateTimePickerValue = item[crudProperty.name]|default(crudProperty.editor.default)|default('') %}
     {% if crudDateTimePickerType == 'data' %}
         {% set crudDateTimePickerValue = crudDateTimePickerValue|formatDate %}
     {% elseif crudDateTimePickerType == 'datetime' %}
