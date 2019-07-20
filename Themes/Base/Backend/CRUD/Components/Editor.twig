@@ -9,4 +9,11 @@
         'Backend/CRUD/Components/Editor/String.twig',
     ] %}
 {% endif %}
-{% include crudEditorTemplate %}
+<div>
+    {% include crudEditorTemplate %}
+</div>
+{% if crudProperty.editor.hint and crud.context != 'index' %}
+    <div class="small">
+        {{ crudProperty.editor.hint is array ? i18n(crudProperty.editor.hint) : crudProperty.editor.hint }}
+    </div>
+{% endif %}

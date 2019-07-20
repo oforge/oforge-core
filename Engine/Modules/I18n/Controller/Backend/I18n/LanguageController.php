@@ -23,46 +23,45 @@ class LanguageController extends BaseCrudController {
     /** @var array $modelProperties */
     protected $modelProperties = [
         [
-            'name' => 'id',
-            'type' => CrudDataTypes::INT,
-            'crud' => [
-                'index' => 'readonly',
-            ],
-        ],
-        [
-            'name'  => 'iso',
-            'type'  => CrudDataTypes::STRING,
-            'label' => [
+            'name'   => 'iso',
+            'type'   => CrudDataTypes::STRING,
+            'label'  => [
                 'key'     => 'module_i18n_language_iso',
                 'default' => [
                     'en' => 'ISO',
                     'de' => 'ISO',
                 ],
             ],
-            'crud'  => [
+            'crud'   => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
                 'create' => 'editable',
                 'update' => 'editable',
                 'delete' => 'readonly',
             ],
+            'editor' => [
+                'required' => true,
+            ],
         ],
         [
-            'name'  => 'name',
-            'type'  => CrudDataTypes::STRING,
-            'label' => [
+            'name'   => 'name',
+            'type'   => CrudDataTypes::STRING,
+            'label'  => [
                 'key'     => 'module_i18n_language_name',
                 'default' => [
                     'en' => 'Name',
                     'de' => 'Name',
                 ],
             ],
-            'crud'  => [
+            'crud'   => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
                 'create' => 'editable',
                 'update' => 'editable',
                 'delete' => 'readonly',
+            ],
+            'editor' => [
+                'required' => true,
             ],
         ],
         [
