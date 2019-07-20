@@ -3,7 +3,7 @@
     {% include 'Backend/CRUD/Components/Index/TableHeader.twig' %}
     </thead>
     <tbody>
-    {% for crudItem in crud.items %}
+    {% for item in crud.items %}
         <tr>
             {% for crudProperty in crud.properties if crudProperty.crud[crud.context] and crudProperty.crud[crud.context]|default('off') != 'off' %}
                 {% include 'Backend/CRUD/Components/Index/TableCell.twig' %}

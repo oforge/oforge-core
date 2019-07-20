@@ -4,29 +4,29 @@
             Missing select list configuration for "{{ crudProperty.name }}"
         </div>
     {% elseif crudProperty.list is empty %}
-        {{ crudItem[crudProperty.name] }}
+        {{ item[crudProperty.name] }}
     {% elseif crudProperty.list|first.options is defined %}
         {% set found = false %}
         {% for group in crudProperty.list %}
-            {% if group.options[crudItem[crudProperty.name]] is defined %}
+            {% if group.options[item[crudProperty.name]] is defined %}
                 {% set found = true %}
-                {{ group.options[crudItem[crudProperty.name]] }}
+                {{ group.options[item[crudProperty.name]] }}
             {% endif %}
         {% endfor %}
         {% if not found %}
             <div>
                 <i class="fa fa-exclamation-triangle"
                    title="{{ i18n('backend_crud_missing_select_value', {en: 'Value not in select list', de: 'Wert nicht in Select-Liste'}) }}"></i>
-                {{ crudItem[crudProperty.name] }}
+                {{ item[crudProperty.name] }}
             </div>
         {% endif %}
-    {% elseif crudProperty.list[crudItem[crudProperty.name]] is not defined %}
+    {% elseif crudProperty.list[item[crudProperty.name]] is not defined %}
         <div>
             <i class="fa fa-exclamation-triangle"
                title="{{ i18n('backend_crud_missing_select_value', {en: 'Value not in select list', de: 'Value not in select list'}) }}"></i>
-            {{ crudItem[crudProperty.name] }}
+            {{ item[crudProperty.name] }}
         </div>
     {% else %}
-        {{ crudProperty.list[crudItem[crudProperty.name]] }}
+        {{ crudProperty.list[item[crudProperty.name]] }}
     {% endif %}
 {% endwith %}

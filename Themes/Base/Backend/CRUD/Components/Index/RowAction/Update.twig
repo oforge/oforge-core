@@ -1,5 +1,5 @@
 <a class="btn btn-primary {% if not crud.actions.update %}disabled{% endif %}"
-   href="{{ url(meta.route.name  ~ '_update', {id: crudItem.id}) }}"
+   href="{{ url(meta.route.name  ~ '_update', {id: item.id}) }}"
    title="{{ i18n('backend_crud_btn_update', {en: 'update', de: 'aktualisieren'}) }}">
     <i class="fa fa-pencil"></i>
 </a>

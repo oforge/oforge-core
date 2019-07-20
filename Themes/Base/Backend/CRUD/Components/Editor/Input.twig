@@ -1,6 +1,6 @@
 <input {% if crudFieldID %}id="{{ crudFieldID }}"{% endif %} type="{{ crudFieldEditor.type|default('text') }}"
-    {% if crudProperty.crud[crud.context] == 'editable' %}name="data[{% if crud.context == 'index' %}{{ crudItem.id }}][{% endif %}{{ crudProperty.name }}]"{% endif %}
-       value="{{ crudItem[crudProperty.name]|default(crudProperty.editor.default)|default('') }}"
+    {% if crudProperty.crud[crud.context] == 'editable' %}name="data[{% if crud.context == 'index' %}{{ item.id }}][{% endif %}{{ crudProperty.name }}]"{% endif %}
+       value="{{ item[crudProperty.name]|default(crudProperty.editor.default)|default('') }}"
        class="form-control {{ crudFieldEditor.class|default('') }}"
     {% if crudProperty.editor.required %}required{% endif %}
     {% if crudProperty.editor.placeholder %}placeholder="{{ crudProperty.editor.placeholder }}"{% endif %}
