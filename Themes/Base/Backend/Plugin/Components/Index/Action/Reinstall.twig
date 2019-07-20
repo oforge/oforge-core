@@ -1,4 +1,4 @@
-<a href="{{ url('backend_plugins_reinstall', {name: item.name|url_encode}, meta.route.query|default({})) }}"
-   title="{{ i18n('backend_crud_plugin_action_reinstall', 'reinstall') }}">
-    {{ i18n('backend_crud_plugin_action_reinstall', 'reinstall') }}
+<a href="{{ url('backend_plugins_reinstall', {name: crudItem.name|url_encode}, meta.route.query|default({})) }}"
+   title="{{ i18n('backend_crud_plugin_action_reinstall', {en: 'reinstall', de: 'reinstallieren'}) }}">
+    {{ i18n('backend_crud_plugin_action_reinstall', {en: 'reinstall', de: 'reinstallieren'}) }}
 </a>
