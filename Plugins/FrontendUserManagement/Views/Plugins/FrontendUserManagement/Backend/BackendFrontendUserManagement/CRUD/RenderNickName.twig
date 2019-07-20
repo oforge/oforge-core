@@ -1,1 +1,6 @@
-<a href="{{ url('insertion_profile', [id, item.id]) }}">{{ item.detail.nickName }}</a>
+{% if crudItem.detail.nickName %}
+    <a href="{{ url('insertion_profile', [id, crudItem.id]) }}">{{ crudItem.detail.nickName }}</a>
+{% else %}
+    -
+{% endif %}
+

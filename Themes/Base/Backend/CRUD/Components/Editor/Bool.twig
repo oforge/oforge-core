@@ -1,14 +1,16 @@
 <div>
-    {% set disabled = property.crud[crud.context] != 'editable' %}
-    {% if crud.context == 'index' %}
-        {% set fieldName = 'data[' ~ item.id ~ '][' ~ property.name ~ ']' %}
-    {% else %}
-        {% set fieldName = 'data[' ~ property.name ~ ']' %}
-    {% endif %}
-    {% include 'Backend/Components/Form/Switch.twig' with {
-        id: fieldID,
-        name: fieldName,
-        disabled: disabled,
-        checked: item[property.name] is defined ? item[property.name] : property.editor.default,
-    } only %}
+    {% with %}
+        {% set crudFieldDisabled = crudProperty.crud[crud.context] != 'editable' %}
+        {% if crud.context == 'index' %}
+            {% set crudFieldName = 'data[' ~ crudItem.id ~ '][' ~ crudProperty.name ~ ']' %}
+        {% else %}
+            {% set crudFieldName = 'data[' ~ crudProperty.name ~ ']' %}
+        {% endif %}
+        {% include 'Backend/Components/Form/Switch.twig' with {
+            crudFieldID: crudFieldID,
+            name: crudFieldName,
+            disabled: crudFieldDisabled,
+            checked: crudItem[crudProperty.name] is defined ? crudItem[crudProperty.name] : crudProperty.editor.default,
+        } only %}
+    {% endwith %}
 </div>

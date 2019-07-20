@@ -1,25 +1,25 @@
-{% if filterConfig.list is defined %}
+{% if crudFilterConfig.list is defined %}
     <span>
-        <select name="{{ propertyName }}" class="form-control select2" title="{{ filterTitle }}
-                data-placeholder="{{ filterTitle }}">
-            <option {% if route.query[propertyName] is not defined %}selected{% endif %} value="">
-                {{ filterTitle }}
+        <select name="{{ crudPropertyName }}" class="form-control select2" title="{{ crudFilterTitle }}
+                data-placeholder="{{ crudFilterTitle }}">
+            <option {% if meta.route.query[crudPropertyName] is not defined %}selected{% endif %} value="">
+                {{ crudFilterTitle }}
             </option>
-            {% for value, label in filterConfig.list %}
-                {% if label.options is defined %}
-                    {% set optgroupLabel = label.label %}
-                    <optgroup label="{{ optgroupLabel }}">
-                        {% for value,label in label.options %}
-                            {% set selected = (route.query[propertyName]|default('') == value) %}
-                            <option {% if selected %}selected{% endif %} value="{{ value }}">
-                                {{ label }}
+            {% for crudFilterValue, crudFilterLabel in crudFilterConfig.list %}
+                {% if crudFilterLabel.options is defined %}
+                    {% set crudFilterOptgroupLabel = crudFilterLabel.label %}
+                    <optgroup label="{{ crudFilterOptgroupLabel }}">
+                        {% for crudFilterValue2,crudFilterLabel2 in crudFilterLabel.options %}
+                            {% set selected = (meta.route.query[crudPropertyName]|default('') == crudFilterValue2) %}
+                            <option {% if selected %}selected{% endif %} value="{{ crudFilterValue2 }}">
+                                {{ crudFilterLabel2 }}
                             </option>
                         {% endfor %}
                     </optgroup>
                 {% else %}
-                    {% set selected = (route.query[propertyName]|default('') == value) %}
-                    <option {% if selected %}selected{% endif %} value="{{ value }}">
-                        {{ label }}
+                    {% set selected = (meta.route.query[crudPropertyName]|default('') == crudFilterValue) %}
+                    <option {% if selected %}selected{% endif %} value="{{ crudFilterValue }}">
+                        {{ crudFilterLabel }}
                     </option>
                 {% endif %}
             {% endfor %}
@@ -27,6 +27,6 @@
     </span>
 {% else %}
     <div class="alert alert-danger" role="alert">
-        Missing select options list configuration for "{{ propertyName }}"
+        Missing select options list configuration for "{{ crudPropertyName }}"
     </div>
 {% endif %}

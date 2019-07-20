@@ -39,9 +39,9 @@ class BaseCrudController extends SecureBackendController {
      *              // Property name. Required
      *              'name'      => 'propertyName',
      *               // Text label or i18n array with key and default value.
-     *              'label'     => 'Text' | ['key' => 'label_id', 'default' => 'ID'],
+     *              'label'     => 'i18n-translated-text' | ['key' => 'label_id', 'default' => 'ID'],
      *              'type'      => CrudDataTypes::..., // Required
-     *              'crud'      => [    // default = off (not rendered). (Required)
+     *              'crud'      => [    // default = off (not rendered, if missing off). (Required)
      *                  'index'     => 'off|readonly|editable',
      *                  'view'      => 'off|readonly|editable',
      *                  'create'    => 'off|readonly|editable',
@@ -51,21 +51,23 @@ class BaseCrudController extends SecureBackendController {
      *              // Select with optgroups, key will be ignored in renderer
      *              'list' => 'functionName' | [
      *                  'key'   => [
-     *                      'label'     => 'Text' | ['key' => 'i18nLabel', 'default' => 'DefaultText'],
+     *                      'label'     => 'i18n-translated-text',
      *                      'options'   => [
-     *                          'value' => => 'Text' | ['key' => 'i18nLabel', 'default' => 'DefaultText'],
+     *                          'value' => => 'i18n-translated-text',
      *                      ]
      *                  ],
      *              ],
      *              // Simple select
      *              'list' => 'functionName' | [
-     *                  'value' => 'Text' | ['key' => 'i18nLabel', 'default' => 'DefaultText'], # Simple select
+     *                  'value' => 'i18n-translated-text', # Simple select
      *              ],
      *              'editor' => [       // Configuration for field editor.
+     *                  'hint'          => ''       // Hint text under editor field.(Optional)
      *                  'default'       => '',      // Default value. (Optional)
      *                  'custom'        => '...'    // If type = custom. Twig path for include.
+     *                  'required'      => false,   // (Optional)
      *                  'pattern'       => '...',   // If type = string. (Optional)
-     *                  'placeholder'   => ...,     //. (Optional)
+     *                  'placeholder'   => '...',   // i18n-translated-text. (Optional)
      *                  'maxlength'     => ...,     // If type = string|text. (Optional)
      *                  'min'           => '...',   // If type = int|float|currency. (Optional)
      *                  'max"           => ...,     // If type = string|text. (Optional)
@@ -85,7 +87,7 @@ class BaseCrudController extends SecureBackendController {
      */
     protected $modelProperties = null;
     /**
-     * Enable or disable crud actions for this model with
+     * Enable or disable crud actions (missing = false) for this model with
      *      protected $crudActions = [
      *          'index'     => true, // enable view
      *          'create'    => true, // enable create button and view

@@ -22,15 +22,18 @@ class KeyValueStoreController extends BaseCrudController {
     /** @var array $modelProperties */
     protected $modelProperties = [
         [
-            'name'  => 'name',
-            'type'  => CrudDataTypes::STRING,
-            'label' => ['key' => 'backend_keyvaluestore_name', 'default' => 'Name'],
-            'crud'  => [
+            'name'   => 'name',
+            'type'   => CrudDataTypes::STRING,
+            'label'  => ['key' => 'backend_keyvaluestore_name', 'default' => 'Name'],
+            'crud'   => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
                 'create' => 'editable',
                 'update' => 'readonly',
                 'delete' => 'readonly',
+            ],
+            'editor' => [
+                'required' => true,
             ],
         ],
         [
@@ -43,6 +46,9 @@ class KeyValueStoreController extends BaseCrudController {
                 'create' => 'editable',
                 'update' => 'editable',
                 'delete' => 'readonly',
+            ],
+            'editor' => [
+                'required' => true,
             ],
         ],
     ];

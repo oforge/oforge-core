@@ -1,12 +1,12 @@
-{% if property.type == 'custom' or property.editor.custom %}
-    {% set rendererTemplate = [
-        property.editor.custom,
+{% if crudProperty.type == 'custom' or crudProperty.editor.custom %}
+    {% set crudEditorTemplate = [
+        crudProperty.editor.custom,
         'Backend/CRUD/Components/Editor/FallbackCustom.twig',
     ] %}
 {% else %}
-    {% set rendererTemplate = [
-        'Backend/CRUD/Components/Editor/' ~ property.type|ucfirst ~'.twig',
+    {% set crudEditorTemplate = [
+        'Backend/CRUD/Components/Editor/' ~ crudProperty.type|ucfirst ~'.twig',
         'Backend/CRUD/Components/Editor/String.twig',
     ] %}
 {% endif %}
-{% include rendererTemplate %}
+{% include crudEditorTemplate %}
