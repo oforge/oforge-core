@@ -29,39 +29,51 @@ class UserManagementController extends BaseCrudController {
     /** @var array $modelProperties */
     protected $modelProperties = [
         [
-            'name'  => 'email',
-            'type'  => CrudDataTypes::EMAIL,
-            'label' => [
+            'name'   => 'email',
+            'type'   => CrudDataTypes::EMAIL,
+            'label'  => [
                 'key'     => 'backend_backenduser_email',
                 'default' => [
                     'en' => 'Mail',
                     'de' => 'Mail',
                 ],
             ],
-            'crud'  => [
+            'crud'   => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
                 'create' => 'editable',
                 'update' => 'editable',
                 'delete' => 'readonly',
             ],
+            'editor' => [
+                'required' => true,
+            ],
         ],# email
         [
-            'name'  => 'password',
-            'type'  => CrudDataTypes::STRING,
-            'label' => [
+            'name'   => 'password',
+            'type'   => CrudDataTypes::STRING,
+            'label'  => [
                 'key'     => 'backend_backenduser_password',
                 'default' => [
                     'en' => 'Password',
                     'de' => 'Passwort',
                 ],
             ],
-            'crud'  => [
+            'crud'   => [
                 'index'  => 'off',
                 'view'   => 'off',
                 'create' => 'editable',
                 'update' => 'editable',
                 'delete' => 'off',
+            ],
+            'editor' => [
+                'hint' => [
+                    'key'     => 'crud_backenduser_hint_password',
+                    'default' => [
+                        'en' => 'If field is left blank, the password will not be changed.',
+                        'de' => 'Wenn Feld leer gelassem wird, wird das Passwort nicht geändert.',
+                    ],
+                ],
             ],
         ],# password
         [
@@ -83,6 +95,13 @@ class UserManagementController extends BaseCrudController {
             ],
             'list'   => 'getSelectRoles',
             'editor' => [
+                'hint'    => [
+                    'key'     => 'crud_backenduser_no_system_user_edit',
+                    'default' => [
+                        'en' => 'A change of system user data is not allowed via the backend.',
+                        'de' => 'Eine Änderung von System Nutzerdaten ist nicht über das Backend erlaubt.',
+                    ],
+                ],
                 'default' => BackendUser::ROLE_MODERATOR,
             ],
         ],# role

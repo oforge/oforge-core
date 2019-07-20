@@ -12,8 +12,15 @@
             {% else %}
                 {{ crudProperty.name|ucfirst }}
             {% endif %}
-            {% if crudProperty.crud[crud.context]|default('off') == 'editable' and crudProperty.editor.required %}
-                <i class="fa fa-exclamation-triangle text-primary" title="{{ i18n('required', {en: 'required', de: 'erforderlich'}) }}"></i>
+            {% if crudProperty.crud[crud.context]|default('off') == 'editable' %}
+                {% if crudProperty.editor.required %}
+                    <i class="fa fa-exclamation-triangle text-primary"
+                       title="{{ i18n('required', {en: 'required', de: 'erforderlich'}) }}"></i>
+                {% endif %}
+                {% if crudProperty.editor.hint %}
+                    <i title="{{ crudProperty.editor.hint is array ? i18n(crudProperty.editor.hint) : crudProperty.editor.hint }}"
+                       class="fa fa-info-circle text-primary"></i>
+                {% endif %}
             {% endif %}
         </th>
     {% endfor %}

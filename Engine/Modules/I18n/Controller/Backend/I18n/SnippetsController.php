@@ -48,6 +48,9 @@ class SnippetsController extends BaseCrudController {
                 'delete' => 'readonly',
             ],
             'list'  => 'getSelectLanguages',
+            'editor' => [
+                'required' => true,
+            ],
         ],
         [
             'name'  => 'name',
@@ -65,6 +68,9 @@ class SnippetsController extends BaseCrudController {
                 'create' => 'editable',
                 'update' => 'editable',
                 'delete' => 'readonly',
+            ],
+            'editor' => [
+                'required' => true,
             ],
         ],
         [

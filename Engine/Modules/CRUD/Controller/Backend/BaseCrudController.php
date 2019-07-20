@@ -62,7 +62,7 @@ class BaseCrudController extends SecureBackendController {
      *                  'value' => 'i18n-translated-text', # Simple select
      *              ],
      *              'editor' => [       // Configuration for field editor.
-     *                  'hint'          => ''       // Hint text under editor field.(Optional)
+     *                  'hint'          => ''i18n-translated-text'| ['key' => 'label_id', 'default' => 'ID'],     // Hint text (in index colum header and under editor field).(Optional)
      *                  'default'       => '',      // Default value. (Optional)
      *                  'custom'        => '...'    // If type = custom. Twig path for include.
      *                  'required'      => false,   // (Optional)
