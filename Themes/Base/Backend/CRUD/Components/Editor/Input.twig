@@ -1,14 +1,13 @@
-<input {% if fieldID %}id="{{ fieldID }}"{% endif %} type="{{ editor.type|default('text') }}"
-        {% if property.crud[crud.context] == 'editable' %}name="data[{% if crud.context == 'index' %}{{ item.id }}][{% endif %}{{ property.name }}]"
-            {% else %}readonly{% endif %}
-       value="{{ item[property.name]|default(property.editor.default)|default('') }}"
-       class="form-control {{ editor.class|default('') }}"
-        {% if editor.disabled %}disabled{% endif %}
-        {% if editor.placeholder %}placeholder="{{ editor.placeholder }}"{% endif %}
-        {% if editor.pattern %}pattern="{{ editor.pattern }}"{% endif %}
-        {% if editor.maxlength %}maxlength="{{ editor.maxlength }}"{% endif %}
-        {% if editor.min %}min="{{ editor.min }}"{% endif %}
-        {% if editor.max %}max="{{ editor.max }}"{% endif %}
-        {% if editor.step %}step="{{ editor.step }}"{% endif %}
+<input {% if crudFieldID %}id="{{ crudFieldID }}"{% endif %} type="{{ crudFieldEditor.type|default('text') }}"
+    {% if crudProperty.crud[crud.context] == 'editable' %}name="data[{% if crud.context == 'index' %}{{ crudItem.id }}][{% endif %}{{ crudProperty.name }}]"{% endif %}
+       value="{{ crudItem[crudProperty.name]|default(crudProperty.editor.default)|default('') }}"
+       class="form-control {{ crudFieldEditor.class|default('') }}"
+    {% if crudProperty.editor.required %}required{% endif %}
+    {% if crudProperty.editor.placeholder %}placeholder="{{ crudProperty.editor.placeholder }}"{% endif %}
+    {% if crudFieldEditor.pattern %}pattern="{{ crudFieldEditor.pattern }}"{% endif %}
+    {% if crudFieldEditor.maxlength %}maxlength="{{ crudFieldEditor.maxlength }}"{% endif %}
+    {% if crudFieldEditor.min %}min="{{ crudFieldEditor.min }}"{% endif %}
+    {% if crudFieldEditor.max %}max="{{ crudFieldEditor.max }}"{% endif %}
+    {% if crudFieldEditor.step %}step="{{ crudFieldEditor.step }}"{% endif %}
 />
 

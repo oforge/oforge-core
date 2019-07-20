@@ -1,4 +1,4 @@
 {% include 'Backend/Components/Image.twig' with {
-    name: 'data[' ~ (crud.context == 'index' ? (item.id ~ '][') : '') ~ property.name ~ ']',
-    data: item[property.name],
+    name: 'data[' ~ (crud.context == 'index' ? (crudItem.id ~ '][') : '') ~ crudProperty.name ~ ']',
+    data: crudItem[crudProperty.name],
 } only %}

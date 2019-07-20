@@ -1,1 +1,6 @@
-<a href="mailto:{{ item.detail.contactEmail }}">{{ item.detail.contactEmail }}</a>
+{% if crudItem.detail.contactEmail %}
+    <a href="mailto:{{ crudItem.detail.contactEmail }}">{{ crudItem.detail.contactEmail }}</a>
+{% else %}
+    -
+{% endif %}
+
