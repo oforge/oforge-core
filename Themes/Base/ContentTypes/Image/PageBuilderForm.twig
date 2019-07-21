@@ -1,0 +1,12 @@
+<div class="form content-type-edit-form-image">
+    <div class="form-group">
+        <label>{{ i18n('type_image', 'Image') }}</label>
+
+        {% include 'Backend/Components/Image.twig' with {
+            name: 'image',
+            data: data.url
+        } only %}
+
+    </div>
+
+</div>

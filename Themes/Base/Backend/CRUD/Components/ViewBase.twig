@@ -1,0 +1,18 @@
+{% extends 'Backend/Master/Index.twig' %}
+{% set meta = mergeRecursive(meta|default({}), dotToNested({
+    'backend.favoriteButton': false,
+})) %}
+{% set breadcrumbs = backend_breadcrumbs(meta.route.parentName)|default({})|merge([{
+    path: meta.route.name,
+    pathArgs: {id: crud.item.id},
+    visible: true,
+    name: i18n('backend_crud_btn_' ~ crud.context, crud.context),
+}]) %}
+{% set page_header = i18n(meta.route.parentName) %}
+{% set page_header_description = i18n('backend_crud_btn_' ~ crud.context, crud.context) %}
+
+{% block pagecontent %}
+    <section class="content">
+        {% include 'Backend/CRUD/Components/Form.twig' with { item: crud.item } %}
+    </section>
+{% endblock %}

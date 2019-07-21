@@ -1,0 +1,14 @@
+<div class="product__attribute">
+    <span class="product__label">{{ i18n(attribute.name) }}</span>
+    <span class="product__value">
+        {% if value is not empty %}
+            {% if value  is iterable %}
+                {% for v in value %}
+                    {{ i18n(getInsertionValue(v).value) }}
+                {% endfor %}
+            {% else %}
+                {{ i18n(getInsertionValue(value).value) }}
+            {% endif %}
+        {% else %}{{ i18n('not_available') }}
+        {% endif %}</span>
+</div>

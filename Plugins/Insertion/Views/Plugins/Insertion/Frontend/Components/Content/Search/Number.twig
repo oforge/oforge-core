@@ -1,0 +1,20 @@
+<div class="form__control">
+    {% if omitLabel is not defined %}<label for="{{ attribute.name }}" class="form__label">{{ i18n(attribute.name) }}</label>{% endif %}
+    <label for="{{ attribute.name }}"
+           class="form__input form__input--inside-label">
+        <input type="number"
+               name="{{ attribute.name }}"
+               id="{{ attribute.name }}"
+               value="{{ search.filter[attribute.name] }}"
+               min="0"
+               class="form__input"
+               placeholder="{{ i18n(attribute.name) }}"
+        />
+        {% set unit = i18n('unit_' ~  attribute.name, '') %}
+        {% if unit is not empty %}
+            <span class="input__unit">
+                {{ unit }}
+            </span>
+        {% endif %}
+    </label>
+</div>

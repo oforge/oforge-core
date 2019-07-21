@@ -1,0 +1,30 @@
+<div id="blog-posts">
+    {% if blog.posts %}
+
+        <div class="blog-post-lastblog">
+            {% if blog.posts|length >= 1 %}
+                {% include 'Plugins/Blog/Frontend/Category/PostEntry.twig' with {blogPost : blog.posts[0]} %}
+            {% endif %}
+        </div>
+        <div id="blog-posts-container" data-masonry="true">
+            {% for index,blogPost in blog.posts %}
+                {% if index > 0 %}
+                    {% block blog_posts__post_entry %}
+                    {% include 'Plugins/Blog/Frontend/Category/PostEntry.twig' %}
+                    {% endblock blog_posts__post_entry %}
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% if blog.posts|length >= blog.postsPerPage %}
+            <div class="blog-load-more blog-load-more-posts">
+                <button class="button button--primary" data-addmore="true" data-trigger-event="resize"
+                        data-container="#blog-posts-container"
+                        data-url="{{ url('frontend_blog_more_posts', {}, {categoryID: blog.category.id}) }}">
+                    {{ i18n('plugin_blog_btn_load_more_posts', 'Load more') }}
+                </button>
+            </div>
+        {% endif %}
+    {% else %}
+        {% include 'Plugins/Blog/Frontend/Category/PostListEmpty.twig' %}
+    {% endif %}
+</div>

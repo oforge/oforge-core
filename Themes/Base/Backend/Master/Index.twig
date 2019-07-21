@@ -1,62 +1,93 @@
 <!doctype html>
-<html lang="en">
+<html lang="{{ meta.language }}">
 <head>
     {% block head %}
-        {% include 'Backend/Master/Head/Main.twig' %}
+        {% include 'Backend/Master/Components/Head/Main.twig' %}
     {% endblock %}
 </head>
-<body class="hold-transition skin-oforge sidebar-mini">
+<body class="hold-transition skin-oforge sidebar-mini {% if meta.backend.sidebar|default(config('backend_sidebar_collapsed_default')) %}sidebar-collapse{% endif %}">
 <div class="wrapper">
+
+    {% if debug.console %}
+        {{ o_dump() }}
+    {% endif %}
+
+    {% set breadcrumbsmap = backend_breadcrumbs_map(meta.route.name) %}
+
     {% block pageheader %}
-        {% include 'Backend/Master/PageHeader.twig' %}
+        {% include 'Backend/Master/Components/PageHeader/Index.twig' %}
     {% endblock %}
 
-
     {% block sidebar %}
-        {% include 'Backend/Master/Sidebar.twig' %}
+        {% include 'Backend/Master/Components/Sidebar/SidebarMain.twig' %}
     {% endblock %}
 
     {% block content %}
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
-            <section class="content-header">
-                <h1>
-                    {{ page_header }}
-                    {% if page_header_description  %}<small>{{ page_header_description }}</small>{% endif %}
-                </h1>
-                <ol class="breadcrumb">
-                    <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-                    <li class="active">Here</li>
-                </ol>
-            </section>
+
+            {% block content_header %}
+                {% include 'Backend/Master/Components/Content/Header.twig' %}
+            {% endblock %}
+
+            {% if (flashMessages) %}
+                {% block content_flash_messages %}
+                    {% include 'Backend/Master/Components/Content/FlashMessages.twig' %}
+                {% endblock content_flash_messages %}
+            {% endif %}
 
             <!-- Main content -->
             <section class="content container-fluid">
                 {% block pagecontent %}
-                <!--------------------------
-                  | Your Page Content Here |
-                  -------------------------->
-
+                    <!--------------------------
+                      | Your Page Content Here |
+                      -------------------------->
                 {% endblock %}
             </section>
             <!-- /.content -->
         </div>
-
     {% endblock %}
 
     {% block footer %}
-        {% include 'Backend/Master/Footer.twig' %}
+        {% include 'Backend/Master/Components/Footer/Index.twig' %}
     {% endblock %}
-
 
     {% block sidebarcontrol %}
-        {% include 'Backend/Master/SidebarControl.twig' %}
+        {% include 'Backend/Master/Components/Sidebar/SidebarControl.twig' %}
     {% endblock %}
 </div>
+
+{% block svg_icons %}
+    {% include 'Frontend/Components/SVG.twig' %}
+{% endblock svg_icons %}
+
 {% block scripts %}
-    {% include 'Backend/Master/Footer/Scripts.twig' %}
+    {% include 'Backend/Master/Components/Footer/Scripts.twig' %}
 {% endblock %}
+
+{% block meta %}
+    {% if debug.session %}
+        <style>
+            .meta {
+                background: #d87a68;
+                color: #fff;
+                padding: 1rem;
+                width: 100%;
+                min-height: 300px;
+                font-size: 1.2rem;
+                line-height: 1.4;
+                word-break: break-all;
+            }
+            .meta * {
+                white-space: pre-wrap;
+            }
+        </style>
+        <div class="meta">
+            {{ o_print(debug.session) }}
+        </div>
+    {% endif %}
+{% endblock meta %}
+
 
 </body>
 </html>

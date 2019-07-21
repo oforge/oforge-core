@@ -1,0 +1,12 @@
+{% if property.type == 'custom' or property.editor.custom %}
+    {% set rendererTemplate = [
+        property.editor.custom,
+        'Backend/CRUD/Components/Editor/FallbackCustom.twig',
+    ] %}
+{% else %}
+    {% set rendererTemplate = [
+        'Backend/CRUD/Components/Editor/' ~ property.type|ucfirst ~'.twig',
+        'Backend/CRUD/Components/Editor/String.twig',
+    ] %}
+{% endif %}
+{% include rendererTemplate %}

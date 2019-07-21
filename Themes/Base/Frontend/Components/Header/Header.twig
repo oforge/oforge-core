@@ -1,0 +1,33 @@
+{# block layout__header #}
+{% block header %}
+    <header class="header">
+        <div class="header__content">
+            {% block header__burger_menu %}
+                {% include 'Frontend/Components/Header/BurgerMenu.twig' %}
+            {% endblock header__burger_menu %}
+
+            {% block header_top %}
+                <div class="header-top flex flex--row flex--center">
+                    <div class="content flex flex--row flex--center flex--wrap flex--justify">
+
+                        {% block header__logo %}
+                            {% include 'Frontend/Components/Header/Logo.twig' %}
+                        {% endblock header__logo %}
+
+                        {% block header__top_nav %}
+                            {% include 'Frontend/Components/Header/TopNav.twig' %}
+                        {% endblock header__top_nav %}
+                    </div>
+                </div>
+            {% endblock header_top %}
+
+            {% block header__main_nav %}
+                {% include 'Frontend/Components/Header/MainNav.twig' %}
+            {% endblock header__main_nav %}
+        </div>
+    </header>
+{% endblock header %}
+
+{% block header_image %}
+    {% include 'Frontend/Components/Header/HeaderImage.twig' %}
+{% endblock header_image %}

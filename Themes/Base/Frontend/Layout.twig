@@ -1,44 +1,7 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{% block title %}Default Title{% endblock %}</title>
-    {% block head_styles %}
-        <style>
-            *, *:before, *:after {
-                box-sizing: border-box;
-                font-family: sans-serif;
-            }
-        </style>
-
-
-        {% if assets.css %}
-            <link rel="stylesheet" href="{{ assets.css }}"/>
-        {% endif %}
-
-        {% if assets.js %}
-            <script type="text/javascript" async="" src="{{ assets.js }}"></script>
-        {% endif %}
-    {% endblock %}
-</head>
-<body>
-<h1>Hey there! This is the Themes/Base/Frontend/Layout.twig Template</h1>
-{% block headline %}
-    <h2>This is the Base Layout Headline</h2>
-{% endblock %}
-
-{% block body %}
-{% endblock %}
-
-{% block footer_scripts %}
-    <script>
-        console.log("%cHello World! This is a default JavaScript from the footer block.", "color: #dd0000");
-    </script>
-{% endblock %}
-
-{{ o_dump() }}
-</body>
-</html>
+{#
+    This file is a helper file for extending the layout of a theme.
+    The variable meta.template.layout can be changed in the admin backend and will be set to Default in the TemplateRenderService
+    if no layout is defined. This helps template developers to easily extend the base theme.
+    You just have to extend '@parent/Frontend/Layout.twig' and define the layout in the admin backend.
+#}
+{% extends 'Frontend/Layouts/' ~ meta.template.layout|default('Default') ~ '.twig' %}

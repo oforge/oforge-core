@@ -1,0 +1,18 @@
+.cms-customers {
+    text-align: center;
+    padding: 5px 0;
+
+    span {
+        vertical-align: middle;
+    }
+
+    .cms-customer-image {
+        display: inline-block;
+        width: 60px;
+        height: 60px;
+        background-position: center center;
+        background-size: cover;
+        border-radius: 50%;
+        border: 1px solid $color-secondary;
+    }
+}

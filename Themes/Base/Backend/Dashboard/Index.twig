@@ -1,7 +1,41 @@
 {% extends "Backend/Master/Index.twig" %}
 
 {% block pagecontent %}
+    {% set widgets = backend_widgets() %}
 
-    {{ o_dump() }}
+    {% if widgets.top %}
+        <div class="row">
+            {% for widget in widgets.top %}
+                {% include 'Backend/Master/Components/Widgets/ItemTop.twig' with {'item': widget} %}
+            {% endfor %}
+        </div>
+    {% endif %}
+    <div class="row">
+
+        <section data-site="left"
+                 class="col-lg-7 connectedSortable ui-sortable">
+            {% for widget in widgets.left %}
+                {% include 'Backend/Master/Components/Widgets/Item.twig' with {'item': widget} %}
+            {% endfor %}
+        </section>
+
+        <section data-site="right"
+                 class="col-lg-5 connectedSortable ui-sortable">
+            {% for widget in widgets.right %}
+                {% include 'Backend/Master/Components/Widgets/Item.twig' with {'item': widget} %}
+            {% endfor %}
+        </section>
+
+    </div>
+
+    <br />
+    <ul>
+        <li>Anzahl aktiver Nutzer (letzte 90 Tage)</li>
+        <li>Anzahl aktiver Inserate</li>
+        <li>Tägliche Webseiten-Besucher (Analytics)</li>
+        <li>Anzahl freizugebender Inserate</li>
+        <li> Anzahl offener Support-Anfragen</li>
+        <li>Klicks auf Werbebanner</li>
+    </ul>
 
 {% endblock %}

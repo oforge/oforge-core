@@ -1,0 +1,70 @@
+.attribute-group {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-gap: $size-large;
+}
+
+.title--attribute-group {
+    display: block;
+    width: 100%;
+    color: $color-secondary;
+    font-weight: 700;
+    font-size: $font-size-3;
+    margin: $size-large 0;
+}
+
+.sub-attribute-container__text {
+    font-size: 13px;
+    margin-top: 10px;
+    display: inline-block;
+}
+
+
+@media screen and (min-width: $screen-medium) {
+    .attribute-group {
+        grid-template-columns: repeat(2, 1fr);
+
+        .form__control {
+            margin-bottom: $size-large;
+        }
+
+        .form__control + .form__control {
+            margin-top: 0;
+        }
+    }
+    .title--attribute-group {
+        grid-column: span 2;
+    }
+}
+
+
+@media screen and (min-width: $screen-large) {
+    .form-controls {
+        > .attribute-group {
+            > .title--attribute-group {
+                grid-column: span 3;
+            }
+
+            > .attribute-container {
+                grid-column: span 3;
+                display: grid;
+                grid-gap: 1.2rem;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+
+                > .form__label {
+                    grid-column: span 3;
+                }
+            }
+        }
+    }
+}
+
+@media screen and (min-width: $screen-large) {
+    .attribute-group {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .title--attribute-group {
+        grid-column: span 3;
+    }
+}

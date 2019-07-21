@@ -1,0 +1,46 @@
+{% block cms_page_builder_form %}
+    <form id="cms_page_builder_form" action={{ url('backend_content_elements') }} method="post"
+          enctype="multipart/form-data">
+        <input name="cms_form" type="hidden" value="cms_page_builder_form">
+        <input id="cms_page_selected_element" name="cms_page_selected_element" type="hidden"
+               value="{{ post.cms_page_selected_element }}">
+        <input id="cms_page_create_content_with_type_id" name="cms_page_create_content_with_type_id" type="hidden"
+               value="{{ post.cms_page_create_content_with_type_id }}">
+        <input id="cms_page_create_content_at_order_index" name="cms_page_create_content_at_order_index" type="hidden"
+               value="{{ post.cms_page_create_content_at_order_index }}">
+        <input id="cms_page_delete_content_with_id" name="cms_page_delete_content_with_id" type="hidden">
+        <input id="cms_page_delete_content_at_order_index" name="cms_page_delete_content_at_order_index" type="hidden">
+        <input id="cms_page_selected_action" name="cms_page_selected_action" type="hidden" value="edit">
+    </form>
+
+    <form data-async="true" data-replace="#messageContainer"
+          action={{ url('backend_content_elements_update') }} method="post"
+          enctype="multipart/form-data">
+        <input name="cms_form" type="hidden" value="cms_page_builder_form">
+        <input id="cms_page_selected_element" name="cms_page_selected_element" type="hidden"
+               value="{{ post.cms_page_selected_element }}">
+        <input id="cms_page_create_content_with_type_id" name="cms_page_create_content_with_type_id" type="hidden"
+               value="{{ post.cms_page_create_content_with_type_id }}">
+        <input id="cms_page_create_content_at_order_index" name="cms_page_create_content_at_order_index" type="hidden"
+               value="{{ post.cms_page_create_content_at_order_index }}">
+        <input id="cms_page_delete_content_with_id" name="cms_page_delete_content_with_id" type="hidden">
+        <input id="cms_page_delete_content_at_order_index" name="cms_page_delete_content_at_order_index" type="hidden">
+        <input id="cms_page_selected_action" name="cms_page_selected_action" type="hidden" value="submit">
+
+        <div id="messageContainer">
+
+        </div>
+
+        {% if contents.form and contentElementData %}
+            <div class="form-group">
+                {% include contents.form with {'data': contentElementData} only %}
+            </div>
+        {% endif %}
+
+
+        {% if contents.type and not contents.isContainer %}
+            <input type="submit" class="btn btn-primary" value="{{ i18n('backend_crud_save') }}" />
+        {% endif %}
+
+    </form>
+{% endblock cms_page_builder_form %}

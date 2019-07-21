@@ -1,0 +1,80 @@
+{% extends "@parent/Frontend/Layout.twig" %}
+{% set grid_box_classes = 'grid-box--extended' %}
+{% block content %}
+
+    <div class="content content--insertions">
+        {% block insertions %}
+            <form class="form form--insertion"
+                  action="{{ url('insertions_feedback') }}"
+                  method="post"
+                  enctype="multipart/form-data">
+                <div class="form-controls">
+
+                    {% block page_content %}
+                        <div class="panel panel--insertions">
+                            <ul class="steps">
+                                {% for i in range(1, 5) %}
+                                    <li class="step step--done {% if i == 5 %}step--feedback{% endif %}">
+                                        <a href="{{ url('insertions_createSteps', { type : type.id, page: i}) }}"
+                                           class="step__link">
+                                            {{ i }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <h2 class="feedback__title">{{ i18n('insertion_feedback_title') }}</h2>
+
+                            <div class="feedback__rating">
+                                <div class="rating">
+                                    <input type="radio" id="star5" name="feedback_rating" value="5" />
+                                    <label class="full" for="star5">
+                                        <svg class="icon icon--secondary">
+                                            <use xlink:href="#star"></use>
+                                        </svg>
+                                    </label>
+                                    <input type="radio" id="star4" name="feedback_rating" value="4" />
+                                    <label class="full" for="star4">
+                                        <svg class="icon icon--secondary">
+                                            <use xlink:href="#star"></use>
+                                        </svg>
+                                    </label>
+                                    <input type="radio" id="star3" name="feedback_rating" value="3" />
+                                    <label class="full" for="star3">
+                                        <svg class="icon icon--secondary">
+                                            <use xlink:href="#star"></use>
+                                        </svg>
+                                    </label>
+                                    <input type="radio" id="star2" name="feedback_rating" value="2" />
+                                    <label class="full" for="star2">
+                                        <svg class="icon icon--secondary">
+                                            <use xlink:href="#star"></use>
+                                        </svg>
+                                    </label>
+                                    <input type="radio" id="star1" name="feedback_rating" value="1" />
+                                    <label class="full" for="star1">
+                                        <svg class="icon icon--secondary">
+                                            <use xlink:href="#star"></use>
+                                        </svg>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="feedback__description">
+                                <h3 class="form__title">{{ i18n('help_us_improve') }}</h3>
+                                <textarea class="form__input" name="feedback_text" placeholder="({{ i18n('optional') }})"></textarea>
+                            </div>
+
+                            <div class="form__control">
+                                <input type="hidden" name="token" value="{{ token() }}">
+                                <input type="submit"
+                                       value="{{ i18n('insertion_feedback_submit') }}"
+                                       class="form__input form__input--submit button">
+                            </div>
+                        </div>
+                    {% endblock page_content %}
+                </div>
+            </form>
+
+        {% endblock insertions %}
+    </div>
+{% endblock content %}

@@ -1,0 +1,13 @@
+{% extends 'Frontend/Layout.twig' %}
+
+{% block content %}
+    {% block content_types %}
+        {% if content %}
+            <div class="content">
+                {% for contentItem in content %}
+                    {% include 'ContentTypes/' ~ contentItem.path ~ '/Index.twig' with {'data': contentItem} %}
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endblock content_types %}
+{% endblock %}

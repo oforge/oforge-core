@@ -1,0 +1,38 @@
+{% if property.list is defined %}
+    <select class="form-control" {% if fieldID %}id="{{ fieldID }}"{% endif %}
+        {% if property.crud[crud.context] == 'editable' %}name="data[{% if crud.context == 'index' %}{{ item.id }}][{% endif %}{{ property.name }}]"
+            {% else %}readonly{% endif %}
+        {% if property.editor.multiple %}multiple{% endif %}
+        {% if property.editor.size %}size="{{ property.editor.size }}"{% endif %}
+    >
+        {% for value,label in property.list %}
+            {% if label.options is defined %}
+                <optgroup label="{{ label.label }}">
+                    {% for value,label in label.options %}
+                        {% if crud.context == 'create' %}
+                            {% set selected = (value == meta.route.query[property.name]|default('')) %}
+                        {% else %}
+                            {% set selected = (value == item[property.name]|default(property.editor.default)) %}
+                        {% endif %}
+                        <option {% if selected %}selected{% endif %} value="{{ value }}">
+                            {{ label }}
+                        </option>
+                    {% endfor %}
+                </optgroup>
+            {% else %}
+                {% if crud.context == 'create' %}
+                    {% set selected = (value == meta.route.query[property.name]|default('')) %}
+                {% else %}
+                    {% set selected = (value == item[property.name]|default(property.editor.default)) %}
+                {% endif %}
+                <option {% if selected %}selected{% endif %} value="{{ value }}">
+                    {{ label }}
+                </option>
+            {% endif %}
+        {% endfor %}
+    </select>
+{% else %}
+    <div class="alert alert-danger" role="alert">
+        Missing select options list configuration for "{{ property.name }}"
+    </div>
+{% endif %}

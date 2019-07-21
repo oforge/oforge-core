@@ -1,0 +1,41 @@
+.cms-content-type-editor-wrapper .gallery {
+    &__editor {
+        //Instead of the line below you could use @include user-select($select)
+        user-select: none;
+    }
+
+    &__item {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        display: inline-block;
+        vertical-align: top;
+
+        img {
+            max-width: 200px;
+            max-height: 200px;
+        }
+
+        &--close {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            z-index: 1;
+        }
+
+        &--edit {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            z-index: 1;
+        }
+
+        &--placeholder {
+            display: inline-block;
+            background-color: $light-blue;
+            width: 200px;
+            height: 200px;
+        }
+    }
+
+}

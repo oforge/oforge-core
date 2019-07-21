@@ -1,0 +1,33 @@
+{# block comment_list__entry #}
+
+{% block entry %}
+<div class="blog-post-comment">
+    <div class="blog-post-comment-title">
+        {{ blogPostComment.title }}
+    </div>
+    <div class="blog-post-comment-created">
+        {{ blogPostComment.created|formatDatetime }}
+    </div>
+    <div class="blog-post-comment-author-image">
+        {#TODO ALEX blog category user.detail.image #}
+        {% if blogPostComment.author.detail.image %}
+            <img src="{{ media(blogPostComment.author.detail.image) }}"/>
+        {% else %}
+            DEFAULT_IMAGE
+        {% endif %}
+    </div>
+    <div class="blog-post-comment-author">
+        {% if blogPostComment.author.detail.nickName %}
+            {{ blogPostComment.author.detail.nickName }}
+        {% elseif blogPostComment.author.detail.firstName or blogPostComment.author.detail.lastName %}
+            {{ blogPostComment.author.detail.firstName }} {{ blogPostComment.author.detail.lastName }}
+        {% else %}
+{#            TODO FALLBACK, email??? #}
+        {% endif %}
+
+    </div>
+    <div class="blog-post-comment-content">
+        {{ blogPostComment.content }}
+    </div>
+</div>
+{% endblock entry %}

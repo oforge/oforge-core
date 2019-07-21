@@ -1,0 +1,39 @@
+{% block insertion_search %}
+    <div class="insertion__sidebar">
+        <form class="form form--search-filter"
+              action=""
+              id="form-search"
+              method="get">
+            <h3 class="form__title">{{ i18n('adjust_search', 'Adjust your search') }}</h3>
+
+            <div class="form-controls form-controls--row">
+                {% include 'Plugins/Insertion/Frontend/Components/Content/Search/Price.twig' %}
+            </div>
+
+            {% for attributeGroup in attributes %}
+                {% if attributeGroup.items|length > 0 and attributeGroup.name != 'main' %}
+                    <div class="form-controls form-controls--row form-controls--with-separator">
+                        {% for attribute in attributeGroup.items %}
+                            {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ attribute.attributeKey.filterType|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey } %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+
+            <div class="form-controls form-controls--row form-controls--with-separator">
+                <h3 class="title">{{ i18n('distance') }}</h3>
+                {% include 'Plugins/Insertion/Frontend/Components/Content/Search/Distance.twig' %}
+            </div>
+
+            <div class="form-controls form-controls--row">
+                <div class="form__control form__control--floating-button">
+                    <input type="submit"
+                           id="floating-button"
+                           value="{{ i18n('apply_filter') }}"
+                           class="form__input button button--primary">
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock insertion_search %}

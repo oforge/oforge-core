@@ -1,0 +1,75 @@
+{% block registration_form %}
+    <form class="form form--registration"
+          action="{{ url('frontend_registration_process') }}"
+          method="post">
+        <div class="form-controls">
+            <div class="form__control">
+                {% block registration_label_email %}
+                <label for="frontend_registration_email"
+                       class="form__label">
+                    {{ i18n('email') }}
+                </label>
+                {% endblock registration_label_email %}
+                <input id="frontend_registration_email"
+                       name="frontend_registration_email"
+                       type="email"
+                       class="form__input {% block registration_email_classes %}{% endblock registration_email_classes %}"
+                       placeholder="{{ i18n('email') }}"
+                       required
+                       data-required>
+            </div>
+            <div class="form__control">
+                {% block registration_label_password %}
+                <label for="frontend_registration_password"
+                       class="form__label">
+                    {{ i18n('password') }}
+                </label>
+                {% endblock registration_label_password %}
+                <input id="frontend_registration_password"
+                       name="frontend_registration_password"
+                       type="password"
+                       minlength="6"
+                       class="form__input {% block registration_password_classes %}{% endblock registration_password_classes %}"
+                       placeholder="{{ i18n('password') }}"
+                       required
+                       data-required>
+            </div>
+            <div class="form__control">
+                {% block registration_label_password_confirm %}
+                <label for="frontend_registration_password_confirm"
+                       class="form__label">
+                    {{ i18n('password_confirm') }}
+                </label>
+                {% endblock registration_label_password_confirm %}
+                <input id="frontend_registration_password_confirm"
+                       name="frontend_registration_password_confirm"
+                       type="password"
+                       class="form__input {% block registration_password_confirm_classes %}{% endblock registration_password_confirm_classes %}"
+                       placeholder="{{ i18n('confirm password') }}"
+                       required
+                       data-required>
+            </div>
+            {% block registration_privacy_notice %}
+            <div class="form__control flex flex--row flex--center">
+                <input id="frontend_registration_privacy_notice_accepted"
+                       name="frontend_registration_privacy_notice_accepted"
+                       type="checkbox"
+                       class="form__input form__input--checkbox"
+                       required
+                       data-required>
+                <label for="frontend_registration_privacy_notice_accepted"
+                       class="form__label form__label--checkbox space-left sub">{{ i18n('accept_privacy_notice') }}</label>
+            </div>
+            {% endblock registration_privacy_notice %}
+            <div class="form__control">
+                <input type="hidden" name="token" value="{{ token() }}">
+                {% if meta.route.referrer %}
+                    <input type="hidden" name="frontend_registration_referrer" value="{{ meta.route.referrer }}"/>
+                {% endif %}
+                <input type="submit"
+                       value="{{ i18n('registration') }}"
+                       class="form__input form__input--submit button">
+            </div>
+        </div>
+    </form>
+{% endblock registration_form %}

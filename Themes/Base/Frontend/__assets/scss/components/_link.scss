@@ -1,0 +1,24 @@
+.link {
+    font-size: $font-size-5;
+    color: $color-primary;
+    text-decoration: underline;
+    &:hover, &:active {
+        color: inherit;
+    }
+
+    &.link--primary {
+        color: $color-primary
+    }
+
+    &.link--secondary {
+        color: $color-secondary;
+    }
+
+    &.link--light {
+        color: $color-light;
+    }
+
+    &.link--sub {
+        font-size: $font-size-6;
+    }
+}

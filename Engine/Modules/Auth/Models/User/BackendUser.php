@@ -8,40 +8,27 @@
 
 namespace Oforge\Engine\Modules\Auth\Models\User;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 
 /**
- * @ORM\Table(name="oforge_auth_backend_user")
  * @ORM\Entity
+ * @ORM\Table(name="oforge_auth_backend_user")
+ * @ORM\HasLifecycleCallbacks
  */
-class BackendUser extends AbstractModel
-{
+class BackendUser extends BaseUser {
 
-    const ROLE_SYSTEM = 0;
-    const ROLE_ADMINISTRATOR = 1;
-    const ROLE_MODERATOR = 2;
     /**
-     * @var int
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * TODO: This values should not be constants. What if we want to add a new role?
+     *
      */
-    private $id;
-    
+    public const ROLE_SYSTEM        = 0;
+    public const ROLE_ADMINISTRATOR = 1;
+    public const ROLE_MODERATOR     = 2;
     /**
      * @var string
-     * @ORM\Column(name="email", type="string", nullable=false, unique=true)
+     * @ORM\Column(name="name", type="string", nullable=false)
      */
-    private $email;
-    
-    /**
-     * @var string
-     * @ORM\Column(name="password", type="string", nullable=false)
-     */
-    private $password;
-    
+    private $name;
     /**
      * 0 = admin, 1 = moderator, 2 = other
      *
@@ -49,58 +36,57 @@ class BackendUser extends AbstractModel
      * @ORM\Column(name="role", type="integer", nullable=false)
      */
     private $role;
-    
+
     /**
-     * @return int
+     * @var BackendUserDetail $detail
+     * @ORM\OneToOne(targetEntity="BackendUserDetail", mappedBy="user", fetch="EXTRA_LAZY", cascade={"all"})
+     * @ORM\JoinColumn(name="detail_id", referencedColumnName="id")
      */
-    public function getId(): int
-    {
-        return $this->id;
+    private $detail;
+
+    public function __construct() {
+        parent::__construct();
     }
-    
+
     /**
      * @return string
      */
-    public function getEmail(): string
-    {
-        return $this->email;
+    public function getName() : string {
+        return $this->name;
     }
-    
+
     /**
-     * @param string $email
+     * @param string $name
      */
-    public function setEmail(string $email)
-    {
-        $this->email = $email;
+    public function setName(string $name) : void {
+        $this->name = $name;
     }
-    
-    /**
-     * @return string
-     */
-    public function getPassword(): string
-    {
-        return $this->password;
-    }
-    
-    /**
-     * @param string $password
-     */
-    public function setPassword(string $password)
-    {
-        $this->password = $password;
-    }
-    
+
     /**
      * @return int
      */
-    public function getRole(): int {
+    public function getRole() : int {
         return $this->role;
     }
-    
+
     /**
      * @param $role int
      */
     public function setRole($role) {
         $this->role = $role;
+    }
+
+    /**
+     * @return BackendUserDetail
+     */
+    public function getDetail() : ?BackendUserDetail {
+        return $this->detail;
+    }
+
+    /**
+     * @param BackendUserDetail $detail
+     */
+    public function setDetail(BackendUserDetail $detail) : void {
+        $this->detail = $detail;
     }
 }

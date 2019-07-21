@@ -1,0 +1,37 @@
+{% extends  'Frontend/Components/Insertions/UserInsertion.twig' %}
+{% block attributes__main %}
+
+    <div class="product__attribute">
+        <span class="product__label">{{ i18n('name') }}</span>
+        <span class="product__value">{{ item.content[0].name }}</span>
+    </div>
+    <div class="product__attribute">
+        <span class="product__label">{{ i18n('price') }}</span>
+        <span class="product__value">{{ item.price }} € {% if (item.tax) %} (Netto) {% else %} (Brutto){% endif %}</span>
+        <!-- TODO: Snippify -->
+    </div>
+    <div class="product__attribute">
+        <span class="product__label">{{ i18n('race') }}</span>
+        <span class="product__value"></span>
+    </div>
+{% endblock attributes__main %}
+
+{% block attributes__bottom %}
+    <div class="product__actions">
+        <a class="button button--primary open"
+           href="{{ url("insertions_detail", {id: item.id}) }}">
+            <span>{{ i18n('open_insertion') }}</span>
+            <svg class="icon icon--light">
+                <use xlink:href="#preview"></use>
+            </svg>
+        </a>
+        </a>
+        <a class="button button--primary remove"
+           href="{{ url('frontend_account_insertions_removeBookmark' , {id: bookmark.id}) }}">
+            <span>{{ i18n('remove_bookmark') }}</span>
+            <svg class="icon icon--light">
+                <use xlink:href="#delete"></use>
+            </svg>
+        </a>
+    </div>
+{% endblock attributes__bottom %}

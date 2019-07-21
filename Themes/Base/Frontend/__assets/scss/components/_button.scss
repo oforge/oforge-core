@@ -1,0 +1,66 @@
+.buttons {
+    margin: $size-medium 0;
+}
+
+.button {
+    display: inline-block;
+    padding: $size-medium $size-large;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+
+    &.button--flex {
+        display: flex;
+
+        .button__text {
+            margin-left: $size-large;
+        }
+    }
+
+    &.button--primary {
+        background: $color-primary;
+        color: $text-light;
+    }
+
+    &.button--secondary {
+        background: $color-secondary;
+        color: $text-light;
+    }
+
+    &.button--ghost {
+        border: 1px solid $color-primary;
+        background: $color-light;
+        color: $color-primary;
+    }
+
+    &.button--shadow {
+        box-shadow: 0 $size-small .8rem $color-primary-light;
+    }
+
+    &.button--uppercase {
+        text-transform: uppercase;
+    }
+
+    &.button--header {
+        font-size: 1.2rem;
+    }
+
+    &.button--flat {
+        border-radius: 0;
+    }
+
+    &.button--small {
+        font-size: $font-size-5;
+    }
+
+    &.button--large {
+        height: 3.6rem;
+    }
+
+    &.button--save-result {
+        width: 18rem;
+        height: auto;
+        min-height: 3.6rem;
+        white-space: normal;
+    }
+}

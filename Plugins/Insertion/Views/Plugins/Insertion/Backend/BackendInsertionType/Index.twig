@@ -1,0 +1,84 @@
+{% extends "Backend/Master/Index.twig" %}
+
+{% block pagecontent %}
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">{{ i18n("backend_insertion_type_title", "Edit InsertionType") }}</h3>
+                <div class="box-tools pull-right">
+                    <div class="btn-group pull-right">
+                        <a href="{{ url('backend_insertion_type_edit') }}" class="btn btn-primary">
+                            <i class="glyphicon glyphicon-plus"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="box-body">
+                <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="example1" class="table table-bordered table-striped dataTable" role="grid"
+                                   aria-describedby="example1_info">
+                                <thead>
+                                <tr role="row">
+                                    <th class="sorting_asc" tabindex="0" aria-controls="example1" rowspan="1"
+                                        colspan="1" aria-sort="ascending"
+                                        aria-label="Rendering engine: activate to sort column descending"
+                                        style="width: 297px;">Name
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
+                                        aria-label="Browser: activate to sort column ascending" style="width: 361px;">
+                                        Parent
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
+                                        aria-label="CSS grade: activate to sort column ascending" style="width: 191px;">
+                                        Attribute Amount
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for insertionType in content.insertionTypes %}
+                                    <tr role="row" class="odd">
+                                        <td class="sorting_1">
+                                            <a href="{{ url("backend_insertion_type_edit") ~ "?id=" ~ insertionType.id }}">
+                                                {{ insertionType.name }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="{{ url("backend_insertion_type_edit") ~ "?id=" ~ insertionType.id }}">
+                                                {{ insertionType.parent.name }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="{{ url("backend_insertion_type_edit") ~ "?id=" ~ insertionType.id }}">
+                                                {{ insertionType.attributes|length }}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-7">
+                            <div class="dataTables_paginate paging_simple_numbers">
+                                <ul class="pagination">
+                                    {% for i in range(1, pageCount) %}
+                                        <li class="paginate_button {% if currentPage == i %}active{% endif %}">
+                                            <a href="{{ url('backend_insertion_type') ~ "?page=" ~ i }}" aria-controls="" data-dt-idx="{{ i }}" tabindex="0">
+                                                {{ i }}
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+{% endblock %}

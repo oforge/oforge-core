@@ -1,0 +1,9 @@
+{% block pageheader_navbar_custom_menu_messages_part %}
+
+    {% for top_nav_item in backend_topbar_navigation() %}
+        <li class="dropdown {{ top_nav_item.name }}-menu">
+            {% include 'Backend/Master/Components/PageHeader/Topbar/' ~ top_nav_item.filename ~ '.twig' %}
+        </li>
+    {% endfor %}
+
+{% endblock %}

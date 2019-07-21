@@ -1,0 +1,11 @@
+{% block logo_claim %}
+<div class="main-nav__header">
+    {% if link %}
+    <a href="/">
+        <span class="logo__text">Your Claim <strong class="logo__text2">Here</strong></span>
+    </a>
+    {% else %}
+        <span class="logo__text">Your Claim <strong class="logo__text2">Here</strong></span>
+    {% endif %}
+</div>
+{% endblock logo_claim %}

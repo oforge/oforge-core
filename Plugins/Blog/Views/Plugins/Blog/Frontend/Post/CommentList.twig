@@ -1,0 +1,23 @@
+<div class="blog-post-comments">
+    <h2>{{ blog.comments_count }} {{ i18n('plugin_blog_comments_count', 'comments') }}</h2>
+    {% if blog.comments %}
+        <div id="blog-post-comments-container">
+            {% for blogPostComment in blog.comments %}
+                {% block comment_list__entry %}
+                    {% include 'Plugins/Blog/Frontend/Post/CommentEntry.twig' %}
+                {% endblock comment_list__entry %}
+            {% endfor %}
+        </div>
+        {% if blog.comments|length >= blog.commentsPerPage %}
+            <div class="blog-load-more blog-load-more-comments">
+                <button class="button button--primary" data-addmore="true"
+                        data-container="#blog-post-comments-container"
+                        data-url="{{ url('frontend_blog_more_comments', {postID:blog.post.id, seoUrlPath:blog.post.seoUrlPath}) }}">
+                    {{ i18n('plugin_blog_btn_load_more_comments', 'other comments') }}
+                </button>
+            </div>
+        {% endif %}
+    {% else %}
+        {% include 'Plugins/Blog/Frontend/Post/CommentListEmpty.twig' %}
+    {% endif %}
+</div>

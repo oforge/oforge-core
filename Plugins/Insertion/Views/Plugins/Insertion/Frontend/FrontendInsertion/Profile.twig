@@ -1,0 +1,128 @@
+{% extends "@parent/Frontend/Layout.twig" %}
+
+{% block layout__header %}
+    {% set headerimage = profile.background.id %}
+    {{ parent() }}
+{% endblock layout__header %}
+
+{% block content %}
+    <div class="content content--insertion content--supplier flex">
+        <div class="main">
+            <div class="insertion__supplier">
+                <div class="user__picture"
+                     {% if profile.user.detail.image is defined %}style="background-image: url('{{ media(profile.user.detail.image, 300) }}');"{% endif %}></div>
+            </div>
+
+            <div class="contact--links flex">
+                <div class="contact--icons">
+                    <a class="contact--icon" href="#">
+                        <svg class="icon icon--secondary mail">
+                            <use xlink:href="#email"></use>
+                        </svg>
+                    </a>
+                    <a class="contact--icon center" href="#">
+                        <div class="wrapper">
+                            <svg class="icon icon--secondary telephone">
+                                <use xlink:href="#telephone"></use>
+                            </svg>
+                        </div>
+                    </a>
+                    <a class="contact--icon" href="#">
+                        <svg class="icon icon--secondary">
+                            <use xlink:href="#facebook"></use>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="panel panel--supplier-description description">
+                <div class="description__head">
+                    <h4 class="title">{{ profile.user.detail.firstName }} {{ profile.user.detail.lastName }}</h4>
+                    <div class="language-switch"></div>
+                </div>
+
+                <div class="description__body">
+                    <span>{{ profile.description }}</span>
+                </div>
+            </div>
+
+            {% block top_slider %}
+                <div class="slider--supplier">
+                    {% for insertion in insertions %}
+                        <a href="/insertions/detail/{{ insertion.id }}">
+                            <div class="slide">
+                                {#
+                                <div class="badge is--new">
+                                    <svg class='icon icon--new'>
+                                        <use xlink:href='#new'></use>
+                                    </svg>
+                                </div>
+                                #}
+                                {% if insertion.media is defined and insertion.media|length > 0 and insertion.media[0].content is defined %}
+                                    <img src="{{ media(insertion.media[0].content, 200) }}"
+                                         alt="{{ insertion.content[0].name }}"
+                                         class="image">
+                                {% else %}
+                                    <!-- TODO add dummy image -->
+                                    <img src="https://placeponi.es/300/300" alt="{{ insertion.content[0].title }}"
+                                         title="{{ insertion.content[0].title }}" class="image">
+                                {% endif %}
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            {% endblock top_slider %}
+        </div>
+
+        <div class="sidebar sidebar--insertion">
+
+            {% if extended %}
+                <div class="panel panel--provider">
+
+                </div>
+            {% endif %}
+
+            <div class="panel panel--contact contact">
+                <div class="contact__name">
+                    <strong>{{ profile.user.detail.firstName }} {{ profile.user.detail.lastName }}</strong></div>
+                <div class="contact__address">{{ profile.user.address.postCode }} {{ profile.user.address.city }}</div>
+                <div class="contact__phone"><strong>{{ i18n('tel') }}: {{ profile.user.detail.phoneNumber }}</strong>
+                </div>
+
+            </div>
+
+            <div class="panel panel--map map">
+                <div class="map__address">
+                    {{ profile.user.address.postCode }} {{ profile.user.address.city }}
+                </div>
+                <div class="map__view">
+                    <iframe class="external--content content--iframe"
+                            src="https://www.google.com/maps?ie=UTF8&amp;Iwloc=near&amp;output=embed&amp;t=m&amp;z=15&amp;q={{ profile.user.address.postCode }}+{{ profile.user.address.city }}"
+                            width="100%" height="100%" frameborder="0">
+                    </iframe>
+                </div>
+            </div>
+
+            <div class="panel panel--about about">
+                <div class="about__title"><strong>{{ i18n('supplier-impress') }}</strong></div>
+                <div class="about__description">
+                    <div class="authority">{{ profile.imprintName }}</div>
+                    <div class="address">
+                        <div class="street">{{ profile.imprintStreet }}</div>
+                        <div class="city">{{ profile.imprintZipCity }}</div>
+                        <div class="country">{{ profile.user.address.country }}</div>
+                    </div>
+                    <div class="contact upper">
+                        <div class="tel">{{ i18n('tel') }}: {{ profile.imprintPhone }}</div>
+                        <div class="fax">{{ i18n('fax') }}: {{ profile.imprintFax }}</div>
+                    </div>
+                    <div class="contact lower">
+                        <div class="web">{{ i18n('web') }}: <!-- TODO: Insert Content --></div>
+                        <div class="mail">{{ i18n('email') }}: {{ profile.imprintEmail }}</div>
+                        <div class="link">http://www.kontakt/impressum/</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

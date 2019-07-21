@@ -1,0 +1,90 @@
+* {
+    font-family: $font-family;
+}
+
+body {
+    font-size: $font-size-4;
+    position: relative;
+}
+
+html body .content {
+    max-width: $content-max;
+    width: 100%;
+    margin: 0 auto;
+    padding: $size-large 0;
+    //z-index: 1;
+
+    &.content--relative {
+        position: relative;
+        padding: 0;
+    }
+
+    &.content--no-pad {
+        padding: 0;
+    }
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: $color-secondary;
+    font-weight: bold;
+}
+
+a {
+    color: $color-primary;
+    text-decoration: none;
+
+    &:hover, &:active {
+        text-decoration: none;
+    }
+}
+
+.module-frontendusermanagement,
+[class*="controller-frontend_account"] {
+    .wrap--has-image:before {
+        background-image: url('../img/header.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+}
+
+.description {
+    font-size: $font-size-5;
+}
+
+.sub {
+    font-size: $font-size-6;
+}
+
+.container {
+    flex: 1 0 auto;
+    padding: $size-large 0;
+}
+
+.space-left.space-left {
+    margin-left: $size-medium;
+}
+
+.pad-l-top {
+    padding-top: $size-large;
+}
+
+
+.highlight {
+    color: $color-secondary;
+    font-weight: bold;
+}
+
+.rich-text {
+    ol,
+    ul,
+    dl {
+        padding-left: 20px;
+    }
+}
+
+@media screen and (min-width: $screen-medium) {
+    .hide--medium {
+        display: none;
+    }
+}
+

@@ -1,0 +1,15 @@
+<div class="blog-content">
+    {% include 'Plugins/Blog/Frontend/Post/PostMeta.twig' %}
+    {% block content__rating %}
+        {% if user_logged_in %}
+            {% block content__rating_form %}
+                {% include 'Plugins/Blog/Frontend/Post/RatingForm.twig' with {blogPost:blog.post} %}
+            {% endblock content__rating_form %}
+        {% else %}
+            {% include 'Plugins/Blog/Frontend/Components/RatingView.twig' with {blogPost:blog.post} %}
+        {% endif %}
+    {% endblock content__rating %}
+    {% include 'Plugins/Blog/Frontend/Post/ContentContent.twig' %}
+    {% include 'Plugins/Blog/Frontend/Post/CommentList.twig' %}
+    {% include 'Plugins/Blog/Frontend/Post/LeaveComment.twig' %}
+</div>

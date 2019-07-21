@@ -1,0 +1,89 @@
+{% block user_details_form %}
+    <form class="form form--user-details"
+          action="{{ url('frontend_account_details_process_details') }}"
+          method="post">
+
+        <div class="form-controls">
+
+            <h3 class="form__title">{{ i18n('user_data', 'User data') }}</h3>
+
+            <div class="form__control form__control--half-medium">
+                {% block user_details_label_first_name %}
+                {% endblock user_details_label_first_name %}
+                <input id="frontend_account_details_first_name"
+                       name="frontend_account_details_first_name"
+                       type="text"
+                       class="form__input form__input"
+                       placeholder="{{ i18n('first_name') }}"
+                       required
+                       {% if (userDetails) %}value="{{ userDetails.firstName }}"{% endif %}>
+
+                {% block user_details_label_last_name %}
+                {% endblock user_details_label_last_name %}
+                <input id="frontend_account_details_last_name"
+                       name="frontend_account_details_last_name"
+                       type="text"
+                       class="form__input form__input"
+                       placeholder="{{ i18n('last_name') }}"
+                       required
+                       {% if (userDetails) %}value="{{ userDetails.lastName }}"{% endif %}>
+            </div>
+        </div>
+            <div class="form__control form__control--half-medium">
+                {% block user_details_label_nick_name %}
+                {% endblock user_details_label_nick_name %}
+                <input id="frontend_account_details_nick_name"
+                       name="frontend_account_details_nick_name"
+                       type="text"
+                       class="form__input form__input"
+                       placeholder="{{ i18n('nick_name') }}"
+                       required
+                       {% if (userDetails) %}value="{{ userDetails.nickName }}"{% endif %}>
+            </div>
+
+
+        {% block user_details_data_separator %}
+            <div class="separator"></div>
+        {% endblock user_details_data_separator %}
+
+        <div class="form-controls">
+
+            <h3 class="form__title">{{ i18n('user_contact_data', 'Contact data') }}</h3>
+
+            <div class="form__control">
+                {% block user_details_label_contact_email %}
+                {% endblock user_details_label_contact_email %}
+                <input id="frontend_account_details_contact_email"
+                       name="frontend_account_details_contact_email"
+                       type="email"
+                       class="form__input form__input"
+                       placeholder="{{ i18n('contact_email') }}"
+                       required
+                       {% if (userDetails) %}value="{{ userDetails.contactEmail }}"{% endif %}>
+            </div>
+
+            <div class="form__control">
+                {% block user_details_label_contact_phone %}
+                {% endblock user_details_label_contact_phone %}
+                <input id="frontend_account_details_contact_phone"
+                       name="frontend_account_details_contact_phone"
+                       type="text"
+                       class="form__input form__input"
+                       placeholder="{{ i18n('contact_phone') }}"
+                       required
+                       {% if (userDetails) %}value="{{ userDetails.phoneNumber }}"{% endif %}>
+            </div>
+
+            <div class="form__control">
+                <input type="hidden" name="token" value="{{ token() }}">
+                <input type="submit"
+                       value="{{ i18n('save') }}"
+                       class="form__input form__input--submit button">
+            </div>
+        </div>
+
+        {% block user_details_contact_separator %}
+            <div class="separator"></div>
+        {% endblock user_details_contact_separator %}
+    </form>
+{% endblock user_details_form %}

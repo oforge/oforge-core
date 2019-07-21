@@ -1,0 +1,61 @@
+@mixin createGridColumns($columns: 1, $gap: $size-medium) {
+    display: grid;
+    grid-template-columns: repeat($columns, 1fr);
+    grid-gap: $gap;
+}
+
+.grid-boxes {
+    @include createGridColumns();
+
+    &.grid-boxes--2 {
+        @include createGridColumns(2);
+    }
+}
+
+.grid-box {
+    padding: $size-large;
+    @media screen and (min-width: $screen-medium) {
+        padding: $size-large * 3;
+    }
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    background: $color-secondary;
+    text-align: center;
+    width: 100%;
+    max-width: 30rem;
+    margin: 0 auto;
+
+    &.grid-box--extended {
+        justify-content: flex-start;
+
+        .grid-box__text {
+            border-bottom: 2px solid $text-light;
+            padding: 0 0 $size-large 0;
+            margin: $size-large 0;
+        }
+    }
+
+    &__content {
+        color: $text-light;
+        font-size: $font-size-5;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+    &__text {
+        margin: $size-large 0 0;
+        width: 100%;
+    }
+
+    &__sub-items {
+        margin: 0 auto 0 0;
+    }
+
+    &__sub-item {
+        color: $text-light;
+        font-size: $font-size-6;
+        text-align: left;
+    }
+}

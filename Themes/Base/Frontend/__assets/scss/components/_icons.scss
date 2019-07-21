@@ -1,0 +1,57 @@
+.icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    fill: $color-primary;
+
+    &.icon--inverted {
+        filter: brightness(0) invert(1);
+        zoom: 1;
+    }
+
+    &.icon--secondary {
+        fill: $color-secondary;
+    }
+
+    &.icon--light {
+        fill: $color-light;
+    }
+    &.icon--red {
+        fill: red;
+    }
+
+    &.icon--small {
+        width: 1.6rem;
+        height: 1.6rem;
+    }
+
+    &.icon--large {
+        width: 6rem;
+        height: 6rem;
+    }
+
+    &.icon--error {
+        fill: $error;
+    }
+
+    &.icon--info {
+        fill: $info;
+    }
+
+    &.icon--success {
+        fill: $success;
+    }
+
+    &.icon--warning {
+        fill: $warning;
+    }
+    &.icon--placeholder {
+        width: 100%;
+        height: 100%;
+        max-width: 30rem;
+        max-height: 30rem;
+        opacity: .4;
+    }
+}

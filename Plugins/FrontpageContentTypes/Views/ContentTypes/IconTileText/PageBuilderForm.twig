@@ -1,0 +1,50 @@
+{% block icon_tile_text_form %}
+<div class="form">
+    {% block icon_tile_text_icon %}
+        <div class="form-group">
+            <label>{{ i18n('type_icon', 'Icon') }}</label>
+            {% if data.url %}
+                <div class="preview-image" {% if data.backgroundcolor %}style="background-color: {{ data.backgroundcolor }}"{% endif %}>
+                    <img src="{{ media(data.url, 200) }}" width="200" title="{{ data.url }}"/>
+                </div>
+            {% endif %}
+
+            <input class="form-control" name="icon" type="file" accept=".svg" >
+        </div>
+    {% endblock icon_tile_text_icon %}
+
+    {% block icon_tile_text_caption %}
+        <div class="form-group">
+            <label>{{ i18n('icon_tile_caption', 'Bildunterschrift') }}</label>
+            <input type="text" name="caption" class="form-control" value="{{ data.caption }}">
+        </div>
+    {% endblock icon_tile_text_caption %}
+
+    {% block icon_tile_text_text %}
+        <div class="form-group">
+            <label>{{ i18n('icon_tile_text', 'Text') }}</label>
+            <input type="text" name="text" class="form-control" value="{{ data.text }}">
+        </div>
+    {% endblock icon_tile_text_text %}
+
+    {% block icon_tile_text_link %}
+        <div class="form-group">
+            <label>{{ i18n('icon_tile_link', 'Link') }}</label>
+            <input type="text" name="link" class="form-control" value="{{ data.link }}">
+        </div>
+    {% endblock icon_tile_text_link %}
+
+    {% block icon_tile_text_appearance_form %}
+        <div>
+            <label>{{ i18n('background_color', 'Hintergrundfarbe') }}</label>
+            <input type="color" name="backgroundcolor"
+                   value="{% if data.backgroundcolor %}{{ data.backgroundcolor }}{% else %}#ffffff{% endif %}">
+        </div>
+        <div>
+            <label>{{ i18n('font_color', 'Schriftfarbe') }}</label>
+            <input type="color" name="fontcolor"
+                   value="{% if data.fontcolor %}{{ data.fontcolor }}{% else %}#6f8e2b{% endif %}">
+        </div>
+    {% endblock icon_tile_text_appearance_form %}
+</div>
+{% endblock icon_tile_text_form %}

@@ -1,0 +1,16 @@
+.module-blog {
+    .wrap {
+        &:before {
+            content: none;
+        }
+    }
+
+    &.action-frontend_blog {
+      /*  background-image: url(../img/header.jpg);
+        background-repeat: no-repeat;
+        background-size: cover; */
+    }
+}
+
+
+

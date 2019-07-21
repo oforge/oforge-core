@@ -1,0 +1,33 @@
+{# block sidebar__account_user #}
+{% block account_user %}
+    <div class="account__user">
+        {% set userimage = current_user.detail.image is defined ? current_user.detail.image : user.detail.image.id %}
+        {% if label %}
+            <label class="center__label flex flex--row" for="input__profile">
+                <div class="user__picture img-profile"
+                     {% if userimage is defined %}style="background-image: url('{{ media(userimage, 300) }}');"{% endif %}>
+                    <div class="flex flex--row flex--center">
+                        <svg class="icon icon--primary">
+                            <use xlink:href="#camera"></use>
+                        </svg>
+                    </div>
+                </div>
+            </label>
+        {% else %}
+            <div class="user__picture img-profile flex"
+                 {% if userimage %}style="background-image: url('{{ media(userimage, 300) }}');"{% endif %}>
+            </div>
+        {% endif %}
+        <div class="user-info">
+            {% if current_user.detail %}
+                <h2 class="user-info__name">
+                    {{ current_user.detail.nickName }}
+                </h2>
+            {% endif %}
+
+            <h2 class="user-info__name">
+                {{ current_user.detail.name }}</h2>
+            <p class="user-info__email">{{ current_user.email }}</p>
+        </div>
+    </div>
+{% endblock account_user %}

@@ -1,0 +1,188 @@
+.panel--account {
+    flex-direction: column;
+    padding: 0;
+}
+
+.panel--detail {
+    padding: $size-large;
+
+    .form--user-details, .form--user-address {
+        .form__input + .form__input {
+            margin-top: $size-large;
+        }
+
+        .form__title {
+            margin: 0;
+        }
+
+        .form__control {
+            margin-top: $size-large;
+        }
+    }
+}
+
+.panel--edit {
+    .account__content {
+        .user__mail {
+            width: 100%;
+            margin-bottom: $size-large;
+            padding-bottom: $size-large;
+            border-bottom: 1px solid $color-primary;
+
+            .form__title:nth-child(2) {
+                margin-left: $size-large;
+            }
+        }
+    }
+}
+
+.account {
+    &__sidebar {
+        display: none;
+    }
+
+    &__nav-bar {
+        background: $color-primary;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: $size-medium;
+        z-index: 2;
+        position: relative;
+    }
+
+    &__title {
+        display: none;
+    }
+}
+
+.nav-bar {
+    &__title {
+        position: absolute;
+        left: 50%;
+        transform: translatex(-50%);
+        text-align: center;
+        font-size: $font-size-3;
+        color: $color-light;
+    }
+}
+
+.account-nav {
+    &__link {
+        color: $text-dark;
+        text-decoration: none;
+        padding: 1rem 0;
+        border-bottom: 2px solid $color-primary;
+
+        &:active,
+        &:hover {
+            color: $text-dark;
+            text-decoration: none;
+
+            border-bottom: 2px solid $color-secondary;
+        }
+
+        &.account-nav__link--active {
+            color: $color-secondary;
+            border-color: $color-secondary;
+        }
+    }
+
+    &__text {
+        word-break: break-all;
+    }
+}
+
+.account-nav__link + .account-nav__link {
+    margin-top: 1rem;
+}
+
+.nav-account {
+    &__item {
+        padding: $size-medium;
+
+        a {
+            text-decoration: none;
+        }
+
+        .icon {
+            margin-right: $size-large;
+            fill: $color-light;
+        }
+
+        &:hover {
+            background-color: $color-secondary;
+        }
+    }
+
+    &__text {
+        color: $color-light;
+        text-decoration: none;
+    }
+}
+
+
+.mobile-padding {
+    padding: $size-large;
+}
+
+@media screen and (min-width: $screen-medium) {
+    .panel--edit {
+        .form--change-password-reset {
+            width: 60%;
+        }
+    }
+    .panel--detail {
+        .form--user-details, .form--user-address {
+            .form__input + .form__input {
+                margin-top: 0;
+            }
+
+        }
+    }
+}
+
+@media screen and (min-width: $screen-large) {
+    .panel--account {
+        flex-direction: row;
+        align-items: flex-start;
+        padding: $size-large 0;
+    }
+
+    .panel--edit {
+        .account__content {
+            .user__mail {
+                padding-top: $size-large;
+                border-top: 1px solid $color-primary;
+            }
+        }
+    }
+
+    .account {
+        &__sidebar {
+            display: block;
+            width: 30rem;
+            padding: 3rem;
+            border-right: 1px solid $color-primary;
+        }
+
+        &__content {
+            width: calc(100% - 30rem);
+            padding: 3rem;
+        }
+
+        &__nav-bar {
+            display: none;
+        }
+
+        &__title {
+            color: $color-primary;
+            display: block;
+            flex: 1 0 100%;
+            margin-bottom: $size-large;
+        }
+    }
+}
+

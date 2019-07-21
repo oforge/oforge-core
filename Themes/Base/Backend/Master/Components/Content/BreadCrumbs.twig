@@ -1,0 +1,18 @@
+{% if breadcrumbs %}
+    <ol class="breadcrumb">
+        <li><a href="{{ url("backend_dashboard") }}"><i class="fa fa-dashboard"></i>{{ i18n('dashboard') }}</a></li>
+        {% for item in breadcrumbs %}
+            {% set itemActive = item.path|trim('/', 'left') == meta.route.path|trim('/', 'left') or item.path|trim('/', 'left') == meta.route.name|trim('/', 'left') %}
+            <li class="{% if itemActive %}active{% endif %}">
+                {% if item.path and item.visible %}
+                    <a class="{% if itemActive %}active{% endif %}"
+                       href="{{ url(item.path, item.pathArgs|default({}), item.pathQuery|default({})) }}">
+                        {{ i18n(item.name) }}
+                    </a>
+                {% else %}
+                    {{ i18n(item.name) }}
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ol>
+{% endif %}

@@ -1,0 +1,154 @@
+.messenger {
+    display: flex;
+    flex-direction: column;
+
+    &__header {
+        background: $color-primary;
+        padding: $size-large $size-medium;
+        height: 6rem;
+        display: flex;
+        align-items: center;
+
+        &.messenger__header--chat {
+            background: $color-secondary;
+        }
+
+        .title {
+            color: $color-light;
+        }
+        &--sidebar {
+            justify-content: space-between;
+            border-bottom: 2px solid $color-light;
+
+        }
+    }
+
+    &__sidebar {
+        min-width: 320px;
+        background: $color-primary;
+    }
+
+    &__chat {
+        width: 100%;
+    }
+    .logo__image {
+        flex: 0 0 auto;
+        width: 4rem;
+        height: 4rem;
+    }
+}
+
+.chat-list {
+    background: $color-primary;
+    &.collapsed {
+        display: none;
+    }
+}
+.chat {
+    padding: $size-large $size-medium;
+
+    &__link {
+        text-decoration: none;
+    }
+
+    &__text {
+        color: $color-light;
+        margin-left: $size-large;
+    }
+    &.is__active {
+        background-color: $color-secondary;
+    }
+}
+.chat + .chat {
+    border-top: 1px solid $color-light;
+}
+
+.messages {
+    height: 30rem;
+    overflow: scroll;
+    width: 100%;
+    padding: $size-large $size-small;
+}
+
+.message {
+    border: 2px solid $color-secondary;
+    width: 80%;
+    margin-left: auto;
+    border-radius: $border-radius;
+    padding: .4rem;
+    position: relative;
+
+    &.partner {
+        border: 2px solid $color-primary;
+        margin-left: 0;
+    }
+}
+
+.message + .message {
+    margin-top: $size-large;
+}
+
+.message-text {
+    font-size: 1.4rem;
+    margin-bottom: $size-medium;
+}
+
+.message-date {
+    font-size: $font-size-6;
+    text-align: right;
+    color: #777;
+}
+
+.sender {
+    margin-bottom: $size-medium;
+    font-size: $font-size-6;
+}
+
+.form--message {
+    #message {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    .form__input--submit {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+    .submit-control {
+        flex: 1 0 auto;
+    }
+}
+
+@media screen and (min-width: $screen-medium) {
+    .messenger {
+        flex-direction: row;
+        .logo__image {
+            width: 4rem;
+            height: 4rem;
+        }
+        &__header--sidebar {
+            .icon {
+                display: none;
+            }
+        }
+    }
+    .message-text {
+        font-size: $font-size-5;
+    }
+    .messages {
+        height: 40rem;
+        padding: $size-large $size-large * 2;
+    }
+    .chat-list {
+        background: $color-primary;
+        &.collapsed {
+            display: block;
+        }
+    }
+}
+
+@media screen and (min-width: $screen-large) {
+    .messages {
+        height: 60rem;
+    }
+}
+

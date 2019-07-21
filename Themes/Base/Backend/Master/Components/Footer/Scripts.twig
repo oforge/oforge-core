@@ -1,0 +1,15 @@
+{% block js_variables %}
+    {% if js %}
+        <script>
+        {% for key, item in js %}
+            var {{ key }} = {{ item|json_encode|raw }};
+        {% endfor %}
+        </script>
+    {% endif %}
+{% endblock %}
+
+{% block js_assets %}
+    {% if assets.js %}
+        <script type="text/javascript" async="async" src="{{ assets.js }}"></script>
+    {% endif %}
+{% endblock js_assets %}

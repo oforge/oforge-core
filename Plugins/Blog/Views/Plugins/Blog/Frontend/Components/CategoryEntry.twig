@@ -1,0 +1,23 @@
+{% if blogCategory is defined %}
+    {% set isActive = meta.route.params.categoryID == blogCategory.id %}
+    <div class="blog__category {{ blogCategory.cssClass }} {% if isActive %}blog__category--active{% endif %}">
+        <a href="{{ url('frontend_blog', {categoryID: blogCategory.id, seoUrlPath: blogCategory.seoUrlPath}) }}"
+           class="blog__category-link">
+            <svg class="icon icon--secondary">
+                <use xlink:href="#{{ blogCategory.icon|default(config('blog_category_icon_default')) }}"></use>
+            </svg>
+            {{ blogCategory.name }}
+        </a>
+    </div>
+{% else %}
+    {% set isActive = meta.route.params.categoryID is not defined %}
+    <div class="blog__category {% if isActive %}blog__category--active{% endif %}">
+        <a href="{{ url('frontend_blog') }}"
+           class="blog__category-link">
+            <svg class="icon icon--secondary">
+                <use xlink:href="#{{ blogCategory.icon|default(config('blog_category_icon_default')) }}"></use>
+            </svg>
+            {{ i18n('plugin_blog_frontend_blog_home', 'Blog') }}
+        </a>
+    </div>
+{% endif %}

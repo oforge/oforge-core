@@ -1,0 +1,65 @@
+{% extends 'Backend/Master/Index.twig' %}
+
+{% block pagecontent %}
+    <section class="content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box box-primary">
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <p class="btn-group" role="group">
+                                    {% block crud_actions_group %}
+                                        <a href="{{ url(meta.route.name  ~ '_create') }}"
+                                           title="{{ i18n('backend_crud_btn_create', {en: 'create', de: 'erstellen'}) }}"
+                                           class="btn btn-primary {% if not crud.actions.create %}disabled{% endif %}">
+                                            <i class="fa fa-plus"></i>
+                                        </a>
+                                    {% endblock crud_actions_group %}
+                                </p>
+                            </div>
+                        </div>
+                        {% include 'Backend/CRUD/Components/Index/FilterBar.twig' with {
+                            crud: crud,
+                            route: meta.route
+                        } only %}
+                        {% if crud.hasEditors %}
+                        <form action="{{ url(meta.route.name, {}, meta.route.query|default({})) }}" method="post"
+                              enctype="multipart/form-data">
+                            {% endif %}
+                            {#{% include 'Backend/CRUD/Components/Index/PaginationRow.twig' with {#}
+                            {#    pagination: crud.pagination,#}
+                            {#    queryKeys: crud.queryKeys,#}
+                            {#    route: meta.route#}
+                            {#} only %}#}
+                            <div class="row">
+                                <div class="col-xs-12 table-responsive">
+                                    {% include 'Backend/CRUD/Components/Index/Table.twig' %}
+                                </div>
+                            </div>
+                            {% include 'Backend/CRUD/Components/Index/PaginationRow.twig' with {
+                                pagination: crud.pagination,
+                                queryKeys: crud.queryKeys,
+                                route: meta.route
+                            } only %}
+                            {% if crud.hasEditors %}
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <input type="hidden" name="action" value="update" />
+                                        <input type="submit" class="btn btn-primary"
+                                               value="{{ i18n('backend_crud_btn_update', {en: 'update', de: 'aktualisieren'}) }}"
+                                               title="{{ i18n('backend_crud_btn_update', {en: 'update', de: 'aktualisieren'}) }}">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        {% endif %}
+                    </div>
+                    {# /.box-body #}
+                </div>
+                {# /.box #}
+            </div>
+        </div>
+    </section>
+{% endblock %}

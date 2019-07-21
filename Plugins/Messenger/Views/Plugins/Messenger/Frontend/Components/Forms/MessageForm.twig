@@ -1,0 +1,23 @@
+{# block messenger__message_form #}
+{% block message_form %}
+<form class="form form--message"
+      action="{{ url('frontend_account_messages', {id: activeConversation.id}) }}"
+      method="post">
+    <div class="form-controls flex flex--row flex--center">
+        <div class="submit-control">
+            {% block message_input %}
+            <input type="text"
+                   id="message"
+                   name="message"
+                   class="form__input"
+                   required>
+            {% endblock message_input %}
+        </div>
+
+        <div>
+            <input type="submit" class="form__input form__input--submit" value="{{ i18n('send') }}">
+            <input type="hidden" name="sender" id="sender" value="{{ user.id }}">
+        </div>
+    </div>
+</form>
+{% endblock message_form %}

@@ -1,0 +1,75 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box box-primary">
+            <div class="box-body">
+                {% if not item and crud.context != 'create' %}
+                    <p>
+                        {{ i18n('backend_crud_entity_not_exist', {en: 'Entity does not exist.', de: 'Element existiert nicht.'}) }}
+                    </p>
+                    <a href="{{ url(meta.route.parentName) }}" class="btn btn-default">
+                        {{ i18n('backend_crud_btn_back2index', {en: 'back to overwiew', de: 'zurück zur Übersicht'}) }}
+                    </a>
+                {% elseif crud.actions[crud.context] %}
+                    {% if crud.context != 'view' %}
+                        <form method="post" enctype="multipart/form-data">
+                    {% endif %}
+                    {% if crud.context != 'create' %}
+                        <input type="hidden" name="data[id]" value="{{ item['id'] }}" />
+                        <p>{{ crud.model|replace({'_': ' '}) }} - ID: {{ item['id'] }}</p>
+                    {% endif %}
+                    {% for property in crud.properties if property.crud[crud.context] and property.crud[crud.context]|default('off') != 'off' and property.name != 'id' %}
+                        <div class="form-group crud-datatype-{{ property.type }} crud-property-{{ property.name }}">
+                            {% if property.label is defined %}
+                                {% if property.label is array %}
+                                    {% set fieldLabel = i18n(property.label) %}
+                                {% else %}
+                                    {% set fieldLabel = property.label %}
+                                {% endif %}
+                            {% elseif property.name == 'id' %}
+                                {% set fieldLabel = 'ID' %}
+                            {% else %}
+                                {% set fieldLabel = property.name|ucfirst %}
+                            {% endif %}
+                            {% set fieldID = ['form', crud.context, crud.model|lower, property.name]|join('_') %}
+                            <label for="{{ fieldID }}">{{ fieldLabel }}</label>
+                            {% if crud.context =='delete' or property.name == 'id' or property.crud[crud.context] == 'readonly' %}
+                                <div>
+                                    {% include 'Backend/CRUD/Components/Renderer.twig' %}
+                                </div>
+                            {% else %}
+                                {% include 'Backend/CRUD/Components/Editor.twig' %}
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    <input type="hidden" name="action" value="{{ crud.context }}" />
+                    <a href="{{ url(meta.route.parentName) }}" class="btn btn-default">
+                        {{ i18n('backend_crud_btn_back2index', {en: 'back to overwiew', de: 'zurück zur Übersicht'}) }}
+                    </a>
+                    {% if crud.context == 'view' %}
+                        {% if crud.actions['update'] %}
+                            <a href="{{ url(meta.route.parentName ~ '_update', {id: crud.item.id}) }}"
+                               class="btn btn-primary">
+                                {{ i18n('backend_crud_btn_update', {en: 'update', de: 'aktualisieren'}) }}
+                            </a>
+                        {% endif %}
+                        {% if crud.actions['delete'] %}
+                            <a href="{{ url(meta.route.parentName ~ '_delete', {id: crud.item.id}) }}"
+                               class="btn btn-danger">
+                                {{ i18n('backend_crud_btn_delete', {en: 'delete', de: 'löschen'}) }}
+                            </a>
+                        {% endif %}
+                    {% else %}
+                        <input type="submit"
+                               class="btn {% if crud.context == 'delete' %}btn-danger{% else %}btn-primary{% endif %}"
+                               value="{{ i18n('backend_crud_btn_' ~ crud.context, crud.context) }}">
+                        </form>
+                    {% endif %}
+                {% else %}
+                    <div class="alert alert-info" role="alert">
+                        {{ i18n('backend_crud_action_disabled', {en: 'Action %s is disabled.', de: 'Aktion %s ist deaktiviert.'})|format(crud.context) }}
+                    </div>
+                {% endif %}
+            </div>{# end .box-body #}
+        </div>{# end .box #}
+    </div>{# end .col #}
+</div>{# end .row #}

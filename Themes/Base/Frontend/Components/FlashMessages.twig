@@ -1,0 +1,16 @@
+{% block flash_message %}
+    {% if (flashMessages) %}
+        <div class="content">
+            {% for flashMessage in flashMessages %}
+                <div class="flash flash--{{ flashMessage.type }}">
+                    <svg class="icon icon--{{ flashMessage.type }}">
+                        <use xlink:href="#{{ flashMessage.type }}"></use>
+                    </svg>
+                    <p class="flash__message">
+                        {{ flashMessage.message|raw }}
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock flash_message %}

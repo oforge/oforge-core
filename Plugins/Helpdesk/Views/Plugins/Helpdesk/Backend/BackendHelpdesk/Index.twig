@@ -1,0 +1,17 @@
+{% extends "Backend/Master/Index.twig" %}
+
+{% block pagecontent %}
+    <section class="content">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-primary">
+                    <div class="box-body no-padding">
+                        {% block helpdesk_list %}
+                            {% include 'Plugins/Helpdesk/Backend/Components/TicketList.twig' %}
+                        {% endblock helpdesk_list %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

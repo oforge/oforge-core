@@ -2,54 +2,97 @@
 
 namespace Oforge\Engine\Modules\Core\Services;
 
-use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use InvalidArgumentException;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Models\Plugin\Middleware;
-use Oforge\Engine\Modules\Core\Models\Plugin\Plugin;
 
-class MiddlewareService
-{
+class MiddlewareService extends AbstractDatabaseAccess {
+    public function __construct() {
+        parent::__construct(['default' => Middleware::class]);
+    }
+
     /**
      * @param $name
      *
      * @return array|Middleware[]
+     * @throws ORMException
      */
     public function getActive($name)
     {
-        $em = Oforge()->DB()->getManager();
-        $repo = $em->getRepository(Middleware::class);
-
-        $middlewares = $repo->findBy(["name" => [$name, "*", $name . "*"], "active" => 1], ['position' => 'DESC']);
+        $queryBuilder = $this->entityManager()->createQueryBuilder();
+        $result = $queryBuilder->select(array('m'))
+            ->from(Middleware::class, 'm')
+            ->where($queryBuilder->expr()->orX(
+                $queryBuilder->expr()->eq('m.name', '?1')
+            ))
+            ->andWhere($queryBuilder->expr()->eq('m.active', 1))
+            ->orderBy('m.position', 'DESC')
+            ->setParameters([1 => $name])
+            ->getQuery();
+        $middlewares = $result->execute();
 
         return $middlewares;
     }
-    
+
     /**
-     * @param $options
-     * @param $middleware
+     * get all active middlewares
+     *
+     * @return array|null
+     * @throws ORMException
+     */
+    public function getAllDistinctActiveNames() {
+
+        $queryBuilder = $this->entityManager()->createQueryBuilder();
+        $result = $queryBuilder->select(array('m.name'))
+           ->from(Middleware::class, 'm')
+           ->where($queryBuilder->expr()->eq('m.active', 1))
+           ->andWhere($queryBuilder->expr()->neq('m.name', '?1'))
+           ->groupBy("m.name")
+           ->setParameters([1 => '*'])
+           ->getQuery();
+        $middlewares = $result->execute();
+        
+        $names = [];
+        
+        foreach ($middlewares as $middleware) {
+            array_push($names, $middleware['name']);
+        }
+        
+        return $names;
+    }
+
+    /**
+     * @param $middlewares
+     * @param bool $activate
      *
      * @return Middleware[]
+     * @throws ConfigOptionKeyNotExistException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function register($options, $middleware)
-    {
+    public function register($middlewares, $activate = false) {
         /**
          * @var $result Middleware[]
          */
         $result = [];
-        if (is_array($options)) {
 
-            foreach ($options as $key => $option) {
-                if ($this->isValid($option)) {
-                    /**
-                     * Check if the element is already within the system
-                     */
-                    $repo = Oforge()->DB()->getManager()->getRepository(Middleware::class);
+        if (is_array($middlewares) && sizeof($middlewares) > 0) {
 
-                    $element = $repo->findOneBy(["class" => $option["class"]]);
-                    if(!isset($element)) {
-                        $element = Middleware::create(Middleware::class, ["name" => $key,  "class" => $option["class"], "position" => $option["position"]]);
-                        $element->setPlugin($middleware);
+            foreach ($middlewares as $pathName => $middleware) {
+                $element = null;
+
+                if (array_key_exists("class", $middleware)) {
+                    $element = $this->createMiddleware($middleware, $pathName, $activate);
+                } elseif (is_array($middleware)) {
+                    foreach ($middleware as $key => $value) {
+                        $element = $this->createMiddleware($value, $pathName, $activate);
                     }
+                }
 
+                if (isset($element)) {
                     array_push($result, $element);
                 }
             }
@@ -57,40 +100,41 @@ class MiddlewareService
 
         return $result;
     }
-    
+
     /**
-     * @param $options
+     * @param $middleware
+     * @param $pathName
+     * @param bool $activate
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @return object|Middleware|null
+     * @throws ConfigOptionKeyNotExistException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function registerFromModule($options)
-    {
-        if (is_array($options)) {
+    private function createMiddleware($middleware, $pathName, $activate = false) {
+        $active = $activate ? 1 : 0;
+
+        if ($this->isValid($middleware)) {
             /**
              * Check if the element is already within the system
              */
-            $repo = Oforge()->DB()->getManager()->getRepository(Middleware::class);
+            $element = $this->repository()->findOneBy(["class" => $middleware["class"]]);
+            if(!isset($element)) {
+                $element = Middleware::create(["name" => $pathName,  "class" => $middleware["class"], "active" => $active, "position" => $middleware["position"]]);
 
-            foreach ($options as $key => $option) {
-                if ($this->isValid($option)) {
-
-                    $element = $repo->findOneBy(["class" => $option["class"]]);
-                    if(!isset($element)) {
-                        $element = Middleware::create(Middleware::class, ["name" => $key,  "class" => $option["class"], "active" => 1, "position" => $option["position"]]);
-                        Oforge()->DB()->getManager()->persist($element);
-                    }
-                }
+                $this->entityManager()->create($element);
             }
-        }
 
-        Oforge()->DB()->getManager()->flush();
+            return $element;
+        }
+        return null;
     }
-    
+
     /**
      * @param array $options
      *
      * @return bool
+     * @throws ConfigOptionKeyNotExistException
      */
     private function isValid(Array $options)
     {
@@ -99,15 +143,50 @@ class MiddlewareService
          */
         $keys = ["class"];
         foreach ($keys as $key) {
-            if (!array_key_exists($key, $options)) throw new ConfigOptionKeyNotExists($key);
+            if (!array_key_exists($key, $options)) throw new ConfigOptionKeyNotExistException($key);
         }
 
         /*
          * Check if correct type are set
          */
         if (isset($options["position"]) && !is_integer($options["position"])) {
-            throw new \InvalidArgumentException("Position value should be of type integer. ");
+            throw new InvalidArgumentException("Position value should be of type integer. ");
         }
         return true;
+    }
+
+    /**
+     * @param string $middlewareName
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function activate(string $middlewareName) {
+        $this->changeActiveState($middlewareName, true);
+    }
+
+    /**
+     * @param string $middlewareName
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function deactivate(string $middlewareName) {
+        $this->changeActiveState($middlewareName, false);
+    }
+
+    /**
+     * @param $middlewareName
+     * @param $state
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    private function changeActiveState($middlewareName, $state) {
+
+        $middleware = $this->repository()->findOneBy(['class' => $middlewareName]);
+        $middleware->setActive($state);
+        //$this->entityManager()->persist($middleware);
+        $this->entityManager()->update($middleware);
     }
 }

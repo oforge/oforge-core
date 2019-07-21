@@ -1,0 +1,208 @@
+.form__control.form__control--pedigree {
+    overflow: hidden;
+    flex: 0 0 100%;
+}
+
+.form-controls.form-controls--row .form__control--pedigree {
+    flex: 0 0 100%;
+}
+
+.panel--pedigree {
+    overflow: hidden;
+    padding: 2rem;
+}
+
+.pedigree__control {
+    display: flex;
+    margin: $size-large 0;
+    padding: $size-large 0;
+    border: 2px solid $color-primary;
+    border-left: 0;
+    border-right: 0;
+
+    .button {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+
+        font-size: 1.4rem;
+        flex-grow: 1;
+        border-right: 2px $color-primary solid;
+        border-radius: 0;
+
+        &:last-child {
+            border-right: 0;
+        }
+
+        &.is--active {
+            color: $color-secondary;
+        }
+    }
+}
+
+
+.pedigree__body {
+    .tree {
+        transition: transform 150ms ease-in-out;
+    }
+
+    &.position-2 {
+        .tree {
+            transform: translate3d(calc(-80% + 1.5rem), 0, 0);
+        }
+    }
+
+    &.position-3 {
+        .tree {
+            transform: translate3d(calc(-160% + 3rem), 0, 0);
+        }
+    }
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.form__control--pedigree .tree {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: stretch;
+    margin: 0 auto;
+
+    &__part {
+        flex: 0 0 calc(80% - 1.5rem);
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: space-around;
+        width: calc(80% - 1.5rem);
+
+        &:not(:first-child) {
+            margin-left: 2rem;
+
+            .tree__content {
+                &:before {
+                    position: absolute;
+                    content: ' ';
+                    left: -1rem;
+                    width: 1rem;
+                    border: 2px solid $color-primary-light;
+                    border-right: 0;
+                    top: 25%;
+                    height: 50%;
+                }
+            }
+        }
+    }
+
+    &__content {
+        position: relative;
+    }
+
+    &__item {
+        border: 1px solid $color-secondary-light;
+        border-radius: $border-radius;
+        text-align: center;
+        padding: 8px 4px;
+        position: relative;
+        font-size: $font-size-5;
+    }
+}
+
+.tree__part .tree__content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.tree__content:not(:first-child) {
+    margin-top: 1rem;
+}
+
+.tree__item {
+    input {
+        width: 100%;
+    }
+
+    &:not(:first-child) {
+        margin-top: 1rem;
+    }
+}
+
+.tree__part:not(:last-child) .tree__item:after {
+    position: absolute;
+    content: '';
+    top: 50%;
+    right: calc(-1rem - 1px);
+    width: 1rem;
+    border-top: 2px solid $color-primary-light;
+}
+
+@media screen and (min-width: $screen-medium) {
+    .form__control.form__control--pedigree {
+        grid-column: span 2;
+    }
+}
+
+@media screen and (min-width: $screen-large) {
+    .form__control.form__control--pedigree {
+        grid-column: span 3;
+    }
+
+    .pedigree__control {
+        display: none;
+    }
+    .insertion__sidebar .pedigree__control {
+        display: flex;
+    }
+
+    .pedigree__body {
+        min-width: 0;
+        transform: none;
+
+        &.position-2 .tree, &.position-3 .tree {
+            transform: none;
+        }
+    }
+
+    .form__control--pedigree .tree {
+        &__part {
+            flex: 0 0 calc(1 / 3 * 100% - 1.5rem);
+        }
+    }
+
+    .insertion__sidebar {
+        .pedigree__control .button {
+            padding: $size-medium;
+        }
+
+        .pedigree__body {
+            .tree {
+                transition: transform 150ms ease-in-out;
+                &__part {
+                    flex: 0 0 calc(80% - 1.5rem);
+                    width: calc(80% - 1.5rem);
+                }
+            }
+
+            &.position-2 {
+                .tree {
+                    transform: translate3d(calc(-80% + 1.5rem), 0, 0);
+                }
+            }
+
+            &.position-3 {
+                .tree {
+                    transform: translate3d(calc(-160% + 3rem), 0, 0);
+                }
+            }
+        }
+    }
+}

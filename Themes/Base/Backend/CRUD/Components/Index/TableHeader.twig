@@ -1,0 +1,20 @@
+<tr>
+    {% for property in crud.properties if property.crud[crud.context] and property.crud[crud.context]|default('off') != 'off' %}
+        <th class="crud-table-header-{{ property.name }}">
+            {% if property.label is defined %}
+                {% if property.label is array %}
+                    {{ i18n(property.label) }}
+                {% else %}
+                    {{ property.label }}
+                {% endif %}
+            {% elseif property.name == 'id' %}
+                {{ 'ID' }}
+            {% else %}
+                {{ property.name|ucfirst }}
+            {% endif %}
+        </th>
+    {% endfor %}
+    {% if crud.hasRowActions %}
+        <th class="text-center">{{ i18n('backend_crud_table_column_rowactions', {en: 'Row actions', de: 'Zeilenaktionen'}) }}</th>
+    {% endif %}
+</tr>

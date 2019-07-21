@@ -1,0 +1,106 @@
+{% extends "@parent/Frontend/Layout.twig" %}
+{% block content %}
+    {% include 'Plugins/FrontendUserManagement/Frontend/Components/AccountNavBar.twig' with { back_link : true, content_title: i18n('user_details', 'User details')} %}
+    <div class="account content content--edit">
+        {% block account %}
+            <div class="panel panel--account flex">
+                {% block account__sidebar %}
+                    {% include 'Plugins/FrontendUserManagement/Frontend/Components/Sidebar.twig' %}
+                {% endblock account__sidebar %}
+
+                {% block account__content %}
+                    <div class="account__content flex">
+                        <form action="{{ url('frontend_account_insertions_profile') }}" method="post"
+                              enctype="multipart/form-data">
+                            <h3 class="account__title">{{ i18n('my_profile') }}</h3>
+                            <label class="center__label" for="input__background">
+
+                                <div class="background img-background flex flex--column-center"
+                                     {% if profile.background %}style="background-image: url('{{ media(profile.background.id) }}')"{% endif %}>
+                                    <div class="flex flex--center">
+                                        <svg class="icon icon--primary">
+                                            <use xlink:href="#camera"></use>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </label>
+
+                            <div class="profile-upload upload-background">
+                                <span>{{ i18n('change_title_img') }}</span>
+                                <label class="upload__label" for="input__background">
+                                    <div class="flex fleflex--center">
+                                        <svg class="icon icon--primary">
+                                            <use xlink:href="#edit"></use>
+                                        </svg>
+                                    </div>
+                                </label>
+                                <input id="input__background" data-update="img-background" type="file" name="background"
+                                       accept="image/*">
+                            </div>
+                            <div class="profile-upload">
+                                <span>{{ i18n('change_profile_img') }}</span>
+                                <label class="upload__label" for="input__profile">
+                                    <div class="flex fleflex--center">
+                                        <svg class="icon icon--primary">
+                                            <use xlink:href="#edit"></use>
+                                        </svg>
+                                    </div>
+                                </label>
+                                <input id="input__profile" data-update="img-profile" type="file" name="profile"
+                                       accept="image/*">
+                            </div>
+                            <div class="profile-link">
+                                <a href="{{ url('insertions_profile', {id: profile.id }) }}">
+                                    <svg class="icon icon--primary icon--mail">
+                                        <use xlink:href="#fade_in"></use>
+                                    </svg>
+                                </a>
+                            </div>
+                            <div class="profile-pic">
+                                {% set label = true %}
+                                {% include 'Plugins/FrontendUserManagement/Frontend/Components/AccountUser.twig' with {  label : label } %}
+                            </div>
+                            <div class="info__description">
+                                {{ i18n('account_insertions_profile_info') }}
+                            </div>
+
+                            <div class="profile--edit">
+                                <div class="description--edit">
+                                    <h3 class="form__title">{{ i18n('account_profile_text') }}</h3>
+                                    <textarea name="description" class="form__input">{{ profile.description }}</textarea>
+                                </div>
+                                <div class="impress--edit">
+                                    <h3 class="form__title">{{ i18n('legal_rights') }}</h3>
+                                    <input class="form__input" type="text" name="imprint_name" placeholder="Name"
+                                           value="{{ profile.imprintName }}" />
+                                    <input class="form__input" type="text" name="imprint_street" placeholder="Street"
+                                           value="{{ profile.imprintStreet }}" />
+                                    <input class="form__input" type="text" name="imprint_zipCity" placeholder="PLZ, ORT"
+                                           value="{{ profile.imprintZipCity }}" />
+                                    <input class="form__input" type="phone" name="imprint_phone" placeholder="Telefon"
+                                           value="{{ profile.imprintPhone }}" />
+                                    <input class="form__input" type="fax" name="imprint_fax" placeholder="Fax"
+                                           value="{{ profile.imprintFax }}" />
+                                    <input class="form__input" type="email" name="imprint_email" placeholder="E-Mail"
+                                           value="{{ profile.imprintEmail }}" />
+                                    <div class="info__business">
+                                        {{ i18n('account_insertions_impress_info') }}
+                                    </div>
+                                    <input class="form__input" type="text" name="imprint_company_number"
+                                           placeholder="Registernummer"
+                                           value="{{ profile.imprintCompanyNumber }}" />
+                                    <input class="form__input" type="text" name="imprint_company_tax"
+                                           placeholder="USt.ID"
+                                           value="{{ profile.imprintCompanyTaxId }}" />
+                                </div>
+                                <div class="submit">
+                                    <input type="submit" class="form__input form__input--submit button" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                {% endblock account__content %}
+            </div>
+        {% endblock account %}
+    </div>
+{% endblock content %}
