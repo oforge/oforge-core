@@ -1,0 +1,57 @@
+{% block pagecontent %}
+    <div class="modal" id="media-chooser">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">{{ i18n('image_chooser') }}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="input-group">
+
+                                <span class="input-group-addon"><i class="fa fa-fw fa-image"></i></span>
+                                <form id="upload-media-form">
+                                    <label class="form-control" class="upload-media"
+                                           for="upload-media">{{ i18n('upload_media') }}</label>
+                                    <input type="file" style="visibility: hidden; position: absolute"
+                                           name="upload-media" id="upload-media"
+                                           accept="image/*" />
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-6">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-fw fa-search"></i></span>
+                                <input type="text" class="form-control" id="search-media"
+                                       placeholder="{{ i18n('search_media') }}" />
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="my-4" />
+                    <div id="image-container">
+                        {% include 'Backend/Media/RenderItems.twig' %}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left"
+                            data-dismiss="modal">{{ i18n('close') }}</button>
+                    <button type="button" class="btn btn-default pull-right media-chooser-reset"
+                            data-dismiss="modal">{{ i18n('reset') }}</button>
+                    <button type="button" class="btn btn-default pull-right no-media-item"
+                            data-dismiss="modal">{{ i18n('clear') }}</button>
+                </div>
+            </div>
+
+            <div class="overlay">
+                <i class="fa fa-refresh fa-spin"></i>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+{% endblock %}

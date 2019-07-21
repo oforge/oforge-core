@@ -1,0 +1,29 @@
+{# block header__main_nav #}
+{% block main_nav %}
+
+    {% set navigation = content('main_navigation') %}
+
+    <nav class="main-nav{% if navigation.childs is defined and navigation.childs.length > 0 %} main-nav--no-border {% endif %}" data-main-nav="true">
+        {% block main_nav_title %}
+            {% include 'Frontend/Components/Header/LogoClaim.twig' with {link: true} %}
+        {% endblock main_nav_title %}
+
+        {% block mobile__top_nav %}
+            {% include 'Frontend/Components/Header/TopNav.twig' %}
+        {% endblock mobile__top_nav %}
+
+        {% if navigation.childs is defined and navigation.childs|length > 0 %}
+            <ul class="main-nav-list content content--no-pad main-nav-list--{{ navigation.childs|length }}">
+                {% for entry in navigation.childs %}
+                        <li class="main-nav-list__item">
+                            <a class="main-nav-list__link" href="{% if entry.url starts with 'http' %}{{ entry.url }}{% else %}{{ url(entry.url) }}{% endif %}"
+                               {% if entry.title is defined %}title="{{ entry.title }}"{% endif %}
+                            >
+                                {{ i18n(entry.link) }}
+                            </a>
+                        </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </nav>
+{% endblock main_nav %}

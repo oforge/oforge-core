@@ -1,0 +1,13 @@
+.separator {
+  margin: ($size-large * 2) 0;
+  border-bottom: 1px solid $color-primary;
+
+  &.separator--double {
+    border-top: 1px solid $color-primary;
+    padding-top: 2px;
+  }
+
+  &.separator--small {
+    margin: $size-large 0;
+  }
+}

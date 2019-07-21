@@ -1,0 +1,4 @@
+group;name;icon;description;classPath
+1;Row;/Themes/Base/ContentTypes/__assets/img/row.png;Row;Oforge\Engine\Modules\CMS\ContentTypes\Row
+2;RichText;/Themes/Base/ContentTypes/__assets/img/richtext.png;RichText;Oforge\Engine\Modules\CMS\ContentTypes\RichText
+3;Image;/Themes/Base/ContentTypes/__assets/img/image.png;Image;Oforge\Engine\Modules\CMS\ContentTypes\Image

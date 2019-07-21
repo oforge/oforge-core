@@ -1,0 +1,22 @@
+{% extends '@parent/Frontend/Layout.twig' %}
+{% block content %}
+    <div class="content">
+        {% block login_registration %}
+            <div class="panel panel--login-registration">
+                {% block login_registration_title %}
+                    <h2 class="panel__title">{{ i18n('welcome') }}</h2>
+                {% endblock login_registration_title %}
+
+                {% block seo_content %}
+                    {% set content = content('login_registration_' ~  meta.language) %}
+                    {% if content %}
+                        {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
+                    {% endif %}
+                {% endblock seo_content %}
+
+
+                {% include 'Plugins/FrontendUserManagement/Frontend/Components/Content/LoginRegistration.twig' %}
+            </div>
+        {% endblock login_registration %}
+    </div>
+{% endblock content %}

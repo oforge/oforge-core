@@ -1,0 +1,22 @@
+{% extends "@parent/Frontend/Layout.twig" %}
+
+{% block content %}
+    <div class="content content--insertion flex">
+            <div class="panel panel--support">
+                <h3 class="title">{{ i18n('insertion_contact_title') }}</h3>
+
+                {% include 'Plugins/Insertion/Frontend/Components/Content/ProductPanel.twig' with {item: insertion } %}
+                    <form method="POST">
+                        <div class="form__control">
+                            <label class="form__label" for="message">{{ i18n('your_message') }}</label><!-- snippify -->
+
+                            <textarea class="form__input form__input--textarea" id="message" name="message"></textarea>
+                        </div>
+                        <div class="form__control">
+                            <input type="submit" class="button button--primary" value="{{ i18n('send') }}">
+                        </div>
+                    </form>
+            </div>
+        </div>
+
+{% endblock content %}

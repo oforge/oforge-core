@@ -1,5 +1,66 @@
-<form action="/backend/login/process" method="post">
-    <input type="hidden" name="email" value="">
-    <input type="hidden" name="password" value="">
-    <input type="submit" value="Tu es">
-</form>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{{ config('system_project_name') }} | Login</title>
+    {% include 'Backend/Master/Components/Head/CSS.twig' %}
+</head>
+<body class="hold-transition login-page">
+<div class="login-box">
+    <div class="login-logo">
+        <a href="{{ url('backend_login') }}"><b>{{ config('system_project_name') }}</b> {{ i18n('admin_label') }}</a>
+    </div>
+    <!-- /.login-logo -->
+    <div class="login-box-body">
+        <p class="login-box-msg">{{ i18n('login') }}</p>
+
+        <form action="{{ url('backend_login_process') }}" method="post">
+            <div class="form-group has-feedback">
+                <input type="email" name="email" class="form-control" placeholder="{{ i18n('email_placeholder') }}">
+                <span class="fa fa-envelope form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <input type="password" name="password" class="form-control" placeholder="{{ i18n('password_placeholder') }}">
+                <span class="fa fa-lock form-control-feedback"></span>
+                <input type="hidden" name="token" value="{{ token() }}">
+            </div>
+            <div class="row">
+                <!-- /.col -->
+                <div class="col-xs-12">
+                    <button type="submit" class="btn btn-primary btn-block btn-flat">{{ i18n('signin') }}</button>
+                </div>
+                <!-- /.col -->
+            </div>
+        </form>
+    </div>
+    <!-- /.login-box-body -->
+</div>
+{% block meta %}
+    {% if debug.session %}
+        <style>
+            .meta {
+                background: #d87a68;
+                color: #fff;
+                padding: 1rem;
+                width: 100%;
+                min-height: 300px;
+                font-size: 1.2rem;
+                line-height: 1.4;
+                word-break: break-all;
+            }
+            .meta * {
+                white-space: pre-wrap;
+            }
+        </style>
+        <div class="meta">
+            {% for key, val in debug.session  %}
+                <p>{{ key }} : {{ val }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock meta %}
+</body>
+</html>

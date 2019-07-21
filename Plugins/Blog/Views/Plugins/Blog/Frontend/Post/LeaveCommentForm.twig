@@ -1,0 +1,16 @@
+<div class="blog-post-leave-comment-form">
+    <form method="POST"
+          action="{{ url('frontend_blog_create_comment', {postID:blog.post.id, seoUrlPath:blog.post.seoUrlPath}) }}">
+        <input type="hidden" name="userID" value="{{ current_user.id }}" />
+        <div>
+            <textarea name="comment" class="form__input form__input--textarea" required
+                      placeholder="{{ i18n('plugin_blog_block_write_comment_textarea_placeholder', 'You comment') }}"
+                      title="{{ i18n('plugin_blog_block_write_comment_textarea_placeholder', 'You comment') }}"
+            ></textarea>
+        </div>
+        <div>
+            <button class="button button--primary"
+                    type="submit">{{ i18n('plugin_blog_block_write_comment_submit', 'Leave comment') }}</button>
+        </div>
+    </form>
+</div>

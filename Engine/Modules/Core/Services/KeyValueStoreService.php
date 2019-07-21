@@ -2,63 +2,69 @@
 
 namespace Oforge\Engine\Modules\Core\Services;
 
+use Doctrine\ORM\ORMException;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Models\Store\KeyValue;
 
-class KeyValueStoreService
-{
-    /**
-     * @var $em \Doctrine\ORM\EntityManager
-     */
-    private $em;
-    /**
-     * @var $repo \Doctrine\Common\Persistence\ObjectRepository|\Doctrine\ORM\EntityRepository
-     */
-    private $repo;
+/**
+ * Class KeyValueStoreService
+ *
+ * @package Oforge\Engine\Modules\Core\Services
+ */
+class KeyValueStoreService extends AbstractDatabaseAccess {
 
-    public function __construct()
-    {
-        $this->em = Oforge()->DB()->getManager();
-        $this->repo = $this->em->getRepository(KeyValue::class);
+    public function __construct() {
+        parent::__construct(KeyValue::class);
     }
-    
+
     /**
      * Get the value of a specific key from the key-value table
      *
      * @param string $name
+     * @param string|null $default
      *
-     * @return string|null
+     * @return mixed
      */
-    public function get(string $name)
-    {
-        /**
-         * @var $element KeyValue
-         */
-        $element = $this->repo->findOneBy(["name" => $name]);
-        return isset($element) && strlen($element->getValue()) > 0 ? $element->getValue() : null;
+    public function get(string $name, ?string $default = null) {
+        try {
+            /** @var KeyValue $entity */
+            $entity = $this->repository()->findOneBy(['name' => $name]);
+
+            return isset($entity) ? $entity->getValue() : $default;
+        } catch (ORMException $exception) {
+            Oforge()->Logger()->logException($exception);
+
+            return $default;
+        }
     }
-    
+
+    public function remove(string $name) {
+        /** @var KeyValue $entity */
+        $entity = $this->repository()->findOneBy(['name' => $name]);
+        $this->entityManager()->remove($entity);
+    }
+
     /**
      * Create or update a key-value entry
      *
      * @param string $name
      * @param string $value
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
      */
-    public function set(string $name, string $value): void
-    {
-        /**
-         * @var $element KeyValue
-         */
-        $element = $this->repo->findOneBy(["name" => $name]);;
-        if (isset($element)) {
-            $element->setValue($value);
+    public function set(string $name, string $value) : void {
+        /** @var KeyValue $entity */
+        $entity = $this->repository()->findOneBy(['name' => $name]);;
+        if (isset($entity)) {
+            $entity->setValue($value);
+            $this->entityManager()->update($entity);
         } else {
-            $element = KeyValue::create(KeyValue::class, ["name" => $name, "value" => $value]);
+            $entity = KeyValue::create([
+                'name'  => $name,
+                'value' => $value,
+            ]);
+            $this->entityManager()->create($entity);
         }
-
-        $this->em->persist($element);
-        $this->em->flush();
     }
+
 }

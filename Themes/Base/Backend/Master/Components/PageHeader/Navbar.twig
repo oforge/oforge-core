@@ -1,0 +1,73 @@
+{% block pageheader_nav_bar %}
+    <nav class="navbar navbar-static-top" role="navigation">
+
+        {% block pageheader_navbar_toggle %}
+            <!-- Sidebar toggle button-->
+            <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                <span class="sr-only">Toggle navigation</span>
+            </a>
+        {% endblock %}
+
+        {% block pageheader_navbar_custom_menu %}
+            <!-- Navbar Right Menu -->
+            <div class="navbar-custom-menu">
+
+                <ul class="nav navbar-nav">
+
+                    {% block pageheader_navbar_custom_menu_messages %}
+                        {% include 'Backend/Master/Components/PageHeader/Messages.twig' %}
+                    {% endblock %}
+
+                    {% block pageheader_navbar_custom_menu_user %}
+                        <!-- Messages: style can be found in dropdown.less-->
+                        <!-- User Account Menu -->
+                        <li class="dropdown user user-menu">
+                            <!-- Menu Toggle Button -->
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <!-- The user image in the navbar-->
+                                {% if user.profile_image is defined %}
+                                    <img src="{{ user.profile_image }}" class="user-image" alt="User Image">
+                                {% else %}
+                                    <i class="fa fa-user-circle fa--big"></i>
+                                {% endif %}
+                                <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                                <span class="hidden-xs">{{ user.email }}</span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <!-- The user image in the menu -->
+                                <li class="user-header">
+                                    {% if user.profile_image is defined %}
+                                    <img src="{{ user.profile_image }}" class="img-circle" alt="User Image">
+                                    {% else %}
+                                        <i class="fa fa-user-circle fa--bigger"></i>
+                                    {% endif %}
+                                    <p>
+                                        {{ user.email }}
+                                        <small>
+                                            {{ i18n("role") }}: {{ user.role }}
+                                        </small>
+                                    </p>
+                                </li>
+                                <!-- Menu Footer-->
+                                <li class="user-footer">
+                                    <div class="pull-left">
+                                        <a href="{{ url("backend_profile") }}" class="btn btn-default btn-flat">{{ i18n("profile") }}</a>
+                                    </div>
+                                    <div class="pull-right">
+                                        <a href="{{ url("backend_logout") }}" class="btn btn-default btn-flat">{{ i18n("signout") }}</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    {% endblock %}
+
+                    {% block pageheader_navbar_custom_menu_toggle_right%}
+                        <li>
+                            <a href="#" data-toggle="control-sidebar"><i class="glyphicon glyphicon-star-empty"></i></a>
+                        </li>
+                    {% endblock %}
+                </ul>
+            </div>
+        {% endblock %}
+    </nav>
+{% endblock %}

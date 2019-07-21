@@ -1,0 +1,42 @@
+{% block cms_page_builder_content %}
+    {% if contents.type %}
+        <div class="col-xs-9 cms-page-builder-container nav-tabs-custom " id="cms_page_builder_container">
+
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">{{ i18n('page_content', 'Content') }}</a></li>
+                <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="false">{{ i18n('page_meta', 'Meta') }}</a></li>
+                <li class="cms-content-type-name pull-right">
+                    {{ i18n('cms_content_type_label_' ~ contentElementData.typeName, contentElementData.typeName) }} ({{ contentElementData.name }})
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab_1">
+                    <div class="cms-page-builder-content" id="cms_page_builder_content">
+                        <div class="cms-content-type-editor-wrapper" id="cms_content_type_editor_wrapper">
+                            {% if contents.isContainer or not contents.type %}
+                                <div class="cms-content-type-editor-container">
+                                    {% include contents.type with {'data': contents} only %}
+                                </div>
+                            {% endif %}
+
+                            {% include 'Backend/Elements/ElementEditorForm.twig' %}
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="tab_2">
+                    {% include 'Backend/Elements/PageBuilderMeta.twig' %}
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="col-xs-9">
+            <div>
+                <div class="cms-page-builder-content" id="cms_page_builder_content">
+                    <div>{{ i18n('cms_page_builder_content_no_page_selected') }}</div>
+                </div>
+            </div>
+        </div>
+        {% include 'Backend/Pages/PageBuilderForm.twig' %}
+    {% endif %}
+{% endblock cms_page_builder_content %}

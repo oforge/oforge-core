@@ -1,0 +1,55 @@
+{% extends 'Backend/Master/Index.twig' %}
+{% set meta = mergeRecursive(meta|default({}), dotToNested({
+    'backend.favoriteButton': false,
+})) %}
+{% set breadcrumbs = backend_breadcrumbs(meta.route.parentName)|default({})|merge([{
+    path: meta.route.name,
+    visible: true,
+    name: i18n('backend_crud_plugin_action_' ~ crud.context, crud.contextLabel),
+}]) %}
+{#pathArgs: {id: crud.item.id},#}
+{% set page_header = i18n(meta.route.parentName) %}
+{% set page_header_description = i18n('backend_crud_plugin_action_' ~ crud.context, crud.contextLabel) %}
+
+{% block pagecontent %}
+    <section class="content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box box-primary">
+                    <form method="post">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">{{ page_header_description|ucfirst }}: {{ crud.pluginName }}</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group crud-datatype-string crud-property-name">
+                                        <label for="crud_plugin_confirm_keep_data">
+                                            {{ i18n('backend_crud_plugin_keep_data', 'Do you want to keep the database tables?') }}
+                                        </label>
+                                        <div>
+                                            {% include 'Backend/Components/Form/Switch.twig' with {
+                                                id: 'crud_plugin_confirm_keep_data',
+                                                name: 'keep_data',
+                                            } only %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <a href="{{ url(meta.route.parentName) }}" class="btn btn-default">
+                                        {{ i18n('backend_crud_btn_back2index', 'back to overwiew') }}
+                                    </a>
+                                    <input type="submit"
+                                           class="btn {% if crud.context == 'delete' %}btn-danger{% else %}btn-primary{% endif %}"
+                                           value="{{ i18n('backend_crud_plugin_action_' ~ crud.context, crud.contextLabel) }}">
+                                </div>
+                            </div>
+                        </div>{# /.box-body #}
+                    </form>
+                </div>{# /.box #}
+            </div>
+        </div>
+    </section>
+{% endblock %}

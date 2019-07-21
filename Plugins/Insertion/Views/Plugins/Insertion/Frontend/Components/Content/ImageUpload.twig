@@ -1,0 +1,44 @@
+{% block image_upload %}
+    <span class="form__label form__label--title">
+        {{ i18n('image_upload_title') }}
+    </span>
+    <div class="upload upload--image"
+         data-upload>
+        <ul class="upload__list"
+            data-upload-images
+            data-text-snippet="{{ i18n('delete') }}">
+            <li class="upload__item upload__item--placeholder">
+                <div class="upload__image">
+                    <svg class="icon icon--secondary">
+                        <use xlink:href="#camera"></use>
+                    </svg>
+                </div>
+            </li>
+            {% for image in data['images'] %}
+            <li class="upload__item"
+                data-upload-id="{{ image.id }}">
+                <img class="upload__image"
+                     src="{{ media(image.path, 200) }}"
+                     alt="{{ image.name }}"
+                     data-upload-image="{{ image.id }}"/>
+                <div class="upload__delete"
+                     data-upload-delete="{{ image.id }}">
+                    {{ i18n('delete') }}
+                </div>
+                <div class="upload__choose-main {% if image.main %}upload__choose-main--is-main{% endif %}"
+                     data-upload-choose-main="{{ image.id }}"></div>
+            </li>
+            {% endfor %}
+            <li class="upload__item upload__item--new-button">
+                <div class="upload__image upload__image--new"
+                     data-upload-button>
+                    {{ i18n('new_image') }}
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="upload__description">
+        <div class="upload__main-icon"></div>
+        <p class="description description--upload">{{ i18n('main_image_description') }}</p>
+    </div>
+{% endblock image_upload %}

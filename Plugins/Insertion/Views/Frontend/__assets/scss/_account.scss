@@ -1,0 +1,165 @@
+/** Account Insertion Profile Edit Page */
+.account.content--edit {
+
+    .panel--account {
+        padding: $size-large;
+    }
+
+    .background {
+        height: 52rem;
+        margin: -$size-large;
+        margin-bottom: 0;
+        background-size: cover;
+        background-position: center top;
+        background-repeat: no-repeat;
+        background-image: url('/Themes/AllYourHorses/Frontend/__assets/img/title_image_placeholder.svg');
+
+    }
+
+    .center__label {
+        .icon {
+            width: 6rem;
+            height: 6rem;
+            fill: $color-light;
+            background: $color-primary;
+            padding: $size-small;
+            border-radius: 5px;
+            opacity: .6;
+        }
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    .profile-pic {
+        width: 30%;
+        position: relative;
+        top: -16rem;
+        margin-bottom: -12rem;
+
+        .account__user {
+            display: block;
+        }
+
+        .user-info {
+            display: none;
+        }
+
+        .user__picture {
+            margin-bottom: 0;
+            width: 10rem;
+            height: 10rem;
+        }
+    }
+
+    .profile--edit {
+        display: flex;
+        flex-direction: column;
+
+        .description--edit {
+            margin: $size-large 0;
+
+            .form__input {
+                max-width: 100%;
+                height: 20rem;
+                width: 100%;
+            }
+        }
+
+        .submit {
+            width: 100%;
+            margin-top: $size-large;
+        }
+
+        .impress--edit {
+            .form__input {
+                margin: $size-medium 0;
+            }
+        }
+        .info__business {
+            margin-top: $size-medium;
+            font-size: 1rem;
+        }
+    }
+
+    .profile-upload {
+        display: flex;
+        font-size: $font-size-6;
+        height: 2rem;
+        line-height: 2rem;
+
+        &.upload-background {
+            text-align: right;
+            justify-content: right;
+        }
+        #input__background, #input__profile {
+            display: none;
+        }
+
+        .upload__label {
+            display: flex;
+            margin-left: $size-large;
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    }
+
+    .profile-link {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .info__description {
+        margin-bottom: 3rem;
+    }
+
+    @media screen and(min-width: $screen-medium) {
+        .panel--account {
+            padding: 3rem;
+        }
+        .background {
+            margin: -3rem -3rem 0 -3rem;
+        }
+        .profile-pic {
+            top: -23rem;
+            margin-bottom: -16rem;
+
+            .user__picture {
+                width: 16rem;
+                height: 16rem;
+            }
+        }
+    }
+
+    @media screen and (min-width: $screen-large) {
+        .panel--account {
+            padding: 0;
+        }
+        .background {
+            margin: 0;
+        }
+        .profile-pic {
+            padding-left: 3rem;
+        }
+        .profile--edit {
+            flex-wrap: wrap;
+            flex-direction: row;
+            justify-content: space-between;
+
+            .description--edit {
+                width: 48%;
+                margin: 0;
+
+                .form__input {
+                    margin: $size-medium 0;
+                }
+            }
+
+            .impress--edit {
+                width: 48%;
+            }
+
+        }
+    }
+}

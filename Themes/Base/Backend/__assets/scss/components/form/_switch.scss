@@ -1,0 +1,80 @@
+$oforge-switch-size: 3rem;
+$oforge-switch-margin: 0.2rem;
+$oforge-switch-delay: 0.3s;
+$oforge-switch-slider-color-normal-on: $light-blue;
+$oforge-switch-slider-color-normal-off: #ccc;
+$oforge-switch-slider-color-disabled-on: lighten($light-blue, 50%);
+$oforge-switch-slider-color-disabled-off: #ddd;
+$oforge-switch-dot-color-normal-on: white;
+$oforge-switch-dot-color-normal-off: white;
+$oforge-switch-dot-color-disabled-on: white;
+$oforge-switch-dot-color-disabled-off: white;
+
+.oforge-switch {
+    $oforge-switch-height: $oforge-switch-size + 2 * $oforge-switch-margin;
+    $oforge-switch-width: 2 * $oforge-switch-size + 2 * $oforge-switch-margin;
+    position: relative;
+    display: inline-block;
+    width: $oforge-switch-width;
+    height: $oforge-switch-height;
+    border-radius: $oforge-switch-height;
+    margin: 0;
+
+    &-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: $oforge-switch-slider-color-normal-off;
+        transition: $oforge-switch-delay;
+        border-radius: $oforge-switch-height;
+
+        &:before {
+            position: absolute;
+            content: "";
+            height: $oforge-switch-size;
+            width: $oforge-switch-size;
+            left: $oforge-switch-margin;
+            bottom: $oforge-switch-margin;
+            background-color: $oforge-switch-dot-color-normal-off;
+            transition: $oforge-switch-delay;
+            border-radius: 50%;
+        }
+    }
+
+    > input[type="checkbox"] {
+        opacity: 0;
+        width: 0;
+        height: 0;
+        display: none;
+
+        &:checked + .oforge-switch-slider {
+            background-color: $oforge-switch-slider-color-normal-on;
+
+            &:before {
+                transform: translateX($oforge-switch-size);
+                background-color: $oforge-switch-dot-color-normal-on;
+            }
+        }
+
+        &:disabled {
+            & + .oforge-switch-slider {
+                cursor: default;
+                background-color: $oforge-switch-slider-color-disabled-off;
+
+                &:before {
+                    background-color: $oforge-switch-dot-color-disabled-off;
+                }
+            }
+            &:checked + .oforge-switch-slider {
+                background-color: $oforge-switch-slider-color-disabled-on;
+
+                &:before {
+                    background-color: $oforge-switch-dot-color-disabled-on;
+                }
+            }
+        }
+    }
+}

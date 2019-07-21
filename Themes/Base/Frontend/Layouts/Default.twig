@@ -1,0 +1,24 @@
+{#
+    The default theme layout.
+    Every layout should extend either another layout or extend the Master.twig template.
+#}
+{% extends 'Frontend/Master.twig' %}
+{% block body %}
+    <div class="wrap wrap--has-image">
+        {% block layout__header %}
+            {% include 'Frontend/Components/Header/Header.twig' %}
+        {% endblock layout__header %}
+
+        {% block flash_messages %}
+            {% include '@parent/Frontend/Components/FlashMessages.twig' %}
+        {% endblock flash_messages %}
+
+        {% block content %}
+
+        {% endblock content %}
+
+        {% block layout__footer %}
+            {% include 'Frontend/Components/Footer/Footer.twig' %}
+        {% endblock layout__footer %}
+    </div>
+{% endblock body %}

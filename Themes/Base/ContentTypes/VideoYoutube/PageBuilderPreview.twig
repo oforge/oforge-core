@@ -1,0 +1,7 @@
+<div class="content-type-edit-videoYoutube-wrapper">
+    {% if data.videoID %}
+        <iframe class="videoYoutube {{ data.css }}" src="//www.youtube.com/embed/{{ data.videoID }}?rel=0"></iframe>
+    {% else %}
+        {{ i18n('cms_content_type_video_youtube_no_id', {en: 'No video ID set.', de: 'Keine Video-ID gesetzt.'}) }}
+    {% endif %}
+</div>

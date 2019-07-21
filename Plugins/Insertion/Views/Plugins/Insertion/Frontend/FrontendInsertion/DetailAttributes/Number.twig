@@ -1,0 +1,6 @@
+{% if value is not empty %}
+    <div class="product__attribute">
+        <span class="product__label">{{ i18n(attribute.name) }}</span>
+        <span class="product__value">{{ value }}{% set unit = i18n('unit_' ~  attribute.name, '') %}{% if unit is not empty %} {{ unit }} {% endif %}</span>
+    </div>
+{% endif %}

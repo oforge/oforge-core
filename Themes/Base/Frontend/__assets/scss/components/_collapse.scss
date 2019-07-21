@@ -1,0 +1,44 @@
+.collapse--container {
+    display: flex;
+    flex-direction: column;
+
+    .collapse--trigger, .collapse--item {
+        padding: $size-large;
+        margin-bottom: $size-large;
+        text-align: left;
+        border-bottom: 1px solid $color-primary;
+    }
+    .collapse--trigger {
+        display: flex;
+        justify-content: space-between;
+
+        &.active {
+            margin-bottom: 0;
+
+            .icon--container .icon {
+                transform: rotate(270deg);
+            }
+        }
+    }
+    .collapse--item {
+        padding: $size-large;
+        margin-bottom: $size-large;
+        display: block;
+
+        &.collapsed {
+            display: none;
+        }
+    }
+    .icon--container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin-left: $size-large;
+
+        .icon {
+            fill: white;
+            transform: rotate(90deg);
+            transition: all .2s linear;
+        }
+    }
+}

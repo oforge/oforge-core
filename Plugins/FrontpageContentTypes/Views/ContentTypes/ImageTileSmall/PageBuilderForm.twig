@@ -1,0 +1,54 @@
+{% block image_tile_small_form %}
+<div class="form">
+    {% block image_tile_small_image %}
+        <div class="form-group">
+            <label>{{ i18n('type_image', 'Image') }}</label>
+            {% if data.url %}
+                <div class="preview-image">
+                    <img src="{{ media(data.url, 200) }}" width="200" title="{{ data.url }}"/>
+                </div>
+            {% endif %}
+
+            <input class="form-control" name="image" type="file" accept="image/*" >
+        </div>
+    {% endblock image_tile_small_image %}
+
+    {% block image_tile_text_caption %}
+        <div class="form-group">
+            <label>{{ i18n('image_tile_caption', 'Überschrift') }}</label>
+            <input type="text" name="caption" class="form-control" value="{{ data.caption }}">
+        </div>
+    {% endblock image_tile_text_caption %}
+
+    {% block image_tile_small_text %}
+        <div class="form-group">
+            <label>{{ i18n('image_tile_text', 'Text') }}</label>
+            <input type="text" name="text" class="form-control" value="{{ data.text }}">
+        </div>
+    {% endblock image_tile_small_text %}
+
+    {% block image_tile_small_link %}
+        <div class="form-group">
+            <label>{{ i18n('image_tile_link', 'Link') }}</label>
+            <input type="text" name="link" class="form-control" value="{{ data.link }}">
+        </div>
+        <div class="form-group">
+            <label>{{ i18n('image_tile_link_text', 'Linktext') }}</label>
+            <input type="text" name="linktext" class="form-control" value="{{ data.linktext }}">
+        </div>
+    {% endblock image_tile_small_link %}
+
+    {% block image_tile_small_appearance_form %}
+        <div>
+            <label>{{ i18n('background_color', 'Hintergrundfarbe') }}</label>
+            <input type="color" name="backgroundcolor"
+                   value="{% if data.backgroundcolor %}{{ data.backgroundcolor }}{% else %}#ffffff{% endif %}">
+        </div>
+        <div>
+            <label>{{ i18n('font_color', 'Schriftfarbe') }}</label>
+            <input type="color" name="fontcolor"
+                   value="{% if data.fontcolor %}{{ data.fontcolor }}{% else %}#6f8e2b{% endif %}">
+        </div>
+    {% endblock image_tile_small_appearance_form %}
+</div>
+{% endblock image_tile_small_form %}

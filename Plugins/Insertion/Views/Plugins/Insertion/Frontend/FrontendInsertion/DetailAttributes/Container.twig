@@ -1,0 +1,13 @@
+{% block detail__container %}
+    <div class="attribute_container">
+        {#<div class="container_label">{{ i18n(attribute.name) }}</div>#}
+        {% set attributeValues = getInsertionValues(attribute.id) %}
+        {% block container_attributes %}
+            {#<div class="container_attributes">#}
+                {% for attributeValue in attributeValues.values %}
+                    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes/' ~ attributeValue.subAttributeKey.type|capitalize  ~ '.twig'  with {'attribute': all_attributes[attributeValue.subAttributeKey.id], hidden: true, required: false, isSubAttribute: true} %}
+                {% endfor %}
+            {#</div>#}
+        {% endblock container_attributes %}
+    </div>
+{% endblock detail__container %}

@@ -1,0 +1,23 @@
+{# block layout__footer_scripts#}
+{% block js_variables %}
+    {% if js %}
+        <script>
+            {#
+                Sometimes you have to use twig variables inside JavaScript. Instead of putting these into data-attributes
+                or having inline scripts in several twig templates, we store the neccessary data from the php controller
+                in a js variable and make this available in this twig template part.
+            #}
+            {% for key, item in js %}
+                var {{ key }} = {{ item|json_encode|raw }};
+            {% endfor %}
+        </script>
+    {% endif %}
+{% endblock js_variables %}
+
+{% block assets_js %}
+    {% if assets.js %}
+        <!-- loadCSS. [c]2017 Filament Group, Inc. MIT License -->
+
+        <script type="text/javascript" src="{{ assets.js }}" defer></script>
+    {% endif %}
+{% endblock %}

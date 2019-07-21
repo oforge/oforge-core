@@ -1,0 +1,18 @@
+{% extends "@parent/Frontend/Layout.twig" %}
+{% block content %}
+    {% include 'Plugins/FrontendUserManagement/Frontend/Components/AccountNavBar.twig' with { content_title: i18n('overview', 'Overview') } %}
+
+    <div class="account content">
+        {% block account %}
+            <div class="panel panel--account panel--edit flex">
+                {% block account__sidebar %}
+                    {% include 'Plugins/FrontendUserManagement/Frontend/Components/Sidebar.twig' %}
+                {% endblock account__sidebar %}
+
+                {% block account__content %}
+                    {% include 'Plugins/FrontendUserManagement/Frontend/Components/Content/ChangePassword.twig' %}
+                {% endblock account__content %}
+            </div>
+        {% endblock account %}
+    </div>
+{% endblock content %}

@@ -1,0 +1,32 @@
+<div>
+    <div class="cms-page-builder-content " id="cms_page_builder_content">
+        <div class="cms-content-type-editor-wrapper" id="cms_content_type_editor_wrapper">
+            {% if post.cms_page_selected_element is empty or contents.isContainer %}
+                <div class="cms-content-type-editor-container cms-content-sortable">
+                    {% if contents.type %}
+                        {% include contents.type with {'data': contents} only %}
+                    {% else %}
+                        {% for data in contents %}
+                            {% if data.type %}
+                                {% set order = data.order %}
+                                {% include 'ContentTypes/PageBuilderPlaceholder.twig' %}
+                                <div class="content-type-edit-selector" title="{{ data.name }} ({{ data.typeName }})"
+                                     data-toggle="tooltip2" data-placement="auto top" data-container="body"
+                                     data-pb-id="{{ data.id }}" data-pb-se="{{ data.se }}" data-pb-order="{{ order }}">
+                                    <div class="sort-handle"><i class="sort-handle-icon fa fa-arrows-v"></i></div>
+                                    <div class="content-type-preview-typeinfo">{{ i18n('cms_content_type_label_' ~ data.typeName, data.typeName) }} ({{ data.name }})</div>
+                                    <div class="content-type-preview">
+                                        {% include data.type %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                        {% set order = 999999999 %}
+                        {% include 'ContentTypes/PageBuilderPlaceholder.twig' %}
+                    {% endif %}
+                </div>
+            {% endif %}
+            {% include 'Backend/Pages/PageBuilderForm.twig' %}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,24 @@
+{% extends '@parent/Frontend/Layout.twig' %}
+
+{% block content %}
+    <div class="content">
+        {% block forgot_password %}
+            <div class="panel panel--forgot-password flex">
+                {% block forgot_password_title %}
+                    <h2 class="panel__title">{{ i18n('welcome') }}</h2>
+                {% endblock forgot_password_title %}
+
+                {% block forgot_password_subtitle %}
+                <div class="panel__content">
+                    <h3 class="panel__sub-title">
+                        {{ i18n('Forgot password') }}
+                    </h3>
+                </div>
+                {% endblock forgot_password_subtitle %}
+                <div class="panel__content flex flex--wrap">
+                    {% include 'Plugins/FrontendUserManagement/Frontend/Components/Forms/ForgotPasswordForm.twig' %}
+                </div>
+            </div>
+        {% endblock forgot_password %}
+    </div>
+{% endblock content %}

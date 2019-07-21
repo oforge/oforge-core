@@ -1,0 +1,12 @@
+{% extends '@parent/Frontend/Components/Header/TopNav.twig' %}
+
+{% block top_nav_links %}
+    {{ parent() }}
+    <li class="top-nav-list__item item--login">
+        <a href="{{ user_logged_in ? url('frontend_account_dashboard') : url('frontend_login_registration') }}" title="Login">
+            <svg class="icon icon--secondary icon--profil">
+                <use xlink:href="#profile"></use>
+            </svg>
+        </a>
+    </li>
+{% endblock top_nav_links %}

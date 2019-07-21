@@ -1,0 +1,12 @@
+{% block pageheader_main %}
+<!-- Main Header -->
+<header class="main-header">
+    {% block pageheader_logo %}
+        {% include 'Backend/Master/Components/PageHeader/Logo.twig' %}
+    {% endblock %}
+
+    {% block pageheader_nav %}
+        {% include 'Backend/Master/Components/PageHeader/Navbar.twig' %}
+    {% endblock %}
+</header>
+{% endblock %}

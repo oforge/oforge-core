@@ -1,0 +1,33 @@
+{% block sidebarcontrol_content %}
+<!-- Control Sidebar -->
+<aside class="control-sidebar control-sidebar-dark">
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <!-- Home tab content -->
+        <div class="tab-pane active sidebar" id="control-favorites-tab">
+            <h3 class="control-sidebar-heading">{{ i18n('favorites_title') }}</h3>
+            <ul class="control-sidebar-menu sidebar-menu">
+                {% set favorites = backend_favorites()  %}
+
+                {% for item in favorites %}
+                <li>
+                    <a href="{{ url(item.name) }}">
+                        {% if item.icon %}
+                            <i class="{{item.icon}}"></i>
+                        {% endif %}
+                        <span>{{ i18n(item.name) }}</span>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+            <!-- /.control-sidebar-menu -->
+        </div>
+        <!-- /.tab-pane -->
+    </div>
+</aside>
+<!-- /.control-sidebar -->
+<!-- Add the sidebar's background. This div must be placed
+immediately after the control sidebar -->
+<div class="control-sidebar-bg"></div>
+{% endblock sidebarcontrol_content %}

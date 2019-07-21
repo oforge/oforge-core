@@ -1,0 +1,17 @@
+{% block icon_tile_text_form %}
+    <div class="form">
+        {% block icon_tile_text_text %}
+            <div class="form-group">
+                <label>{{ i18n('icon_tile_text', 'Text') }}</label>
+                <input type="text" name="text" class="form-control" value="{{ data.text }}">
+            </div>
+        {% endblock icon_tile_text_text %}
+
+        {% block icon_tile_text_link %}
+            <div class="form-group">
+                <label>{{ i18n('icon_tile_icon', 'Icon') }}</label>
+                <input type="text" name="icon" class="form-control" value="{{ data.icon }}">
+            </div>
+        {% endblock icon_tile_text_link %}
+    </div>
+{% endblock icon_tile_text_form %}

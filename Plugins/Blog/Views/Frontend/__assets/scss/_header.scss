@@ -1,0 +1,15 @@
+.blog-header {
+    position: absolute;
+    top: 100px;
+
+    @media only screen and (min-width: 480px) {
+        top: 240px;
+    }
+
+    @media only screen and (min-width: 800px) {
+        top: 400px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+    }
+}

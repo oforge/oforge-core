@@ -1,0 +1,43 @@
+{% extends "@parent/Frontend/Layout.twig" %}
+
+{% block content %}
+
+    <div class="account content">
+        {% block account %}
+            <div class="panel panel--account flex">
+                {% if sidebar_navigation is defined %}
+                    {% block account__sidebar %}
+                        {% include 'Plugins/FrontendUserManagement/Frontend/Components/Sidebar.twig' %}
+                    {% endblock account__sidebar %}
+                {% endif %}
+                {% block account__content %}
+                    <div class="account__content flex  {% if sidebar_navigation is not defined %}content__faq{% endif %}">
+                        <h3 class="account__title">{{ i18n('faqs') }}</h3>
+
+                        {% block seo_content %}
+                            {% set content = content('faq_header_' ~  meta.language) %}
+                            {% if content %}
+                                {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
+                            {% endif %}
+                        {% endblock seo_content %}
+
+                        <div class="collapse--container">
+                            {% for value in faq %}
+                                <div class="collapse--trigger button button--secondary button--flat"
+                                     data-collapse>
+                                    <div>{{ value.question }}</div>
+                                    <div class="icon--container">
+                                        <svg class="icon">
+                                            <use xlink:href="#slider"></use>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="collapse--item collapsed">{{ value.answer | raw }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endblock account__content %}
+            </div>
+        {% endblock account %}
+    </div>
+{% endblock content %}

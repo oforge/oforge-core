@@ -1,9 +1,9 @@
 <?php
 /*****************************************************
  *
- *     	OFORGE
+ *      OFORGE
  *      Copyright (c) 7P.konzepte GmbH
- *		License: MIT
+ *      License: MIT
  *
  *
  *                (                           (
@@ -31,33 +31,59 @@
  *
  *
  **********************************************************/
+
 namespace Oforge\Engine\Modules\Core\Abstracts;
 
-use Slim\Http\Request;
-use Slim\Http\Response;
+use Oforge\Engine\Modules\TemplateEngine\Core\Twig\TwigFlash;
 
+/**
+ * Class AbstractViewManager
+ *
+ * @package Oforge\Engine\Modules\Core\Abstracts
+ */
 abstract class AbstractViewManager {
+
     /**
-     * Assign Data from a Controller to a Template
+     * Storage of messages and data for next request / redirect.
+     *
+     * @return TwigFlash
+     */
+    public abstract function Flash() : TwigFlash;
+
+    /**
+     * Assign data from a controller to a template
      *
      * @param array $data
+     *
+     * @return AbstractViewManager
      */
     public abstract function assign($data);
 
     /**
-     * Fetch View Data. This function should be called from the route middleware
+     * Fetch view data. This function should be called from the route middleware
      * so that it can transport the data to the TemplateEngine
      *
      * @return array
      */
     public abstract function fetch();
-    
+
     /**
-     * Get a specific key value from the viewData
+     * Get a specific key value from the viewData or $default if data with key does not exist.
      *
-     * @param $key
+     * @param string $key
+     * @param mixed $default
      *
      * @return mixed
      */
-    public abstract function get(string $key);
+    public abstract function get(string $key, $default = null);
+
+    /**
+     * Check if a specific key exists and is not empty
+     *
+     * @param string $key
+     *
+     * @return bool
+     */
+    public abstract function has(string $key) : bool;
+
 }

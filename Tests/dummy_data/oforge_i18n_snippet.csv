@@ -1,0 +1,17 @@
+scope;name;value
+de;cms_page_builder_page_tree_title;Seiten
+en;cms_page_builder_page_tree_title;Pages
+de;cms_page_builder_content_title;Inhalt
+en;cms_page_builder_content_title;Content
+de;cms_page_builder_content_language_selection;Sprache
+en;cms_page_builder_content_language_selection;Language
+de;cms_page_builder_content_page_active_checkbox_label;Aktiv
+en;cms_page_builder_content_page_active_checkbox_label;Active
+de;cms_page_builder_content_globals_link_label;Globals
+en;cms_page_builder_content_globals_link_label;Globals
+de;cms_page_builder_content_preview;Vorschau
+en;cms_page_builder_content_preview;Preview
+de;cms_page_builder_content_no_page_selected;Wählen Sie eine Seite zum Editieren!
+en;cms_page_builder_content_no_page_selected;Select a page for editing!
+de;cms_page_builder_content_types_title;Typen
+en;cms_page_builder_content_types_title;Types

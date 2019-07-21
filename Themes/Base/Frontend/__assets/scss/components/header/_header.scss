@@ -1,0 +1,13 @@
+.header {
+    width: 100%;
+    padding-bottom: 2rem;
+}
+
+.header-top {
+    height: 10rem;
+}
+
+@import "logo";
+@import "burger-menu";
+@import "top-nav";
+@import "main-nav";

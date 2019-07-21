@@ -1,0 +1,60 @@
+#media-chooser {
+    .modal-dialog {
+        top: 50%;
+        transform: translateY(-50%);
+
+        .row {
+            margin-bottom: 10px;
+        }
+
+        .overlay {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            top: 0;
+            left: 0;
+            z-index: 2;
+            display: none;
+
+            i {
+                left: 50%;
+                top: 50%;
+                position: absolute;
+                z-index: 3;
+                font-size: 100px;
+                margin-left: -42px;
+                margin-top: -50px;
+                color: #708f2b;
+            }
+        }
+    }
+
+    .upload-media {
+        cursor: pointer;
+    }
+
+    .media-item {
+        cursor: pointer;
+
+        &:hover {
+            img {
+                border-color: green;
+            }
+        }
+
+        img {
+            margin: 0 auto;
+            max-height: 80px;
+            display: block;
+        }
+
+        span {
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+        }
+    }
+}

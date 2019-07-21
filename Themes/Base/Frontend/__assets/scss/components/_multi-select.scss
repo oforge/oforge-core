@@ -1,0 +1,100 @@
+.multi-select {
+    position: relative;
+    cursor: pointer;
+    height: 3.6rem;
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid $color-primary;
+    background: $color-light;
+
+    &__search {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        border-top: none;
+        border-left: none;
+        border-bottom: 1px solid $color-primary;
+        border-right: 1px solid $color-primary;
+        background: $color-light;
+        color: $color-primary;
+        margin: 0;
+        padding: .4rem;
+        height: 3.6rem;
+        width: calc(100% - 2rem);
+        display: block;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    &.multi-select--is-open {
+        height: auto;
+        overflow: auto;
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 2;
+    }
+
+    &:after {
+        content: ' ';
+        position: absolute;
+        display: block;
+        width: 12px;
+        height: 8px;
+        border-style: solid;
+        border-width: 8px 6px 0 6px;
+        border-color: $color-primary transparent transparent transparent;
+        right: 4px;
+        top: calc((3.6rem / 2) - 4px);
+        z-index: 0;
+    }
+
+    &__list {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        max-height: 15rem;
+        width: calc(100% - .4rem);
+    }
+
+    &__item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        position: relative;
+        padding: $size-small;
+
+        &:before {
+            content: ' ';
+            display: block;
+            width: 1.6rem;
+            height: 1.6rem;
+            border: 1px solid $color-primary;
+            margin: 0 $size-small 0 0;
+        }
+
+        &.multi-select__item--checked {
+            &:after {
+                position: absolute;
+                left: .9rem;
+                top: .8rem;
+                content: ' ';
+                display: block;
+                width: .6rem;
+                height: 1.2rem;
+                border: solid $color-primary;
+                border-width: 0 .2rem .2rem 0;
+                transform: rotate(45deg);
+            }
+        }
+    }
+}
+
+.form__label + .multi-select.multi-select--is-open {
+    top: 2.4rem;
+}
+
+.multi-select__item {
+    margin: .8rem 0;
+}

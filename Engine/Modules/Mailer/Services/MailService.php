@@ -2,78 +2,206 @@
 
 namespace Oforge\Engine\Modules\Mailer\Services;
 
-class MailService
-{
-    public function send(array $options) {
+use InvalidArgumentException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
+use Oforge\Engine\Modules\Core\Helper\Statics;
+use Oforge\Engine\Modules\Core\Services\ConfigService;
+use Oforge\Engine\Modules\Media\Twig\MediaExtension;
+use Oforge\Engine\Modules\TemplateEngine\Core\Twig\CustomTwig;
+use Oforge\Engine\Modules\TemplateEngine\Extensions\Twig\AccessExtension;
+use Oforge\Engine\Modules\TemplateEngine\Extensions\Twig\SlimExtension;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\PHPMailer;
+use Twig_Error_Loader;
+use Twig_Error_Runtime;
+use Twig_Error_Syntax;
 
-        if($this->isValid($options)) {
+class MailService {
 
-            $mail = new PHPMailer(true);                              // Passing `true` enables exceptions
+    /**
+     * Initialises PHP Mailer Instance with specified Mailer Settings, Options and TemplateData.
+     * Options = ['to' => [], 'cc' => [], 'bcc' => [], 'replyTo' => [], 'attachment' => [], "subject" => string "html" => bool
+
+     * @param array $options
+     * @param array $templateData
+     *
+     * @return bool
+     * @throws ConfigElementNotFoundException
+     * @throws ConfigOptionKeyNotExistException
+     * @throws ServiceNotFoundException
+     * @throws Twig_Error_Loader
+     * @throws Twig_Error_Runtime
+     * @throws Twig_Error_Syntax
+     */
+    public function send(array $options, array $templateData = []) {
+        if ($this->isValid($options)) {
             try {
-                //Server settings
-                $mail->SMTPDebug = 2;                                 // Enable verbose debug output
-                $mail->isSMTP();                                      // Set mailer to use SMTP
-                $mail->Host = 'smtp1.example.com;smtp2.example.com';  // Specify main and backup SMTP servers
-                $mail->SMTPAuth = true;                               // Enable SMTP authentication
-                $mail->Username = 'user@example.com';                 // SMTP username
-                $mail->Password = 'secret';                           // SMTP password
-                $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
-                $mail->Port = 587;                                    // TCP port to connect to
+                /**
+                 * @var $configService ConfigService
+                 */
+                $configService = Oforge()->Services()->get("config");
+                $exceptions    = $configService->get("mailer_exceptions");
 
-                //Recipients
-                $mail->setFrom('from@example.com', 'Mailer');
-                $mail->addAddress('joe@example.net', 'Joe User');     // Add a recipient
-                $mail->addAddress('ellen@example.com');               // Name is optional
-                $mail->addReplyTo('info@example.com', 'Information');
-                $mail->addCC('cc@example.com');
-                $mail->addBCC('bcc@example.com');
+                /** @var  $mail */
+                $mail          = new PHPMailer($exceptions);
 
-                //Attachments
-                $mail->addAttachment('/var/tmp/file.tar.gz');         // Add attachments
-                $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
+                /**  Mailer Settings */
+                $mail->isSMTP();
+                $mail->setFrom($this->getSenderAddress($options['from']));
+                $mail->Host       = $configService->get("mailer_host");
+                $mail->Username   = $configService->get("mailer_smtp_username");
+                $mail->Port       = $configService->get("mailer_port");
+                $mail->SMTPAuth   = $configService->get("mailer_smtp_auth");
+                $mail->Password   = $configService->get("mailer_smtp_password");
+                $mail->SMTPSecure = $configService->get("mailer_smtp_secure");
+                $mail->Encoding = 'base64';
+                $mail->CharSet = 'UTF-8';
 
-                //Content
-                $mail->isHTML(true);                                  // Set email format to HTML
-                $mail->Subject = 'Here is the subject';
-                $mail->Body    = 'This is the HTML message body <b>in bold!</b>';
-                $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+                /** Add Recipients ({to,cc,bcc}Addresses) */
+                foreach ($options["to"] as $key => $value) {
+                    $mail->addAddress($key, $value);
+                }
+                if (isset($options['cc'])) {
+                    foreach ($options["cc"] as $key => $value) {
+                        $mail->addCC($key, $value);
+                    }
+                }
+                if (isset($options['bcc'])) {
+                    foreach ($options["bcc"] as $key => $value) {
+                        $mail->addBCC($key, $value);
+                    }
+                }
+                if (isset($options['replyTo'])) {
+                    foreach ($options["replyTo"] as $key => $value) {
+                        $mail->addReplyTo($key, $value);
+                    }
+                }
+
+                /** Add Attachments: */
+                if (isset($options['attachment'])) {
+                    foreach ($options["attachment"] as $key => $value) {
+                        $mail->addAttachment($key, $value);
+                    }
+                }
+
+                /** Render HTML */
+                $renderedTemplate = $this->renderMail($options,$templateData);
+
+
+                /** Add Content */
+                $mail->isHTML(ArrayHelper::get($options, 'html', true));
+                $mail->Subject = $options["subject"];
+                $mail->Body    = $renderedTemplate;
 
                 $mail->send();
-                echo 'Message has been sent';
+
+                Oforge()->Logger()->get("mailer")->info("Message has been sent", $options);
+                return true;
+
             } catch (Exception $e) {
-                echo 'Message could not be sent. Mailer Error: ', $mail->ErrorInfo;
+                Oforge()->Logger()->get("mailer")->error("Message has not been sent", [$mail->ErrorInfo]);
+                return false;
             }
         }
     }
-    private function isValid(array $options) {
-        /**
-         * Check if required keys are within the options
-         */
-        $keys = ["to", "subject", "body"];
+
+    /**
+     * @param array $options
+     *
+     * @return bool
+     * @throws ConfigOptionKeyNotExistException
+     */
+    private function isValid(array $options) : bool {
+
+        $keys = ["to", "subject", "template"];
         foreach ($keys as $key) {
-            if(!array_key_exists($key, $options)) throw new ConfigOptionKeyNotExists($key);
+            if (!array_key_exists($key, $options)) {
+                throw new ConfigOptionKeyNotExistException($key);
+            }
         }
 
-        /**
-         * Check valid email
-         */
+        /** Validate Mail Addresses */
         $emailKeys = ["to", "cc", "bcc", "replyTo"];
         foreach ($emailKeys as $key) {
-            if(array_key_exists($key, $options)) {
-                if(is_array($options[$key])) {
-
+            if (array_key_exists($key, $options)) {
+                if (is_array($options[$key])) {
+                    foreach ($options[$key] as $email => $name) {
+                        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                            throw new InvalidArgumentException("$email is not a valid email.");
+                        }
+                    }
                 } else {
-                    throw new \InvalidArgumentException("Expected array for $key but get " . gettype($options[$key]));
+                    // Argument is not an Array
+                    throw new InvalidArgumentException("Expected array for $key but get " . gettype($options[$key]));
                 }
             }
         }
-
-
-        /*if (filter_var($email_a, FILTER_VALIDATE_EMAIL)) {
-            echo "Email address '$email_a' is considered valid.\n";
-        }*/
+        return true;
     }
 
+    /**
+     * Loads minimal Twig Environment and returns rendered Template from active Theme.
+     * If specified Template does not exists in active Theme -> Fallback to Base Theme
+     *
+     * @param array $options
+     * @param array $templateData
+     *
+     * @return string
+     * @throws ServiceNotFoundException
+     * @throws Twig_Error_Loader
+     * @throws Twig_Error_Runtime
+     * @throws Twig_Error_Syntax
+     */
+    public function renderMail(array $options, array $templateData) {
 
+        $templateManagementService = Oforge()->Services()->get("template.management");
+        $templateName = $templateManagementService->getActiveTemplate()->getName();
+        $templatePath = Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . $templateName . DIRECTORY_SEPARATOR . 'MailTemplates';
 
+        if(!file_exists($templatePath . DIRECTORY_SEPARATOR . $options['template'])) {
+            $templatePath = Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . Statics::DEFAULT_THEME . DIRECTORY_SEPARATOR . 'MailTemplates';
+        }
+
+        $twig = new CustomTwig($templatePath);
+        $twig->addExtension(new \Oforge\Engine\Modules\CMS\Twig\AccessExtension());
+        $twig->addExtension(new AccessExtension());
+        $twig->addExtension(new MediaExtension());
+        $twig->addExtension(new SlimExtension());
+
+        return $twig->fetch($template = $options['template'], $data = $templateData);
+    }
+
+    /**
+     * Looks up mailer backend options for custom sender and host information.
+     *
+     * @param string $key
+     *
+     * @return string
+     * @throws ConfigElementNotFoundException
+     * @throws ServiceNotFoundException
+     */
+    public function getSenderAddress($key = 'info') {
+
+        $configService = Oforge()->Services()->get("config");
+
+        $host          = $configService->get('mailer_from_host');
+        if(!$host) {
+            throw new InvalidArgumentException("Error: Host is not set");
+        }
+        $sender        = $configService->get('mailer_from_' . $key);
+
+        $senderAddress = $sender . '@' . $host;
+        return $senderAddress;
+    }
+
+    public function batchSend() {
+        //
+    }
+
+    public function getSystemMails() {
+        //
+    }
 }

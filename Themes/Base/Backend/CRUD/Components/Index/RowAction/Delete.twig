@@ -1,0 +1,5 @@
+<a class="btn btn-danger {% if not crud.actions.delete %}disabled{% endif %}"
+   href="{{ url(meta.route.name  ~ '_delete', {id: item.id}) }}"
+   title="{{ i18n('backend_crud_btn_delete', {en: 'delete', de: 'löschen'}) }}">
+    <i class="fa fa-trash"></i>
+</a>

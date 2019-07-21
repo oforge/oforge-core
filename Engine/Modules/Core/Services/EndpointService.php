@@ -1,92 +1,336 @@
 <?php
+
 namespace Oforge\Engine\Modules\Core\Services;
 
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
+use Doctrine\Common\Annotations\AnnotationException;
+use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\IndexedReader;
+use Doctrine\Common\Annotations\Reader;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
+use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\Core\Helper\StringHelper;
-use Oforge\Engine\Modules\Core\Models\Routes\Route;
+use Oforge\Engine\Modules\Core\Models\Endpoint\Endpoint as EndpointModel;
+use Oforge\Engine\Modules\Core\Models\Endpoint\EndpointMethod;
+use ReflectionClass;
+use ReflectionException;
+use ReflectionMethod;
 
-class EndpointService
-{
+/**
+ * Class EndpointService
+ *
+ * @package Oforge\Engine\Modules\Core\Services
+ */
+class EndpointService extends AbstractDatabaseAccess {
+    /** @var array $configCache */
+    private $configCache = [];
+    /** @var EndpointModel[] */
+    private $activeEndpoints;
+
+    public function __construct() {
+        parent::__construct(EndpointModel::class);
+    }
+
     /**
-     * Store Route endpoints in a database table
+     * @return EndpointModel[]
+     * @throws ORMException
+     */
+    public function getActiveEndpoints() {
+        if (!isset($this->activeEndpoints)) {
+            $this->activeEndpoints = $this->repository()->findBy(['active' => 1], ['order' => 'ASC']);
+        }
+
+        return $this->activeEndpoints;
+    }
+
+    /**
+     * Store endpoints in a database table
      *
      * @param array $endpoints
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws AnnotationException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function register(Array $endpoints) {
-        $this->saveEndpoints($endpoints);
+    public function install(array $endpoints) {
+        $endpointConfigs = $this->prepareEndpointConfigs($endpoints);
+
+        $created = false;
+        foreach ($endpointConfigs as $endpointConfig) {
+            /** @var EndpointModel $endpoint */
+            $endpoint = $this->repository()->findOneBy(['name' => $endpointConfig['name']]);
+            if (!isset($endpoint)) {
+                $endpoint = EndpointModel::create($endpointConfig);
+                $this->entityManager()->create($endpoint, false);
+                $created = true;
+            }
+        }
+
+        if ($created) {
+            $this->entityManager()->flush();
+            $this->repository()->clear();
+        }
     }
-    
+
     /**
-     * Remove Route endpoints
+     * Activation of endpoints.
+     *
+     * @param array $endpoints
+     *
+     * @throws AnnotationException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function unregister() {
-        // TODO: implement unregister function
+    public function activate(array $endpoints) {//TODO ungetestet
+        $this->iterateEndpointModels($endpoints, function (EndpointModel $endpoint) {
+            $endpoint->setActive(true);
+        });
     }
-    
+
     /**
-     * Save the Route endpoints
+     * Deactivation of endpoints.
      *
-     * @param $endpoints
+     * @param array $endpoints
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws AnnotationException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    protected function saveEndpoints($endpoints) {
-        $em = Oforge()->DB()->getManager();
-        $repo =  $em->getRepository(Route::class);
+    public function deactivate(array $endpoints) {//TODO ungetestet
+        $this->iterateEndpointModels($endpoints, function (EndpointModel $endpoint) {
+            $endpoint->setActive(false);
+        });
+    }
 
-        $methodCollection = [];
+    /**
+     * Removing endpoints
+     *
+     * @param array $endpoints
+     *
+     * @throws AnnotationException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function deinstall(array $endpoints) {//TODO ungetestet
+        $this->iterateEndpointModels($endpoints, function (EndpointModel $endpoint) {
+            $this->entityManager()->remove($endpoint, false);
 
-        foreach($endpoints as $path => $config ) {
-            $isRoot = $path == "/" || "";
+            return true;
+        });
+    }
 
-            if($this->isValid($config)) {
-                $methods = get_class_methods($config["controller"]);
-                foreach($methods as $method) {
-                    $scope = array_key_exists("asset_scope", $config) ? $config["asset_scope"] : "frontend";
-                    if($method == "indexAction") {
-                        $key = array_key_exists("name", $config) ? $config["name"] : str_replace("/", "_", $path);
+    /**
+     * @param array $endpoints
+     * @param callable $callable
+     *
+     * @throws AnnotationException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    protected function iterateEndpointModels(array $endpoints, callable $callable) {
+        $endpointConfigs = $this->prepareEndpointConfigs($endpoints);
 
-                        array_push($methodCollection, ["path" => $path, "controller" => $config["controller"] . ':' . $method, "name" =>  $key, "asset_scope" => $scope]);
-                    } else {
-                        $custom_path = $path . ($isRoot ? "" : "/"). substr($method, 0, -6);
-                        $key = array_key_exists("name", $config) ? ($config["name"] . "_"  . substr($method, 0, -6)) : ($path . ($isRoot ? "" : "/"). substr($method, 0, -6));
+        foreach ($endpointConfigs as $endpointConfig) {
+            /** @var EndpointModel[] $endpoints */
+            $endpoints = $this->repository()->findBy(['name' => $endpointConfig['name']]);
 
-                        array_push($methodCollection, ["path" => $custom_path, "controller" => $config["controller"] . ':' . $method, "name" =>  $key, "asset_scope" => $scope]);
+            if (!empty($endpoints)) {
+                foreach ($endpoints as $endpoint) {
+                    $callable($endpoint);
+                    $this->entityManager()->update($endpoint, false);
+                }
+                $this->entityManager()->flush();
+            }
+        }
+        $this->repository()->clear();
+    }
+
+    /**
+     * @param array $endpoints
+     *
+     * @return array
+     * @throws AnnotationException
+     */
+    protected function prepareEndpointConfigs(array $endpoints) : array {
+        $isProductionMode = Oforge()->Settings()->isProductionMode();
+        $endpointConfigs  = [];
+        class_exists(EndpointClass::class);
+        class_exists(EndpointAction::class);
+        if (!file_exists(Statics::ENDPOINT_CACHE_DIR)) {
+            @mkdir(Statics::ENDPOINT_CACHE_DIR, 0755, true);
+        }
+
+        $reader = new IndexedReader(new AnnotationReader());
+        // $isDevMode = false;
+        // $cacheDir  = ROOT_PATH . DIRECTORY_SEPARATOR . Statics::CACHE_DIR . DIRECTORY_SEPARATOR . 'endpoint';
+        // $filesystemCache = new FilesystemCache($cacheDir);
+        // $reader    = new CachedReader($reader, $filesystemCache, $isDevMode);
+
+        foreach ($endpoints as $class) {
+            if (!is_string($class)) {
+                continue;
+            }
+            $fileName = $class;
+            if (StringHelper::startsWith($fileName, 'Oforge\Engine\Modules')) {
+                $fileName = explode('Modules', $class, 2)[1];
+                $fileName = ltrim(str_replace('\\', '_', $fileName), '_');
+            }
+            if ($isProductionMode) {
+                $cacheFile = Statics::ENDPOINT_CACHE_DIR . DIRECTORY_SEPARATOR . $fileName . '.cache';
+                if (file_exists($cacheFile)) {
+                    if (!isset($this->configCache[$fileName])) {
+                        $content                      = trim(file_get_contents($cacheFile));
+                        $this->configCache[$fileName] = unserialize($content);
                     }
+                    $endpointConfigsForClass = $this->configCache[$fileName];
+                } else {
+                    $endpointConfigsForClass      = $this->getEndpointConfigFromClass($reader, $class);
+                    $this->configCache[$fileName] = $endpointConfigsForClass;
+                    file_put_contents($cacheFile, serialize($endpointConfigsForClass));
+                }
+            } else {
+                if (!isset($this->configCache[$fileName])) {
+                    $this->configCache[$fileName] = $this->getEndpointConfigFromClass($reader, $class);
+                }
+                $endpointConfigsForClass = $this->configCache[$fileName];
+            }
+            if (empty($endpointConfigsForClass)) {
+                Oforge()->Logger()->get()->addWarning("An endpoint was defined but the corresponding controller '$class' has no action methods.");
+            } else {
+                $endpointConfigs = array_merge($endpointConfigs, $endpointConfigsForClass);
+            }
+        }
+        if (!empty($endpoints) && empty($endpointConfigs)) {
+            Oforge()->Logger()->get()->addWarning('Endpoints were defined but the corresponding controllers has no action methods.', $endpoints);
+        }
+
+        return $endpointConfigs;
+    }
+
+    /**
+     * Extract endpoint config from Class.
+     *
+     * @param Reader $reader
+     * @param string $class
+     *
+     * @return array
+     * @throws AnnotationException
+     */
+    protected function getEndpointConfigFromClass(Reader $reader, string $class) {
+        $endpointConfigs = [];
+        try {
+            $reflectionClass = new ReflectionClass($class);
+            /** @var EndpointClass $classAnnotation */
+            $classAnnotation = $reader->getClassAnnotation($reflectionClass, EndpointClass::class);
+            if (is_null($classAnnotation)) {
+                Oforge()->Logger()->get()
+                        ->addWarning("An endpoint was defined but the corresponding controller '$class' has no configurated annotation 'EndpointClass'.");
+
+                return $endpointConfigs;
+            }
+            $classAnnotation->checkRequired($class);
+
+            $classMethods = get_class_methods($class);
+            if (is_null($classMethods)) {
+                Oforge()->Logger()->get()->addWarning("Get class methods failed for '$class'. Maybe some namespace, class or method was defined wrong.");
+                $classMethods = [];
+            }
+            foreach ($classMethods as $classMethod) {
+                $isMethodActionPrefix = StringHelper::endsWith($classMethod, 'Action');
+                if ($classAnnotation->isStrictActionSuffix() && !$isMethodActionPrefix) {
+                    continue;
+                }
+                $reflectionMethod = new ReflectionMethod($class, $classMethod);
+                /** @var EndpointAction $methodAnnotation */
+                $methodAnnotation = $reader->getMethodAnnotation($reflectionMethod, EndpointAction::class);
+                if (!$classAnnotation->isStrictActionSuffix() && is_null($methodAnnotation)) {
+                    // skipping of methods without endpoint action annotation in disabled strict mode
+                    continue;
+                }
+                if (isset($methodAnnotation) && !$methodAnnotation->isCreate()) {
+                    continue;
+                }
+                $endpointConfig = $this->buildEndpointConfig($class, $classMethod, $isMethodActionPrefix, $classAnnotation, $methodAnnotation);
+                if (!empty($endpointConfig)) {
+                    $endpointConfigs[] = $endpointConfig;
                 }
             }
+        } catch (ReflectionException $exception) {
+            Oforge()->Logger()->get()->addWarning('Reflection exception: ' . $exception->getMessage(), $exception->getTrace());
         }
 
-        foreach($methodCollection as $method) {
-            $r = $repo->findBy(array('name' => $method["name"]));
-
-            if(sizeof($r) == 0) {
-                $route = new Route();
-                $route->fromArray($method);
-                $route->setLanguageId("de");
-                $route->setActivate(true);
-                $em->persist($route);
-            }
-        }
-
-        $em->flush();
+        return $endpointConfigs;
     }
 
-    private function isValid($options)
-    {
-        /**
-         * Check if required keys are within the options
-         */
-        $keys = ["controller", "name"];
-        foreach ($keys as $key) {
-            if(!array_key_exists($key, $options)) throw new ConfigOptionKeyNotExists($key);
+    /**
+     * @param string $class
+     * @param string $classMethod
+     * @param bool $isMethodActionPrefix
+     * @param EndpointClass $classAnnotation
+     * @param EndpointAction $methodAnnotation
+     *
+     * @return array
+     */
+    protected function buildEndpointConfig(
+        string $class,
+        string $classMethod,
+        bool $isMethodActionPrefix,
+        EndpointClass $classAnnotation,
+        ?EndpointAction $methodAnnotation
+    ) : array {
+        $parentName = $classAnnotation->getName();
+        $name       = $parentName . '_';
+        $path       = $classAnnotation->getPath();
+        $order      = null;
+        $assetScope = null;
+        $httpMethod = EndpointMethod::ANY;
+
+        $context = explode('\\', $class)[StringHelper::startsWith($class, 'Oforge\Engine\Modules') ? 3 : 0];
+
+        $actionName = $classMethod;
+        if ($isMethodActionPrefix) {
+            $actionName = explode('Action', $actionName)[0];
+        }
+        $isIndexAction = $actionName === 'index';
+
+        if (isset($methodAnnotation)) {
+            $order      = $methodAnnotation->getOrder();
+            $assetScope = $methodAnnotation->getAssetScope();
+            if (EndpointMethod::isValid($methodAnnotation->getMethod())) {
+                $httpMethod = $methodAnnotation->getMethod();
+            }
+        }
+        if (isset($methodAnnotation) && !empty($methodAnnotation->getPath())) {
+            $path .= $methodAnnotation->getPath();
+        } elseif (!$isIndexAction) {
+            $path .= '/' . $actionName;
+        }
+        if (isset($methodAnnotation) && !empty($methodAnnotation->getName())) {
+            $name .= $methodAnnotation->getName();
+        } elseif (!$isIndexAction) {
+            $name .= $actionName;
         }
 
-        return true;
+        $name       = trim($name, '_');
+        $path       = StringHelper::leading($path, '/');
+        $order      = $order ?? $classAnnotation->getOrder() ?? Statics::DEFAULT_ORDER;
+        $assetScope = $assetScope ?? $classAnnotation->getAssetScope() ?? 'Frontend';
+
+        return [
+            'name'             => $name,
+            'parentName'       => $parentName,
+            'path'             => $path,
+            'context'          => $context,
+            'controllerClass'  => $class,
+            'controllerMethod' => $classMethod,
+            'assetScope'       => $assetScope,
+            'httpMethod'       => $httpMethod,
+            'order'            => $order,
+            // 'controllerAction' => $actionName ?? '-',
+        ];
     }
 
 }

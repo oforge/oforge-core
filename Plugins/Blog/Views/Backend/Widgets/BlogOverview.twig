@@ -1,0 +1,41 @@
+<div class="box box-widget widget-user-2">
+    <div class="box-footer no-padding">
+        <ul class="nav nav-stacked">
+            <li>
+                <a href="{{ url('backend_blog_categories') }}">
+                    {{ i18n('plugin_blog_categories', {en: 'Categories', de: 'Kategorien'}) }}
+                    <i class="fa fa-arrow-circle-right"></i>
+                    <span class="pull-right badge bg-blue">
+                        {{ content.categories|default(0) }}
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ url('backend_blog_posts') }}">
+                    {{ i18n('plugin_blog_posts', {en: 'Posts', de: 'Beiträge'}) }}
+                    <i class="fa fa-arrow-circle-right"></i>
+                    <span class="pull-right badge bg-blue">
+                        {{ content.posts|default(0) }}
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ url('backend_blog_comments') }}">
+                    {{ i18n('plugin_blog_comments', {en: 'Comments', de: 'Kommentare'}) }}
+                    <i class="fa fa-arrow-circle-right"></i>
+                    <span class="pull-right badge bg-blue">
+                        {{ content.comments|default(0) }}
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a>
+                    Ratings
+                    <span class="pull-right badge bg-blue">
+                        {{ content.ratings|default(0) }}
+                    </span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,133 @@
+{% block page_content %}
+    <div class="form-controls form-controls--container">
+
+        <div class="row">
+
+            <div class="form__control--row-half">
+                {# contact information #}
+                <div class="form__control ">
+                    {% set label = i18n('insertion_description_' ~ type.name, '' ) is empty ? i18n('description') :  i18n('insertion_description_' ~ type.name) %}
+                    <h3 class="form__sub-title">{{ label }}</h3>
+                    <textarea name="insertion_description"
+                              class="form__input form__input--textarea form__input--textarea-description form-control"
+                              placeholder="{{ i18n('description') }}">{{ data.insertion_description }}</textarea>
+                </div>
+
+                {# contact attributes #}
+                {% for attributeGroup in attributes %}
+                    {% if attributeGroup.items|length > 0 and attributeGroup.name == 'contact' %}
+                        <div class="attribute-group">
+                            <h2>{{ i18n('attribute_group_' ~ attributeGroup.name) }}</h2>
+                            <div>
+                                {% for attribute in attributeGroup.items %}
+                                    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': attribute.required } %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="form__control--row-half">
+                <div class="form__control">
+                    <h3 class="form__sub-title">{{ i18n('contact_partner') }}</h3>
+                    <input type="text"
+                           name="contact_name"
+                           class="form__input form-control"
+                           value="{{ data['contact_name'] }}"
+                           placeholder="{{ i18n('name') }}" />
+                </div>
+                <div class="form__control">
+                    <h3 class="form__sub-title">{{ i18n('contact_data') }}</h3>
+                    <input type="email"
+                           name="contact_email"
+                           class="form__input form-control"
+                           value="{{ data['contact_email'] }}"
+                           placeholder="{{ i18n('email') }}" />
+                </div>
+                <div class="form__control">
+                    <input type="tel"
+                           name="contact_phone"
+                           class="form__input form-control"
+                           value="{{ data['contact_phone'] }}"
+                           placeholder="{{ i18n('phone') }}">
+                </div>
+                <div class="form__control columns">
+                    <h3 class="form__sub-title">{{ i18n('address') }}</h3>
+                    <div class="column column--one-third">
+                        <input type="text"
+                               name="contact_zip"
+                               required
+                               class="form__input form-control"
+                               value="{{ data['contact_zip'] }}"
+                               placeholder="{{ i18n('zip') }}" />
+                    </div>
+                    <div class="column column--two-third">
+                        <input type="text"
+                               name="contact_city"
+                               class="form__input form-control"
+                               value="{{ data['contact_city'] }}"
+                               placeholder="{{ i18n('city') }}" />
+                    </div>
+                </div>
+
+
+                <div class="form__control">
+                    <div class="form__input form__input--select">
+                        <select class="form__input form__input--no-input" name="contact_country">
+                            <option value="germany" selected="selected">{{ i18n('germany') }}</option>
+                            <option value="austria">{{ i18n('austria') }}</option>
+                            <option value="switzerland">{{ i18n('switzerland') }}</option>
+                            <option value="netherlands">{{ i18n('netherlands') }}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form__control">
+                    <label class="form__label form__label--checkbox">
+                        <input type="hidden" value="off" name="contact_visible" />
+                        <input type="checkbox"
+                               name="contact_visible"
+                               {% if data['contact_visible'] == 'on' %}checked="checked"{% endif %}
+                               class="form__input form__input--checkbox form__input--checkbox-small" />
+                        {{ i18n('contact_data_visible', 'My contact data should be visible for registered users only.') }}
+                    </label>
+                </div>
+            </div>
+
+        </div>
+        <div class="form-controls">
+            <div class="attribute-group">
+                <label for="price"
+                       class="title title--attribute-group">{{ i18n('price') }}</label>
+                <div class="form__control">
+                    <label for="price"
+                           class="form__input form__input--inside-label">
+                        <input type="number"
+                               name="price"
+                               id="price"
+                               min="0"
+                               value="{{ data['price'] }}"
+                               class="form__input"
+                               required />
+                        {% if i18nExists('unit_price') %}
+                            <span class="input__unit">
+                        {{ i18n('unit_price') }}
+                    </span>
+                        {% endif %}
+                    </label>
+                </div>
+
+                <div class="form__control form__control--checkbox">
+                    <label for="tax" class="form__label form__label--checkbox"> {{ i18n('tax') }}</label>
+                    <input type="hidden" name="tax" value="off" />
+                    <input type="checkbox"
+                           class="form__input form__input--checkbox"
+                           name="tax"
+                           id="tax"
+                            {% if data['tax'] == 'on' %}
+                        checked="checked"
+                            {% endif %}>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock page_content %}

@@ -1,0 +1,34 @@
+.logo {
+    margin-right: auto;
+
+    &__img {
+        max-height: 80px;
+    }
+    &__link {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        height: 100%;
+        width: 100%;
+
+        &:hover,
+        &:active {
+            text-decoration: none;
+        }
+    }
+
+    &__text,
+    &__text2 {
+        display: inline;
+        font-weight: bold;
+        font-size: $font-size-4;
+    }
+
+    &__text {
+        color: $color-primary;
+    }
+
+    &__text2 {
+        color: $color-secondary;
+    }
+}

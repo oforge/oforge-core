@@ -1,0 +1,15 @@
+<section class="content-flash-messages container-fluid">
+    {% for flashMessage in flashMessages %}
+        {% set flashMessageDismissible = flashMessage.dismissible is not defined or flashMessage.dismissible != false %}
+        {% set flashMessageIcon = {'success': 'fa-check', 'warning': 'fa-warning', 'error': 'fa-ban', 'info': 'fa-info'}[flashMessage.type]|default('') %}
+        <div class="alert alert-{{ flashMessage.type }} {% if flashMessageDismissible %}alert-dismissable{% endif %}">
+            {% if flashMessageDismissible %}
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            {% endif %}
+            {% if flashMessageIcon %}
+                <i class="icon fa {{ flashMessageIcon }}"></i>
+            {% endif %}
+            {{ flashMessage.message|raw }}
+        </div>
+    {% endfor %}
+</section>

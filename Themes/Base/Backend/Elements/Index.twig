@@ -1,0 +1,20 @@
+{% extends 'Backend/Master/Index.twig' %}
+
+{% block pagecontent %}
+
+    {% block cms_element_editor %}
+        <div class="container-fluid element-editor-container-wrapper" id="element_editor_container_wrapper">
+        <div class="row">
+            {% include 'Backend/Elements/ElementJsTree.twig' %}
+            <div class="col-xs-9">
+                <div class="box box-primary">
+                    <div class="box-body ">
+                        {% include 'Backend/Elements/ElementContent.twig' %}
+                        {% include 'Backend/Pages/ContentTypeList.twig' %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endblock cms_element_editor %}
+
+{% endblock pagecontent %}

@@ -1,0 +1,35 @@
+{% block image_tile_content %}
+    {% if data.link %}
+        <a href="{{ url(data.link) }}">
+    {% endif %}
+    <div class="content" style="background-color:{{ data.backgroundcolor }}">
+        <div class="image-container">
+            <img class="lazy" data-src="{{ media(data.url, imagewidth) }}" alt="{{ data.caption }}">
+        </div>
+        <div class="text-container" style="background-color:{{ data.backgroundcolor }}">
+            <h2 style="color:{{ data.fontcolor }};">{{ data.caption }}</h2>
+            {% if data.subheading %}
+                <h3>{{ data.subheading }}</h3>{% endif %}
+            {% if richtext is defined %}
+                {{ data.text|raw }}
+            {% elseif data.text %}
+                <p>{{ data.text }}</p>
+            {% endif %}
+            {% block image_tile_link %}
+                {% if data.link %}
+                    <div class="link">
+                        <div class="link-text">
+                            <strong>{% if data.linktext %}{{ data.linktext }}{% endif %}</strong>
+                            <svg class="icon icon--secondary icon--profil">
+                                <use xlink:href="#read_more"></use>
+                            </svg>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endblock image_tile_link %}
+        </div>
+    </div>
+    {% if data.link %}
+        </a>
+    {% endif %}
+{% endblock image_tile_content %}

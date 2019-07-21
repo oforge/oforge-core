@@ -1,0 +1,18 @@
+{
+    "name": "oforge-docker-script",
+    "version": "0.0.1",
+    "description": "A workflow for Angular made with Webpack",
+    "scripts": {
+        "docker:compose": "cd docker && docker-compose -p oforgemysql build --no-cache",
+        "docker:compose:up": "cd docker && docker-compose -p oforgemysql up",
+        "docker:compose:down": "cd docker && docker-compose -p oforgemysql down",
+        "docker": "npm run docker:compose:down && npm run docker:compose && npm run docker:compose:up",
+        "cssprefix": "npx postcss ./var/public/__assets/Frontend/css/*.css --use autoprefixer --replace --no-map",
+        "svgsprite": "npx svg-sprite --ss ./node_scripts/dest --sscss ./node_scripts/src/svg/*.svg"
+    },
+    "devDependencies": {
+        "autoprefixer": "*",
+        "postcss-cli": "*",
+        "svg-sprite": "*"
+    }
+}

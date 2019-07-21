@@ -1,0 +1,47 @@
+{% block image_tile_large_form %}
+    <div class="form">
+        {% block image_tile_large_image %}
+            <div class="form-group">
+                <label>{{ i18n('type_image', 'Image') }}</label>
+                {% if data.url %}
+                    <div class="preview-image">
+                        <img src="{{ media(data.url, 200) }}" width="200" title="{{ data.url }}"/>
+                    </div>
+                {% endif %}
+
+                <input class="form-control" name="image" type="file" accept="image/*" >
+            </div>
+        {% endblock image_tile_large_image %}
+
+        {% block image_tile_text_caption %}
+            <div class="form-group">
+                <label>{{ i18n('image_tile_caption', 'Überschrift') }}</label>
+                <input type="text" name="caption" class="form-control" value="{{ data.caption }}">
+            </div>
+            <div class="form-group">
+                <label>{{ i18n('image_tile_subheader', 'Unterüberschrift') }}</label>
+                <input type="text" name="subheading" class="form-control" value="{{ data.subheading }}">
+            </div>
+        {% endblock image_tile_text_caption %}
+
+        {% block image_tile_large_text %}
+            <div class="form-group">
+                <label>{{ i18n('image_tile_text', 'Text') }}</label>
+                <textarea  class="editor oforge-quill-editable" id="text" name="text">{{ data.text|raw }}</textarea>
+            </div>
+        {% endblock image_tile_large_text %}
+
+        {% block image_tile_large_appearance_form %}
+            <div>
+                <label>{{ i18n('background_color', 'Hintergrundfarbe') }}</label>
+                <input type="color" name="backgroundcolor"
+                       value="{% if data.backgroundcolor %}{{ data.backgroundcolor }}{% else %}#ffffff{% endif %}">
+            </div>
+            <div>
+                <label>{{ i18n('font_color', 'Schriftfarbe') }}</label>
+                <input type="color" name="fontcolor"
+                       value="{% if data.fontcolor %}{{ data.fontcolor }}{% else %}#6f8e2b{% endif %}">
+            </div>
+        {% endblock image_tile_large_appearance_form %}
+    </div>
+{% endblock image_tile_large_form %}

@@ -8,29 +8,29 @@
 
 namespace Oforge\Engine\Modules\Auth\Services;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
-use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
-use Oforge\Engine\Modules\Auth\Models\User\User;
+use Doctrine\ORM\ORMException;
+use Oforge\Engine\Modules\Auth\Models\User\BaseUser;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 
 /**
  * This Base class has the default methods for logging users in and validating passwords.
  * It can be extended by specific LoginServices e.g. for the backend or the portal
- *
  * Class BaseLoginService
+ *
  * @package Oforge\Engine\Modules\Auth\Services
  */
-class BaseLoginService {
+class BaseLoginService extends AbstractDatabaseAccess {
+
     /**
-     * @var $em EntityManager
+     * BaseLoginService constructor.
+     *
+     * @param $models
      */
-    protected $em;
-    
-    /**
-     * @var $repo EntityRepository
-     */
-    protected $repo;
-    
+    public function __construct($models) {
+        parent::__construct($models);
+    }
+
     /**
      * Validate login credentials against entities in the database and if valid, respond with a JWT.
      *
@@ -38,41 +38,29 @@ class BaseLoginService {
      * @param string $password
      *
      * @return string|null
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ServiceNotFoundException
+     * @throws ORMException
      */
     public function login(string $email, string $password) {
-        /**
-         * @var $authService AuthService
-         */
-        $authService = Oforge()->Services()->get("auth");
-        
-        /**
-         * @var $user BackendUser|User
-         */
-        $user = $this->repo->findOneBy(["email" => $email]);
-        
+        /** @var AuthService $authService */
+        $authService = Oforge()->Services()->get('auth');
+
+        /** @var PasswordService $passwordService */
+        $passwordService = Oforge()->Services()->get('password');
+
+        /** @var BaseUser $user */
+        $user = $this->repository()->findOneBy(['email' => $email]);//TODO include 'active' => true ?
+
         if (isset($user)) {
-            if ($this->comparePasswords($password, $user->getPassword())) {
-                $userObj = [
-                    'user_id' => $user->getId(),
-                    'user_email' => $user->getEmail(),
-                    'user_type' => get_class($user),
-                    'user_role' => 1 //TODO temp => Admin
-                ];
+            if ($passwordService->validate($password, $user->getPassword())) {
+                $userObj = $user->toArray(1);
+                unset($userObj['password']);
+                $userObj['type'] = get_class($user);
+
                 return $authService->createJWT($userObj);
             }
         }
+
         return null;
-    }
-    
-    /**
-     * Check, if two services are identical
-     * @param string $clientPassword
-     * @param string $serverPassword
-     *
-     * @return bool
-     */
-    public function comparePasswords(string $clientPassword, string $serverPassword) : bool {
-        return password_verify($clientPassword, $serverPassword);
     }
 }

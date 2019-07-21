@@ -1,0 +1,13 @@
+{% extends 'Frontend/Layout.twig' %}
+{% block content %}
+    <div class="404 content">
+        <div class="panel">
+            {% set content = content('not_found_' ~ meta.language) %}
+            {% if content %}
+                <div class="content">
+                    {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock content %}

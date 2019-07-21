@@ -1,0 +1,71 @@
+{#
+    This is the top (Master) template file, that defines the basic structure of a theme.
+#}
+<!doctype html>
+<html lang="{{ meta.language }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}{% if meta.title is defined %}{{ meta.title }}{% else %}{{ config('system_project_name') }}{% endif %}{% endblock title %}</title>
+    <meta name="description" content="{% block description %}{{ meta.description }}{% endblock description %}" />
+    {#<base href="{{ meta.route.baseUrl }}" />#}
+    <link rel="shortcut icon" href="/var/public/__assets/Frontend/img/favicon.ico">
+
+    {% block master__additional_meta %}
+    {% endblock master__additional_meta %}
+
+    {% block master__styles %}
+        {% if assets.css %}
+            <link rel="stylesheet" href="{{ assets.css }}">
+        {% endif %}
+    {% endblock master__styles %}
+</head>
+<body class="{% block body_class %}controller-{{ meta.route.parentName|lower }} module-{{ meta.route.context|lower }} action-{{ meta.route.name|lower }} {{ meta.body_class|lower }} {% endblock body_class %}">
+
+{% if debug.console %}
+    {{ o_dump() }}
+{% endif %}
+
+{% block body %}
+{% endblock body %}
+
+{% block master__footer_scripts %}
+    {% include 'Frontend/Components/Scripts.twig' %}
+{% endblock master__footer_scripts %}
+
+
+{% block svg_icons %}
+    {% include 'Frontend/Components/SVG.twig' %}
+    {% if debug %}
+        {% include 'Frontend/Components/TestIcons.twig' %}
+    {% endif %}
+{% endblock svg_icons %}
+
+{% block master__meta %}
+    {% if debug.session %}
+        <style>
+            .meta {
+                background: #d87a68;
+                color: #fff;
+                padding: 1rem;
+                width: 100%;
+                min-height: 300px;
+                font-size: 1.2rem;
+                line-height: 1.4;
+                word-break: break-all;
+            }
+
+            .meta * {
+                white-space: pre-wrap;
+            }
+        </style>
+        <div class="meta">
+            {{ o_print(debug.session) }}
+        </div>
+    {% endif %}
+{% endblock master__meta %}
+
+</body>
+</html>

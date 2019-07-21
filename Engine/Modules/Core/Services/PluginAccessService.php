@@ -1,42 +1,77 @@
 <?php
+
 namespace Oforge\Engine\Modules\Core\Services;
 
-use Doctrine\Common\Persistence\ObjectRepository;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
-use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
-use Oforge\Engine\Modules\Core\Exceptions\CouldNotActivatePluginException;
-use Oforge\Engine\Modules\Core\Exceptions\CouldNotDeactivatePluginException;
-use Oforge\Engine\Modules\Core\Exceptions\PluginNotFoundException;
-use Oforge\Engine\Modules\Core\Helper\Helper;
+use Doctrine\ORM\ORMException;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Models\Plugin\Plugin;
+use function PHPSTORM_META\map;
 
-class PluginAccessService
-{
-    /**
-     * @var $em EntityManager
-     */
-    private $em;
-    
-    /**
-     * @var $repo ObjectRepository|EntityRepository
-     */
-    private $repo;
-    
+class PluginAccessService extends AbstractDatabaseAccess {
+
     public function __construct() {
-        $this->em = Oforge()->DB()->getManager();
-        $this->repo = $this->em->getRepository(Plugin::class);
+        parent::__construct(["default" => Plugin::class]);
     }
-    
+
     /**
      * @return array|object[]
+     * @throws ORMException
      */
-    public function getActive()
-    {
+    public function getActive() {
         //find all plugins order by "order"
-        $plugins = $this->repo->findBy(array("active" => 1), array('order' => 'ASC'));
+        /** @var Plugin[] $plugins */
+        $plugins = $this->repository()->findBy(["active" => 1], ['order' => 'ASC']);
         //create working bucket with all plugins that should be started
-        return $plugins;
+
+        $dependencyList = [];
+
+        foreach ($plugins as $plugin) {
+            $classname    = $plugin->getName() . "\\Bootstrap";
+            $instance     = new $classname();
+            $dependencies = array_map(function ($val) {
+                return explode('\\', $val)[0];
+            }, $instance->getDependencies());
+
+            $dependencyList[] = [
+                'name'         => $plugin->getName(),
+                'dependencies' => $dependencies,
+            ];
+        }
+
+        $result = [];
+        $checkedDependencies = [];
+
+        // while not all items are resolved:
+        while(count($dependencyList) > count($result)) {
+            $success = false;
+            foreach($dependencyList as $plugin) {
+                if(isset($checkedDependencies[$plugin['name']])) {
+                    continue;
+                }
+                $resolved = true;
+                if(isset($plugin['dependencies'])) {
+                    foreach($plugin['dependencies'] as $dependency) {
+                        if(!isset($checkedDependencies[$dependency])) {
+                            // there is a dependency that is not met:
+                            $resolved = false;
+                            break;
+                        }
+                    }
+                }
+                if($resolved) {
+                    //all dependencies are met:
+                    $checkedDependencies[$plugin['name']] = true;
+                    $result[] = $plugin;
+                    $success = true;
+                }
+            }
+
+            if(!$success) {
+                echo "TODO THROW EXCEPTION";
+            }
+        }
+
+        return array_reverse($result);
     }
 
 }
