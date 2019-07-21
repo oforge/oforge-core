@@ -1,0 +1,37 @@
+{% set useTextarea = item.scopes[meta.route.query.language1].value|default('')|length > 99
+    or item.scopes[meta.route.query.language2].value|default('')|length > 99 %}
+<tr>
+    <td>{{ item.name }}</td>
+    <td>
+        {% include 'Backend/I18n/Snippets/Components/Comparator/Editor.twig' with {
+            side: 'language1',
+            useTextarea: useTextarea,
+            rowIndex: rowIndex,
+            item: item,
+            meta: meta,
+        } only %}
+    </td>
+    <td>
+        <div class="btn-group">
+            <button class="btn btn-default module-i18n-snippet-comparator-language-copy" type="button" tabindex="-1"
+                    title="{{ i18n('backend_i18n_snippet_comparator_copy_left', {en: 'copy right to left', de: 'kopiere von rechts nach links'}) }}"
+                    data-src="language2-{{ rowIndex }}" data-dst="language1-{{ rowIndex }}">
+                <i class="fa fa-caret-left"></i>
+            </button>
+            <button class="btn btn-default module-i18n-snippet-comparator-language-copy" type="button" tabindex="-1"
+                    title="{{ i18n('backend_i18n_snippet_comparator_copy_right', {en: 'copy left to right', de: 'kopiere von links nach rechts'}) }}"
+                    data-src="language1-{{ rowIndex }}" data-dst="language2-{{ rowIndex }}">
+                <i class="fa fa-caret-right"></i>
+            </button>
+        </div>
+    </td>
+    <td>
+        {% include 'Backend/I18n/Snippets/Components/Comparator/Editor.twig' with {
+            side: 'language2',
+            useTextarea: useTextarea,
+            rowIndex: rowIndex,
+            item: item,
+            meta: meta,
+        } only %}
+    </td>
+</tr>

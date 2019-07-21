@@ -1,7 +1,5 @@
-<div class="container-fluid">
-    {% include 'Backend/Components/Form/Switch.twig' with {
-        id: crudFieldID,
-        disabled: true,
-        checked: item[crudProperty.name],
-    } only %}
-</div>
+{% include 'Backend/Components/Form/Switch.twig' with {
+    id: crudFieldID,
+    disabled: true,
+    checked: item[crudProperty.name],
+} only %}
