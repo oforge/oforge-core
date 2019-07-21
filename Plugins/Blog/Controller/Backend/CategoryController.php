@@ -260,7 +260,10 @@ class CategoryController extends BaseCrudController {
             $category = $this->crudService->getById($this->model, $entityID);
             if (!isset($category)) {
                 Oforge()->View()->Flash()->addMessage('error', sprintf(#
-                    I18N::translate('plugin_blog_category_not_found', 'Category with ID "%s" not found.'),#
+                    I18N::translate('plugin_blog_category_not_found', [
+                        'en' => 'Category with ID "%s" not found.',
+                        'de' => 'Kategorie mit der ID "%s" wurde nicht gefunden.',
+                    ]),#
                     $entityID#
                 ));
 
@@ -269,7 +272,10 @@ class CategoryController extends BaseCrudController {
             $postCount = $category->getPosts()->count();
             if ($postCount > 0) {
                 Oforge()->View()->Flash()->addMessage('warning', sprintf(#
-                    I18N::translate('plugin_blog_category_not_deleted_has_posts', 'Category with ID "%s" can not be deleted because it still contains posts.'),#
+                    I18N::translate('plugin_blog_category_not_deleted_has_posts', [
+                        'en' => 'Category with ID "%s" can not be deleted because it still contains posts.',
+                        'de' => 'Kategorie mit der ID "%s" kann nicht gelöscht werden, da sie noch Beiträge enthält.',
+                    ]),#
                     $entityID#
                 ));
 
@@ -278,7 +284,10 @@ class CategoryController extends BaseCrudController {
 
             return parent::handleDeleteAction($response, $entityID);
         } catch (ORMException $exception) {
-            Oforge()->View()->Flash()->addExceptionMessage('error', I18N::translate('backend_crud_error', 'An error has occurred.'), $exception);
+            Oforge()->View()->Flash()->addExceptionMessage('error', I18N::translate('backend_crud_error', [
+                'en' => 'An error has occurred.',
+                'de' => 'Ein Fehler ist aufgetreten.',
+            ]), $exception);
 
             return $this->redirect($response, 'delete', ['id' => $entityID]);
         }

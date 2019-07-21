@@ -1,12 +1,12 @@
 <div class="btn-group pull-right">
     <a class="btn btn-info" target="_blank"
        href="{{ url('frontend_blog', {categoryID: item.id, seoUrlPath: item.seoUrlPath}) }}"
-       title="{{ i18n('plugin_blog_goto_frontend_category', 'Show category in frontend') }}">
+       title="{{ i18n('plugin_blog_goto_frontend_category', {en: 'Show category in frontend', de: 'Kategorie im Frontend anzeigen'}) }}">
         <i class="fa fa-eye"></i>
     </a>
     <a class="btn btn-primary"
        href="{{ url('backend_blog_posts', {}, {category: item.id}) }}"
-       title="{{ i18n('plugin_blog_goto_posts_of_category', 'Show posts of category') }}">
+       title="{{ i18n('plugin_blog_goto_posts_of_category', {en: 'Show posts of category', de: 'Beiträge der Kategorie anzeigen'}) }}">
         <i class="fa fa-sticky-note"></i>
         &nbsp;{{ item.posts }}
     </a>

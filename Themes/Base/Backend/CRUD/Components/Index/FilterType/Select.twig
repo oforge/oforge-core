@@ -10,14 +10,14 @@
                     {% set crudFilterOptgroupLabel = crudFilterLabel.label %}
                     <optgroup label="{{ crudFilterOptgroupLabel }}">
                         {% for crudFilterValue2,crudFilterLabel2 in crudFilterLabel.options %}
-                            {% set selected = (meta.route.query[crudPropertyName]|default('') == crudFilterValue2) %}
+                            {% set selected = (meta.route.query[crudPropertyName]|default(null) == crudFilterValue2) %}
                             <option {% if selected %}selected{% endif %} value="{{ crudFilterValue2 }}">
                                 {{ crudFilterLabel2 }}
                             </option>
                         {% endfor %}
                     </optgroup>
                 {% else %}
-                    {% set selected = (meta.route.query[crudPropertyName]|default('') == crudFilterValue) %}
+                    {% set selected = (meta.route.query[crudPropertyName]|default(null) == crudFilterValue) %}
                     <option {% if selected %}selected{% endif %} value="{{ crudFilterValue }}">
                         {{ crudFilterLabel }}
                     </option>

@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-xs-12">
             <form id="oforge-crud-filters" method="GET" class="form-inline">
-                {% for crudPropertyName, crudFilterConfig in crud.filter if crudFilterConfig.type != 'hidden' %}
+                {% for crudPropertyName, crudFilterConfig in crud.filter %}
                     {% if crudFilterConfig.label is defined %}
                         {% if crudFilterConfig.label is array %}
                             {% set crudFilterTitle = i18n(crudFilterConfig.label) %}
@@ -14,7 +14,9 @@
                     {% endif %}
                     {% include 'Backend/CRUD/Components/Index/FilterType/' ~ crudFilterConfig.type|ucfirst ~ '.twig' ignore missing %}
                 {% endfor %}
-                <button class="btn btn-default" type="submit">{{ i18n('backend_crud_btn_filter_submit', {en: 'Filter', de: 'Filtern'}) }}</button>
+                <button class="btn btn-default" type="submit">
+                    {{ i18n('backend_crud_btn_filter_submit', {en: 'Filter', de: 'Filtern'}) }}
+                </button>
             </form>
         </div>
     </div>

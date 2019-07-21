@@ -9,7 +9,6 @@
         {% set crudDateTimePickerValue = crudDateTimePickerValue|formatTime %}
     {% endif %}
     {% set crudDateTimePickerID = crudFieldID ~ '_picker' %}
-    {{ o_dump() }}
     <div id="{{ crudDateTimePickerID }}" class="input-group oforge-{{ crudDateTimePickerType }}-picker"
          data-configuration="{{ {format: config('system_datetimepicker_format_' ~ crudDateTimePickerType)}|json_encode }}"
          data-target-input="nearest">

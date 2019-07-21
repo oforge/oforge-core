@@ -269,7 +269,10 @@ class UserManagementController extends BaseCrudController {
     protected function convertData(array $data, string $crudAction) : array {
         if (empty($data['password'])) {
             if ($crudAction === 'create') {
-                throw new Exception(I18N::translate('Missing password', ['en' => 'Missing password', 'de' => 'Passwort fehlt']));
+                throw new Exception(I18N::translate('Missing password', [
+                    'en' => 'Missing password',
+                    'de' => 'Passwort fehlt',
+                ]));
             } else {
                 unset($data['password']);
             }

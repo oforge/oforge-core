@@ -23,7 +23,6 @@ class FavoritesController extends SecureBackendController {
     /**
      * @param Request $request
      * @param Response $response
-     * @param array $args
      *
      * @return Response
      * @EndpointAction()
