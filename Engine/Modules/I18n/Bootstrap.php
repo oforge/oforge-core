@@ -41,6 +41,8 @@ class Bootstrap extends AbstractBootstrap {
             'i18n'          => InternationalizationService::class,
             'i18n.language' => LanguageService::class,
         ];
+
+        $this->order = 4;
     }
 
     /**
@@ -60,16 +62,35 @@ class Bootstrap extends AbstractBootstrap {
             'active'  => true,
             'default' => true,
         ]);
+        $languageService->create([
+            'iso'     => 'de',
+            'name'    => 'Deutsch',
+            'active'  => true,
+            'default' => false,
+        ]);
 
-        I18N::translate('backend_i18n', ['en' => 'Internationalization', 'de' => 'Internationalisierung']);
-        I18N::translate('backend_i18n_language', ['en' => 'Language', 'de' => 'Sprache']);
-        I18N::translate('backend_i18n_snippets', ['en' => 'Text snippets', 'de' => 'Textschnipsel']);
+        I18N::translate('backend_i18n', [
+            'en' => 'Internationalization',
+            'de' => 'Internationalisierung',
+        ]);
+        I18N::translate('backend_i18n_language', [
+            'en' => 'Language',
+            'de' => 'Sprache',
+        ]);
+        I18N::translate('backend_i18n_snippets', [
+            'en' => 'Text snippets',
+            'de' => 'Textschnipsel',
+        ]);
+        I18N::translate('backend_i18n_snippet_comparator', [
+            'en' => 'Text snippets comparator',
+            'de' => 'Textschnipsel-Vergleich',
+        ]);
 
         /** @var BackendNavigationService $backendNavigationService */
         $backendNavigationService = Oforge()->Services()->get('backend.navigation');
         $backendNavigationService->add(BackendNavigationService::CONFIG_ADMIN);
         $backendNavigationService->add([
-            'name'     => 'backend_i18n',
+            'name'     => 'backend_i18n',//TODO change to sidebar_i18n
             'order'    => 100,
             'parent'   => BackendNavigationService::KEY_ADMIN,
             'icon'     => 'glyphicon glyphicon-globe',
@@ -89,6 +110,14 @@ class Bootstrap extends AbstractBootstrap {
             'parent'   => 'backend_i18n',
             'icon'     => 'fa fa-file-text-o',
             'path'     => 'backend_i18n_snippets',
+            'position' => 'sidebar',
+        ]);
+        $backendNavigationService->add([
+            'name'     => 'backend_i18n_snippet_comparator',
+            'order'    => 3,
+            'parent'   => 'backend_i18n',
+            'icon'     => 'fa fa-arrows-h',
+            'path'     => 'backend_i18n_snippets_comparator',
             'position' => 'sidebar',
         ]);
     }
