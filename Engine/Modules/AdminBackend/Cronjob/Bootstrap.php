@@ -11,6 +11,7 @@ use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\I18n\Helper\I18N;
 
 class Bootstrap extends AbstractBootstrap {
 
@@ -32,11 +33,15 @@ class Bootstrap extends AbstractBootstrap {
      * @throws ConfigOptionKeyNotExistException
      */
     public function install() {
+        I18N::translate('backend_cronjobs', [
+            'en' => 'Cronjobs',
+            'de' => 'Cronjobs',
+        ]);
         /** @var BackendNavigationService $backendNavigationService */
         $backendNavigationService = Oforge()->Services()->get('backend.navigation');
         $backendNavigationService->add(BackendNavigationService::CONFIG_ADMIN);
         $backendNavigationService->add([
-            'name'     => 'backend_cronjob',
+            'name'     => 'backend_cronjobs',
             'order'    => 6,
             'parent'   => BackendNavigationService::KEY_ADMIN,
             'icon'     => 'fa fa-history',

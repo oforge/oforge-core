@@ -302,7 +302,7 @@ class BaseCrudController extends SecureBackendController {
             } catch (Exception $exception) {
                 Oforge()->View()->Flash()->addExceptionMessage('error', I18N::translate('backend_crud_msg_create_failed', [
                     'en' => 'Entity creation failed.',
-                    'de' => 'Die Erstellung des Elements ist fehlgeschlagen.',
+                    'de' => 'Erstellung des Elements fehlgeschlagen.',
                 ]), $exception);
                 Oforge()->View()->Flash()->setData($this->moduleModelName, $data);
 
@@ -374,12 +374,12 @@ class BaseCrudController extends SecureBackendController {
                 $this->crudService->update($this->model, $data);
                 Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_update_success', [
                     'en' => 'Entity successfully updated.',
-                    'de' => 'Entity successfully updated.',
+                    'de' => 'Element erfolgreich aktualisiert.',
                 ]));
             } catch (Exception $exception) {
                 Oforge()->View()->Flash()->addExceptionMessage('error', I18N::translate('backend_crud_msg_update_failed', [
                     'en' => 'Entity update failed.',
-                    'de' => 'Entity update failed.',
+                    'de' => 'Aktualisieren des Elements fehlgeschlagen.',
                 ]), $exception);
                 Oforge()->View()->Flash()->setData($this->moduleModelName, $data);
             }
@@ -844,7 +844,7 @@ class BaseCrudController extends SecureBackendController {
      * @throws NonUniqueResultException
      * @throws ORMException
      */
-    private function prepareIndexPaginationData(array $queryParams) : array {
+    protected function prepareIndexPaginationData(array $queryParams) : array {
         $queryKeys = $this->indexReservedQueryKeys;;
         $queryKeyPage            = $queryKeys['page'];
         $queryKeyEntitiesPerPage = $queryKeys['entitiesPerPage'];
