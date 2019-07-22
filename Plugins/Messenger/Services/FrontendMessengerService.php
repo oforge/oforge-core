@@ -52,7 +52,10 @@ class FrontendMessengerService extends AbstractMessengerService {
                     ->orWhere(
                         $queryBuilder->expr()->andX(
                             $queryBuilder->expr()->eq('c.requested', $userId),
-                            $queryBuilder->expr()->eq('c.requestedType', '1')))->getQuery();
+                            $queryBuilder->expr()->eq('c.requestedType', '1')))
+                    ->orderBy('c.lastMessageTimestamp', 'DESC')
+                    ->getQuery();
+
         /** @var Conversation[] $conversations */
         $conversations = $query->execute();
         $result        = [];
