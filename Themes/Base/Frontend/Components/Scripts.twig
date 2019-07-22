@@ -18,6 +18,6 @@
     {% if assets.js %}
         <!-- loadCSS. [c]2017 Filament Group, Inc. MIT License -->
 
-        <script type="text/javascript" src="{{ assets.js }}" defer></script>
+        <script type="text/javascript" src="{{ url(assets.js) }}" defer></script>
     {% endif %}
 {% endblock %}
