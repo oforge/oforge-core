@@ -44,7 +44,6 @@
                     {% for message in activeConversation.messages %}
                         {% set sender = message.sender %}
                         <div class="message {{ sender == user.id ? '' : 'partner' }}">
-                            <p class="sender">{{ sender }}</p>
                             <p class="message-text">{{ message.message }}</p>
                             <p class="message-date">{{ message.timestamp|formatDatetime }}</p>
                         </div>
