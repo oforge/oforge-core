@@ -1,24 +1,21 @@
 <?php
 
-
 namespace FrontpageContentTypes\ContentTypes;
-
 
 use Oforge\Engine\Modules\CMS\Abstracts\AbstractContentType;
 use Oforge\Engine\Modules\CMS\Models\Content\Content;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Media\Models\Media;
 use Oforge\Engine\Modules\Media\Services\MediaService;
 
-class ImageTileLarge extends AbstractContentType
-{
+class ImageTileLarge extends AbstractContentType {
     /**
      * Return whether or not content type is a container type like a row
      *
      * @return bool true|false
      */
-    public function isContainer(): bool
-    {
+    public function isContainer() : bool {
         return false;
     }
 
@@ -27,21 +24,20 @@ class ImageTileLarge extends AbstractContentType
      *
      * @return array
      */
-    public function getEditData()
-    {
+    public function getEditData() {
         $contentData = $this->getContentData();
 
         $data = [
-            'id'                => $this->getContentId(),
-            'type'              => $this->getId(),
-            'name'              => $this->getContentName(),
-            'css'               => $this->getContentCssClass(),
-            'url'               => $contentData['url'],
-            'caption'           => $contentData['caption'],
-            'subheading'         => $contentData['subheading'],
-            'text'              => $contentData['text'],
-            'backgroundcolor'   => $contentData['backgroundcolor'],
-            'fontcolor'         => $contentData['fontcolor']
+            'id'              => $this->getContentId(),
+            'type'            => $this->getId(),
+            'name'            => $this->getContentName(),
+            'css'             => $this->getContentCssClass(),
+            'url'             => ArrayHelper::get($contentData, 'url'),
+            'caption'         => ArrayHelper::get($contentData, 'caption'),
+            'subheading'      => ArrayHelper::get($contentData, 'subheading'),
+            'text'            => ArrayHelper::get($contentData, 'text'),
+            'backgroundcolor' => ArrayHelper::get($contentData, 'backgroundcolor'),
+            'fontcolor'       => ArrayHelper::get($contentData, 'fontcolor'),
         ];
 
         return $data;
@@ -49,23 +45,23 @@ class ImageTileLarge extends AbstractContentType
 
     /**
      * Set edit data for page builder of content type
+     *
      * @param $data
+     *
      * @return ImageTileLarge $this
      * @throws ServiceNotFoundException
      */
-    public function setEditData($data)
-    {
+    public function setEditData($data) {
         $contentData = [
-            'url'               => $this->getContentData()['url'],
-            'caption'           => $data['caption'],
-            'subheading'        => $data['subheading'],
-            'text'              => $data['text'],
-            'backgroundcolor'   => $data['backgroundcolor'],
-            'fontcolor'         => $data['fontcolor']
+            'url'             => $this->getContentData()['url'],
+            'caption'         => $data['caption'],
+            'subheading'      => $data['subheading'],
+            'text'            => $data['text'],
+            'backgroundcolor' => $data['backgroundcolor'],
+            'fontcolor'       => $data['fontcolor'],
         ];
 
         if (isset($_FILES["image"])) {
-
             /** @var MediaService $configService */
             $mediaService = Oforge()->Services()->get('media');
 
@@ -75,8 +71,6 @@ class ImageTileLarge extends AbstractContentType
                 $contentData['url'] = $media->getPath();
             }
         }
-
-
 
         $this->setContentData($contentData);
 
@@ -88,22 +82,21 @@ class ImageTileLarge extends AbstractContentType
      *
      * @return array
      */
-    public function getRenderData()
-    {
+    public function getRenderData() {
         $contentData = $this->getContentData();
 
         $data = [
-            'form'              => "ContentTypes/" . $this->getPath() . "/PageBuilderForm.twig",
-            'type'              => "ContentTypes/" . $this->getPath() . "/PageBuilder.twig",
-            'typeId'            => $this->getId(),
-            'isContainer'       => $this->isContainer(),
-            'css'               => $contentData['css'],
-            'url'               => $contentData['url'],
-            'caption'           => $contentData['caption'],
-            'subheading'        => $contentData['subheading'],
-            'text'              => $contentData['text'],
-            'backgroundcolor'   => $contentData['backgroundcolor'],
-            'fontcolor'         => $contentData['fontcolor']
+            'form'            => "ContentTypes/" . $this->getPath() . "/PageBuilderForm.twig",
+            'type'            => "ContentTypes/" . $this->getPath() . "/PageBuilder.twig",
+            'typeId'          => $this->getId(),
+            'isContainer'     => $this->isContainer(),
+            'css'             => ArrayHelper::get($contentData, 'css'),
+            'url'             => ArrayHelper::get($contentData, 'url'),
+            'caption'         => ArrayHelper::get($contentData, 'caption'),
+            'subheading'      => ArrayHelper::get($contentData, 'subheading'),
+            'text'            => ArrayHelper::get($contentData, 'text'),
+            'backgroundcolor' => ArrayHelper::get($contentData, 'backgroundcolor'),
+            'fontcolor'       => ArrayHelper::get($contentData, 'fontcolor'),
         ];
 
         return $data;
@@ -111,25 +104,25 @@ class ImageTileLarge extends AbstractContentType
 
     /**
      * Create a child of given content type
+     *
      * @param Content $contentEntity
      * @param int $order
      *
      * @return ImageTileLarge $this
      */
-    public function createChild($contentEntity, $order)
-    {
+    public function createChild($contentEntity, $order) {
         return $this;
     }
 
     /**
      * Delete a child
+     *
      * @param Content $contentEntity
      * @param int $order
      *
      * @return ImageTileLarge $this
      */
-    public function deleteChild($contentEntity, $order)
-    {
+    public function deleteChild($contentEntity, $order) {
         return $this;
     }
 
@@ -138,8 +131,7 @@ class ImageTileLarge extends AbstractContentType
      *
      * @return array|false should return false if no child content data is available
      */
-    public function getChildData()
-    {
+    public function getChildData() {
         return false;
     }
 }
