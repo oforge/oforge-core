@@ -102,6 +102,7 @@ class CssAssetService extends BaseAssetService {
 
         file_put_contents($outputFull . ".css", $result);
 
+        $output = str_replace('\\', '/', $output);
         // only minify if source mapping is not active
         if(!$sourceMap) {
             $minifier = new CSS($outputFull . ".css");

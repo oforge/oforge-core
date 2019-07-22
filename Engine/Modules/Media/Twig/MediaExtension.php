@@ -9,6 +9,7 @@
 namespace Oforge\Engine\Modules\Media\Twig;
 
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Oforge\Engine\Modules\Media\Services\ImageCompressService;
 use Twig_Extension;
 use Twig_ExtensionInterface;
@@ -47,6 +48,9 @@ class MediaExtension extends Twig_Extension implements Twig_ExtensionInterface {
             } else {
                 $result = $configService->getPath($vars[0]);
             }
+        }
+        if (!empty($result)) {
+            $result = RouteHelper::getUrlWithBasePath($result);
         }
 
         return $result;
