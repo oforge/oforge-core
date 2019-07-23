@@ -92,6 +92,7 @@ class SystemSettingsController extends SecureBackendController {
 
     public function initPermissions() {
         $this->ensurePermissions('indexAction', BackendUser::class, BackendUser::ROLE_ADMINISTRATOR);
+        $this->ensurePermissions('groupIndexAction', BackendUser::class, BackendUser::ROLE_ADMINISTRATOR);
     }
 
 }

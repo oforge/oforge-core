@@ -15,6 +15,7 @@ use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
+use phpDocumentor\Reflection\Types\Integer;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -118,6 +119,7 @@ class BackendHelpdeskController extends SecureBackendController {
                 }
 
                 $helpdeskMessengerService->sendMessage($conversation['id'], $senderId, $message);
+                $this->sendNewMessageInfoMail($conversation['requester']);
 
                 $uri = $router->pathFor('backend_helpdesk_messenger', ['id' => $args['id']]);
 
@@ -153,18 +155,23 @@ class BackendHelpdeskController extends SecureBackendController {
     }
 
     /**
+     * @param $userId
+     *
      * @throws ServiceNotFoundException
      */
-    public function sendNewMessageMail() {
-        $mailService = Oforge()->Services()->get('mail');
+    public function sendNewMessageInfoMail($userId) {
+        /** @var  $userService */
+        $userService   = Oforge()->Services()->get('frontend.user.management.user');
+        $user          = $userService->getUserbyId($userId);
+        $mailService   = Oforge()->Services()->get('mail');
         $mailerOptions = [
-            'to'       => [],
+            'to'       => [$user->getEmail() => $user->getEmail()],
             'from'     => 'no_reply',
             'subject'  => I18N::translate('mailer_subject_new_message'),
             'template' => 'NewMessage.twig',
         ];
         $templateData = [
-            'conversationLink' => '',
+            'conversationLink' => '', // TODO : Full Path to ConversationId
             'receiver_name'    => '',
             'sender_mail'      => $mailService->getSenderAddress('no_reply'),
         ];
@@ -173,6 +180,7 @@ class BackendHelpdeskController extends SecureBackendController {
 
     public function initPermissions() {
         $this->ensurePermissions('indexAction', BackendUser::class, BackendUser::ROLE_MODERATOR);
+        $this->ensurePermissions('messengerAction', BackendUser::class, BackendUser::ROLE_MODERATOR);
     }
 
 
