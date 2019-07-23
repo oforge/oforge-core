@@ -559,6 +559,7 @@ class PluginController extends BaseCrudController {
     protected function prepareItemDataArray(?AbstractModel $entity, string $crudAction) : array {
         $data = parent::prepareItemDataArray($entity, $crudAction);
 
+        // Refactor after Boot-Refactoring
         $pluginBootstrapClass = $data['name'] . '\\Bootstrap';
         $bootstrapInstance    = Oforge()->getBootstrapManager()->getBootstrapInstance($pluginBootstrapClass);
 
