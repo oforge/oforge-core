@@ -44,16 +44,13 @@ class BaseLoginService extends AbstractDatabaseAccess {
     public function login(string $email, string $password) {
         /** @var AuthService $authService */
         $authService = Oforge()->Services()->get('auth');
-
         /** @var PasswordService $passwordService */
         $passwordService = Oforge()->Services()->get('password');
-
         /** @var BaseUser|null $user */
         $user = $this->repository()->findOneBy([
-            'email' => $email,
-            // 'active' => true, //TODO include 'active' => true ?
+            'email'  => $email,
+            'active' => true,
         ]);
-
         if (isset($user)) {
             if ($passwordService->validate($password, $user->getPassword())) {
                 $userData = $user->toArray(1);
@@ -66,4 +63,5 @@ class BaseLoginService extends AbstractDatabaseAccess {
 
         return null;
     }
+
 }
