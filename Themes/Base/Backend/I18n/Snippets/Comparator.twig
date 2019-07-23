@@ -2,7 +2,7 @@
 
 {% block pagecontent %}
     {% set meta = mergeRecursive(meta|default({}), dotToNested({
-        'route.query.language1': meta.route.query.language1|default(meta.language),
+        'route.query.language1': meta.route.query.language1|default(meta.language.iso),
     })) %}
     <section class="content">
         <div class="row">
