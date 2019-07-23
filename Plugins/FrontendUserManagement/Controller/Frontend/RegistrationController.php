@@ -190,6 +190,7 @@ class RegistrationController extends AbstractController {
         $templateData = [
             'activationLink' => $activationLink,
             'user_mail'      => $user['email'],
+            'sender_mail'         => $mailService->getSenderAddress('info'),
             // TODO: 'receiver_name'  => ???
         ];
 
