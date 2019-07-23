@@ -67,34 +67,46 @@
                             <div class="profile--edit">
                                 <div class="description--edit">
                                     <h3 class="form__title">{{ i18n('account_profile_text') }}</h3>
-                                    <textarea name="description" class="form__input">{{ profile.description }}</textarea>
+                                    <textarea name="description"
+                                              class="form__input">{{ profile.description }}</textarea>
                                 </div>
                                 <div class="impress--edit">
                                     <h3 class="form__title">{{ i18n('legal_rights') }}</h3>
                                     <input class="form__input" type="text" name="imprint_name" placeholder="Name"
-                                           value="{{ profile.imprintName }}" />
+                                           value="{{ profile.imprintName }}"/>
                                     <input class="form__input" type="text" name="imprint_street" placeholder="Street"
-                                           value="{{ profile.imprintStreet }}" />
+                                           value="{{ profile.imprintStreet }}"/>
                                     <input class="form__input" type="text" name="imprint_zipCity" placeholder="PLZ, ORT"
-                                           value="{{ profile.imprintZipCity }}" />
+                                           value="{{ profile.imprintZipCity }}"/>
                                     <input class="form__input" type="phone" name="imprint_phone" placeholder="Telefon"
-                                           value="{{ profile.imprintPhone }}" />
+                                           value="{{ profile.imprintPhone }}"/>
                                     <input class="form__input" type="fax" name="imprint_fax" placeholder="Fax"
-                                           value="{{ profile.imprintFax }}" />
+                                           value="{{ profile.imprintFax }}"/>
                                     <input class="form__input" type="email" name="imprint_email" placeholder="E-Mail"
-                                           value="{{ profile.imprintEmail }}" />
+                                           value="{{ profile.imprintEmail }}"/>
+                                    <div class="form__input">
+                                        <label for="imprint_facebook">
+                                            {{ i18n('facebook_base_url', 'https://www.facebook.com/') }}</label><input
+                                                class="input__facebook" type="text"
+                                                name="imprint_facebook"
+                                                placeholder="{{ i18n('facebook_page_placeholder') }}"
+                                                value="{{ profile.imprintFacebook }}"/>
+                                    </div>
+                                    <input class="form__input" type="text" name="imprint_website"
+                                           placeholder="{{ i18n('imprint_website') }}"
+                                           value="{{ profile.imprintWebsite }}"/>
                                     <div class="info__business">
                                         {{ i18n('account_insertions_impress_info') }}
                                     </div>
                                     <input class="form__input" type="text" name="imprint_company_number"
                                            placeholder="Registernummer"
-                                           value="{{ profile.imprintCompanyNumber }}" />
+                                           value="{{ profile.imprintCompanyNumber }}"/>
                                     <input class="form__input" type="text" name="imprint_company_tax"
                                            placeholder="USt.ID"
-                                           value="{{ profile.imprintCompanyTaxId }}" />
+                                           value="{{ profile.imprintCompanyTaxId }}"/>
                                 </div>
                                 <div class="submit">
-                                    <input type="submit" class="form__input form__input--submit button" />
+                                    <input type="submit" class="form__input form__input--submit button"/>
                                 </div>
                             </div>
                         </form>
