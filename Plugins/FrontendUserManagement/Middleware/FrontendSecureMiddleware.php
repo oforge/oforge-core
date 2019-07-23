@@ -16,8 +16,8 @@ class FrontendSecureMiddleware extends SecureMiddleware {
     protected $userClass = User::class;
     /** @var string $viewUserDataKey */
     protected $viewUserDataKey = 'current_user';
-    /** @var string $urlPathName */
-    protected $urlPathName = 'frontend_login';
+    /** @var string $invalidRedirectPathName */
+    protected $invalidRedirectPathName = 'frontend_login';
 
     /** @inheritDoc */
     protected function createPermissionDeniedFlashMessage() {
