@@ -204,9 +204,9 @@ class Conversation extends AbstractModel {
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTime|null
      */
-    public function getLastMessageTimestamp() : \DateTime {
+    public function getLastMessageTimestamp() : ?\DateTime {
         return $this->lastMessageTimestamp;
     }
 
@@ -221,9 +221,9 @@ class Conversation extends AbstractModel {
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getLastMessage() : string {
+    public function getLastMessage() : ?string {
         return $this->lastMessage;
     }
 
