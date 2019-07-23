@@ -8,11 +8,20 @@
 
     .cms-customer-image {
         display: inline-block;
-        width: 60px;
-        height: 60px;
+        width: 100px;
+        height: 100px;
         background-position: center center;
         background-size: cover;
         border-radius: 50%;
         border: 1px solid $color-secondary;
+    }
+
+    .cms-customers-details {
+        display: inline-block;
+        overflow: hidden;
+        .cms-customer-name {
+            font-weight: bold;
+            display: block;
+        }
     }
 }
