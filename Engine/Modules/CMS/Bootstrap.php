@@ -130,96 +130,136 @@ class Bootstrap extends AbstractBootstrap {
         $contentTypeGroupManagementService = Oforge()->Services()->get('content.type.group.management');
         $contentTypeManagementService      = Oforge()->Services()->get('content.type.management');
 
-        $ctgContainerID = $contentTypeGroupManagementService->put([
-            'name'        => 'container',
-            'description' => 'Container',
+        $ctgContainerID = $contentTypeGroupManagementService->add([
+            'name'  => 'container',
+            'label' => [
+                'en' => 'Container',
+                'de' => 'Container',
+            ],
         ]);
-        $contentTypeManagementService->put([
-            'name'        => 'row',
-            'path'        => 'Row',
-            'icon'        => '/Themes/Base/ContentTypes/__assets/img/row.png',
-            'description' => 'Row',
-            'group'       => $ctgContainerID,
-            'classPath'   => Row::class,
+        $contentTypeManagementService->add([
+            'name'      => 'row',
+            'path'      => 'Row',
+            'icon'      => '/Themes/Base/ContentTypes/__assets/img/row.png',
+            'group'     => $ctgContainerID,
+            'classPath' => Row::class,
+            'label'     => [
+                'en' => 'Row',
+                'de' => 'Zeile',
+            ],
         ]);
-        $contentTypeManagementService->put([
-            'name'        => 'list',
-            'path'        => 'List',
-            'icon'        => '/Themes/Base/ContentTypes/__assets/img/row.png',
-            'description' => 'List',
-            'group'       => $ctgContainerID,
-            'classPath'   => EntryList::class,
-        ]);
-
-        $ctgBasicID = $contentTypeGroupManagementService->put([
-            'name'        => 'basic',
-            'description' => 'Basic',
-        ]);
-        $contentTypeManagementService->put([
-            'name'        => 'richtext',
-            'path'        => 'RichText',
-            'icon'        => '/Themes/Base/ContentTypes/__assets/img/richtext.png',
-            'description' => 'RichText',
-            'group'       => $ctgBasicID,
-            'classPath'   => RichText::class,
-        ]);
-        $contentTypeManagementService->put([
-            'name'        => 'text',
-            'path'        => 'Text',
-            'icon'        => '/Themes/Base/ContentTypes/__assets/img/text.png',
-            'description' => 'Text',
-            'group'       => $ctgBasicID,
-            'classPath'   => Text::class,
+        $contentTypeManagementService->add([
+            'name'      => 'list',
+            'path'      => 'List',
+            'icon'      => '/Themes/Base/ContentTypes/__assets/img/row.png',
+            'group'     => $ctgContainerID,
+            'classPath' => EntryList::class,
+            'label'     => [
+                'en' => 'List',
+                'de' => 'Liste',
+            ],
         ]);
 
-        $ctgMediaID = $contentTypeGroupManagementService->put([
-            'name'        => 'media',
-            'description' => 'Media',
+        $ctgBasicID = $contentTypeGroupManagementService->add([
+            'name'  => 'basic',
+            'label' => [
+                'en' => 'Basic',
+                'de' => 'Basis',
+            ],
         ]);
-        $contentTypeManagementService->put([
-            'name'        => 'image',
-            'path'        => 'Image',
-            'icon'        => '/Themes/Base/ContentTypes/__assets/img/image.png',
-            'description' => 'Image',
-            'group'       => $ctgMediaID,
-            'classPath'   => Image::class,
+        $contentTypeManagementService->add([
+            'name'      => 'richtext',
+            'path'      => 'RichText',
+            'icon'      => '/Themes/Base/ContentTypes/__assets/img/richtext.png',
+            'group'     => $ctgBasicID,
+            'classPath' => RichText::class,
+            'label'     => [
+                'en' => 'RichText',
+                'de' => 'RichText',
+            ],
         ]);
-        $contentTypeManagementService->put([
-            'name'        => 'gallery',
-            'path'        => 'Gallery',
-            'icon'        => '/Themes/Base/ContentTypes/__assets/img/gallery.png',
-            'description' => 'Gallery',
-            'group'       => $ctgMediaID,
-            'classPath'   => Gallery::class,
+        $contentTypeManagementService->add([
+            'name'      => 'text',
+            'path'      => 'Text',
+            'icon'      => '/Themes/Base/ContentTypes/__assets/img/text.png',
+            'group'     => $ctgBasicID,
+            'classPath' => Text::class,
+            'label'     => [
+                'en' => 'Text',
+                'de' => 'Text',
+            ],
         ]);
-        $contentTypeManagementService->put([
+
+        $ctgMediaID = $contentTypeGroupManagementService->add([
+            'name'  => 'media',
+            'label' => [
+                'en' => 'Media',
+                'de' => 'Medien',
+            ],
+        ]);
+        $contentTypeManagementService->add([
+            'name'      => 'image',
+            'path'      => 'Image',
+            'icon'      => '/Themes/Base/ContentTypes/__assets/img/image.png',
+            'group'     => $ctgMediaID,
+            'classPath' => Image::class,
+            'label'     => [
+                'en' => 'Image',
+                'de' => 'Bild',
+            ],
+        ]);
+        $contentTypeManagementService->add([
+            'name'      => 'gallery',
+            'path'      => 'Gallery',
+            'icon'      => '/Themes/Base/ContentTypes/__assets/img/gallery.png',
+            'group'     => $ctgMediaID,
+            'classPath' => Gallery::class,
+            'label'     => [
+                'en' => 'Gallery',
+                'de' => 'Gallerie',
+            ],
+        ]);
+        $contentTypeManagementService->add([
             'name'        => 'video_youtube',
             'path'        => 'VideoYoutube',
             'icon'        => '/Themes/Base/ContentTypes/__assets/img/video_youtube.svg',
             'description' => 'Youtube video',
             'group'       => $ctgMediaID,
             'classPath'   => VideoYoutube::class,
+            'label'       => [
+                'en' => 'Youtube video',
+                'de' => 'Youtube-Video',
+            ],
         ]);
 
-        $ctgNavigationID = $contentTypeGroupManagementService->put([
-            'name'        => 'navigation',
-            'description' => 'Navigation',
+        $ctgNavigationID = $contentTypeGroupManagementService->add([
+            'name'  => 'navigation',
+            'label' => [
+                'en' => 'Navigation',
+                'de' => 'Navigation',
+            ],
         ]);
-        $contentTypeManagementService->put([
-            'name'        => 'entrylist',
-            'path'        => 'List',
-            'icon'        => '/Themes/Base/ContentTypes/__assets/img/icontilebasic.png',
-            'description' => 'entry_list',
-            'group'       => $ctgNavigationID,
-            'classPath'   => EntryList::class,
+        $contentTypeManagementService->add([
+            'name'      => 'navigation_list',
+            'path'      => 'List',
+            'icon'      => '/Themes/Base/ContentTypes/__assets/img/icontilebasic.png',
+            'group'     => $ctgNavigationID,
+            'classPath' => EntryList::class,
+            'label'     => [
+                'en' => 'Navigation List',
+                'de' => 'Navigationsliste',
+            ],
         ]);
-        $contentTypeManagementService->put([
-            'name'        => 'navigationentry',
-            'path'        => 'NavigationEntry',
-            'icon'        => '/Themes/Base/ContentTypes/__assets/img/icontilebasic.png',
-            'description' => 'navigation_entry',
-            'group'       => $ctgNavigationID,
-            'classPath'   => NavigationEntry::class,
+        $contentTypeManagementService->add([
+            'name'      => 'navigation_entry',
+            'path'      => 'NavigationEntry',
+            'icon'      => '/Themes/Base/ContentTypes/__assets/img/icontilebasic.png',
+            'group'     => $ctgNavigationID,
+            'classPath' => NavigationEntry::class,
+            'label'     => [
+                'en' => 'Navigation element',
+                'de' => 'Navigationselement',
+            ],
         ]);
     }
 

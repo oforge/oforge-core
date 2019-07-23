@@ -169,10 +169,11 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: $size-medium $size-large;
-    border-left: 1px solid $color-primary;
+    padding: $size-medium;
+    border-left: 1px solid rgba(60,60,59,1);
     font-size: 1rem;
-    min-width: 1rem;
+    min-width: 2rem;
+    height: 100%;
 }
 
 .form__input {
@@ -195,20 +196,20 @@
 
     &.form__input--inside-label {
         display: inline-flex;
-        align-items: stretch;
+        align-items: center;
         width: 100%;
         margin: 0;
-        padding: 0;
+        padding: 0 1px;
 
         .form__input {
             -webkit-appearance: none;
             -moz-appearance: none;
             border: none;
             outline: none;
-            padding: $size-medium;
-            height: auto;
+            padding: .6rem;
             width: 100%;
             min-width: 0;
+            height: 3.2rem;
             text-overflow: fade;
         }
     }
@@ -371,8 +372,9 @@
     .form--search {
         .form-controls {
             &.form-controls--row {
-                .form__control {
+                > .form__control {
                     flex: 0 0 calc(50% - .6rem);
+                    max-width: calc(50% - .6rem);
                 }
             }
         }
@@ -428,12 +430,6 @@
     }
 }
 
-
-.form__control.form__control__range {
-    & > .form__control {
-        margin-top: 0;
-    }
-}
 
 .form-controls.form-controls--row, .attribute-group {
     .form__control.form__control__boolean {

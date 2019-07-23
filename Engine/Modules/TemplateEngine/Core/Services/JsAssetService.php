@@ -75,7 +75,7 @@ class JsAssetService extends BaseAssetService {
         if ($hasFilesToMinify) {
             $minifier = new JS($outputFull . ".js");
             $minifier->minify($outputFull . ".min.js");
-
+            $output = str_replace('\\', '/', $output);
             $this->store->set($this->getAccessKey($scope), $output . ".min.js");
             $this->removeOldAssets($fullFolder, $fileName, ".js");
 
