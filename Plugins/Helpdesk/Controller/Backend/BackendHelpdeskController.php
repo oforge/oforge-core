@@ -14,6 +14,7 @@ use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -119,6 +120,7 @@ class BackendHelpdeskController extends SecureBackendController {
                 $helpdeskMessengerService->sendMessage($conversation['id'], $senderId, $message);
 
                 $uri = $router->pathFor('backend_helpdesk_messenger', ['id' => $args['id']]);
+
                 return $response->withRedirect($uri , 302);
             }
 
@@ -153,8 +155,25 @@ class BackendHelpdeskController extends SecureBackendController {
     /**
      * @throws ServiceNotFoundException
      */
+    public function sendNewMessageMail() {
+        $mailService = Oforge()->Services()->get('mail');
+        $mailerOptions = [
+            'to'       => [],
+            'from'     => 'no_reply',
+            'subject'  => I18N::translate('mailer_subject_new_message'),
+            'template' => 'NewMessage.twig',
+        ];
+        $templateData = [
+            'conversationLink' => '',
+            'receiver_name'    => '',
+            'sender_mail'      => $mailService->getSenderAddress('no_reply'),
+        ];
+        $mailService->send($mailerOptions, $templateData);
+    }
+
     public function initPermissions() {
         $this->ensurePermissions('indexAction', BackendUser::class, BackendUser::ROLE_MODERATOR);
     }
+
 
 }
