@@ -16,11 +16,10 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\HasLifecycleCallbacks
  */
 class BackendUser extends BaseUser {
-
     /**
      * TODO: This values should not be constants. What if we want to add a new role?
-     *
      */
+    public const ROLE_PUBLIC        = -1;
     public const ROLE_SYSTEM        = 0;
     public const ROLE_ADMINISTRATOR = 1;
     public const ROLE_MODERATOR     = 2;
@@ -46,6 +45,13 @@ class BackendUser extends BaseUser {
 
     public function __construct() {
         parent::__construct();
+    }
+
+    /** @ORM\PrePersist */
+    public function initDetail() : void {
+        if (!isset($this->detail)) {
+            $this->detail = new BackendUserDetail();
+        }
     }
 
     /**
@@ -89,4 +95,5 @@ class BackendUser extends BaseUser {
     public function setDetail(BackendUserDetail $detail) : void {
         $this->detail = $detail;
     }
+
 }

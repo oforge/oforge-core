@@ -20,12 +20,10 @@ use Slim\Http\Response;
 class SecureMiddleware {
     /** @var string $userClass */
     protected $userClass = BaseUser::class;
-    /** @var string $fallbackPermissionRole */
-    protected $fallbackPermissionRole = 9999;
     /** @var string $viewUserDataKey */
     protected $viewUserDataKey = 'user';
-    /** @var string $urlPathName The named path for redirects */
-    protected $urlPathName = '';
+    /** @var string $invalidRedirectPathName The named path for redirects */
+    protected $invalidRedirectPathName = '';
 
     /**
      * Middleware call before the controller call
@@ -37,6 +35,7 @@ class SecureMiddleware {
      * @throws ServiceNotFoundException
      */
     public function prepend(Request $request, Response $response) : ?Response {
+        $user = null;
         if (isset($_SESSION['auth'])) {
             $auth = $_SESSION['auth'];
             /** @var AuthService $authService */
@@ -56,7 +55,7 @@ class SecureMiddleware {
             $permissionService = Oforge()->Services()->get('permissions');
             $permission        = $permissionService->get($controllerClass, $controllerMethod);
         } else {
-            $permission = ['role' => $this->fallbackPermissionRole, 'type' => $this->userClass];
+            $permission = null;
         }
         if ($this->isUserValid($user, $permission)) {
             //nothing to do. proceed
@@ -64,8 +63,8 @@ class SecureMiddleware {
             Oforge()->View()->assign(['stopNext' => true]);
             $_SESSION["login_redirect_url"] = $request->getUri()->getPath();
             $this->createPermissionDeniedFlashMessage();
-            if (!empty($this->urlPathName)) {
-                return RouteHelper::redirect($response, $this->urlPathName);
+            if (!empty($this->invalidRedirectPathName)) {
+                return RouteHelper::redirect($response, $this->invalidRedirectPathName);
             }
 
             return $response->withRedirect('/', 302);
@@ -91,7 +90,7 @@ class SecureMiddleware {
      * @return bool
      */
     protected function isUserValid(?array $user, array $permission) {
-        return ($user !== null
+        return ($user !== null && $permission !== null
                 && isset($user['role'])
                 && isset($user['type'])
                 && $user['type'] === $permission['type']
