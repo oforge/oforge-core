@@ -51,7 +51,7 @@
 
         {% if insertion.active %}
             <a class="button button--primary disable"
-               href="{{ url('frontend_account_insertions_disable', {id: item.id}) }}">
+               href="{{ url('frontend_account_insertions_disable', {'id': item.id}) }}">
                 <span>{{ i18n('disable') }}</span>
                 <svg class="icon icon--light">
                     <use xlink:href="#deactivate"></use>

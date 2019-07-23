@@ -37,7 +37,12 @@ class SeoUrlService {
         try {
             $seoObject = $this->seoService->getBySource($result);
             if ($seoObject != null) {
+                $query  = explode('?', $result);
                 $result = $seoObject->getTarget();
+
+                if (sizeof($query) > 1) {
+                    $result .= '?' . $query[1];
+                }
             }
         } catch (\Exception $e) {
         }

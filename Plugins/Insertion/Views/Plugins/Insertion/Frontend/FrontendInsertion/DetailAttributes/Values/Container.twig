@@ -1,0 +1,5 @@
+{% for subAttribute in attribute.values %}
+    {% if subAttribute.subAttributeKey != null %}
+        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes/Values/' ~ all_attributes[subAttribute.subAttributeKey].type|capitalize ~'.twig'  with {'attribute': all_attributes[subAttribute.subAttributeKey], 'value': insertion_values[subAttribute.subAttributeKey] } %}
+    {% endif %}
+{% endfor %}
