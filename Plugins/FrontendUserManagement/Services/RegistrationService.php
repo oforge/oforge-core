@@ -95,7 +95,13 @@ class RegistrationService extends AbstractDatabaseAccess {
         return $user;
     }
 
-    private function userExists(string $email) {
-        return $this->repository()->findBy(['email' => $email]);
+    /**
+     * @param string $email
+     *
+     * @return object|null
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function userExists(string $email) {
+        return $this->repository()->findOneBy(['email' => $email]);
     }
 }
