@@ -1,6 +1,6 @@
 {% set attributeKey = getInsertionAttribute(attribute.attributeKey != null ? attribute.attributeKey : attribute.id) %}
 {% if value is not empty %}
-    <span class="sub-value-key">{{ i18n(attributeKey.name) }}</span>
+    {#<span class="sub-value-key">{{ i18n(attributeKey.name) }}</span>#}
     <span class="sub-value">{{ i18n(getInsertionValue(value).value) }}</span>
     {% for subAttribute in attribute.values %}
         {% if subAttribute.subAttributeKey != null %}
