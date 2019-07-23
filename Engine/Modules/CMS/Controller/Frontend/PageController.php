@@ -14,9 +14,9 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Slim\Router;
 
 /**
  * Class PageController
@@ -55,16 +55,17 @@ class PageController extends AbstractController {
             $cmsContent = $pagePathService->loadContentForPagePath($pagePath);
         }
 
-        if ($cmsContent !== null) {
+        if ($cmsContent === null) {
+            return RouteHelper::redirect($response, 'not_found');
+        } else {
             if ($pagePath->getLanguage()->getIso() !== $languageIso) {
                 foreach ($pagePath->getPage()->getPaths() as $path) {
                     if ($path->getLanguage()->getIso() === $languageIso) {
-                        $response = $response->withRedirect('/' . $languageIso . $path->getPath(), 301);
+                        return $response->withRedirect('/' . $languageIso . $path->getPath(), 302);
                     }
                 }
             }
 
-            // TODO: Remove meta assignment
             Oforge()->View()->assign([
                 'content'   => $cmsContent,
                 'cms'       => $pagePath->toArray(),
@@ -75,14 +76,7 @@ class PageController extends AbstractController {
                 ],
                 'cache-for' => '1D',
             ]);
-
-            return $response;
         }
-
-        /** @var Router $router */
-        $router   = Oforge()->App()->getContainer()->get('router');
-        $uri      = $router->pathFor('not_found');
-        $response = $response->withRedirect($uri, 301);
 
         return $response;
     }
