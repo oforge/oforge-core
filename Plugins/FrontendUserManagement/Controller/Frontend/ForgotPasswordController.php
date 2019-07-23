@@ -119,6 +119,7 @@ class ForgotPasswordController extends AbstractController {
         $templateData = [
             'passwordResetLink' => $passwordResetLink,
             'receiver_name'     => $userNickName,
+            'sender_mail'       => $mailService->getSenderAddress('no_reply'),
         ];
 
         /**
