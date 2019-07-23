@@ -27,7 +27,7 @@
                                 </a>
                             </div>
                             <div class="ticket__link ticket__delete">
-                                <a href="#">
+                                <a href="{{ url('frontend_account_support_closeTicket', {'id': ticket.id}) }}">
                                     <svg class="icon icon--secondary">
                                         <use xlink:href="#delete"></use>
                                     </svg>

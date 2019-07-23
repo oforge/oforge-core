@@ -90,6 +90,9 @@ class FrontendUsersInsertionController extends SecureFrontendController {
      * @param $args
      *
      * @return Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @EndpointAction(path="/delete/{id}")
      */
     public function deleteAction(Request $request, Response $response, $args) {
         return $this->modifyInsertion($request, $response, $args, 'delete');
@@ -101,6 +104,9 @@ class FrontendUsersInsertionController extends SecureFrontendController {
      * @param $args
      *
      * @return Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @EndpointAction(path="/activate/{id}")
      */
     public function activateAction(Request $request, Response $response, $args) {
         return $this->modifyInsertion($request, $response, $args, 'activate');
@@ -112,25 +118,44 @@ class FrontendUsersInsertionController extends SecureFrontendController {
      * @param $args
      *
      * @return Response
+     * @throws \Doctrine\ORM\ORMException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @EndpointAction(path="/disable/{id}")
      */
     public function disableAction(Request $request, Response $response, $args) {
         /** @var User $user */
         /** @var UserService $frontendUserService */
         $user = Oforge()->View()->get('user');
+
+        /** @var  $userDetailService */
+        $userDetailService = Oforge()->Services()->get('frontend.user.management.user.details');
+        $userDetails       = $userDetailService->get($user['id']);
         $mailService = Oforge()->Services()->get('mail');
-        $targetMail  = $user->getEmail();
         $mailOptions  = [
-            'to'       => [$targetMail => $targetMail],
+            'to'       => [$user['email'] => $user['email']],
             'from'     => 'no_reply',
-            'subject'  => I18N::translate('email_subject_password_reset', 'Oforge | Your password reset!'),
-            'template' => 'ResetPassword.twig',
+            'subject'  => I18N::translate('mailer_subject_deactivation_confirm', 'Oforge | Your Deactivation was successful'),
+            'template' => 'DeactivationConfirm.twig',
+        ];
+        $templateData = [
+            'receiver_name'     => $userDetails->getNickName(),
+            'sender_mail'       => $mailService->getSenderAddress('no_reply'),
         ];
 
-        $mailService->send($mailOptions);
+        $mailService->send($mailOptions,$templateData);
         return $this->modifyInsertion($request, $response, $args, 'disable');
     }
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param $args
+     * @param string $action
+     *
+     * @return Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     */
     private function modifyInsertion(Request $request, Response $response, $args, string $action) {
         $id = $args["id"];
         /**

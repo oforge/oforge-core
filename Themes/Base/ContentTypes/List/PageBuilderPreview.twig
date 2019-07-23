@@ -1,0 +1,29 @@
+<div class="content-type-preview-row cms-content-sortable">
+    {% for child in data.childs %}
+        {% if child.type %}
+            {% if data.id == data.se %}
+                {% set order = child.order %}
+                {% include 'ContentTypes/PageBuilderPlaceholder.twig' %}
+            {% endif %}
+            <div class="content-type-edit-selector" title="{{ child.name }} ({{ child.typeName }})"
+                 data-toggle="tooltip2" data-placement="auto top" data-container="body"
+                 data-pb-id="{{ child.id }}" data-pb-se="{{ child.se }}" data-pb-order="{{ child.order }}">
+                <div class="sort-handle"><i class="sort-handle-icon fa fa-arrows-v"></i></div>
+                <div class="content-type-preview-typeinfo">{{ i18n('cms_content_type_label_' ~ child.typeName, child.typeName) }}
+                    ({{ child.name }})
+                </div>
+                <div class="content-type-preview">
+                    {% include child.type with {'data': child, 'order': child.order} only %}
+                </div>
+            </div>
+        {% else %}
+            <div class="alert alert-danger">
+                Missing template path (type attribute) of child content type: {{ child.typeName }}
+            </div>
+        {% endif %}
+    {% endfor %}
+    {% if data.id == data.se %}
+        {% set order = 999999999 %}
+        {% include 'ContentTypes/PageBuilderPlaceholder.twig' %}
+    {% endif %}
+</div>

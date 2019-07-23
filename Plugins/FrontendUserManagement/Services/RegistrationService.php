@@ -3,6 +3,8 @@
 namespace FrontendUserManagement\Services;
 
 use FrontendUserManagement\Models\User;
+use FrontendUserManagement\Models\UserAddress;
+use FrontendUserManagement\Models\UserDetail;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Slim\Router;
 
@@ -28,6 +30,10 @@ class RegistrationService extends AbstractDatabaseAccess {
             $user->setEmail($email);
             $user->setPassword($password);
             $this->entityManager()->create($user);
+            $userDetails = UserDetail::create(['user' => $user]);
+            $userAddress = UserAddress::create(['user' => $user]);
+            $this->entityManager()->create($userAddress);
+            $this->entityManager()->create($userDetails);
 
             $user = $user->toArray();
             unset($user["password"]);
@@ -89,7 +95,13 @@ class RegistrationService extends AbstractDatabaseAccess {
         return $user;
     }
 
-    private function userExists(string $email) {
-        return $this->repository()->findBy(['email' => $email]);
+    /**
+     * @param string $email
+     *
+     * @return object|null
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function userExists(string $email) {
+        return $this->repository()->findOneBy(['email' => $email]);
     }
 }
