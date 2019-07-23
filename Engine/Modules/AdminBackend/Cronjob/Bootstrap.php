@@ -33,7 +33,7 @@ class Bootstrap extends AbstractBootstrap {
      * @throws ConfigOptionKeyNotExistException
      */
     public function install() {
-        I18N::translate('backend_cronjobs', [
+        I18N::translate('backend_cronjob', [
             'en' => 'Cronjobs',
             'de' => 'Cronjobs',
         ]);
@@ -41,7 +41,7 @@ class Bootstrap extends AbstractBootstrap {
         $backendNavigationService = Oforge()->Services()->get('backend.navigation');
         $backendNavigationService->add(BackendNavigationService::CONFIG_ADMIN);
         $backendNavigationService->add([
-            'name'     => 'backend_cronjobs',
+            'name'     => 'backend_cronjob',
             'order'    => 6,
             'parent'   => BackendNavigationService::KEY_ADMIN,
             'icon'     => 'fa fa-history',
