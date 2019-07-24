@@ -22,7 +22,7 @@
             {% set partner = getChatPartnerInformation('requester', conversation.requester) %}
         {% endif %}
 
-        <img class="" src="{{ media(partner.imageId, 30) }}">
+        <i class="user__image" src="{{ media(partner.imageId, 30) }}"></i>
         <span class="chat__text">{{ partner.title }}</span>
     {% else %}
         {{ parent() }}

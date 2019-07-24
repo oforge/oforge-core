@@ -1,0 +1,99 @@
+.insertion-create__type-overview {
+    overflow: hidden;
+    margin: 2rem 0;
+
+    @media screen and (min-width: $screen-large) {
+        margin: 2rem $size-large * -10;
+    }
+
+    .insertion-create__type {
+        @media screen and (min-width: $screen-medium) {
+            float: left;
+            width: 50%;
+        }
+
+
+        padding: $size-large * 4;
+
+        text-align: center;
+
+        a {
+            overflow: hidden;
+            display: block;
+
+            img {
+                display: inline-block;
+            }
+        }
+
+        h2, span {
+            color: #FFF;
+        }
+
+        span {
+            font-size: $font-size-5;
+        }
+
+        .type--name {
+            position: relative;
+            font-size: $font-size-2;
+            margin-bottom: 2 * $size-large;
+
+            &:after {
+                content: '';
+                display: block;
+                position: absolute;
+                width: 70%;
+                height: 3px;
+                bottom: -1rem;
+                left: 50%;
+                transform: translateX(-50%);
+                background-color: #FFF;
+            }
+
+        }
+
+        &:nth-child(2n) {
+            background-color: $color-secondary;
+        }
+
+        &:nth-child(2n - 1) {
+            background-color: $color-primary;
+        }
+    }
+}
+
+
+.action-insertions_create, .action-insertions_createtype {
+    h1 {
+        color: $color-primary;
+        margin-bottom: 2rem;
+    }
+}
+
+.action-insertions_createtype {
+    h1 {
+        position: relative;
+        margin-bottom: 4rem;
+        &:after {
+            content: "";
+            width: 300px;
+            max-width: 80%;
+            background-color: $color-primary;
+            height: 4px;
+            display: block;
+            left: 50%;
+            transform: translateX(-50%);
+            position: absolute;
+            bottom: -10px;
+        }
+    }
+}
+
+.action-insertions_create {
+    @media screen and (min-width: $screen-medium) {
+        .panel--insertions {
+            padding: $size-large * 3 $size-large * 10;
+        }
+    }
+}

@@ -3,7 +3,7 @@
         {% block product__image %}
             <a href="{{ url("insertions_detail", {id: item.id}) }}" class="product__image">
                 {% if item.media is defined and item.media|length > 0 and item.media[0].content is defined %}
-                    <img src="{{ media(item.media[0].content, 300) }}" alt="{{ item.content[0].name }}"
+                    <img src="{{ media(item.media[0].content, 600) }}" alt="{{ item.content[0].name }}"
                          class="image">
                 {% else %}
                     <svg class="icon icon--placeholder">
