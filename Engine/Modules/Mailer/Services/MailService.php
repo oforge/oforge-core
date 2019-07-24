@@ -15,6 +15,7 @@ use Oforge\Engine\Modules\TemplateEngine\Extensions\Twig\AccessExtension;
 use Oforge\Engine\Modules\TemplateEngine\Extensions\Twig\SlimExtension;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
+use Pimple\Tests\Fixtures\Service;
 use Twig_Error_Loader;
 use Twig_Error_Runtime;
 use Twig_Error_Syntax;
@@ -39,9 +40,8 @@ class MailService {
     public function send(array $options, array $templateData = []) {
         if ($this->isValid($options)) {
             try {
-                /**
-                 * @var $configService ConfigService
-                 */
+
+               /** @var  $configService */
                 $configService = Oforge()->Services()->get("config");
                 $exceptions    = $configService->get("mailer_exceptions");
 
@@ -171,7 +171,10 @@ class MailService {
         $twig->addExtension(new MediaExtension());
         $twig->addExtension(new SlimExtension());
 
-        return $twig->fetch($template = $options['template'], $data = $templateData);
+        $html =  $twig->fetch($template = $options['template'], $data = $templateData);
+
+        $inlineCssService = Oforge()->Services()->get('inline.css');
+        return $inlineCssService->renderInlineCss($html);
     }
 
     /**

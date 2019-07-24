@@ -10,6 +10,7 @@ use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Models\Config\ConfigType;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
+use Oforge\Engine\Modules\Mailer\Services\InlineCssService;
 use Oforge\Engine\Modules\Mailer\Services\MailService;
 use SystemMailService\SystemMailService;
 
@@ -22,7 +23,8 @@ class Bootstrap extends AbstractBootstrap {
 
     public function __construct() {
         $this->services = [
-            'mail' => MailService::class,
+            'mail'       => MailService::class,
+            'inline.css' => InlineCssService::class,
         ];
     }
 
