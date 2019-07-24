@@ -3,7 +3,7 @@
     margin: 2rem 0;
 
     @media screen and (min-width: $screen-large) {
-        margin: 2rem $size-large * -5;
+        margin: 2rem $size-large * -10;
     }
 
     .insertion-create__type {
@@ -86,6 +86,14 @@
             transform: translateX(-50%);
             position: absolute;
             bottom: -10px;
+        }
+    }
+}
+
+.action-insertions_create {
+    @media screen and (min-width: $screen-medium) {
+        .panel--insertions {
+            padding: $size-large * 3 $size-large * 10;
         }
     }
 }
