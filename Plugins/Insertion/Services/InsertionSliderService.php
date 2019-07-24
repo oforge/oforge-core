@@ -76,9 +76,8 @@ class InsertionSliderService extends AbstractDatabaseAccess {
                           deleted IS FALSE AND
                           moderation IS TRUE
                     ORDER BY RAND()
-                    LIMIT ?";
+                    LIMIT " . $limit;
 
-            $params[] = $limit;
         } elseif (is_null($notId)) {
             $query = "
                     SELECT id
@@ -88,10 +87,9 @@ class InsertionSliderService extends AbstractDatabaseAccess {
                           moderation IS TRUE AND
                           insertion_type_id = ?
                     ORDER BY RAND()
-                    LIMIT ?";
+                    LIMIT " . $limit;
 
             $params[] = $insertionType;
-            $params[] = $limit;
         } else {
             $query = "
                     SELECT id
