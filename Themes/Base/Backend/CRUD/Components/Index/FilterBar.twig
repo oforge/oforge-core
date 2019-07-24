@@ -2,19 +2,21 @@
     <div class="row">
         <div class="col-xs-12">
             <form id="oforge-crud-filters" method="GET" class="form-inline">
-                {% for propertyName, filterConfig in crud.filter if filterConfig.type != 'hidden' %}
-                    {% if filterConfig.label is defined %}
-                        {% if filterConfig.label is array %}
-                            {% set filterTitle = i18n(filterConfig.label) %}
+                {% for crudPropertyName, crudFilterConfig in crud.filter %}
+                    {% if crudFilterConfig.label is defined %}
+                        {% if crudFilterConfig.label is array %}
+                            {% set crudFilterTitle = i18n(crudFilterConfig.label) %}
                         {% else %}
-                            {% set filterTitle = filterConfig.label %}
+                            {% set crudFilterTitle = crudFilterConfig.label %}
                         {% endif %}
                     {% else %}
-                        {% set filterTitle = propertyName|ucfirst %}
+                        {% set crudFilterTitle = crudPropertyName|ucfirst %}
                     {% endif %}
-                    {% include 'Backend/CRUD/Components/Index/FilterType/' ~ filterConfig.type|ucfirst ~ '.twig' ignore missing %}
+                    {% include 'Backend/CRUD/Components/Index/FilterType/' ~ crudFilterConfig.type|ucfirst ~ '.twig' ignore missing %}
                 {% endfor %}
-                <button class="btn btn-default" type="submit">{{ i18n('backend_crud_btn_filter_submit', {en: 'Filter', de: 'Filtern'}) }}</button>
+                <button class="btn btn-default" type="submit">
+                    {{ i18n('backend_crud_btn_filter_submit', {en: 'Filter', de: 'Filtern'}) }}
+                </button>
             </form>
         </div>
     </div>

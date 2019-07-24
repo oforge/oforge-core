@@ -26,6 +26,7 @@ use Oforge\Engine\Modules\CMS\Models\Content\Content;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentParent;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentTypeGroup;
+use Oforge\Engine\Modules\CMS\Models\ContentTypes\Row as RowModel;
 use Oforge\Engine\Modules\CMS\Models\Layout\Layout;
 use Oforge\Engine\Modules\CMS\Models\Layout\Slot;
 use Oforge\Engine\Modules\CMS\Models\Page\Page;
@@ -76,7 +77,7 @@ class Bootstrap extends AbstractBootstrap {
             ContentType::class,
             ContentParent::class,
             Content::class,
-            \Oforge\Engine\Modules\CMS\Models\ContentTypes\Row::class,
+            RowModel::class,
             Page::class,
             PagePath::class,
             PageContent::class,
@@ -97,9 +98,6 @@ class Bootstrap extends AbstractBootstrap {
             'cms.order'                     => CmsOrderService::class,
             'content.type.group.management' => ContentTypeGroupManagementService::class,
         ];
-    }
-
-    public function install() {
     }
 
     public function activate() {
