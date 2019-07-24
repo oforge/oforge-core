@@ -36,7 +36,7 @@ class BackendFrontendUserManagementController extends BaseCrudController {
         [
             'name'  => 'email',
             'type'  => CrudDataTypes::EMAIL,
-            'label' => ['key' => 'plugin_frontend_user_management_property_contact_email', 'default' => 'Account email'],
+            'label' => ['key' => 'plugin_frontend_user_management_property_email', 'default' => 'Account email'],
             'crud'  => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
@@ -46,7 +46,7 @@ class BackendFrontendUserManagementController extends BaseCrudController {
             ],
         ],
         [
-            'name'     => 'accountEmail',
+            'name'     => 'contactEmail',
             'type'     => CrudDataTypes::CUSTOM,
             'label'    => ['key' => 'plugin_frontend_user_management_property_contact_email', 'default' => 'Contact email'],
             'crud'     => [

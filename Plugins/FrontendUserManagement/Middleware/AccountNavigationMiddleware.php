@@ -21,7 +21,7 @@ class AccountNavigationMiddleware {
             $configService = Oforge()->Services()->get('config');
             $projectName = $configService->get('system_project_name');
 
-            $title = I18N::translate('your_account', 'Your Account') . I18N::translate('title_separator', ' | ') . $projectName;
+            $title = I18N::translate('your_account', 'Your Account') . I18N::translate('title_separator', ['en' => ' | ', 'de' => ' | ']) . $projectName;
 
             Oforge()->View()->assign(['sidebar_navigation' => $sidebarNavigation, 'meta' => ['title' =>  $title ]]);
         }

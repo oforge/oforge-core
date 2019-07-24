@@ -1,0 +1,28 @@
+<div class="row">
+    <div class="col-xs-12">
+        <form id="oforge-crud-filters" method="GET" class="form-inline">
+            {% for crudPropertyName, crudFilterConfig in filter %}
+                {% if crudFilterConfig.label is defined %}
+                    {% if crudFilterConfig.label is array %}
+                        {% set crudFilterTitle = i18n(crudFilterConfig.label) %}
+                    {% else %}
+                        {% set crudFilterTitle = crudFilterConfig.label %}
+                    {% endif %}
+                {% else %}
+                    {% set crudFilterTitle = crudPropertyName|ucfirst %}
+                {% endif %}
+                {% if crudFilterConfig.type == 'Button' %}
+                    <button id="module_i18n_snippet_comparator_swap_language" class="btn btn-default" type="button"
+                            title="{{ crudFilterTitle }}">
+                        <i class="fa fa-arrows-h"></i>
+                    </button>
+                {% else %}
+                    {% include 'Backend/CRUD/Components/Index/FilterType/' ~ crudFilterConfig.type|ucfirst ~ '.twig' ignore missing %}
+                {% endif %}
+            {% endfor %}
+            <button class="btn btn-default" type="submit">
+                {{ i18n('backend_crud_btn_filter_submit', {en: 'Filter', de: 'Filtern'}) }}
+            </button>
+        </form>
+    </div>
+</div>

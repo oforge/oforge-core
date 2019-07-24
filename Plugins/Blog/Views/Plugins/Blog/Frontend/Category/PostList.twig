@@ -20,7 +20,7 @@
                 <button class="button button--primary" data-addmore="true" data-trigger-event="resize"
                         data-container="#blog-posts-container"
                         data-url="{{ url('frontend_blog_more_posts', {}, {categoryID: blog.category.id}) }}">
-                    {{ i18n('plugin_blog_btn_load_more_posts', 'Load more') }}
+                    {{ i18n('plugin_blog_btn_load_more_posts', {en: 'Load more', de: 'Mehr laden'}) }}
                 </button>
             </div>
         {% endif %}
