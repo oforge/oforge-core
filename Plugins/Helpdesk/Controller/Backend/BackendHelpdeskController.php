@@ -118,8 +118,15 @@ class BackendHelpdeskController extends SecureBackendController {
                     $conversation = $conversation[0];
                 }
 
+                /** send notification to requester */
+                $messages = $helpdeskMessengerService->getMessagesOfConversation($conversation['id']);
+                $lastMessage = end($messages)->toArray(1);
+                if ($lastMessage["sender"] != 'helpdesk') {
+                    $this->sendNewMessageInfoMail($conversation['requester'], $conversation['id']);
+                    Oforge()->View()->Flash()->addMessage('success', "Notification Mail has been sent");
+                }
+
                 $helpdeskMessengerService->sendMessage($conversation['id'], $senderId, $message);
-                $this->sendNewMessageInfoMail($conversation['requester']);
 
                 $uri = $router->pathFor('backend_helpdesk_messenger', ['id' => $args['id']]);
 
@@ -156,14 +163,28 @@ class BackendHelpdeskController extends SecureBackendController {
 
     /**
      * @param $userId
+     * @param $conversationId
      *
      * @throws ServiceNotFoundException
      */
-    public function sendNewMessageInfoMail($userId) {
-        /** @var  $userService */
+    public function sendNewMessageInfoMail($userId, $conversationId) {
+        /** @var  $userService */ /** @var  $router */ /** @var  $mailService */
+
+        $router = Oforge()->App()->getContainer()->get('router');
         $userService   = Oforge()->Services()->get('frontend.user.management.user');
-        $user          = $userService->getUserbyId($userId);
         $mailService   = Oforge()->Services()->get('mail');
+
+        $user          = $userService->getUserbyId($userId);
+
+        $uri = $router->pathFor('frontend_account_messages') . DIRECTORY_SEPARATOR . $conversationId;
+
+        $conversationLink = 'http://';
+        if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+            $conversationLink = 'https://';
+        }
+
+        $conversationLink .= $_SERVER['HTTP_HOST'];
+        $conversationLink .= $uri;
         $mailerOptions = [
             'to'       => [$user->getEmail() => $user->getEmail()],
             'from'     => 'no_reply',
@@ -171,8 +192,8 @@ class BackendHelpdeskController extends SecureBackendController {
             'template' => 'NewMessage.twig',
         ];
         $templateData = [
-            'conversationLink' => '', // TODO : Full Path to ConversationId
-            'receiver_name'    => '',
+            'conversationLink' => $conversationLink, // TODO : Full Path to ConversationId
+            'receiver_name'    => $user->getDetail()->getNickName(),
             'sender_mail'      => $mailService->getSenderAddress('no_reply'),
         ];
         $mailService->send($mailerOptions, $templateData);
