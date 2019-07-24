@@ -177,8 +177,6 @@ class MailService {
      */
     public function renderMail(array $options, array $templateData) {
 
-
-
         $templateManagementService = Oforge()->Services()->get("template.management");
         $templateName = $templateManagementService->getActiveTemplate()->getName();
         $templatePath = Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . $templateName . DIRECTORY_SEPARATOR . 'MailTemplates';
