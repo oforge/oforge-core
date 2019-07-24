@@ -117,7 +117,7 @@ class FrontendUsersInsertionController extends SecureFrontendController {
     public function disableAction(Request $request, Response $response, $args) {
         /** @var User $user */
         /** @var UserService $frontendUserService */
-        $user = Oforge()->View()->get('user');
+        $user = Oforge()->View()->get('current_user');
         $mailService = Oforge()->Services()->get('mail');
         $targetMail  = $user->getEmail();
         $mailOptions  = [

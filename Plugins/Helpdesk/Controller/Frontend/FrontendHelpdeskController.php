@@ -31,7 +31,7 @@ class FrontendHelpdeskController extends SecureFrontendController {
      * @EndpointAction()
      */
     public function indexAction(Request $request, Response $response) {
-        $user = Oforge()->View()->get('user');
+        $user = Oforge()->View()->get('current_user');
 
         /** @var HelpdeskTicketService $helpdeskTicketService */
         $helpdeskTicketService = Oforge()->Services()->get('helpdesk.ticket');
@@ -63,7 +63,7 @@ class FrontendHelpdeskController extends SecureFrontendController {
         /** @var Router $router */
         $router       = Oforge()->App()->getContainer()->get('router');
         $uri          = $router->pathFor('frontend_account_support');
-        $user         = Oforge()->View()->get('user');
+        $user         = Oforge()->View()->get('current_user');
         $body         = $request->getParsedBody();
         $issueType    = $body['helpdesk_request'];
         $issueTitle   = $body['helpdesk_request_title'];

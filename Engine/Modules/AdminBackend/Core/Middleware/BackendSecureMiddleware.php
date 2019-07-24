@@ -17,13 +17,15 @@ class BackendSecureMiddleware extends SecureMiddleware {
     protected $invalidRedirectPathName = 'backend_login';
 
     /** @inheritDoc */
-    protected function isUserValid(?array $user, array $permission) {
-        return ($user === null && $permission['role'] === BackendUser::ROLE_PUBLIC)
-               || ($user !== null && $permission !== null
-                   && isset($user['role'])
-                   && isset($user['type'])
-                   && $user['type'] === $permission['type']
-                   && $user['role'] <= $permission['role']);
+    protected function checkPermission(?array $user, ?array $permission) {
+        return $permission !== null#
+               && ($permission['role'] === BackendUser::ROLE_PUBLIC
+                   || (#
+                       $user !== null && isset($user['role']) && isset($user['type'])
+                       && $user['type'] === $permission['type']
+                       && $user['role'] <= $permission['role']#
+                   )#
+               );
     }
 
 }

@@ -3,11 +3,13 @@
 namespace Oforge\Engine\Modules\AdminBackend\Core\Controller\Backend;
 
 use Exception;
+use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
+use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Auth\Services\BackendLoginService;
-use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -19,18 +21,29 @@ use Slim\Router;
  * @package Oforge\Engine\Modules\AdminBackend\Core\Controller\Backend
  * @EndpointClass(path="/backend/login", name="backend_login", assetScope="Backend")
  */
-class LoginController extends AbstractController {
+class LoginController extends SecureBackendController {
+
+    public function initPermissions() {
+        $this->ensurePermissions('indexAction', BackendUser::class, BackendUser::ROLE_PUBLIC);
+        $this->ensurePermissions('processAction', BackendUser::class, BackendUser::ROLE_PUBLIC);
+    }
 
     /**
      * @param Request $request
      * @param Response $response
      *
+     * @return Response
      * @throws Exception
      * @EndpointAction()
      */
     public function indexAction(Request $request, Response $response) {
         // for creating a user if no user exists in dev environment:
         // $2y$10$fnI/7By7ojrwUv51JRi.K.yskzFSy0N4iiE6VheIJUh6ln1EsYWSi <<<<< geheim
+        if (isset($_SESSION['auth']) && !isset($_SESSION['login_redirect_url'])) {
+            return RouteHelper::redirect($response, 'backend_dashboard');
+        }
+
+        return $response;
     }
 
     /**
@@ -110,7 +123,7 @@ class LoginController extends AbstractController {
             unset($_SESSION["login_redirect_url"]);
         }
 
-        if($referrer != null) {
+        if ($referrer != null) {
             $uri = $referrer;
         } else {
             $uri = $router->pathFor('backend_dashboard');

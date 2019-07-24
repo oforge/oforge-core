@@ -55,13 +55,13 @@ class SecureMiddleware {
             $permissionService = Oforge()->Services()->get('permissions');
             $permission        = $permissionService->get($controllerClass, $controllerMethod);
         } else {
-            $permission = null;
+            $permission = ['role' => null, 'type' => $this->userClass];
         }
-        if ($this->isUserValid($user, $permission)) {
+        if ($this->checkPermission($user, $permission)) {
             //nothing to do. proceed
         } else {
             Oforge()->View()->assign(['stopNext' => true]);
-            $_SESSION["login_redirect_url"] = $request->getUri()->getPath();
+            $_SESSION['login_redirect_url'] = $request->getUri()->getPath();
             $this->createPermissionDeniedFlashMessage();
             if (!empty($this->invalidRedirectPathName)) {
                 return RouteHelper::redirect($response, $this->invalidRedirectPathName);
@@ -89,7 +89,7 @@ class SecureMiddleware {
      *
      * @return bool
      */
-    protected function isUserValid(?array $user, array $permission) {
+    protected function checkPermission(?array $user, ?array $permission) {
         return ($user !== null && $permission !== null
                 && isset($user['role'])
                 && isset($user['type'])
