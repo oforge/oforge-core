@@ -22,27 +22,45 @@ class KeyValueStoreController extends BaseCrudController {
     /** @var array $modelProperties */
     protected $modelProperties = [
         [
-            'name'  => 'name',
-            'type'  => CrudDataTypes::STRING,
-            'label' => ['key' => 'backend_keyvaluestore_name', 'default' => 'Name'],
-            'crud'  => [
+            'name'   => 'name',
+            'type'   => CrudDataTypes::STRING,
+            'label'  => [
+                'key'     => 'backend_keyvaluestore_name',
+                'default' => [
+                    'en' => 'Name',
+                    'de' => 'Name',
+                ],
+            ],
+            'crud'   => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
                 'create' => 'editable',
                 'update' => 'readonly',
                 'delete' => 'readonly',
             ],
+            'editor' => [
+                'required' => true,
+            ],
         ],
         [
-            'name'  => 'value',
-            'type'  => CrudDataTypes::STRING,
-            'label' => ['key' => 'backend_keyvaluestore_value', 'default' => 'Value'],
-            'crud'  => [
+            'name'   => 'value',
+            'type'   => CrudDataTypes::STRING,
+            'label'  => [
+                'key'     => 'backend_keyvaluestore_value',
+                'default' => [
+                    'en' => 'Value',
+                    'de' => 'Wert',
+                ],
+            ],
+            'crud'   => [
                 'index'  => 'editable',
                 'view'   => 'readonly',
                 'create' => 'editable',
                 'update' => 'editable',
                 'delete' => 'readonly',
+            ],
+            'editor' => [
+                'required' => true,
             ],
         ],
     ];
@@ -50,7 +68,13 @@ class KeyValueStoreController extends BaseCrudController {
     protected $indexFilter = [
         'name' => [
             'type'  => CrudFilterType::TEXT,
-            'label' => ['key' => 'backend_keyvaluestore_filter_name', 'default' => 'Search in name'],
+            'label' => [
+                'key'     => 'backend_keyvaluestore_filter_name',
+                'default' => [
+                    'en' => 'Search in name',
+                    'de' => 'Suche im Namen',
+                ],
+            ],
         ],
     ];
     /** @var array $indexOrderBy */

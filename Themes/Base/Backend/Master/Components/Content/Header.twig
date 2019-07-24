@@ -8,19 +8,16 @@
             {% if meta.backend.favoriteButton is defined and not meta.backend.favoriteButton %}
                 <a class="favorite"><span class="glyphicon glyphicon-star-empty"></span></a>
             {% else %}
-                <a href="{{ url('backend_favorites_toggle', {}, {name: meta.route.name}) }}" class="favorite"
-                   title="{{ i18n('backend_toggle_favorite') }}">
-                    {% if isFavorite(meta.route.name) %}
-                        <span class="glyphicon glyphicon-star"></span>
-                    {% else %}
-                        <span class="glyphicon glyphicon-star-empty"></span>
-                    {% endif %}
+                <a href="{{ url('backend_favorites_toggle', {}, {name: meta.route.name, params: meta.route.params, query: meta.route.query}) }}"
+                   class="favorite" title="{{ i18n('backend_toggle_favorite') }}">
+                    <span class="glyphicon glyphicon-star{% if not isFavorite(meta.route.name) %}-empty{% endif %}"></span>
                 </a>
             {% endif %}
             {% set current = breadcrumbs|last %}
 
             {% if page_header %}{{ page_header }}{% else %}{{ i18n(current.name) }}{% endif %}
-            {% if page_header_description %}<small>{{ page_header_description }}</small>{% endif %}
+            {% if page_header_description %}
+                <small>{{ page_header_description }}</small>{% endif %}
         </h1>
         {% include 'Backend/Master/Components/Content/BreadCrumbs.twig' %}
 

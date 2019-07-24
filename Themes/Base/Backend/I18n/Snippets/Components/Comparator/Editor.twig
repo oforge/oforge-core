@@ -1,0 +1,25 @@
+{% set snippet = item.scopes[meta.route.query[side]] %}
+{% set otherSnippet = item.scopes[meta.route.query[side == 'language1' ? 'language2' : 'language1']] %}
+{% if snippet %}
+    {% set editorName = 'data_update[' ~ snippet.id ~ '][value]' %}
+    {% set editorValue = snippet.value|default('') %}
+{% else %}
+    {% set editorName = ('data_create[' ~ rowIndex ~ '][value]') %}
+    {% set editorValue = otherSnippet.value|default('') %}
+    <input name="data_create[{{ rowIndex }}][scope]" value="{{ meta.route.query[side] }}" type="hidden" />
+    <input name="data_create[{{ rowIndex }}][name]" value="{{ item.name }}" type="hidden" />
+{% endif %}
+<div class="form-group has-feedback" style="width: 100%">
+    {% if useTextarea %}
+        <textarea name="{{ editorName }}" class="form-control"
+                  data-copy_id="{{ side }}-{{ rowIndex }}">{{ editorValue }}</textarea>
+    {% else %}
+        <input name="{{ editorName }}" class="form-control" value="{{ editorValue }}"
+               data-copy_id="{{ side }}-{{ rowIndex }}" />
+    {% endif %}
+    {% if not snippet %}
+        <i class="fa fa-plus-circle text-primary form-control-feedback"></i>
+    {% elseif snippet.value is empty %}
+        <i class="fa fa-exclamation-circle text-gray form-control-feedback"></i>
+    {% endif %}
+</div>
