@@ -184,12 +184,14 @@ class RegistrationController extends AbstractController {
         $mailOptions  = [
             'to'       => [$user['email'] => $user['email']],
             'from'     => 'info',
-            'subject'  => I18N::translate('email_subject_registration', 'Oforge | Your registration!'),
+            'subject'  => I18N::translate('mailer_subject_registration', 'Oforge | Your registration!'),
             'template' => 'RegisterConfirm.twig',
         ];
         $templateData = [
             'activationLink' => $activationLink,
             'user_mail'      => $user['email'],
+            'sender_mail'    => $mailService->getSenderAddress('info'),
+            'receiver_name'  => '', // TODO: Get generated nickname
         ];
 
         /**
@@ -205,7 +207,7 @@ class RegistrationController extends AbstractController {
         if (!isset($referrer)) {
             $uri = $router->pathFor('frontend_login');
         }
-        Oforge()->View()->Flash()->addMessage('success', I18N::translate('registration_mail_success',
+        Oforge()->View()->Flash()->addMessage('success', I18N::translate('mailer_subject_registration',
             'Registration successful. You will receive an email with information about you account activation.'));
 
         return $response->withRedirect($uri, 302);

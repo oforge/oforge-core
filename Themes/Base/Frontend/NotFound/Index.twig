@@ -2,7 +2,7 @@
 {% block content %}
     <div class="404 content">
         <div class="panel">
-            {% set content = content('not_found_' ~ meta.language) %}
+            {% set content = content('not_found_' ~ meta.language.iso) %}
             {% if content %}
                 <div class="content">
                     {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}

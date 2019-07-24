@@ -2,7 +2,9 @@
 
 namespace Insertion\Services;
 
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\QueryBuilder;
 use Insertion\Models\AttributeKey;
 use Insertion\Models\Insertion;
@@ -54,6 +56,78 @@ class InsertionSliderService extends AbstractDatabaseAccess {
         }
 
         return $result;
+    }
+
+    /**
+     * @param int $limit
+     * @param int|null $insertionType
+     * @param int|null $notId
+     *
+     * @return Insertion[]
+     * @throws ORMException
+     */
+    public function getRandomInsertion(int $limit, int $insertionType = null, int $notId = null) {
+        $params = [];
+        if (is_null($insertionType)) {
+            $query = "
+                    SELECT id
+                    FROM oforge_insertion
+                    WHERE active IS TRUE AND
+                          deleted IS FALSE AND
+                          moderation IS TRUE
+                    ORDER BY RAND()
+                    LIMIT " . $limit;
+
+        } elseif (is_null($notId)) {
+            $query = "
+                    SELECT id
+                    FROM oforge_insertion 
+                    WHERE active IS TRUE AND
+                          deleted IS FALSE AND
+                          moderation IS TRUE AND
+                          insertion_type_id = ?
+                    ORDER BY RAND()
+                    LIMIT " . $limit;
+
+            $params[] = $insertionType;
+        } else {
+            $query = "
+                    SELECT id
+                    FROM oforge_insertion
+                    WHERE active IS TRUE AND
+                          deleted IS FALSE AND
+                          moderation IS TRUE AND
+                          id != ? AND
+                          insertion_type_id = ?
+                    ORDER BY RAND()
+                    LIMIT " . $limit;
+
+            $params[] = $notId;
+            $params[] = $insertionType;
+        }
+
+
+        $sqlResult = $this->entityManager()->getEntityManager()->getConnection()->executeQuery($query, $params);
+
+        $ids = $sqlResult->fetchAll();
+
+        $findIds = [];
+
+        foreach ($ids as $id) {
+            $findIds[] = $id["id"];
+        }
+
+        $data = [];
+        if (sizeof($findIds) > 0) {
+            $insertions = $this->repository()->findBy(["id" => $findIds]);
+            foreach ($insertions as $insertion) {
+                if ($insertion != null) {
+                    $data[] = $insertion->toArray(3);
+                }
+            }
+        }
+
+        return $data;
     }
 
     public function getPremiumInsertions() {

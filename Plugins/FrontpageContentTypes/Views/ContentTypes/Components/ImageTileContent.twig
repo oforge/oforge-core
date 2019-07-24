@@ -4,7 +4,11 @@
     {% endif %}
     <div class="content" style="background-color:{{ data.backgroundcolor }}">
         <div class="image-container">
-            <img class="lazy" data-src="{{ media(data.url, imagewidth) }}" alt="{{ data.caption }}">
+            <picture class="lazy">
+                <source class="lazy" data-srcset="{{ media(data.url, 800) }}" media="(min-width: 640px)" />
+                <source class="lazy" data-srcset="{{ media(data.url, 600) }}" media="(min-width: 480px)" />
+                <img class="tile__image lazy" data-src="{{ media(data.url, 400) }}" alt="{{ data.caption }}" />
+            </picture>
         </div>
         <div class="text-container" style="background-color:{{ data.backgroundcolor }}">
             <h2 style="color:{{ data.fontcolor }};">{{ data.caption }}</h2>

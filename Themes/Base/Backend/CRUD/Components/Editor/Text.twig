@@ -1,7 +1,6 @@
-<textarea class="form-control" {% if fieldID %}id="{{ fieldID }}"{% endif %}
-          {% if property.crud[crud.context] == 'editable' %}name="data[{% if crud.context == 'index' %}{{ item.id }}][{% endif %}{{ property.name }}]"
-          {% else %}readonly{% endif %}
-        {% if property.crud[crud.context] == 'readonly' %}readonly{% endif %}
-        {% if property.editor.placeholder %}placeholder="{{ property.editor.placeholder }}"{% endif %}
-        {% if property.editor.maxlength %}maxlength="{{ property.editor.maxlength }}"{% endif %}
->{{ item[property.name] }}</textarea>
+<textarea class="form-control" {% if crudFieldID %}id="{{ crudFieldID }}"{% endif %}
+    {% if crudProperty.crud[crud.context] == 'editable' %}name="data[{% if crud.context == 'index' %}{{ item.id }}][{% endif %}{{ crudProperty.name }}]"{% endif %}
+    {% if crudProperty.editor.required %}required{% endif %}
+    {% if crudProperty.editor.placeholder %}placeholder="{{ crudProperty.editor.placeholder }}"{% endif %}
+    {% if crudProperty.editor.maxlength %}maxlength="{{ crudProperty.editor.maxlength }}"{% endif %}
+>{{ item[crudProperty.name] }}</textarea>

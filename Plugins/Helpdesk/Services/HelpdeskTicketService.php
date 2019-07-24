@@ -176,4 +176,9 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
     public function getIssueTypesByGroup($groupName) {
         return $this->repository('IssueTypesGroup')->findOneBy(['issueTypeGroupName' => $groupName]);
     }
+
+
+    private function isDuplicate() {
+        // TODO check if this insertion has already been reported for that reason
+    }
 }

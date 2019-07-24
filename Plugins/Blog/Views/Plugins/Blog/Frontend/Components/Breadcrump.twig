@@ -1,6 +1,6 @@
 <div class="blog-breadcrump">
     <span>
-        <a href="{{ url('frontend_blog') }}">{{ i18n('plugin_blog_frontend_blog_home', 'Blog') }}</a>
+        <a href="{{ url('frontend_blog') }}">{{ i18n('plugin_blog_frontend_blog_home', {en: 'Blog', de: 'Blog'}) }}</a>
     </span>
     {% if blog.category is defined %}
         <span>

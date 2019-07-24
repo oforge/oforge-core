@@ -4,7 +4,6 @@ namespace Oforge\Engine\Modules\AdminBackend\KeyValueStore;
 
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
-use Oforge\Engine\Modules\I18n\Helper\I18N;
 
 /**
  * Class Bootstrap
@@ -35,5 +34,4 @@ class Bootstrap extends AbstractBootstrap {
             'position' => 'sidebar',
         ]);
     }
-
 }

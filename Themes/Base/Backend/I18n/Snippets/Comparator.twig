@@ -1,0 +1,35 @@
+{% extends 'Backend/Master/Index.twig' %}
+
+{% block pagecontent %}
+    {% set meta = mergeRecursive(meta|default({}), dotToNested({
+        'route.query.language1': meta.route.query.language1|default(meta.language.iso),
+    })) %}
+    <section class="content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box box-primary">
+                    <div class="box-body">
+                        {% include 'Backend/I18n/Snippets/Components/Comparator/FilterBar.twig' with {
+                            filter: i18nComparator.filter,
+                            meta: meta
+                        } only %}
+                        {% if meta.route.query.language1 and meta.route.query.language2 %}
+                            {% include 'Backend/I18n/Snippets/Components/Comparator/Form.twig' with {
+                                comparator: i18nComparator,
+                                meta: meta
+                            } only %}
+                        {% else %}
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    {{ i18n('module_i18n_snippet_comparator', {en: 'Select languages', de: 'Sprachen auswählen'}) }}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    {# /.box-body #}
+                </div>
+                {# /.box #}
+            </div>
+        </div>
+    </section>
+{% endblock pagecontent %}

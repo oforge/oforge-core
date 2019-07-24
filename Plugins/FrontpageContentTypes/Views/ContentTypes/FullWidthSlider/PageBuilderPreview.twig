@@ -1,4 +1,4 @@
-<div class="content-type-edit-row-wrapper cms-content-sortable">
+<div class="content-type-preview-row cms-content-sortable">
     {% for child in data.childs %}
         {% if data.id == data.se %}
             {% set order = child.order %}
@@ -6,7 +6,7 @@
         {% endif %}
         <div class="content-type-edit-selector" data-pb-id="{{ child.id }}"
              data-pb-se="{{ child.se }}" data-pb-order="{{ child.order }}">
-            <div class="sort-handle"><i class="sort-handle-icon fa fa-arrows-v"></i></div>
+            <div class="sort-handle"></div>
             <div class="content-type-preview">
                 {% include child.type with {'data': child, 'order': child.order} only %}
             </div>

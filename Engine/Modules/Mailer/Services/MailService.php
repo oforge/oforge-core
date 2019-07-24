@@ -7,10 +7,12 @@ use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
+use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\Media\Twig\MediaExtension;
 use Oforge\Engine\Modules\TemplateEngine\Core\Twig\CustomTwig;
+use Oforge\Engine\Modules\TemplateEngine\Core\Twig\TwigOforgeDebugExtension;
 use Oforge\Engine\Modules\TemplateEngine\Extensions\Twig\AccessExtension;
 use Oforge\Engine\Modules\TemplateEngine\Extensions\Twig\SlimExtension;
 use PHPMailer\PHPMailer\Exception;
@@ -22,8 +24,18 @@ use Twig_Error_Syntax;
 class MailService {
 
     /**
-     * Initialises PHP Mailer Instance with specified Mailer Settings, Options and TemplateData.
-     * Options = ['to' => [], 'cc' => [], 'bcc' => [], 'replyTo' => [], 'attachment' => [], "subject" => string "html" => bool
+     * Initialises PHP Mailer Instance with specified Mailer Options and TemplateData.
+     * Options = [
+     * 'to'         => ['user@host.de' => 'user_name', user2@host.de => 'user2_name, ...],
+     * 'cc'         => [],
+     * 'bcc'        => [],
+     * 'replyTo'    => [],
+     * 'attachment' => [],
+     * "subject"    => string,
+     * "html"       => bool,
+     * ]
+     *
+     * TemplateData = ['key' = value, ... ]
 
      * @param array $options
      * @param array $templateData
@@ -86,6 +98,14 @@ class MailService {
                         $mail->addAttachment($key, $value);
                     }
                 }
+                /** Generate Base-Url for Media */
+                $conversationLink = 'http://';
+                if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+                    $conversationLink = 'https://';
+                }
+
+                $conversationLink .= $_SERVER['HTTP_HOST'];
+                $templateData['baseUrl'] = $conversationLink;
 
                 /** Render HTML */
                 $renderedTemplate = $this->renderMail($options,$templateData);
@@ -98,7 +118,7 @@ class MailService {
 
                 $mail->send();
 
-                Oforge()->Logger()->get("mailer")->info("Message has been sent", $options);
+                Oforge()->Logger()->get("mailer")->info("Message has been sent", $templateData);
                 return true;
 
             } catch (Exception $e) {
@@ -157,6 +177,8 @@ class MailService {
      */
     public function renderMail(array $options, array $templateData) {
 
+
+
         $templateManagementService = Oforge()->Services()->get("template.management");
         $templateName = $templateManagementService->getActiveTemplate()->getName();
         $templatePath = Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . $templateName . DIRECTORY_SEPARATOR . 'MailTemplates';
@@ -170,6 +192,7 @@ class MailService {
         $twig->addExtension(new AccessExtension());
         $twig->addExtension(new MediaExtension());
         $twig->addExtension(new SlimExtension());
+        $twig->addExtension(new TwigOforgeDebugExtension());
 
         return $twig->fetch($template = $options['template'], $data = $templateData);
     }

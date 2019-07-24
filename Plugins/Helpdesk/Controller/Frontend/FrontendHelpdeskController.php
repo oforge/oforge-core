@@ -41,7 +41,6 @@ class FrontendHelpdeskController extends SecureFrontendController {
             $issueTypesMap[$issueType->getId()] = $issueType->toArray(0);
         }
 
-
         Oforge()->View()->assign([
             'supportTypes' => $issueTypes->toArray(),
             'tickets'      => $tickets,
@@ -54,8 +53,9 @@ class FrontendHelpdeskController extends SecureFrontendController {
      * @param Response $response
      *
      * @return Response
-     * @throws ServiceNotFoundException
      * @throws ORMException
+     * @throws ServiceNotFoundException
+     * @throws \ReflectionException
      * @EndpointAction()
      */
     public function submitAction(Request $request, Response $response) {
@@ -97,12 +97,52 @@ class FrontendHelpdeskController extends SecureFrontendController {
     }
 
     /**
+     * @param Request $request
+     * @param Response $response
+     * @param $args
+     *
+     * @return Response
      * @throws ServiceNotFoundException
+     * @EndpointAction(path="/close/{id}")
      */
+    public function closeTicketAction(Request $request, Response $response, $args) {
+        $ticketId = $args["id"];
+        /** @var  $router */
+        $router = Oforge()->App()->getContainer()->get('router');
+        $uri    = $router->pathFor('frontend_account_support');
+
+        /** @var  $ticketService */
+        $ticketService = Oforge()->Services()->get('helpdesk.ticket');
+        $ticketOpener  = $ticketService->getTicketById($ticketId)->getOpener();
+
+        /** @var  $userService */
+        $userId = Oforge()->View()->get('current_user')['id'];
+
+        if ($ticketOpener != $userId) {
+            Oforge()->View()->Flash()->addMessage('error', I18N::translate('ticket_closing_violation', "You don't have permission to close this ticket"));
+
+            return $response->withRedirect($uri, 302);
+        }
+
+        try {
+            $ticketService->changeStatus($ticketId, 'closed');
+
+        } catch (\Exception $e) {
+            Oforge()->View()->Flash()->addMessage('error', I18N::translate('ticket_closing_error', 'Could not close ticket'));
+
+            return $response->withRedirect($uri, 302);
+        }
+
+        Oforge()->View()->Flash()->addMessage('success', I18N::translate('ticket_closing_success', 'Ticket closed'));
+
+        return $response->withRedirect($uri, 302);
+    }
+
     public function initPermissions() {
         $this->ensurePermissions([
             'indexAction',
             'submitAction',
+            'closeTicketAction',
         ]);
     }
 
