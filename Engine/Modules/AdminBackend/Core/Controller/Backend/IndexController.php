@@ -5,9 +5,9 @@ namespace Oforge\Engine\Modules\AdminBackend\Core\Controller\Backend;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
+use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Slim\Router;
 
 /**
  * Class IndexController
@@ -25,14 +25,7 @@ class IndexController extends AbstractController {
      * @EndpointAction()
      */
     public function indexAction(Request $request, Response $response) {
-        /** @var Router $router */
-        $router = Oforge()->App()->getContainer()->get('router');
-        $uri    = $router->pathFor('backend_login');
-        if (isset($_SESSION['auth'])) {
-            $uri = $router->pathFor('backend_dashboard');
-        }
-
-        return $response->withRedirect($uri, 302);
+        return RouteHelper::redirect($response, isset($_SESSION['auth']) ? 'backend_dashboard' : 'backend_login');
     }
 
 }

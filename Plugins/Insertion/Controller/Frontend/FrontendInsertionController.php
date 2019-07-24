@@ -108,7 +108,8 @@ class FrontendInsertionController extends SecureFrontendController
         $page = $args['page'];
         $typeId = $args['type'];
 
-        $result = ['page' => $page, 'pagecount' => 5];
+        $result = ['page' => $page, 'pagecount' =>
+            5];
 
         /**
          * @var $service InsertionTypeService
@@ -159,7 +160,7 @@ class FrontendInsertionController extends SecureFrontendController
         $service = Oforge()->Services()->get('insertion.type');
         $types = $service->getInsertionTypeTree($typeId);
         $result['types'] = $types;
-
+        $result['type'] = $service->getInsertionTypeById($typeId)->toArray();
         Oforge()->View()->assign($result);
     }
 
@@ -253,6 +254,8 @@ class FrontendInsertionController extends SecureFrontendController
         $templateData = [
             'insertionId'    => $insertion->getId(),
             'insertionTitle' => $insertion->getContent()[0]->getTitle(),
+            'receiver_name'  => $user->getDetail()->getNickName(),
+            'sender_mail'    => $mailService->getSenderAddress('no_reply'),
         ];
         $mailService->send($mailerOptions, $templateData);
     }

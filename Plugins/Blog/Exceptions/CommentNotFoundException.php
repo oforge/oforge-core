@@ -18,7 +18,10 @@ class CommentNotFoundException extends BlogException {
      */
     public function __construct(string $commentID) {
         parent::__construct(sprintf(#
-            I18N::translate('plugin_blog_exception_comment_not_found', 'Comment with ID "%s" not found!'),#
+            I18N::translate('plugin_blog_exception_comment_not_found', [
+                'en' => 'Comment with ID "%s" not found!',
+                'de' => 'Kommentar mit ID "%s" nicht gefunden!',
+            ]),#
             $commentID#
         ));
     }

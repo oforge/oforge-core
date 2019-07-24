@@ -1,35 +1,38 @@
 <div class="row">
-    <div class="col-xs-12 col-md-4" title="{{ i18n('backend_crud_label_epp', {en: 'Entities per page', de: 'Elemente pro Seite'}) }}">
-        {#{{ i18n('backend_crud_label_epp', {en: 'Entities per page', de: 'Elemente pro Seite'}) }}:#}
-        {% for buttonValue in pagination.buttons.values %}
-            {% set buttonDisabled = pagination.buttons.current == buttonValue %}
-            {% set buttonHref = url(route.name, [], route.query|merge({(queryKeys.entitiesPerPage) : buttonValue})) %}
-            <a href="{{ buttonHref }}"
-               class="btn btn-default {% if buttonDisabled %}disabled{% endif %}">
-                {{ buttonValue }}
+    {% with %}
+        <div class="col-xs-12 col-md-4"
+             title="{{ i18n('backend_crud_label_epp', {en: 'Entities per page', de: 'Elemente pro Seite'}) }}">
+            {#{{ i18n('backend_crud_label_epp', {en: 'Entities per page', de: 'Elemente pro Seite'}) }}:#}
+            {% for buttonValue in pagination.buttons.values %}
+                {% set buttonDisabled = pagination.buttons.current == buttonValue %}
+                {% set buttonHref = url(route.name, [], route.query|merge({(queryKeys.entitiesPerPage) : buttonValue})) %}
+                <a href="{{ buttonHref }}"
+                   class="btn btn-default {% if buttonDisabled %}disabled{% endif %}">
+                    {{ buttonValue }}
+                </a>
+            {% endfor %}
+        </div>
+        <div class="col-xs-12 col-md-4"></div>
+        <div class="col-xs-12 col-md-4">
+            {% set hrefFirst = url(route.name, [], route.query|merge({(queryKeys.page): 1})) %}
+            {% set hrefPrev = url(route.name, [], route.query|merge({(queryKeys.page): pagination.page.current - 1})) %}
+            {% set hrefNext = url(route.name, [], route.query|merge({(queryKeys.page): pagination.page.current + 1})) %}
+            {% set hrefLast = url(route.name, [], route.query|merge({(queryKeys.page): pagination.page.max})) %}
+            {% set buttonsLeftDisabled = pagination.page.current < 2 %}
+            {% set buttonsRightDisabled = pagination.page.current >= pagination.page.max %}
+            <a href="{{ hrefFirst }}" class="btn btn-default {% if buttonsLeftDisabled %}disabled{% endif %}">
+                <i class="fa fa-fw fa-angle-double-left"></i>
             </a>
-        {% endfor %}
-    </div>
-    <div class="col-xs-12 col-md-4"></div>
-    <div class="col-xs-12 col-md-4">
-        {% set hrefFirst = url(route.name, [], route.query|merge({(queryKeys.page): 1})) %}
-        {% set hrefPrev = url(route.name, [], route.query|merge({(queryKeys.page): pagination.page.current - 1})) %}
-        {% set hrefNext = url(route.name, [], route.query|merge({(queryKeys.page): pagination.page.current + 1})) %}
-        {% set hrefLast = url(route.name, [], route.query|merge({(queryKeys.page): pagination.page.max})) %}
-        {% set buttonsLeftDisabled = pagination.page.current < 2 %}
-        {% set buttonsRightDisabled = pagination.page.current >= pagination.page.max %}
-        <a href="{{ hrefFirst }}" class="btn btn-default {% if buttonsLeftDisabled %}disabled{% endif %}">
-            <i class="fa fa-fw fa-angle-double-left"></i>
-        </a>
-        <a href="{{ hrefPrev }}" class="btn btn-default {% if buttonsLeftDisabled %}disabled{% endif %}">
-            <i class="fa fa-fw fa-angle-left"></i>
-        </a>
-        {{ i18n('backend_crud_label_paginator', {en: '%1$s of %2$s', de: '%1$s von %2$s'})|format(pagination.page.current, pagination.page.max) }}
-        <a href="{{ hrefNext }}" class="btn btn-default {% if buttonsRightDisabled %}disabled{% endif %}">
-            <i class="fa fa-fw fa-angle-right"></i>
-        </a>
-        <a href=" {{ hrefLast }}" class="btn btn-default {% if buttonsRightDisabled %}disabled{% endif %}">
-            <i class="fa fa-fw fa-angle-double-right"></i>
-        </a>
-    </div>
+            <a href="{{ hrefPrev }}" class="btn btn-default {% if buttonsLeftDisabled %}disabled{% endif %}">
+                <i class="fa fa-fw fa-angle-left"></i>
+            </a>
+            {{ i18n('backend_crud_label_paginator', {en: '%1$s of %2$s', de: '%1$s von %2$s'})|format(pagination.page.current, pagination.page.max) }}
+            <a href="{{ hrefNext }}" class="btn btn-default {% if buttonsRightDisabled %}disabled{% endif %}">
+                <i class="fa fa-fw fa-angle-right"></i>
+            </a>
+            <a href=" {{ hrefLast }}" class="btn btn-default {% if buttonsRightDisabled %}disabled{% endif %}">
+                <i class="fa fa-fw fa-angle-double-right"></i>
+            </a>
+        </div>
+    {% endwith %}
 </div>

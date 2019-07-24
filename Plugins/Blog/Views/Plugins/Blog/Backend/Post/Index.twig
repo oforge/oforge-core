@@ -7,7 +7,7 @@
         {% set buttonQuery = {} %}
     {% endif %}
     <a href="{{ url(meta.route.name  ~ '_create', {}, buttonQuery) }}"
-       title="{{ i18n('backend_crud_btn_create', 'create') }}"
+       title="{{ i18n('backend_crud_btn_create', {en: 'create', de: 'erstellen'}) }}"
        class="btn btn-primary {% if not crud.actions.create %}disabled{% endif %}">
         <i class="fa fa-plus"></i>
     </a>

@@ -15,23 +15,35 @@
 
             <div class="contact--links flex">
                 <div class="contact--icons">
-                    <a class="contact--icon" href="#">
-                        <svg class="icon icon--secondary mail">
-                            <use xlink:href="#email"></use>
-                        </svg>
-                    </a>
-                    <a class="contact--icon center" href="#">
-                        <div class="wrapper">
-                            <svg class="icon icon--secondary telephone">
-                                <use xlink:href="#telephone"></use>
-                            </svg>
-                        </div>
-                    </a>
-                    <a class="contact--icon" href="#">
-                        <svg class="icon icon--secondary">
-                            <use xlink:href="#facebook"></use>
-                        </svg>
-                    </a>
+                    {% if profile.imprintEmail is not empty %}
+                        <a class="contact--icon" href="mailto:{{ profile.imprintEmail }}">
+                            <div class="wrapper">
+                                <svg class="icon icon--secondary mail pulse-on-hover">
+                                    <use xlink:href="#email"></use>
+                                </svg>
+                            </div>
+                        </a>
+                    {% endif %}
+                    {% if profile.imprintPhone is not empty %}
+                        <a class="contact--icon center" href="tel:{{ profile.imprintPhone }}">
+                            <div class="wrapper">
+                                <svg class="icon icon--secondary telephone   pulse-on-hover">
+                                    <use xlink:href="#telephone"></use>
+                                </svg>
+                            </div>
+                        </a>
+                    {% endif %}
+                    {% if profile.imprintFacebook is not empty %}
+                        <a class="contact--icon"
+                           href="{{ i18n('facebook_base_url', 'https://www.facebook.com/') }}{{ profile.imprintFacebook }}"
+                           target="_blank">
+                            <div class="wrapper">
+                                <svg class="icon icon--secondary  pulse-on-hover">
+                                    <use xlink:href="#facebook"></use>
+                                </svg>
+                            </div>
+                        </a>
+                    {% endif %}
                 </div>
             </div>
 
@@ -42,34 +54,35 @@
                 </div>
 
                 <div class="description__body">
-                    <span>{{ profile.description }}</span>
+                    <span>{{ profile.description|nl2br }}</span>
                 </div>
             </div>
 
             {% block top_slider %}
-                <div class="slider--supplier">
-                    {% for insertion in insertions %}
-                        <a href="/insertions/detail/{{ insertion.id }}">
-                            <div class="slide">
-                                {#
-                                <div class="badge is--new">
-                                    <svg class='icon icon--new'>
-                                        <use xlink:href='#new'></use>
-                                    </svg>
+                <div class="panel panel--supplier-slider">
+                    <div class="slider--supplier">
+                        {% for insertion in insertions %}
+                            <a href="{{ url('insertions_detail', {id: insertion.id}) }}">
+                                <div class="slide">
+                                    {% if insertion.media is defined and insertion.media|length > 0 and insertion.media[0].content is defined %}
+                                        <img src="{{ media(insertion.media[0].content, 1024) }}"
+                                             alt="{{ insertion.content[0].name }}"
+                                             class="image">
+                                    {% else %}
+                                        <svg class="icon icon--placeholder">
+                                            <use xlink:href="#placeholder-insertion"></use>
+                                        </svg>
+                                    {% endif %}
+                                    <div class="insertion--link">
+                                        <svg class="icon icon--insertion">
+                                            <use xlink:href="#insertion"></use>
+                                        </svg>
+                                        {{ i18n('go_to_insertion') }}
+                                    </div>
                                 </div>
-                                #}
-                                {% if insertion.media is defined and insertion.media|length > 0 and insertion.media[0].content is defined %}
-                                    <img src="{{ media(insertion.media[0].content, 200) }}"
-                                         alt="{{ insertion.content[0].name }}"
-                                         class="image">
-                                {% else %}
-                                    <!-- TODO add dummy image -->
-                                    <img src="https://placeponi.es/300/300" alt="{{ insertion.content[0].title }}"
-                                         title="{{ insertion.content[0].title }}" class="image">
-                                {% endif %}
-                            </div>
-                        </a>
-                    {% endfor %}
+                            </a>
+                        {% endfor %}
+                    </div>
                 </div>
             {% endblock top_slider %}
         </div>
@@ -84,42 +97,60 @@
 
             <div class="panel panel--contact contact">
                 <div class="contact__name">
-                    <strong>{{ profile.user.detail.firstName }} {{ profile.user.detail.lastName }}</strong></div>
-                <div class="contact__address">{{ profile.user.address.postCode }} {{ profile.user.address.city }}</div>
-                <div class="contact__phone"><strong>{{ i18n('tel') }}: {{ profile.user.detail.phoneNumber }}</strong>
-                </div>
-
+                    <strong>{{ profile.imprintName }}</strong></div>
+                {% endif %}
+                <div class="contact__address">{{ profile.imprintZipCity }}</div>
+                {% if profile.imprintPhone is not empty %}
+                    <div class="contact__phone"><strong class="pulse-on-hover"><a
+                                    href="tel:{{ profile.imprintPhone }}">{{ i18n('tel') }}
+                                : {{ profile.imprintPhone }}</a></strong>
+                    </div>
+                {% endif %}
             </div>
 
-            <div class="panel panel--map map">
-                <div class="map__address">
-                    {{ profile.user.address.postCode }} {{ profile.user.address.city }}
+            {% if profile.imprintZipCity is not empty %}
+                <div class="panel panel--map map">
+                    <div class="map__address">
+                        {{ profile.imprintZipCity }}
+                    </div>
+                    <div class="map__view">
+                        <iframe class="external--content content--iframe"
+                                src="https://www.google.com/maps?ie=UTF8&amp;Iwloc=near&amp;output=embed&amp;t=m&amp;z=15&amp;q={% if profile.imprintStreet is not empty %}{{ profile.imprintStreet }}+{% endif %}{{ profile.imprintZipCity }}"
+                                width="100%" height="100%" frameborder="0">
+                        </iframe>
+                    </div>
                 </div>
-                <div class="map__view">
-                    <iframe class="external--content content--iframe"
-                            src="https://www.google.com/maps?ie=UTF8&amp;Iwloc=near&amp;output=embed&amp;t=m&amp;z=15&amp;q={{ profile.user.address.postCode }}+{{ profile.user.address.city }}"
-                            width="100%" height="100%" frameborder="0">
-                    </iframe>
-                </div>
-            </div>
+            {% endif %}
 
             <div class="panel panel--about about">
                 <div class="about__title"><strong>{{ i18n('supplier-impress') }}</strong></div>
                 <div class="about__description">
-                    <div class="authority">{{ profile.imprintName }}</div>
+                    {% if profile.imprintName is not empty %}
+                        <div class="authority">{{ profile.imprintName }}</div>
+                    {% endif %}
                     <div class="address">
                         <div class="street">{{ profile.imprintStreet }}</div>
                         <div class="city">{{ profile.imprintZipCity }}</div>
                         <div class="country">{{ profile.user.address.country }}</div>
                     </div>
                     <div class="contact upper">
-                        <div class="tel">{{ i18n('tel') }}: {{ profile.imprintPhone }}</div>
-                        <div class="fax">{{ i18n('fax') }}: {{ profile.imprintFax }}</div>
+                        {% if profile.imprintPhone is not empty %}
+                            <div class="tel">{{ i18n('tel') }}: {{ profile.imprintPhone }}</div>
+                        {% endif %}
+                        {% if profile.imprintFax is not empty %}
+                            <div class="fax">{{ i18n('fax') }}: {{ profile.imprintFax }}</div>
+                        {% endif %}
                     </div>
                     <div class="contact lower">
-                        <div class="web">{{ i18n('web') }}: <!-- TODO: Insert Content --></div>
-                        <div class="mail">{{ i18n('email') }}: {{ profile.imprintEmail }}</div>
-                        <div class="link">http://www.kontakt/impressum/</div>
+                        {% if profile.imprintWebsite is not empty %}
+                            <div class="web">{{ i18n('web') }}:
+                                <div><a href="http://{{ profile.imprintWebsite }}" target="_blank"
+                                        class="link">{{ profile.imprintWebsite }}</a></div>
+                            </div>
+                        {% endif %}
+                        {% if profile.imprintEmail is not empty %}
+                            <div class="mail">{{ i18n('email') }}: {{ profile.imprintEmail }}</div>
+                        {% endif %}
                     </div>
                 </div>
             </div>

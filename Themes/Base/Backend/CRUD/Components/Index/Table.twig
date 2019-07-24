@@ -1,11 +1,11 @@
 <table id="crud_index_table" class="table table-bordered table-hover table-striped crud-table-{{ crud.model|lower|replace({'\\': '_'}) }}">
     <thead>
-    {% include 'Backend/CRUD/Components/Index/TableHeader.twig' with {crud: crud} only %}
+    {% include 'Backend/CRUD/Components/Index/TableHeader.twig' %}
     </thead>
     <tbody>
     {% for item in crud.items %}
         <tr>
-            {% for property in crud.properties if property.crud[crud.context] and property.crud[crud.context]|default('off') != 'off' %}
+            {% for crudProperty in crud.properties if crudProperty.crud[crud.context] and crudProperty.crud[crud.context]|default('off') != 'off' %}
                 {% include 'Backend/CRUD/Components/Index/TableCell.twig' %}
             {% endfor %}
             {% if crud.hasRowActions %}
@@ -14,12 +14,12 @@
         </tr>
     {% else %}
         <tr>
-            {% set width = crud.hasRowActions + crud.properties|default([])|length %}
-            <td colspan="{{ width }}">{{ i18n('backend_crud_table_empty', {en: 'no entities', de: 'keine Elemente'}) }}</td>
+            {% set crudColumnWidth = (crud.hasRowActions ? 1 : 0) + crud.properties|default({})|length %}
+            <td colspan="{{ crudColumnWidth }}">{{ i18n('backend_crud_table_empty', {en: 'no entities', de: 'keine Elemente'}) }}</td>
         </tr>
     {% endfor %}
     </tbody>
     <tfoot>
-    {% include 'Backend/CRUD/Components/Index/TableHeader.twig' with {crud: crud} only %}
+    {% include 'Backend/CRUD/Components/Index/TableHeader.twig' %}
     </tfoot>
 </table>

@@ -1,20 +1,24 @@
 .text-icon-prefix {
-    float: left;
-    width: 50%;
-
+    //float: left;
+    //width: 50%;
+    margin-bottom: 2rem;
+    .icon {
+        width: 40px;
+        height: 40px;
+    }
     svg {
         display: inline;
     }
 
     * {
         vertical-align: middle;
-        font-size: 13px;
+        //font-size: 13px;
     }
 }
 
 
 @media screen and (min-width: $screen-large) {
     .text-icon-prefix {
-        width: 25%;
+       //width: 25%;
     }
 }
