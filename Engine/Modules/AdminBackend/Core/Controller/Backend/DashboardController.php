@@ -163,10 +163,14 @@ class DashboardController extends SecureBackendController {
      * @throws ServiceNotFoundException
      */
     public function initPermissions() {
-        $this->ensurePermissions('indexAction', BackendUser::class, BackendUser::ROLE_MODERATOR);
-        $this->ensurePermissions('buildAction', BackendUser::class, BackendUser::ROLE_ADMINISTRATOR);
-        $this->ensurePermissions('widgetsAction', BackendUser::class, BackendUser::ROLE_MODERATOR);
-        $this->ensurePermissions('testAction', BackendUser::class, BackendUser::ROLE_ADMINISTRATOR);
+        $this->ensurePermissions([
+            'indexAction',
+            'widgetsAction',
+        ], BackendUser::ROLE_MODERATOR);
+        $this->ensurePermissions([
+            'buildAction',
+            'testAction',
+        ], BackendUser::ROLE_ADMINISTRATOR);
     }
 
 }

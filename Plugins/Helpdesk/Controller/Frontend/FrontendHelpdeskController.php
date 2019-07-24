@@ -4,7 +4,6 @@ namespace Helpdesk\Controller\Frontend;
 
 use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Abstracts\SecureFrontendController;
-use FrontendUserManagement\Models\User;
 use Helpdesk\Services\HelpdeskTicketService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
@@ -101,8 +100,10 @@ class FrontendHelpdeskController extends SecureFrontendController {
      * @throws ServiceNotFoundException
      */
     public function initPermissions() {
-        $this->ensurePermissions('indexAction', User::class);
-        $this->ensurePermissions('submitAction', User::class);
+        $this->ensurePermissions([
+            'indexAction',
+            'submitAction',
+        ]);
     }
 
 }

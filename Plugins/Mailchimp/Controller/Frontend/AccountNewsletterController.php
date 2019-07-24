@@ -3,16 +3,15 @@
 namespace Mailchimp\Controller\Frontend;
 
 use FrontendUserManagement\Abstracts\SecureFrontendController;
-use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\UserDetailsService;
 use Interop\Container\Exception\ContainerException;
 use Mailchimp\Services\MailchimpNewsletterService;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
-use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 
 /**
  * Class AccountNewsletterController
@@ -132,10 +131,11 @@ class AccountNewsletterController extends SecureFrontendController
      * @EndpointAction()
      */
 
-    public function initPermissions()
-    {
-        $this->ensurePermissions('indexAction', User::class);
-        $this->ensurePermissions('subscribeAction', User::class);
-        $this->ensurePermissions('unsubscribeAction', User::class);
+    public function initPermissions() {
+        $this->ensurePermissions([
+            'indexAction',
+            'subscribeAction',
+            'unsubscribeAction',
+        ]);
     }
 }

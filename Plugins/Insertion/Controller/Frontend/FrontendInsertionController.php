@@ -629,6 +629,6 @@ class FrontendInsertionController extends SecureFrontendController {
     }
 
     public function initPermissions() {
-        $this->ensurePermissions('accountListAction', User::class);
+        $this->ensurePermission('accountListAction');
     }
 }

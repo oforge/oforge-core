@@ -446,7 +446,7 @@ class BaseCrudController extends SecureBackendController {
         foreach ($actions as $action) {
             if (ArrayHelper::get($crudActions, $action, true)) {
                 $actionPermission = is_array($crudPermissions) ? ArrayHelper::get($crudPermissions, $action, BackendUser::ROLE_MODERATOR) : $crudPermissions;
-                $this->ensurePermissions($action . 'Action', BackendUser::class, $actionPermission);
+                $this->ensurePermission($action . 'Action', $actionPermission);
             }
         }
     }

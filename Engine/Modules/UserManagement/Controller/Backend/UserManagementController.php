@@ -109,10 +109,12 @@ class UserManagementController extends SecureBackendController {
     }
 
     public function initPermissions() {
-        $this->ensurePermissions('indexAction', BackendUser::class, BackendUser::ROLE_ADMINISTRATOR);
-        $this->ensurePermissions('createAction', BackendUser::class, BackendUser::ROLE_ADMINISTRATOR);
-        $this->ensurePermissions('updateAction', BackendUser::class, BackendUser::ROLE_ADMINISTRATOR);
-        $this->ensurePermissions('deleteAction', BackendUser::class, BackendUser::ROLE_ADMINISTRATOR);
+        $this->ensurePermissions([
+            'indexAction',
+            'createAction',
+            'updateAction',
+            'deleteAction',
+        ], BackendUser::ROLE_ADMINISTRATOR);
     }
 
 }

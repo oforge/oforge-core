@@ -96,10 +96,12 @@ class MediaController extends SecureBackendController {
      * @inheritdoc
      */
     public function initPermissions() {
-        $this->ensurePermissions('indexAction', BackendUser::class, BackendUser::ROLE_MODERATOR);
-        $this->ensurePermissions('createAction', BackendUser::class, BackendUser::ROLE_MODERATOR);
-        $this->ensurePermissions('searchAction', BackendUser::class, BackendUser::ROLE_MODERATOR);
-        $this->ensurePermissions('deleteAction', BackendUser::class, BackendUser::ROLE_MODERATOR);
+        $this->ensurePermissions([
+            'indexAction',
+            'createAction',
+            'searchAction',
+            'deleteAction',
+        ], BackendUser::ROLE_MODERATOR);
     }
 
 }

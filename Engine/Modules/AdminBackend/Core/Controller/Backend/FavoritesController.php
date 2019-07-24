@@ -44,7 +44,7 @@ class FavoritesController extends SecureBackendController {
     }
 
     public function initPermissions() {
-        $this->ensurePermissions('toggleAction', BackendUser::class, BackendUser::ROLE_MODERATOR);
+        $this->ensurePermission('toggleAction', BackendUser::ROLE_MODERATOR);
     }
 
 }
