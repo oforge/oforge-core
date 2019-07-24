@@ -98,7 +98,8 @@ class MediaController extends SecureBackendController {
     public function initPermissions() {
         $this->ensurePermissions([
             'indexAction',
-            'createAction',
+            'demoAction',
+            'uploadAction',
             'searchAction',
             'deleteAction',
         ], BackendUser::ROLE_MODERATOR);
