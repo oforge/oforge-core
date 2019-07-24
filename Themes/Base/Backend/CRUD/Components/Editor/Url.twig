@@ -1,6 +1,6 @@
 {% include 'Backend/CRUD/Components/Editor/Input.twig' with {
-    editor: {
+    crudFieldEditor: {
         type: 'url',
-        pattern: property.editor.pattern|default(''),
+        pattern: crudProperty.editor.pattern|default(''),
     }
 } %}

@@ -18,8 +18,8 @@ use ReflectionException;
  * @package Oforge\Engine\Modules\I18n\Services
  */
 class LanguageService extends AbstractDatabaseAccess {
-    /** @var string $currentLanguageIso */
-    private $currentLanguageIso;
+    /** @var array $currentLanguageIso */
+    private $currentLanguage;
 
     public function __construct() {
         parent::__construct(Language::class);
@@ -99,36 +99,49 @@ class LanguageService extends AbstractDatabaseAccess {
     }
 
     /**
-     * @param mixed $context
+     * @param array $context
      *
      * @return string
      */
-    public function getCurrentLanguageIso($context) {
-        if (isset($this->currentLanguageIso)) {
-            return $this->currentLanguageIso;
-        }
-        if (isset($context['meta']['language']) && strtolower($context['meta']['route']['assetScope']) == 'frontend') {
-            $this->currentLanguageIso = $context['meta']['language'];
-        } elseif (isset($context['meta']['route']['languageId'])
-                  && isset($context['meta']['route']['assetScope'])
-                  && strtolower($context['meta']['route']['assetScope']) !== 'backend') {
-            $this->currentLanguageIso = $context['meta']['route']['languageId'];
-        } elseif (isset($_SESSION['config']['language'])) {
-            $this->currentLanguageIso = $_SESSION['config']['language'];
-        } else {
-            $this->currentLanguageIso = 'en';
-            try {
-                /** @var ?Language $language */
-                $language = $this->repository()->findOneBy(['active' => true], ['default' => 'DESC']);
-                if (isset($language)) {
-                    $this->currentLanguageIso = $language->getIso();
-                }
-            } catch (ORMException $exception) {
-                Oforge()->Logger()->get()->error($exception->getMessage(), $exception->getTrace());
+    public function getCurrentLanguageIso(array $context = []) {
+        if (!isset($this->currentLanguage)) {
+            if (isset($context['meta']['language']) && strtolower($context['meta']['route']['assetScope']) == 'frontend') {
+                $this->currentLanguage = $context['meta']['language'];
+                // }elseif (isset($context['meta']['route']['languageId']) // current endpoint has no language(id)
+                //           && isset($context['meta']['route']['assetScope'])
+                //           && strtolower($context['meta']['route']['assetScope']) !== 'backend') {
+                //     $this->currentLanguageIso = $context['meta']['route']['languageId'];
+            } elseif (isset($_SESSION['language'])) {
+                $this->currentLanguage = $_SESSION['language'];
+            } else {
+                $this->updateCurrentLanguage();
             }
         }
 
-        return $this->currentLanguageIso;
+        return $this->currentLanguage['iso'];
+    }
+
+    public function updateCurrentLanguage() {
+        $this->currentLanguage = [
+            'id'  => 1,
+            'iso' => 'en',
+        ];
+        try {
+            /** @var Language|null $language */
+            $language = $this->repository()->findOneBy(['active' => true], ['default' => 'DESC']);
+            if (isset($language)) {
+                $this->currentLanguage = [
+                    'id'  => $language->getId(),
+                    'iso' => $language->getIso(),
+                ];
+            }
+        } catch (ORMException $exception) {
+            Oforge()->Logger()->get()->error($exception->getMessage(), $exception->getTrace());
+        }
+        if (isset($_SESSION)) {
+            $_SESSION['language'] = $this->currentLanguage;
+        }
+        Oforge()->View()->assign(['meta.language' => $this->currentLanguage]);
     }
 
     /**

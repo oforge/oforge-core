@@ -1,16 +1,26 @@
 <tr>
-    {% for property in crud.properties if property.crud[crud.context] and property.crud[crud.context]|default('off') != 'off' %}
-        <th class="crud-table-header-{{ property.name }}">
-            {% if property.label is defined %}
-                {% if property.label is array %}
-                    {{ i18n(property.label) }}
+    {% for crudProperty in crud.properties if crudProperty.crud[crud.context] and crudProperty.crud[crud.context]|default('off') != 'off' %}
+        <th class="crud-table-header-{{ crudProperty.name }}">
+            {% if crudProperty.label is defined %}
+                {% if crudProperty.label is array %}
+                    {{ i18n(crudProperty.label) }}
                 {% else %}
-                    {{ property.label }}
+                    {{ crudProperty.label }}
                 {% endif %}
-            {% elseif property.name == 'id' %}
+            {% elseif crudProperty.name == 'id' %}
                 {{ 'ID' }}
             {% else %}
-                {{ property.name|ucfirst }}
+                {{ crudProperty.name|ucfirst }}
+            {% endif %}
+            {% if crudProperty.crud[crud.context]|default('off') == 'editable' %}
+                {% if crudProperty.editor.required %}
+                    <i class="fa fa-exclamation-triangle text-primary"
+                       title="{{ i18n('required', {en: 'required', de: 'erforderlich'}) }}"></i>
+                {% endif %}
+                {% if crudProperty.editor.hint %}
+                    <i title="{{ crudProperty.editor.hint is array ? i18n(crudProperty.editor.hint) : crudProperty.editor.hint }}"
+                       class="fa fa-info-circle text-primary"></i>
+                {% endif %}
             {% endif %}
         </th>
     {% endfor %}

@@ -1,0 +1,10 @@
+{% if item.dependencies %}
+    <span class="btn">
+        <i class="fa fa-exclamation-circle fa--big text-primary" data-toggle="tooltip"
+           title="{{ item.dependencies|join('\n') }}"></i>
+    </span>
+{% else %}
+    <span class="btn">
+        <i class="fa fa-minus-circle fa--big text-gray"></i>
+    </span>
+{% endif %}

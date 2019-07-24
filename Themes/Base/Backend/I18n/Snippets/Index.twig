@@ -1,0 +1,14 @@
+{% extends 'Backend/CRUD/Index.twig' %}
+
+{% block crud_actions_group %}
+    {{ parent() }}
+    {% set i18nComparatorLanguage2 = meta.route.query.scope|default(null) %}
+    <a class="btn btn-default" title="{{ i18n('backend_i18n_snippet_comparator', {en: '', de: ''}) }}"
+       href="{{ url('backend_i18n_snippets_comparator', {}, {
+           language1: meta.language.iso,
+           language2: i18nComparatorLanguage2 == meta.language ? null : i18nComparatorLanguage2,
+           name: meta.route.query.name|default(null)
+       }) }}">
+        <i class="fa fa-arrows-h"></i>
+    </a>
+{% endblock crud_actions_group %}

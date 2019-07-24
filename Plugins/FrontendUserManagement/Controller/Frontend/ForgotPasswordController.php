@@ -113,7 +113,7 @@ class ForgotPasswordController extends AbstractController {
         $mailOptions  = [
             'to'       => [$email => $email],
             'from'     => 'no_reply',
-            'subject'  => I18N::translate('email_subject_password_reset', 'Oforge | Your password reset!'),
+            'subject'  => I18N::translate('mailer_subject_password_reset', 'Oforge | Your password reset!'),
             'template' => 'ResetPassword.twig',
         ];
         $templateData = [

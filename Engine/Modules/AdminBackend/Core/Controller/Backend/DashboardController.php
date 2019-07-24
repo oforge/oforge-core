@@ -38,12 +38,6 @@ class DashboardController extends SecureBackendController {
             'page_header'             => 'Willkommen auf dem Dashboard',
             'page_header_description' => 'Hier finden Sie alle relevanten Informationen übersichtlich dargestellt.',
         ];
-        /**
-         * @var $authService AuthService
-         */
-        $authService  = Oforge()->Services()->get('auth');
-        $user         = $authService->decode($_SESSION['auth']);
-        $data['user'] = $user;
 
         Oforge()->View()->assign($data);
     }
