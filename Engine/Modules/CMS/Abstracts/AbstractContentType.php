@@ -20,7 +20,6 @@ abstract class AbstractContentType extends AbstractDatabaseAccess {
     private $name = null;
     private $path = null;
     private $icon = null;
-    private $description = null;
     private $classPath = null;
 
     private $contentId = null;
@@ -46,7 +45,6 @@ abstract class AbstractContentType extends AbstractDatabaseAccess {
         $this->name        = $this->contentTypeEntity->getName();
         $this->path        = $this->contentTypeEntity->getPath();
         $this->icon        = $this->contentTypeEntity->getIcon();
-        $this->description = $this->contentTypeEntity->getDescription();
         $this->class_path  = $this->contentTypeEntity->getClassPath();
     }
 
@@ -154,15 +152,6 @@ abstract class AbstractContentType extends AbstractDatabaseAccess {
      */
     public function getIcon() {
         return $this->icon;
-    }
-
-    /**
-     * Return description of content type
-     *
-     * @return string
-     */
-    public function getDescription() {
-        return $this->description;
     }
 
     /**

@@ -21,8 +21,8 @@
                         </div>
                         {% include 'Backend/CRUD/Components/Index/FilterBar.twig' with {
                             crud: crud,
-                            route: meta.route
-                        } only %}
+                            meta: meta
+                        } %}
                         {% if crud.hasEditors %}
                         <form action="{{ url(meta.route.name, {}, meta.route.query|default({})) }}" method="post"
                               enctype="multipart/form-data">

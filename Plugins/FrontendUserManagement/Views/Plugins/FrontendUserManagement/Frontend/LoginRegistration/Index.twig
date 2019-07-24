@@ -8,7 +8,7 @@
                 {% endblock login_registration_title %}
 
                 {% block seo_content %}
-                    {% set content = content('login_registration_' ~  meta.language) %}
+                    {% set content = content('login_registration_' ~  meta.language.iso) %}
                     {% if content %}
                         {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
                     {% endif %}

@@ -100,18 +100,27 @@ class ForgotPasswordController extends AbstractController {
 
             return $response->withRedirect($uri, 302);
         }
-
         $passwordResetLink = $passwordResetService->createPasswordResetLink($email);
+
+        /** @var  $registrationService */
+        $registrationService = Oforge()->Services()->get('frontend.user.management.registration');
+        $userDetail          = $registrationService->userExists($email)->getDetail();
+        $userNickName        = $userDetail->getNickName();
+
 
         $mailService = Oforge()->Services()->get('mail');
 
         $mailOptions  = [
             'to'       => [$email => $email],
             'from'     => 'no_reply',
-            'subject'  => I18N::translate('email_subject_password_reset', 'Oforge | Your password reset!'),
+            'subject'  => I18N::translate('mailer_subject_password_reset', 'Oforge | Your password reset!'),
             'template' => 'ResetPassword.twig',
         ];
-        $templateData = ['passwordResetLink' => $passwordResetLink];
+        $templateData = [
+            'passwordResetLink' => $passwordResetLink,
+            'receiver_name'     => $userNickName,
+            'sender_mail'       => $mailService->getSenderAddress('no_reply'),
+        ];
 
         /**
          * Mail could not be sent

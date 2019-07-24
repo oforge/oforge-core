@@ -17,7 +17,14 @@
         {% endif %}
     </div>
     <div class="blog-post-comment-author">
-        {{ blogPostComment.author.detail.firstName }} {{ blogPostComment.author.detail.lastName }}
+        {% if blogPostComment.author.detail.nickName %}
+            {{ blogPostComment.author.detail.nickName }}
+        {% elseif blogPostComment.author.detail.firstName or blogPostComment.author.detail.lastName %}
+            {{ blogPostComment.author.detail.firstName }} {{ blogPostComment.author.detail.lastName }}
+        {% else %}
+{#            TODO FALLBACK, email??? #}
+        {% endif %}
+
     </div>
     <div class="blog-post-comment-content">
         {{ blogPostComment.content }}

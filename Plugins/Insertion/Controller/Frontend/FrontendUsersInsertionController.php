@@ -83,6 +83,9 @@ class FrontendUsersInsertionController extends SecureFrontendController {
      * @param $args
      *
      * @return Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @EndpointAction(path="/delete/{id}")
      */
     public function deleteAction(Request $request, Response $response, $args) {
         return $this->modifyInsertion($request, $response, $args, 'delete');
@@ -94,6 +97,9 @@ class FrontendUsersInsertionController extends SecureFrontendController {
      * @param $args
      *
      * @return Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @EndpointAction(path="/activate/{id}")
      */
     public function activateAction(Request $request, Response $response, $args) {
         return $this->modifyInsertion($request, $response, $args, 'activate');
@@ -105,76 +111,33 @@ class FrontendUsersInsertionController extends SecureFrontendController {
      * @param $args
      *
      * @return Response
+     * @throws \Doctrine\ORM\ORMException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @EndpointAction(path="/disable/{id}")
      */
     public function disableAction(Request $request, Response $response, $args) {
         /** @var User $user */
         /** @var UserService $frontendUserService */
         $user = Oforge()->View()->get('current_user');
-        $mailService = Oforge()->Services()->get('mail');
-        $targetMail  = $user->getEmail();
-        $mailOptions  = [
-            'to'       => [$targetMail => $targetMail],
+
+        /** @var UserDetailsService $userDetailService */
+        $userDetailService = Oforge()->Services()->get('frontend.user.management.user.details');
+        $userDetails       = $userDetailService->get($user['id']);
+        $mailService       = Oforge()->Services()->get('mail');
+        $mailOptions       = [
+            'to'       => [$user['email'] => $user['email']],
             'from'     => 'no_reply',
-            'subject'  => I18N::translate('email_subject_password_reset', 'Oforge | Your password reset!'),
-            'template' => 'ResetPassword.twig',
+            'subject'  => I18N::translate('mailer_subject_deactivation_confirm', 'Oforge | Your Deactivation was successful'),
+            'template' => 'DeactivationConfirm.twig',
+        ];
+        $templateData      = [
+            'receiver_name' => $userDetails->getNickName(),
+            'sender_mail'   => $mailService->getSenderAddress('no_reply'),
         ];
 
-        $mailService->send($mailOptions);
+        $mailService->send($mailOptions, $templateData);
+
         return $this->modifyInsertion($request, $response, $args, 'disable');
-    }
-
-    private function modifyInsertion(Request $request, Response $response, $args, string $action) {
-        $id = $args["id"];
-        /**
-         * @var $service InsertionService
-         */
-        $service   = Oforge()->Services()->get("insertion");
-        $insertion = $service->getInsertionById(intval($id));
-
-        /**
-         * @var $userService FrontendUserService
-         */
-        $userService = Oforge()->Services()->get("frontend.user");
-        $user        = $userService->getUser();
-
-        if (!isset($insertion) || $insertion == null) {
-            return $response->withRedirect("/404", 301);
-        }
-
-        if ($user == null || $insertion->getUser()->getId() != $user->getId()) {
-            return $response->withRedirect("/401", 301);
-        }
-
-        /**
-         * @var $updateService InsertionUpdaterService
-         */
-        $updateService = Oforge()->Services()->get("insertion.updater");
-
-        switch ($action) {
-            case "disable":
-                $updateService->deactivate($insertion);
-                break;
-            case "delete":
-                $updateService->delete($insertion);
-                break;
-            case "activate":
-                $updateService->activate($insertion);
-                break;
-        }
-
-        $refererHeader = $request->getHeader('HTTP_REFERER');
-
-        /** @var Router $router */
-        $router = Oforge()->App()->getContainer()->get('router');
-        $url    = $router->pathFor('frontend_account_insertions');;
-        if (isset($refererHeader) && sizeof($refererHeader) > 0) {
-            $url = $refererHeader[0];
-        }
-
-        Oforge()->View()->Flash()->addMessage("success", "insertion_" . $action);
-
-        return $response->withRedirect($url, 301);
     }
 
     /**
@@ -229,7 +192,6 @@ class FrontendUsersInsertionController extends SecureFrontendController {
         $types    = $typeService->getInsertionTypeList(100, 0);
         $valueMap = [];
         foreach ($types as $type) {
-
             /**
              * @var $attribute InsertionTypeAttribute
              */
@@ -363,7 +325,7 @@ class FrontendUsersInsertionController extends SecureFrontendController {
          * @var $bookmarkService InsertionBookmarkService
          */
         $bookmarkService = Oforge()->Services()->get("insertion.bookmark");
-        $id = $args["id"];
+        $id              = $args["id"];
 
         $bookmarkService->remove($id);
         Oforge()->View()->Flash()->addMessage('success', I18n::translate('remove_bookmark_success'));
@@ -437,5 +399,68 @@ class FrontendUsersInsertionController extends SecureFrontendController {
             'profileAction',
             'removeBookmarkAction',
         ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param $args
+     * @param string $action
+     *
+     * @return Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     */
+    private function modifyInsertion(Request $request, Response $response, $args, string $action) {
+        $id = $args["id"];
+        /**
+         * @var $service InsertionService
+         */
+        $service   = Oforge()->Services()->get("insertion");
+        $insertion = $service->getInsertionById(intval($id));
+
+        /**
+         * @var $userService FrontendUserService
+         */
+        $userService = Oforge()->Services()->get("frontend.user");
+        $user        = $userService->getUser();
+
+        if (!isset($insertion) || $insertion == null) {
+            return $response->withRedirect("/404", 301);
+        }
+
+        if ($user == null || $insertion->getUser()->getId() != $user->getId()) {
+            return $response->withRedirect("/401", 301);
+        }
+
+        /**
+         * @var $updateService InsertionUpdaterService
+         */
+        $updateService = Oforge()->Services()->get("insertion.updater");
+
+        switch ($action) {
+            case "disable":
+                $updateService->deactivate($insertion);
+                break;
+            case "delete":
+                $updateService->delete($insertion);
+                break;
+            case "activate":
+                $updateService->activate($insertion);
+                break;
+        }
+
+        $refererHeader = $request->getHeader('HTTP_REFERER');
+
+        /** @var Router $router */
+        $router = Oforge()->App()->getContainer()->get('router');
+        $url    = $router->pathFor('frontend_account_insertions');;
+        if (isset($refererHeader) && sizeof($refererHeader) > 0) {
+            $url = $refererHeader[0];
+        }
+
+        Oforge()->View()->Flash()->addMessage("success", "insertion_" . $action);
+
+        return $response->withRedirect($url, 301);
     }
 }

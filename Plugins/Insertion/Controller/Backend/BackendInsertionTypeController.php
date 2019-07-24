@@ -9,6 +9,7 @@ use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Services\AttributeService;
 use Insertion\Services\InsertionTypeService;
 use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
+use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
@@ -199,6 +200,10 @@ class BackendInsertionTypeController extends SecureBackendController {
     }
 
     public function initPermissions() {
-        parent::initPermissions();
+        $this->ensurePermissions([
+            'indexAction',
+            'deleteAction',
+            'editAction',
+        ], BackendUser::ROLE_MODERATOR);
     }
 }

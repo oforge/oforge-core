@@ -1,6 +1,6 @@
 <div class="blog-content-header">
     {% include 'Plugins/Blog/Frontend/Components/Breadcrump.twig' %}
-    <h1>{{ blog.category.headerTitle|default(i18n('plugin_blog_frontend_blog_home', 'Blog')) }}</h1>
+    <h1>{{ blog.category.headerTitle|default(i18n('plugin_blog_frontend_blog_home', {en: 'Blog', de: 'Blog'})) }}{% if blog.category.headerTitle is not defined %} {{ i18n('by') }} {{ config('system_project_name') }}{% endif %}</h1>
     {% if blog.category.headerSubtext %}
         <p>{{ blog.category.headerSubtext }}</p>
     {% endif %}

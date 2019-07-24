@@ -1,0 +1,44 @@
+<form action="{{ url(meta.route.name, {}, meta.route.query|default({})) }}" method="post">
+    <div class="row">
+        <div class="col-xs-12 table-responsive">
+            <table id="crud_index_table"
+                   class="table table-bordered table-hover table-striped i18n-snippet-comparator-table">
+                <thead>
+                {% include 'Backend/I18n/Snippets/Components/Comparator/TableHeader.twig' with {
+                    meta: meta,
+                } only %}
+                </thead>
+                <tbody>
+                {% for i18nComparatorItem in comparator.items %}
+                    {% include 'Backend/I18n/Snippets/Components/Comparator/TableRow.twig' with {
+                        item: i18nComparatorItem,
+                        meta: meta,
+                        rowIndex: loop.index0,
+                    } only %}
+                {% else %}
+                    <tr>
+                        <td colspan="3">
+                            {{ i18n('backend_crud_table_empty', {en: 'no entities', de: 'keine Elemente'}) }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+                <tfoot>
+                {% include 'Backend/I18n/Snippets/Components/Comparator/TableHeader.twig' with {
+                    meta: meta,
+                } only %}
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="form-group">
+                <input type="hidden" name="action" value="update" />
+                <input type="submit" class="btn btn-primary"
+                       value="{{ i18n('backend_crud_btn_update', {en: 'update', de: 'aktualisieren'}) }}"
+                       title="{{ i18n('backend_crud_btn_update', {en: 'update', de: 'aktualisieren'}) }}">
+            </div>
+        </div>
+    </div>
+</form>

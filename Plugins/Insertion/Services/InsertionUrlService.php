@@ -26,13 +26,10 @@ class InsertionUrlService {
     }
 
     /** @see UrlService::getUrl() */
-    public function getUrl(...$vars) {
+    public function getUrl(string $name, array $namedParams = [], array $queryParams = []) : string {
         if (!isset($this->router)) {
             $this->router = Oforge()->App()->getContainer()->get('router');
         }
-
-        $name        = ArrayHelper::get($vars, 0);
-        $namedParams = ArrayHelper::get($vars, 1, []);
 
         if ($name == 'insertions_detail' && isset($namedParams["id"])) {
             /** @var InsertionService $service */
@@ -45,10 +42,9 @@ class InsertionUrlService {
 
                 return "/" . urlencode($typeTitle) . "/" . urlencode($title) . "/" . $insertion->getId();
             }
-
         }
 
-        return $this->instance->getUrl(...$vars);
+        return $this->instance->getUrl($name, $namedParams, $queryParams);
     }
 
 }

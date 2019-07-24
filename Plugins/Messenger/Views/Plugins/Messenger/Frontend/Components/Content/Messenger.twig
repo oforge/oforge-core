@@ -2,14 +2,17 @@
 {% block account_content %}
     <div class="account__content flex flex--wrap">
         <div class="messenger">
-            <div class="messenger__sidebar">
-                <div class="messenger__header messenger__header--sidebar">
+            <div class="messenger__sidebar sidebar__mobile">
+                <div class="messenger__header messenger__header--sidebar" data-collapse="640">
                     <h3 class="title title--sidebar">{{ i18n('my-chats', 'My chats') }}</h3>
+                    <svg class="icon icon--light">
+                        <use xlink:href="#arrow"></use>
+                    </svg>
                 </div>
 
-                <ul class="chat-list">
+                <ul class="chat-list collapsed">
                     {% for conversation in conversationList %}
-                        <li class="chat">
+                        <li class="chat" id="{{ conversation.id }}">
                             <a href="{{ url('frontend_account_messages', {id: conversation.id}) }}"
                                class="chat__link flex flex--row flex--center">
                                 {% block messenger_conversation_list %}
@@ -21,6 +24,7 @@
                     {% endfor %}
                 </ul>
             </div>
+
             <div class="messenger__chat">
                 <div class="messenger__header messenger__header--chat flex flex--row flex--center flex--between">
 
@@ -40,9 +44,8 @@
                     {% for message in activeConversation.messages %}
                         {% set sender = message.sender %}
                         <div class="message {{ sender == user.id ? '' : 'partner' }}">
-                            <p class="sender">{{ sender }}</p>
                             <p class="message-text">{{ message.message }}</p>
-                            <p class="message-date">{{ message.timestamp.date|date('Y-m-d H:i:s') }}</p>
+                            <p class="message-date">{{ message.timestamp|formatDatetime }}</p>
                         </div>
                     {% endfor %}
                 </div>

@@ -16,6 +16,11 @@
         .title {
             color: $color-light;
         }
+        &--sidebar {
+            justify-content: space-between;
+            border-bottom: 2px solid $color-light;
+
+        }
     }
 
     &__sidebar {
@@ -26,12 +31,18 @@
     &__chat {
         width: 100%;
     }
+    .logo__image {
+        flex: 0 0 auto;
+        width: 4rem;
+        height: 4rem;
+    }
 }
 
 .chat-list {
-    border-top: $size-large solid $color-light;
     background: $color-primary;
-    border-bottom: $size-large solid $color-light;
+    &.collapsed {
+        display: none;
+    }
 }
 .chat {
     padding: $size-large $size-medium;
@@ -44,12 +55,17 @@
         color: $color-light;
         margin-left: $size-large;
     }
+    &.is__active {
+        background-color: $color-secondary;
+    }
 }
 .chat + .chat {
     border-top: 1px solid $color-light;
 }
 
 .messages {
+    height: 30rem;
+    overflow: scroll;
     width: 100%;
     padding: $size-large $size-small;
 }
@@ -72,28 +88,67 @@
     margin-top: $size-large;
 }
 
-.form--message .submit-control {
-    flex: 1 0 auto;
+.message-text {
+    font-size: 1.4rem;
+    margin-bottom: $size-medium;
+}
+
+.message-date {
+    font-size: $font-size-6;
+    text-align: right;
+    color: #777;
+}
+
+.sender {
+    margin-bottom: $size-medium;
+    font-size: $font-size-6;
+}
+
+.form--message {
+    #message {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    .form__input--submit {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+    .submit-control {
+        flex: 1 0 auto;
+    }
 }
 
 @media screen and (min-width: $screen-medium) {
     .messenger {
         flex-direction: row;
+        .logo__image {
+            width: 4rem;
+            height: 4rem;
+        }
+        &__header--sidebar {
+            .icon {
+                display: none;
+            }
+        }
+    }
+    .message-text {
+        font-size: $font-size-5;
     }
     .messages {
+        height: 40rem;
         padding: $size-large $size-large * 2;
+    }
+    .chat-list {
+        background: $color-primary;
+        &.collapsed {
+            display: block;
+        }
     }
 }
 
-.sender {
-    margin-bottom: $size-medium;
-    font-size: 1.2rem;
+@media screen and (min-width: $screen-large) {
+    .messages {
+        height: 60rem;
+    }
 }
-.message-text {
-    margin-bottom: $size-medium;
-}
-.message-date {
-    font-size: 1.2rem;
-    text-align: right;
-    color: #777;
-}
+

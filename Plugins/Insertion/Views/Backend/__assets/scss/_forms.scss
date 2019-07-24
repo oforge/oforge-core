@@ -1,0 +1,11 @@
+.form--insertion {
+    .form__label:not(.form__label--checkbox) {
+        display: block;
+        font-weight: bold;
+        margin: 0 0 $size-large 0;
+    }
+}
+.form-controls > .row {
+    margin-left: 0;
+    margin-right: 0;
+}

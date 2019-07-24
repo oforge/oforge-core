@@ -86,10 +86,22 @@ class MessengerController extends SecureFrontendController {
                 $frontendMessengerService->sendMessage($activeConversation['id'], $user['id'], $message);
 
                 $lastMessageUser = end($activeConversation['messages'])->toArray()['sender'];
+
+                $uri = $router->pathFor('frontend_account_messages') . DIRECTORY_SEPARATOR . $activeConversation['id'];
+
+                $conversationLink = 'http://';
+                if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+                    $conversationLink = 'https://';
+                }
+                $conversationLink .= $_SERVER['HTTP_HOST'];
+                $conversationLink .= $uri;
+
                 /* Only send mails for classified advert */
                 if ($activeConversation['requesterType'] == 1 && $activeConversation['requestedType'] == 1 && $lastMessageUser != $user['id']) {
                     $targetUserId = ($isRequester) ? $activeConversation['requested'] : $targetUserId = $activeConversation['requester'];
                     $targetIdMail = $frontendUserService->getUserById($targetUserId)->getEmail();
+                    $targetName   = $frontendUserService->getUserById($targetUserId)->getDetail()->getNickName();
+
                     $mailOptions  = [
                         'to'       => [$targetIdMail => $targetIdMail],
                         'from'     => 'no_reply',
@@ -97,13 +109,14 @@ class MessengerController extends SecureFrontendController {
                         'template' => 'NewMessage.twig',
                     ];
                     $templateData = [
-                        'conversationId' => $conversationId,
+                        'conversationLink' => $conversationLink,
+                        'receiver_name'    => $targetName,
+                        'sender_mail'      => $mailService->getSenderAddress('no_reply'),
                     ];
                     $mailService->send($mailOptions, $templateData);
                 }
-                $uri = $router->pathFor('frontend_account_messages');
 
-                return $response->withRedirect($uri . '/' . $activeConversation['id'], 302);
+                return $response->withRedirect($uri, 302);
             }
             Oforge()->View()->assign(['activeConversation' => $activeConversation]);
 

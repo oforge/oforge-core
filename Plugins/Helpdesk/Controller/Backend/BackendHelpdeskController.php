@@ -14,6 +14,7 @@ use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -116,9 +117,18 @@ class BackendHelpdeskController extends SecureBackendController {
                     $conversation = $conversation[0];
                 }
 
+                /** send notification to requester */
+                $messages = $helpdeskMessengerService->getMessagesOfConversation($conversation['id']);
+                $lastMessage = end($messages)->toArray(1);
+                if ($lastMessage["sender"] != 'helpdesk') {
+                    $this->sendNewMessageInfoMail($conversation['requester'], $conversation['id']);
+                    Oforge()->View()->Flash()->addMessage('success', "Notification Mail has been sent");
+                }
+
                 $helpdeskMessengerService->sendMessage($conversation['id'], $senderId, $message);
 
                 $uri = $router->pathFor('backend_helpdesk_messenger', ['id' => $args['id']]);
+
                 return $response->withRedirect($uri , 302);
             }
 
@@ -151,10 +161,48 @@ class BackendHelpdeskController extends SecureBackendController {
     }
 
     /**
+     * @param $userId
+     * @param $conversationId
+     *
      * @throws ServiceNotFoundException
      */
+    public function sendNewMessageInfoMail($userId, $conversationId) {
+        /** @var  $userService */ /** @var  $router */ /** @var  $mailService */
+
+        $router = Oforge()->App()->getContainer()->get('router');
+        $userService   = Oforge()->Services()->get('frontend.user.management.user');
+        $mailService   = Oforge()->Services()->get('mail');
+
+        $user          = $userService->getUserbyId($userId);
+
+        $uri = $router->pathFor('frontend_account_messages') . DIRECTORY_SEPARATOR . $conversationId;
+
+        $conversationLink = 'http://';
+        if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+            $conversationLink = 'https://';
+        }
+
+        $conversationLink .= $_SERVER['HTTP_HOST'];
+        $conversationLink .= $uri;
+        $mailerOptions = [
+            'to'       => [$user->getEmail() => $user->getEmail()],
+            'from'     => 'no_reply',
+            'subject'  => I18N::translate('mailer_subject_new_message'),
+            'template' => 'NewMessage.twig',
+        ];
+        $templateData = [
+            'conversationLink' => $conversationLink,
+            'receiver_name'    => $user->getDetail()->getNickName(),
+            'sender_mail'      => $mailService->getSenderAddress('no_reply'),
+        ];
+        $mailService->send($mailerOptions, $templateData);
+    }
+
     public function initPermissions() {
-        $this->ensurePermission('indexAction', BackendUser::ROLE_MODERATOR);
+        $this->ensurePermissions([
+            'indexAction',
+            'messengerAction',
+        ], BackendUser::ROLE_MODERATOR);
     }
 
 }

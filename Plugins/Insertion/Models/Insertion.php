@@ -172,14 +172,14 @@ class Insertion extends AbstractModel {
     /**
      * @return DateTime
      */
-    public function getCreatedAt() : DateTime {
+    public function getCreatedAt() : ?DateTime {
         return $this->createdAt;
     }
 
     /**
      * @return DateTime
      */
-    public function getUpdatedAt() : DateTime {
+    public function getUpdatedAt() : ?DateTime {
         return $this->updatedAt;
     }
 

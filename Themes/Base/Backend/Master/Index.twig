@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{ meta.language }}">
+<html lang="{{ meta.language.iso }}">
 <head>
     {% block head %}
         {% include 'Backend/Master/Components/Head/Main.twig' %}
@@ -56,6 +56,10 @@
         {% include 'Backend/Master/Components/Sidebar/SidebarControl.twig' %}
     {% endblock %}
 </div>
+
+{% block svg_icons %}
+    {% include 'Frontend/Components/SVG.twig' %}
+{% endblock svg_icons %}
 
 {% block scripts %}
     {% include 'Backend/Master/Components/Footer/Scripts.twig' %}

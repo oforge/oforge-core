@@ -110,34 +110,12 @@ class InsertionUpdaterService extends AbstractDatabaseAccess {
         $insertion->setPrice($data["price"]);
         $insertion->setTax($data["tax"]);
 
-        $notTouched = [];
-        $modified   = [];
-        $values     = $insertion->getValues();
-
-        //update existing values
-        foreach ($data["attributes"] as $key => $attributeData) {
-            $touch = false;
-            foreach ($values as $value) {
-                $keyId = $value->getAttributeKey()->getId();
-                if ($keyId == $attributeData["attributeKey"]->getId() && !isset($modified[$value->getId()])) {
-                    $value->setValue($attributeData["value"]);
-                    $modified[$value->getId()] = true;
-                    $touch                     = true;
-                    break;
-                }
-            }
-
-            if (!$touch) {
-                $notTouched[$key] = true;
-            }
-        }
+        $values = $insertion->getValues();
 
         //collect items for deletion
         $delete = [];
         foreach ($values as $value) {
-            if (!isset($modified[$value->getId()])) {
-                $delete[] = $value;
-            }
+            $delete[] = $value;
         }
 
         //delete not modified elements
@@ -147,14 +125,13 @@ class InsertionUpdaterService extends AbstractDatabaseAccess {
         }
 
         //create new values
-        foreach ($notTouched as $key => $value) {
+        foreach ($data["attributes"] as $key => $value) {
             $attributeData = $data["attributes"][$key];
 
             $attributeValue = InsertionAttributeValue::create($attributeData);
             $attributeValue->setInsertion($insertion);
             $this->entityManager()->create($attributeValue, false);
             $insertion->getValues()->add($attributeValue);
-
         }
 
         $medias     = $insertion->getMedia();
@@ -180,11 +157,11 @@ class InsertionUpdaterService extends AbstractDatabaseAccess {
         }
 
         if (isset($data["images_interactions"])) {
-
             //collect items for deletion
             $delete = [];
             foreach ($medias as $media) {
-                if (isset($data["images_interactions"][$media->getContent()->getId()]) && $data["images_interactions"][$media->getContent()->getId()] == "delete") {
+                if (isset($data["images_interactions"][$media->getContent()->getId()])
+                    && $data["images_interactions"][$media->getContent()->getId()] == "delete") {
                     $delete[] = $media;
                 }
             }
@@ -213,7 +190,8 @@ class InsertionUpdaterService extends AbstractDatabaseAccess {
 
         if (isset($data["images_interactions"])) {
             foreach ($medias as $media) {
-                if (isset($data["images_interactions"][$media->getContent()->getId()]) && $data["images_interactions"][$media->getContent()->getId()] == "main") {
+                if (isset($data["images_interactions"][$media->getContent()->getId()])
+                    && $data["images_interactions"][$media->getContent()->getId()] == "main") {
                     $media->setMain(true);
                 }
             }

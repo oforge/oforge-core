@@ -9,17 +9,19 @@
             <form method="POST">
                 <div class="form__control">
                     <label class="form__label">{{ i18n('report_reason', 'Report reason:') }}</label>
-                        <select class="select"
+                    <div class="form__input form__input--select">
+                        <select class="form__input form__input--no-input"
                                 name="issueType"
                                 id="issueType">
                             {% for reportType in reportTypes.issueTypes %}
-                                <option value="{{ reportType.id }}">{{ reportType.issueTypeName }}</option>
+                                <option value="{{ reportType.id }}">{{ i18n(reportType.issueTypeName) }}</option>
                             {% endfor %}
                         </select>
+                    </div>
                 </div>
 
                 <div class="form__control">
-                    <label class="form__label" for="message">{{ i18n('short_description') }}</label><!-- snippify -->
+                    <label class="form__label" for="message">{{ i18n('short_description') }}</label>
 
                     <textarea class="form__input form__input--textarea" id="message" name="message"></textarea>
                 </div>
