@@ -34,7 +34,7 @@ class UserDetailsController extends SecureFrontendController {
      * @EndpointAction()
      */
     public function indexAction(Request $request, Response $response) {
-        $userId = Oforge()->View()->get('user')['id'];
+        $userId = Oforge()->View()->get('current_user')['id'];
         /** @var UserService $userService */
         $userService = Oforge()->Services()->get('frontend.user.management.user');
         $user        = $userService->getUserById($userId);
@@ -67,7 +67,7 @@ class UserDetailsController extends SecureFrontendController {
         $nickName           = $body['frontend_account_details_nick_name'];
         $contactEmail       = $body['frontend_account_details_contact_email'];
         $contactPhone       = $body['frontend_account_details_contact_phone'];
-        $userId             = Oforge()->View()->get('user')['id'];
+        $userId             = Oforge()->View()->get('current_user')['id'];
 
         $uri = $router->pathFor('frontend_account_details');
 
@@ -138,7 +138,7 @@ class UserDetailsController extends SecureFrontendController {
         $streetNumber       = $body['user_address_street_number'];
         $postCode           = $body['user_address_post_code'];
         $city               = $body['user_address_city'];
-        $userId             = Oforge()->View()->get('user')['id'];
+        $userId             = Oforge()->View()->get('current_user')['id'];
 
         /**
          * no valid form data found

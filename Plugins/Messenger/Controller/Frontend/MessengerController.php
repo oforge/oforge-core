@@ -52,7 +52,7 @@ class MessengerController extends SecureFrontendController {
         /** @var User $user */
         /** @var UserService $frontendUserService */
         $frontendMessengerService = Oforge()->Services()->get('frontend.messenger');
-        $user                     = Oforge()->View()->get('user');
+        $user                     = Oforge()->View()->get('current_user');
         $frontendUserService      = Oforge()->Services()->get('frontend.user.management.user');
 
         /** @var Conversation[] $conversationList */

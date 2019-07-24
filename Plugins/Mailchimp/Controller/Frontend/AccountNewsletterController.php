@@ -35,9 +35,9 @@ class AccountNewsletterController extends SecureFrontendController
         /** @var UserDetailsService $userDetailsService */
         $userDetailsService         = Oforge()->Services()->get('frontend.user.management.user.details');
         $router                     = Oforge()->Container()->get('router');
-        $email                      = Oforge()->View()->get('user')['email'];
+        $email                      = Oforge()->View()->get('current_user')['email'];
         $mailchimpNewsletterService = Oforge()->Services()->get('mailchimp.newsletter');
-        $userId                     = Oforge()->View()->get('user')['id'];
+        $userId                     = Oforge()->View()->get('current_user')['id'];
         $userDetails                = $userDetailsService->get($userId);
         $isSubscribed               = $mailchimpNewsletterService->isSubscribed($userId);
         $accountSubscribeLink       = $router->pathFor('frontend_account_newsletter');
@@ -71,7 +71,7 @@ class AccountNewsletterController extends SecureFrontendController
      */
     public function subscribeAction(Request $request, Response $response)
     {
-        $user = Oforge()->View()->get('user');
+        $user = Oforge()->View()->get('current_user');
         $mailchimpNewsletterService = Oforge()->Services()->get('mailchimp.newsletter');
         $router                     = Oforge()->Container()->get('router');
         $email                      = $user['email'];
@@ -102,7 +102,7 @@ class AccountNewsletterController extends SecureFrontendController
      */
     public function unsubscribeAction(Request $request, Response $response)
     {
-        $user = Oforge()->View()->get('user');
+        $user = Oforge()->View()->get('current_user');
         /** @var MailchimpNewsletterService $mailchimpNewsletterService */
         $mailchimpNewsletterService = Oforge()->Services()->get('mailchimp.newsletter');
         $router                     = Oforge()->Container()->get('router');

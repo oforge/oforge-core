@@ -25,7 +25,7 @@ class SecureController extends AbstractController {
         try {
             /** @var PermissionService $permissionService */
             $permissionService = Oforge()->Services()->get('permissions');
-            $permissionService->put(get_called_class(), $method, $userType, $role);
+            $permissionService->put(static::class, $method, $userType, $role);
         } catch (ServiceNotFoundException $exception) {
             Oforge()->Logger()->logException($exception);
         }
