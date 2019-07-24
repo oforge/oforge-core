@@ -15,7 +15,7 @@
                         <h3 class="account__title">{{ i18n('faqs') }}</h3>
 
                         {% block seo_content %}
-                            {% set content = content('faq_header_' ~  meta.language) %}
+                            {% set content = content('faq_header_' ~  meta.language.iso) %}
                             {% if content %}
                                 {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
                             {% endif %}

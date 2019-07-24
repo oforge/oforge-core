@@ -9,7 +9,7 @@
             <div class="panel panel--insertions flex insertion-create">
 
                 {% block insertions_content %}
-                    {% set content = content('insertion_create_' ~ meta.language) %}
+                    {% set content = content('insertion_create_' ~ meta.language.iso) %}
                     {% if content %}
                         {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
                     {% endif %}

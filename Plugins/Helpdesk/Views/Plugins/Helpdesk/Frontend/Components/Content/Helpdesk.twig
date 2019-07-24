@@ -6,7 +6,7 @@
         {% endblock helpdesk_title %}
 
         {% block helpdesk_description %}
-            {% set content = content('helpdesk_description_' ~  meta.language) %}
+            {% set content = content('helpdesk_description_' ~  meta.language.iso) %}
             {% if content %}
                 {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
             {% endif %}
