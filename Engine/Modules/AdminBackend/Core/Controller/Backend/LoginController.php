@@ -8,10 +8,10 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Slim\Router;
 
 /**
  * Class LoginController
@@ -50,52 +50,39 @@ class LoginController extends AbstractController {
         }
         /** @var BackendLoginService $backendLoginService */
         $backendLoginService = Oforge()->Services()->get('backend.login');
-        /** @var Router $router */
-        $router = Oforge()->App()->getContainer()->get('router');
-        $uri    = $router->pathFor('backend_login');
 
-        /**
-         * disallow direct processAction call. Only post action is allowed
-         */
+        // disallow direct processAction call. Only post action is allowed
         if (!$request->isPost()) {
-            return $response->withRedirect($uri, 302);
+            return RouteHelper::redirect($response, 'backend_login');
         }
 
-        $body = $request->getParsedBody();
-        $jwt  = null;
-
-        /**
-         * no token was sent
-         */
-        if (!isset($body['token']) || empty($body['token'])) {
+        $postData = $request->getParsedBody();
+        $jwt      = null;
+        // no token was sent
+        if (!isset($postData['token']) || empty($postData['token'])) {
             Oforge()->Logger()->get()->addWarning('Someone tried to do a backend login with a form without csrf token! Redirecting to backend login.');
 
-            return $response->withRedirect($uri, 302);
+            return RouteHelper::redirect($response, 'backend_login');
         }
-
-        /**
-         * invalid token was sent
-         */
-        if (!hash_equals($_SESSION['token'], $body['token'])) {
+        // invalid token was sent
+        if (!hash_equals($_SESSION['token'], $postData['token'])) {
             Oforge()->Logger()->get()->addWarning('Someone tried a backend login without a valid form csrf token! Redirecting back to login.');
 
-            return $response->withRedirect($uri, 302);
+            return RouteHelper::redirect($response, 'backend_login');
         }
-
-        /**
-         * no email or password body was sent
-         */
-        if (!isset($body['email']) || !isset($body['password'])) {
-            return $response->withRedirect($router->pathFor('backend_login'), 302);
+        // no email or password body was sent
+        if (!isset($postData['email']) || !isset($postData['password'])) {
+            return RouteHelper::redirect($response, 'backend_login');
         }
+        try {
+            $jwt = $backendLoginService->login($postData['email'], $postData['password']);// $jwt is null if the login credentials are incorrect
+            if (!isset($jwt)) {
+                return RouteHelper::redirect($response, 'backend_login');
+            }
+        } catch (Exception $exception) {
+            Oforge()->Logger()->logException($exception);
 
-        $jwt = $backendLoginService->login($body['email'], $body['password']);
-
-        /**
-         * $jwt is null if the login credentials are incorrect
-         */
-        if (!isset($jwt)) {
-            return $response->withRedirect($uri, 302);
+            return RouteHelper::redirect($response, 'backend_login');
         }
 
         /** @var SessionManagementService $sessionManagement */
@@ -104,19 +91,14 @@ class LoginController extends AbstractController {
 
         $_SESSION['auth'] = $jwt;
 
-        $referrer = null;
         if (isset($_SESSION["login_redirect_url"])) {
             $referrer = $_SESSION["login_redirect_url"];
             unset($_SESSION["login_redirect_url"]);
+
+            return $response->withRedirect($referrer, 302);
         }
 
-        if($referrer != null) {
-            $uri = $referrer;
-        } else {
-            $uri = $router->pathFor('backend_dashboard');
-        }
-
-        return $response->withRedirect($uri, 302);
+        return RouteHelper::redirect($response, 'backend_dashboard');
     }
 
 }

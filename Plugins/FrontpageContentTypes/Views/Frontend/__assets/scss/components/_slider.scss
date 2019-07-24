@@ -1,10 +1,22 @@
 .cms-slider {
-    background: $color-primary-lighter;
+    //background: $color-primary-lighter;
+    & > * {
+        display: none;
+
+        &:first-child {
+            display: block;
+        }
+    }
+
+    &.slick-initialized > * {
+        display: block;
+    }
+
 }
 
 .panel--insertions {
     .cms-slider {
-        margin: 2rem -6rem 4rem -6rem;
+        //margin: 2rem -6rem 4rem -6rem;
     }
 }
 

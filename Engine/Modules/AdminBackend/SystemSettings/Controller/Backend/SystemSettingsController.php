@@ -55,16 +55,16 @@ class SystemSettingsController extends SecureBackendController {
             /** @var ConfigService $configService */
             $configService = Oforge()->Services()->get('config');
             if ($request->isPost()) {
-                $formData = $request->getParsedBody();
+                $postData = $request->getParsedBody();
                 try {
-                    foreach ($formData as $key => $value) {
+                    foreach ($postData as $key => $value) {
                         $configService->update($key, $value);
                     }
                     Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_settings_update_success', 'Settings successfully updated.'));
                 } catch (Exception $exception) {
                     Oforge()->View()->Flash()
                             ->addExceptionMessage('error', I18N::translate('backend_settings_update_failed', 'Update of settings failed.'), $exception);
-                    Oforge()->View()->Flash()->setData(self::class, $formData);
+                    Oforge()->View()->Flash()->setData(self::class, $postData);
                 }
 
                 return RouteHelper::redirect($response, null, ['group' => $args['group']]);
@@ -92,6 +92,6 @@ class SystemSettingsController extends SecureBackendController {
 
     public function initPermissions() {
         $this->ensurePermissions('indexAction', BackendUser::class, BackendUser::ROLE_ADMINISTRATOR);
+        $this->ensurePermissions('groupIndexAction', BackendUser::class, BackendUser::ROLE_ADMINISTRATOR);
     }
-
 }

@@ -85,8 +85,6 @@ class MessengerController extends SecureFrontendController {
 
                 $frontendMessengerService->sendMessage($activeConversation['id'], $user['id'], $message);
 
-
-
                 $lastMessageUser = end($activeConversation['messages'])->toArray()['sender'];
 
                 $uri = $router->pathFor('frontend_account_messages') . DIRECTORY_SEPARATOR . $activeConversation['id'];
@@ -113,6 +111,7 @@ class MessengerController extends SecureFrontendController {
                     $templateData = [
                         'conversationLink' => $conversationLink,
                         'receiver_name'    => $targetName,
+                        'sender_mail'      => $mailService->getSenderAddress('no_reply'),
                     ];
                     $mailService->send($mailOptions, $templateData);
                 }

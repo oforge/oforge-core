@@ -1,8 +1,8 @@
 {% include 'Backend/CRUD/Components/Editor/Input.twig' with {
-    editor: {
+    crudFieldEditor: {
         type: 'number',
-        min: property.editor.min|default(''),
-        max: property.editor.max|default(''),
-        step: property.editor.step|default('0.01'),
+        min: crudProperty.editor.min|default(''),
+        max: crudProperty.editor.max|default(''),
+        step: crudProperty.editor.step|default('0.01'),
     }
 } %}
