@@ -4,7 +4,7 @@
     {% if blog.post is defined %}
         {% set title = (blog.post.headerTitle ~ i18n('title_separator', {en: ' | ', de: ' | '}) ~ blog.category.name) %}
     {% else %}
-        {% set title = (blog.category is defined ? blog.category.name : i18n('plugin_blog_frontend_blog_home', {en: 'Blog', de: 'Blog'}))) %}
+        {% set title = (blog.category is defined ? blog.category.name : i18n('plugin_blog_frontend_blog_home', {en: 'Blog', de: 'Blog'})) %}
     {% endif %}
     {{ title|length > 35 ? title|slice(0, 35) : title }}{{ i18n('title_separator', {en: ' | ', de: ' | '}) }}{{ config('system_project_name') }}
 {% endblock title %}
