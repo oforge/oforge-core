@@ -57,7 +57,7 @@ class SecureMiddleware {
         } else {
             $permission = ['role' => null, 'type' => $this->userClass];
         }
-        if ($this->checkPermission($user, $permission)) {
+        if (static::checkUserPermission($user, $permission)) {
             //nothing to do. proceed
         } else {
             Oforge()->View()->assign(['stopNext' => true]);
@@ -85,11 +85,11 @@ class SecureMiddleware {
 
     /**
      * @param array|null $user
-     * @param array $permission
+     * @param array|null $permission
      *
      * @return bool
      */
-    protected function checkPermission(?array $user, ?array $permission) {
+    public static function checkUserPermission(?array $user, ?array $permission) {
         return ($user !== null && $permission !== null
                 && isset($user['role'])
                 && isset($user['type'])
