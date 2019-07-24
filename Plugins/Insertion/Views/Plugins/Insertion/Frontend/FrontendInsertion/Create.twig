@@ -1,12 +1,12 @@
 {% extends "@parent/Frontend/Layout.twig" %}
-{% set grid_box_classes = 'grid-box--extended' %}
+
 {% block content %}
     {% include 'Plugins/FrontendUserManagement/Frontend/Components/AccountNavBar.twig'
         with { back_link : true, content_title: i18n('insertions_create', 'Create Insertion')} %}
 
     <div class="content content--insertions">
         {% block insertions %}
-            <div class="panel panel--insertions flex">
+            <div class="panel panel--insertions flex insertion-create">
 
                 {% block insertions_content %}
                     {% set content = content('insertion_create_' ~ meta.language) %}
@@ -15,12 +15,13 @@
                     {% endif %}
                 {% endblock insertions_content %}
 
-                <div class="grid-boxes grid-boxes--2">
+                <div class="insertion-create__type-overview">
                     {% for type in types %}
-                        <div class="grid-box {{ grid_box_classes }}">
+
+                        <div class="insertion-create__type">
 
                             <a href="{% if type.children is defined %}{{ url('insertions_createType', { type : type.id}) }}{% else %}{{ url('insertions_createSteps', { type : type.id, page: 1}) }}{% endif %}"
-                               class="grid-box__content flex flex--center flex--justify">
+                               class="">
                                 {% if type.image.id is defined %}
                                     <img class="icon icon--large icon--light icon--inverted"
                                          src="{{ media(type.image.id, 300) }}" />
@@ -29,14 +30,9 @@
                                         <use xlink:href="#top_inserat"></use>
                                     </svg>
                                 {% endif %}
-                                <span class="grid-box__text">{{ i18n(type.name) }}</span>
-                                <ul class="grid-box__sub-items">
-                                    {% for child in type.children %}
-                                        <li class="grid-box__sub-item">
-                                            {{ i18n(child.name) }}
-                                        </li>
-                                    {% endfor %}
-                                </ul>
+                                <h2 class="type--name">{{ i18n(type.name) }}</h2>
+                                <span class="type--description">{{ i18n('insertion_create_type_description_' ~ type.name) }}</span>
+
                             </a>
                         </div>
                     {% endfor %}
