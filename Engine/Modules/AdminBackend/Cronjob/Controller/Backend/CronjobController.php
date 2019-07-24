@@ -110,8 +110,11 @@ class CronjobController extends BaseCrudController {
     /** @var int|array<string,int> $crudPermission */
     protected $crudPermissions = BackendUser::ROLE_ADMINISTRATOR;
 
-    public function __construct() {
-        parent::__construct();
+    public function initPermissions() {
+        parent::initPermissions();
+        $this->ensurePermissions([
+            'runAction',
+        ], BackendUser::ROLE_ADMINISTRATOR);
     }
 
     /** @EndpointAction(create=false) */
