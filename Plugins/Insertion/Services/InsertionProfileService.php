@@ -6,6 +6,7 @@ use FrontendUserManagement\Models\User;
 use Insertion\Models\InsertionProfile;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Media\Services\MediaService;
+use Oforge\Engine\Modules\I18n\Helper\I18N;
 
 class InsertionProfileService extends AbstractDatabaseAccess {
     public function __construct() {
@@ -76,6 +77,15 @@ class InsertionProfileService extends AbstractDatabaseAccess {
             }
         }
 
+        $imprintWebsite = $params["imprint_website"];
+        $disallowed = array('http://', 'https://');
+
+        foreach($disallowed as $d) {
+            if(strpos($imprintWebsite, $d) === 0) {
+                return str_replace($d, '', $imprintWebsite);
+            }
+        }
+
         $result->fromArray([
             "description"          => $params["description"],
             "user"                 => $user,
@@ -85,6 +95,8 @@ class InsertionProfileService extends AbstractDatabaseAccess {
             "imprintPhone"         => $params["imprint_phone"],
             "imprintFax"           => $params["imprint_fax"],
             "imprintEmail"         => $params["imprint_email"],
+            "imprintFacebook"      => $params["imprint_facebook"],
+            "imprintWebsite"       => $imprintWebsite,
             "imprintCompanyTaxId"  => $params["imprint_company_tax"],
             "imprintCompanyNumber" => $params["imprint_company_number"],
         ]);

@@ -36,6 +36,15 @@
         width: 4rem;
         height: 4rem;
     }
+    .user__image {
+        flex: 0 0 auto;
+        width: 4rem;
+        height: 4rem;
+        border-radius: 100%;
+        background-color: $color-primary-light;
+        background-image: url('/Themes/AllYourHorses/Frontend/__assets/img/profile_image_placeholder.svg');
+    }
+
 }
 
 .chat-list {

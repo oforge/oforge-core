@@ -160,7 +160,7 @@ class FrontendInsertionController extends SecureFrontendController
         $service = Oforge()->Services()->get('insertion.type');
         $types = $service->getInsertionTypeTree($typeId);
         $result['types'] = $types;
-
+        $result['type'] = $service->getInsertionTypeById($typeId)->toArray();
         Oforge()->View()->assign($result);
     }
 
