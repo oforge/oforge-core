@@ -98,6 +98,15 @@ class MailService {
                         $mail->addAttachment($key, $value);
                     }
                 }
+                /** Generate Base-Url for Media */
+                $conversationLink = 'http://';
+                if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+                    $conversationLink = 'https://';
+                }
+
+                $conversationLink .= $_SERVER['HTTP_HOST'];
+                $templateData['baseUrl'] = $conversationLink;
+
                 /** Render HTML */
                 $renderedTemplate = $this->renderMail($options,$templateData);
 
@@ -167,6 +176,8 @@ class MailService {
      * @throws Twig_Error_Syntax
      */
     public function renderMail(array $options, array $templateData) {
+
+
 
         $templateManagementService = Oforge()->Services()->get("template.management");
         $templateName = $templateManagementService->getActiveTemplate()->getName();
