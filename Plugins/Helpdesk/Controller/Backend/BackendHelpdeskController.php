@@ -192,7 +192,7 @@ class BackendHelpdeskController extends SecureBackendController {
             'template' => 'NewMessage.twig',
         ];
         $templateData = [
-            'conversationLink' => $conversationLink, // TODO : Full Path to ConversationId
+            'conversationLink' => $conversationLink,
             'receiver_name'    => $user->getDetail()->getNickName(),
             'sender_mail'      => $mailService->getSenderAddress('no_reply'),
         ];
