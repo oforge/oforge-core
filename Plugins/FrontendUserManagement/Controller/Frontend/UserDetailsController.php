@@ -4,7 +4,6 @@ namespace FrontendUserManagement\Controller\Frontend;
 
 use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Abstracts\SecureFrontendController;
-use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\UserAddressService;
 use FrontendUserManagement\Services\UserDetailsService;
 use FrontendUserManagement\Services\UserService;
@@ -189,9 +188,11 @@ class UserDetailsController extends SecureFrontendController {
     }
 
     public function initPermissions() {
-        $this->ensurePermissions('indexAction', User::class);
-        $this->ensurePermissions('process_detailsAction', User::class);
-        $this->ensurePermissions('process_addressAction', User::class);
+        $this->ensurePermissions([
+            'indexAction',
+            'process_detailsAction',
+            'process_addressAction',
+        ]);
     }
 
 }

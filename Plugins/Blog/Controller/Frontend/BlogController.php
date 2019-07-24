@@ -13,7 +13,6 @@ use Blog\Services\RatingService;
 use Doctrine\ORM\ORMException;
 use Exception;
 use FrontendUserManagement\Abstracts\SecureFrontendController;
-use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\FrontendUserService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
@@ -59,11 +58,15 @@ class BlogController extends SecureFrontendController {
     }
 
     public function initPermissions() {
-        $this->ensurePermissions('indexAction', User::class, BlogPermission::PUBLIC);
-        $this->ensurePermissions('viewPostAction', User::class, BlogPermission::PUBLIC);
-        $this->ensurePermissions('createCommentAction', User::class, BlogPermission::LOGGED);
-        $this->ensurePermissions('deleteCommentAction', User::class, BlogPermission::LOGGED);
-        $this->ensurePermissions('leaveRatingAction', User::class, BlogPermission::LOGGED);
+        $this->ensurePermissions([
+            'indexAction',
+            'viewPostAction',
+        ], BlogPermission::PUBLIC);
+        $this->ensurePermissions([
+            'createCommentAction',
+            'deleteCommentAction',
+            'leaveRatingAction',
+        ], BlogPermission::LOGGED);
     }
 
     /**

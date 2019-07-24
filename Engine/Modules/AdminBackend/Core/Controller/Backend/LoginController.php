@@ -24,8 +24,10 @@ use Slim\Router;
 class LoginController extends SecureBackendController {
 
     public function initPermissions() {
-        $this->ensurePermissions('indexAction', BackendUser::class, BackendUser::ROLE_PUBLIC);
-        $this->ensurePermissions('processAction', BackendUser::class, BackendUser::ROLE_PUBLIC);
+        $this->ensurePermissions([
+            'indexAction',
+            'processAction',
+        ], BackendUser::ROLE_PUBLIC);
     }
 
     /**

@@ -2,28 +2,21 @@
 
 namespace Insertion\Controller\Frontend;
 
-use Doctrine\DBAL\Schema\View;
-use Doctrine\ORM\Event\OnFlushEventArgs;
 use FrontendUserManagement\Abstracts\SecureFrontendController;
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\FrontendUserService;
 use FrontendUserManagement\Services\UserDetailsService;
 use FrontendUserManagement\Services\UserService;
-use Insertion\Models\InsertionType;
 use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Services\InsertionBookmarkService;
-use Insertion\Services\InsertionCreatorService;
-use Insertion\Services\InsertionFeedbackService;
 use Insertion\Services\InsertionListService;
 use Insertion\Services\InsertionProfileService;
 use Insertion\Services\InsertionSearchBookmarkService;
 use Insertion\Services\InsertionService;
 use Insertion\Services\InsertionTypeService;
 use Insertion\Services\InsertionUpdaterService;
-use Oforge\Engine\Modules\CMS\Bootstrap;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
-use Oforge\Engine\Modules\Core\Helper\StringHelper;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -428,18 +421,21 @@ class FrontendUsersInsertionController extends SecureFrontendController {
     }
 
     public function initPermissions() {
-        $this->ensurePermissions('accountListAction', User::class);
-        $this->ensurePermissions('bookmarksAction', User::class);
-        $this->ensurePermissions('searchBookmarksAction', User::class);
-        $this->ensurePermissions('modifyInsertion', User::class);
-        $this->ensurePermissions('disableAction', User::class);
-        $this->ensurePermissions('pageAction', User::class);
-        $this->ensurePermissions('deleteAction', User::class);
-        $this->ensurePermissions('activateAction', User::class);
-        $this->ensurePermissions('indexAction', User::class);
-        $this->ensurePermissions('toggleBookmarkAction', User::class);
-        $this->ensurePermissions('toggleSearchBookmarkAction', User::class);
-        $this->ensurePermissions('profileAction', User::class);
-        $this->ensurePermissions('removeBookmarkAction', User::class);
+        $this->ensurePermissions([
+            'accountListAction',
+            'bookmarksAction',
+            'searchBookmarksAction',
+            'modifyInsertion',
+            'disableAction',
+            'pageAction',
+            'deleteAction',
+            'activateAction',
+            'deleteAction',
+            'indexAction',
+            'toggleBookmarkAction',
+            'toggleSearchBookmarkAction',
+            'profileAction',
+            'removeBookmarkAction',
+        ]);
     }
 }

@@ -122,6 +122,6 @@ class MessengerController extends SecureFrontendController {
      * @throws ServiceNotFoundException
      */
     public function initPermissions() {
-        $this->ensurePermissions("indexAction", User::class);
+        $this->ensurePermission('indexAction');
     }
 }
