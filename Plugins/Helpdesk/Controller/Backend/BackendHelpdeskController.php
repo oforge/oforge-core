@@ -201,7 +201,9 @@ class BackendHelpdeskController extends SecureBackendController {
     public function initPermissions() {
         $this->ensurePermissions([
             'indexAction',
+            'closeTicketAction',
             'messengerAction',
+            'sendNewMessageInfoMail',
         ], BackendUser::ROLE_MODERATOR);
     }
 

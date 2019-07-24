@@ -124,6 +124,9 @@ class BackendHelpdeskSettingsController extends SecureBackendController {
     /**
      */
     public function initPermissions() {
-        $this->ensurePermission('indexAction', BackendUser::ROLE_ADMINISTRATOR);
+        $this->ensurePermissions([
+            'indexAction',
+            'editAction',
+        ], BackendUser::ROLE_ADMINISTRATOR);
     }
 }
