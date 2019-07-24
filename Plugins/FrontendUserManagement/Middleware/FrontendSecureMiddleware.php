@@ -28,7 +28,7 @@ class FrontendSecureMiddleware extends SecureMiddleware {
     }
 
     /** @inheritDoc */
-    protected function checkPermission($user, $permission) {
+    public static function checkUserPermission($user, $permission) {
         // The frontend user has no role (yet). So we don't check the role.
         return ($user !== null && isset($user['type']) && $user['type'] === $permission['type']);
     }
