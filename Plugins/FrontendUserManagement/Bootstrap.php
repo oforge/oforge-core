@@ -8,6 +8,7 @@ use FrontendUserManagement\Middleware\AccountNavigationMiddleware;
 use FrontendUserManagement\Middleware\FrontendSecureMiddleware;
 use FrontendUserManagement\Middleware\FrontendUserStateMiddleware;
 use FrontendUserManagement\Models\AccountNavigation;
+use FrontendUserManagement\Models\NickNameValue;
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Models\UserAddress;
 use FrontendUserManagement\Models\UserDetail;
@@ -38,6 +39,7 @@ class Bootstrap extends AbstractBootstrap {
             Controller\Frontend\AccountController::class,
             Controller\Frontend\UserDetailsController::class,
             Controller\Backend\BackendFrontendUserManagementController::class,
+            Controller\Backend\BackendNickNameGeneratorController::class,
         ];
 
         $this->middlewares = [
@@ -56,6 +58,7 @@ class Bootstrap extends AbstractBootstrap {
             User::class,
             UserDetail::class,
             UserAddress::class,
+            NickNameValue::class,
         ];
 
         $this->services = [
