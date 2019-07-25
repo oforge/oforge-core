@@ -96,6 +96,7 @@
             {% endif %}
 
             <div class="panel panel--contact contact">
+                {% if profile.imprintName is not empty %}
                 <div class="contact__name">
                     <strong>{{ profile.imprintName }}</strong></div>
                 {% endif %}
