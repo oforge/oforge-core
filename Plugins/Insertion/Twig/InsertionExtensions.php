@@ -209,9 +209,13 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
                 $insertionService = Oforge()->Services()->get('insertion');
                 /** @var Insertion $insertion */
                 $insertion = $insertionService->getInsertionById($vars[1]);
-
+                $insertionMedia = $insertion->getMedia()[0];
+                $imageId = null;
+                if (isset($insertionMedia)) {
+                    $imageId = $insertionMedia->getContent()->getId();
+                }
                 return [
-                    'imageId' => $insertion->getMedia()[0]->getContent()->getId(),
+                    'imageId' => $imageId,
                     'title'   => $insertion->getContent()[0]->getTitle(),
                 ];
             } else {
