@@ -21,6 +21,11 @@
     <div class="content content--insertion flex {% if profile.background.id is not empty %} has-header-image {% endif %}">
         <div class="main">
             <div class="panel panel--product-view">
+
+                {% block insertion_detail__breadcrumb %}
+                    {% include 'Plugins/Insertion/Frontend/Components/Breadcrumb.twig' %}
+                {% endblock insertion_detail__breadcrumb %}
+
                 {% block insertion_detail__heading %}
                     <div class="product-view--heading">
                         <h3 class="title title--3 title--product">{{ insertion.content[0].title }}</h3>
