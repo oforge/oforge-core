@@ -79,6 +79,18 @@ class Conversation extends AbstractModel {
     private $lastMessageTimestamp = null;
 
     /**
+     * @var \DateTime
+     * @ORM\Column(name="requester_last_seen", type="datetime", nullable=true);
+     */
+    private $requesterLastSeen = null;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="requested_last_seen, type="datetime", nullable=true);
+     */
+    private $requestedLastSeen = null;
+
+    /**
      * Triggered on insert
      *
      * @ORM\PrePersist
@@ -271,5 +283,37 @@ class Conversation extends AbstractModel {
         $this->requestedType = $requestedType;
 
         return $this;
+    }
+
+    /**
+     * @return \DateTime|null
+     */
+    public function getRequesterLastSeen() : ?\DateTime {
+        return $this->requesterLastSeen;
+    }
+
+    /**
+     * @param \DateTime $timestamp
+     *
+     * @return Conversation
+     */
+    public function setRequesterLastSeen(\DateTime $timestamp)  {
+        $this->requesterLastSeen = $timestamp;
+    }
+
+    /**
+     * @return \DateTime|null
+     */
+    public function getRequestedLastSeen() : ?\DateTime {
+        return $this->requestedLastSeen;
+    }
+
+    /**
+     * @param \DateTime $timestamp
+     *
+     * @return $this
+     */
+    public function setRequestedLastSeen(\DateTime $timestamp) {
+        $this->requestedLastSeen = $timestamp;
     }
 }
