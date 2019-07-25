@@ -6,7 +6,10 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Exception;
 use InvalidArgumentException;
+use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
+use Oforge\Engine\Modules\AdminBackend\Core\Middleware\BackendSecureMiddleware;
 use Oforge\Engine\Modules\AdminBackend\Core\Models\BackendNavigation;
+use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Auth\Services\PermissionService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistException;
@@ -247,23 +250,28 @@ class BackendNavigationService extends AbstractDatabaseAccess {
     private function filterTreeByPermission(PermissionService $permissionService, ?array $user, array &$array) {
         foreach ($array as $index => &$item) {
             $checkChildren = true;
-            if (!empty($item['path'])) {
+            if ($item['parent'] !== '0' && !empty($item['path'])) {
                 if (isset($this->activeEndpointsData[$item['path']])) {
                     $endpointData = $this->activeEndpointsData[$item['path']];
-
-                    $permissions = $permissionService->get($endpointData['class'], $endpointData['method']);
-
-                    $invalid = $user === null
-                               || !isset($user['role'])
-                               || $user['role'] > $permissions['role']
-                               || !isset($user['type'])
-                               || $user['type'] !== $permissions['type'];
-                    if ($invalid) {
-                        unset($array[$index]);
-                        $checkChildren = false;
+                    if (is_subclass_of($endpointData['class'], SecureBackendController::class)) {
+                        $permission = $permissionService->get($endpointData['class'], $endpointData['method']);
+                    } else {
+                        // backendController does not extends BackendSecureController or missing ensurePermissions
+                        $permission = null;
                     }
+                    if ($permission === null) {
+                        // default permissions
+                        $permission = ['role' => null, 'type' => BackendUser::class];
+                    }
+                    $removeItem = !BackendSecureMiddleware::checkUserPermission($user, $permission);
+                } else {
+                    // not of active endpoint
+                    $removeItem = true;
                 }
-
+                if ($removeItem) {
+                    unset($array[$index]);
+                    $checkChildren = false;
+                }
             }
             if ($checkChildren && isset($item['children'])) {
                 if ($checkChildren) {

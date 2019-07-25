@@ -200,10 +200,10 @@ class BackendInsertionTypeController extends SecureBackendController {
     }
 
     public function initPermissions() {
-        $this->ensurePermissions('deleteAction', BackendUser::class, BackendUser::ROLE_MODERATOR);
-        $this->ensurePermissions('indexAction', BackendUser::class, BackendUser::ROLE_MODERATOR);
-        $this->ensurePermissions('editAction', BackendUser::class, BackendUser::ROLE_MODERATOR);
-
-        parent::initPermissions();
+        $this->ensurePermissions([
+            'indexAction',
+            'deleteAction',
+            'editAction',
+        ], BackendUser::ROLE_MODERATOR);
     }
 }

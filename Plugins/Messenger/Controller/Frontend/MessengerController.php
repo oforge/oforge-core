@@ -50,7 +50,7 @@ class MessengerController extends SecureFrontendController {
         /** @var FrontendMessengerService $frontendMessengerService */ /** @var User $user */
         /** @var UserService $frontendUserService */
         $frontendMessengerService = Oforge()->Services()->get('frontend.messenger');
-        $user                     = Oforge()->View()->get('user');
+        $user                     = Oforge()->View()->get('current_user');
 
         /** @var Conversation[] $conversationList */
         $conversationList = $frontendMessengerService->getConversationList($user['id']);
@@ -118,6 +118,6 @@ class MessengerController extends SecureFrontendController {
     }
 
     public function initPermissions() {
-        $this->ensurePermissions("indexAction", User::class);
+        $this->ensurePermission('indexAction');
     }
 }

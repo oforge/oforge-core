@@ -70,7 +70,7 @@ class SystemSettingsController extends SecureBackendController {
                 return RouteHelper::redirect($response, null, ['group' => $args['group']]);
             }
             $groupConfigs = $configService->getGroupConfigs($args['group']);
-            $groupConfigs = array_map(function($config) {
+            $groupConfigs = array_map(function ($config) {
                 /** @var Config $config */
                 return $config->toArray();
             }, $groupConfigs);
@@ -91,7 +91,10 @@ class SystemSettingsController extends SecureBackendController {
     }
 
     public function initPermissions() {
-        $this->ensurePermissions('indexAction', BackendUser::class, BackendUser::ROLE_ADMINISTRATOR);
-        $this->ensurePermissions('groupIndexAction', BackendUser::class, BackendUser::ROLE_ADMINISTRATOR);
+        $this->ensurePermissions([
+            'indexAction',
+            'groupIndexAction',
+        ], BackendUser::ROLE_ADMINISTRATOR);
     }
+
 }

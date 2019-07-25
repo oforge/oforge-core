@@ -123,11 +123,11 @@ class RegistrationController extends AbstractController {
         $privacyNoticeAccepted = $body['frontend_registration_privacy_notice_accepted'];
         $referrer              = ArrayHelper::get($body, 'frontend_registration_referrer');
 
-        if (!isset($body['frontend_registration_nickname']) || empty($body['frontend_registration_nickname'])) {
-            $nickname = $userDetailService->generateNickname();
-        } else {
-            $nickname = $body['frontend_registration_nickname'];
-        }
+        // if (!isset($body['frontend_registration_nickname']) || empty($body['frontend_registration_nickname'])) {
+        //     $nickname = $userDetailService->generateNickname();
+        // } else {
+        //     $nickname = $body['frontend_registration_nickname'];
+        // }
 
         if (isset($referrer)) {
             $uri = $referrer;

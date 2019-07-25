@@ -39,8 +39,10 @@ class AnalyticsController extends SecureBackendController {
 
     /** @inheritdoc */
     public function initPermissions() {
-        $this->ensurePermissions('indexAction', BackendUser::class, BackendUser::ROLE_ADMINISTRATOR);
-        $this->ensurePermissions('refreshAction', BackendUser::class, BackendUser::ROLE_ADMINISTRATOR);
+        $this->ensurePermissions([
+            'indexAction',
+            'refreshAction',
+        ], BackendUser::ROLE_ADMINISTRATOR);
     }
 
 }

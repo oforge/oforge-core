@@ -16,8 +16,9 @@ use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
  * @package Oforge\Engine\Modules\Auth\Services
  */
 class BackendLoginService extends BaseLoginService {
+
     /**
-     * BackendAuthService constructor.
+     * BackendLoginService constructor.
      */
     public function __construct() {
         parent::__construct(BackendUser::class);
