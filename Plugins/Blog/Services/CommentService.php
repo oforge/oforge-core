@@ -181,18 +181,25 @@ class CommentService extends AbstractDatabaseAccess {
     public function getFilterDataUserNamesOfComments() : array {
         $result       = [];
         $queryBuilder = $this->getRepository(Comment::class)->createQueryBuilder('c')#
-                             ->select('ud')#
+                             ->select('fu.id, fu.email, fud.nickName, fud.firstName, fud.lastName')#
                              ->leftJoin('c.author', 'fu')#
-                             ->leftJoin(UserDetail::class, 'ud', 'WITH', 'ud.user = fu.id')#
-                             ->groupBy('ud.id')#
+                             ->leftJoin(UserDetail::class, 'fud', 'WITH', 'fud.user = fu.id')#
+                             ->groupBy('fu.id')#
                              ->distinct();
         if (ArrayHelper::issetNotEmpty($_GET, 'post')) {
             $queryBuilder = $queryBuilder->where('c.post = ?1')->setParameter(1, $_GET['post']);
         }
-        /** @var UserDetail[] $userDetails */
-        $userDetails = $queryBuilder->getQuery()->getResult();
-        foreach ($userDetails as $userDetail) {
-            $result[$userDetail->getId()] = $userDetail->getLastName() . ', ' . $userDetail->getFirstName();
+        /** @var UserDetail[] $entries */
+        $entries = $queryBuilder->getQuery()->getResult();
+        foreach ($entries as $entry) {
+            $name = $entry['nickName'];
+            if (empty($name)) {
+                $name = $entry['lastName'] . ', ' . $entry['firstName'];
+            }
+            if (empty($name) || strlen($name) === 2) {
+                $name = $entry['email'];
+            }
+            $result[$entry['id']] = $name;
         }
 
         return $result;

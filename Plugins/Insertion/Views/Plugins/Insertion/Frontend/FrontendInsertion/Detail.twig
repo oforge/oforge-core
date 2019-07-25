@@ -1,8 +1,8 @@
 {% extends "@parent/Frontend/Layout.twig" %}
 
-{% block title %}{% set title = insertion.content[0].title ~ i18n('title_separator') ~ i18n(insertion.insertionType.name) %}{{ title|length > 35 ? title|slice(0, 35) : title }}{{ i18n('title_separator') }}{{ config('system_project_name') }}{% endblock title %}
+{% block title %}{% set title = insertion.content[0].title ~ i18n('title_separator', {en: ' | ', de: ' | '}) ~ i18n(insertion.insertionType.name) %}{{ title|length > 35 ? title|slice(0, 35) : title }}{{ i18n('title_separator', {en: ' | ', de: ' | '}) }}{{ config('system_project_name') }}{% endblock title %}
 
-{% block description %}{% set description = insertion.content[0].description %}{{ description|length > 255 ? description|slice(0, 220) : description }}{{ i18n('title_separator') }}{{ config('system_project_name') }}{% endblock description %}
+{% block description %}{% set description = insertion.content[0].description %}{{ description|length > 255 ? description|slice(0, 220) : description }}{{ i18n('title_separator', {en: ' | ', de: ' | '}) }}{{ config('system_project_name') }}{% endblock description %}
 
 
 {% block layout__header %}
