@@ -11,6 +11,11 @@
 {% set page_header = i18n(meta.route.parentName) %}
 {% set page_header_description = i18n('backend_crud_btn_' ~ crud.context, crud.context) %}
 
+{% block sidebar %}
+    {% set breadcrumbsmap = backend_breadcrumbs_map(meta.route.parentName) %}
+    {{ parent() }}
+{% endblock %}
+
 {% block pagecontent %}
     <section class="content">
         {% include 'Backend/CRUD/Components/Form.twig' with { item: crud.item } %}

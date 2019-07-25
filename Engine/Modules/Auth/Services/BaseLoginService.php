@@ -25,7 +25,7 @@ class BaseLoginService extends AbstractDatabaseAccess {
     /**
      * BaseLoginService constructor.
      *
-     * @param $models
+     * @param string|array $models
      */
     public function __construct($models) {
         parent::__construct($models);
@@ -44,23 +44,24 @@ class BaseLoginService extends AbstractDatabaseAccess {
     public function login(string $email, string $password) {
         /** @var AuthService $authService */
         $authService = Oforge()->Services()->get('auth');
-
         /** @var PasswordService $passwordService */
         $passwordService = Oforge()->Services()->get('password');
-
-        /** @var BaseUser $user */
-        $user = $this->repository()->findOneBy(['email' => $email]);//TODO include 'active' => true ?
-
+        /** @var BaseUser|null $user */
+        $user = $this->repository()->findOneBy([
+            'email'  => $email,
+            'active' => true,
+        ]);
         if (isset($user)) {
             if ($passwordService->validate($password, $user->getPassword())) {
-                $userObj = $user->toArray(1);
-                unset($userObj['password']);
-                $userObj['type'] = get_class($user);
+                $userData = $user->toArray(1);
+                unset($userData['password']);
+                $userData['type'] = get_class($user);
 
-                return $authService->createJWT($userObj);
+                return $authService->createJWT($userData);
             }
         }
 
         return null;
     }
+
 }

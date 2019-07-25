@@ -6,7 +6,6 @@ if (typeof Oforge !== 'undefined') {
             var self = this;
             var floatingButton = document.querySelector(self.selector);
             var insertionSidebar = floatingButton.closest('.insertion__sidebar');
-            var searchForm = document.querySelector('#form-search')
             var raf = window.requestAnimationFrame ||
                 window.webkitRequestAnimationFrame ||
                 window.mozRequestAnimationFrame ||
@@ -24,20 +23,6 @@ if (typeof Oforge !== 'undefined') {
                 ticking = true;
             }
 
-            //Check if any input has been filled out
-            function isFormFilled() {
-                var inputs = searchForm.getElementsByTagName('input');
-                for (var i = 0; i < inputs.length; i++) {
-                    if (inputs[i].value !== "" && inputs[i].type !== 'submit') {
-                        if (inputs[i].type === 'checkbox' && !inputs[i].checked) {
-                            continue;
-                        }
-                        return true;
-                    }
-                }
-                return false;
-            }
-
             function onScroll() {
                 floatingButtonPos = floatingButton.getBoundingClientRect().bottom;
                 lastInsertionSidebarPos = insertionSidebarPos;
@@ -45,16 +30,7 @@ if (typeof Oforge !== 'undefined') {
                 requestTick();
             }
 
-            function onFormChange() {
-                requestTick();
-            }
-
             function update() {
-                if (isFormFilled()) {
-                    floatingButton.classList.add('is-visible')
-                } else {
-                    floatingButton.classList.remove('is-visible');
-                }
                 if (floatingButtonPos > insertionSidebarPos && (lastInsertionSidebarPos === 0 || lastInsertionSidebarPos > insertionSidebarPos)) {
                     floatingButton.classList.add('position-static');
 
@@ -67,10 +43,7 @@ if (typeof Oforge !== 'undefined') {
             window.addEventListener('scroll', function (evt) {
                 onScroll();
             });
-
-            $(searchForm).on('change', function(evt) {
-                onFormChange();
-            })
+            onScroll();
         }
     });
 } else {
