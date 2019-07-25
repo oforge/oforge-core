@@ -93,7 +93,9 @@ class RegistrationController extends AbstractController {
         }
 
         $registrationService = Oforge()->Services()->get('frontend.user.management.registration');
+        /** @var UserDetailsService $userDetailService */
         $userDetailService   = Oforge()->Services()->get('frontend.user.management.user.details');
+        /** @var Router $router */
         $router              = Oforge()->App()->getContainer()->get('router');
 
         /** @var RedirectService $redirectService */
@@ -121,11 +123,11 @@ class RegistrationController extends AbstractController {
         $privacyNoticeAccepted = $body['frontend_registration_privacy_notice_accepted'];
         $referrer              = ArrayHelper::get($body, 'frontend_registration_referrer');
 
-        if (!isset($body['frontend_registration_nickname']) || empty($body['frontend_registration_nickname'])) {
-            $nickname = $userDetailService->generateNickname();
-        } else {
-            $nickname = $body['frontend_registration_nickname'];
-        }
+        // if (!isset($body['frontend_registration_nickname']) || empty($body['frontend_registration_nickname'])) {
+        //     $nickname = $userDetailService->generateNickname();
+        // } else {
+        //     $nickname = $body['frontend_registration_nickname'];
+        // }
 
         if (isset($referrer)) {
             $uri = $referrer;
@@ -154,7 +156,7 @@ class RegistrationController extends AbstractController {
         /**
          * no email or password body was sent
          */
-        if (!$email || !$nickname || !$password || !$passwordConfirm || !$privacyNoticeAccepted) {
+        if (!$email || !$password || !$passwordConfirm || !$privacyNoticeAccepted) {
             Oforge()->View()->Flash()->addMessage('warning', I18N::translate('form_invalid_data', 'Invalid form data.'));
 
             return $response->withRedirect($uri, 302);
@@ -173,7 +175,7 @@ class RegistrationController extends AbstractController {
         $passwordService = Oforge()->Services()->get('password');
         $password        = $passwordService->hash($password);
         $user            = $registrationService->register($email, $password);
-        $userDetail      = $userDetailService->save(['userId' => $user['id'], 'nickname' => $nickname]);
+        $userDetailService->save(['userId' => $user['id'], 'nickname' => $nickname]);
 
         /**
          * Registration failed
