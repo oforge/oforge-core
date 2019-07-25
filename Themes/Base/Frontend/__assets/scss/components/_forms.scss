@@ -355,16 +355,23 @@
 
 #floating-button {
     position: fixed;
-    z-index: 3;
+    z-index: 4;
     bottom: $size-large;
     width: calc(100% - 1.2rem);
-    transition: bottom .2s ease-in, width .2s ease-in;
+    opacity: 0;
+    transition: all .2s ease-in, width .2s ease-in;
+
+    &.is-visible {
+        opacity: 1;
+        transition: opacity 100ms ease-in-out;
+    }
 
     &.position-static {
         position: static;
         width: 100%;
         bottom: 0;
         box-shadow: none;
+        opacity: 1;
     }
 }
 
@@ -455,6 +462,7 @@
 @media screen and (min-width: $screen-large) {
     #floating-button {
         width: 27.6rem;
+        opacity: 1;
 
         &.position-static {
             width: 27.6rem;
