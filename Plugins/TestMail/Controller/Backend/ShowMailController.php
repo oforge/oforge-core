@@ -23,6 +23,6 @@ class ShowMailController extends SecureBackendController {
         return $response;
     }
     public function initPermissions() {
-        $this->ensurePermissions('indexAction', BackendUser::class, BackendUser::ROLE_ADMINISTRATOR);
+        $this->ensurePermission('indexAction', BackendUser::ROLE_ADMINISTRATOR);
     }
 }

@@ -3,8 +3,9 @@
 namespace Oforge\Engine\Modules\AdminBackend\Core\Controller\Backend;
 
 use Exception;
+use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
+use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Auth\Services\BackendLoginService;
-use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
@@ -19,18 +20,31 @@ use Slim\Http\Response;
  * @package Oforge\Engine\Modules\AdminBackend\Core\Controller\Backend
  * @EndpointClass(path="/backend/login", name="backend_login", assetScope="Backend")
  */
-class LoginController extends AbstractController {
+class LoginController extends SecureBackendController {
+
+    public function initPermissions() {
+        $this->ensurePermissions([
+            'indexAction',
+            'processAction',
+        ], BackendUser::ROLE_PUBLIC);
+    }
 
     /**
      * @param Request $request
      * @param Response $response
      *
+     * @return Response
      * @throws Exception
      * @EndpointAction()
      */
     public function indexAction(Request $request, Response $response) {
         // for creating a user if no user exists in dev environment:
         // $2y$10$fnI/7By7ojrwUv51JRi.K.yskzFSy0N4iiE6VheIJUh6ln1EsYWSi <<<<< geheim
+        if (isset($_SESSION['auth']) && !isset($_SESSION['login_redirect_url'])) {
+            return RouteHelper::redirect($response, 'backend_dashboard');
+        }
+
+        return $response;
     }
 
     /**

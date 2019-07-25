@@ -2,8 +2,6 @@
 
 namespace Oforge\Engine\Modules\Mailer\Services;
 
-use FrontendUserManagement\Models\User;
-use FrontendUserManagement\Services\FrontendUserService;
 use InvalidArgumentException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
@@ -12,7 +10,6 @@ use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
-use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\Media\Twig\MediaExtension;
 use Oforge\Engine\Modules\TemplateEngine\Core\Twig\CustomTwig;
 use Oforge\Engine\Modules\TemplateEngine\Core\Twig\TwigOforgeDebugExtension;
@@ -20,8 +17,6 @@ use Oforge\Engine\Modules\TemplateEngine\Extensions\Twig\AccessExtension;
 use Oforge\Engine\Modules\TemplateEngine\Extensions\Twig\SlimExtension;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
-use Pimple\Tests\Fixtures\Service;
-use Slim\Router;
 use Twig_Error_Loader;
 use Twig_Error_Runtime;
 use Twig_Error_Syntax;
@@ -56,8 +51,9 @@ class MailService {
     public function send(array $options, array $templateData = []) {
         if ($this->isValid($options)) {
             try {
-
-               /** @var  $configService */
+                /**
+                 * @var $configService ConfigService
+                 */
                 $configService = Oforge()->Services()->get("config");
                 $exceptions    = $configService->get("mailer_exceptions");
 
@@ -167,7 +163,7 @@ class MailService {
     }
 
     /**
-     * Loads minimal Twig Environment and returns rendered HTML - Template with inlined CSS from active Theme.
+     * Loads minimal Twig Environment and returns rendered Template from active Theme.
      * If specified Template does not exists in active Theme -> Fallback to Base Theme
      *
      * @param array $options
@@ -180,6 +176,8 @@ class MailService {
      * @throws Twig_Error_Syntax
      */
     public function renderMail(array $options, array $templateData) {
+
+
 
         $templateManagementService = Oforge()->Services()->get("template.management");
         $templateName = $templateManagementService->getActiveTemplate()->getName();
@@ -196,13 +194,7 @@ class MailService {
         $twig->addExtension(new SlimExtension());
         $twig->addExtension(new TwigOforgeDebugExtension());
 
-        /** @var string $html */
-        $html =  $twig->fetch($template = $options['template'], $data = $templateData);
-
-        /** @var  $inlineCssService */
-        $inlineCssService = Oforge()->Services()->get('inline.css');
-
-        return $inlineCssService->renderInlineCss($html);
+        return $twig->fetch($template = $options['template'], $data = $templateData);
     }
 
     /**
@@ -226,49 +218,6 @@ class MailService {
 
         $senderAddress = $sender . '@' . $host;
         return $senderAddress;
-    }
-
-    /**
-     * @param $userId
-     * @param $conversationId
-     *
-     * @throws ConfigElementNotFoundException
-     * @throws ConfigOptionKeyNotExistException
-     * @throws ServiceNotFoundException
-     * @throws Twig_Error_Loader
-     * @throws Twig_Error_Runtime
-     * @throws Twig_Error_Syntax
-     */
-    public function sendNewMessageInfoMail($userId, $conversationId) {
-
-        /** @var  FrontendUserService $userService */ /** @var  Router $router */ /** @var MailService $mailService */
-        $router = Oforge()->App()->getContainer()->get('router');
-        $userService   = Oforge()->Services()->get('frontend.user.management.user');
-
-        /** @var User $user */
-        $user          = $userService->getUserbyId($userId);
-        $uri = $router->pathFor('frontend_account_messages') . DIRECTORY_SEPARATOR . $conversationId;
-
-        $conversationLink = 'http://';
-        if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
-            $conversationLink = 'https://';
-        }
-        $conversationLink .= $_SERVER['HTTP_HOST'];
-        $conversationLink .= $uri;
-
-        $userMail = $user->getEmail();
-        $mailerOptions = [
-            'to'       => [$userMail => $userMail],
-            'from'     => 'no_reply',
-            'subject'  => I18N::translate('mailer_subject_new_message'),
-            'template' => 'NewMessage.twig',
-        ];
-        $templateData = [
-            'conversationLink' => $conversationLink,
-            'receiver_name'    => $user->getDetail()->getNickName(),
-            'sender_mail'      => $mailService->getSenderAddress('no_reply'),
-        ];
-        $this->send($mailerOptions, $templateData);
     }
 
     public function batchSend() {
