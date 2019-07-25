@@ -184,7 +184,7 @@ class Insertion extends AbstractModel {
     }
 
     /**
-     * @return InsertionMedia[]
+     * @return object|null
      */
     public function getMedia() : ?object {
         return $this->media;
