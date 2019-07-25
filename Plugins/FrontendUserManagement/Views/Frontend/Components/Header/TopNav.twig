@@ -3,7 +3,7 @@
 {% block top_nav_links %}
     {{ parent() }}
     <li class="top-nav-list__item item--login">
-        <a href="{{ user_logged_in ? url('frontend_account_dashboard') : url('frontend_login_registration') }}" title="Login">
+        <a href="{{ user_logged_in ? url('frontend_account_dashboard') : url('frontend_login_registration') }}" title="{{ user_logged_in ? i18n('frontend_account_dashboard_title', 'Mein Dashboard') : i18n('frontend_login_registration_title', 'Zum Login')}}">
             <svg class="icon icon--secondary icon--profil">
                 <use xlink:href="#profile"></use>
             </svg>
