@@ -182,6 +182,8 @@ class UserManagementController extends BaseCrudController {
     protected $indexOrderBy = [
         'email' => CrudGroubByOrder::ASC,
     ];
+    /** @var int|array<string,int> $crudPermission */
+    protected $crudPermissions = BackendUser::ROLE_ADMINISTRATOR;
 
     /** @return array */
     public function getSelectRoles() : array {
