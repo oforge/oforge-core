@@ -14,11 +14,13 @@ use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\Mailer\Services\MailService;
 use phpDocumentor\Reflection\Types\Integer;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Slim\Router;
 
 /**
  * Class BackendHelpdeskController
@@ -150,7 +152,7 @@ class BackendHelpdeskController extends SecureBackendController {
             $conversation = $helpdeskMessengerService->getConversationsByTarget($ticketId, 'helpdesk');
 
             if (sizeof($conversation) > 0) {
-                $conversation = $conversation[0];
+                $conversation = $conversation[0];g
             }
 
             $messages = $helpdeskMessengerService->getMessagesOfConversation($conversation['id']);
