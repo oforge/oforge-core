@@ -8,16 +8,18 @@
 
 namespace Oforge\Engine\Modules\UserManagement\Controller\Backend;
 
+use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
+use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
 use Oforge\Engine\Modules\UserManagement\Services\BackendUsersCrudService;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Slim\Router;
 
 /**
  * Class ProfileController
@@ -25,7 +27,15 @@ use Slim\Router;
  * @package Oforge\Engine\Modules\UserManagement\Controller\Backend
  * @EndpointClass(path="/backend/profile", name="backend_profile", assetScope="Backend")
  */
-class ProfileController {
+class ProfileController extends SecureBackendController {
+
+    public function initPermissions() {
+        $this->ensurePermissions([
+            'indexAction',
+            'updateAction',
+        ], BackendUser::ROLE_MODERATOR);
+    }
+
     /**
      * @param Request $request
      * @param Response $response
@@ -80,10 +90,7 @@ class ProfileController {
             $_SESSION['auth'] = $authService->createJWT($user);
         }
 
-        /** @var Router $router */
-        $router = Oforge()->App()->getContainer()->get('router');
-
-        return $response->withRedirect($router->pathFor('backend_profile'), 302);
+        return RouteHelper::redirect($response, 'backend_profile');
     }
 
 }

@@ -5,8 +5,6 @@
         {# Sidebar Menu #}
         <ul class="sidebar-menu" data-widget="tree">
             {% set navigation = backend_sidebar_navigation() %}
-{#            {{ o_dump(navigation) }}#}
-
             {% for item in navigation %}
                 {% include 'Backend/Master/Components/Sidebar/Root.twig' with item %}
             {% endfor %}

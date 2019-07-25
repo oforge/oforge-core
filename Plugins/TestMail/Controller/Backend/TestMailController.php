@@ -42,9 +42,11 @@ class TestMailController extends SecureBackendController {
         //
     }
     public function initPermissions() {
-        $this->ensurePermissions('indexAction', BackendUser::class, BackendUser::ROLE_ADMINISTRATOR);
-        $this->ensurePermissions('sendAction', BackendUser::class, BackendUser::ROLE_ADMINISTRATOR);
-        $this->ensurePermissions('showAction', BackendUser::class, BackendUser::ROLE_ADMINISTRATOR);
+        $this->ensurePermissions([
+            'indexAction',
+            'sendAction',
+            'showAction',
+        ], BackendUser::ROLE_ADMINISTRATOR);
     }
 
 }

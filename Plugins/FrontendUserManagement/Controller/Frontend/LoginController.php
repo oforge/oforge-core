@@ -27,6 +27,7 @@ class LoginController extends AbstractController {
      * @param Request $request
      * @param Response $response
      *
+     * @return Response
      * @throws ServiceNotFoundException
      * @EndpointAction()
      */
@@ -34,6 +35,11 @@ class LoginController extends AbstractController {
         /** @var RedirectService $redirectService */
         $redirectService = Oforge()->Services()->get('redirect');
         $redirectService->setRedirectUrlName('frontend_login');
+        // if (Oforge()->View()->get('user_logged_in', false)) {
+        //     return RouteHelper::redirect($response, 'frontend_account_dashboard');
+        // }
+
+        return $response;
     }
 
     /**
@@ -131,10 +137,10 @@ class LoginController extends AbstractController {
         $_SESSION['user_logged_in'] = true;
 
         if (!isset($referrer)) {
-            if (isset($_SESSION["login_redirect_url"])) {
-                $referrer = $_SESSION["login_redirect_url"];
-                $uri = $referrer;
-                unset($_SESSION["login_redirect_url"]);
+            if (isset($_SESSION['login_redirect_url'])) {
+                $referrer = $_SESSION['login_redirect_url'];
+                $uri      = $referrer;
+                unset($_SESSION['login_redirect_url']);
             }
         }
 
