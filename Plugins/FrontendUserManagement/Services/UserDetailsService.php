@@ -92,4 +92,21 @@ class UserDetailsService extends AbstractDatabaseAccess {
 
         return $user;
     }
+
+    public function generateNickname() {
+        do {
+            $query     = "SELECT n.value FROM frontend_user_nickname_generator as n WHERE sort_order = 1 ORDER BY RAND() LIMIT 1";
+            $sqlResult = $this->entityManager()->getEntityManager()->getConnection()->executeQuery($query);
+            $attribute = $sqlResult->fetchAll()[0]['value'];
+
+            $query     = "SELECT n.value FROM frontend_user_nickname_generator as n WHERE sort_order = 2 ORDER BY RAND() LIMIT 1";
+            $sqlResult = $this->entityManager()->getEntityManager()->getConnection()->executeQuery($query);
+            $race      = $sqlResult->fetchAll()[0]['value'];
+
+            $nickname     = $attribute . $race . rand(0, 9) . rand(0, 9) . rand(0, 9);
+            $existingUser = $this->repository()->findOneBy(['nickName' => $nickname]);
+        } while (!is_null($existingUser));
+
+        return $nickname;
+    }
 }
