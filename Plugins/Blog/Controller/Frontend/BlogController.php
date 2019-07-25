@@ -191,8 +191,13 @@ class BlogController extends SecureFrontendController {
         if ($request->isPost() && !empty($postData)) {
             $userID  = ArrayHelper::get($postData, 'userID');
             $comment = ArrayHelper::get($postData, 'comment');
-            if (!empty($userID) && !empty($comment) && $userID == Oforge()->View()->get('current_user.id')) {
-                $twigFlash = Oforge()->View()->Flash();
+            $twigFlash = Oforge()->View()->Flash();
+            if (empty($userID) || empty($comment) || $userID != Oforge()->View()->get('current_user.id')) {
+                $twigFlash->addMessage('warning', I18N::translate('plugin_blog_comment_user_not_logged_in', [
+                    'en' => 'You must be logged in to leave a comment.',
+                    'de' => 'Sie müssen angemeldet sein, um einen Kommentar zu hinterlassen.',
+                ]));
+            } else {
                 try {
                     $this->commentService->createComment([
                         'author'  => $userID,
