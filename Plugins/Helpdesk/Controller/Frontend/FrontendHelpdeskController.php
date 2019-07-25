@@ -4,7 +4,6 @@ namespace Helpdesk\Controller\Frontend;
 
 use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Abstracts\SecureFrontendController;
-use FrontendUserManagement\Models\User;
 use Helpdesk\Services\HelpdeskTicketService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
@@ -31,7 +30,7 @@ class FrontendHelpdeskController extends SecureFrontendController {
      * @EndpointAction()
      */
     public function indexAction(Request $request, Response $response) {
-        $user = Oforge()->View()->get('user');
+        $user = Oforge()->View()->get('current_user');
 
         /** @var HelpdeskTicketService $helpdeskTicketService */
         $helpdeskTicketService = Oforge()->Services()->get('helpdesk.ticket');
@@ -63,7 +62,7 @@ class FrontendHelpdeskController extends SecureFrontendController {
         /** @var Router $router */
         $router       = Oforge()->App()->getContainer()->get('router');
         $uri          = $router->pathFor('frontend_account_support');
-        $user         = Oforge()->View()->get('user');
+        $user         = Oforge()->View()->get('current_user');
         $body         = $request->getParsedBody();
         $issueType    = $body['helpdesk_request'];
         $issueTitle   = $body['helpdesk_request_title'];
@@ -117,7 +116,7 @@ class FrontendHelpdeskController extends SecureFrontendController {
         $ticketOpener  = $ticketService->getTicketById($ticketId)->getOpener();
 
         /** @var  $userService */
-        $userId = Oforge()->View()->get('user')['id'];
+        $userId = Oforge()->View()->get('current_user')['id'];
 
         if ($ticketOpener != $userId) {
             Oforge()->View()->Flash()->addMessage('error', I18N::translate('ticket_closing_violation', "You don't have permission to close this ticket"));
@@ -140,8 +139,11 @@ class FrontendHelpdeskController extends SecureFrontendController {
     }
 
     public function initPermissions() {
-        $this->ensurePermissions('indexAction', User::class);
-        $this->ensurePermissions('submitAction', User::class);
-        $this->ensurePermissions('closeTicketAction', User::class);
+        $this->ensurePermissions([
+            'indexAction',
+            'submitAction',
+            'closeTicketAction',
+        ]);
     }
+
 }

@@ -15,7 +15,6 @@ use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
-use phpDocumentor\Reflection\Types\Integer;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -200,9 +199,12 @@ class BackendHelpdeskController extends SecureBackendController {
     }
 
     public function initPermissions() {
-        $this->ensurePermissions('indexAction', BackendUser::class, BackendUser::ROLE_MODERATOR);
-        $this->ensurePermissions('messengerAction', BackendUser::class, BackendUser::ROLE_MODERATOR);
+        $this->ensurePermissions([
+            'indexAction',
+            'closeTicketAction',
+            'messengerAction',
+            'sendNewMessageInfoMail',
+        ], BackendUser::ROLE_MODERATOR);
     }
-
 
 }

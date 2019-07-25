@@ -135,7 +135,7 @@ class LanguageController extends BaseCrudController {
                 $this->filterSelectData['snippets'] = [];
             }
         }
-        $data['snippets'] = ArrayHelper::get($this->filterSelectData['snippets'], $data['iso'], 0);
+        $data['snippets'] = ArrayHelper::get($this->filterSelectData['snippets'], ArrayHelper::get($data, 'iso'), 0);
 
         return $data;
     }

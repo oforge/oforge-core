@@ -133,12 +133,27 @@ class I18N {
      * Fallback, if translate fails because of errors.
      *
      * @param string $key
-     * @param string|null $defaultValue
+     * @param string|array|null $defaultValue
      *
      * @return string
      */
-    protected static function translateFallback(string $key, ?string $defaultValue = null) : string {
-        return isset($defaultValue) ? $defaultValue : $key;
+    protected static function translateFallback(string $key, $defaultValue = null) : string {
+        if (isset($defaultValue)) {
+            if (is_string($defaultValue)) {
+                return $defaultValue;
+            } elseif (is_array($defaultValue)) {
+                try {
+                    $languageIso = self::getCurrentLanguage([]);
+                } catch (ServiceNotFoundException $e) {
+                    $languageIso = 'en';
+                }
+                if (isset($defaultValue[$languageIso])) {
+                    return $defaultValue[$languageIso];
+                }
+            }
+        }
+
+        return $key;
     }
 
 }

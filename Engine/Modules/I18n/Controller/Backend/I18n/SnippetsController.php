@@ -299,7 +299,7 @@ class SnippetsController extends BaseCrudController {
 
     public function initPermissions() {
         parent::initPermissions();
-        $this->ensurePermissions('comparatorAction', BackendUser::class, BackendUser::ROLE_MODERATOR);
+        $this->ensurePermission('comparatorAction', BackendUser::ROLE_MODERATOR);
     }
 
     /**
