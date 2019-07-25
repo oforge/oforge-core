@@ -91,6 +91,10 @@ class RegistrationController extends AbstractController {
         }
 
         $registrationService = Oforge()->Services()->get('frontend.user.management.registration');
+        /** @var UserDetailsService $userDetailService */
+        $userDetailService   = Oforge()->Services()->get('frontend.user.management.user.details');
+        /** @var Router $router */
+      
         $router              = Oforge()->App()->getContainer()->get('router');
 
         /** @var RedirectService $redirectService */
@@ -162,6 +166,7 @@ class RegistrationController extends AbstractController {
         $passwordService = Oforge()->Services()->get('password');
         $password        = $passwordService->hash($password);
         $user            = $registrationService->register($email, $password);
+        $userDetailService->save(['userId' => $user['id'], 'nickname' => $nickname]);
 
         /**
          * Registration failed
