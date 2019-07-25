@@ -153,7 +153,7 @@ class BackendHelpdeskController extends SecureBackendController {
             $conversation = $helpdeskMessengerService->getConversationsByTarget($ticketId, 'helpdesk');
 
             if (sizeof($conversation) > 0) {
-                $conversation = $conversation[0];g
+                $conversation = $conversation[0];
             }
 
             $messages = $helpdeskMessengerService->getMessagesOfConversation($conversation['id']);
