@@ -15,7 +15,6 @@
                        type="text"
                        class="form__input form__input"
                        placeholder="{{ i18n('street_name') }}"
-                       required
                        {% if (userAddress) %}value="{{ userAddress.streetName }}"{% endif %}>
 
                 {% block user_address_label_street_number %}
@@ -25,7 +24,6 @@
                        type="text"
                        class="form__input form__input"
                        placeholder="{{ i18n('street_number') }}"
-                       required
                        {% if (userAddress) %}value="{{ userAddress.streetNumber }}"{% endif %}>
             </div>
 
@@ -39,7 +37,6 @@
                        type="text"
                        class="form__input form__input"
                        placeholder="{{ i18n('post_code') }}"
-                       required
                        {% if (userAddress) %}value="{{ userAddress.postCode }}"{% endif %}>
 
                 {% block user_address_label_city %}
@@ -49,7 +46,6 @@
                        type="text"
                        class="form__input form__input"
                        placeholder="{{ i18n('city') }}"
-                       required
                        {% if (userAddress) %}value="{{ userAddress.city }}"{% endif %}>
             </div>
 
