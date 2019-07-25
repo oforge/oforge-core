@@ -21,11 +21,17 @@
     <div class="content content--insertion flex {% if profile.background.id is not empty %} has-header-image {% endif %}">
         <div class="main">
             <div class="panel panel--product-view">
+
+                {% block insertion_detail__breadcrumb %}
+                    {% include 'Plugins/Insertion/Frontend/Components/Breadcrumb.twig' %}
+                {% endblock insertion_detail__breadcrumb %}
+
                 {% block insertion_detail__heading %}
                     <div class="product-view--heading">
                         <h3 class="title title--3 title--product">{{ insertion.content[0].title }}</h3>
-                        <span class="title title--3 product-view__price"><span
-                                    class="price-value">{{ insertion.price|number_format(0, ',', '.') }} €</span></span>
+                        <span class="title title--3 product-view__price">{{ i18n('insertion_detail_price_' ~ insertion.insertionType.name, i18n('price')) }} <span
+                                    class="price-value">{{ insertion.price|number_format(0, ',', '.') }} €</span></span>{% if insertion.tax %}
+                        <span class="product-view__tax">, {{ i18n('vat_identifiable') }}</span>{% endif %}
                     </div>
                 {% endblock insertion_detail__heading %}
 
