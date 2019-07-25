@@ -2,6 +2,8 @@
 
 namespace Oforge\Engine\Modules\Auth\Services;
 
+use Oforge\Engine\Modules\Auth\Controller\SecureController;
+
 /**
  * Class Permissions
  *
@@ -35,12 +37,16 @@ class PermissionService {
             return $this->methods[$key];
         }
 
-        $instance = new $class();
-        if (method_exists($instance, 'initPermissions')) {
-            $instance->initPermissions();
+        if (is_subclass_of($class, SecureController::class)) {
+            $instance = Oforge()->App()->getContainer()->get($class);
+            if (method_exists($instance, 'initPermissions')) {
+                $instance->initPermissions();
+            }
+
+            return isset($this->methods[$key]) ? $this->methods[$key] : null;
         }
 
-        return isset($this->methods[$key]) ? $this->methods[$key] : null;
+        return null;
     }
 
 }

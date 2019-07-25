@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/Helper/Functions/functions.php';
 
 use Oforge\Engine\Modules\Core\Abstracts\AbstractTemplateManager;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractViewManager;

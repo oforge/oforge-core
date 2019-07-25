@@ -107,6 +107,21 @@ class PluginController extends BaseCrudController {
         parent::__construct();
     }
 
+    public function initPermissions() {
+        parent::initPermissions();
+        $this->ensurePermissions([
+            'activateAction',
+            'deactivateAction',
+            'deleteAction',
+            'installAction',
+            'uninstallAction',
+            'reactivateAction',
+            'rebuildAction',
+            'reinstallAction',
+            'reinstallActivateAction',
+        ], BackendUser::ROLE_ADMINISTRATOR);
+    }
+
     /**
      * @param Request $request
      * @param Response $response
