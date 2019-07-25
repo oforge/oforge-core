@@ -18,6 +18,7 @@ use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\Mailer\Services\MailService;
 use phpDocumentor\Reflection\Types\Integer;
+
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
@@ -170,9 +171,12 @@ class BackendHelpdeskController extends SecureBackendController {
     }
 
     public function initPermissions() {
-        $this->ensurePermissions('indexAction', BackendUser::class, BackendUser::ROLE_MODERATOR);
-        $this->ensurePermissions('messengerAction', BackendUser::class, BackendUser::ROLE_MODERATOR);
+        $this->ensurePermissions([
+            'indexAction',
+            'closeTicketAction',
+            'messengerAction',
+            'sendNewMessageInfoMail',
+        ], BackendUser::ROLE_MODERATOR);
     }
-
 
 }
