@@ -6,14 +6,16 @@ use Pelago\Emogrifier;
 
 class InlineCssService {
     /**
+     * HTML / CSS input needs to be UTF-8 encoded.
+     *
      * @param $html
      * @param $css
      *
-     * @return string
+     * @return string HTML with inline-CSS
      */
     public function renderInlineCss($html, $css = null) {
 
-        /** @var  $emogrifier */
+        /** @var  $cssInliner */
         $cssInliner = new Emogrifier($html);
 
         if(isset($css)) {

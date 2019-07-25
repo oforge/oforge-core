@@ -7,7 +7,7 @@
         {% else %}
             {% set partner = getChatPartnerInformation('requester', activeConversation.requester) %}
         {% endif %}
-        <img class="" src="{{ media(partner.imageId, 30) }}">
+        <i class="user__image" style="background-image: url('{{ media(partner.imageId, 50) }}'); background-size: contain; background-repeat: no-repeat; background-position: center center"></i>
         <h3 class="title title--chat">{{ partner.title }}</h3>
     {% else %}
         {{ parent() }}
@@ -22,7 +22,7 @@
             {% set partner = getChatPartnerInformation('requester', conversation.requester) %}
         {% endif %}
 
-        <i class="user__image" src="{{ media(partner.imageId, 30) }}"></i>
+        <i class="user__image" style="background-image: url('{{ media(partner.imageId, 50) }}'); background-size: contain; background-repeat: no-repeat; background-position: center center"></i>
         <span class="chat__text">{{ partner.title }}</span>
     {% else %}
         {{ parent() }}

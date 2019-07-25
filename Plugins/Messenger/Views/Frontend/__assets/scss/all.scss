@@ -18,8 +18,6 @@
         }
         &--sidebar {
             justify-content: space-between;
-            border-bottom: 2px solid $color-light;
-
         }
     }
 
@@ -31,30 +29,33 @@
     &__chat {
         width: 100%;
     }
-    .logo__image {
+    .logo__image, .user__image {
+        border: 1px solid $color-light;
         flex: 0 0 auto;
         width: 4rem;
         height: 4rem;
+    }
+    .logo__image {
+        border-radius: 100%;
     }
     .user__image {
-        flex: 0 0 auto;
-        width: 4rem;
-        height: 4rem;
         border-radius: 100%;
         background-color: $color-primary-light;
-        background-image: url('/Themes/AllYourHorses/Frontend/__assets/img/profile_image_placeholder.svg');
+        background-image: url('/Themes/allyourhorses/Frontend/__assets/img/profile_image_placeholder.svg');
     }
-
 }
 
 .chat-list {
     background: $color-primary;
+    border-top: 2px solid $color-light;
     &.collapsed {
         display: none;
     }
 }
+
 .chat {
     padding: $size-large $size-medium;
+    border-bottom: 1px solid $color-light;
 
     &__link {
         text-decoration: none;
@@ -67,9 +68,6 @@
     &.is__active {
         background-color: $color-secondary;
     }
-}
-.chat + .chat {
-    border-top: 1px solid $color-light;
 }
 
 .messages {

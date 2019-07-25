@@ -37,23 +37,15 @@ class MessengerController extends SecureFrontendController {
      * @param array $args
      *
      * @return Response
-     * @throws ServiceNotFoundException
      * @throws ORMException
      * @throws ServiceNotFoundException
-     * @throws ConfigElementNotFoundException
-     * @throws ConfigOptionKeyNotExistException
-     * @throws Twig_Error_Loader
-     * @throws Twig_Error_Runtime
-     * @throws Twig_Error_Syntax
      * @EndpointAction(path="[/{id:.*}]", name="messages")
      */
     public function indexAction(Request $request, Response $response, array $args) {
-        /** @var FrontendMessengerService $frontendMessengerService */
-        /** @var User $user */
+        /** @var FrontendMessengerService $frontendMessengerService */ /** @var User $user */
         /** @var UserService $frontendUserService */
         $frontendMessengerService = Oforge()->Services()->get('frontend.messenger');
         $user                     = Oforge()->View()->get('user');
-        $frontendUserService      = Oforge()->Services()->get('frontend.user.management.user');
 
         /** @var Conversation[] $conversationList */
         $conversationList = $frontendMessengerService->getConversationList($user['id']);
@@ -68,7 +60,7 @@ class MessengerController extends SecureFrontendController {
 
             /** @var Conversation $conversation */
             $activeConversation = $frontendMessengerService->getConversation($conversationId, $user['id']);
-            $isRequester  = ($activeConversation['requester'] == $user['id']);
+            $isRequester        = ($activeConversation['requester'] == $user['id']);
             /* Check for permission of conversation */
             if (!($activeConversation['requested'] == $user['id'] || $activeConversation['requester'] == $user['id'])) {
                 return $response->withRedirect("/404", 301);
@@ -85,39 +77,28 @@ class MessengerController extends SecureFrontendController {
 
                 $frontendMessengerService->sendMessage($activeConversation['id'], $user['id'], $message);
 
-                $lastMessageUser = end($activeConversation['messages'])->toArray()['sender'];
+                $targetUserId = ($isRequester) ? $activeConversation['requested'] : $targetUserId = $activeConversation['requester'];
 
                 $uri = $router->pathFor('frontend_account_messages') . DIRECTORY_SEPARATOR . $activeConversation['id'];
 
-                $conversationLink = 'http://';
-                if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
-                    $conversationLink = 'https://';
-                }
-                $conversationLink .= $_SERVER['HTTP_HOST'];
-                $conversationLink .= $uri;
-
-                /* Only send mails for classified advert */
-                if ($activeConversation['requesterType'] == 1 && $activeConversation['requestedType'] == 1 && $lastMessageUser != $user['id']) {
-                    $targetUserId = ($isRequester) ? $activeConversation['requested'] : $targetUserId = $activeConversation['requester'];
-                    $targetIdMail = $frontendUserService->getUserById($targetUserId)->getEmail();
-                    $targetName   = $frontendUserService->getUserById($targetUserId)->getDetail()->getNickName();
-
-                    $mailOptions  = [
-                        'to'       => [$targetIdMail => $targetIdMail],
-                        'from'     => 'no_reply',
-                        'subject'  => I18N::translate('email_subject_new_message', 'New private message'),
-                        'template' => 'NewMessage.twig',
-                    ];
-                    $templateData = [
-                        'conversationLink' => $conversationLink,
-                        'receiver_name'    => $targetName,
-                        'sender_mail'      => $mailService->getSenderAddress('no_reply'),
-                    ];
-                    $mailService->send($mailOptions, $templateData);
+                /** only send mails for classified advert */
+                if ($activeConversation['requesterType'] == 1 && $activeConversation['requestedType'] == 1) {
+                    $lastMessage = end($activeConversation['messages']);
+                    /** send mail if posted message is first message */
+                    if ($lastMessage == false) {
+                        $mailService->sendNewMessageInfoMail($targetUserId, $activeConversation['id']);
+                    } else {
+                        $lastMessageUser = $lastMessage->toArray()['sender'];
+                        /** send mail if last message came from other chat user */
+                        if ($lastMessageUser != $user['id']) {
+                            $mailService->sendNewMessageInfoMail($targetUserId, $activeConversation['id']);
+                        }
+                    }
                 }
 
                 return $response->withRedirect($uri, 302);
             }
+
             Oforge()->View()->assign(['activeConversation' => $activeConversation]);
 
         } else {
@@ -131,9 +112,6 @@ class MessengerController extends SecureFrontendController {
         }
     }
 
-    /**
-     * @throws ServiceNotFoundException
-     */
     public function initPermissions() {
         $this->ensurePermissions("indexAction", User::class);
     }
