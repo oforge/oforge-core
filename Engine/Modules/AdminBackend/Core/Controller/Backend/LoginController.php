@@ -11,6 +11,7 @@ use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
+use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -86,11 +87,20 @@ class LoginController extends SecureBackendController {
         }
         // no email or password body was sent
         if (!isset($postData['email']) || !isset($postData['password'])) {
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('login_invalid_data', [
+                'en' => 'Invalid login data.',
+                'de' => 'Ungültige Zugangsdaten.',
+            ]));
             return RouteHelper::redirect($response, 'backend_login');
         }
         try {
             $jwt = $backendLoginService->login($postData['email'], $postData['password']);// $jwt is null if the login credentials are incorrect
             if (!isset($jwt)) {
+                Oforge()->View()->Flash()->addMessage('warning', I18N::translate('login_invalid_data', [
+                    'en' => 'Invalid login data.',
+                    'de' => 'Ungültige Zugangsdaten.',
+                ]));
+
                 return RouteHelper::redirect($response, 'backend_login');
             }
         } catch (Exception $exception) {

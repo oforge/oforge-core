@@ -113,7 +113,10 @@ class LoginController extends AbstractController {
          */
         if (!array_key_exists('frontend_login_email', $body)
             || !array_key_exists('frontend_login_password', $body)) {
-            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('login_invalid_data', 'Invalid username or password.'));
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('login_invalid_data', [
+                'en' => 'Invalid login data.',
+                'de' => 'Ungültige Zugangsdaten.',
+            ]));
 
             return $response->withRedirect($router->pathFor('frontend_login'), 302);
         }
@@ -124,7 +127,10 @@ class LoginController extends AbstractController {
          * $jwt is null if the login credentials are incorrect
          */
         if (!isset($jwt)) {
-            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('login_invalid_data', 'Invalid username or password.'));
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('login_invalid_data', [
+                'en' => 'Invalid login data.',
+                'de' => 'Ungültige Zugangsdaten.',
+            ]));
 
             return $response->withRedirect($uri, 302);
         }
