@@ -14,7 +14,6 @@ use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
-use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -86,8 +85,12 @@ class BackendHelpdeskController extends SecureBackendController {
      *
      * @return Response
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws ServiceNotFoundException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      * @EndpointAction(path="/messenger/{id}")
      */
     public function messengerAction(Request $request, Response $response, array $args) {
@@ -117,11 +120,12 @@ class BackendHelpdeskController extends SecureBackendController {
                     $conversation = $conversation[0];
                 }
 
-                /** send notification to requester */
+                /** @var  MailService $mailService - send notification to requester */
+                $mailService = Oforge()->Services()->get('mail');
                 $messages = $helpdeskMessengerService->getMessagesOfConversation($conversation['id']);
                 $lastMessage = end($messages)->toArray(1);
                 if ($lastMessage["sender"] != 'helpdesk') {
-                    $this->sendNewMessageInfoMail($conversation['requester'], $conversation['id']);
+                    $mailService->sendNewMessageInfoMail($conversation['requester'], $conversation['id']);
                     Oforge()->View()->Flash()->addMessage('success', "Notification Mail has been sent");
                 }
 
@@ -158,44 +162,6 @@ class BackendHelpdeskController extends SecureBackendController {
         } else {
             return $response->withRedirect($uri, 302);
         }
-    }
-
-    /**
-     * @param $userId
-     * @param $conversationId
-     *
-     * @throws ServiceNotFoundException
-     */
-    public function sendNewMessageInfoMail($userId, $conversationId) {
-        /** @var  $userService */ /** @var  $router */ /** @var  $mailService */
-
-        $router = Oforge()->App()->getContainer()->get('router');
-        $userService   = Oforge()->Services()->get('frontend.user.management.user');
-        $mailService   = Oforge()->Services()->get('mail');
-
-        $user          = $userService->getUserbyId($userId);
-
-        $uri = $router->pathFor('frontend_account_messages') . DIRECTORY_SEPARATOR . $conversationId;
-
-        $conversationLink = 'http://';
-        if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
-            $conversationLink = 'https://';
-        }
-
-        $conversationLink .= $_SERVER['HTTP_HOST'];
-        $conversationLink .= $uri;
-        $mailerOptions = [
-            'to'       => [$user->getEmail() => $user->getEmail()],
-            'from'     => 'no_reply',
-            'subject'  => I18N::translate('mailer_subject_new_message'),
-            'template' => 'NewMessage.twig',
-        ];
-        $templateData = [
-            'conversationLink' => $conversationLink,
-            'receiver_name'    => $user->getDetail()->getNickName(),
-            'sender_mail'      => $mailService->getSenderAddress('no_reply'),
-        ];
-        $mailService->send($mailerOptions, $templateData);
     }
 
     public function initPermissions() {
