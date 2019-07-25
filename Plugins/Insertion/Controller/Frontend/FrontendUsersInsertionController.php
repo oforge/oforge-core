@@ -459,7 +459,7 @@ class FrontendUsersInsertionController extends SecureFrontendController {
             $url = $refererHeader[0];
         }
 
-        Oforge()->View()->Flash()->addMessage("success", "insertion_" . $action);
+        Oforge()->View()->Flash()->addMessage("success", I18N::translate("insertion_" . $action));
 
         return $response->withRedirect($url, 301);
     }
