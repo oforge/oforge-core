@@ -22,19 +22,19 @@
                             {% for v in value %}
                                 <div class="tag" data-key="{{ f }}" data-value="{{ v }}">
                                     <a href="#"
-                                       onclick="window.location.href = Oforge.removeQueryString('{{ f }}[]', '{{ v }}')"
+                                       onclick="window.location.href = Oforge.removeQueryString('{{ f }}[]'.replace(/ /g, '+'), '{{ v }}')"
                                        class="close"></a>
-                                    <span class="tag__text">{{ i18n(f) }} {{ search.values[v] }}</span>
+                                    <span class="tag__text">{{ i18n(f) }} {{ i18n(search.values[v]) }}</span>
                                 </div>
                             {% endfor %}
                         {% else %}
                             <div class="tag" data-key="{{ f }}" data-value="{{ value }}">
-                                <a href="#" onclick="window.location.href = Oforge.updateQueryString('{{ f }}')"
+                                <a href="#" onclick="window.location.href = Oforge.updateQueryString('{{ f }}'.replace(/ /g, '+'))"
                                    class="close"></a>
                                 {% if keys[f].type is same as( 'boolean') %}
                                     <span class="tag__text">{{ i18n(f) }}</span>
                                 {% else %}
-                                    <span class="tag__text">{{ i18n(f) }} {{ search.values[value] }}</span>
+                                    <span class="tag__text">{{ i18n(f) }} {{ i18n(search.values[value]) }}</span>
                                 {% endif %}
                             </div>
                         {% endif %}
