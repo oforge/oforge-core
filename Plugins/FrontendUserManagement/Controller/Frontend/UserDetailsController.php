@@ -73,7 +73,7 @@ class UserDetailsController extends SecureFrontendController {
         /**
          * no valid form data found
          */
-        if (!$token || !$firstName || !$lastName || !$nickName || !$contactEmail || !$contactPhone) {
+        if (!$token || !$nickName ) {
             Oforge()->View()->Flash()->addMessage('warning', I18N::translate('form_invalid_data', 'Invalid form data.'));
 
             return $response->withRedirect($uri, 302);
@@ -142,7 +142,7 @@ class UserDetailsController extends SecureFrontendController {
         /**
          * no valid form data found
          */
-        if (!$token || !$streetName || !$streetNumber || !$postCode || !$city) {
+        if (!$token) {
             Oforge()->View()->Flash()->addMessage('warning', I18N::translate('form_invalid_data', 'Invalid form data.'));
 
             return RouteHelper::redirect($response, 'frontend_account_details');
