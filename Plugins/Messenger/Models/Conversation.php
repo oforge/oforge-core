@@ -86,7 +86,7 @@ class Conversation extends AbstractModel {
 
     /**
      * @var \DateTime
-     * @ORM\Column(name="requested_last_seen, type="datetime", nullable=true);
+     * @ORM\Column(name="requested_last_seen", type="datetime", nullable=true);
      */
     private $requestedLastSeen = null;
 
@@ -294,8 +294,6 @@ class Conversation extends AbstractModel {
 
     /**
      * @param \DateTime $timestamp
-     *
-     * @return Conversation
      */
     public function setRequesterLastSeen(\DateTime $timestamp)  {
         $this->requesterLastSeen = $timestamp;
@@ -310,8 +308,6 @@ class Conversation extends AbstractModel {
 
     /**
      * @param \DateTime $timestamp
-     *
-     * @return $this
      */
     public function setRequestedLastSeen(\DateTime $timestamp) {
         $this->requestedLastSeen = $timestamp;

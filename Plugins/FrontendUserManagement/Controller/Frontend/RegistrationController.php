@@ -91,7 +91,7 @@ class RegistrationController extends AbstractController {
             print_r('No session :/');
             die();
         }
-
+        /** @var RegistrationService $registrationService */
         $registrationService = Oforge()->Services()->get('frontend.user.management.registration');
         /** @var UserDetailsService $userDetailService */
         $userDetailService   = Oforge()->Services()->get('frontend.user.management.user.details');
@@ -123,11 +123,11 @@ class RegistrationController extends AbstractController {
         $privacyNoticeAccepted = $body['frontend_registration_privacy_notice_accepted'];
         $referrer              = ArrayHelper::get($body, 'frontend_registration_referrer');
 
-        // if (!isset($body['frontend_registration_nickname']) || empty($body['frontend_registration_nickname'])) {
-        //     $nickname = $userDetailService->generateNickname();
-        // } else {
-        //     $nickname = $body['frontend_registration_nickname'];
-        // }
+        if (!isset($body['frontend_registration_nickname']) || empty($body['frontend_registration_nickname'])) {
+            $nickname = $userDetailService->generateNickname();
+        } else {
+            $nickname = $body['frontend_registration_nickname'];
+        }
 
         if (isset($referrer)) {
             $uri = $referrer;
@@ -205,8 +205,9 @@ class RegistrationController extends AbstractController {
             'activationLink' => $activationLink,
             'user_mail'      => $user['email'],
             'sender_mail'    => $mailService->getSenderAddress('info'),
-            'receiver_name'  => '', // TODO: Get generated nickname
+            'receiver_name'  => $nickname,
         ];
+
 
         /**
          * Registration Mail could not be sent
