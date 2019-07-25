@@ -53,6 +53,26 @@ class ArrayHelper {
     }
 
     /**
+     * Pop array value or default.
+     *
+     * @param array $array
+     * @param mixed $key
+     * @param mixed $defaultValue
+     *
+     * @return mixed
+     */
+    public static function pop(array &$array, $key, $defaultValue = null) {
+        if (isset($array[$key])) {
+            $value = $array[$key];
+            unset($array[$key]);
+
+            return $value;
+        }
+
+        return $defaultValue;
+    }
+
+    /**
      * Returns array value or default.
      * Check array key with array_key_exists.
      *

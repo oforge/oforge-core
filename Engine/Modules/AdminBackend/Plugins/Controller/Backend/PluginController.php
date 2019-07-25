@@ -17,6 +17,7 @@ use Oforge\Engine\Modules\Core\Exceptions\Plugin\PluginNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\Plugin\PluginNotInstalledException;
 use Oforge\Engine\Modules\Core\Exceptions\Template\TemplateNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\RouteHelper;
+use Oforge\Engine\Modules\Core\Helper\StringHelper;
 use Oforge\Engine\Modules\Core\Models\Plugin\Plugin;
 use Oforge\Engine\Modules\Core\Services\PluginStateService;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
@@ -40,16 +41,15 @@ class PluginController extends BaseCrudController {
     /** @var array $modelProperties */
     protected $modelProperties = [
         [
-            'name' => 'id',
-            'type' => CrudDataTypes::INT,
-            'crud' => [
-                'index' => 'readonly',
-            ],
-        ],
-        [
             'name'     => 'name',
             'type'     => CrudDataTypes::CUSTOM,
-            'label'    => ['key' => 'backend_crud_plugin_property_name', 'default' => 'Plugin name'],
+            'label'    => [
+                'key'     => 'backend_crud_plugin_property_name',
+                'default' => [
+                    'en' => 'Plugin name',
+                    'de' => 'Pluginname',
+                ],
+            ],
             'crud'     => [
                 'index' => 'readonly',
             ],
@@ -58,9 +58,32 @@ class PluginController extends BaseCrudController {
             ],
         ],
         [
+            'name'     => 'dependencies',
+            'type'     => CrudDataTypes::CUSTOM,
+            'label'    => [
+                'key'     => 'backend_crud_plugin_property_dependencies',
+                'default' => [
+                    'en' => 'Dependencies',
+                    'de' => 'Abhängigkeiten',
+                ],
+            ],
+            'crud'     => [
+                'index' => 'readonly',
+            ],
+            'renderer' => [
+                'custom' => 'Backend/Plugin/Components/Index/DependenciesColumn.twig',
+            ],
+        ],
+        [
             'name'     => 'action',
             'type'     => CrudDataTypes::CUSTOM,
-            'label'    => ['key' => 'backend_crud_plugin_property_action', 'default' => 'Action'],
+            'label'    => [
+                'key'     => 'backend_crud_plugin_property_action',
+                'default' => [
+                    'en' => 'Action',
+                    'de' => 'Aktion',
+                ],
+            ],
             'crud'     => [
                 'index' => 'readonly',
             ],
@@ -111,7 +134,7 @@ class PluginController extends BaseCrudController {
     public function activateAction(Request $request, Response $response, array $args) {
         $this->handleActivate($args);
 
-        return RouteHelper::redirect($response, 'backend_plugins');
+        return RouteHelper::redirect($response, 'backend_plugins', [], $request->getQueryParams());
     }
 
     /**
@@ -125,7 +148,7 @@ class PluginController extends BaseCrudController {
     public function deactivateAction(Request $request, Response $response, array $args) {
         $this->handleDeactivate($args);
 
-        return RouteHelper::redirect($response, 'backend_plugins');
+        return RouteHelper::redirect($response, 'backend_plugins', [], $request->getQueryParams());
     }
 
     /**
@@ -155,7 +178,7 @@ class PluginController extends BaseCrudController {
     public function installAction(Request $request, Response $response, array $args) {
         $this->handleInstall($args);
 
-        return RouteHelper::redirect($response, 'backend_plugins');
+        return RouteHelper::redirect($response, 'backend_plugins', [], $request->getQueryParams());
     }
 
     /**
@@ -171,7 +194,7 @@ class PluginController extends BaseCrudController {
             $this->handleActivate($args);
         }
 
-        return RouteHelper::redirect($response, 'backend_plugins');
+        return RouteHelper::redirect($response, 'backend_plugins', [], $request->getQueryParams());
     }
 
     /**
@@ -197,7 +220,7 @@ class PluginController extends BaseCrudController {
             $twigFlash->addExceptionMessage('error', I18N::translate('crud_plugin_msg_error', 'An error has occurred.'), $exception);
         }
 
-        return RouteHelper::redirect($response, 'backend_plugins');
+        return RouteHelper::redirect($response, 'backend_plugins', [], $request->getQueryParams());
     }
 
     /**
@@ -216,7 +239,7 @@ class PluginController extends BaseCrudController {
                 $this->handleInstall($args);
             }
 
-            return RouteHelper::redirect($response, 'backend_plugins');
+            return RouteHelper::redirect($response, 'backend_plugins', [], $request->getQueryParams());
         }
         Oforge()->View()->assign([
             'crud' => [
@@ -245,7 +268,7 @@ class PluginController extends BaseCrudController {
                 }
             }
 
-            return RouteHelper::redirect($response, 'backend_plugins');
+            return RouteHelper::redirect($response, 'backend_plugins', [], $request->getQueryParams());
         }
         Oforge()->View()->assign([
             'crud' => [
@@ -270,7 +293,7 @@ class PluginController extends BaseCrudController {
             $keepData = (bool) $postData['keep_data'];
             $this->handleUninstall($args, $keepData);
 
-            return RouteHelper::redirect($response, 'backend_plugins');
+            return RouteHelper::redirect($response, 'backend_plugins', [], $request->getQueryParams());
         }
         Oforge()->View()->assign([
             'crud' => [
@@ -535,6 +558,20 @@ class PluginController extends BaseCrudController {
     /** @inheritDoc */
     protected function prepareItemDataArray(?AbstractModel $entity, string $crudAction) : array {
         $data = parent::prepareItemDataArray($entity, $crudAction);
+
+        // Refactor after Boot-Refactoring
+        $pluginBootstrapClass = $data['name'] . '\\Bootstrap';
+        $bootstrapInstance    = Oforge()->getBootstrapManager()->getBootstrapInstance($pluginBootstrapClass);
+
+        if (isset($bootstrapInstance)) {
+            $dependencies = $bootstrapInstance->getDependencies();
+            if (!empty($dependencies)) {
+                $dependencies         = array_map(function ($dependency) {
+                    return StringHelper::rightTrim($dependency, '\\Bootstrap');
+                }, $dependencies);
+                $data['dependencies'] = $dependencies;
+            }
+        }
 
         // TODO include data version, description.long & description.short
         return $data;

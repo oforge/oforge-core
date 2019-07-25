@@ -330,7 +330,10 @@ class PostController extends BaseCrudController {
         $category = $entityManager->getRepository(Category::class)->findOneBy(['id' => $categoryID]);
         if (!isset($category)) {
             throw new NotFoundException(sprintf(#
-                I18N::translate('plugin_blog_category_not_found', 'Category with ID "%s" not found.'),#
+                I18N::translate('plugin_blog_category_not_found', [
+                    'en' => 'Category with ID "%s" not found.',
+                    'de' => 'Kategorie mit der ID "%s" wurde nicht gefunden.',
+                ]),#
                 $categoryID)#
             );
         }
@@ -402,16 +405,25 @@ class PostController extends BaseCrudController {
             if (isset($result)) {
                 list($commentsDeleted, $ratingsDeleted) = $result;
                 Oforge()->View()->Flash()->addMessage('success', sprintf(#
-                    I18N::translate('plugin_blog_msg_post_delete_success', 'Post with %s comments & %s ratings successfully deleted.'),#
+                    I18N::translate('plugin_blog_msg_post_delete_success', [
+                        'en' => 'Post with %s comments & %s ratings successfully deleted.',
+                        'de' => 'Beitrag mit %s Kommentaren & %s Bewertungen erfolgreich gelöscht.',
+                    ]),#
                     $commentsDeleted,#
                     $ratingsDeleted#
                 ));
             } else {
-                Oforge()->View()->Flash()->addMessage('error', I18N::translate('backend_crud_msg_delete_failed', 'Entity delete failed.'));
+                Oforge()->View()->Flash()->addMessage('error', I18N::translate('backend_crud_msg_delete_failed', [
+                    'en' => 'Entity deletion failed.',
+                    'de' => 'Löschen des Elements fehlgeschlagen.',
+                ]));
             }
         } catch (PostNotFoundException $exception) {
             Oforge()->View()->Flash()->addMessage('error', sprintf(#
-                I18N::translate('plugin_blog_post_not_found', 'Post with ID "%s" not found.'),#
+                I18N::translate('plugin_blog_post_not_found', [
+                    'en' => 'Post with ID "%s" not found.',
+                    'de' => 'Beitrag mit ID "%s" nicht gefunden.',
+                ]),#
                 $entityID#
             ));
         }

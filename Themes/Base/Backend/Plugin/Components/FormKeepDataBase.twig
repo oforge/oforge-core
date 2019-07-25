@@ -25,7 +25,7 @@
                                 <div class="col-xs-12">
                                     <div class="form-group crud-datatype-string crud-property-name">
                                         <label for="crud_plugin_confirm_keep_data">
-                                            {{ i18n('backend_crud_plugin_keep_data', 'Do you want to keep the database tables?') }}
+                                            {{ i18n('backend_crud_plugin_keep_data', {en: 'Do you want to keep the database tables?', de: 'Möchten Sie die Datenbanktabellen behalten?'}) }}
                                         </label>
                                         <div>
                                             {% include 'Backend/Components/Form/Switch.twig' with {
@@ -39,7 +39,7 @@
                             <div class="row">
                                 <div class="col-xs-12">
                                     <a href="{{ url(meta.route.parentName) }}" class="btn btn-default">
-                                        {{ i18n('backend_crud_btn_back2index', 'back to overwiew') }}
+                                        {{ i18n('backend_crud_btn_back2index', {en: 'back to overwiew', de: 'zurück zur Übersicht'}) }}
                                     </a>
                                     <input type="submit"
                                            class="btn {% if crud.context == 'delete' %}btn-danger{% else %}btn-primary{% endif %}"

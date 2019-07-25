@@ -17,7 +17,7 @@
             <svg class="icon icon--secondary">
                 <use xlink:href="#{{ blogCategory.icon|default(config('blog_category_icon_default')) }}"></use>
             </svg>
-            {{ i18n('plugin_blog_frontend_blog_home', 'Blog') }}
+            {{ i18n('plugin_blog_frontend_blog_home', {en: 'Blog', de: 'Blog'}) }}
         </a>
     </div>
 {% endif %}
