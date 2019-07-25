@@ -10,6 +10,7 @@ use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
+use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\Media\Twig\MediaExtension;
 use Oforge\Engine\Modules\TemplateEngine\Core\Twig\CustomTwig;
 use Oforge\Engine\Modules\TemplateEngine\Core\Twig\TwigOforgeDebugExtension;
@@ -163,7 +164,7 @@ class MailService {
     }
 
     /**
-     * Loads minimal Twig Environment and returns rendered Template from active Theme.
+     * Loads minimal Twig Environment and returns rendered HTML - Template with inlined CSS from active Theme.
      * If specified Template does not exists in active Theme -> Fallback to Base Theme
      *
      * @param array $options
@@ -192,9 +193,12 @@ class MailService {
         $twig->addExtension(new SlimExtension());
         $twig->addExtension(new TwigOforgeDebugExtension());
 
+        /** @var string $html */
         $html =  $twig->fetch($template = $options['template'], $data = $templateData);
 
+        /** @var  $inlineCssService */
         $inlineCssService = Oforge()->Services()->get('inline.css');
+
         return $inlineCssService->renderInlineCss($html);
     }
 
@@ -219,6 +223,38 @@ class MailService {
 
         $senderAddress = $sender . '@' . $host;
         return $senderAddress;
+    }
+
+    public function sendNewMessageInfoMail($userId, $conversationId) {
+
+        /** @var  $userService */ /** @var  $router */ /** @var  $mailService */
+        $router = Oforge()->App()->getContainer()->get('router');
+        $userService   = Oforge()->Services()->get('frontend.user.management.user');
+        $mailService   = Oforge()->Services()->get('mail');
+
+        $user          = $userService->getUserbyId($userId);
+
+        $uri = $router->pathFor('frontend_account_messages') . DIRECTORY_SEPARATOR . $conversationId;
+
+        $conversationLink = 'http://';
+        if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+            $conversationLink = 'https://';
+        }
+
+        $conversationLink .= $_SERVER['HTTP_HOST'];
+        $conversationLink .= $uri;
+        $mailerOptions = [
+            'to'       => [$user->getEmail() => $user->getEmail()],
+            'from'     => 'no_reply',
+            'subject'  => I18N::translate('mailer_subject_new_message'),
+            'template' => 'NewMessage.twig',
+        ];
+        $templateData = [
+            'conversationLink' => $conversationLink,
+            'receiver_name'    => $user->getDetail()->getNickName(),
+            'sender_mail'      => $mailService->getSenderAddress('no_reply'),
+        ];
+        $mailService->send($mailerOptions, $templateData);
     }
 
     public function batchSend() {
