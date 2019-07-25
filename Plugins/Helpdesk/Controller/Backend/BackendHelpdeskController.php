@@ -88,8 +88,12 @@ class BackendHelpdeskController extends SecureBackendController {
      *
      * @return Response
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws ServiceNotFoundException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      * @EndpointAction(path="/messenger/{id}")
      */
     public function messengerAction(Request $request, Response $response, array $args) {

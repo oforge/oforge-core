@@ -37,8 +37,13 @@ class MessengerController extends SecureFrontendController {
      * @param array $args
      *
      * @return Response
+     * @throws ConfigElementNotFoundException
+     * @throws ConfigOptionKeyNotExistException
      * @throws ORMException
      * @throws ServiceNotFoundException
+     * @throws Twig_Error_Loader
+     * @throws Twig_Error_Runtime
+     * @throws Twig_Error_Syntax
      * @EndpointAction(path="[/{id:.*}]", name="messages")
      */
     public function indexAction(Request $request, Response $response, array $args) {
