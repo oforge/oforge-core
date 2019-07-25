@@ -1,0 +1,22 @@
+{# insertion_detail__breadcrumb #}
+{% block detail_breadcrumb %}
+    <div class="breadcrumb">
+    <span>
+        <a href="{{ url('/') }}">{{ i18n('home_title') }}</a>
+    </span>
+        {% if insertion.insertionType is defined %}
+            <span>
+            <a href="{{ url('insertions_listing' , {type: insertion.insertionType.id}) }}">
+                {{ i18n('insertion_type_name_' ~ insertion.insertionType.name|lower) }}
+            </a>
+            </span>
+            {% if insertion is defined %}
+                <span>
+                <a href="{{ url('insertions_detail', {id: insertion.id}) }}">
+                    {{ i18n('single_insertion', {en: 'Insertion', de: 'Inserat'}) }}
+                </a>
+            </span>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock detail_breadcrumb %}
