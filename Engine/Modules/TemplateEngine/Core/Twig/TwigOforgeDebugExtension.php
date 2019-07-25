@@ -57,9 +57,9 @@ class TwigOforgeDebugExtension extends Twig_Extension {
                 }
             }
 
-            return "<script>console.log(" . json_encode($vars) . ") </script>";
+            return o_dump($vars, false);
         } else {
-            return "<script>console.log(" . json_encode(...$vars) . ") </script>";
+            return $this->oforgeVarDumpSub(...$vars);
         }
     }
 
@@ -91,9 +91,16 @@ class TwigOforgeDebugExtension extends Twig_Extension {
                 }
             });
         }
-        echo '<pre>';
-        print_r($vars);
-        echo '</pre>';
+        o_print($vars);
+    }
+
+    /**
+     * @param $vars
+     *
+     * @return string
+     */
+    private function oforgeVarDumpSub($vars) {
+        return o_dump($vars, false);
     }
 
 }
