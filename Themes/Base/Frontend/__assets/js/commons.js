@@ -3,7 +3,8 @@ if (typeof Oforge !== 'undefined') {
 
     Oforge.removeQueryString = function (key, value, url) {
         if (!url) url = window.location.href;
-        var re = new RegExp("([?&])" + encodeURIComponent(key) + "=" + encodeURIComponent(value) + "?(&|#|$)(.*)", "gi"),
+
+        var re = new RegExp("([?&])" + encodeURI(key) + "=" + encodeURI(value) + "?(&|#|$)(.*)", "g"),
             hash;
 
         if (re.test(url)) {
@@ -22,7 +23,7 @@ if (typeof Oforge !== 'undefined') {
         if (removeEmpty !== true && removeEmpty !== false) {
             removeEmpty = false;
         }
-        var re = new RegExp("([?&])" + key + "=.*?(&|#|$)(.*)", "gi"),
+        var re = new RegExp("([?&])" + key + "=.*?(&|#|$)(.*)", "g"),
             hash;
 
         if (re.test(url)) {

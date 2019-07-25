@@ -120,7 +120,7 @@ class InsertionListService extends AbstractDatabaseAccess {
 
                 if (isset($params[$name])) {
                     $value                   = $params[$name];
-                    $result['filter'][$name] = $value;
+                    $result['filter'][$attributeKey->getName()] = $value;
 
                     if (is_array($value)) { //should always be a multi selection or a range component
                         $sqlQuery                             .= " left join oforge_insertion_insertion_attribute_value v$attributeCount on v$attributeCount.insertion_id = i.id and v$attributeCount.attribute_key = :v"

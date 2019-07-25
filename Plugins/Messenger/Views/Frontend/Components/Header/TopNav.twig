@@ -5,7 +5,7 @@
     {% if user_logged_in %}
         <li class="top-nav-list__item item--login">
             <a href="{{ url('frontend_account_messages')  }}"
-               title="Login">
+               title="{{  i18n('frontend_account_messages_title', 'Meine Nachrichten') }}">
                 <svg class="icon icon--secondary icon--postfach">
                     <use xlink:href="#email"></use>
                 </svg>
