@@ -7,7 +7,7 @@
         {% if insertion.insertionType is defined %}
             <span>
             <a href="{{ url('insertions_listing' , {type: insertion.insertionType.id}) }}">
-                {{ i18n('insertion_type_name_' ~ insertion.insertionType.name|lower) }}
+                {{ i18n(insertion.insertionType.name) }}
             </a>
             </span>
             {% if insertion is defined %}
