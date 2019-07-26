@@ -2,7 +2,8 @@
 
 namespace Oforge\Engine\Modules\AdminBackend\Core\Controller\Backend;
 
-use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
+use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
+use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Helper\RouteHelper;
@@ -15,7 +16,11 @@ use Slim\Http\Response;
  * @package Oforge\Engine\Modules\AdminBackend\Core\Controller\Backend
  * @EndpointClass(path="/backend[/]", name="backend", assetScope="Backend")
  */
-class IndexController extends AbstractController {
+class IndexController extends SecureBackendController {
+
+    public function initPermissions() {
+        $this->ensurePermission('indexAction', BackendUser::ROLE_PUBLIC);
+    }
 
     /**
      * @param Request $request

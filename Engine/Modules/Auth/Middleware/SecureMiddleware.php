@@ -77,9 +77,9 @@ class SecureMiddleware {
      * Create Flash message for failed request.
      */
     protected function createPermissionDeniedFlashMessage() {
-        Oforge()->View()->Flash()->addMessage('error', I18N::translate('secured_area_no_permission', [
-            'en' => 'You do not have permission for this page. Log in with another user.',
-            'de' => 'Du hast keine Berechtigung für diese Seite. Logge dich mit einem anderem User ein.',
+        Oforge()->View()->Flash()->addMessage('warning', I18N::translate('secured_area_no_permission', [
+            'en' => 'You are not logged in or do not have permission for this page. Log in with another user.',
+            'de' => 'Du bist nicht eingeloggt oder hast keine Berechtigung für diese Seite. Logge dich mit einem anderem User ein.',
         ]));
     }
 

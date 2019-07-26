@@ -35,7 +35,7 @@ class UserDetail extends AbstractModel {
     private $nickName;
     /**
      * @var string|null $contactEmail
-     * @ORM\Column(name="contact_email", type="string", nullable=false)
+     * @ORM\Column(name="contact_email", type="string", nullable=true)
      */
     private $contactEmail;
     /**
@@ -103,12 +103,12 @@ class UserDetail extends AbstractModel {
     /**
      * @return string|null
      */
-    public function getNickName() : string {
+    public function getNickName() : ?string {
         return $this->nickName;
     }
 
     /**
-     * @param string $nickName
+     * @param string|null $nickName
      *
      * @return UserDetail
      */
