@@ -85,8 +85,10 @@
       position: relative;
       max-height: 300px;
       overflow: hidden;
+    }
 
-      &:after {
+    &.has-link {
+      p:after {
         content: "";
         background-image: linear-gradient(0deg, #ffffff, rgba(255, 255, 255, 0));
         pointer-events: none;

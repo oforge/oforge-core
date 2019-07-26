@@ -58,6 +58,7 @@
         text-decoration: none;
         text-align: center;
         transition: background .1s ease-in, color .1s ease-in;
+        font-size: 17px; /** fix for blurred font on chrome */
 
         &:hover,
         &:active {
