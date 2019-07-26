@@ -13,15 +13,21 @@
         background-position: center center;
         background-size: cover;
         border-radius: 50%;
-        border: 1px solid $color-secondary;
+        border: 2px solid $color-secondary;
     }
 
     .cms-customers-details {
         display: inline-block;
         overflow: hidden;
+        text-align: left;
+
         .cms-customer-name {
             font-weight: bold;
             display: block;
+        }
+        .cms-customer-comment {
+            display: block;
+            font-style: italic;
         }
     }
 }

@@ -119,8 +119,8 @@ class InsertionListService extends AbstractDatabaseAccess {
                 $name = str_replace(" ", "_", $name);
 
                 if (isset($params[$name])) {
-                    $value                   = $params[$name];
-                    $result['filter'][$attributeKey->getName()] = $value;
+                    $value                                      = $params[$name];
+                    $result['filter'][$attributeKey->getName()] = is_array($value) ? array_unique($value) : $value;
 
                     if (is_array($value)) { //should always be a multi selection or a range component
                         $sqlQuery                             .= " left join oforge_insertion_insertion_attribute_value v$attributeCount on v$attributeCount.insertion_id = i.id and v$attributeCount.attribute_key = :v"
@@ -193,7 +193,8 @@ class InsertionListService extends AbstractDatabaseAccess {
                                         $sqlQueryWhere .= " or ";
                                     }
 
-                                    $sqlQueryWhere                                .= "v$attributeCount.insertion_attribute_value = :v" . $attributeCount . "value" . $key;
+                                    $sqlQueryWhere                                .= "v$attributeCount.insertion_attribute_value = :v" . $attributeCount
+                                                                                     . "value" . $key;
                                     $args["v" . $attributeCount . "value" . $key] = $v;
                                 }
 
@@ -263,7 +264,7 @@ class InsertionListService extends AbstractDatabaseAccess {
             ];
 
             foreach ($attribute->getAttributeKey()->getValues() as $value) {
-                $valueMap[$value->getId()] = $value->getValue();
+                $valueMap  +=  $this->getValueMap($value);
             }
         }
 
@@ -387,6 +388,19 @@ class InsertionListService extends AbstractDatabaseAccess {
         if ($current === null) {
             $current = [];
         }
+
         return $current;
+    }
+
+    private function getValueMap($value) {
+        $temp                  = [];
+        $temp[$value->getId()] = $value->getValue();
+        if ($value->getSubAttributeKey() != null) {
+            foreach ($value->getSubAttributeKey()->getValues() as $v) {
+                $temp += $this->getValueMap($v);
+            }
+        }
+
+        return $temp;
     }
 }

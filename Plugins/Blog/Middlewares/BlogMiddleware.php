@@ -3,7 +3,7 @@
 namespace Blog\Middlewares;
 
 use Blog\Enums\BlogPermission;
-use Oforge\Engine\Modules\Auth\Services\AuthService;
+use FrontendUserManagement\Services\FrontendUserService;
 use Oforge\Engine\Modules\Auth\Services\PermissionService;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\RouteHelper;
@@ -30,11 +30,13 @@ class BlogMiddleware {
         try {
             $user = Oforge()->View()->get('current_user');
             if (!isset($user)) {
-                /** @var AuthService $authService */
-                $authService = Oforge()->Services()->get("auth");
-
-                $auth = isset($_SESSION['auth']) ? $_SESSION['auth'] : null;
-                $user = $authService->decode($auth);
+                /** @var FrontendUserService $userService */
+                $userService = Oforge()->Services()->get("frontend.user");
+                $user        = $userService->getUser();
+                if ($user != null) {
+                    $user = $user->toArray(1, ['password']);
+                    Oforge()->View()->assign(['current_user' => $user]);
+                }
             }
             if (isset($user)) {
                 /** @var PermissionService $permissionService */
