@@ -104,6 +104,7 @@ class InsertionTypeService extends AbstractDatabaseAccess {
         $result = [];
         foreach ($attributes as $attribute) {
             $result[$attribute->getId()] = $attribute->toArray();
+            $result[$attribute->getName()] = $attribute->toArray();
         }
 
         return $result;
