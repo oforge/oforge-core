@@ -114,12 +114,11 @@ class GenericCrudService extends AbstractDatabaseAccess {
      * Get single entity data (by toArray) or null if not exist.
      *
      * @param string $class
-     * @param int $id
+     * @param int|string $id
      *
      * @return AbstractModel|null
-     * @throws ORMException
      */
-    public function getById(string $class, int $id) {
+    public function getById(string $class, $id) {
         $repo = $this->getRepository($class);
         /** @var AbstractModel|null $entity */
         $entity = $repo->findOneBy([
@@ -136,9 +135,9 @@ class GenericCrudService extends AbstractDatabaseAccess {
      * @param string $class
      * @param array $options
      *
+     * @return AbstractModel
      * @throws ConfigElementAlreadyExistException
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws ReflectionException
      */
     public function create(string $class, array $options) {
@@ -216,13 +215,13 @@ class GenericCrudService extends AbstractDatabaseAccess {
      * If entity not exist, an NotFoundException is thrown.
      *
      * @param string $class
-     * @param int $id
+     * @param int|string $id
      *
      * @throws NotFoundException
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function delete(string $class, int $id) {
+    public function delete(string $class, $id) {
         $repository = $this->getRepository($class);
 
         $entity = $repository->findOneBy([
