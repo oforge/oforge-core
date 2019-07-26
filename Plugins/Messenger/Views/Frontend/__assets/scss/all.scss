@@ -165,6 +165,9 @@
         padding: $size-large $size-large * 2;
     }
     .chat-list {
+        max-height: 60rem;
+        overflow: auto;
+        overflow: auto;
         background: $color-primary;
         &.collapsed {
             display: block;
