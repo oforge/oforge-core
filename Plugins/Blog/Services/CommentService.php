@@ -184,7 +184,7 @@ class CommentService extends AbstractDatabaseAccess {
                              ->select('fu.id, fu.email, fud.nickName, fud.firstName, fud.lastName')#
                              ->leftJoin('c.author', 'fu')#
                              ->leftJoin(UserDetail::class, 'fud', 'WITH', 'fud.user = fu.id')#
-                             ->groupBy('fu.id')#
+                             #->groupBy('fu.id')#
                              ->distinct();
         if (ArrayHelper::issetNotEmpty($_GET, 'post')) {
             $queryBuilder = $queryBuilder->where('c.post = ?1')->setParameter(1, $_GET['post']);
