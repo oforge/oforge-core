@@ -12,7 +12,8 @@
 {% block messenger_conversation_list %}
     {% if conversation.type == "helpdesk_inquiry" %}
         <i class="logo__image"></i>
-        <span class="chat__text">{{ i18n('support') }} - {{ conversation.title }} -- {{ conversation.unreadMessages }}</span>
+        <span class="chat__text">{{ i18n('support') }} - {{ conversation.title }} </span>
+        <i class="unread__messages"><span>{{ conversation.unreadMessages }}</span></i>
     {% else %}
         {{ parent() }}
     {% endif %}
