@@ -1,0 +1,16 @@
+{% if value is iterable %}
+    {% for v in value %}
+        <div class="tag" data-key="{{ f }}" data-value="{{ v }}">
+            <a href="#"
+               onclick="window.location.href = Oforge.removeQueryString('{{ f }}[]', '{{ v }}')"
+               class="close"></a>
+            <span class="tag__text">{{ i18n(f) }} {{ i18n(search.values[v]) }}</span>
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="tag" data-key="{{ f }}" data-value="{{ value }}">
+        <a href="#" onclick="window.location.href = Oforge.updateQueryString('{{ f }}')"
+           class="close"></a>
+            <span class="tag__text">{{ i18n(f) }} {{ i18n(search.values[value]) }}</span>
+    </div>
+{% endif %}

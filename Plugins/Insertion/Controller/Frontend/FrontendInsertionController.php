@@ -221,7 +221,7 @@ class FrontendInsertionController extends SecureFrontendController {
                     Oforge()->Logger()->get()->error('insertion_creation', $data);
                     Oforge()->Logger()->get()->error('insertion_creation_stack', $exception->getTrace());
 
-                    Oforge()->View()->Flash()->addMessage('error', 'server_error');
+                    Oforge()->View()->Flash()->addMessage('error', I18N::translate('server_error'));
                     $uri = $router->pathFor('insertions_createSteps', ['type' => $typeId, 'page' => '5']);
 
                     return $response->withRedirect($uri, 301);
