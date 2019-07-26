@@ -32,7 +32,7 @@
                     {# default case  #}
                     {% block messenger_header %}
                         <img class="" src="{{ media(partner.imageId, 30) }}">
-                        <h3 class="title title--chat">{{ partner.name }} - Default</h3>
+                        <h3 class="title title--chat">{{ partner.name }}</h3>
                     {% endblock messenger_header %}
 
                     <a href="{{ url('frontend_account_messages', {id: activeConversation.id}) }}">
@@ -44,7 +44,8 @@
                 <div class="messages">
                     {% for message in activeConversation.messages %}
                         {% set sender = message.sender %}
-                        <div class="message {{ sender == user.id ? '' : 'partner' }}">
+
+                        <div class="message {% if sender|number_format == user.id|number_format %}partner{% endif %}">
                             <p class="message-text">{{ message.message }}</p>
                             <p class="message-date">{{ message.timestamp|formatDatetime }}</p>
                         </div>
