@@ -643,7 +643,7 @@ class FrontendInsertionController extends SecureFrontendController {
 
             return $response->withRedirect($uri, 302);
         }
-        
+
         $data = $insertion->toArray(2);
         $data["topvalues"] = [];
         /**
