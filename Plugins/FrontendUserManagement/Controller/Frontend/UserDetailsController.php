@@ -82,13 +82,6 @@ class UserDetailsController extends SecureFrontendController {
         /**
          * invalid token was sent
          */
-        if (!hash_equals($_SESSION['token'], $body['token'])) {
-            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('form_invalid_token', 'The data has been sent from an invalid form.'));
-            Oforge()->Logger()->get()->addWarning('Someone tried to change the password without a valid form csrf token! Redirecting back to login.');
-
-            return $response->withRedirect($uri, 302);
-        }
-
         if (!$_SESSION['auth']) {
             Oforge()->View()->Flash()->addMessage('warning', I18N::translate('missing_session_auth', 'The data has been sent from an invalid form.'));
             Oforge()->Logger()->get()->addWarning('Someone tried to change the password without a valid form csrf token! Redirecting back to login.');

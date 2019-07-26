@@ -65,11 +65,27 @@
     }
 
     &__text {
+        flex: 1 1 auto;
         color: $color-light;
         margin-left: $size-large;
     }
+    .unread__messages {
+        flex: 1 0 auto;
+        border: 1px solid $color-light;
+        font-style: normal;
+        border-radius: 100%;
+        text-align: center;
+        line-height: 1.8rem;
+        width: 2rem;
+        height: 2rem;
+        background-color: $color-secondary;
+        color: $color-light;
+    }
     &.is__active {
         background-color: $color-secondary;
+        .unread__messages {
+            display: none;
+        }
     }
 }
 
@@ -93,6 +109,7 @@
         margin-left: 0;
     }
 }
+
 
 .message + .message {
     margin-top: $size-large;
@@ -149,6 +166,9 @@
         padding: $size-large $size-large * 2;
     }
     .chat-list {
+        max-height: 60rem;
+        overflow: auto;
+        overflow: auto;
         background: $color-primary;
         &.collapsed {
             display: block;
