@@ -137,6 +137,8 @@ class FrontendMessengerService extends AbstractMessengerService {
     }
 
     /**
+     * Counts user's unread messages up to a limit of 10.
+     *
      * @param array $conversation
      * @param $userId
      *
@@ -146,8 +148,13 @@ class FrontendMessengerService extends AbstractMessengerService {
         $queryBuilder = $this->entityManager()->createQueryBuilder();
         $queryBuilder->setParameter('conversationId', $conversation['id']);
 
-        /** User has never clicked on this conversation */
-        if (!isset($conversation['requesterLastSeen'])) {
+        $userLastSeen = $conversation['requester'] == $userId ? 'requesterLastSeen' : 'requestedLastSeen';
+
+        /**
+         * Conversation has no timestamp with user's last call
+         * -> count all messages of chat-partner
+         */
+        if (!isset($conversation[$userLastSeen])) {
 
             if ($conversation['requester'] == $userId) {
                 $queryBuilder->setParameter('user', $conversation['requester']);
@@ -157,12 +164,18 @@ class FrontendMessengerService extends AbstractMessengerService {
             $queryBuilder->select('msg')
                          ->from(Message::class, 'msg')
                          ->where('msg.conversationId = :conversationId')
-                         ->andwhere('msg.sender != :user');
+                         ->andwhere('msg.sender != :user')
+                         ->setMaxResults(10);
+
             $result = $queryBuilder->getQuery()->getArrayResult();
 
             return count($result);
         }
 
+        /**
+         * Conversation has a timestamp with user's last call
+         * -> count all newer messages
+         */
         if ($conversation['requester'] == $userId) {
             $queryBuilder->setParameter('lastSeen', $conversation['requesterLastSeen']);
         } else {
@@ -170,7 +183,8 @@ class FrontendMessengerService extends AbstractMessengerService {
         }
         $queryBuilder->select('msg')->from(Message::class, 'msg')
                                     ->where('msg.conversationId = :conversationId')
-                                    ->andWhere('msg.timestamp > :lastSeen');
+                                    ->andWhere('msg.timestamp > :lastSeen')
+                                    ->setMaxResults(10);
         $result = $queryBuilder->getQuery()->getArrayResult();
 
         return count($result);
