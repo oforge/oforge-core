@@ -1,0 +1,10 @@
+<div class="tag" data-key="{{ f }}" data-value="{{ v }}">
+    <a href="#"
+       onclick="window.location.href = Oforge.updateQueryString('{{ f }}[]', null, Oforge.updateQueryString('{{ f }}[]'))"
+       class="close"></a>
+    <span class="tag__text">
+            {{ i18n(f) }}
+        {% set unit = i18n('unit_' ~  attribute.name, '') %}
+            <span class="tag__text">{{ value[0] }} {{ unit }} {{ i18n('between') }}  {{ value[1] }} {{ unit }}</span>
+</span>
+</div>
