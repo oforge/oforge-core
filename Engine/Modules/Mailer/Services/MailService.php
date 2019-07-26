@@ -266,7 +266,7 @@ class MailService {
         $templateData = [
             'conversationLink' => $conversationLink,
             'receiver_name'    => $user->getDetail()->getNickName(),
-            'sender_mail'      => $mailService->getSenderAddress('no_reply'),
+            'sender_mail'      => $this->getSenderAddress('no_reply'),
         ];
         $this->send($mailerOptions, $templateData);
     }
