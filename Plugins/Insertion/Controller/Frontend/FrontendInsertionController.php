@@ -643,8 +643,29 @@ class FrontendInsertionController extends SecureFrontendController {
 
             return $response->withRedirect($uri, 302);
         }
+        
+        $data = $insertion->toArray(2);
+        $data["topvalues"] = [];
+        /**
+         * @var $attribute InsertionTypeAttribute
+         */
+        foreach ($insertion->getInsertionType()->getAttributes() as $attribute) {
+            if ($attribute->isTop()) {
+                foreach ($data["values"] as $value) {
+                    if ($value["attributeKey"] == $attribute->getAttributeKey()->getId()) {
+                        $data["topvalues"][] = [
+                            "name"         => $attribute->getAttributeKey()->getName(),
+                            "type"         => $attribute->getAttributeKey()->getType(),
+                            "attributeKey" => $attribute->getAttributeKey()->getId(),
+                            "value"        => $value["value"],
+                        ];
+                    }
+                }
+            }
+        }
 
-        Oforge()->View()->assign(['insertion' => $insertion->toArray(2)]);
+
+        Oforge()->View()->assign(['insertion' => $data]);
     }
 
     /**
@@ -701,8 +722,30 @@ class FrontendInsertionController extends SecureFrontendController {
             return $response->withRedirect($uri, 302);
         }
 
+
+
+        $data = $insertion->toArray(2);
+        $data["topvalues"] = [];
+        /**
+         * @var $attribute InsertionTypeAttribute
+         */
+        foreach ($insertion->getInsertionType()->getAttributes() as $attribute) {
+            if ($attribute->isTop()) {
+                foreach ($data["values"] as $value) {
+                    if ($value["attributeKey"] == $attribute->getAttributeKey()->getId()) {
+                        $data["topvalues"][] = [
+                            "name"         => $attribute->getAttributeKey()->getName(),
+                            "type"         => $attribute->getAttributeKey()->getType(),
+                            "attributeKey" => $attribute->getAttributeKey()->getId(),
+                            "value"        => $value["value"],
+                        ];
+                    }
+                }
+            }
+        }
+
         Oforge()->View()->assign([
-            'insertion'   => $insertion->toArray(2),
+            'insertion'   => $data,
             'reportTypes' => $reportTypes,
         ]);
     }
