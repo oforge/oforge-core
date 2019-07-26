@@ -21,7 +21,7 @@ class FrontendSecureMiddleware extends SecureMiddleware {
 
     /** @inheritDoc */
     protected function createPermissionDeniedFlashMessage() {
-        Oforge()->View()->Flash()->addMessage('error', I18N::translate('secured_area_no_login', [
+        Oforge()->View()->Flash()->addMessage('warning', I18N::translate('frontend_secured_area_no_login', [
             'en' => 'You have to be logged in to the requested page.',
             'de' => 'Du must für die aufgerufene Seite angemeldet sein.',
         ]));

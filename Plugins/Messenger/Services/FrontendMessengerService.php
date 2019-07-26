@@ -2,11 +2,13 @@
 
 namespace Messenger\Services;
 
+use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Messenger\Abstracts\AbstractMessengerService;
 use Messenger\Models\Conversation;
+use Messenger\Models\Message;
 use ReflectionException;
 
 class FrontendMessengerService extends AbstractMessengerService {
@@ -62,6 +64,8 @@ class FrontendMessengerService extends AbstractMessengerService {
 
         foreach ($conversations as $conversation) {
             $conversation = $conversation->toArray();
+            $unreadMessages = $this->countUnreadMessages($conversation, $userId);
+            $conversation['unreadMessages'] = $unreadMessages;
             if ($conversation['requested'] == $userId) {
                 $conversation['chatPartner'] = $conversation['requester'];
             } else {
@@ -103,6 +107,22 @@ class FrontendMessengerService extends AbstractMessengerService {
     }
 
     /**
+     * @param $conversationId
+     * @param $userId
+     *
+     * @throws ORMException
+     */
+    public function updateLastSeen($conversationId, $userId) {
+        $conversation = parent::getConversationById($conversationId);
+        if ($conversation->toArray()['requester'] == $userId) {
+            $conversation->setRequesterLastSeen(new DateTime("now"));
+        } else {
+            $conversation->setRequestedLastSeen(new DateTime("now"));
+        }
+        $this->entityManager()->update($conversation);
+    }
+
+    /**
      * @param $requester
      * @param $requested
      * @param $conversationType
@@ -120,5 +140,28 @@ class FrontendMessengerService extends AbstractMessengerService {
         ]);
 
         return $conversation;
+    }
+
+    /**
+     * @param array $conversation
+     * @param $userId
+     *
+     * @return int
+     */
+    public function countUnreadMessages(array $conversation, $userId) {
+        $queryBuilder = $this->entityManager()->createQueryBuilder();
+        $queryBuilder->setParameter('conversationId', $conversation['id']);
+        if ($conversation['requester'] == $userId) {
+            $queryBuilder->setParameter('lastSeen', $conversation['requesterLastSeen']);
+        } else {
+            $queryBuilder->setParameter('lastSeen', $conversation['requestedLastSeen']);
+        }
+        $queryBuilder->select('msg')
+            ->from(Message::class, 'msg' )
+            ->where('msg.conversationId = :conversationId')
+            ->andWhere('msg.timestamp > :lastSeen');
+        $result= $queryBuilder->getQuery()->getArrayResult();
+
+        return count($result);
     }
 }
