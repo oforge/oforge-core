@@ -64,6 +64,7 @@ class MessengerController extends SecureFrontendController {
             $conversationId = $args['id'];
 
             /** @var Conversation $conversation */
+            $frontendMessengerService->updateLastSeen($conversationId, $user['id']);
             $activeConversation = $frontendMessengerService->getConversation($conversationId, $user['id']);
             $isRequester        = ($activeConversation['requester'] == $user['id']);
             /* Check for permission of conversation */
