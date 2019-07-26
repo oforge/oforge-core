@@ -335,8 +335,7 @@ class BaseCrudController extends SecureBackendController {
      * @param array $args
      *
      * @return Response
-     * @throws ORMException
-     * @EndpointAction(path="/view/{id:\d+}")
+     * @EndpointAction(path="/view/{id}")
      */
     public function viewAction(Request $request, Response $response, array $args) {
         $entity = $this->crudService->getById($this->model, $args['id']);
@@ -361,8 +360,7 @@ class BaseCrudController extends SecureBackendController {
      * @param array $args
      *
      * @return Response
-     * @throws ORMException
-     * @EndpointAction(path="/update/{id:\d+}")
+     * @EndpointAction(path="/update/{id}")
      */
     public function updateAction(Request $request, Response $response, array $args) {
         $postData = $request->getParsedBody();
@@ -413,8 +411,7 @@ class BaseCrudController extends SecureBackendController {
      * @param array $args
      *
      * @return Response
-     * @throws ORMException
-     * @EndpointAction(path="/delete/{id:\d+}")
+     * @EndpointAction(path="/delete/{id}")
      */
     public function deleteAction(Request $request, Response $response, array $args) {
         $postData = $request->getParsedBody();
@@ -457,7 +454,7 @@ class BaseCrudController extends SecureBackendController {
      * Process select list callable.
      *
      * @param array $filter
-     * @param string $key
+     * @param string $propertyName
      */
     protected function processSelectListCallable(array &$filter, string $propertyName) {
         if (isset($filter['list']) && is_string($filter['list']) && method_exists($this, $filter['list'])) {
