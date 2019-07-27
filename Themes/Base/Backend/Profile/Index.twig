@@ -4,36 +4,68 @@
     <div class="row">
         <div class="col-xs-12">
             <div class="box box-primary">
-
-                <div class="box-header">
-                    <h3 class="box-title">{{ i18n("profile_title") }}</h3>
+                <div class="box-header with-border">
+                    <h3 class="box-title"><i class="fa fa-user"></i> {{ i18n('profile') }}</h3>
                 </div>
-
                 <div class="box-body">
-                    <form id="form_edit" action="{{ url("backend_profile_update") }}" method="post">
-                        <div class="form-group">
-                            <label for="email">
-                                {{ i18n("email") }}
-                            </label>
-                            <input class="form-control"
-                                   type="email"
-                                   id="email"
-                                   name="email"
-                                   value="{{ user.email }}">
+                    <div class="nav-tabs-custom">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" class="active">
+                                <a href="#profile_login" aria-controls="profile_login" role="tab" data-toggle="tab">
+                                    {{ i18n('profile_settings_login', {en: 'Login', de: 'Login'}) }}
+                                </a>
+                            </li>
+                            {#                            <li role="presentation">#}
+                            {#                                <a href="#profile_details" aria-controls="profile_details" role="tab" data-toggle="tab">#}
+                            {#                                    Personal informations#}
+                            {#                                </a>#}
+                            {#                            </li>#}
+                            <li role="presentation">
+                                <a href="#profile_dashboard_widgets" aria-controls="profile_dashboard_widgets"
+                                   role="tab" data-toggle="tab">
+                                    {{ i18n('profile_settings_dashboard_widgets', {en: 'Dashboard widgets', de: 'Dashboard-Widgets'}) }}
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="profile_login">
+                                <form id="form_edit" action="{{ url('backend_profile_update') }}" method="post">
+                                    <div class="form-group">
+                                        <label for="email">
+                                            {{ i18n("email") }}
+                                        </label>
+                                        <input class="form-control"
+                                               type="email"
+                                               id="email"
+                                               name="email"
+                                               value="{{ user.email }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="password">
+                                            {{ i18n("password") }}
+                                        </label>
+                                        <input class="form-control"
+                                               type="password"
+                                               id="password"
+                                               name="password">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">{{ i18n('update') }}</button>
+                                    <input type="hidden" id="id" name="id" value="{{ user.id }}">
+                                </form>
+                            </div>
+                            {#                            <div role="tabpanel" class="tab-pane" id="profile_details">#}
+                            {#                                2#}
+                            {#                            </div>#}
+                            <div role="tabpanel" class="tab-pane" id="profile_dashboard_widgets">
+                                3
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="password">
-                                {{ i18n("password") }}
-                            </label>
-                            <input class="form-control"
-                                   type="password"
-                                   id="password"
-                                   name="password">
-                        </div>
-                        <button type="submit" class="btn btn-primary">{{ i18n("update") }}</button>
-                        <a href="javascript:location.href='{{ url("backend_dashboard") }}'" class="btn btn-default">{{ i18n("cancel") }}</a>
-                        <input type="hidden" id="id" name="id" value="{{ user.id }}">
-                    </form>
+                    </div>
+                </div>
+                <div class="box-footer">
+                    <a href="{{ url('backend_dashboard') }}" class="btn btn-default">
+                        {{ i18n('back to dashboard') }}
+                    </a>
                 </div>
             </div>
         </div>
