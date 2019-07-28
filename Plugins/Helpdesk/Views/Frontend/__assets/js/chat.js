@@ -1,5 +1,7 @@
 /**
- * This module will highlight the active chat-navigation element
+ * This module will:
+ * 1. Add class 'is__active' to currently selected conversation element.
+ * 2. Scroll active chat to user's last-seen message.
  */
 
 if (typeof Oforge !== 'undefined') {
@@ -9,10 +11,17 @@ if (typeof Oforge !== 'undefined') {
         selector: '.messenger',
         otherNotRequiredContent: '',
         init: function () {
-            var messageKey = document.URL.split("/").pop();
-            var activeChat = document.getElementById(messageKey);
-            if(activeChat) {
+            let conversationId = document.URL.split("/").pop();
+            let activeChat = document.getElementById(conversationId);
+            if (activeChat) {
                 activeChat.classList.add("is__active");
+                let chatInput = document.getElementById('message');
+                let unreadMessages = activeChat.dataset.unread;
+                let messages = document.getElementsByClassName('message');
+                let lastSeenMessageIndex = messages.length - (1 + parseInt(unreadMessages));
+                messages[lastSeenMessageIndex].scrollIntoView(false);
+                chatInput.scrollIntoView(false);
+                chatInput.focus();
             }
         }
     });
