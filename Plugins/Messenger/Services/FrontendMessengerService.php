@@ -46,11 +46,20 @@ class FrontendMessengerService extends AbstractMessengerService {
      */
     public function getConversationList($userId) {
         $queryBuilder = $this->entityManager()->createQueryBuilder();
+        $queryBuilder->setParameter('open', 'open');
 
-        $query = $queryBuilder->select('c')->from(Conversation::class, 'c')->where($queryBuilder->expr()->andX($queryBuilder->expr()
-                                                                                                                            ->eq('c.requester', $userId),
-                $queryBuilder->expr()->eq('c.requesterType', '1')))->orWhere($queryBuilder->expr()->andX($queryBuilder->expr()->eq('c.requested', $userId),
-                $queryBuilder->expr()->eq('c.requestedType', '1')))->orderBy('c.lastMessageTimestamp', 'DESC')->getQuery();
+        $query = $queryBuilder->select('c')
+                              ->from(Conversation::class, 'c')
+                              ->where($queryBuilder->expr()->andX(
+                                  $queryBuilder->expr()->eq('c.requester', $userId),
+                                  $queryBuilder->expr()->eq('c.requesterType', '1'),
+                                  $queryBuilder->expr()->eq('c.state', ':open')))
+                              ->orWhere($queryBuilder->expr()->andX(
+                                  $queryBuilder->expr()->eq('c.requested', $userId),
+                                  $queryBuilder->expr()->eq('c.requestedType', '1'),
+                                  $queryBuilder->expr()->eq('c.state', ':open')))
+                              ->orderBy('c.lastMessageTimestamp', 'DESC')
+                              ->getQuery();
 
         /** @var Conversation[] $conversations */
         $conversations = $query->execute();
