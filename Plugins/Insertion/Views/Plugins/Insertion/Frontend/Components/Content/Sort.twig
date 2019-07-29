@@ -18,11 +18,15 @@
             </select>
         </div>
 
+        <p>
+            |{{ typeId }}|
+        </p>
         <form method="post"
               class="form form--sort"
-              action="{{ url('frontend_account_insertions_toggleSearchBookmark', {'typeId': typeId }) }}"
+              action="{{ url('frontend_account_insertions_toggleSearchBookmark') }}"
               enctype="multipart/form-data">
             <input type="hidden" name="filter" value="{{ search.filter|json_encode() }}" />
+            <input type="hidden" name="type_id" value="{{ typeId }}" />
             <input type="submit"
                    class="button button--large button--secondary button--save-result"
                    value="{% if hasSearchBookmark(typeId, search.filter) %}{{ i18n('remove_from_search_list', 'Remove search from search list') }}{% else %}{{ i18n('save_search', 'Save search') }}{% endif %}" />
