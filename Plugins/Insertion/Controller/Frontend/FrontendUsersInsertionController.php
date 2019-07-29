@@ -2,6 +2,7 @@
 
 namespace Insertion\Controller\Frontend;
 
+use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Abstracts\SecureFrontendController;
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\FrontendUserService;
@@ -17,6 +18,7 @@ use Insertion\Services\InsertionTypeService;
 use Insertion\Services\InsertionUpdaterService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -34,7 +36,7 @@ class FrontendUsersInsertionController extends SecureFrontendController {
      * @param Request $request
      * @param Response $response
      *
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ServiceNotFoundException
      */
     public function indexAction(Request $request, Response $response) {
         /**
@@ -57,7 +59,7 @@ class FrontendUsersInsertionController extends SecureFrontendController {
      * @param Request $request
      * @param Response $response
      *
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ServiceNotFoundException
      */
     public function pageAction(Request $request, Response $response) {
         /**
@@ -83,8 +85,8 @@ class FrontendUsersInsertionController extends SecureFrontendController {
      * @param $args
      *
      * @return Response
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ORMException
+     * @throws ServiceNotFoundException
      * @EndpointAction(path="/delete/{id}")
      */
     public function deleteAction(Request $request, Response $response, $args) {
@@ -97,8 +99,8 @@ class FrontendUsersInsertionController extends SecureFrontendController {
      * @param $args
      *
      * @return Response
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ORMException
+     * @throws ServiceNotFoundException
      * @EndpointAction(path="/activate/{id}")
      */
     public function activateAction(Request $request, Response $response, $args) {
@@ -111,8 +113,8 @@ class FrontendUsersInsertionController extends SecureFrontendController {
      * @param $args
      *
      * @return Response
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ORMException
+     * @throws ServiceNotFoundException
      * @EndpointAction(path="/disable/{id}")
      */
     public function disableAction(Request $request, Response $response, $args) {
@@ -144,7 +146,7 @@ class FrontendUsersInsertionController extends SecureFrontendController {
      * @param Request $request
      * @param Response $response
      *
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ServiceNotFoundException
      */
     public function bookmarksAction(Request $request, Response $response) {
         /**
@@ -167,8 +169,8 @@ class FrontendUsersInsertionController extends SecureFrontendController {
      * @param Request $request
      * @param Response $response
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ORMException
+     * @throws ServiceNotFoundException
      */
     public function searchBookmarksAction(Request $request, Response $response) {
         /**
@@ -217,8 +219,8 @@ class FrontendUsersInsertionController extends SecureFrontendController {
      * @param $args
      *
      * @return Response
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ORMException
+     * @throws ServiceNotFoundException
      */
     public function toggleBookmarkAction(Request $request, Response $response, $args) {
         $id = $args["insertionId"];
@@ -263,11 +265,11 @@ class FrontendUsersInsertionController extends SecureFrontendController {
      * @param $args
      *
      * @return Response
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ORMException
+     * @throws ServiceNotFoundException
      */
     public function toggleSearchBookmarkAction(Request $request, Response $response, $args) {
-        $id = 2;
+        $id = $request->getParsedBody('type_id');
         /**
          * @var $service InsertionTypeService
          */
@@ -316,8 +318,8 @@ class FrontendUsersInsertionController extends SecureFrontendController {
      * @param $args
      *
      * @return Response
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ORMException
+     * @throws ServiceNotFoundException
      * @EndpointAction(path="/removeBookmark/{id}")
      */
     public function removeBookmarkAction(Request $request, Response $response, $args) {
@@ -347,8 +349,8 @@ class FrontendUsersInsertionController extends SecureFrontendController {
      * @param Response $response
      * @EndpointAction(path = "/profile")
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ORMException
+     * @throws ServiceNotFoundException
      */
     public function profileAction(Request $request, Response $response) {
         /**
@@ -408,15 +410,14 @@ class FrontendUsersInsertionController extends SecureFrontendController {
      * @param string $action
      *
      * @return Response
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ORMException
+     * @throws ServiceNotFoundException
      */
     private function modifyInsertion(Request $request, Response $response, $args, string $action) {
-        $id = $args["id"];
-        /**
-         * @var $service InsertionService
-         */
+
+        /** @var $service InsertionService */
         $service   = Oforge()->Services()->get("insertion");
+        $id = $args["id"];
         $insertion = $service->getInsertionById(intval($id));
 
         /**
