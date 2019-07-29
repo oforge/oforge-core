@@ -71,6 +71,8 @@
         margin-left: $size-large;
     }
     .unread__messages {
+
+        flex: 0 0 auto;
         border: 1px solid $color-light;
         font-style: normal;
         border-radius: 100%;
