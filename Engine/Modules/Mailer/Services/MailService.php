@@ -235,6 +235,7 @@ class MailService {
      * @param $userId
      * @param $conversationId
      *
+     * @return bool
      * @throws ConfigElementNotFoundException
      * @throws ConfigOptionKeyNotExistException
      * @throws ServiceNotFoundException
@@ -250,7 +251,7 @@ class MailService {
 
         /** @var User $user */
         $user          = $userService->getUserbyId($userId);
-        $uri = $router->pathFor('frontend_account_messages') . DIRECTORY_SEPARATOR . $conversationId;
+        $uri           = $router->pathFor('frontend_account_messages') . DIRECTORY_SEPARATOR . $conversationId;
 
         $conversationLink = 'http://';
         if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
@@ -271,19 +272,20 @@ class MailService {
             'receiver_name'    => $user->getDetail()->getNickName(),
             'sender_mail'      => $this->getSenderAddress('no_reply'),
         ];
-        $this->send($mailerOptions, $templateData);
+        return $this->send($mailerOptions, $templateData);
     }
 
     /**
      * @param $insertionId
      *
+     * @return bool
      * @throws ConfigElementNotFoundException
      * @throws ConfigOptionKeyNotExistException
+     * @throws ORMException
      * @throws ServiceNotFoundException
      * @throws Twig_Error_Loader
      * @throws Twig_Error_Runtime
      * @throws Twig_Error_Syntax
-     * @throws ORMException
      */
     public function sendInsertionApprovedInfoMail($insertionId) {
 
@@ -297,10 +299,6 @@ class MailService {
         $user          = $insertion->getUser();
         $userMail      = $user->getEmail();
 
-        /** @var  FrontendUserService $userService */ /** @var  Router $router */
-        $router = Oforge()->App()->getContainer()->get('router');
-        $userService   = Oforge()->Services()->get('frontend.user.management.user');
-
         $mailerOptions = [
             'to'       => [$userMail => $userMail],
             'from'     => 'no_reply',
@@ -309,11 +307,11 @@ class MailService {
         ];
         $templateData = [
             'insertionId'      => $insertionId,
-            'insertionTitle'   => $insertion->getContent(),
+            // 'insertionTitle'   => $insertion->getContent(),
             'receiver_name'    => $user->getDetail()->getNickName(),
             'sender_mail'      => $this->getSenderAddress('no_reply'),
         ];
-        $this->send($mailerOptions, $templateData);
+        return $this->send($mailerOptions, $templateData);
     }
 
     public function batchSend() {
