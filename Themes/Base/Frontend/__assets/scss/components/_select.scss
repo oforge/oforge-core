@@ -42,6 +42,15 @@
         }
     }
 
+    &__filter {
+        width: calc(100% - 1.2rem);
+        border: 1px solid $color-primary;
+        margin: $size-medium;
+        border-radius: $size-small;
+        padding: $size-small;
+        font-size: $font-size-5;
+    }
+
     &__text {
         position: relative;
         margin: 0;
@@ -84,6 +93,7 @@
     }
     &__list {
         height: auto;
+        max-height: 400px;
         list-style: none;
         margin: 0;
         padding: 0;
@@ -104,6 +114,10 @@
             margin-right: .6rem;
             border: 1px solid $color-primary;
             border-radius: $size-small;
+        }
+
+        &.select__item--is-hidden {
+            display: none;
         }
 
         &.select__item--is-checked {
@@ -134,6 +148,11 @@
         overflow: hidden;
         white-space: nowrap;
         line-height: 24px;
+
+        strong {
+            font-weight: bold;
+            color: $color-secondary;
+        }
     }
 }
 
