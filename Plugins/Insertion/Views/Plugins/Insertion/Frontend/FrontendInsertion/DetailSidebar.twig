@@ -1,5 +1,6 @@
 {% block detail__sidebar %}
-    <div class="sidebar sidebar--insertion {% if profile.user.detail.image is not empty %}has-provider-image{% endif %}">
+    <div
+        class="sidebar sidebar--insertion {% if profile.user.detail.image is not empty %}has-provider-image{% endif %}">
 
         {% block sidebar__panel_provider %}
             {% if profile.user.detail.image is not empty %}
@@ -27,9 +28,10 @@
                 <div class="panel panel--contact contact">
                     <div class="contact__name">{{ contact.name }}</div>
                     <div class="contact__address"><span class="adress__zip">{{ contact.zip }}</span> <span
-                                class="adress__city">{{ contact.city }}</span></div>
+                            class="adress__city">{{ contact.city }}</span></div>
                     {% if contact.phone is not empty %}
-                        <div class="contact__phone">{{ i18n ('insertion_detail_telephone', 'Tel.:') }} {{ contact.phone }}</div>
+                        <div
+                            class="contact__phone">{{ i18n ('insertion_detail_telephone', 'Tel.:') }} {{ contact.phone }}</div>
                     {% endif %}
                     <a href="{{ url("insertions_contact", {id: insertion.id}) }}"
                        class="button button--secondary">{{ i18n('insertion_detail_contact_advertiser', 'Anbieter Kontaktieren') }}</a>
@@ -42,7 +44,7 @@
         {% block sidebar__panel_map %}
             <div class="panel panel--map map">
                 <div class="map__address"><span class="adress__zip">{{ contact.zip }}</span> <span
-                            class="adress__city">{{ contact.city }}</span></div>
+                        class="adress__city">{{ contact.city }}</span></div>
                 <div class="map__view">
                     <iframe class="external--content content--iframe"
                             src="https://www.google.com/maps?ie=UTF8&amp;Iwloc=near&amp;output=embed&amp;t=m&amp;z=15&amp;q={{ contact.zip }}+{{ contact.city }}"
@@ -55,18 +57,5 @@
         {% block detail_sidebar__cross_sell %}
             {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailSidebarCrosssell.twig' %}
         {% endblock detail_sidebar__cross_sell %}
-{#
-        <div class="panel panel--cross-sell cross-sell">
-            <div class="cross-sell__title">Some new blog post</div>
-            <div class="cross-sell__image">
-                <img src="https://placeponi.es/300/300" alt="" class="image">
-            </div>
-            <div class="cross-sell__description">
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At eos ex omnis perferendis,
-                    quidem tempora unde. Accusantium autem commodi
-                    excepturi harum, officiis pariatur quasi quidem sint sunt tempora. Animi, non?</p>
-            </div>
-            <a href="#" class="button button--primary">To the blog post</a>
-        </div>#}
     </div>
 {% endblock detail__sidebar %}
