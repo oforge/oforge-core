@@ -324,6 +324,7 @@ class BackendInsertionController extends BaseCrudController {
 
         return $response;
     }
+
         /**
      * @param Request $request
      * @param Response $response
@@ -342,25 +343,25 @@ class BackendInsertionController extends BaseCrudController {
     public function approveInsertionAction(Request $request, Response $response, $args) {
         $insertionId = $args["id"];
 
-        /** @var InsertionUpdaterService $insertionUpdater */
-        $insertionUpdater = Oforge()->Services()->get('insertion.updater');
-
         /** @var MailService $mailService */
         $mailService = Oforge()->Services()->get('mail');
+
         /** @var InsertionService $insertionService */
         $insertionService = Oforge()->Services()->get('insertion');
+
         /** @var Insertion $insertion */
         $insertion = $insertionService->getInsertionById($insertionId);
+        $insertion->setModeration(true);
+        $insertionService->entityManager()->update($insertion);
 
-        $insertionUpdater->update($insertion, ['moderation' => true]);
-        $mailService->sendInsertionApprovedInfoMail($insertionId);
+        if($mailService->sendInsertionApprovedInfoMail($insertionId)) {
+            Oforge()->View()->Flash()->addMessage('success', 'ID ' . $insertionId . ': Notification has been sent');
+
+        } else {
+            Oforge()->View()->Flash()->addMessage('error', 'ID ' . $insertionId . ': Notification could not be sent' );
+        }
 
         return RouteHelper::redirect($response, 'backend_insertions');
-    }
-    public function initPermissions() {
-        parent::initPermissions();
-        $this->ensurePermission('approveInsertionAction', BackendUser::ROLE_MODERATOR);
-        $this->ensurePermission('disapproveInsertionAction', BackendUser::ROLE_MODERATOR);
     }
 
     /**
@@ -369,12 +370,29 @@ class BackendInsertionController extends BaseCrudController {
      * @param $args
      *
      * @return Response
+     * @throws ORMException
+     * @throws ServiceNotFoundException
      * @EndpointAction(path="/disapprove/{id:\d+}")
      */
     public function disapproveInsertionAction(Request $request, Response $response, $args) {
         $insertionId = $args["id"];
 
-        return RouteHelper::redirect($response, 'backend_insertions');
+        /** @var InsertionService $insertionService */
+        $insertionService = Oforge()->Services()->get('insertion');
 
+        /** @var Insertion $insertion */
+        $insertion = $insertionService->getInsertionById($insertionId);
+        $insertion->setModeration(false);
+        $insertionService->entityManager()->update($insertion);
+
+        // TODO: Tell user why insertion has been disapproved ?
+
+        return RouteHelper::redirect($response, 'backend_insertions');
+    }
+
+    public function initPermissions() {
+        parent::initPermissions();
+        $this->ensurePermission('approveInsertionAction', BackendUser::ROLE_MODERATOR);
+        $this->ensurePermission('disapproveInsertionAction', BackendUser::ROLE_MODERATOR);
     }
 }
