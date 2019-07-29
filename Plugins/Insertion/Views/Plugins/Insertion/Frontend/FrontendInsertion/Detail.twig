@@ -13,13 +13,15 @@
 {% endblock layout__header %}
 
 {% block content %}
-    {% if not insertion.moderation %}
-        {{ i18n('insertion_needs_moderation') }}
-        {% include 'Frontend/Components/FlashMessages.twig' with {'flashMessages' : insertion.moderation} %}
-    {% endif %}
-
-    <div class="content content--insertion flex {% if profile.background.id is not empty %} has-header-image {% endif %}">
+    <div
+        class="content content--insertion flex {% if profile.background.id is not empty %} has-header-image {% endif %}">
         <div class="main">
+            {% if not insertion.moderation %}
+                {% block insertion_detail__flash_message %}
+                {% set flashMessage = { 0 : {'message' : i18n('insertion_needs_moderation'), 'type' : 'info', 'dismissible' : true } } %}
+                {% include 'Frontend/Components/FlashMessages.twig' with {'flashMessages' : flashMessage} %}
+                {% endblock insertion_detail__flash_message %}
+            {% endif %}
             <div class="panel panel--product-view">
 
                 {% block insertion_detail__breadcrumb %}
@@ -29,9 +31,13 @@
                 {% block insertion_detail__heading %}
                     <div class="product-view--heading">
                         <h3 class="title title--3 title--product">{{ insertion.content[0].title }}</h3>
-                        <span class="title title--3 product-view__price">{{ i18n('price_' ~ insertion.insertionType.name, i18n('price')) }} <span
-                                    class="price-value">{{ insertion.price|number_format(0, ',', '.') }} €</span></span>{% if insertion.tax %}
-                        <span class="product-view__tax">, {{ i18n('vat_identifiable') }}</span>{% endif %}
+                        <span
+                            class="title title--3 product-view__price">{{ i18n('price_' ~ insertion.insertionType.name, i18n('price')) }}
+                            <span class="price-value">{{ insertion.price|number_format(0, ',', '.') }} €</span>
+                        {% if insertion.tax %}
+                            <span class="product-view__tax">, {{ i18n('vat_identifiable') }}</span>
+                        {% endif %}
+                    </span>
                     </div>
                 {% endblock insertion_detail__heading %}
 
@@ -53,7 +59,8 @@
 
 
                     <div class="product__attribute">
-                        <span class="attribute-label">{{ i18n('price_' ~ insertion.insertionType.name, i18n('price')) }}</span>
+                    <span
+                        class="attribute-label">{{ i18n('price_' ~ insertion.insertionType.name, i18n('price')) }}</span>
                         <span class="attribute-value">{{ insertion.price|number_format(0, ',', '.') }} €</span>
                     </div>
                 </div>
