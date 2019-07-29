@@ -8,10 +8,6 @@
                             {% if item is defined and item.content|length > 0 and item.content.path is defined %}
                                 <img src="{{ item.content.path }}" alt="{{ item.content.name }}"
                                      class="thumbnail__image">
-                            {% else %}
-                                <!-- TODO add dummy image -->
-                                <img src="https://placeponi.es/300/300" alt="{{ insertion.content[0].title }}"
-                                     title="{{ insertion.content[0].title }}" class="image">
                             {% endif %}
                         </div>
                     {% endfor %}
@@ -24,10 +20,6 @@
                             {% if item is defined and item.content|length > 0 and item.content.path is defined %}
                                 <img src="{{ item.content.path }}" alt="{{ item.content.name }}"
                                      class="thumbnail__image">
-                            {% else %}
-                                <!-- TODO add dummy image -->
-                                <img src="https://placeponi.es/300/300" alt="{{ insertion.content[0].title }}"
-                                     title="{{ insertion.content[0].title }}" class="image">
                             {% endif %}
                         </div>
                     {% endfor %}
