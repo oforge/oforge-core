@@ -65,6 +65,7 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
             $insertion->setContact($contact);
             $insertion->setMedia($media);
             $insertion->setValues($attributeValues);
+            $insertion->setTax($data["tax"]);
 
             $this->entityManager()->create($content, false);
             $this->entityManager()->create($contact, false);
