@@ -10,7 +10,7 @@
                 <img class="tile__image lazy" data-src="{{ media(data.url, 400) }}" alt="{{ data.caption }}" />
             </picture>
         </div>
-        <div class="text-container" style="background-color:{{ data.backgroundcolor }}" class="{% if data.link %}has-link{% endif %}">
+        <div class="text-container {% if data.link is not empty%}has-link{% endif %}" style="background-color:{{ data.backgroundcolor }}">
             <h2 style="color:{{ data.fontcolor }};">{{ data.caption }}</h2>
             {% if data.subheading %}
                 <h3>{{ data.subheading }}</h3>{% endif %}
