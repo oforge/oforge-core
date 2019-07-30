@@ -229,7 +229,7 @@ $('.cms-content-sortable').sortable({
                 type: "POST",
                 url: "/backend/cms/ajax/order",
                 async: false,
-                data: {"data": JSON.stringify(data)},
+                data: {"data": data},
                 success: function () {
                 }
             })
