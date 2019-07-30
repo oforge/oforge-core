@@ -60,7 +60,7 @@ class MessengerController extends SecureFrontendController {
         $router = Oforge()->App()->getContainer()->get('router');
 
         /* Get a conversation: /messages/conversationId */
-        if (isset($args) && isset($args['id'])) {
+        if (isset($args) && ($args['id'])) {
             $conversationId = $args['id'];
 
             /** @var Conversation $conversation */
