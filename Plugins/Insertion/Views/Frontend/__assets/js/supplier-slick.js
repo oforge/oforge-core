@@ -2,31 +2,27 @@ var prevArrow = "<button class='slick-prev slick-arrow' aria-label='Previous' ty
 var nextArrow = "<button class='slick-next slick-arrow' aria-label='Previous' type='button'><svg class='icon icon--profil'><use xlink:href='#slider'></use></svg></button>";
 
 
-
 $(document).ready(function () {
     $('.slider--supplier').slick({
-        slidesToShow: 1,
         arrows: true,
-        autoplay: true,
-        autoplaySpeed: 7000,
+        variableWidth: false,
         prevArrow: prevArrow,
         nextArrow: nextArrow,
         lazyLoad: 'progressive',
+        dots: false,
+        mobileFirst: true,
         responsive: [
             {
-                breakpoint: 768,
+                breakpoint: 1280,
                 settings: {
-                    arrows: false,
                     slidesToShow: 1,
-                    autoplaySpeed: 5000
+                    focusOnSelect: true,
                 }
-            },
-            {
-                breakpoint: 480,
+            }, {
+                breakpoint: 959,
                 settings: {
-                    arrows: false,
                     slidesToShow: 1,
-                    autoplaySpeed: 5000
+                    focusOnSelect: true,
                 }
             }
         ]

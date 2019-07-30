@@ -46,9 +46,9 @@ class Customers extends AbstractContentType {
      */
     public function setEditData($data) {
         $contentData = [
-            'customer_name' => $data['customer_name'],
-            'image'         => $data['image'],
-            'text'          => $data['text'],
+            'customer_name' => ArrayHelper::get($data, 'customer_name', ''),
+            'image'         => ArrayHelper::get($data, 'image', ''),
+            'text'          => ArrayHelper::get($data, 'text', ''),
         ];
 
         $this->setContentData($contentData);

@@ -12,13 +12,13 @@
 
                 <ul class="chat-list collapsed">
                     {% for conversation in conversationList %}
-                        <li class="chat" id="{{ conversation.id }}">
+                        <li class="chat" id="{{ conversation.id }}" data-unread="{{  conversation.unreadMessages }}">
                             <a href="{{ url('frontend_account_messages', {id: conversation.id}) }}"
                                class="chat__link flex flex--row flex--center">
                                 {% block messenger_conversation_list %}
                                     <img class="" src="{{ media(partner.imageId, 30) }}">
                                     <span class="chat__text">{{ conversation.chatPartner.name }}</span>
-                                    <i class="unread__messages">{{ conversation.unreadMessages }}</i>
+                                    <i class="unread__messages" {% if conversation.unreadMessages == 0 %}style="visibility: hidden"{% endif %}></i>
                                 {% endblock messenger_conversation_list %}
                             </a>
                         </li>
@@ -45,7 +45,7 @@
                     {% for message in activeConversation.messages %}
                         {% set sender = message.sender %}
 
-                        <div class="message {% if sender|number_format == user.id|number_format %}partner{% endif %}">
+                        <div class="message {% if sender|number_format !=  current_user.id|number_format %}partner{% endif %}">
                             <p class="message-text">{{ message.message }}</p>
                             <p class="message-date">{{ message.timestamp|formatDatetime }}</p>
                         </div>
