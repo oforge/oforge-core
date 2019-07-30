@@ -35,7 +35,7 @@
                     {% endif %}
                     <a href="{{ url("insertions_contact", {id: insertion.id}) }}"
                        class="button button--secondary">{{ i18n('insertion_detail_contact_advertiser', 'Anbieter Kontaktieren') }}</a>
-                    <a href="{{ url('frontend_account_insertions_toggleBookmark', {'insertionId': insertion.id }) }}"
+                    <a href="{{ url('frontend_account_insertions_toggleBookmark', {insertionId: insertion.id }) }}"
                        class="button button--secondary">{% if hasBookmark(insertion.id) %} {{ i18n('insertion_detail_contact_remove_from_wishlist', 'Aus meinem Stall entfernen') }} {% else %}{{ i18n('insertion_detail_contact_add_to_wishlist', 'In meinen Stall stellen') }}{% endif %}</a>
                 </div>
             {% endif %}

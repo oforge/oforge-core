@@ -16,6 +16,9 @@
 
     .form-controls.form-controls--row .form__control.form__control__boolean {
         margin: 0;
+        .form__label {
+            margin-bottom: 0;
+        }
     }
     .form__label {
         display: inline-block;
@@ -54,9 +57,10 @@
             flex-direction: column;
             align-items: flex-start;
             justify-content: flex-start;
-        }
-        .form__control {
-            flex: auto;
+            .form__control {
+                flex: auto;
+                min-width: 100%;
+            }
         }
     }
 }

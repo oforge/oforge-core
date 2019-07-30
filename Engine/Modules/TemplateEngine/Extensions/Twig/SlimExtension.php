@@ -70,7 +70,7 @@ class SlimExtension extends Twig_Extension {
 
         $urlService = Oforge()->Services()->get('url');
 
-        return RouteHelper::getUrlWithBasePath($urlService->getUrl($name, $namedParams, $queryParams));
+        return $urlService->getUrl($name, $namedParams, $queryParams);
     }
 
     /**
