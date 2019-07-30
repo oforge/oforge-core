@@ -26,10 +26,12 @@
                     </div>
                     <div class="row collapse in" id="contenttypegroup_{{ contentTypeGroup.id }}">
                         {% for contentType in contentTypeGroup.types %}
+                            {% set contentTypeLabel = i18n('cms_content_type_label_' ~ contentType.name, contentType.name) %}
                             <div class="content-type-selector jstree_draggable" data-ct-id="{{ contentType.id }}"
-                                 title="{{ i18n('cms_content_type_label_' ~ contentType.name, contentType.name) }}">
+                                 title="{{ contentTypeLabel }}">
                                 <div draggable="false">
                                     <img draggable="false" class="content-type-icon" src="{{ contentType.icon }}" />
+                                    <div class="content-type-description" draggable="false">{{ contentTypeLabel }}</div>
                                     {% if contentType.hint %}
                                         <button class="content-type-hint" draggable="false"
                                                 title="{{ i18n(contentType.hint) }}"
