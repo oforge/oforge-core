@@ -35,7 +35,7 @@
         width: 30%;
         position: relative;
         top: -16rem;
-        margin-bottom: -12rem;
+        margin-bottom: -10rem;
 
         .account__user {
             display: block;
@@ -89,8 +89,11 @@
         line-height: 2rem;
 
         &.upload-background {
-            text-align: right;
-            justify-content: right;
+            justify-content: flex-end;
+            .icon {
+                width: 2rem;
+                height: 2rem;
+            }
         }
         #input__background, #input__profile {
             display: none;
