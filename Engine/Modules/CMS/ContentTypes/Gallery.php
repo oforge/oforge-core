@@ -4,6 +4,7 @@ namespace Oforge\Engine\Modules\CMS\ContentTypes;
 
 use Oforge\Engine\Modules\CMS\Abstracts\AbstractContentType;
 use Oforge\Engine\Modules\CMS\Models\Content\Content;
+use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 
 /**
  * Class Gallery
@@ -46,7 +47,7 @@ class Gallery extends AbstractContentType {
      * @return Gallery $this
      */
     public function setEditData($data) {
-        $this->setContentData($data['images']);
+        $this->setContentData(ArrayHelper::get($data, 'images', []));
 
         return $this;
     }
