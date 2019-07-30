@@ -52,11 +52,11 @@ class IconTileText extends AbstractContentType {
     public function setEditData($data) {
         $contentData = [
             'url'             => $this->getContentData()['url'],
-            'caption'         => $data['caption'],
-            'text'            => $data['text'],
-            'link'            => $data['link'],
-            'backgroundcolor' => $data['backgroundcolor'],
-            'fontcolor'       => $data['fontcolor'],
+            'caption'         => ArrayHelper::get($data, 'caption', ''),
+            'text'            => ArrayHelper::get($data, 'text', ''),
+            'link'            => ArrayHelper::get($data, 'link', ''),
+            'backgroundcolor' => ArrayHelper::get($data, 'backgroundcolor', ''),
+            'fontcolor'       => ArrayHelper::get($data, 'fontcolor', ''),
         ];
 
         if (isset($_FILES["icon"])) {
