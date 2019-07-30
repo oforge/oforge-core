@@ -50,10 +50,10 @@ class IconTileBasic extends AbstractContentType {
     public function setEditData($data) {
         $contentData = [
             'url'             => $this->getContentData()['url'],
-            'caption'         => $data['caption'],
-            'link'            => $data['link'],
-            'backgroundcolor' => $data['backgroundcolor'],
-            'fontcolor'       => $data['fontcolor'],
+            'caption'         => ArrayHelper::get($data, 'caption', ''),
+            'link'            => ArrayHelper::get($data, 'link', ''),
+            'backgroundcolor' => ArrayHelper::get($data, 'backgroundcolor', ''),
+            'fontcolor'       => ArrayHelper::get($data, 'fontcolor', ''),
         ];
 
         if (isset($_FILES["icon"])) {

@@ -15,6 +15,7 @@
 
         .title {
             color: $color-light;
+            margin-left: $size-large;
         }
         &--sidebar {
             justify-content: space-between;
@@ -41,9 +42,9 @@
     .user__image {
         border-radius: 100%;
         background-color: $color-primary-light;
-        background-image: url('/Themes/allyourhorses/Frontend/__assets/img/profile_image_placeholder.svg');
+        background-image: url('/Themes/AllYourHorses/Frontend/__assets/img/profile_image_placeholder.svg');
         background-position: center center;
-        background-size: contain;
+        background-size: cover;
         background-repeat: no-repeat;
     }
 }
@@ -70,7 +71,8 @@
         margin-left: $size-large;
     }
     .unread__messages {
-        flex: 1 0 auto;
+
+        flex: 0 0 auto;
         border: 1px solid $color-light;
         font-style: normal;
         border-radius: 100%;

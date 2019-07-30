@@ -12,7 +12,8 @@
                     selectItem: 'select__item',
                     selectItemIsChecked: 'select__item--is-checked',
                     selectValue: 'select__value',
-                    subSelect: 'form__control--is-sub'
+                    subSelect: 'form__control--is-sub',
+                    selectValues: []
                 };
                 var selectors = {
                     select: '.' + classNames.select,
@@ -21,9 +22,11 @@
                     selectItem: '.' + classNames.selectItem,
                     selectItemIsChecked: '.' + classNames.selectItemIsChecked,
                     selectValue: '.' + classNames.selectValue,
-                    subSelect: '[data-sub-select]'
+                    subSelect: '[data-sub-select]',
+                    selectFilter: '[data-select-filter]'
                 };
                 var selectList = document.querySelectorAll(self.selector);
+                var currentOpenSelectFilterInputSelector = selectors.selectIsOpen + ' ' + selectors.selectFilter;
 
                 function addHiddenInputToCheckItem(check) {
                     var input = document.createElement('input');
@@ -32,6 +35,10 @@
                     input.setAttribute('data-select-input', check.dataset.valueId);
                     input.setAttribute('value', check.dataset.valueId);
                     check.closest(self.selector).appendChild(input);
+                }
+
+                function filterSelect() {
+
                 }
 
                 function hasSubSelect(selectItem) {
@@ -60,7 +67,7 @@
                     var parentSelect = null;
                     var toggleState = false;
                     var valueId = selectItem.dataset.valueId;
-                    var valueName = selectItem.querySelector(selectors.selectValue).innerHTML;
+                    var valueName = selectItem.querySelector(selectors.selectValue).innerHTML.replace('<strong>', '').replace('</strong>', '');
 
                     if (selectItem) {
                         parentSelect = selectItem.closest(self.selector);
@@ -126,6 +133,50 @@
                 }
 
                 function fireClick(evt) {
+                    var allSelects = null;
+                    var currentOpenSelectFilterInput = null;
+
+                    if (!evt.target.closest(selectors.selectIsOpen)) {
+                        allSelects = document.querySelectorAll(selectors.selectIsOpen);
+                        allSelects.forEach(function (selectItem) {
+                            selectItem.classList.remove(classNames.selectIsOpen);
+                        });
+                    }
+
+                    if (evt.target.matches(currentOpenSelectFilterInputSelector)) {
+                        selectValues = evt.target.closest(selectors.select).querySelectorAll('.select__item:not(.select__item--sub) > .select__value');
+                        currentOpenSelectFilterInput = document.querySelector(currentOpenSelectFilterInputSelector);
+
+                        currentOpenSelectFilterInput.onkeyup = function (evt) {
+                            var matchStart = 0;
+                            var beforeMatch = null;
+                            var afterMatch = null;
+                            var matchText = null;
+                            var matchEnd = currentOpenSelectFilterInput.value.length;
+
+                            selectValues.forEach(function (selectedValue) {
+
+                                selectedValue.innerHTML = selectedValue.innerHTML.replace('<strong>', '').replace('</strong>', '');
+
+                                if (matchEnd > 0) {
+                                    if (selectedValue.innerHTML.toLowerCase().indexOf(currentOpenSelectFilterInput.value.toLowerCase()) > -1) {
+
+                                        matchStart = selectedValue.innerHTML.toLowerCase().indexOf(currentOpenSelectFilterInput.value.toLowerCase());
+                                        beforeMatch = selectedValue.innerHTML.slice(0, matchStart);
+                                        matchText = selectedValue.innerHTML.slice(matchStart, matchStart + matchEnd);
+                                        afterMatch = selectedValue.innerHTML.slice(matchStart + matchEnd);
+                                        selectedValue.innerHTML = beforeMatch + '<strong>' + matchText + '</strong>' + afterMatch;
+                                        selectedValue.closest('.select__item').classList.remove('select__item--is-hidden');
+                                    } else {
+                                        selectedValue.closest('.select__item').classList.add('select__item--is-hidden');
+                                    }
+                                } else {
+                                    selectedValue.closest('.select__item').classList.remove('select__item--is-hidden');
+                                }
+                            });
+                        };
+                    }
+
                     if (evt.target.matches(selectors.selectText)) {
                         var select = evt.target.closest(self.selector);
 
@@ -146,19 +197,6 @@
                     } else if (evt.target.matches(selectors.selectValue)) {
                         var selectItem = evt.target.closest(selectors.selectItem);
                         toggleOneItem(selectItem);
-                    } else if (evt.target.matches('.sub-attribute-container')
-                    || evt.target.matches('.sub-attribute-container__text')
-                    || evt.target.matches('.select .form__label')
-                    || evt.target.matches('.select .form__control--is-sub')
-                    || evt.target.matches('.select__list')
-                    ) {
-                    }
-                    else {
-                        if (selectList.length > 0) {
-                            selectList.forEach(function (select) {
-                                select.classList.remove(classNames.selectIsOpen);
-                            });
-                        }
                     }
                 }
 
@@ -173,8 +211,9 @@
 
                         selectText.innerHTML = select.dataset.placeholder;
                         checkedElements.forEach(function (checkedElement) {
+                            var checkedName = checkedElement.querySelector(selectors.selectValue).innerHTML.replace('<strong>', '').replace('</strong>', '');
                             select.checkedValues.push(checkedElement.dataset.valueId);
-                            select.checkedNames.push(checkedElement.querySelector(selectors.selectValue).innerHTML);
+                            select.checkedNames.push(checkedName);
                             addHiddenInputToCheckItem(checkedElement);
                         });
                         if (select.checkedNames.length > 0) {
