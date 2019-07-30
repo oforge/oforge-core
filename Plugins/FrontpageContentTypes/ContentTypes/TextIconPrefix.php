@@ -45,8 +45,8 @@ class TextIconPrefix extends AbstractContentType {
      */
     public function setEditData($data) {
         $contentData = [
-            'icon' => $data['icon'],
-            'text' => $data['text'],
+            'icon' => ArrayHelper::get($data, 'icon', ''),
+            'text' => ArrayHelper::get($data, 'text', ''),
         ];
 
         $this->setContentData($contentData);

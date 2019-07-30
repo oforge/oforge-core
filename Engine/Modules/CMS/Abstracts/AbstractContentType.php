@@ -244,7 +244,7 @@ abstract class AbstractContentType extends AbstractDatabaseAccess {
      * @return mixed
      */
     public function getContentData() {
-        if($this->contentData == null) {
+        if($this->contentData === null) {
             $this->contentData = [];
         }
         return $this->contentData;

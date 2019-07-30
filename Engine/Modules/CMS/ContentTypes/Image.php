@@ -3,11 +3,8 @@
 namespace Oforge\Engine\Modules\CMS\ContentTypes;
 
 use Oforge\Engine\Modules\CMS\Abstracts\AbstractContentType;
-use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
 use Oforge\Engine\Modules\CMS\Models\Content\Content;
-use Oforge\Engine\Modules\Core\Helper\Statics;
-use Oforge\Engine\Modules\Media\Models\Media;
-use Oforge\Engine\Modules\Media\Services\MediaService;
+use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 
 class Image extends AbstractContentType {
     /**
@@ -43,8 +40,7 @@ class Image extends AbstractContentType {
      * @return Image $this
      */
     public function setEditData($data) {
-
-        $this->setContentData($data["image"]);
+        $this->setContentData(ArrayHelper::get($data, 'image', null));
 
         return $this;
     }
