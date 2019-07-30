@@ -1,6 +1,5 @@
 /** Account Insertion Profile Edit Page */
 .account.content--edit {
-
     .panel--account {
         padding: $size-large;
     }
@@ -89,8 +88,11 @@
         line-height: 2rem;
 
         &.upload-background {
-            text-align: right;
-            justify-content: right;
+            justify-content: flex-end;
+            .icon {
+                width: 2rem;
+                height: 2rem;
+            }
         }
         #input__background, #input__profile {
             display: none;

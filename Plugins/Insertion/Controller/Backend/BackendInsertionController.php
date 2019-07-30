@@ -325,7 +325,7 @@ class BackendInsertionController extends BaseCrudController {
         return $response;
     }
 
-        /**
+    /**
      * @param Request $request
      * @param Response $response
      * @param $args
@@ -392,7 +392,6 @@ class BackendInsertionController extends BaseCrudController {
 
     public function initPermissions() {
         parent::initPermissions();
-        $this->ensurePermission('approveInsertionAction', BackendUser::ROLE_MODERATOR);
-        $this->ensurePermission('disapproveInsertionAction', BackendUser::ROLE_MODERATOR);
+        $this->ensurePermissions(['approveInsertionAction','disapproveInsertionAction'], BackendUser::ROLE_MODERATOR);
     }
 }
