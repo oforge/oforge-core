@@ -13,7 +13,8 @@
                    placeholder="{{ i18n('search') }}">
         {% endif %}
         <ul class="select__list"
-            data-select-list="">
+            data-select-list=""
+            {% if not isSubAttribute %}data-simplebar=""{% endif %}>
 
             {% for value in attribute.values %}
                 <li class="select__item {% if value.id in data['insertion'][attribute.id] %}select__item--is-checked{% endif %}{% if isSubAttribute %}select__item--sub{% endif %}"
