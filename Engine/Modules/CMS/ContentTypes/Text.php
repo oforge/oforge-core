@@ -4,6 +4,7 @@ namespace Oforge\Engine\Modules\CMS\ContentTypes;
 
 use Oforge\Engine\Modules\CMS\Abstracts\AbstractContentType;
 use Oforge\Engine\Modules\CMS\Models\Content\Content;
+use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 
 /**
  * Class Text
@@ -44,7 +45,7 @@ class Text extends AbstractContentType {
      * @return Text $this
      */
     public function setEditData($data) {
-        $this->setContentData($data['text']);
+        $this->setContentData(ArrayHelper::get($data, 'text', ''));
 
         return $this;
     }

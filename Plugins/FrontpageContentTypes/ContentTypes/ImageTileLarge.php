@@ -54,11 +54,11 @@ class ImageTileLarge extends AbstractContentType {
     public function setEditData($data) {
         $contentData = [
             'url'             => $this->getContentData()['url'],
-            'caption'         => $data['caption'],
-            'subheading'      => $data['subheading'],
-            'text'            => $data['text'],
-            'backgroundcolor' => $data['backgroundcolor'],
-            'fontcolor'       => $data['fontcolor'],
+            'caption'         => ArrayHelper::get($data, 'caption', ''),
+            'subheading'      => ArrayHelper::get($data, 'subheading', ''),
+            'text'            => ArrayHelper::get($data, 'text', ''),
+            'backgroundcolor' => ArrayHelper::get($data, 'backgroundcolor', ''),
+            'fontcolor'       => ArrayHelper::get($data, 'fontcolor', ''),
         ];
 
         if (isset($_FILES["image"])) {

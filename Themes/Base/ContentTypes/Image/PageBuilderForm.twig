@@ -4,7 +4,7 @@
 
         {% include 'Backend/Components/Image.twig' with {
             name: 'image',
-            data: data.url
+            data: data.url|default(null)
         } only %}
 
     </div>
