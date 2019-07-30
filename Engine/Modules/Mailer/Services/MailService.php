@@ -4,6 +4,7 @@ namespace Oforge\Engine\Modules\Mailer\Services;
 
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\FrontendUserService;
+use FrontendUserManagement\Services\UserService;
 use Insertion\Models\Insertion;
 use Insertion\Services\InsertionService;
 use InvalidArgumentException;
@@ -32,7 +33,7 @@ use \Doctrine\ORM\ORMException;
 class MailService {
 
     /**
-     * Initialises PHP Mailer Instance with specified Mailer Options and TemplateData.
+     * Initialises PHP Mailer instance with specified mailer options and template data.
      * Options = [
      * 'to'         => ['user@host.de' => 'user_name', user2@host.de => 'user2_name, ...],
      * 'cc'         => [],
@@ -125,7 +126,7 @@ class MailService {
 
                 $mail->send();
 
-                Oforge()->Logger()->get("mailer")->info("Message has been sent", $templateData);
+                Oforge()->Logger()->get("mailer")->info("Message has been sent",[$options, $templateData]);
                 return true;
 
             } catch (Exception $e) {
@@ -170,8 +171,8 @@ class MailService {
     }
 
     /**
-     * Loads minimal Twig Environment and returns rendered HTML - Template with inlined CSS from active Theme.
-     * If specified Template does not exists in active Theme -> Fallback to Base Theme
+     * Loads minimal twig environment and returns rendered HTML-template with inlined CSS from active theme.
+     * If specified template does not exists in active theme -> fallback to base theme
      *
      * @param array $options
      * @param array $templateData
@@ -238,6 +239,7 @@ class MailService {
      * @return bool
      * @throws ConfigElementNotFoundException
      * @throws ConfigOptionKeyNotExistException
+     * @throws ORMException
      * @throws ServiceNotFoundException
      * @throws Twig_Error_Loader
      * @throws Twig_Error_Runtime
@@ -245,20 +247,11 @@ class MailService {
      */
     public function sendNewMessageInfoMail($userId, $conversationId) {
 
-        /** @var  FrontendUserService $userService */ /** @var  Router $router */
-        $router = Oforge()->App()->getContainer()->get('router');
+        /** @var  UserService $userService */
         $userService   = Oforge()->Services()->get('frontend.user.management.user');
 
         /** @var User $user */
-        $user          = $userService->getUserbyId($userId);
-        $uri           = $router->pathFor('frontend_account_messages') . DIRECTORY_SEPARATOR . $conversationId;
-
-        $conversationLink = 'http://';
-        if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
-            $conversationLink = 'https://';
-        }
-        $conversationLink .= $_SERVER['HTTP_HOST'];
-        $conversationLink .= $uri;
+        $user          = $userService->getUserById($userId);
 
         $userMail = $user->getEmail();
         $mailerOptions = [
@@ -268,7 +261,7 @@ class MailService {
             'template' => 'NewMessage.twig',
         ];
         $templateData = [
-            'conversationLink' => $conversationLink,
+            'conversationId'   => $conversationId,
             'receiver_name'    => $user->getDetail()->getNickName(),
             'sender_mail'      => $this->getSenderAddress('no_reply'),
         ];
