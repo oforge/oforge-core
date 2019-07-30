@@ -1,2 +1,2 @@
-<img class="content-type-edit-image-wrapper" src="{{ media(data.url, 300) }}" alt="{{ data.alt }}">
-
+{% set imageUrl = data.url ? media(data.url, 300) : '/Themes/Base/ContentTypes/__assets/img/image.png' %}
+<img class="content-type-edit-image-wrapper" src="{{ imageUrl }}" alt="{{ data.alt|default() }}" />
