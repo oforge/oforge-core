@@ -222,7 +222,7 @@ class RegistrationController extends AbstractController {
         if (!isset($referrer)) {
             $uri = $router->pathFor('frontend_login');
         }
-        Oforge()->View()->Flash()->addMessage('success', I18N::translate('mailer_subject_registration',
+        Oforge()->View()->Flash()->addMessage('success', I18N::translate('registration_mail_success',
             'Registration successful. You will receive an email with information about you account activation.'));
 
         return $response->withRedirect($uri, 302);
