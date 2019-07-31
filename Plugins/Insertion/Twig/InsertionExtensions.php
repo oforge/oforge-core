@@ -46,6 +46,7 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
             new Twig_Function('getLatestBlogPostTile', [$this, 'getLatestBlogPostTile']),
             new Twig_Function('getQuickSearch', [$this, 'getQuickSearch']),
             new Twig_Function('getChatPartnerInformation', [$this, 'getChatPartnerInformation']),
+            new Twig_Function('numberToRomanNumeral', [$this, 'numberToRomanNumeral']),
         ];
     }
 
@@ -223,11 +224,11 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
                 $userService = Oforge()->Services()->get('frontend.user.management.user');
                 /** @var User $user */
                 $user      = $userService->getUserById($vars[1]);
-                $userImage = $user->getDetail()->getImage();
-                if ($userImage) {
+                $imageId = null;
+                try {
                     $imageId = $user->getDetail()->getImage()->getId();
-                } else {
-                    $imageId = 'default';
+                } catch (\Throwable $e) {
+
                 }
 
                 return [
@@ -270,5 +271,24 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
         }
 
         return null;
+    }
+
+    /**
+     * @param $number
+     * @return string
+     */
+    public function numberToRomanNumeral($number) {
+        $map = array('M' => 1000, 'CM' => 900, 'D' => 500, 'CD' => 400, 'C' => 100, 'XC' => 90, 'L' => 50, 'XL' => 40, 'X' => 10, 'IX' => 9, 'V' => 5, 'IV' => 4, 'I' => 1);
+        $returnValue = '';
+        while ($number > 0) {
+            foreach ($map as $roman => $int) {
+                if($number >= $int) {
+                    $number -= $int;
+                    $returnValue .= $roman;
+                    break;
+                }
+            }
+        }
+        return $returnValue;
     }
 }

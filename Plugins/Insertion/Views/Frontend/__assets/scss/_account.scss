@@ -1,6 +1,5 @@
 /** Account Insertion Profile Edit Page */
 .account.content--edit {
-
     .panel--account {
         padding: $size-large;
     }
@@ -33,9 +32,10 @@
 
     .profile-pic {
         width: 30%;
+        min-width: 120px;
         position: relative;
-        top: -16rem;
-        margin-bottom: -12rem;
+        top: -18rem;
+        margin-bottom: -10rem;
 
         .account__user {
             display: block;
@@ -87,11 +87,9 @@
         font-size: $font-size-6;
         height: 2rem;
         line-height: 2rem;
+        justify-content: space-between;
+        margin-bottom: $size-large;
 
-        &.upload-background {
-            text-align: right;
-            justify-content: right;
-        }
         #input__background, #input__profile {
             display: none;
         }

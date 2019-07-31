@@ -1,4 +1,4 @@
 <div class="form-group content-type-edit-form-text">
     <label>Text Editor</label>
-    <textarea class="form-control" id="text" name="text">{{ data.text }}</textarea>
+    <textarea class="form-control" id="text" name="text">{{ data.text|default() }}</textarea>
 </div>

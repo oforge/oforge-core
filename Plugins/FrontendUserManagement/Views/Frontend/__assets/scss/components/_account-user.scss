@@ -1,36 +1,39 @@
 .account__user, .insertion__supplier {
-  display: none;
+    display: none;
 
-  .user__picture {
-    background-size: contain;
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-color: $color-primary;
-    background-image: url('/Themes/AllYourHorses/Frontend/__assets/img/profile_image_placeholder.svg');
-    border-radius: 50%;
-    overflow: hidden;
-    box-shadow: 0 .4rem .8rem rgba(112, 112, 112, 1);
-    display: flex;
-    justify-content: center;
-    margin-bottom: 3rem;
-    &:after {
-      content: "";
-      padding-bottom: 100%;
+    .user__picture {
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-color: $color-primary;
+        background-image: url('/Themes/AllYourHorses/Frontend/__assets/img/profile_image_placeholder.svg');
+        border-radius: 50%;
+        overflow: hidden;
+        box-shadow: 0 .4rem .8rem rgba(112, 112, 112, 1);
+        display: flex;
+        justify-content: center;
+        margin-bottom: 3rem;
+
+        &:after {
+            content: "";
+            padding-bottom: 100%;
+        }
     }
-  }
 
-  .user-info__name {
-    color: $color-primary;
-    margin-bottom: $size-medium;
-  }
+    .user-info__name {
+        color: $color-primary;
+        margin-bottom: $size-medium;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
 
-  .user-info__email {
-    color: $color-secondary;
-  }
+    .user-info__email {
+        color: $color-secondary;
+    }
 }
 
 @media screen and (min-width: $screen-large) {
-  .account__user, .insertion__supplier {
-    display: block;
-  }
+    .account__user, .insertion__supplier {
+        display: block;
+    }
 }

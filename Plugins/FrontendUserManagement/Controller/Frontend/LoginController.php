@@ -121,7 +121,20 @@ class LoginController extends AbstractController {
             return $response->withRedirect($router->pathFor('frontend_login'), 302);
         }
 
-        $jwt = $loginService->login($body['frontend_login_email'], $body['frontend_login_password']);
+
+        /**
+         * Checks if an account has been activated
+         */
+        if ($loginService->isActive($body['frontend_login_email'], $body['frontend_login_password'])) {
+            $jwt = $loginService->login($body['frontend_login_email'], $body['frontend_login_password']);
+        } else {
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('login_account_not_activated', [
+                'en' => 'Your account has not been activated yet. Please check your emails.',
+                'de' => 'Dein Konto wurde noch nicht aktiviert. Bitte überprüfe deine E-Mails.',
+            ]));
+
+            return $response->withRedirect($uri, 302);
+        }
 
         /**
          * $jwt is null if the login credentials are incorrect
