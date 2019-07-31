@@ -76,8 +76,9 @@ class BackendInsertionTypeController extends SecureBackendController {
         $attributeService = Oforge()->Services()->get('insertion.attribute');
         /** @var InsertionTypeService $insertionTypeService */
         $insertionTypeService = Oforge()->Services()->get('insertion.type');
-        $insertionTypeId      = $request->getQueryParams()['id'];
-
+        if (isset($request->getQueryParams()['id'])) {
+            $insertionTypeId = $request->getQueryParams()['id'];
+        }
         if ($request->isPost()) {
             $body                             = $request->getParsedBody();
             $body['values']                   = json_decode($body['values'], true);
@@ -87,12 +88,12 @@ class BackendInsertionTypeController extends SecureBackendController {
             $parent = $insertionTypeService->getInsertionTypeById($body['parent']);
             if (isset($request->getQueryParams()['id'])) {
                 /** @var InsertionType $insertionType */
-                $data = [
-                    'name' => $body['name'],
-                    'parent' => $parent,
+                $data          = [
+                    'name'        => $body['name'],
+                    'parent'      => $parent,
                     'quickSearch' => $body['insertionTypeQuickSearch'],
                     'description' => $body['description'],
-                    'image' => $body['image']
+                    'image'       => $body['image'],
                 ];
                 $insertionType = $insertionTypeService->updateInsertionType($insertionTypeId, $data);
                 /** @var InsertionTypeAttribute[] $insertionTypeAttributes */
