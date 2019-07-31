@@ -96,7 +96,7 @@ class Bootstrap extends AbstractBootstrap {
         $accountNavigationService->put([
             'name'     => 'frontend_account_change_password',
             'order'    => 999,
-            'icon'     => 'profile',
+            'icon'     => 'key',
             'path'     => 'frontend_account_edit',
             'position' => 'sidebar',
         ]);
