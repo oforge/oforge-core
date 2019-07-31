@@ -219,17 +219,17 @@ class FrontendUsersInsertionController extends SecureFrontendController {
      * @return Response
      * @throws \Doctrine\ORM\ORMException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
-     * @EndpointAction(path="/toggle-bookmark/{insertionId}")
+     * @EndpointAction(path="/toggle-bookmark/{insertionId:\d+}")
      */
     public function toggleBookmarkAction(Request $request, Response $response, $args) {
-        $id = $args["insertionId"];
+        $id = (int)$args["insertionId"];
         /**
          * @var $service InsertionService
          */
         $service   = Oforge()->Services()->get("insertion");
-        $insertion = $service->getInsertionById(intval($id));
+        $insertion = $service->getInsertionById($id);
 
-        if (!isset($insertion) || $insertion == null) {
+        if (!isset($insertion)) {
             return $response->withRedirect("/404", 301);
         }
 
