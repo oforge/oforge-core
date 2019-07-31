@@ -12,19 +12,25 @@ use Insertion\Services\InsertionFormsService;
 use Insertion\Services\InsertionService;
 use Insertion\Services\InsertionTypeService;
 use Insertion\Services\InsertionUpdaterService;
+use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Forge\ForgeEntityManager;
+use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Oforge\Engine\Modules\Core\Helper\SessionHelper;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
 use Oforge\Engine\Modules\CRUD\Enum\CrudFilterType;
 use Oforge\Engine\Modules\CRUD\Enum\CrudGroubByOrder;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
+use Oforge\Engine\Modules\Mailer\Services\MailService;
+use phpDocumentor\Reflection\Types\This;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
+use \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use \Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
 
 /**
  * Class BackendInsertionController
@@ -117,7 +123,7 @@ class BackendInsertionController extends BaseCrudController {
             'type'  => CrudDataTypes::BOOL,
             'label' => ['key' => 'plugin_insertion_moderation', 'default' => 'Freigegeben'],
             'crud'  => [
-                'index'  => 'editable',
+                'index'  => 'readonly',
                 'view'   => 'editable',
                 'create' => 'off',
                 'update' => 'editable',
@@ -157,6 +163,8 @@ class BackendInsertionController extends BaseCrudController {
      * @param Response $response
      *
      * @return Response
+     * @throws ORMException
+     * @throws ServiceNotFoundException
      * @EndpointAction()
      */
     public function createAction(Request $request, Response $response) {
@@ -235,8 +243,11 @@ class BackendInsertionController extends BaseCrudController {
     /**
      * @param Request $request
      * @param Response $response
+     * @param array $args
      *
      * @return Response
+     * @throws ORMException
+     * @throws ServiceNotFoundException
      * @EndpointAction(path="/update/{id:\d+}")
      */
     public function updateAction(Request $request, Response $response, $args) {
@@ -314,4 +325,73 @@ class BackendInsertionController extends BaseCrudController {
         return $response;
     }
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param $args
+     *
+     * @return Response
+     * @throws ConfigElementNotFoundException
+     * @throws ORMException
+     * @throws ServiceNotFoundException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     * @EndpointAction(path="/approve/{id:\d+}")
+     */
+    public function approveInsertionAction(Request $request, Response $response, $args) {
+        $insertionId = $args["id"];
+
+        /** @var MailService $mailService */
+        $mailService = Oforge()->Services()->get('mail');
+
+        /** @var InsertionService $insertionService */
+        $insertionService = Oforge()->Services()->get('insertion');
+
+        /** @var Insertion $insertion */
+        $insertion = $insertionService->getInsertionById($insertionId);
+        $insertion->setModeration(true);
+        $insertionService->entityManager()->update($insertion);
+
+        if($mailService->sendInsertionApprovedInfoMail($insertionId)) {
+            Oforge()->View()->Flash()->addMessage('success', 'ID ' . $insertionId . ': Notification has been sent');
+
+        } else {
+            Oforge()->View()->Flash()->addMessage('error', 'ID ' . $insertionId . ': Notification could not be sent' );
+        }
+
+        return RouteHelper::redirect($response, 'backend_insertions');
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param $args
+     *
+     * @return Response
+     * @throws ORMException
+     * @throws ServiceNotFoundException
+     * @EndpointAction(path="/disapprove/{id:\d+}")
+     */
+    public function disapproveInsertionAction(Request $request, Response $response, $args) {
+        $insertionId = $args["id"];
+
+        /** @var InsertionService $insertionService */
+        $insertionService = Oforge()->Services()->get('insertion');
+
+        /** @var Insertion $insertion */
+        $insertion = $insertionService->getInsertionById($insertionId);
+        $insertion->setModeration(false);
+        $insertionService->entityManager()->update($insertion);
+
+        // TODO: Tell user why insertion has been disapproved ?
+
+        return RouteHelper::redirect($response, 'backend_insertions');
+    }
+
+    public function initPermissions() {
+        parent::initPermissions();
+        $this->ensurePermissions(['approveInsertionAction','disapproveInsertionAction'], BackendUser::ROLE_MODERATOR);
+    }
 }

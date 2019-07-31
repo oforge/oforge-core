@@ -58,4 +58,7 @@ class FrontendUserService {
         return null;
     }
 
+    public function getUserById($userId) {
+    }
+
 }

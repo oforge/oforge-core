@@ -4,6 +4,9 @@ namespace Oforge\Engine\Modules\Mailer\Services;
 
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\FrontendUserService;
+use FrontendUserManagement\Services\UserService;
+use Insertion\Models\Insertion;
+use Insertion\Services\InsertionService;
 use InvalidArgumentException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
@@ -25,11 +28,12 @@ use Slim\Router;
 use Twig_Error_Loader;
 use Twig_Error_Runtime;
 use Twig_Error_Syntax;
+use \Doctrine\ORM\ORMException;
 
 class MailService {
 
     /**
-     * Initialises PHP Mailer Instance with specified Mailer Options and TemplateData.
+     * Initialises PHP Mailer instance with specified mailer options and template data.
      * Options = [
      * 'to'         => ['user@host.de' => 'user_name', user2@host.de => 'user2_name, ...],
      * 'cc'         => [],
@@ -122,7 +126,7 @@ class MailService {
 
                 $mail->send();
 
-                Oforge()->Logger()->get("mailer")->info("Message has been sent", $templateData);
+                Oforge()->Logger()->get("mailer")->info("Message has been sent",[$options, $templateData]);
                 return true;
 
             } catch (Exception $e) {
@@ -167,8 +171,8 @@ class MailService {
     }
 
     /**
-     * Loads minimal Twig Environment and returns rendered HTML - Template with inlined CSS from active Theme.
-     * If specified Template does not exists in active Theme -> Fallback to Base Theme
+     * Loads minimal twig environment and returns rendered HTML-template with inlined CSS from active theme.
+     * If specified template does not exists in active theme -> fallback to base theme
      *
      * @param array $options
      * @param array $templateData
@@ -232,8 +236,10 @@ class MailService {
      * @param $userId
      * @param $conversationId
      *
+     * @return bool
      * @throws ConfigElementNotFoundException
      * @throws ConfigOptionKeyNotExistException
+     * @throws ORMException
      * @throws ServiceNotFoundException
      * @throws Twig_Error_Loader
      * @throws Twig_Error_Runtime
@@ -241,20 +247,11 @@ class MailService {
      */
     public function sendNewMessageInfoMail($userId, $conversationId) {
 
-        /** @var  FrontendUserService $userService */ /** @var  Router $router */ /** @var MailService $mailService */
-        $router = Oforge()->App()->getContainer()->get('router');
+        /** @var  UserService $userService */
         $userService   = Oforge()->Services()->get('frontend.user.management.user');
 
         /** @var User $user */
-        $user          = $userService->getUserbyId($userId);
-        $uri = $router->pathFor('frontend_account_messages') . DIRECTORY_SEPARATOR . $conversationId;
-
-        $conversationLink = 'http://';
-        if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
-            $conversationLink = 'https://';
-        }
-        $conversationLink .= $_SERVER['HTTP_HOST'];
-        $conversationLink .= $uri;
+        $user          = $userService->getUserById($userId);
 
         $userMail = $user->getEmail();
         $mailerOptions = [
@@ -264,11 +261,50 @@ class MailService {
             'template' => 'NewMessage.twig',
         ];
         $templateData = [
-            'conversationLink' => $conversationLink,
+            'conversationId'   => $conversationId,
             'receiver_name'    => $user->getDetail()->getNickName(),
             'sender_mail'      => $this->getSenderAddress('no_reply'),
         ];
-        $this->send($mailerOptions, $templateData);
+        return $this->send($mailerOptions, $templateData);
+    }
+
+    /**
+     * @param $insertionId
+     *
+     * @return bool
+     * @throws ConfigElementNotFoundException
+     * @throws ConfigOptionKeyNotExistException
+     * @throws ORMException
+     * @throws ServiceNotFoundException
+     * @throws Twig_Error_Loader
+     * @throws Twig_Error_Runtime
+     * @throws Twig_Error_Syntax
+     */
+    public function sendInsertionApprovedInfoMail($insertionId) {
+
+        /** @var InsertionService $insertionService */
+        $insertionService = Oforge()->Services()->get('insertion');
+
+        /** @var Insertion $insertion */
+        $insertion = $insertionService->getInsertionById($insertionId);
+
+        /** @var User $user */
+        $user          = $insertion->getUser();
+        $userMail      = $user->getEmail();
+
+        $mailerOptions = [
+            'to'       => [$userMail => $userMail],
+            'from'     => 'no_reply',
+            'subject'  => I18N::translate('mailer_subject_insertion_approved'),
+            'template' => 'InsertionApproved.twig',
+        ];
+        $templateData = [
+            'insertionId'      => $insertionId,
+            // 'insertionTitle'   => $insertion->getContent(),
+            'receiver_name'    => $user->getDetail()->getNickName(),
+            'sender_mail'      => $this->getSenderAddress('no_reply'),
+        ];
+        return $this->send($mailerOptions, $templateData);
     }
 
     public function batchSend() {

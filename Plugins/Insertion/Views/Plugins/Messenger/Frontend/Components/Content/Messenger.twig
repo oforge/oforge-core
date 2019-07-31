@@ -24,7 +24,7 @@
 
         <i class="user__image" {% if partner.imageId is not null %}style="background-image: url('{{ media(partner.imageId, 50) }}');"{% endif %}></i>
         <span class="chat__text">{{ partner.title }}</span>
-        <i class="unread__messages"><span>{{ conversation.unreadMessages }}</span></i>
+        <i class="unread__messages" {% if conversation.unreadMessages|number_format == 0 %}style="visibility: hidden"{% endif %}><span>{{ conversation.unreadMessages }}</span></i>
     {% else %}
         {{ parent() }}
     {% endif %}

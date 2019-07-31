@@ -221,16 +221,17 @@ class FrontendUsersInsertionController extends SecureFrontendController {
      * @return Response
      * @throws ORMException
      * @throws ServiceNotFoundException
+     * @EndpointAction(path="/toggle-bookmark/{insertionId:\d+}")
      */
     public function toggleBookmarkAction(Request $request, Response $response, $args) {
-        $id = $args["insertionId"];
+        $id = (int)$args["insertionId"];
         /**
          * @var $service InsertionService
          */
         $service   = Oforge()->Services()->get("insertion");
-        $insertion = $service->getInsertionById(intval($id));
+        $insertion = $service->getInsertionById($id);
 
-        if (!isset($insertion) || $insertion == null) {
+        if (!isset($insertion)) {
             return $response->withRedirect("/404", 301);
         }
 
@@ -414,7 +415,6 @@ class FrontendUsersInsertionController extends SecureFrontendController {
      * @throws ServiceNotFoundException
      */
     private function modifyInsertion(Request $request, Response $response, $args, string $action) {
-
         /** @var $service InsertionService */
         $service   = Oforge()->Services()->get("insertion");
         $id = $args["id"];
