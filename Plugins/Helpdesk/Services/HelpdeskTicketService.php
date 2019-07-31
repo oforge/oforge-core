@@ -65,7 +65,7 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
      * @throws ORMException
      */
     public function getTickets($status = 'open') {
-        return $this->repository()->findBy(['status' => $status]);
+        return $this->repository()->findBy(['status' => $status],['created' => 'DESC']);
     }
 
     /**
@@ -87,7 +87,7 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
      * @throws ServiceNotFoundException
      */
     public function getTicketsByOpener(int $opener, $status = 'open') {
-        $tickets = $this->repository()->findBy(['opener' => $opener, 'status' => $status]);
+        $tickets = $this->repository()->findBy(['opener' => $opener, 'status' => $status],['created' => 'DESC']);
         $result  = [];
 
         /** @var FrontendMessengerService $frontendMessengerService */
