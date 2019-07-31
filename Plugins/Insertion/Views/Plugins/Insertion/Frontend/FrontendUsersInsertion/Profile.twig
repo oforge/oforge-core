@@ -12,7 +12,7 @@
                     <div class="account__content flex">
                         <form action="{{ url('frontend_account_insertions_profile') }}" method="post"
                               enctype="multipart/form-data">
-                            <h3 class="account__title">{{ i18n('my_profile') }}</h3>
+                            <h1 class="account__title">{{ i18n('my_profile') }}</h1>
                             <label class="center__label" for="input__background">
 
                                 <div class="background img-background flex flex--column-center"
@@ -69,12 +69,12 @@
 
                             <div class="profile--edit">
                                 <div class="description--edit">
-                                    <h3 class="form__title">{{ i18n('account_profile_text') }}</h3>
+                                    <h2 class="form__title">{{ i18n('account_profile_text') }}</h2>
                                     <textarea name="description"
                                               class="form__input">{{ profile.description }}</textarea>
                                 </div>
                                 <div class="impress--edit">
-                                    <h3 class="form__title">{{ i18n('legal_rights') }}</h3>
+                                    <h2 class="form__title">{{ i18n('legal_rights') }}</h2>
                                     <input class="form__input" type="text" name="imprint_name" placeholder="Name"
                                            value="{{ profile.imprintName }}" />
                                     <input class="form__input" type="text" name="imprint_street" placeholder="Street"
