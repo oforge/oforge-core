@@ -11,9 +11,7 @@
                 </svg>
             </a>
             {% if has_messages(current_user.id)  %}
-                yes
-            {% else %}
-                no
+                <i class="unread__messages__flag"></i>
             {% endif %}
         </li>
     {% endif %}
