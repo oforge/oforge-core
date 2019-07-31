@@ -76,7 +76,7 @@ class CommentController extends BaseCrudController {
         ],# author
         [
             'name'  => 'content',
-            'type'  => CrudDataTypes::HTML,
+            'type'  => CrudDataTypes::STRING,
             'label' => ['key' => 'plugin_blog_property_comment_content', 'default' => 'Content'],
             'crud'  => [
                 'index'  => 'off',

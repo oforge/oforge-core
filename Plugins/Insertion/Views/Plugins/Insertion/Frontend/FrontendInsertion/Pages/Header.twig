@@ -7,10 +7,11 @@
 
     <ul class="steps">
         {% for i in range(1, pagecount) %}
-            <li class="step {% if i < page %}step--done{% endif %}{% if i == page %}step--current{% endif %}">
+            <li class="step {% if i < page %}step--done{% endif %} {% if i == page %}step--current{% endif %}">
                 <a href="{{ url('insertions_createSteps', { type : type.id, page: i}) }}"
                    class="step__link">
-                    {{ i }}
+                    {% set numeral = numberToRomanNumeral(i) %}
+                    {{ numeral }}
                 </a>
             </li>
         {% endfor %}
