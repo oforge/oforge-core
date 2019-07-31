@@ -11,7 +11,7 @@
                 </svg>
             </a>
             {% if has_messages(current_user.id)  %}
-                <i class="unread__messages__flag"></i>
+                <a href="{{ url('frontend_account_messages') }}" class="unread__messages__flag"></a>
             {% endif %}
         </li>
     {% endif %}
