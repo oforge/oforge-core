@@ -224,11 +224,11 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
                 $userService = Oforge()->Services()->get('frontend.user.management.user');
                 /** @var User $user */
                 $user      = $userService->getUserById($vars[1]);
-                $userImage = $user->getDetail()->getImage();
-                if ($userImage) {
+                $imageId = null;
+                try {
                     $imageId = $user->getDetail()->getImage()->getId();
-                } else {
-                    $imageId = 'default';
+                } catch (\Throwable $e) {
+
                 }
 
                 return [
