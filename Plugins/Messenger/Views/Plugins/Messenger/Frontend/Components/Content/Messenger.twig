@@ -18,7 +18,7 @@
                                 {% block messenger_conversation_list %}
                                     <img class="" src="{{ media(partner.imageId, 30) }}">
                                     <span class="chat__text">{{ conversation.chatPartner.name }}</span>
-                                    <i class="unread__messages" {% if conversation.unreadMessages == 0 %}style="visibility: hidden"{% endif %}></i>
+                                    <i class="unread__messages" {% if conversation.unreadMessages|number_format == 0 %}style="visibility: hidden"{% endif %}></i>
                                 {% endblock messenger_conversation_list %}
                             </a>
                         </li>
