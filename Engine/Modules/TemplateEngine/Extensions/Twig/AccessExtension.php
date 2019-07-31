@@ -187,16 +187,4 @@ class AccessExtension extends Twig_Extension implements Twig_ExtensionInterface 
     public function isString($value) {
         return is_string($value);
     }
-
-    /**
-     * @param $userId
-     *
-     * @return bool
-     * @throws ServiceNotFoundException
-     */
-    public function hasMessages($userId) {
-        /** @var FrontendMessengerService $messengerService */
-        $messengerService = Oforge()->Services()->get('frontend.messenger');
-        return $messengerService->hasUnreadMessages($userId);
-    }
 }
