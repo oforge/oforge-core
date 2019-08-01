@@ -12,9 +12,15 @@
                     <div class="account__content">
                         <h1>{{ i18n('frontend_user_bookmarks_headline') }}</h1>
                         <div class="">
+
                             <div class="">
-                                <h2>{{ i18n('insertions') }}</h2>
+                                {% if bookmarks|length > 0 %}
+                                    <h2>{{ i18n('insertions') }}</h2>
+                                {% else %}
+                                    <h2>{{ i18n('no_bookmarks_saved') }}</h2>
+                                {% endif %}
                             </div>
+
 
                             <div id="bookmarks-container" class="">
                                 {% include 'Frontend/Components/Insertions/Bookmarks.twig' %}

@@ -15,10 +15,11 @@
                             <a href="{{ url( 'insertions_create') }}"
                                class="button button--secondary button--shadow button--uppercase button--header">{{ i18n('frontend_user_insertion_create', 'Jetzt inserieren!') }}</a>
 
-
-                            <div class="">
-                                <h2>{{ i18n('insertions') }}</h2>
-                            </div>
+                            {% if insertions|length > 0 %}
+                                <div>
+                                    <h2>{{ i18n('insertions') }}</h2>
+                                </div>
+                            {% endif %}
 
                             <div id="insertion-container" class="">
                                 {% include 'Frontend/Components/Insertions/UserList.twig' with {insertions : insertions } %}
