@@ -11,7 +11,6 @@ use Insertion\Controller\Backend\BackendInsertionController;
 use Insertion\Controller\Backend\BackendInsertionTypeController;
 use Insertion\Controller\Backend\BackendInsertionTypeGroupController;
 use Insertion\Controller\Frontend\FrontendInsertionController;
-use Insertion\Controller\Frontend\FrontendInsertionSupplierController;
 use Insertion\Controller\Frontend\FrontendUsersInsertionController;
 use Insertion\Cronjobs\Reminder14DaysCronjob;
 use Insertion\Cronjobs\Reminder30DaysCronjob;
