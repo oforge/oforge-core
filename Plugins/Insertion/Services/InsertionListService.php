@@ -237,6 +237,10 @@ class InsertionListService extends AbstractDatabaseAccess {
 
         $sqlResult = $this->entityManager()->getEntityManager()->getConnection()->executeQuery($sqlQuery . $sqlQueryWhere, $args);
 
+        print_r($sqlResult);
+
+        echo "\n";
+
         $ids = $sqlResult->fetchAll();
 
         $result["query"]["count"]     = sizeof($ids);
