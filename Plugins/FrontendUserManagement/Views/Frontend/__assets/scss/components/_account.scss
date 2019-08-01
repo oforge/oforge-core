@@ -1,6 +1,15 @@
 .panel--account {
     flex-direction: column;
     padding: 0;
+
+    h1 {
+        color: $color-secondary;
+        font-weight: bold;
+    }
+
+    h2 {
+        color: $color-primary;
+    }
 }
 
 .panel--detail {
@@ -12,6 +21,7 @@
         }
 
         .form__title {
+            color: $color-secondary;
             margin: 0;
         }
 
@@ -178,7 +188,7 @@
         }
 
         &__title {
-            color: $color-primary;
+            color: $color-secondary;
             display: block;
             flex: 1 0 100%;
             margin-bottom: $size-large;

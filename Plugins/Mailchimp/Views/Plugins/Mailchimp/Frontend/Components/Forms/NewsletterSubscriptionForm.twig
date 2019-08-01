@@ -2,7 +2,7 @@
     <form class="form form--newsletter"
           action="{{ subscribeLink }}{% if isSubscribed == true %}/unsubscribe{% elseif isSubscribed == false %}/subscribe{% else %}{{ url('frontend_newsletter_subscription_subscribe') }}{% endif %}"
           method="post">
-        <h3 class="form__title">{{ i18n('newsletter', 'Newsletter') }}</h3>
+        <h1 class="form__title">{{ i18n('newsletter', 'Newsletter') }}</h1>
 
         {% block seo_content %}
             {% set content = content('newsletter_header_' ~  meta.language.iso) %}
