@@ -148,7 +148,8 @@ class BackendAttributeController extends SecureBackendController {
             AttributeType::TEXT,
             AttributeType::DATE,
             AttributeType::DATEYEAR,
-            AttributeType::DATEMONTH
+            AttributeType::DATEMONTH,
+            AttributeType::PEDIGREE
         ];
 
         $attributeList = [];
