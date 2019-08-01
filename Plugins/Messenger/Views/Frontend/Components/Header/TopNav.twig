@@ -4,11 +4,14 @@
 
     {% if user_logged_in %}
         <li class="top-nav-list__item item--login">
-            <a href="{{ url('frontend_account_messages')  }}"
-               title="{{  i18n('frontend_account_messages_title', 'Meine Nachrichten') }}">
+            <a class="flex flex--row"href="{{ url('frontend_account_messages') }}"
+               title="{{ i18n('frontend_account_messages_title', 'Meine Nachrichten') }}">
                 <svg class="icon icon--secondary icon--postfach">
                     <use xlink:href="#email"></use>
                 </svg>
+                {% if has_messages(current_user.id)  %}
+                    <i class="unread__messages__flag"></i>
+                {% endif %}
             </a>
         </li>
     {% endif %}

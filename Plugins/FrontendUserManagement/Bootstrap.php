@@ -106,9 +106,9 @@ class Bootstrap extends AbstractBootstrap {
             'position' => 'sidebar',
         ]);
         $accountNavigationService->put([
-            'name'     => 'frontend_account_edit',
-            'order'    => 1,
-            'icon'     => 'profile',
+            'name'     => 'frontend_account_change_password',
+            'order'    => 999,
+            'icon'     => 'key',
             'path'     => 'frontend_account_edit',
             'position' => 'sidebar',
         ]);
@@ -128,7 +128,22 @@ class Bootstrap extends AbstractBootstrap {
             'order'    => 4,
             'parent'   => BackendNavigationService::KEY_CONTENT,
             'icon'     => 'fa fa-user',
+            'position' => 'sidebar',
+        ]);
+        $backendNavigationService->add([
+            'name'     => 'backend_frontend_user_management_list',
+            'order'    => 1,
+            'icon'     => 'fa fa-list',
             'path'     => 'backend_frontend_user_management',
+            'parent'   => 'backend_frontend_user_management',
+            'position' => 'sidebar',
+        ]);
+        $backendNavigationService->add([
+            'name'     => 'backend_frontend_user_management_nickname_generator',
+            'order'    => 2,
+            'icon'     => 'fa fa-brain',
+            'path'     => 'backend_frontend_user_management_nickname_generator',
+            'parent'   => 'backend_frontend_user_management',
             'position' => 'sidebar',
         ]);
         /** @var DashboardWidgetsService $dashboardWidgetsService */
