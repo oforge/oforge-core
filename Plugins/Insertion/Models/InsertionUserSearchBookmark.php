@@ -4,6 +4,7 @@ namespace Insertion\Models;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Oforge\Engine\Modules\I18n\Models\Language;
 
@@ -26,7 +27,11 @@ class InsertionUserSearchBookmark extends AbstractModel {
      */
     private $createdAt;
 
-
+    /**
+     * @var Datetime
+     * @ORM\Column(name="last_checked", type="datetime")
+     */
+    private $lastChecked;
 
     /**
      * @var InsertionType
@@ -42,11 +47,12 @@ class InsertionUserSearchBookmark extends AbstractModel {
 
     /**
      * @ORM\PrePersist
-     * @throws \Exception
+     * @throws Exception
      */
     public function onPrePersist() {
-        $date            = new \DateTime('now');
-        $this->createdAt = $date;
+        $date              = new DateTime('now');
+        $this->createdAt   = $date;
+        $this->lastChecked = $date;
     }
 
     /**
@@ -56,7 +62,6 @@ class InsertionUserSearchBookmark extends AbstractModel {
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-
 
     /**
      * @return int
@@ -72,6 +77,23 @@ class InsertionUserSearchBookmark extends AbstractModel {
         return $this->createdAt;
     }
 
+    /**
+     * @return DateTime
+     */
+    public function getLastChecked() : DateTime {
+        return $this->lastChecked;
+    }
+
+    /**
+     * @return InsertionUserSearchBookmark
+     * @throws Exception
+     */
+    public function setChecked() : InsertionUserSearchBookmark {
+        $date              = new DateTime('now');
+        $this->lastChecked = $date;
+
+        return $this;
+    }
 
     /**
      * @return mixed
@@ -101,6 +123,7 @@ class InsertionUserSearchBookmark extends AbstractModel {
      */
     public function setParams(array $params) : InsertionUserSearchBookmark {
         $this->params = $params;
+
         return $this;
     }
 
