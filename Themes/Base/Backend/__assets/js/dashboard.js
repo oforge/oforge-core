@@ -13,30 +13,27 @@
             window.setTimeout(function () {
                 container.each(function () {
                     var c = $(this);
-                    var site = c.data("site");
-                    if (site != null) {
-                        var children = c.children(".box");
+                    var site = c.data('site');
+                    if (site !== null) {
+                        var children = c.children('.box');
                         children.each(function (index) {
                             var child = $(this);
-                            var id = child.data("id");
-                            if (id != null) {
-                                data[id] = {"order": index, "site": site};
+                            var id = child.data('id');
+                            if (id !== null) {
+                                data[id] = {'order': index, 'position': site};
                             }
                         });
                     }
                 });
-
-                $.ajax
-                ({
-                    type: "POST",
-                    url: "/backend/dashboard/widgets",
+                $.ajax({
+                    type: 'POST',
+                    url: '/backend/dashboard/widgets',
                     async: false,
-                    data: {"data": JSON.stringify(data)},
+                    data: {'data': data},
                     success: function () {
                     }
-                })
+                });
             }, 0);
-
         }
     });
 

@@ -1,0 +1,11 @@
+<div class="inner">
+    <h3>{{ data.count }}</h3>
+    <p>{{ i18n('user_registrations', {en: 'User registrations', de : 'Nutzerregistrierungen'}) }}</p>
+</div>
+<div class="icon">
+    <i class="ion ion-person-add"></i>
+</div>
+
+<a href="{{ url('backend_frontend_user_management') }}" class="small-box-footer">
+    {{ i18n('more_info', {en: 'More information', de: 'Mehr Informationen'}) }} <i class="fa fa-arrow-circle-right"></i>
+</a>
