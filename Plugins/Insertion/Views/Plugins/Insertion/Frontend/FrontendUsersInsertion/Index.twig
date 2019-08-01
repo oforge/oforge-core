@@ -10,18 +10,19 @@
 
                 {% block account__content %}
                     <div class="account__content">
-                        <h1>{{ i18n('frontend_user_insertions_headline') }}</h1>
+                        <h2 class="account__title">{{ i18n('frontend_user_insertions_headline') }}</h2>
                         <div class="user--insertions">
                             <a href="{{ url( 'insertions_create') }}"
-                               class="button button--secondary button--shadow button--uppercase button--header">{{ i18n('frontend_user_insertion_create', 'Jetzt inserieren!') }}</a>
-
-
-                            <div class="">
-                                <h2>{{ i18n('insertions') }}</h2>
-                            </div>
-
+                               class="button button--secondary button--shadow button--uppercase button--header">
+                                {{ i18n('frontend_user_insertion_create', 'Jetzt inserieren!') }}
+                            </a>
+                            {% if insertions|length > 0 %}
+                                <div class="insertions__banner">
+                                    <h2>{{ i18n('insertions') }}</h2>
+                                </div>
+                            {% endif %}
                             <div id="insertion-container" class="">
-                                {% include 'Frontend/Components/Insertions/UserList.twig' with {insertions : insertions } %}
+                                {% include 'Frontend/Components/Insertions/UserList.twig' with { insertions : insertions } %}
                             </div>
 
                             {% if insertions|length >= 10 %}
