@@ -307,6 +307,44 @@ class MailService {
         return $this->send($mailerOptions, $templateData);
     }
 
+    /**
+     * @param $userId
+     * @param $newResultsCount
+     * @param $searchQuery
+     *
+     * @return bool
+     * @throws ConfigElementNotFoundException
+     * @throws ConfigOptionKeyNotExistException
+     * @throws ORMException
+     * @throws ServiceNotFoundException
+     * @throws Twig_Error_Loader
+     * @throws Twig_Error_Runtime
+     * @throws Twig_Error_Syntax
+     */
+    public function sendNewSearchResultsInfoMail($userId, $newResultsCount, $searchQuery) {
+        /** @var  UserService $userService */
+        $userService   = Oforge()->Services()->get('frontend.user.management.user');
+
+        /** @var User $user */
+        $user          = $userService->getUserById($userId);
+        $userMail      = $user->getEmail();
+
+        $mailerOptions = [
+            'to'       => [$userMail => $userMail],
+            'from'     => 'no_reply',
+            'subject'  => I18N::translate('mailer_subject_new_search_results'),
+            'template' => 'NewSearchResults.twig',
+        ];
+        $templateData = [
+            //TODO: 'resultCount' => ...
+            //TODO: 'resultLink'  => ...
+            'sender_mail' => $this->getSenderAddress('no_reply'),
+            'receiver_name' => $user->getDetail()->getNickName(),
+
+        ];
+        return $this->send($mailerOptions, $templateData);
+    }
+
     public function batchSend() {
         //
     }
