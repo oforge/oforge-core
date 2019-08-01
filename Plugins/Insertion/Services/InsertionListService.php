@@ -48,7 +48,16 @@ class InsertionListService extends AbstractDatabaseAccess {
         $page     = isset($params["page"]) ? $params["page"] : 1;
         $pageSize = isset($params["pageSize"]) ? $params["pageSize"] : 10;
 
-        $keys = $this->repository("key")->findAll();
+        if (!isset($params['order'])) {
+            $params['order'] = 'price_asc';
+        }
+
+        /** @var InsertionType $type */
+        $typeAttributes = $this->repository("type")->find($typeId)->getAttributes();
+        $keys           = [];
+        foreach ($typeAttributes as $typeAttribute) {
+            $keys[] = $typeAttribute->getAttributeKey();
+        }
 
         $result = ["filter" => [], "query" => [], 'order' => $params["order"]];
 
@@ -235,6 +244,18 @@ class InsertionListService extends AbstractDatabaseAccess {
             }
         }
 
+        if (isset($params["after_date"])) {
+            $params['after_date'] = date_format($params["after_date"], 'Y-m-d h:i:s');
+
+            $sqlQueryWhere       .= " and DATEDIFF(i.created_at, :ad) > 0";
+            $args["ad"] = $params["after_date"];
+
+            print_r($sqlQuery . $sqlQueryWhere);
+            echo "\n";
+            print_r($args);
+            echo "\n";
+        }
+
         $sqlResult = $this->entityManager()->getEntityManager()->getConnection()->executeQuery($sqlQuery . $sqlQueryWhere, $args);
 
         print_r($sqlResult);
@@ -268,7 +289,7 @@ class InsertionListService extends AbstractDatabaseAccess {
             ];
 
             foreach ($attribute->getAttributeKey()->getValues() as $value) {
-                $valueMap  +=  $this->getValueMap($value);
+                $valueMap += $this->getValueMap($value);
             }
         }
 
@@ -293,8 +314,6 @@ class InsertionListService extends AbstractDatabaseAccess {
                     $order    = 'createdAt';
                     $orderDir = 'desc';
                     break;
-                case 'rand':
-                    $orderDir = 'RAND()';
             }
         }
 
@@ -321,7 +340,6 @@ class InsertionListService extends AbstractDatabaseAccess {
                 "price"     => $item->getPrice(),
                 "tax"       => $item->isTax(),
                 "createdAt" => $item->getCreatedAt(),
-
             ];
 
             foreach ($item->getContent() as $content) {

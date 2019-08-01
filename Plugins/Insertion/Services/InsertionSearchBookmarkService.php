@@ -108,7 +108,6 @@ class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
 
         $first = true;
 
-
         foreach ($params as $key => $value) {
             if (is_array($value)) {
                 foreach ($value as $v) {
