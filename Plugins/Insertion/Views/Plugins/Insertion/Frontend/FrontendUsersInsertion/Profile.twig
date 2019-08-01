@@ -14,7 +14,6 @@
                               enctype="multipart/form-data">
                             <h3 class="account__title">{{ i18n('my_profile') }}</h3>
                             <label class="center__label" for="input__background">
-
                                 <div class="background img-background flex flex--column-center"
                                      {% if profile.background %}style="background-image: url('{{ media(profile.background.id) }}')"{% endif %}>
                                     <div class="flex flex--center">
@@ -27,8 +26,8 @@
 
                             <div class="profile-upload upload-background">
                                 <div class="flex flex--row">
-                                    <span>{{ i18n('change_title_img') }}</span>
                                     <label class="upload__label" for="input__background">
+                                        <span>{{ i18n('change_title_img') }}</span>
                                         <div class="flex flex--center">
                                             <svg class="icon icon--primary">
                                                 <use xlink:href="#edit"></use>
@@ -40,8 +39,8 @@
                                            accept="image/*">
                                 </div>
                                 <div class="flex flex--row">
-                                    <span>{{ i18n('change_profile_img') }}</span>
                                     <label class="upload__label" for="input__profile">
+                                        <span>{{ i18n('change_profile_img') }}</span>
                                         <div class="flex fleflex--center">
                                             <svg class="icon icon--primary">
                                                 <use xlink:href="#edit"></use>
@@ -53,11 +52,14 @@
                                 </div>
                             </div>
                             <div class="profile-link">
-                                <a href="{{ url('insertions_profile', {id: profile.id }) }}">
-                                    <svg class="icon icon--primary icon--mail">
-                                        <use xlink:href="#fade_in"></use>
-                                    </svg>
-                                </a>
+                                {% if profile is not null %}
+                                    <span>{{ i18n('show_profile') }}</span>
+                                    <a href="{{ url('insertions_profile', {id: profile.id }) }}">
+                                        <svg class="icon icon--primary icon--mail">
+                                            <use xlink:href="#fade_in"></use>
+                                        </svg>
+                                    </a>
+                                {% endif %}
                             </div>
                             <div class="profile-pic">
                                 {% set label = true %}
