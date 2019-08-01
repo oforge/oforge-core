@@ -135,6 +135,24 @@ class BackendFrontendUserManagementController extends BaseCrudController {
                 'custom' => 'Plugins/FrontendUserManagement/Backend/BackendFrontendUserManagement/CRUD/RenderPhoneNumber.twig',
             ],
         ],
+        [
+            'name'  => 'active',
+            'type'  => CrudDataTypes::BOOL,
+            'label' => [
+                'key'     => 'active',
+                'default' => [
+                    'en' => 'Active',
+                    'de' => 'Aktiviert',
+                ],
+            ],
+            'crud'  => [
+                'index'  => 'editable',
+                'view'   => 'readonly',
+                'create' => 'editable',
+                'update' => 'editable',
+                'delete' => 'readonly',
+            ],
+        ],
     ];
     /**
      * @var array $crudActions Keys of 'add|edit|delete'

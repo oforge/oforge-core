@@ -5,14 +5,17 @@ namespace Insertion;
 use Doctrine\DBAL\Cache\QueryCacheProfile;
 use FrontendUserManagement\Services\AccountNavigationService;
 use Insertion\Commands\ReminderCommand;
+use Insertion\Commands\SearchBookmarkCommand;
 use Insertion\Controller\Backend\BackendAttributeController;
 use Insertion\Controller\Backend\BackendInsertionController;
 use Insertion\Controller\Backend\BackendInsertionTypeController;
 use Insertion\Controller\Backend\BackendInsertionTypeGroupController;
 use Insertion\Controller\Frontend\FrontendInsertionController;
-use Insertion\Controller\Frontend\FrontendInsertionSupplierController;
 use Insertion\Controller\Frontend\FrontendUsersInsertionController;
 use Insertion\Cronjobs\Reminder14DaysCronjob;
+use Insertion\Cronjobs\Reminder30DaysCronjob;
+use Insertion\Cronjobs\Reminder3DaysCronjob;
+use Insertion\Cronjobs\SearchBookmarkCronjob;
 use Insertion\Middleware\InsertionDetailMiddleware;
 use Insertion\Models\AttributeKey;
 use Insertion\Models\AttributeValue;
@@ -107,10 +110,14 @@ class Bootstrap extends AbstractBootstrap {
 
         $this->commands = [
             ReminderCommand::class,
+            SearchBookmarkCommand::class,
         ];
 
         $this->cronjobs = [
+            Reminder3DaysCronjob::class,
             Reminder14DaysCronjob::class,
+            Reminder30DaysCronjob::class,
+            SearchBookmarkCronjob::class,
         ];
     }
 

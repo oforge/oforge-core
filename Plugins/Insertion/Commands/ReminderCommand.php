@@ -22,8 +22,9 @@ class ReminderCommand extends AbstractCommand {
         parent::__construct('oforge:plugin:insertion:reminder', self::TYPE_DEFAULT);
         $this->setDescription('Insertion Reminders');
         $this->addOptions([
-            Option::create('d', 'days', GetOpt::REQUIRED_ARGUMENT)->setDescription('Reminds for outrunning Insertion in x days')#
-                  ->setValidation('is_numeric'),#
+            Option::create('d', 'days', GetOpt::REQUIRED_ARGUMENT)
+                  ->setDescription('Reminds for outrunning Insertion in x days')
+                  ->setValidation('is_numeric'),
         ]);
 
     }
@@ -40,7 +41,7 @@ class ReminderCommand extends AbstractCommand {
         /** @var InsertionService $insertionService */
         /** @var MailService $mailService */
         $insertionService = Oforge()->Services()->get('insertion');
-        $mailService = Oforge()->Services()->get('mail');
+        $mailService      = Oforge()->Services()->get('mail');
         $dateNow          = new DateTime('NOW');
         $days             = $input->getOption('days');
         $pastDays         = 90 - intval($days);
@@ -67,9 +68,9 @@ class ReminderCommand extends AbstractCommand {
             $user = $reminderInsertion->getUser();
 
             $mailOptions = [
-                'from' => 'no-reply',
-                'to' => $user->getEmail(),
-                'Subject' => 'Reminder',
+                'from'     => 'no-reply',
+                'to'       => $user->getEmail(),
+                'Subject'  => 'Reminder',
                 'template' => $template,
             ];
             $mailService->send($mailOptions);
