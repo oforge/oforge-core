@@ -47,7 +47,7 @@ class InsertionBookmarkService extends AbstractDatabaseAccess {
     }
 
     public function list(User $user) : array {
-        $bookmarks = $this->repository("user")->findBy(["user" => $user]);
+        $bookmarks = $this->repository("user")->findBy(["user" => $user], ["createdAt" => "DESC"]);
 
         $result = [];
         if (isset($bookmarks) && sizeof($bookmarks) > 0) {

@@ -6,6 +6,7 @@ use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Messenger\Abstracts\AbstractMessengerService;
 use Messenger\Models\Conversation;
@@ -45,6 +46,8 @@ class FrontendMessengerService extends AbstractMessengerService {
      * @return Collection|array
      */
     public function getConversationList($userId) {
+
+        /** @var QueryBuilder $queryBuilder */
         $queryBuilder = $this->entityManager()->createQueryBuilder();
         $queryBuilder->setParameter('open', 'open');
 
@@ -192,10 +195,47 @@ class FrontendMessengerService extends AbstractMessengerService {
         }
         $queryBuilder->select('msg')->from(Message::class, 'msg')
                                     ->where('msg.conversationId = :conversationId')
-                                    ->andWhere('msg.timestamp > :lastSeen')
-                                    ->setMaxResults(10);
+                                    ->andWhere('msg.timestamp > :lastSeen');
         $result = $queryBuilder->getQuery()->getArrayResult();
 
         return count($result);
+    }
+
+    /**
+     * @param $userId
+     *
+     * @return bool
+     */
+    public function hasUnreadMessages($userId) : bool {
+        /** @var QueryBuilder $queryBuilder */
+        $queryBuilder = $this->entityManager()->createQueryBuilder();
+        $queryBuilder->setParameter('open', 'open');
+
+        $query = $queryBuilder->select('c')
+                              ->from(Conversation::class, 'c')
+                              ->where($queryBuilder->expr()->andX(
+                                  $queryBuilder->expr()->eq('c.requester', $userId),
+                                  $queryBuilder->expr()->eq('c.requesterType', '1'),
+                                  $queryBuilder->expr()->eq('c.state', ':open')))
+                              ->orWhere($queryBuilder->expr()->andX(
+                                  $queryBuilder->expr()->eq('c.requested', $userId),
+                                  $queryBuilder->expr()->eq('c.requestedType', '1'),
+                                  $queryBuilder->expr()->eq('c.state', ':open')))
+                              ->getQuery();
+        /** @var Conversation[] $conversations */
+        $conversations = $query->execute();
+        if(!isset($conversations)) {
+            return false;
+        }
+        else {
+            foreach ($conversations as $conversation) {
+                $conversation   = $conversation->toArray();
+                $unreadMessages = $this->countUnreadMessages($conversation, $userId);
+                if ($unreadMessages > 0) {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

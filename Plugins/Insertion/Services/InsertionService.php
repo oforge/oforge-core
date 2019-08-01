@@ -103,6 +103,7 @@ class InsertionService extends AbstractDatabaseAccess {
     /**
      * @param $id
      *
+     * @return object|null
      * @throws ORMException
      */
     public function getInsertionById($id) {

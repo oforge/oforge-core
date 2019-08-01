@@ -9,6 +9,7 @@
 namespace Oforge\Engine\Modules\TemplateEngine\Extensions\Twig;
 
 use Doctrine\ORM\ORMException;
+use Messenger\Services\FrontendMessengerService;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
@@ -65,6 +66,7 @@ class AccessExtension extends Twig_Extension implements Twig_ExtensionInterface 
             new Twig_Function('mergeRecursive', [$this, 'mergeRecursive'], [
                 'is_safe' => ['html'],
             ]),
+            new Twig_Function('has_messages',  [$this, 'hasMessages']),
         ];
     }
 
@@ -185,5 +187,4 @@ class AccessExtension extends Twig_Extension implements Twig_ExtensionInterface 
     public function isString($value) {
         return is_string($value);
     }
-
 }

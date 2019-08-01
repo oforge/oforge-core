@@ -77,9 +77,9 @@
         font-style: normal;
         border-radius: 100%;
         text-align: center;
-        line-height: 1.8rem;
-        width: 2rem;
-        height: 2rem;
+        line-height: 2.25rem;
+        width: 2.5rem;
+        height: 2.5rem;
         background-color: $color-secondary;
         color: $color-light;
     }
@@ -182,5 +182,16 @@
     .messages {
         height: 60rem;
     }
+}
+.unread__messages__flag {
+    width: 2rem;
+    height: 2rem;
+    background-color: $color-secondary;
+    border-radius: 100%;
+    position: relative;
+    bottom: 0.75rem;
+    right: 0.75rem;
+    border: 1px solid white;
+    margin-right: -2rem;
 }
 
