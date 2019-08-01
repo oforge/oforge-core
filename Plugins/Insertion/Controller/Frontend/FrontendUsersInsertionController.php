@@ -179,12 +179,23 @@ class FrontendUsersInsertionController extends SecureFrontendController {
         $userService = Oforge()->Services()->get("frontend.user");
         $user        = $userService->getUser();
 
-        /**
-         * @var $bookmarkService InsertionSearchBookmarkService
-         */
-        $bookmarkService = Oforge()->Services()->get("insertion.search.bookmark");
+        /** @var $searchBookmarkService InsertionSearchBookmarkService */
+        $searchBookmarkService = Oforge()->Services()->get("insertion.search.bookmark");
 
-        $bookmarks = $bookmarkService->list($user);
+        $bookmarks = $searchBookmarkService->list($user);
+
+        $result = [];
+        if (isset($bookmarks) && sizeof($bookmarks) > 0) {
+            foreach ($bookmarks as $bookmark) {
+                $data = $bookmark->toArray(0);
+
+                $data["url"] = $searchBookmarkService->getUrl($data["insertionType"], $data["params"]);
+                $result[]    = $data;
+            }
+        }
+
+        $bookmarks = $result;
+
 
         /**
          * @var $typeService InsertionTypeService

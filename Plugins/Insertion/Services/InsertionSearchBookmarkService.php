@@ -45,20 +45,25 @@ class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
         return false;
     }
 
-    public function list(User $user) : array {
-        $bookmarks = $this->repository("search")->findBy(["user" => $user]);
-
-        $result = [];
-        if (isset($bookmarks) && sizeof($bookmarks) > 0) {
-            foreach ($bookmarks as $bookmark) {
-                $data = $bookmark->toArray(0);
-
-                $data["url"] = $this->getUrl($data["insertionType"], $data["params"]);
-                $result[]    = $data;
-            }
+    public function list(User $user = null) : array {
+        if (is_null($user)) {
+            return $bookmarks = $this->repository("search")->findAll();
+        } else {
+            return $bookmarks = $this->repository("search")->findBy(["user" => $user]);
         }
+    }
 
-        return $result;
+
+    public function setLastChecked($bookmark) {
+        if (is_a($bookmark, InsertionUserSearchBookmark::class)) {
+            $bookmark->setChecked();
+            $this->entityManager()->update($bookmark);
+        } elseif (is_int($bookmark)) {
+            $bookmark = $this->repository('search')->find($bookmark);
+            $bookmark->setChecked();
+            $this->entityManager()->update($bookmark);
+        }
+        $this->entityManager()->flush();
     }
 
     public function toggle(InsertionType $insertionType, User $user, array $params) {
