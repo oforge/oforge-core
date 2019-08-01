@@ -96,7 +96,6 @@
 
         .upload__label {
             display: flex;
-            margin-left: $size-large;
             &:hover {
                 cursor: pointer;
             }
@@ -106,6 +105,10 @@
     .profile-link {
         display: flex;
         justify-content: flex-end;
+
+        a {
+            margin-left: $size-large;
+        }
     }
 
     .info__description {

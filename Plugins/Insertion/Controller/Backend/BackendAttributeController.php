@@ -43,8 +43,8 @@ class BackendAttributeController extends SecureBackendController {
         $data             = [];
 
         if (isset($request->getQueryParams()['page']) && is_numeric($request->getQueryParams()['page'])) {
-            $offset = $limit * ($request->getQueryParams()['page']-1);
-            $page = $request->getQueryParams()['page'];
+            $offset = $limit * ($request->getQueryParams()['page'] - 1);
+            $page   = $request->getQueryParams()['page'];
         }
 
         $attributes = $attributeService->getAttributeList($limit, $offset);
@@ -74,7 +74,9 @@ class BackendAttributeController extends SecureBackendController {
     public function editAction(Request $request, Response $response) {
         /** @var AttributeService $attributeService */
         $attributeService = Oforge()->Services()->get('insertion.attribute');
-        $attributeKeyId   = $request->getQueryParams()['id'];
+        if (isset($request->getQueryParams()['id'])) {
+            $attributeKeyId = $request->getQueryParams()['id'];
+        }
 
         if ($request->isPost()) {
             $body           = $request->getParsedBody();
@@ -84,7 +86,7 @@ class BackendAttributeController extends SecureBackendController {
                 $attributeKey = $attributeService->updateAttributeKey($attributeKeyId, $body['name'], $body['type'], $body['filterType']);
                 /** @var AttributeValue[] $attributeValues */
                 $attributeValues = $attributeKey->getValues();
-                $idList = [];
+                $idList          = [];
                 foreach ($attributeValues as $value) {
                     $idList[] = $value->getId();
                 }

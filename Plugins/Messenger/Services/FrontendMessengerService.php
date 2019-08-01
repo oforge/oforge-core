@@ -195,8 +195,7 @@ class FrontendMessengerService extends AbstractMessengerService {
         }
         $queryBuilder->select('msg')->from(Message::class, 'msg')
                                     ->where('msg.conversationId = :conversationId')
-                                    ->andWhere('msg.timestamp > :lastSeen')
-                                    ->setMaxResults(10);
+                                    ->andWhere('msg.timestamp > :lastSeen');
         $result = $queryBuilder->getQuery()->getArrayResult();
 
         return count($result);
