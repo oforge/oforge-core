@@ -8,20 +8,29 @@
 
 namespace FrontendUserManagement\Widgets;
 
+use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Models\User;
-use Oforge\Engine\Modules\AdminBackend\Core\Widgets\DashboardWidgetInterface;
+use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\DashboardWidgetInterface;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 
+/**
+ * Class DashboardWidgetHandler
+ *
+ * @package FrontendUserManagement\Widgets
+ */
 class DashboardWidgetHandler extends AbstractDatabaseAccess implements DashboardWidgetInterface {
 
     public function __construct() {
         parent::__construct(["default" => User::class]);
     }
 
-    function getData() : array {
+    /**
+     * @inheritDoc
+     * @throws ORMException
+     */
+    public function prepareData() : array {
         $users = $this->repository()->count([]);
 
-        return ["count" => $users];
-        // TODO: Implement getData() method.
+        return ['count' => $users];
     }
 }

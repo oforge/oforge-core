@@ -95,7 +95,7 @@ class ArrayHelper {
      *
      * @return array
      */
-    public static function extractArray(array $keys, array $inputArray, $defaultValue = '') : array {
+    public static function extractData(array $keys, array $inputArray, $defaultValue = '') : array {
         $tmp = array_fill_keys($keys, $defaultValue);
 
         return array_replace($tmp, array_intersect_key($inputArray, $tmp));
@@ -205,6 +205,22 @@ class ArrayHelper {
         }
 
         return $result;
+    }
+
+    /**
+     * Removes all unwanted array keys.
+     *
+     * @param array $keys
+     * @param array $inputArray
+     *
+     * @return array
+     */
+    public static function filterByKeys(array $keys, array $inputArray) {
+        $tmp = array_fill_keys($keys, 1);
+
+        return array_filter($inputArray, function ($key) use ($tmp) {
+            return isset($tmp[$key]);
+        }, ARRAY_FILTER_USE_KEY);
     }
 
 }
