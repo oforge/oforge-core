@@ -134,7 +134,7 @@ class InsertionListService extends AbstractDatabaseAccess {
                     if (is_array($value)) { //should always be a multi selection or a range component
                         $sqlQuery                             .= " left join oforge_insertion_insertion_attribute_value v$attributeCount on v$attributeCount.insertion_id = i.id and v$attributeCount.attribute_key = :v"
                                                                  . $attributeCount . "key";
-                        $args[":v" . $attributeCount . "key"] = $attributeKey->getId();
+                        $args["v" . $attributeCount . "key"] = $attributeKey->getId();
 
                         switch ($attributeKey->getFilterType()) {
                             case AttributeType::RANGE:
@@ -151,8 +151,8 @@ class InsertionListService extends AbstractDatabaseAccess {
                                     $max = $t;
                                 }
 
-                                $args[":v" . $attributeCount . "value"]  = $min;
-                                $args[":v" . $attributeCount . "value2"] = $max;
+                                $args["v" . $attributeCount . "value"]  = $min;
+                                $args["v" . $attributeCount . "value2"] = $max;
 
                                 break;
                             case AttributeType::DATEYEAR:
@@ -170,8 +170,8 @@ class InsertionListService extends AbstractDatabaseAccess {
                                     $max = $t;
                                 }
 
-                                $args[":v" . $attributeCount . "value"]  = $min;
-                                $args[":v" . $attributeCount . "value2"] = $max;
+                                $args["v" . $attributeCount . "value"]  = $min;
+                                $args["v" . $attributeCount . "value2"] = $max;
 
                                 break;
                             case AttributeType::DATEMONTH:
@@ -189,8 +189,8 @@ class InsertionListService extends AbstractDatabaseAccess {
                                     $max = $t;
                                 }
 
-                                $args[":v" . $attributeCount . "value"]  = $min;
-                                $args[":v" . $attributeCount . "value2"] = $max;
+                                $args["v" . $attributeCount . "value"]  = $min;
+                                $args["v" . $attributeCount . "value2"] = $max;
 
                                 break;
                             default: //multi
@@ -221,8 +221,8 @@ class InsertionListService extends AbstractDatabaseAccess {
                                 $sqlQueryWhere                          .= " and v$attributeCount . attribute_key = :v" . $attributeCount
                                                                            . "key and v$attributeCount . insertion_attribute_value like :v" . $attributeCount
                                                                            . "value";
-                                $args[":v" . $attributeCount . "key"]   = $attributeKey->getId();
-                                $args[":v" . $attributeCount . "value"] = "%" . $value . "%";
+                                $args["v" . $attributeCount . "key"]   = $attributeKey->getId();
+                                $args["v" . $attributeCount . "value"] = "%" . $value . "%";
 
                                 $attributeCount++;
                                 break;
@@ -234,8 +234,8 @@ class InsertionListService extends AbstractDatabaseAccess {
                                 $sqlQueryWhere                          .= " and v$attributeCount . attribute_key = :v" . $attributeCount
                                                                            . "key and v$attributeCount . insertion_attribute_value = :v" . $attributeCount
                                                                            . "value";
-                                $args[":v" . $attributeCount . "key"]   = $attributeKey->getId();
-                                $args[":v" . $attributeCount . "value"] = $value;
+                                $args["v" . $attributeCount . "key"]   = $attributeKey->getId();
+                                $args["v" . $attributeCount . "value"] = $value;
 
                                 $attributeCount++;
                         }
@@ -243,25 +243,13 @@ class InsertionListService extends AbstractDatabaseAccess {
                 }
             }
         }
-
         if (isset($params["after_date"])) {
             $params['after_date'] = date_format($params["after_date"], 'Y-m-d h:i:s');
-
             $sqlQueryWhere       .= " and DATEDIFF(i.created_at, :ad) > 0";
             $args["ad"] = $params["after_date"];
-
-            print_r($sqlQuery . $sqlQueryWhere);
-            echo "\n";
-            print_r($args);
-            echo "\n";
         }
 
         $sqlResult = $this->entityManager()->getEntityManager()->getConnection()->executeQuery($sqlQuery . $sqlQueryWhere, $args);
-
-        print_r($sqlResult);
-
-        echo "\n";
-
         $ids = $sqlResult->fetchAll();
 
         $result["query"]["count"]     = sizeof($ids);
