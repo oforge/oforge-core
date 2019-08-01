@@ -14,7 +14,7 @@
         <i class="logo__image"></i>
         <span class="chat__text">{{ i18n('support') }} - {{ conversation.title }} </span>
             <i class="unread__messages" {% if conversation.unreadMessages == 0 %}style="visibility: hidden"{% endif %}>
-                <span> {{ conversation.unreadMessages }}</span>
+                <span>{{ conversation.unreadMessages|single_digit }}</span>
             </i>
     {% else %}
         {{ parent() }}
