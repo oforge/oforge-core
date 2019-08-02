@@ -53,7 +53,9 @@ class BackendHelpdeskController extends SecureBackendController {
             /** @var User $user */
             $user = $userService->getUserById($ticket->getOpener());
             $ticket = $ticket->toArray();
-            $ticket['email'] = $user->getEmail();
+            if(isset($user)) {
+                $ticket['email'] = $user->getEmail();
+            }
             $tickets[] = $ticket;
         }
 
