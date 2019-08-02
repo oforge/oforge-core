@@ -9,15 +9,14 @@ use FrontendUserManagement\Services\UserService;
 use Helpdesk\Models\Ticket;
 use Helpdesk\Services\HelpdeskMessengerService;
 use Helpdesk\Services\HelpdeskTicketService;
+use Messenger\Services\FrontendMessengerService;
 use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
-use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\Mailer\Services\MailService;
-use phpDocumentor\Reflection\Types\Integer;
 
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -44,16 +43,18 @@ class BackendHelpdeskController extends SecureBackendController {
         $helpdeskTicketService = Oforge()->Services()->get('helpdesk.ticket');
         /** @var Ticket[] $ticketData */
         $ticketData = $helpdeskTicketService->getTickets();
-        $tickets = [];
+        $tickets    = [];
 
         /** @var UserService $userService */
         $userService = Oforge()->Services()->get('frontend.user.management.user');
 
         foreach ($ticketData as $ticket) {
             /** @var User $user */
-            $user = $userService->getUserById($ticket->getOpener());
+            $user   = $userService->getUserById($ticket->getOpener());
             $ticket = $ticket->toArray();
-            $ticket['email'] = $user->getEmail();
+            if (isset($user)) {
+                $ticket['email'] = $user->getEmail();
+            }
             $tickets[] = $ticket;
         }
 
@@ -62,14 +63,13 @@ class BackendHelpdeskController extends SecureBackendController {
 
     /**
      * @param Request $request
-     * @param Response $response*
+     * @param Response $response
      * @EndpointAction(path="/closeTicket")
      *
      * @return Response
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws ServiceNotFoundException
-     *
      */
     public function closeTicketAction(Request $request, Response $response) {
         if ($request->isPost()) {
@@ -79,6 +79,21 @@ class BackendHelpdeskController extends SecureBackendController {
             $ticketId = $request->getParsedBody()['ticketId'];
 
             $helpdeskTicketService->changeStatus($ticketId, 'closed');
+
+            $conversationId = $helpdeskTicketService->getAssociatedConversationId($ticketId);
+
+            /** @var FrontendMessengerService $messengerService */
+            $messengerService = Oforge()->Services()->get('frontend.messenger');
+            $messengerService->changeStatus($conversationId, 'closed');
+
+            Oforge()->View()->Flash()->addMessage('success', I18N::translate('ticket_close_success', [
+                'en' => 'Ticket closed',
+                'de' => 'Ticket wurde erfolgreich geschlossen',
+            ]));
+            Oforge()->View()->Flash()->addMessage('success', I18N::translate('conversation_close_success', [
+                'en' => 'Associated conversation closed',
+                'de' => 'Dem Ticket zugehörige Unterhaltung wurde erfolgreicht geschlossen',
+            ]));
 
             return $response->withRedirect('/backend/helpdesk');
         }
@@ -102,7 +117,7 @@ class BackendHelpdeskController extends SecureBackendController {
     public function messengerAction(Request $request, Response $response, array $args) {
         /** @var Router $router */
         $router = Oforge()->App()->getContainer()->get('router');
-        $uri = $router->pathFor('backend_helpdesk');
+        $uri    = $router->pathFor('backend_helpdesk');
 
         if (isset($args) && isset($args['id'])) {
             $ticketId = $args['id'];
@@ -128,7 +143,7 @@ class BackendHelpdeskController extends SecureBackendController {
 
                 /** @var  MailService $mailService - send notification to requester */
                 $mailService = Oforge()->Services()->get('mail');
-                $messages = $helpdeskMessengerService->getMessagesOfConversation($conversation['id']);
+                $messages    = $helpdeskMessengerService->getMessagesOfConversation($conversation['id']);
                 $lastMessage = end($messages)->toArray(1);
                 if ($lastMessage["sender"] != 'helpdesk') {
                     $mailService->sendNewMessageInfoMail($conversation['requester'], $conversation['id']);
@@ -139,7 +154,7 @@ class BackendHelpdeskController extends SecureBackendController {
 
                 $uri = $router->pathFor('backend_helpdesk_messenger', ['id' => $args['id']]);
 
-                return $response->withRedirect($uri , 302);
+                return $response->withRedirect($uri, 302);
             }
 
             /** @var HelpdeskTicketService $helpdeskTicketService */

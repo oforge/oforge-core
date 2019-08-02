@@ -63,7 +63,7 @@ class Insertion extends AbstractModel {
 
     /**
      * @var InsertionContact
-     * @ORM\OneToOne(targetEntity="InsertionContact", mappedBy="insertion", fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity="InsertionContact", mappedBy="insertion", cascade={"all"}, fetch="EXTRA_LAZY")
      */
     private $contact;
 

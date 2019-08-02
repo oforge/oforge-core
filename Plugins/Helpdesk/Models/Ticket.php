@@ -48,7 +48,6 @@ class Ticket extends AbstractModel {
      */
     private $title;
 
-
     /**
      * @var string
      * @ORM\Column(name="first_message", type="text", nullable=false)
