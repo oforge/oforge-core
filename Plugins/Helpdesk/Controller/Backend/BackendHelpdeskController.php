@@ -2,7 +2,6 @@
 
 namespace Helpdesk\Controller\Backend;
 
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\UserService;
@@ -14,13 +13,17 @@ use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\Mailer\Services\MailService;
-
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
+use Twig_Error_Loader;
+use Twig_Error_Runtime;
+use Twig_Error_Syntax;
 
 /**
  * Class BackendHelpdeskController
@@ -58,7 +61,7 @@ class BackendHelpdeskController extends SecureBackendController {
             $tickets[] = $ticket;
         }
 
-        Oforge()->View()->assign([ "data" => ["ticketData" => $tickets]]);
+        Oforge()->View()->assign(["data" => ["ticketData" => $tickets]]);
     }
 
     /**
@@ -68,7 +71,6 @@ class BackendHelpdeskController extends SecureBackendController {
      *
      * @return Response
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws ServiceNotFoundException
      */
     public function closeTicketAction(Request $request, Response $response) {
@@ -107,11 +109,11 @@ class BackendHelpdeskController extends SecureBackendController {
      * @return Response
      * @throws ORMException
      * @throws ServiceNotFoundException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws ConfigElementNotFoundException
+     * @throws ConfigOptionKeyNotExistException
+     * @throws Twig_Error_Loader
+     * @throws Twig_Error_Runtime
+     * @throws Twig_Error_Syntax
      * @EndpointAction(path="/messenger/{id}")
      */
     public function messengerAction(Request $request, Response $response, array $args) {
