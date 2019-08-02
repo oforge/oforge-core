@@ -106,6 +106,9 @@
         display: flex;
         justify-content: flex-end;
         a {
+            display: flex;
+        }
+        .icon {
             margin-left: $size-large;
         }
     }
