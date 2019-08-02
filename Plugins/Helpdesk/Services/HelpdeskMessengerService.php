@@ -22,7 +22,7 @@ class HelpdeskMessengerService extends AbstractMessengerService {
     public function createNewConversation(array $data) {
         $conversation = new Conversation();
 
-        $data['state'] = 'open';
+        $data['status'] = 'open';
         $data['requesterType'] = 1;
         $data['requestedType'] = 2;
 
