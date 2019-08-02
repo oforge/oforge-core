@@ -2,7 +2,6 @@
 
 namespace Helpdesk\Services;
 
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Helpdesk\Models\IssueTypeGroup;
 use Helpdesk\Models\IssueTypes;
@@ -69,6 +68,23 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
     }
 
     /**
+     * @param $targetId
+     *
+     * @return string
+     * @throws ORMException
+     * @throws ServiceNotFoundException
+     */
+    public function getAssociatedConversationId($targetId) {
+        /** @var FrontendMessengerService $messengerService */
+        $messengerService = Oforge()->Services()->get('frontend.messenger');
+        /** @var Conversation $conversation */
+        $conversation = $messengerService->repository('conversation')->findOneBy(['type' => 'helpdesk_inquiry', 'targetId' => $targetId]);
+        if(isset($conversation)) {
+            return $conversation->getId();
+        }
+    }
+
+    /**
      * @param string $status
      *
      * @return int
@@ -132,7 +148,6 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
      * @param $status
      *
      * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function changeStatus($id, $status) {
         $ticket = $this->getTicketById($id);
@@ -176,7 +191,6 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
     public function getIssueTypesByGroup($groupName) {
         return $this->repository('IssueTypesGroup')->findOneBy(['issueTypeGroupName' => $groupName]);
     }
-
 
     private function isDuplicate() {
         // TODO check if this insertion has already been reported for that reason
