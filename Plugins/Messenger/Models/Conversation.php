@@ -44,9 +44,9 @@ class Conversation extends AbstractModel {
 
     /**
      * @var string
-     * @ORM\Column(name="conversation_state", type="string", nullable=false)
+     * @ORM\Column(name="conversation_status", type="string", nullable=false)
      */
-    private $state;
+    private $status;
 
     /**
      * @var string
@@ -144,19 +144,19 @@ class Conversation extends AbstractModel {
     }
 
     /**
-     * @return string
+     * @return string $status
      */
-    public function getState() : string {
-        return $this->state;
+    public function getStatus() : string {
+        return $this->status;
     }
 
     /**
-     * @param string $state
+     * @param string
      *
      * @return Conversation
      */
-    public function setState(string $state) : Conversation {
-        $this->state = $state;
+    public function setStatus(string $status) : Conversation {
+        $this->status = $status;
 
         return $this;
     }
