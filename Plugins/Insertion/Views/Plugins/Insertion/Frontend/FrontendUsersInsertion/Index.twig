@@ -10,7 +10,7 @@
 
                 {% block account__content %}
                     <div class="account__content">
-                        <h2 class="account__title">{{ i18n('frontend_user_insertions_headline') }}</h2>
+                        <h1 class="form__title">{{ i18n('frontend_user_insertions_headline') }}</h1>
                         <div class="user--insertions">
                             <a href="{{ url( 'insertions_create') }}"
                                class="button button--secondary button--shadow button--uppercase button--header">
@@ -18,7 +18,7 @@
                             </a>
                             {% if insertions|length > 0 %}
                                 <div class="insertions__banner">
-                                    <h2>{{ i18n('insertions') }}</h2>
+                                    <h2 class="form__title">{{ i18n('insertions') }}</h2>
                                 </div>
                             {% endif %}
                             <div id="insertion-container" class="">
