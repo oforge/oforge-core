@@ -1,32 +1,39 @@
 {% extends "Backend/Master/Index.twig" %}
 
 {% block pagecontent %}
-    {% set widgets = backend_widgets() %}
-
+    {% set widgets = backend_dashboard_widgets() %}
     {% if widgets.top %}
         <div class="row">
-            {% for widget in widgets.top %}
-                {% include 'Backend/Master/Components/Widgets/ItemTop.twig' with {'item': widget} %}
-            {% endfor %}
+            <section data-site="top">
+                {% for widget in widgets.top %}
+                    {% include 'Backend/Master/Components/Widgets/ItemSmall.twig' with {'widget': widget} %}
+                {% endfor %}
+            </section>
         </div>
     {% endif %}
     <div class="row">
-
         <section data-site="left"
                  class="col-lg-7 connectedSortable ui-sortable">
             {% for widget in widgets.left %}
-                {% include 'Backend/Master/Components/Widgets/Item.twig' with {'item': widget} %}
+                {% include 'Backend/Master/Components/Widgets/Item.twig' with {'widget': widget} %}
             {% endfor %}
         </section>
-
         <section data-site="right"
                  class="col-lg-5 connectedSortable ui-sortable">
             {% for widget in widgets.right %}
-                {% include 'Backend/Master/Components/Widgets/Item.twig' with {'item': widget} %}
+                {% include 'Backend/Master/Components/Widgets/Item.twig' with {'widget': widget} %}
             {% endfor %}
         </section>
-
     </div>
+    {% if widgets.bottom %}
+        <div class="row">
+            <section data-site="bottom">
+                {% for widget in widgets.bottom %}
+                    {% include 'Backend/Master/Components/Widgets/ItemSmall.twig' with {'widget': widget} %}
+                {% endfor %}
+            </section>
+        </div>
+    {% endif %}
 
     <br />
     <ul>
@@ -37,5 +44,4 @@
         <li> Anzahl offener Support-Anfragen</li>
         <li>Klicks auf Werbebanner</li>
     </ul>
-
 {% endblock %}

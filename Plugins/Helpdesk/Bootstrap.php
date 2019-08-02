@@ -2,8 +2,7 @@
 
 namespace Helpdesk;
 
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
+use Exception;
 use FrontendUserManagement\Services\AccountNavigationService;
 use Helpdesk\Controller\Backend\BackendHelpdeskController;
 use Helpdesk\Controller\Backend\BackendHelpdeskSettingsController;
@@ -13,15 +12,13 @@ use Helpdesk\Models\IssueTypes;
 use Helpdesk\Models\Ticket;
 use Helpdesk\Services\HelpdeskMessengerService;
 use Helpdesk\Services\HelpdeskTicketService;
-use Helpdesk\Widgets\HelpdeskCountWidgetHandler;
-use Helpdesk\Widgets\HelpdeskWidgetHandler;
+use Helpdesk\Widgets\HelpdeskLastTicketsWidgetHandler;
+use Helpdesk\Widgets\HelpdeskOpenTicketsWidgetHandler;
+use Oforge\Engine\Modules\AdminBackend\Core\Enums\DashboardWidgetPosition;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\DashboardWidgetsService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistException;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
-use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
-use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\CRUD\Services\GenericCrudService;
 
 /**
@@ -58,51 +55,76 @@ class Bootstrap extends AbstractBootstrap {
         ];
     }
 
-    /**
-     * @throws ConfigElementAlreadyExistException
-     * @throws ORMException
-     * @throws OptimisticLockException
-     * @throws ServiceNotFoundException
-     * @throws \ReflectionException
-     */
+    /** @inheritDoc */
     public function install() {
-        /** @var GenericCrudService $crud */
-        $crud = Oforge()->Services()->get('crud');
-        /** @var IssueTypeGroup $supportGroup */
-        $supportGroup = $crud->create(IssueTypeGroup::class, ['issueTypeGroupName' => 'support']);
-        /** @var IssueTypeGroup $reportGroup */
-        $reportGroup = $crud->create(IssueTypeGroup::class, ['issueTypeGroupName' => 'report']);
-
-        /** @var HelpdeskTicketService $helpdeskTicketService */
+        /**
+         * @var GenericCrudService $crud
+         * @var HelpdeskTicketService $helpdeskTicketService
+         */
+        $crud                  = Oforge()->Services()->get('crud');
         $helpdeskTicketService = Oforge()->Services()->get('helpdesk.ticket');
-        $helpdeskTicketService->createIssueType('support_issue_type_1', $supportGroup);
-        $helpdeskTicketService->createIssueType('support_issue_type_2', $supportGroup);
-        $helpdeskTicketService->createIssueType('report_issue_type_1', $reportGroup);
-        $helpdeskTicketService->createIssueType('report_issue_type_2', $reportGroup);
+        try {
+            /**
+             * @var IssueTypeGroup $supportGroup
+             * @var IssueTypeGroup $reportGroup
+             */
+            $supportGroup = $crud->create(IssueTypeGroup::class, ['issueTypeGroupName' => 'support']);
+            $reportGroup  = $crud->create(IssueTypeGroup::class, ['issueTypeGroupName' => 'report']);
+            $helpdeskTicketService->createIssueType('support_issue_type_1', $supportGroup);
+            $helpdeskTicketService->createIssueType('support_issue_type_2', $supportGroup);
+            $helpdeskTicketService->createIssueType('report_issue_type_1', $reportGroup);
+            $helpdeskTicketService->createIssueType('report_issue_type_2', $reportGroup);
+            $helpdeskTicketService->createNewTicket(1, 1, 'but the horse ain\'t one',
+                'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.');
+            $helpdeskTicketService->createNewTicket(1, 1, 'but the horse ain\'t two',
+                'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.');
+        } catch (ConfigElementAlreadyExistException $exception) {
+            // ignore
+        } catch (Exception $exception) {
+            throw $exception;
+        }
 
-        $helpdeskTicketService->createNewTicket(1, 1, 'but the horse ain\'t one',
-            'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.');
-
-        $helpdeskTicketService->createNewTicket(1, 1, 'but the horse ain\'t two',
-            'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.');
+        /** @var DashboardWidgetsService $dashboardWidgetsService */
+        $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
+        $dashboardWidgetsService->install([
+            'name'     => 'plugin_helpdesk_open_tickets',
+            'template' => 'HelpdeskOpenTickets',
+            'handler'  => HelpdeskOpenTicketsWidgetHandler::class,
+            'label'    => [
+                'en' => 'Open helpdesk tickets',
+                'de' => 'Offene Helpdesk-Tickets',
+            ],
+            'position' => DashboardWidgetPosition::TOP,
+            'cssClass' => 'bg-red',
+        ]);
+        $dashboardWidgetsService->install([
+            'name'     => 'plugin_helpdesk_last_tickets',
+            'template' => 'HelpdeskLastTickets',
+            'handler'  => HelpdeskLastTicketsWidgetHandler::class,
+            'label'    => [
+                'en' => 'Last helpdesk tickets',
+                'de' => 'Letzte Helpdesk-Tickets',
+            ],
+            'position' => DashboardWidgetPosition::LEFT,
+            'cssClass' => 'box-success',
+        ]);
     }
 
-    /**
-     * @throws ConfigElementAlreadyExistException
-     * @throws ConfigOptionKeyNotExistException
-     * @throws ORMException
-     * @throws OptimisticLockException
-     * @throws ParentNotFoundException
-     * @throws ServiceNotFoundException
-     */
+    /** @inheritDoc */
+    public function uninstall() {
+        /** @var DashboardWidgetsService $dashboardWidgetsService */
+        $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
+        $dashboardWidgetsService->uninstall("plugin_helpdesk_last_tickets");
+        $dashboardWidgetsService->uninstall("plugin_helpdesk_open_tickets");
+    }
+
+    /** @inheritDoc */
     public function activate() {
         /**
          * @var AccountNavigationService $accountNavigation
-         * @var DashboardWidgetsService $dashboardWidgetsService
          * @var BackendNavigationService $backendNavigationService
          */
         $accountNavigation        = Oforge()->Services()->get('frontend.user.management.account.navigation');
-        $dashboardWidgetsService  = Oforge()->Services()->get('backend.dashboard.widgets');
         $backendNavigationService = Oforge()->Services()->get('backend.navigation');
 
         $backendNavigationService->add([
@@ -135,37 +157,18 @@ class Bootstrap extends AbstractBootstrap {
             'path'     => 'frontend_account_support',
             'position' => 'sidebar',
         ]);
-        $dashboardWidgetsService->register([
-            'position'     => 'left',
-            'action'       => HelpdeskWidgetHandler::class,
-            'title'        => 'frontend_widget_helpdesk_title',
-            'name'         => 'frontend_widget_helpdesk',
-            'cssClass'     => 'box-success',
-            'templateName' => 'Helpdesk',
-        ]);
-
-        $dashboardWidgetsService->register([
-            'position'     => 'top',
-            'action'       => HelpdeskCountWidgetHandler::class,
-            'title'        => 'frontend_widget_helpdesk_count_title',
-            'name'         => 'frontend_widget_helpdesk_count',
-            'cssClass'     => 'bg-red',
-            'templateName' => 'HelpdeskCount',
-        ]);
-
+        /** @var DashboardWidgetsService $dashboardWidgetsService */
+        $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
+        $dashboardWidgetsService->activate("plugin_helpdesk_last_tickets");
+        $dashboardWidgetsService->activate("plugin_helpdesk_open_tickets");
     }
 
-    public function load() {
+    /** @inheritDoc */
+    public function deactivate() {
+        /** @var DashboardWidgetsService $dashboardWidgetsService */
         $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
-
-        $dashboardWidgetsService->register([
-            'position'     => 'top',
-            'action'       => HelpdeskCountWidgetHandler::class,
-            'title'        => 'frontend_widget_helpdesk_count_title',
-            'name'         => 'frontend_widget_helpdesk_count',
-            'cssClass'     => 'bg-red',
-            'templateName' => 'HelpdeskCount',
-        ]);
+        $dashboardWidgetsService->deactivate("plugin_helpdesk_last_tickets");
+        $dashboardWidgetsService->deactivate("plugin_helpdesk_open_tickets");
     }
 
 }

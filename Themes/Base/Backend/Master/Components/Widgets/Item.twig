@@ -1,10 +1,8 @@
-<div class="box {{ item.cssClass }}" data-id="{{ item.id }}">
+<div class="box {{ widget.cssClass }}" data-id="{{ widget.id }}">
     <div class="box-header with-border ui-sortable-handle">
-        <h3 class="box-title">{{ i18n(item.title) }}</h3>
+        <h3 class="box-title">{{ i18n(widget.label, widget.label) }}</h3>
     </div>
-    <!-- /.box-header -->
     <div class="box-body">
-        {% set content = backend_widget_data(item.name) %}
-        {% include 'Backend/Widgets/' ~ item.templateName ~ '.twig' with {'data': item, 'content': content} %}
+        {% include 'Backend/Widgets/' ~ widget.template ~ '.twig' with {data: widget.data, widget: widget} %}
     </div>
 </div>
