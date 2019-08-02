@@ -8,7 +8,6 @@ use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\DashboardWidgetsService;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
-use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistException;
@@ -50,40 +49,28 @@ class DashboardController extends SecureBackendController {
      * @EndpointAction()
      */
     public function buildAction(Request $request, Response $response) {
-        Oforge()->Services()->get('assets.template')->build("", Oforge()->View()->get('meta')['route']['assetScope']);
+        Oforge()->Services()->get('assets.template')->build('', Oforge()->View()->get('meta')['route']['assetScope']);
     }
 
     /**
      * @param Request $request
      * @param Response $response
+     *
+     * @throws ORMException
+     * @throws ServiceNotFoundException
      * @EndpointAction()
      */
     public function widgetsAction(Request $request, Response $response) {
-        if ($_POST && isset($_POST["data"])) {
-            $data = json_decode($_POST["data"], true);
-
-            $auth = null;
-            if (isset($_SESSION['auth'])) {
-                $auth = $_SESSION['auth'];
-            }
-
-            /** @var AuthService $authService */
-            $authService = Oforge()->Services()->get('auth');
-            $user        = $authService->decode($auth);
-
-            if ($user != null) {
-                /** @var AuthService $authService */
-                $authService = Oforge()->Services()->get('auth');
-                $user        = $authService->decode($auth);
-
-                /**
-                 * @var DashboardWidgetsService $dashboardWidgetsService
-                 */
+        if ($_POST && isset($_POST['data'])) {
+            $data = $_POST['data'];
+            $user = Oforge()->View()->get('user');
+            if ($user !== null) {
+                /**  @var DashboardWidgetsService $dashboardWidgetsService */
                 $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
-                $dashboardWidgetsService->updateUserWidgets($user["id"], $data);
+                $dashboardWidgetsService->saveUserSettings($data);
             }
 
-            Oforge()->View()->assign(["json" => $data]);
+            Oforge()->View()->assign(['json' => $data]);
         }
 
     }
