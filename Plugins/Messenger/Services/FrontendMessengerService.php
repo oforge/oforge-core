@@ -99,28 +99,33 @@ class FrontendMessengerService extends AbstractMessengerService {
     /**
      * @param $conversationId
      *
-     * @return array
+     * @return array|null
      * @throws ORMException
      */
     public function getConversationById($conversationId) {
-        return parent::getConversationById($conversationId)->toArray();
+        $conversation = parent::getConversationById($conversationId);
+        if(isset($conversation)) {
+            return $conversation->toArray();
+        }
     }
 
     /**
      * @param $conversationId
      * @param $userId
      *
-     * @return array
+     * @return object|null
      * @throws ORMException
      */
     public function getConversation($conversationId, $userId) {
         $conversation = $this->getConversationById($conversationId);
-        if ($conversation['requester'] == $userId) {
-            $conversation['chatPartner'] = $conversation['requested'];
-        } else {
-            $conversation['chatPartner'] = $conversation['requester'];
+        if (isset($conversation)) {
+            if ($conversation['requester'] == $userId) {
+                $conversation['chatPartner'] = $conversation['requested'];
+            } else {
+                $conversation['chatPartner'] = $conversation['requester'];
+            }
+            $conversation['messages'] = $this->getMessagesOfConversation($conversationId);
         }
-        $conversation['messages'] = $this->getMessagesOfConversation($conversationId);
 
         return $conversation;
     }
