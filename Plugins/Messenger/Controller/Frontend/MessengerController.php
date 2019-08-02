@@ -64,13 +64,15 @@ class MessengerController extends SecureFrontendController {
             $conversationId = $args['id'];
 
             /** @var Conversation $conversation */
-            $frontendMessengerService->updateLastSeen($conversationId, $user['id']);
             $activeConversation = $frontendMessengerService->getConversation($conversationId, $user['id']);
+
             $isRequester        = ($activeConversation['requester'] == $user['id']);
             /* Check for permission of conversation */
             if (!($activeConversation['requested'] == $user['id'] || $activeConversation['requester'] == $user['id'])) {
                 return $response->withRedirect("/404", 301);
             }
+
+            $frontendMessengerService->updateLastSeen($conversationId, $user['id']);
 
             /* Create a new message for a given conversation */
             if ($request->isPost()) {

@@ -26,35 +26,21 @@
 
                             <div class="profile-upload upload-background">
                                 <div class="flex flex--row">
-                                    <label class="upload__label" for="input__background">
-                                        <span>{{ i18n('change_title_img') }}</span>
-                                        <div class="flex flex--center">
-                                            <svg class="icon icon--primary">
-                                                <use xlink:href="#edit"></use>
-                                            </svg>
-                                        </div>
-                                    </label>
+
                                     <input id="input__background" data-update="img-background" type="file"
                                            name="background"
                                            accept="image/*">
                                 </div>
                                 <div class="flex flex--row">
-                                    <label class="upload__label" for="input__profile">
-                                        <span>{{ i18n('change_profile_img') }}</span>
-                                        <div class="flex fleflex--center">
-                                            <svg class="icon icon--primary">
-                                                <use xlink:href="#edit"></use>
-                                            </svg>
-                                        </div>
-                                    </label>
+
                                     <input id="input__profile" data-update="img-profile" type="file" name="profile"
                                            accept="image/*">
                                 </div>
                             </div>
                             <div class="profile-link">
                                 {% if profile is not null %}
-                                    <span>{{ i18n('show_profile') }}</span>
                                     <a href="{{ url('insertions_profile', {id: profile.id }) }}">
+                                        <span>{{ i18n('show_profile') }}</span>
                                         <svg class="icon icon--primary icon--mail">
                                             <use xlink:href="#fade_in"></use>
                                         </svg>
@@ -63,7 +49,7 @@
                             </div>
                             <div class="profile-pic">
                                 {% set label = true %}
-                                {% include 'Plugins/FrontendUserManagement/Frontend/Components/AccountUser.twig' with {  label : label } %}
+                                {% include 'Plugins/FrontendUserManagement/Frontend/Components/AccountUser.twig' with { label : label } %}
                             </div>
                             <div class="info__description">
                                 {{ i18n('account_insertions_profile_info') }}
@@ -77,17 +63,17 @@
                                 </div>
                                 <div class="impress--edit">
                                     <h2 class="form__title">{{ i18n('legal_rights') }}</h2>
-                                    <input class="form__input" type="text" name="imprint_name" placeholder="Name"
+                                    <input class="form__input" type="text" name="imprint_name" placeholder="{{ i18n('imprint_name') }}"
                                            value="{{ profile.imprintName }}" />
-                                    <input class="form__input" type="text" name="imprint_street" placeholder="Street"
+                                    <input class="form__input" type="text" name="imprint_street" placeholder="{{ i18n('imprint_street') }}"
                                            value="{{ profile.imprintStreet }}" />
-                                    <input class="form__input" type="text" name="imprint_zipCity" placeholder="PLZ, ORT"
+                                    <input class="form__input" type="text" name="imprint_zipCity" placeholder="{{ i18n('imprint_zipCity') }}"
                                            value="{{ profile.imprintZipCity }}" />
-                                    <input class="form__input" type="phone" name="imprint_phone" placeholder="Telefon"
+                                    <input class="form__input" type="phone" name="imprint_phone" placeholder="{{ i18n('imprint_phone') }}"
                                            value="{{ profile.imprintPhone }}" />
-                                    <input class="form__input" type="fax" name="imprint_fax" placeholder="Fax"
+                                    <input class="form__input" type="fax" name="imprint_fax" placeholder={{ i18n('imprint_fax') }}
                                            value="{{ profile.imprintFax }}" />
-                                    <input class="form__input" type="email" name="imprint_email" placeholder="E-Mail"
+                                    <input class="form__input" type="email" name="imprint_email" placeholder="{{ i18n('imprint_email') }}"
                                            value="{{ profile.imprintEmail }}" />
                                     <div class="form__input">
                                         <label for="imprint_facebook">
@@ -101,13 +87,13 @@
                                            placeholder="{{ i18n('imprint_website') }}"
                                            value="{{ profile.imprintWebsite }}" />
                                     <div class="info__business">
-                                        {{ i18n('account_insertions_impress_info') }}
+                                        {{ i18n('account_insertions_imprint_info') }}
                                     </div>
                                     <input class="form__input" type="text" name="imprint_company_number"
-                                           placeholder="Registernummer"
+                                           placeholder="{{ i18n('imprint_company_number') }}"
                                            value="{{ profile.imprintCompanyNumber }}" />
                                     <input class="form__input" type="text" name="imprint_company_tax"
-                                           placeholder="USt.ID"
+                                           placeholder="{{ i18n('imprint_company_tax') }}"
                                            value="{{ profile.imprintCompanyTaxId }}" />
                                 </div>
                                 <div class="submit">
