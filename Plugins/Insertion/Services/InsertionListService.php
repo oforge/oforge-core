@@ -249,18 +249,9 @@ class InsertionListService extends AbstractDatabaseAccess {
 
             $sqlQueryWhere       .= " and DATEDIFF(i.created_at, :ad) > 0";
             $args["ad"] = $params["after_date"];
-
-            print_r($sqlQuery . $sqlQueryWhere);
-            echo "\n";
-            print_r($args);
-            echo "\n";
         }
 
         $sqlResult = $this->entityManager()->getEntityManager()->getConnection()->executeQuery($sqlQuery . $sqlQueryWhere, $args);
-
-        print_r($sqlResult);
-
-        echo "\n";
 
         $ids = $sqlResult->fetchAll();
 

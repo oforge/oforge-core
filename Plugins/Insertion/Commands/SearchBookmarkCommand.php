@@ -47,16 +47,9 @@ class SearchBookmarkCommand extends AbstractCommand {
             $insertionList      = $insertionListService->search($bookmark->getInsertionType()->getId(), $params);
             $newInsertionsCount = sizeof($insertionList);
 
-            echo "search: ";
-            echo $newInsertionsCount;
-            echo "\n";
-            echo "\n";
-            echo "\n";
-
             // TODO: BASTI send mail
 
             $searchBookmarkService->setLastChecked($bookmark);
-
         }
     }
 }
