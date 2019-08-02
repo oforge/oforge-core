@@ -26,35 +26,21 @@
 
                             <div class="profile-upload upload-background">
                                 <div class="flex flex--row">
-                                    <label class="upload__label" for="input__background">
-                                        <span>{{ i18n('change_title_img') }}</span>
-                                        <div class="flex flex--center">
-                                            <svg class="icon icon--primary">
-                                                <use xlink:href="#edit"></use>
-                                            </svg>
-                                        </div>
-                                    </label>
+
                                     <input id="input__background" data-update="img-background" type="file"
                                            name="background"
                                            accept="image/*">
                                 </div>
                                 <div class="flex flex--row">
-                                    <label class="upload__label" for="input__profile">
-                                        <span>{{ i18n('change_profile_img') }}</span>
-                                        <div class="flex fleflex--center">
-                                            <svg class="icon icon--primary">
-                                                <use xlink:href="#edit"></use>
-                                            </svg>
-                                        </div>
-                                    </label>
+
                                     <input id="input__profile" data-update="img-profile" type="file" name="profile"
                                            accept="image/*">
                                 </div>
                             </div>
                             <div class="profile-link">
                                 {% if profile is not null %}
-                                    <span>{{ i18n('show_profile') }}</span>
                                     <a href="{{ url('insertions_profile', {id: profile.id }) }}">
+                                        <span>{{ i18n('show_profile') }}</span>
                                         <svg class="icon icon--primary icon--mail">
                                             <use xlink:href="#fade_in"></use>
                                         </svg>
@@ -63,7 +49,7 @@
                             </div>
                             <div class="profile-pic">
                                 {% set label = true %}
-                                {% include 'Plugins/FrontendUserManagement/Frontend/Components/AccountUser.twig' with {  label : label } %}
+                                {% include 'Plugins/FrontendUserManagement/Frontend/Components/AccountUser.twig' with { label : label } %}
                             </div>
                             <div class="info__description">
                                 {{ i18n('account_insertions_profile_info') }}
