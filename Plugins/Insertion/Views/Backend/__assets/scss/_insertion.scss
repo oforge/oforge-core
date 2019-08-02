@@ -7,7 +7,16 @@
         }
     }
 }
-
+.insertions__banner {
+    margin-top: 1.2rem;
+    margin-bottom: -1.2rem;
+    background-color: $color-secondary;
+    border-bottom: 2px solid rgb(60, 60, 59);
+    h2 {
+        color: $color-light;
+        padding-left: $size-large;
+    }
+}
 .action-frontend_account_insertions {
     .panel--account {
         //background: none;

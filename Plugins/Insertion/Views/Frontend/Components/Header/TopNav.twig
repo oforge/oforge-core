@@ -7,7 +7,7 @@
 
     {{ parent() }}
 
-    {% if user_logged_in %}
+    {% if user_logged_in and current_user is not null %}
 
         <li class="top-nav-list__item item--login">
             <a href="{{ url('frontend_account_insertions_bookmarks') }}"
