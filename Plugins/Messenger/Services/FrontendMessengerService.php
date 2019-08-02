@@ -6,7 +6,6 @@ use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Messenger\Abstracts\AbstractMessengerService;
 use Messenger\Models\Conversation;
@@ -28,7 +27,7 @@ class FrontendMessengerService extends AbstractMessengerService {
 
         $data['requesterType'] = 1;
         $data['requestedType'] = 1;
-        $data['state']         = 'open';
+        $data['status']        = 'open';
 
         $conversation->fromArray($data);
 
@@ -38,6 +37,20 @@ class FrontendMessengerService extends AbstractMessengerService {
         parent::sendMessage($conversation->getId(), $data['requester'], $data['firstMessage']);
 
         return $conversation;
+    }
+
+    /**
+     * @param $conversationId
+     * @param $status
+     *
+     * @throws ORMException
+     */
+    public function changeStatus($conversationId, $status) {
+        /** @var Conversation $conversation */
+        $conversation = parent::getConversationById($conversationId);
+
+        $conversation->setStatus($status);
+        $this->entityManager()->update($conversation);
     }
 
     /**
@@ -56,11 +69,11 @@ class FrontendMessengerService extends AbstractMessengerService {
                               ->where($queryBuilder->expr()->andX(
                                   $queryBuilder->expr()->eq('c.requester', $userId),
                                   $queryBuilder->expr()->eq('c.requesterType', '1'),
-                                  $queryBuilder->expr()->eq('c.state', ':open')))
+                                  $queryBuilder->expr()->eq('c.status', ':open')))
                               ->orWhere($queryBuilder->expr()->andX(
                                   $queryBuilder->expr()->eq('c.requested', $userId),
                                   $queryBuilder->expr()->eq('c.requestedType', '1'),
-                                  $queryBuilder->expr()->eq('c.state', ':open')))
+                                  $queryBuilder->expr()->eq('c.status', ':open')))
                               ->orderBy('c.lastMessageTimestamp', 'DESC')
                               ->getQuery();
 
@@ -149,7 +162,7 @@ class FrontendMessengerService extends AbstractMessengerService {
     }
 
     /**
-     * Counts user's unread messages up to a limit of 10.
+     * Counts user's unread messages
      *
      * @param array $conversation
      * @param $userId
@@ -216,11 +229,11 @@ class FrontendMessengerService extends AbstractMessengerService {
                               ->where($queryBuilder->expr()->andX(
                                   $queryBuilder->expr()->eq('c.requester', $userId),
                                   $queryBuilder->expr()->eq('c.requesterType', '1'),
-                                  $queryBuilder->expr()->eq('c.state', ':open')))
+                                  $queryBuilder->expr()->eq('c.status', ':open')))
                               ->orWhere($queryBuilder->expr()->andX(
                                   $queryBuilder->expr()->eq('c.requested', $userId),
                                   $queryBuilder->expr()->eq('c.requestedType', '1'),
-                                  $queryBuilder->expr()->eq('c.state', ':open')))
+                                  $queryBuilder->expr()->eq('c.status', ':open')))
                               ->getQuery();
         /** @var Conversation[] $conversations */
         $conversations = $query->execute();
