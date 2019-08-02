@@ -42,6 +42,7 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
             new Twig_Function('getInsertionAttribute', [$this, 'getAttribute']),
             new Twig_Function('getInsertionValue', [$this, 'getValue']),
             new Twig_Function('hasBookmark', [$this, 'hasBookmark']),
+            new Twig_Function('userHasBookmark', [$this, 'userHasBookmark']),
             new Twig_Function('hasSearchBookmark', [$this, 'hasSearchBookmark']),
             new Twig_Function('getInsertionSliderContent', [$this, 'getInsertionSliderContent']),
             new Twig_Function('getSimilarInsertion', [$this, 'getSimilarInsertion']),
@@ -102,7 +103,8 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
     /**
      * @param mixed ...$vars
      *
-     * @return boolean
+     * @return bool
+     * @throws ORMException
      * @throws ServiceNotFoundException
      */
     public function hasBookmark(...$vars) {
@@ -117,6 +119,28 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
 
                     return $bookmarkService->hasBookmark($vars[0], $user['id']);
                 }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     * @throws ORMException
+     * @throws ServiceNotFoundException
+     */
+    public function userHasBookmark() {
+
+        /** @var $authService AuthService */
+        $authService = Oforge()->Services()->get("auth");
+        if (isset($_SESSION["auth"])) {
+            $user = $authService->decode($_SESSION["auth"]);
+            if (isset($user) && isset($user['id'])) {
+                /** @var InsertionBookmarkService $bookmarkService */
+                $bookmarkService = Oforge()->Services()->get("insertion.bookmark");
+
+                return $bookmarkService->userHasBookmark($user['id']);
             }
         }
 
@@ -215,7 +239,7 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
                 $insertionService = Oforge()->Services()->get('insertion');
                 /** @var Insertion $insertion */
                 $insertion = $insertionService->getInsertionById($vars[1]);
-                $linkId = $vars[1];
+                $linkId    = $vars[1];
 
                 try {
                     $imageId = $insertion->getMedia()[0]->getContent()->getId();
