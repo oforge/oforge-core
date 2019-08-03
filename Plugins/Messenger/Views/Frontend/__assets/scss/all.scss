@@ -93,7 +93,7 @@
 
 .messages {
     height: 30rem;
-    overflow: scroll;
+    overflow-y: scroll;
     width: 100%;
     padding: $size-large $size-small;
 }
