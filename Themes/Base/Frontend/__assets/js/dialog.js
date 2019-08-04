@@ -4,19 +4,16 @@ if (typeof Oforge !== 'undefined') {
         selector: '[data-yes-no]',
         init: function () {
             var self = this;
-            var htmlElement = document.querySelectorAll(self.selector);
-            var dialogText = document.querySelector('[data-dialog-text]');
+            var htmlElements = document.querySelectorAll(self.selector);
 
-            document.addEventListener('click', function(evt) {
-                var text = "";
-                if (evt.target.matches(self.selector) || evt.target.matches(self.selector + ' span') || evt.target.matches(self.selector + ' span svg')) {
-                    if (dialogText) {
-                        text = dialogText.dataset.dialogText;
-                    }
+            htmlElements.forEach(function(element) {
+                element.addEventListener('click', function(evt) {
+                    var text = element.dataset.dialogText;
+
                     if (!window.confirm(text)) {
                         evt.preventDefault();
                     }
-                }
+                })
             });
         }
     });
