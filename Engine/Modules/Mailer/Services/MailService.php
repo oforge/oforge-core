@@ -3,7 +3,6 @@
 namespace Oforge\Engine\Modules\Mailer\Services;
 
 use FrontendUserManagement\Models\User;
-use FrontendUserManagement\Services\FrontendUserService;
 use FrontendUserManagement\Services\UserService;
 use Insertion\Models\Insertion;
 use Insertion\Services\InsertionService;
@@ -12,9 +11,7 @@ use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
-use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Oforge\Engine\Modules\Core\Helper\Statics;
-use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\Media\Twig\MediaExtension;
 use Oforge\Engine\Modules\TemplateEngine\Core\Twig\CustomTwig;
@@ -23,8 +20,6 @@ use Oforge\Engine\Modules\TemplateEngine\Extensions\Twig\AccessExtension;
 use Oforge\Engine\Modules\TemplateEngine\Extensions\Twig\SlimExtension;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
-use Pimple\Tests\Fixtures\Service;
-use Slim\Router;
 use Twig_Error_Loader;
 use Twig_Error_Runtime;
 use Twig_Error_Syntax;
@@ -127,6 +122,7 @@ class MailService {
                 $mail->send();
 
                 Oforge()->Logger()->get("mailer")->info("Message has been sent",[$options, $templateData]);
+
                 return true;
 
             } catch (Exception $e) {
@@ -193,7 +189,7 @@ class MailService {
             $templatePath = Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . Statics::DEFAULT_THEME . DIRECTORY_SEPARATOR . 'MailTemplates';
         }
 
-        $twig = new CustomTwig($templatePath);
+        $twig = new CustomTwig($templatePath, ['cache' =>  ROOT_PATH . DIRECTORY_SEPARATOR . Statics::CACHE_DIR . '/mailer']);
         $twig->addExtension(new \Oforge\Engine\Modules\CMS\Twig\AccessExtension());
         $twig->addExtension(new AccessExtension());
         $twig->addExtension(new MediaExtension());
