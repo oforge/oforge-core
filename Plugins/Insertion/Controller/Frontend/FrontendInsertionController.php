@@ -384,11 +384,11 @@ class FrontendInsertionController extends SecureFrontendController {
     public function detailAction(Request $request, Response $response, $args) {
         $id = $args['id'];
         /**
-         * @var $service InsertionService
+         * @var InsertionService $service
          */
         $service = Oforge()->Services()->get('insertion');
         /**
-         * @var $insertion Insertion
+         * @var Insertion $insertion
          */
         $insertion = $service->getInsertionById(intval($id));
 
@@ -466,10 +466,14 @@ class FrontendInsertionController extends SecureFrontendController {
             }
         }
 
-        Oforge()->View()->assign(["top_values" => $topValues]);
-        Oforge()->View()->assign(["attributes" => $typeAttributes]);
-        Oforge()->View()->assign(["all_attributes" => $insertionTypeService->getInsertionTypeAttributeMap()]);
-        Oforge()->View()->assign(["insertion_values" => $insertionValues]);
+        Oforge()->View()->assign([
+            "top_values"       => $topValues,
+            "attributes"       => $typeAttributes,
+            "all_attributes"   => $insertionTypeService->getInsertionTypeAttributeMap(),
+            "insertion_values" => $insertionValues,
+            'animations'       => Oforge()->View()->Flash()->getData('animations'),
+        ]);
+        Oforge()->View()->Flash()->clearData('animations');
 
     }
 
@@ -644,7 +648,7 @@ class FrontendInsertionController extends SecureFrontendController {
             return $response->withRedirect($uri, 302);
         }
 
-        $data = $insertion->toArray(2);
+        $data              = $insertion->toArray(2);
         $data["topvalues"] = [];
         /**
          * @var $attribute InsertionTypeAttribute
@@ -663,7 +667,6 @@ class FrontendInsertionController extends SecureFrontendController {
                 }
             }
         }
-
 
         Oforge()->View()->assign(['insertion' => $data]);
     }
@@ -722,9 +725,7 @@ class FrontendInsertionController extends SecureFrontendController {
             return $response->withRedirect($uri, 302);
         }
 
-
-
-        $data = $insertion->toArray(2);
+        $data              = $insertion->toArray(2);
         $data["topvalues"] = [];
         /**
          * @var $attribute InsertionTypeAttribute
