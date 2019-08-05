@@ -30,7 +30,6 @@ class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
     public function add(InsertionType $insertionType, User $user, array $params) : bool {
         $bookmark = InsertionUserSearchBookmark::create(["insertionType" => $insertionType, "user" => $user, "params" => $params]);
         $this->entityManager()->create($bookmark);
-
         return true;
     }
 
