@@ -4,6 +4,7 @@ namespace Insertion\Cronjobs;
 
 use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Annotation\ORM\Discriminator\DiscriminatorEntry;
+use Oforge\Engine\Modules\Cronjob\Enums\ExecutionInterval;
 use Oforge\Engine\Modules\Cronjob\Models\CommandCronjob;
 
 /**
@@ -20,7 +21,7 @@ class Reminder30DaysCronjob extends CommandCronjob {
         $this->fromArray([
             'name'              => 'oforge:insertion:reminder30',
             'title'             => 'Insertion reminder for 30 days',
-            'executionInterval' => 24 * 60 * 60,
+            'executionInterval' => ExecutionInterval::DAILY,
             'command'           => 'oforge:plugin:insertion:reminder --days 30',
         ]);
     }
