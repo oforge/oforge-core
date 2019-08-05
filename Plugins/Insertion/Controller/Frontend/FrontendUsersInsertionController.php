@@ -188,7 +188,7 @@ class FrontendUsersInsertionController extends SecureFrontendController {
         $result = [];
         if (isset($bookmarks) && sizeof($bookmarks) > 0) {
             foreach ($bookmarks as $bookmark) {
-                $data = $bookmark->toArray(0);
+                $data = $bookmark->toArray(1);
 
                 $data["url"] = $searchBookmarkService->getUrl($data["insertionType"], $data["params"]);
                 $result[]    = $data;
@@ -285,7 +285,7 @@ class FrontendUsersInsertionController extends SecureFrontendController {
      * @throws ServiceNotFoundException
      */
     public function toggleSearchBookmarkAction(Request $request, Response $response, $args) {
-        $id = $request->getParsedBody('type_id');
+        $id = $request->getParsedBody()['type_id'];
         /**
          * @var $service InsertionTypeService
          */

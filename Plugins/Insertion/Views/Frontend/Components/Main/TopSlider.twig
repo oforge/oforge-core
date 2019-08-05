@@ -2,7 +2,6 @@
 {% extends '@parent/Frontend/Components/Main/TopSlider.twig' %}
 {% block top_slider %}
     {% set slider = getInsertionSliderContent() %}
-    {{ o_dump(slider) }}
     {% if slider['insertions']|length > 0 %}
         <div class="slider slider--top">
             {% for insertion in slider.insertions %}
