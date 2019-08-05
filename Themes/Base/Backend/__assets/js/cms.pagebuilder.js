@@ -143,7 +143,7 @@ $(document).on('mouseup', function (event) {
 
 
 // on edit cancel button event
-$('#cms-page-builder-cancel').click(
+$('.cms-page-builder-cancel').click(
     function () {
         var lastElementIdPosition = $(this).attr('data-pb-se').lastIndexOf('-');
         var newSelectedElementId = '';
