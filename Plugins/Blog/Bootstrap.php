@@ -11,10 +11,10 @@ use Blog\Services\CommentService;
 use Blog\Services\PostService;
 use Blog\Services\RatingService;
 use Blog\Widgets\BlogOverviewWidget;
+use Oforge\Engine\Modules\AdminBackend\Core\Enums\DashboardWidgetPosition;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\DashboardWidgetsService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
-use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Models\Config\ConfigType;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
@@ -60,6 +60,7 @@ class Bootstrap extends AbstractBootstrap {
         ];
     }
 
+    /** @inheritDoc */
     public function install() {
         I18N::translate('config_blog_load_more_epp_posts', [
             'en' => 'Posts per load more page',
@@ -133,23 +134,35 @@ class Bootstrap extends AbstractBootstrap {
             'label'   => 'config_blog_post_maxlength_header_title',
         ]);
 
-        I18N::translate('plugin_blog_dashboard_widget_overview_title', [
-            'en' => 'Blog statistics',
-            'de' => 'Blog-Statistiken',
-        ]);
         /** @var DashboardWidgetsService $dashboardWidgetsService */
         $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
-        $dashboardWidgetsService->register([
-            'position'     => 'right',
-            'action'       => BlogOverviewWidget::class,
-            'title'        => 'plugin_blog_dashboard_widget_overview_title',
-            'name'         => 'plugin_blog_dashboard_widget_overview_name',
-            'cssClass'     => 'box-blue',
-            'templateName' => 'BlogOverview',
+        $dashboardWidgetsService->install([
+            'name'     => 'plugin_blog_overview',
+            'template' => 'BlogOverview',
+            'handler'  => BlogOverviewWidget::class,
+            'label'    => [
+                'en' => 'Blog statistics',
+                'de' => 'Blog-Statistiken',
+            ],
+            'position' => DashboardWidgetPosition::RIGHT,
+            'cssClass' => 'box-blue',
         ]);
-
     }
 
+    /** @inheritDoc */
+    public function uninstall() {
+        /** @var DashboardWidgetsService $dashboardWidgetsService */
+        $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
+        $dashboardWidgetsService->uninstall('plugin_blog_overview');
+    }
+
+    public function deactivate() {
+        /** @var DashboardWidgetsService $dashboardWidgetsService */
+        $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
+        $dashboardWidgetsService->deactivate('plugin_blog_overview');
+    }
+
+    /** @inheritDoc */
     public function activate() {
         I18N::translate('plugin_blog', [
             'en' => 'Blog',
@@ -198,15 +211,9 @@ class Bootstrap extends AbstractBootstrap {
             'path'     => 'backend_blog_comments',
             'position' => 'sidebar',
         ]);
-    }
-
-    /**
-     * @throws ServiceNotFoundException
-     */
-    public function uninstall() {
         /** @var DashboardWidgetsService $dashboardWidgetsService */
         $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
-        $dashboardWidgetsService->unregister('blog_overview');
+        $dashboardWidgetsService->activate('plugin_blog_overview');
     }
 
 }

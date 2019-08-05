@@ -9,18 +9,23 @@
 namespace Helpdesk\Widgets;
 
 use Helpdesk\Services\HelpdeskTicketService;
-use Oforge\Engine\Modules\AdminBackend\Core\Widgets\DashboardWidgetInterface;
+use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\DashboardWidgetInterface;
 
-class HelpdeskCountWidgetHandler implements DashboardWidgetInterface {
+/**
+ * Class HelpdeskOpenTicketsWidgetHandler
+ *
+ * @package Helpdesk\Widgets
+ */
+class HelpdeskOpenTicketsWidgetHandler implements DashboardWidgetInterface {
 
-
-    function getData() : array {
-
+    /** @inheritDoc */
+    public function prepareData() : array {
         /** @var HelpdeskTicketService $helpdeskTicketService */
         $helpdeskTicketService = Oforge()->Services()->get('helpdesk.ticket');
 
         $ticketData = $helpdeskTicketService->count();
 
-        return ["count" => $ticketData];
+        return ['count' => $ticketData];
     }
+
 }

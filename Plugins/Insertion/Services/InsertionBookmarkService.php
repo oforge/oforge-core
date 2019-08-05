@@ -16,6 +16,13 @@ class InsertionBookmarkService extends AbstractDatabaseAccess {
         ]);
     }
 
+    /**
+     * @param Insertion $insertion
+     * @param User $user
+     *
+     * @return bool
+     * @throws \Doctrine\ORM\ORMException
+     */
     public function add(Insertion $insertion, User $user) : bool {
         if (isset($insertion)) {
             $bookmark = InsertionUserBookmark::create(["user" => $user, "insertion" => $insertion]);
@@ -46,6 +53,12 @@ class InsertionBookmarkService extends AbstractDatabaseAccess {
         return false;
     }
 
+    /**
+     * @param User $user
+     *
+     * @return array
+     * @throws \Doctrine\ORM\ORMException
+     */
     public function list(User $user) : array {
         $bookmarks = $this->repository("user")->findBy(["user" => $user], ["createdAt" => "DESC"]);
 
@@ -59,6 +72,14 @@ class InsertionBookmarkService extends AbstractDatabaseAccess {
         return $result;
     }
 
+    /**
+     * @param Insertion $insertion
+     * @param User $user
+     *
+     * @return bool
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function toggle(Insertion $insertion, User $user) : bool {
 
         $bookmark = $this->repository("user")->findOneBy(["insertion" => $insertion, "user" => $user]);
@@ -69,8 +90,27 @@ class InsertionBookmarkService extends AbstractDatabaseAccess {
         return $this->add($insertion, $user);
     }
 
+    /**
+     * @param int $insertion
+     * @param int $user
+     *
+     * @return bool
+     * @throws \Doctrine\ORM\ORMException
+     */
     public function hasBookmark(int $insertion, int $user) : bool {
         $bookmark = $this->repository("user")->findOneBy(["insertion" => $insertion, "user" => $user]);
+
+        return $bookmark != null;
+    }
+
+    /**
+     * @param $userId
+     *
+     * @return bool
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function userHasBookmark($userId) {
+        $bookmark = $this->repository("user")->findOneBy(["user" => $userId]);
 
         return $bookmark != null;
     }
