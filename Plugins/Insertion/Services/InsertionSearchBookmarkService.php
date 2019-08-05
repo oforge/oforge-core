@@ -53,7 +53,6 @@ class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
         }
     }
 
-
     public function setLastChecked($bookmark) {
         if (is_a($bookmark, InsertionUserSearchBookmark::class)) {
             $bookmark->setChecked();
@@ -93,12 +92,35 @@ class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
          * @var $found InsertionUserSearchBookmark
          */
         foreach ($bookmarks as $found) {
-            if (sizeof($found->getParams()) == sizeof($params) && !array_diff($found->getParams(), $params) && !array_diff($params, $found->getParams())) {
+            if (sizeof(array_diff_key($found->getParams(), $params)) > 0 || sizeof(array_diff_key($params, $found->getParams())) > 0) {
+                continue;
+            }
+
+            if (sizeof($this->array_diff_assoc_recursive($found->getParams(), $params)) === 0 && sizeof($this->array_diff_assoc_recursive($params, $found->getParams())) === 0) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    private function array_diff_assoc_recursive($array1, $array2) {
+        $difference = [];
+        foreach ($array1 as $key => $value) {
+            if (is_array($value)) {
+                if (!isset($array2[$key]) || !is_array($array2[$key])) {
+                    $difference[$key] = $value;
+                } else {
+                    $newDiff = $this->array_diff_assoc_recursive($value, $array2[$key]);
+                    if (!empty($newDiff)) {
+                        $difference[$key] = $newDiff;
+                    }
+                }
+            } elseif (!array_key_exists($key, $array2) || $array2[$key] !== $value) {
+                $difference[$key] = $value;
+            }
+        }
+        return $difference;
     }
 
     public function getUrl($id, ?array $params) {
