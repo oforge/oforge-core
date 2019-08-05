@@ -3,6 +3,5 @@
   <component name="ExternalDependencies">
     <plugin id="de.espend.idea.php.annotation" />
     <plugin id="de.espend.idea.php.toolbox" />
-    <plugin id="mobi.hsz.idea.gitignore" />
   </component>
 </project>
