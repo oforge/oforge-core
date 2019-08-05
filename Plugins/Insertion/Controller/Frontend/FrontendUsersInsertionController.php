@@ -8,6 +8,7 @@ use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\FrontendUserService;
 use FrontendUserManagement\Services\UserDetailsService;
 use FrontendUserManagement\Services\UserService;
+use Insertion\Models\Insertion;
 use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Services\InsertionBookmarkService;
 use Insertion\Services\InsertionListService;
@@ -237,9 +238,10 @@ class FrontendUsersInsertionController extends SecureFrontendController {
     public function toggleBookmarkAction(Request $request, Response $response, $args) {
         $id = (int)$args["insertionId"];
         /**
-         * @var $service InsertionService
+         * @var InsertionService $service
          */
         $service   = Oforge()->Services()->get("insertion");
+        /** @var Insertion $insertion */
         $insertion = $service->getInsertionById($id);
 
         if (!isset($insertion)) {
@@ -247,7 +249,7 @@ class FrontendUsersInsertionController extends SecureFrontendController {
         }
 
         /**
-         * @var $userService FrontendUserService
+         * @var FrontendUserService $userService
          */
         $userService = Oforge()->Services()->get("frontend.user");
         $user        = $userService->getUser();
@@ -258,6 +260,8 @@ class FrontendUsersInsertionController extends SecureFrontendController {
         $bookmarkService = Oforge()->Services()->get("insertion.bookmark");
 
         $bookmarkService->toggle($insertion, $user);
+
+        Oforge()->View()->Flash()->setData('animations', ['heartbeat' => true]);
 
         /** @var Router $router */
         $router = Oforge()->App()->getContainer()->get('router');
