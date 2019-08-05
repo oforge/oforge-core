@@ -19,5 +19,10 @@
         <input class="form-control" type="text" name="css" value="{{ contentElementData.css }}" />
     </div>
 
+    {% if post.cms_edit_element_parent_id %}
+        <button type="button" class="btn btn-default cms-page-builder-cancel"
+                data-pb-se="{{ post.cms_edit_element_parent_id }}">{{ i18n('back') }}</button>
+    {% endif %}
+
     <input type="submit" class="btn btn-primary" value="{{ i18n('backend_crud_save') }}" />
 </form>
