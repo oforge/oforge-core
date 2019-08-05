@@ -6,6 +6,13 @@ var cmsElementsControllerModule = (function() {
 		cecm.resizeContentEditor();
 	});
 
+	$('.cms-page-builder-cancel').click(
+        function () {
+            $('[name="cms_page_selected_element"]').val($(this).attr('data-pb-se'));
+            $('#cms_page_builder_form').submit();
+        }
+    );
+
 	// mark and select selectable elements in page builder
 	$('[data-pb-id]').each(
 		function() {

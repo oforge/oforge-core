@@ -2,20 +2,27 @@
 
 namespace Oforge\Engine\Modules\CMS\Services;
 
-use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
-use Oforge\Engine\Modules\CMS\Models\Content\ContentTypeGroup;
-use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
-use Oforge\Engine\Modules\CMS\Models\Content\ContentParent;
 use Oforge\Engine\Modules\CMS\Models\Content\Content;
+use Oforge\Engine\Modules\CMS\Models\Content\ContentParent;
+use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
+use Oforge\Engine\Modules\CMS\Models\Content\ContentTypeGroup;
+use Oforge\Engine\Modules\CMS\Models\ContentTypes\Row;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Forge\ForgeEntityManager;
 
 class ElementsControllerService extends AbstractDatabaseAccess {
     /** @var ForgeEntityManager  */
     private $forgeEntityManager = NULL;
-    
+
     public function __construct() {
-        parent::__construct(["contentTypeGroup" => ContentTypeGroup::class, "contentType" => ContentType::class, "contentParent" => ContentParent::class, "content" => Content::class]);
-        
+        parent::__construct([
+            "contentTypeGroup" => ContentTypeGroup::class,
+            "contentType"      => ContentType::class,
+            "contentParent"    => ContentParent::class,
+            "content"          => Content::class,
+            'row'              => Row::class,
+        ]);
+
         $this->forgeEntityManager = Oforge()->DB()->getForgeEntityManager();
     }
 
@@ -24,6 +31,7 @@ class ElementsControllerService extends AbstractDatabaseAccess {
         $contentTypeService = OForge()->Services()->get("content.type.service");
         $pageBuilderService = OForge()->Services()->get("page.builder.service");
 
+        /** @var Content $contentEntity */
         $contentEntity = $this->repository('content')->findOneBy(["id" => $contentId]);
 
         if ($contentEntity) {
@@ -33,7 +41,7 @@ class ElementsControllerService extends AbstractDatabaseAccess {
             $pageContent["id"]      = 0;
             $pageContent["content"] = $pageBuilderService->getContentArray($contentEntity);
             $pageContent["order"]   = 0;
-            
+
             $pageContents[] = $pageContent;
 
             $contentElementId     = $contentEntity->getId();
@@ -92,6 +100,7 @@ class ElementsControllerService extends AbstractDatabaseAccess {
                 $post["cms_form"] = "cms_element_jstree_form";
 
                 return $this->editElementData($post);
+            case "edit":
             case "submit":
                 $selectedElementId = isset($post["cms_page_selected_element"]) && !empty($post["cms_page_selected_element"]) ? $post["cms_page_selected_element"] : false;
 
@@ -99,11 +108,11 @@ class ElementsControllerService extends AbstractDatabaseAccess {
                     $contentEntity = $this->repository('content')->findOneBy(["id" => $selectedElementId]);
 
                     $selectedElementTypeId = false;
-    
+
                     if ($contentEntity) {
                         $selectedElementTypeId = $contentEntity->getType()->getId();
                     }
-    
+
                     if ($selectedElementTypeId) {
                         // persist new content element data to database
                         $contentTypeService->setContentDataArray($selectedElementId, $selectedElementTypeId, $post);
@@ -113,7 +122,7 @@ class ElementsControllerService extends AbstractDatabaseAccess {
                         $post["cms_edit_element_action"] = "edit";
                         $post["cms_edit_element_id"] = $selectedElementId;
                         $post["cms_form"] = "cms_element_jstree_form";
-        
+
                         return $this->editElementData($post);
                     }
                 }
@@ -128,7 +137,7 @@ class ElementsControllerService extends AbstractDatabaseAccess {
         foreach ($contentEntities as $contentEntity)
         {
             $contentEntity->setParent(NULL);
-            
+
             $this->forgeEntityManager->update($contentEntity);
         }
     }
@@ -141,13 +150,13 @@ class ElementsControllerService extends AbstractDatabaseAccess {
     private function findAndRemoveChildContentParents($parentId)
     {
         $contentParentEntities = $this->repository('contentParent')->findBy(["parent" => $parentId]);
-        
+
         foreach ($contentParentEntities as $contentParentEntity)
         {
             $this->findAndRemoveChildContentParents($contentParentEntity->getId());
 
             $this->resetContentElementContentParent($contentParentEntity);
-            
+
             $this->forgeEntityManager->remove($contentParentEntity);
         }
     }
@@ -164,7 +173,7 @@ class ElementsControllerService extends AbstractDatabaseAccess {
             if ($moveContentParentEntity && $toContentParentEntity)
             {
                 $moveContentParentEntity->setParent($toContentParentEntity);
-                
+
                 $this->forgeEntityManager->update($moveContentParentEntity);
             }
         }
@@ -175,7 +184,7 @@ class ElementsControllerService extends AbstractDatabaseAccess {
             if ($moveContentParentEntity)
             {
                 $moveContentParentEntity->setParent(NULL);
-                
+
                 $this->forgeEntityManager->update($moveContentParentEntity);
             }
         }
@@ -193,7 +202,7 @@ class ElementsControllerService extends AbstractDatabaseAccess {
             if ($moveContentElementEntity && $toContentParentEntity)
             {
                 $moveContentElementEntity->setParent($toContentParentEntity);
-                
+
                 $this->forgeEntityManager->update($moveContentElementEntity);
             }
         }
@@ -204,7 +213,7 @@ class ElementsControllerService extends AbstractDatabaseAccess {
             if ($moveContentElementEntity)
             {
                 $moveContentElementEntity->setParent(NULL);
-                
+
                 $this->forgeEntityManager->update($moveContentElementEntity);
             }
         }
@@ -220,7 +229,7 @@ class ElementsControllerService extends AbstractDatabaseAccess {
         if (strpos($selectedElementParentId, "_parent#") === 0)
         {
             $selectedElementParentId = intval(str_replace("_parent#", "", $selectedElementParentId));
-        
+
             if ($selectedElementParentId > 0)
             {
                 $contentParentEntity = $this->repository('contentParent')->findOneBy(["id" => $selectedElementParentId]);
@@ -228,16 +237,16 @@ class ElementsControllerService extends AbstractDatabaseAccess {
         }
 
         $contentTypeEntity = $this->repository('contentType')->findOneBy(["id" => $selectedElementId]);
-        
+
         $contentId = false;
-        
+
         if ($contentTypeEntity) {
             $contentEntity =  new Content;
             $contentEntity->setType($contentTypeEntity);
             $contentEntity->setParent($contentParentEntity);
             $contentEntity->setName(uniqid());
             $contentEntity->setCssClass('');
-            
+
             $this->forgeEntityManager->create($contentEntity);
 
             $contentId = $contentEntity->getId();
@@ -279,6 +288,7 @@ class ElementsControllerService extends AbstractDatabaseAccess {
         {
             $post["cms_page_selected_element"] = $selectedElementId;
         }
+        o_print([$selectedElementId]);
 
         $data = [];
 
@@ -299,7 +309,7 @@ class ElementsControllerService extends AbstractDatabaseAccess {
                 $newContentParentEntity = new ContentParent;
                 $newContentParentEntity->setParent($contentParentEntity);
                 $newContentParentEntity->setDescription($selectedElementDescription);
-                
+
                 $this->forgeEntityManager->create($newContentParentEntity);
 
                 $contentParentId = $newContentParentEntity->getId();
@@ -314,7 +324,7 @@ class ElementsControllerService extends AbstractDatabaseAccess {
                     if ($contentParentEntity)
                     {
                         $contentParentEntity->setDescription($selectedElementDescription);
-                
+
                         $this->forgeEntityManager->update($contentParentEntity);
                     }
                 }
@@ -329,15 +339,23 @@ class ElementsControllerService extends AbstractDatabaseAccess {
                     if ($contentParentEntity)
                     {
                         $this->findAndRemoveChildContentParents($contentParentEntity->getId());
-    
+
                         $this->resetContentElementContentParent($contentParentEntity);
-                        
+
                         $this->forgeEntityManager->update($contentParentEntity);
                     }
                 }
                 break;
             case 'edit':
                 $data = $this->getPageContentArrayForContentElement($selectedElementId);
+                if ($selectedElementParentId === false) {
+                    /** @var Row $rowEntity */
+                    $rowEntity = $this->repository('row')->findOneBy(['content' => $selectedElementId]);
+                    if (isset($rowEntity)) {
+                        $selectedElementParentId = $rowEntity->getRow();
+                    }
+                    $post['cms_edit_element_parent_id'] = $selectedElementParentId;
+                }
                 break;
         }
 
