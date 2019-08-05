@@ -69,11 +69,13 @@ class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
         $bookmarks = $this->repository("search")->findBy(["insertionType" => $insertionType, "user" => $user]);
 
         $bookmark = null;
-        /**
-         * @var $found InsertionUserSearchBookmark
-         */
+        /** @var InsertionUserSearchBookmark $found */
         foreach ($bookmarks as $found) {
-            if (sizeof($found->getParams()) == sizeof($params) && !array_diff($found->getParams(), $params) && !array_diff($params, $found->getParams())) {
+            if (sizeof(array_diff_key($found->getParams(), $params)) > 0 || sizeof(array_diff_key($params, $found->getParams())) > 0) {
+                continue;
+            }
+            if (sizeof($this->array_diff_assoc_recursive($found->getParams(), $params)) === 0
+                && sizeof($this->array_diff_assoc_recursive($params, $found->getParams())) === 0) {
                 $bookmark = $found;
             }
         }
@@ -88,15 +90,14 @@ class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
     public function hasBookmark(int $insertionType, int $user, array $params) : bool {
         $bookmarks = $this->repository("search")->findBy(["insertionType" => $insertionType, "user" => $user]);
 
-        /**
-         * @var $found InsertionUserSearchBookmark
-         */
+        /** @var InsertionUserSearchBookmark $found */
         foreach ($bookmarks as $found) {
             if (sizeof(array_diff_key($found->getParams(), $params)) > 0 || sizeof(array_diff_key($params, $found->getParams())) > 0) {
                 continue;
             }
 
-            if (sizeof($this->array_diff_assoc_recursive($found->getParams(), $params)) === 0 && sizeof($this->array_diff_assoc_recursive($params, $found->getParams())) === 0) {
+            if (sizeof($this->array_diff_assoc_recursive($found->getParams(), $params)) === 0
+                && sizeof($this->array_diff_assoc_recursive($params, $found->getParams())) === 0) {
                 return true;
             }
         }
@@ -120,6 +121,7 @@ class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
                 $difference[$key] = $value;
             }
         }
+
         return $difference;
     }
 
