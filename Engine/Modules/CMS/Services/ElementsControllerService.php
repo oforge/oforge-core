@@ -288,7 +288,6 @@ class ElementsControllerService extends AbstractDatabaseAccess {
         {
             $post["cms_page_selected_element"] = $selectedElementId;
         }
-        o_print([$selectedElementId]);
 
         $data = [];
 
