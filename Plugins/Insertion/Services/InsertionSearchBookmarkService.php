@@ -71,9 +71,10 @@ class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
         $bookmark = null;
         /** @var InsertionUserSearchBookmark $found */
         foreach ($bookmarks as $found) {
-            if (sizeof(array_diff_key($found->getParams(), $params)) > 0 || sizeof(array_diff_key($params, $found->getParams())) > 0) {
+            if (!empty(array_diff_key($found->getParams(), $params)) || !empty(array_diff_key($params, $found->getParams()))) {
                 continue;
             }
+
             if (sizeof($this->array_diff_assoc_recursive($found->getParams(), $params)) === 0
                 && sizeof($this->array_diff_assoc_recursive($params, $found->getParams())) === 0) {
                 $bookmark = $found;
@@ -92,7 +93,7 @@ class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
 
         /** @var InsertionUserSearchBookmark $found */
         foreach ($bookmarks as $found) {
-            if (sizeof(array_diff_key($found->getParams(), $params)) > 0 || sizeof(array_diff_key($params, $found->getParams())) > 0) {
+            if (!empty(array_diff_key($found->getParams(), $params)) || !empty(array_diff_key($params, $found->getParams()))) {
                 continue;
             }
 
@@ -117,7 +118,7 @@ class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
                         $difference[$key] = $newDiff;
                     }
                 }
-            } elseif (!array_key_exists($key, $array2) || $array2[$key] !== $value) {
+            } elseif (!isset($array2[$key]) || $array2[$key] !== $value) {
                 $difference[$key] = $value;
             }
         }
