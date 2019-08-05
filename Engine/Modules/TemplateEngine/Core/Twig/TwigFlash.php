@@ -27,7 +27,7 @@ class TwigFlash {
     }
 
     /**
-     * Add a error message for the next request / redirect.
+     * Add an error message for the next request / redirect.
      *
      * @param string $type
      * @param Exception $exception
