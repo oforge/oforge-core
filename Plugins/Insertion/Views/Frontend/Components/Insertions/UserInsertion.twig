@@ -67,9 +67,8 @@
             </a>
         {% endif %}
         <a class="button button--primary delete"
-           href="{{ url('frontend_account_insertions_delete', {id: item.id}) }}"
-           data-yes-no=""
-           data-dialog-text="{{ i18n('really-want-to-delete-insertion', 'Willst Du das Inserat wirklich löschen?') }}">
+           onclick="return confirm('{{ i18n('really-want-to-delete-insertion', 'Willst Du das Inserat wirklich löschen?') }}')"
+           href="{{ url('frontend_account_insertions_delete', {id: item.id}) }}">
             <span>{{ i18n('delete') }}</span>
             <svg class="icon icon--light">
                 <use xlink:href="#delete"></use>
@@ -98,7 +97,9 @@
                 </a>
             {% endif %}
 
-            <a class="mobile-button" href="{{ url('frontend_account_insertions_delete', {id: item.id}) }}" data-yes-no="">
+            <a class="mobile-button"
+               onclick="return confirm('{{ i18n('really-want-to-delete-insertion', 'Willst Du das Inserat wirklich löschen?') }}')"
+               href="{{ url('frontend_account_insertions_delete', {id: item.id}) }}">
                 <svg class="icon icon--primary">
                     <use xlink:href="#delete"></use>
                 </svg>
