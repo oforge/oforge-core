@@ -190,7 +190,7 @@ class FrontendUsersInsertionController extends SecureFrontendController {
             foreach ($bookmarks as $bookmark) {
                 $data = $bookmark->toArray(1);
 
-                $data["url"] = $searchBookmarkService->getUrl($data["insertionType"], $data["params"]);
+                $data["url"] = $searchBookmarkService->getUrl($data["insertionType"]["id"], $data["params"]);
                 $result[]    = $data;
             }
         }

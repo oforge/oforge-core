@@ -128,21 +128,7 @@ class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
     public function getUrl($id, ?array $params) {
         /** @var Router $router */
         $router = Oforge()->App()->getContainer()->get('router');
-        $url    = $router->pathFor('insertions_listing', ["type" => $id]);
-
-        $first = true;
-
-        foreach ($params as $key => $value) {
-            if (is_array($value)) {
-                foreach ($value as $v) {
-                    $url   .= ($first ? "?" : "&") . urlencode($key . '[]') . "=" . urlencode($v);
-                    $first = false;
-                }
-            } else {
-                $url   .= ($first ? "?" : "&") . urlencode($key) . "=" . urlencode($value);
-                $first = false;
-            }
-        }
+        $url    = $router->pathFor('insertions_listing', ["type" => $id], isset($params) ? $params : [] );
 
         return $url;
     }
