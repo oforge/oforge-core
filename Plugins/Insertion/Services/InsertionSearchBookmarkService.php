@@ -75,8 +75,8 @@ class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
                 continue;
             }
 
-            if (sizeof($this->array_diff_assoc_recursive($found->getParams(), $params)) === 0
-                && sizeof($this->array_diff_assoc_recursive($params, $found->getParams())) === 0) {
+            if (empty($this->array_diff_assoc_recursive($found->getParams(), $params))
+                && empty($this->array_diff_assoc_recursive($params, $found->getParams()))) {
                 $bookmark = $found;
             }
         }
@@ -97,8 +97,8 @@ class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
                 continue;
             }
 
-            if (sizeof($this->array_diff_assoc_recursive($found->getParams(), $params)) === 0
-                && sizeof($this->array_diff_assoc_recursive($params, $found->getParams())) === 0) {
+            if (empty($this->array_diff_assoc_recursive($found->getParams(), $params))
+                && empty($this->array_diff_assoc_recursive($params, $found->getParams()))) {
                 return true;
             }
         }
