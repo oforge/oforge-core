@@ -1,0 +1,16 @@
+{% block pedigree_inputs %}
+    {% set inputName = 'insertion[' ~ attribute.id ~ ']' %}
+    {% set inputValue = data['insertion'][attribute.id] %}
+
+    {% if search %}
+        {% set inputName = 'pedigree[' ~  attribute.name ~ ']' %}
+        {% set inputValue = search.filter[inputName] %}
+    {% endif %}
+
+<div class="tree__item">
+    <input type="text"
+           name="{{ inputName }}"
+           value="{{ inputValue }}"
+           placeholder="{{ i18n(placeholder) }}"/>
+</div>
+{% endblock pedigree_inputs %}
