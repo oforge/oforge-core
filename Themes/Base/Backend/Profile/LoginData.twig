@@ -1,0 +1,63 @@
+{% extends "Backend/Master/Index.twig" %}
+
+{% set page_header = i18n('profile_settings_login', {en: 'Login', de: 'Login'}) %}
+
+{% set breadcrumbs = backend_breadcrumbs(meta.route.name)|default({})|merge([
+    {
+        path: meta.route.parentName,
+        visible: true,
+        name: i18n('profile'),
+    },
+    {
+        path: meta.route.name,
+        visible: true,
+        name: page_header,
+    }
+]) %}
+
+{% block pagecontent %}
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-primary">
+                <form action="{{ url('backend_profile_login') }}" method="post">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">
+                            <i class="fa fa-sign-in"></i>
+                            {{ page_header }}
+                        </h3>
+                    </div>
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label for="email">
+                                {{ i18n("Mail", {en: 'Mail', de: 'E-Mail'}) }}
+                            </label>
+                            <input class="form-control" type="email" id="email" name="data[email]"
+                                   value="{{ user.email }}"
+                                   required />
+                        </div>
+                        <div class="form-group">
+                            <label for="password">
+                                {{ i18n("Password", {en: 'Password', de: 'Passwort'}) }}
+                            </label>
+                            <input class="form-control" type="password" id="password" name="data[password]" />
+                            <div>
+                                <small>
+                                    {{ i18n('crud_backenduser_hint_password', {
+                                        en: 'If field is left blank, the password will not be changed.',
+                                        de: 'Wenn Feld leer gelassem wird, wird das Passwort nicht geändert.'
+                                    }) }}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <a href="{{ url('backend_profile') }}" class="btn btn-default">
+                            {{ i18n('back to profile') }}
+                        </a>
+                        <button type="submit" class="btn btn-primary">{{ i18n('save') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock pagecontent %}

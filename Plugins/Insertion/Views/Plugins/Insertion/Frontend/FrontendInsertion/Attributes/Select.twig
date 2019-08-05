@@ -4,31 +4,26 @@
          data-select-type="{{ attribute.type }}"
          data-placeholder="{{ i18n(attribute.name) }}"
          data-select="insertion[{{ attribute.id }}]{{ attribute.type == 'multi' ? '[]' : '' }}">
-        <p class="select__text"
-           data-select-text=""></p>
+        <p class="select__text" data-select-text=""></p>
         {% if not isSubAttribute %}
-            <input type="text"
-                   class="select__filter"
-                   data-select-filter=""
-                   placeholder="{{ i18n('search') }}">
+        <input type="text"
+               class="select__filter"
+               data-select-filter=""
+               placeholder="{{ i18n('search') }}">
         {% endif %}
         <ul class="select__list"
             data-select-list=""
             {% if not isSubAttribute %}data-simplebar=""{% endif %}>
-
             {% for value in attribute.values %}
                 <li class="select__item {% if value.id in data['insertion'][attribute.id] %}select__item--is-checked{% endif %}{% if isSubAttribute %}select__item--sub{% endif %}"
                     data-selected="false"
                     data-index="{{ loop.index0 }}"
                     data-value-id="{{ value.id }}">
-                    <span class="select__value">
-                    {{ i18n(value.value) }}
-                    </span>
+                    <span class="select__value">{{ i18n(value.value) }}</span>
                     {% if value.subAttributeKey is not null %}
                         <div class="sub-attribute-container" data-sub-select="">
                             <em class="sub-attribute-container__text">{{ i18n('please_choose') }}</em>
                             {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ all_attributes[value.subAttributeKey].filterType|capitalize  ~ '.twig'  with {'attribute': all_attributes[value.subAttributeKey], hidden: true, required: false, isSubAttribute: true, 'omitLabel': true} %}
-
                         </div>
                     {% endif %}
                 </li>

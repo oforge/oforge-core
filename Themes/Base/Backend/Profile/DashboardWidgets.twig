@@ -1,0 +1,60 @@
+{% extends "Backend/Master/Index.twig" %}
+
+{% set page_header = i18n('profile_settings_dashboard_widgets', {en: 'Dashboard widgets', de: 'Dashboard-Widgets'}) %}
+
+{% set breadcrumbs = backend_breadcrumbs(meta.route.name)|default({})|merge([
+    {
+        path: meta.route.parentName,
+        visible: true,
+        name: i18n('profile'),
+    },
+    {
+        path: meta.route.name,
+        visible: true,
+        name: page_header,
+    }
+]) %}
+
+{% block pagecontent %}
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-primary">
+                <form action="{{ url('backend_profile_dashboard_widgets') }}" method="post">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">
+                            <i class="fa fa-sign-in"></i>
+                            {{ page_header }}
+                        </h3>
+                    </div>
+                    <div class="box-body">
+                        {% set widgets = backend_dashboard_widgets(false) %}
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover table-striped">
+                                {% include 'Backend/Profile/Components/DashboardWidget/TableHeader.twig' %}
+                                {% for widgetPosition, widgetList in widgets %}
+                                    {% for widget in widgetList %}
+                                        <tr>
+                                            <td>{{ i18n(widget.label) }}</td>
+                                            <td>{% include 'Backend/Profile/Components/DashboardWidget/Active.twig' %}</td>
+                                            <td>{% include 'Backend/Profile/Components/DashboardWidget/Position.twig' %}</td>
+                                            <td>{% include 'Backend/Profile/Components/DashboardWidget/Order.twig' %}</td>
+                                            <td>{% include 'Backend/Profile/Components/DashboardWidget/CssClass.twig' %}</td>
+                                        </tr>
+                                    {% endfor %}
+                                {% endfor %}
+                                {% include 'Backend/Profile/Components/DashboardWidget/TableHeader.twig' %}
+                            </table>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <a href="{{ url('backend_profile') }}" class="btn btn-default">
+                            {{ i18n('back to profile') }}
+                        </a>
+                        <button type="submit" class="btn btn-primary">{{ i18n('save') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock pagecontent %}
+

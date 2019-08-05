@@ -28,7 +28,6 @@ class BackendNavigationService extends AbstractDatabaseAccess {
     const KEY_CONTENT       = 'backend_content';
     const KEY_SYSTEM        = 'backend_system';
     const KEY_DOCUMENTATION = 'backend_documentation';
-
     /** @var array Root-navigation-config for admins */
     public const CONFIG_ADMIN = [
         'name'     => self::KEY_ADMIN,

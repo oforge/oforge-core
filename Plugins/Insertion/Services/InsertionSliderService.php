@@ -2,6 +2,7 @@
 
 namespace Insertion\Services;
 
+use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\ResultSetMapping;
@@ -27,28 +28,44 @@ class InsertionSliderService extends AbstractDatabaseAccess {
         ]);
     }
 
+    /**
+     * Get a random list of insertions if it is bigger than MAX_INSERTIONS
+     *
+     * @return array
+     * @throws ORMException
+     */
     public function getRandomInsertions() {
         $result = [];
 
         /** @var QueryBuilder $queryBuilder */
-        $queryBuilder = $this->entityManager()->createQueryBuilder()->select('i.id')->from("Insertion\Models\Insertion", 'i');
+        $queryBuilder = $this->entityManager()
+                             ->createQueryBuilder()
+                             ->select('i.id')
+                             ->from("Insertion\Models\Insertion", 'i')
+                             ->where('i.deleted = 0')
+                             ->andWhere('i.active = 1')
+                             ->andWhere('i.moderation = 1');
+
+       // "deleted" => false, "active" => true, "moderation" => true
 
         /** @var Query $query */
         $query = $queryBuilder->getQuery();
 
         //Get all insertion IDs
-        $ids = array_column($query->getScalarResult(), "id");
+        $ids = $query->getScalarResult();
 
         if (sizeof($ids) > 0) {
             //Select a bunch of random insertions from the Database
             $randomKeys = array_rand($ids, sizeof($ids) < self::MAX_INSERTIONS ? sizeof($ids) : self::MAX_INSERTIONS);
+
             // If theres only one item, array_rand returns the key which is 0.
             // Make this an array element so that foreach still works...
             if ($randomKeys === 0) {
                 $randomKeys = [0];
             }
             foreach ($randomKeys as $randomKey) {
-                $insertion = $this->repository()->findOneBy(["id" => $ids[$randomKey], "deleted" => false, "active" => true, "moderation" => true], null, 1);
+                /** @var Insertion $insertion */
+                $insertion = $this->repository()->findOneBy(["id" => $ids[$randomKey]], null);
                 if ($insertion != null) {
                     array_push($result, $insertion->toArray(3));
                 }
@@ -65,6 +82,7 @@ class InsertionSliderService extends AbstractDatabaseAccess {
      *
      * @return Insertion[]
      * @throws ORMException
+     * @throws DBALException
      */
     public function getRandomInsertion(int $limit, int $insertionType = null, int $notId = null) {
         $params = [];
@@ -119,6 +137,7 @@ class InsertionSliderService extends AbstractDatabaseAccess {
 
         $data = [];
         if (sizeof($findIds) > 0) {
+            /** @var Insertion[] $insertions */
             $insertions = $this->repository()->findBy(["id" => $findIds]);
             foreach ($insertions as $insertion) {
                 if ($insertion != null) {
