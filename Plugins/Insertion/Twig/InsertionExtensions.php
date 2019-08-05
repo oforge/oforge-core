@@ -11,6 +11,7 @@ use FrontendUserManagement\Services\UserService;
 use Insertion\Models\Insertion;
 use Insertion\Services\AttributeService;
 use Insertion\Services\InsertionBookmarkService;
+use Insertion\Services\InsertionProfileService;
 use Insertion\Services\InsertionSearchBookmarkService;
 use Insertion\Services\InsertionService;
 use Insertion\Services\InsertionSliderService;
@@ -19,6 +20,7 @@ use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
+use Oforge\Engine\Modules\TemplateEngine\Extensions\Services\UrlService;
 use Twig_Extension;
 use Twig_ExtensionInterface;
 use Twig_Filter;
@@ -40,6 +42,7 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
             new Twig_Function('getInsertionAttribute', [$this, 'getAttribute']),
             new Twig_Function('getInsertionValue', [$this, 'getValue']),
             new Twig_Function('hasBookmark', [$this, 'hasBookmark']),
+            new Twig_Function('userHasBookmark', [$this, 'userHasBookmark']),
             new Twig_Function('hasSearchBookmark', [$this, 'hasSearchBookmark']),
             new Twig_Function('getInsertionSliderContent', [$this, 'getInsertionSliderContent']),
             new Twig_Function('getSimilarInsertion', [$this, 'getSimilarInsertion']),
@@ -60,11 +63,11 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
     }
 
     /**
-     * Format DateTimeObjects.
+     * @param string|null $dateTimeObject
+     * @param string|null $type
      *
-     * @param DateTimeInterface|null $dateTimeObject
-     *
-     * @return string
+     * @return string|null
+     * @throws \Exception
      */
     public function getAge(?string $dateTimeObject, ?string $type) : ?string {
         $bday  = DateTime::createFromFormat('Y-m-d', $dateTimeObject); // Your date of birth
@@ -100,7 +103,8 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
     /**
      * @param mixed ...$vars
      *
-     * @return boolean
+     * @return bool
+     * @throws ORMException
      * @throws ServiceNotFoundException
      */
     public function hasBookmark(...$vars) {
@@ -115,6 +119,28 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
 
                     return $bookmarkService->hasBookmark($vars[0], $user['id']);
                 }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     * @throws ORMException
+     * @throws ServiceNotFoundException
+     */
+    public function userHasBookmark() {
+
+        /** @var $authService AuthService */
+        $authService = Oforge()->Services()->get("auth");
+        if (isset($_SESSION["auth"])) {
+            $user = $authService->decode($_SESSION["auth"]);
+            if (isset($user) && isset($user['id'])) {
+                /** @var InsertionBookmarkService $bookmarkService */
+                $bookmarkService = Oforge()->Services()->get("insertion.bookmark");
+
+                return $bookmarkService->userHasBookmark($user['id']);
             }
         }
 
@@ -205,39 +231,52 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
      */
     public function getChatPartnerInformation(...$vars) {
         if (count($vars) === 2) {
+            $imageId = null;
+            $title   = null;
+            $linkId  = null;
             if ($vars[0] === 'requested') {
                 /** @var InsertionService $insertionService */
                 $insertionService = Oforge()->Services()->get('insertion');
                 /** @var Insertion $insertion */
                 $insertion = $insertionService->getInsertionById($vars[1]);
-                $insertionMedia = $insertion->getMedia()[0];
-                $imageId = null;
-                if (isset($insertionMedia)) {
-                    $imageId = $insertionMedia->getContent()->getId();
+                $linkId    = $vars[1];
+
+                try {
+                    $imageId = $insertion->getMedia()[0]->getContent()->getId();
+                } catch (\Throwable $e) {
                 }
-                return [
-                    'imageId' => $imageId,
-                    'title'   => $insertion->getContent()[0]->getTitle(),
-                ];
+                try {
+                    $title = $insertion->getContent()[0]->getTitle();
+                } catch (\Throwable $e) {
+                }
+
             } else {
                 /** @var UserService $userService */
                 $userService = Oforge()->Services()->get('frontend.user.management.user');
                 /** @var User $user */
-                $user      = $userService->getUserById($vars[1]);
-                $imageId   = null;
-                $title     = null;
+                $user = $userService->getUserById($vars[1]);
+                /** @var InsertionProfileService $insertionProfileService */
+                $insertionProfileService = Oforge()->Services()->get('insertion.profile');
+
                 try {
                     $imageId = $user->getDetail()->getImage()->getId();
-                    $title   = $user->getDetail()->getNickName();
                 } catch (\Throwable $e) {
-
+                };
+                try {
+                    $title = $user->getDetail()->getNickName();
+                } catch (\Throwable $e) {
+                };
+                try {
+                    $linkId = $insertionProfileService->get($vars[1])->getId();
+                } catch (\Throwable $e) {
                 }
-
-                return [
-                    'imageId' => $imageId,
-                    'title'   => $title,
-                ];
             }
+
+            return [
+                'imageId' => $imageId,
+                'title'   => $title,
+                'link'    => $linkId,
+            ];
         }
 
         return false;
@@ -277,20 +316,36 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
 
     /**
      * @param $number
+     *
      * @return string
      */
     public function numberToRomanNumeral($number) {
-        $map = array('M' => 1000, 'CM' => 900, 'D' => 500, 'CD' => 400, 'C' => 100, 'XC' => 90, 'L' => 50, 'XL' => 40, 'X' => 10, 'IX' => 9, 'V' => 5, 'IV' => 4, 'I' => 1);
+        $map         = [
+            'M'  => 1000,
+            'CM' => 900,
+            'D'  => 500,
+            'CD' => 400,
+            'C'  => 100,
+            'XC' => 90,
+            'L'  => 50,
+            'XL' => 40,
+            'X'  => 10,
+            'IX' => 9,
+            'V'  => 5,
+            'IV' => 4,
+            'I'  => 1,
+        ];
         $returnValue = '';
         while ($number > 0) {
             foreach ($map as $roman => $int) {
-                if($number >= $int) {
-                    $number -= $int;
+                if ($number >= $int) {
+                    $number      -= $int;
                     $returnValue .= $roman;
                     break;
                 }
             }
         }
+
         return $returnValue;
     }
 }

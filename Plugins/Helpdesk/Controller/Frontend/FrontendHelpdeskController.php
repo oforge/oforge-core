@@ -5,6 +5,7 @@ namespace Helpdesk\Controller\Frontend;
 use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Abstracts\SecureFrontendController;
 use Helpdesk\Services\HelpdeskTicketService;
+use Messenger\Services\FrontendMessengerService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
@@ -102,8 +103,8 @@ class FrontendHelpdeskController extends SecureFrontendController {
      * @param $args
      *
      * @return Response
+     * @throws ORMException
      * @throws ServiceNotFoundException
-     * @EndpointAction(path="/close/{id}")
      */
     public function closeTicketAction(Request $request, Response $response, $args) {
         $ticketId = $args["id"];
@@ -111,9 +112,12 @@ class FrontendHelpdeskController extends SecureFrontendController {
         $router = Oforge()->App()->getContainer()->get('router');
         $uri    = $router->pathFor('frontend_account_support');
 
-        /** @var  $ticketService */
+        /** @var HelpdeskTicketService $ticketService */
         $ticketService = Oforge()->Services()->get('helpdesk.ticket');
         $ticketOpener  = $ticketService->getTicketById($ticketId)->getOpener();
+
+        /** @var FrontendMessengerService $messengerService */
+        $messengerService = Oforge()->Services()->get('frontend.messenger');
 
         /** @var  $userService */
         $userId = Oforge()->View()->get('current_user')['id'];
@@ -126,6 +130,9 @@ class FrontendHelpdeskController extends SecureFrontendController {
 
         try {
             $ticketService->changeStatus($ticketId, 'closed');
+
+            $conversationId = $ticketService->getAssociatedConversationId($ticketId);
+            $messengerService->changeStatus($conversationId, 'closed');
 
         } catch (\Exception $e) {
             Oforge()->View()->Flash()->addMessage('error', I18N::translate('ticket_closing_error', 'Could not close ticket'));

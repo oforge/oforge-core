@@ -336,7 +336,7 @@ class MailService {
             'template' => 'NewSearchResults.twig',
         ];
         $templateData = [
-            //TODO: 'resultCount' => ...
+            'resultCount' => $newResultsCount,
             //TODO: 'resultLink'  => ...
             'sender_mail' => $this->getSenderAddress('no_reply'),
             'receiver_name' => $user->getDetail()->getNickName(),

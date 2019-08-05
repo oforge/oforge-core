@@ -2,8 +2,6 @@
 
 namespace FrontendUserManagement;
 
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Middleware\AccountNavigationMiddleware;
 use FrontendUserManagement\Middleware\FrontendSecureMiddleware;
 use FrontendUserManagement\Middleware\FrontendUserStateMiddleware;
@@ -14,13 +12,10 @@ use FrontendUserManagement\Models\UserAddress;
 use FrontendUserManagement\Models\UserDetail;
 use FrontendUserManagement\Services\AccountNavigationService;
 use FrontendUserManagement\Widgets\DashboardWidgetHandler;
+use Oforge\Engine\Modules\AdminBackend\Core\Enums\DashboardWidgetPosition;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\DashboardWidgetsService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistException;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
-use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
-use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 
 /**
  * Class Bootstrap
@@ -74,14 +69,31 @@ class Bootstrap extends AbstractBootstrap {
         ];
     }
 
-    /**
-     * @throws ORMException
-     * @throws OptimisticLockException
-     * @throws ConfigElementAlreadyExistException
-     * @throws ConfigOptionKeyNotExistException
-     * @throws ParentNotFoundException
-     * @throws ServiceNotFoundException
-     */
+    /** @inheritDoc */
+    public function install() {
+        /** @var DashboardWidgetsService $dashboardWidgetsService */
+        $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
+        $dashboardWidgetsService->install([
+            'name'     => 'plugin_frontend_user_registrations',
+            'template' => 'FrontendUsersRegistrations',
+            'handler'  => DashboardWidgetHandler::class,
+            'label'    => [
+                'en' => 'User registrations',
+                'de' => 'Nutzerregistrierungen',
+            ],
+            'position' => DashboardWidgetPosition::TOP,
+            'cssClass' => 'box-yellow',
+        ]);
+    }
+
+    /** @inheritDoc */
+    public function uninstall() {
+        /** @var DashboardWidgetsService $dashboardWidgetsService */
+        $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
+        $dashboardWidgetsService->uninstall('plugin_frontend_user_registrations');
+    }
+
+    /** @inheritDoc */
     public function activate() {
         /** @var AccountNavigationService $accountNavigationService */
         $accountNavigationService = Oforge()->Services()->get('frontend.user.management.account.navigation');
@@ -106,17 +118,6 @@ class Bootstrap extends AbstractBootstrap {
             'icon'     => 'exit',
             'path'     => 'frontend_logout',
             'position' => 'sidebar',
-        ]);
-
-        /** @var DashboardWidgetsService $dashboardWidgetsService */
-        $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
-        $dashboardWidgetsService->register([
-            'position'     => 'top',
-            'action'       => DashboardWidgetHandler::class,
-            'title'        => 'frontend_users_title',
-            'name'         => 'frontend_users',
-            'cssClass'     => 'bg-yellow',
-            'templateName' => 'FrontendUsers',
         ]);
 
         /** @var BackendNavigationService $backendNavigationService */
@@ -145,16 +146,16 @@ class Bootstrap extends AbstractBootstrap {
             'parent'   => 'backend_frontend_user_management',
             'position' => 'sidebar',
         ]);
-
+        /** @var DashboardWidgetsService $dashboardWidgetsService */
+        $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
+        $dashboardWidgetsService->activate('plugin_frontend_user_registrations');
     }
 
-    /**
-     * @throws ServiceNotFoundException
-     */
+    /** @inheritDoc */
     public function deactivate() {
         /** @var DashboardWidgetsService $dashboardWidgetsService */
         $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
-        $dashboardWidgetsService->unregister("frontend_users");
+        $dashboardWidgetsService->deactivate("plugin_frontend_user_registrations");
     }
 
 }

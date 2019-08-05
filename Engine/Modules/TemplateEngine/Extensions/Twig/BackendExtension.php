@@ -3,6 +3,7 @@
 namespace Oforge\Engine\Modules\TemplateEngine\Extensions\Twig;
 
 use Doctrine\ORM\ORMException;
+use Exception;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\DashboardWidgetsService;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\UserFavoritesService;
@@ -28,8 +29,7 @@ class BackendExtension extends Twig_Extension implements Twig_ExtensionInterface
             new Twig_Function('backend_breadcrumbs_map', [$this, 'get_breadcrumbs_map']),
             new Twig_Function('backend_notifications', [$this, 'get_backend_notifications']),
             new Twig_Function('backend_favorites', [$this, 'get_favorites']),
-            new Twig_Function('backend_widgets', [$this, 'get_widgets']),
-            new Twig_Function('backend_widget_data', [$this, 'get_widgets_data']),
+            new Twig_Function('backend_dashboard_widgets', [$this, 'getDashboardWidgets']),
             new Twig_Function('isFavorite', [$this, 'is_favorite']),
         ];
     }
@@ -177,39 +177,16 @@ class BackendExtension extends Twig_Extension implements Twig_ExtensionInterface
     }
 
     /**
-     * @return array|object[]
-     * @throws ServiceNotFoundException
-     * @throws ORMException
-     */
-    public function get_widgets() {
-        /** @var $authService AuthService */
-        $authService = Oforge()->Services()->get('auth');
-        $user        = $authService->decode($_SESSION['auth']);
-        if (isset($user) && isset($user['id'])) {
-            /** @var DashboardWidgetsService $widgetService */
-            $widgetService = Oforge()->Services()->get('backend.dashboard.widgets');
-
-            return $widgetService->getUserWidgets($user['id']);
-        }
-
-        return [];
-    }
-
-    /**
-     * @return array|object[]
+     * @param bool $forDashboard
+     *
+     * @return array
      * @throws ServiceNotFoundException
      */
-    public function get_widgets_data(...$vars) {
-        /** @var $authService AuthService */
-        $authService = Oforge()->Services()->get('auth');
-        $user        = $authService->decode($_SESSION['auth']);
-        if (isset($user) && isset($user['id']) && isset($vars) && sizeof($vars) > 0) {
-            /** @var DashboardWidgetsService $widgetService */
-            $widgetService = Oforge()->Services()->get('backend.dashboard.widgets');
+    public function getDashboardWidgets(bool $forDashboard = true) {
+        /** @var DashboardWidgetsService $dashboardWidgetsService */
+        $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
 
-            return $widgetService->getWidgetsData($vars[0]);
-        }
-
-        return [];
+        return $dashboardWidgetsService->getUserWidgets($forDashboard);
     }
+
 }
