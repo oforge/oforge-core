@@ -13,7 +13,7 @@ use Oforge\Engine\Modules\AdminBackend\Core\Middleware\BackendSecureMiddleware;
 use Oforge\Engine\Modules\AdminBackend\Core\Models\BackendNavigation;
 use Oforge\Engine\Modules\AdminBackend\Core\Models\BackendUserFavorites;
 use Oforge\Engine\Modules\AdminBackend\Core\Models\DashboardWidget;
-use Oforge\Engine\Modules\AdminBackend\Core\Models\UserDashboardWidgets;
+use Oforge\Engine\Modules\AdminBackend\Core\Models\UserDashboardWidget;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\DashboardWidgetsService;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\UserFavoritesService;
@@ -52,7 +52,7 @@ class Bootstrap extends AbstractBootstrap {
             BackendNavigation::class,
             BackendUserFavorites::class,
             DashboardWidget::class,
-            UserDashboardWidgets::class,
+            UserDashboardWidget::class,
         ];
 
         $this->services = [

@@ -1,6 +1,6 @@
 {% extends "@parent/Frontend/Layout.twig" %}
 {% block content %}
-    {% include 'Plugins/FrontendUserManagement/Frontend/Components/AccountNavBar.twig' with { back_link : true, content_title: i18n('user_details', 'User details')} %}
+    {% include 'Plugins/FrontendUserManagement/Frontend/Components/AccountNavBar.twig' with { back_link : true, content_title: i18n('frontend_account_insertions_bookmarks', 'Bookmarks')} %}
     <div class="account content">
         {% block account %}
             <div class="panel panel--account flex">
@@ -17,7 +17,7 @@
                                 {% if bookmarks|length > 0 %}
                                     <h2>{{ i18n('insertions') }}</h2>
                                 {% else %}
-                                    <h2>{{ i18n('no_bookmarks_saved') }}</h2>
+                                    <div>{{ i18n('no_bookmarks_saved') }}</div>
                                 {% endif %}
                             </div>
 

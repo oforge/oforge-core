@@ -1,0 +1,11 @@
+<div class="inner">
+    <h3>{{ data.count }}</h3>
+    <p>{{ i18n('helpdesk_widget_open_tickets', {en: 'Open tickets', de: 'Offene Tickets'}) }}</p>
+</div>
+<div class="icon">
+    <i class="ion ion-android-warning"></i>
+</div>
+
+<a href="{{ url('backend_helpdesk') }}" class="small-box-footer">
+    {{ i18n('more_info', {en: 'More information', de: 'Mehr Informationen'}) }} <i class="fa fa-arrow-circle-right"></i>
+</a>

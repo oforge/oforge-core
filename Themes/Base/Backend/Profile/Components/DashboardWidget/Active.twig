@@ -1,0 +1,4 @@
+{% include 'Backend/Components/Form/Switch.twig' with {
+    name: 'data[' ~ widget.id ~ '][active]',
+    checked: widget.active,
+} only %}

@@ -2,15 +2,15 @@
 
 namespace Insertion\Commands;
 
-use FrontendUserManagement\Services\UserService;
-use GetOpt\GetOpt;
-use GetOpt\Option;
+use FrontendUserManagement\Models\User;
 use Insertion\Models\InsertionUserSearchBookmark;
 use Insertion\Services\InsertionListService;
 use Insertion\Services\InsertionSearchBookmarkService;
 use Monolog\Logger;
 use Oforge\Engine\Modules\Console\Abstracts\AbstractCommand;
 use Oforge\Engine\Modules\Console\Lib\Input;
+use Oforge\Engine\Modules\Mailer\Services\MailService;
+use Oforge\Engine\Modules\Core\Exceptions;
 
 class SearchBookmarkCommand extends AbstractCommand {
 
@@ -23,17 +23,26 @@ class SearchBookmarkCommand extends AbstractCommand {
     }
 
     /**
-     * Command handle function.
+     * Command handle function
      *
      * @param Input $input
      * @param Logger $output
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws Exceptions\ConfigElementNotFoundException
+     * @throws Exceptions\ConfigOptionKeyNotExistException
+     * @throws Exceptions\ServiceNotFoundException
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     public function handle(Input $input, Logger $output) : void {
-        /** @var InsertionSearchBookmarkService $searchBookmarkService */ /** @var UserService $userService */
+        /** @var InsertionSearchBookmarkService $searchBookmarkService */
         /** @var InsertionListService $insertionListService */
         $searchBookmarkService = Oforge()->Services()->get('insertion.search.bookmark');
         $insertionListService  = Oforge()->Services()->get('insertion.list');
-        $userService           = Oforge()->Services()->get('frontend.user.management.user');
+
+        /** @var MailService $mailService */
         $mailService           = Oforge()->Services()->get('mail');
 
         /** @var InsertionUserSearchBookmark[] $bookmarks */
@@ -47,7 +56,9 @@ class SearchBookmarkCommand extends AbstractCommand {
             $insertionList      = $insertionListService->search($bookmark->getInsertionType()->getId(), $params);
 
             $newInsertionsCount = sizeof($insertionList["query"]["items"]);
-            // TODO: BASTI send mail
+            if($newInsertionsCount > 0) {
+                $mailService->sendNewSearchResultsInfoMail($user->getId(), $newInsertionsCount, $searchQuery=[] );
+            }
 
             $searchBookmarkService->setLastChecked($bookmark);
         }
