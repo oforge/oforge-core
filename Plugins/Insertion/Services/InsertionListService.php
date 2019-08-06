@@ -76,22 +76,34 @@ class InsertionListService extends AbstractDatabaseAccess {
         /**
          * filter by price
          */
-        if (isset($params["price"]) && is_array($params["price"]) && sizeof($params["price"]) == 2) {
-            $sqlQueryWhere .= " and i.price between :min and :max ";
+        if (isset($params["price"]) && is_array($params["price"])) {
+            $min = null;
+            $max = null;
 
-            $min = $params["price"][0];
-            $max = $params["price"][1];
+            if (isset($params["price"]['min'])) {
+                $sqlQueryWhere .= " and i.price >= :min";
+                $min           = $params["price"]['min'];
+                $args["min"]   = $min;
 
-            if ($min > $max) {
-                $t   = $min;
-                $min = $max;
-                $max = $t;
+                $result['filter']['price']['min'] = $min;
             }
 
-            $args["min"] = $min;
-            $args["max"] = $max;
+            if (isset($params["price"]['max'])) {
+                $sqlQueryWhere                    .= " and i.price <= :max ";
+                $max                              = $params["price"]['max'];
+                $args["max"]                      = $max;
+                $result['filter']['price']['max'] = $max;
+            }
 
-            $result['filter']['price'] = [$min, $max];
+            if (isset($params["price"]['min']) && isset($params["price"]['max']) && $min > $max) {
+                $t                                = $min;
+                $min                              = $max;
+                $max                              = $t;
+                $args["min"]                      = $min;
+                $args["max"]                      = $max;
+                $result['filter']['price']['min'] = $min;
+                $result['filter']['price']['max'] = $max;
+            }
         }
 
         /**
@@ -132,65 +144,86 @@ class InsertionListService extends AbstractDatabaseAccess {
                     $result['filter'][$attributeKey->getName()] = is_array($value) ? array_unique($value) : $value;
 
                     if (is_array($value)) { //should always be a multi selection or a range component
-                        $sqlQuery                             .= " left join oforge_insertion_insertion_attribute_value v$attributeCount on v$attributeCount.insertion_id = i.id and v$attributeCount.attribute_key = :v"
-                                                                 . $attributeCount . "key";
+                        $sqlQuery                            .= " left join oforge_insertion_insertion_attribute_value v$attributeCount on v$attributeCount.insertion_id = i.id and v$attributeCount.attribute_key = :v"
+                                                                . $attributeCount . "key";
                         $args["v" . $attributeCount . "key"] = $attributeKey->getId();
 
                         switch ($attributeKey->getFilterType()) {
                             case AttributeType::RANGE:
-                                $sqlQueryWhere .= " and v$attributeCount.attribute_key = :v" . $attributeCount
-                                                  . "key and v$attributeCount.insertion_attribute_value between :v" . $attributeCount . "value and :v"
-                                                  . $attributeCount . "value2";
+                                $min = null;
+                                $max = null;
 
-                                $min = $value[0];
-                                $max = $value[1];
+                                $sqlQueryWhere .= " and v$attributeCount.attribute_key = :v" . $attributeCount . "key";
 
-                                if ($min > $max) {
-                                    $t   = $min;
-                                    $min = $max;
-                                    $max = $t;
+                                if (isset($value['min'])) {
+                                    $sqlQueryWhere                         .= " and v$attributeCount.insertion_attribute_value >= :v" . $attributeCount . "value";
+                                    $min                                   = $value['min'];
+                                    $args["v" . $attributeCount . "value"] = $min;
+                                }
+                                if (isset($value['max'])) {
+                                    $sqlQueryWhere                          .= " and v$attributeCount.insertion_attribute_value <= :v" . $attributeCount . "value2";
+                                    $max                                    = $value['max'];
+                                    $args["v" . $attributeCount . "value2"] = $max;
                                 }
 
-                                $args["v" . $attributeCount . "value"]  = $min;
-                                $args["v" . $attributeCount . "value2"] = $max;
+                                if (isset($value['min']) && isset($value['max']) && $min > $max) {
+                                    $t                                      = $min;
+                                    $min                                    = $max;
+                                    $max                                    = $t;
+                                    $args["v" . $attributeCount . "value"]  = $min;
+                                    $args["v" . $attributeCount . "value2"] = $max;
+                                }
 
                                 break;
                             case AttributeType::DATEYEAR:
+                                $dateQuery     = " and YEAR(CURDATE()) - YEAR(v$attributeCount.insertion_attribute_value) - IF(STR_TO_DATE(CONCAT(YEAR(CURDATE()), '-', MONTH(v$attributeCount.insertion_attribute_value), '-', DAY(v$attributeCount.insertion_attribute_value)) ,'%Y-%c-%e') > CURDATE(), 1, 0)";
+                                $sqlQueryWhere .= " and v$attributeCount.attribute_key = :v" . $attributeCount . "key";
 
-                                $sqlQueryWhere .= " and v$attributeCount.attribute_key = :v" . $attributeCount
-                                                  . "key and YEAR(CURDATE()) - YEAR(v$attributeCount.insertion_attribute_value) - IF(STR_TO_DATE(CONCAT(YEAR(CURDATE()), '-', MONTH(v$attributeCount.insertion_attribute_value), '-', DAY(v$attributeCount.insertion_attribute_value)) ,'%Y-%c-%e') > CURDATE(), 1, 0)  between :v"
-                                                  . $attributeCount . "value and :v" . $attributeCount . "value2";
-
-                                $min = $value[0];
-                                $max = $value[1];
-
-                                if ($min > $max) {
-                                    $t   = $min;
-                                    $min = $max;
-                                    $max = $t;
+                                if (isset($value['min'])) {
+                                    $sqlQueryWhere                         .= $dateQuery . " >= :v" . $attributeCount . "value";
+                                    $min                                   = $value['min'];
+                                    $args["v" . $attributeCount . "value"] = $min;
+                                }
+                                if (isset($value['max'])) {
+                                    $sqlQueryWhere                          .= $dateQuery . " <= :v" . $attributeCount . "value2";
+                                    $max                                    = $value['max'];
+                                    $args["v" . $attributeCount . "value2"] = $max;
                                 }
 
-                                $args["v" . $attributeCount . "value"]  = $min;
-                                $args["v" . $attributeCount . "value2"] = $max;
+                                if (isset($value['min']) && isset($value['max']) && $min > $max) {
+                                    $t                                      = $min;
+                                    $min                                    = $max;
+                                    $max                                    = $t;
+                                    $args["v" . $attributeCount . "value"]  = $min;
+                                    $args["v" . $attributeCount . "value2"] = $max;
+                                }
 
                                 break;
                             case AttributeType::DATEMONTH:
+                                $min = null;
+                                $max = null;
 
-                                $sqlQueryWhere .= " and v$attributeCount.attribute_key = :v" . $attributeCount
-                                                  . "key and DATEDIFF(CURDATE(), v$attributeCount.insertion_attribute_value) / 30  between :v" . $attributeCount
-                                                  . "value and :v" . $attributeCount . "value2";
+                                $dateQuery     = " and DATEDIFF(CURDATE(), v$attributeCount.insertion_attribute_value) / 30";
+                                $sqlQueryWhere .= " and v$attributeCount.attribute_key = :v" . $attributeCount . "key";
 
-                                $min = $value[0];
-                                $max = $value[1];
-
-                                if ($min > $max) {
-                                    $t   = $min;
-                                    $min = $max;
-                                    $max = $t;
+                                if (isset($value['min'])) {
+                                    $sqlQueryWhere                         .= $dateQuery . " >= :v" . $attributeCount . "value";
+                                    $min                                   = $value['min'];
+                                    $args["v" . $attributeCount . "value"] = $min;
+                                }
+                                if (isset($value['max'])) {
+                                    $sqlQueryWhere                          .= $dateQuery . " <= :v" . $attributeCount . "value2";
+                                    $max                                    = $value['max'];
+                                    $args["v" . $attributeCount . "value2"] = $max;
                                 }
 
-                                $args["v" . $attributeCount . "value"]  = $min;
-                                $args["v" . $attributeCount . "value2"] = $max;
+                                if (isset($value['min']) && isset($value['max']) && $min > $max) {
+                                    $t                                      = $min;
+                                    $min                                    = $max;
+                                    $max                                    = $t;
+                                    $args["v" . $attributeCount . "value"]  = $min;
+                                    $args["v" . $attributeCount . "value2"] = $max;
+                                }
 
                                 break;
                             default: //multi
@@ -218,9 +251,9 @@ class InsertionListService extends AbstractDatabaseAccess {
                                                                                                                                                               . attribute_key = :v"
                                              . $attributeCount . "key";
 
-                                $sqlQueryWhere                          .= " and v$attributeCount . attribute_key = :v" . $attributeCount
-                                                                           . "key and v$attributeCount . insertion_attribute_value like :v" . $attributeCount
-                                                                           . "value";
+                                $sqlQueryWhere                         .= " and v$attributeCount . attribute_key = :v" . $attributeCount
+                                                                          . "key and v$attributeCount . insertion_attribute_value like :v" . $attributeCount
+                                                                          . "value";
                                 $args["v" . $attributeCount . "key"]   = $attributeKey->getId();
                                 $args["v" . $attributeCount . "value"] = "%" . $value . "%";
 
@@ -231,9 +264,9 @@ class InsertionListService extends AbstractDatabaseAccess {
                                                                                                                                                               . attribute_key = :v"
                                              . $attributeCount . "key and v$attributeCount . insertion_attribute_value = :v" . $attributeCount . "value";
 
-                                $sqlQueryWhere                          .= " and v$attributeCount . attribute_key = :v" . $attributeCount
-                                                                           . "key and v$attributeCount . insertion_attribute_value = :v" . $attributeCount
-                                                                           . "value";
+                                $sqlQueryWhere                         .= " and v$attributeCount . attribute_key = :v" . $attributeCount
+                                                                          . "key and v$attributeCount . insertion_attribute_value = :v" . $attributeCount
+                                                                          . "value";
                                 $args["v" . $attributeCount . "key"]   = $attributeKey->getId();
                                 $args["v" . $attributeCount . "value"] = $value;
 
@@ -245,12 +278,12 @@ class InsertionListService extends AbstractDatabaseAccess {
         }
         if (isset($params["after_date"])) {
             $params['after_date'] = date_format($params["after_date"], 'Y-m-d h:i:s');
-            $sqlQueryWhere       .= " and DATEDIFF(i.created_at, :ad) > 0";
-            $args["ad"] = $params["after_date"];
+            $sqlQueryWhere        .= " and DATEDIFF(i.created_at, :ad) > 0";
+            $args["ad"]           = $params["after_date"];
         }
 
         $sqlResult = $this->entityManager()->getEntityManager()->getConnection()->executeQuery($sqlQuery . $sqlQueryWhere, $args);
-        $ids = $sqlResult->fetchAll();
+        $ids       = $sqlResult->fetchAll();
 
         $result["query"]["count"]     = sizeof($ids);
         $result["query"]["pageSize"]  = $pageSize;
