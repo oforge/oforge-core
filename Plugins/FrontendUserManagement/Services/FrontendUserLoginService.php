@@ -6,6 +6,7 @@ use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Models\User;
 use Oforge\Engine\Modules\Auth\Models\User\BaseUser;
 use Oforge\Engine\Modules\Auth\Services\BaseLoginService;
+use Oforge\Engine\Modules\Auth\Services\PasswordService;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 
 /**
@@ -22,30 +23,27 @@ class FrontendUserLoginService extends BaseLoginService {
         parent::__construct(User::class);
     }
 
+
     /**
-     * Check if the account has been activated after validating the login information
-     *
      * @param string $email
-     * @param string $password
      *
-     * @return string|null
-     * @throws ServiceNotFoundException
+     * @return int status: 0 => user doesn't exists
+     *                     1 => user not active
+     *
      * @throws ORMException
      */
-
-    public function isActive(string $email, string $password) {
-        $passwordService = Oforge()->Services()->get('password');
-        /** @var BaseUser|null $user */
+    public function getUserStatus(string $email) {
+        /** @var User $user */
         $user = $this->repository()->findOneBy([
-            'email'  => $email,
+            'email' => $email,
         ]);
-
         if (isset($user)) {
-            if ($passwordService->validate($password, $user->getPassword())) {
-                return $user->isActive();
+            if (!$user->isActive()) {
+                return 1;
             }
         }
-
-        return null;
+        else {
+            return 0;
+        }
     }
 }
