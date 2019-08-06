@@ -23,13 +23,12 @@ class FrontendUserLoginService extends BaseLoginService {
         parent::__construct(User::class);
     }
 
-
     /**
      * @param string $email
      *
      * @return int status: 0 => user doesn't exists
      *                     1 => user not active
-     *
+     *                     2 => user exists and is active
      * @throws ORMException
      */
     public function getUserStatus(string $email) {
@@ -38,12 +37,11 @@ class FrontendUserLoginService extends BaseLoginService {
             'email' => $email,
         ]);
         if (isset($user)) {
-            if (!$user->isActive()) {
-                return 1;
+            if ($user->isActive()) {
+                return 2;
             }
+            return 1;
         }
-        else {
-            return 0;
-        }
+        return 0;
     }
 }
