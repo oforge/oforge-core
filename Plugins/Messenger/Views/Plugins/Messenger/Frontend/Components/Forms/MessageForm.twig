@@ -1,6 +1,7 @@
 {# block messenger__message_form #}
 {% block message_form %}
-<form class="form form--message"
+<form id="message--input-form"
+      class="form form--message"
       action="{{ url('frontend_account_messages', {id: activeConversation.id}) }}"
       method="post">
     <div class="form-controls flex flex--row flex--center">
