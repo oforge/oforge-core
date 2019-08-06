@@ -345,6 +345,30 @@ class MailService {
         return $this->send($mailerOptions, $templateData);
     }
 
+    /**
+     * @param User $user
+     * @param Insertion $insertion
+     *
+     * @throws ServiceNotFoundException
+     */
+    public function sendInsertionCreateInfoMail(User $user, Insertion $insertion) {
+        $mailService   = Oforge()->Services()->get("mail");
+        $userMail      = $user->getEmail();
+        $mailerOptions = [
+            'to'       => [$userMail => $userMail],
+            'from'     => 'info',
+            'subject'  => I18N::translate('mailer_subject_insertion_created','Insertion was created'),
+            'template' => 'InsertionCreated.twig',
+        ];
+        $templateData  = [
+            'insertionId'    => $insertion->getId(),
+            'insertionTitle' => $insertion->getContent()[0]->getTitle(),
+            'receiver_name'  => $user->getDetail()->getNickName(),
+            'sender_mail'    => $mailService->getSenderAddress('no_reply'),
+        ];
+        $mailService->send($mailerOptions, $templateData);
+    }
+
     public function batchSend() {
         //
     }
