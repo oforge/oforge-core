@@ -357,7 +357,7 @@ class MailService {
         $mailerOptions = [
             'to'       => [$userMail => $userMail],
             'from'     => 'info',
-            'subject'  => I18N::translate('mailer_subject_insertion_created'),
+            'subject'  => I18N::translate('mailer_subject_insertion_created','Insertion was created'),
             'template' => 'InsertionCreated.twig',
         ];
         $templateData  = [
