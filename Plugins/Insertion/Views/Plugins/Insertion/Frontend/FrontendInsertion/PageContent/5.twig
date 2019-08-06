@@ -77,7 +77,11 @@
                 'route.referrer': url('insertions_createSteps', {type:  type.id, page: page}),
             })) %}
 
-            {% embed 'Plugins/FrontendUserManagement/Frontend/Components/Content/LoginRegistration.twig' %}
+            {% embed 'Plugins/FrontendUserManagement/Frontend/Components/Content/LoginRegistration.twig' with {
+                meta: mergeRecursive(meta|default({}), dotToNested({
+                    'route.referrer': url(meta.route.name, meta.route.params),
+                }))
+            }%}
                 {% block login_registration_subtitle %}{% endblock login_registration_subtitle %}
                 {% block login_registration__registration_benefits %}{% endblock login_registration__registration_benefits %}
             {% endembed %}
