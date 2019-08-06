@@ -5,6 +5,6 @@
     <span class="tag__text">
             {{ i18n(f) }}
         {% set unit = i18n('unit_' ~  attribute.name, '') %}
-            <span class="tag__text">{{ value[0] }} {{ unit }} {{ i18n('between') }}  {{ value[1] }} {{ unit }}</span>
+            <span class="tag__text">{% if value.min %} {{ i18n(f ~ '_from') }} {{ value.min }} {{ unit }} {% endif %} {% if value.max %}{{ i18n(f ~ '_to') }} {{ value.max }} {{ unit }}{% endif %}</span>
 </span>
 </div>
