@@ -1,0 +1,24 @@
+{% extends 'Frontend/Layout.twig' %}
+
+
+{% block master__footer_scripts %}
+    {{ parent() }}
+
+    {% set analyticsKey = config('analytics_tracking_id') %}
+
+    {% if analyticsKey is not empty %}
+        <script async src="https://www.googletagmanager.com/gtag/js?id={{ analyticsKey }}"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+
+            gtag('js', new Date());
+            gtag('config', '{{ analyticsKey }}', {'anonymize_ip': true});
+        </script>
+
+    {% endif %}
+
+
+{% endblock master__footer_scripts %}

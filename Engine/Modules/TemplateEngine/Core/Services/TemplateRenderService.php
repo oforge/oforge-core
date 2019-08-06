@@ -143,17 +143,17 @@ class TemplateRenderService {
             }
 
             foreach ($plugins as $plugin) {
-                $viewsDir = ROOT_PATH . DIRECTORY_SEPARATOR . Statics::PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin->getName() . DIRECTORY_SEPARATOR
+                $viewsDir = ROOT_PATH . DIRECTORY_SEPARATOR . Statics::PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin['name'] . DIRECTORY_SEPARATOR
                             . Statics::VIEW_DIR;
 
                 if (file_exists($viewsDir)) {
                     $paths['parent'][]                  = $viewsDir;
                     $paths[self::TWIG_MAIN_NAMESPACE][] = $viewsDir;
 
-                    if (!isset($paths[$plugin->getName()])) {
-                        $paths[$plugin->getName()] = [];
+                    if (!isset($paths[$plugin['name']])) {
+                        $paths[$plugin['name']] = [];
                     }
-                    $paths[$plugin->getName()][] = $viewsDir;
+                    $paths[$plugin['name']][] = $viewsDir;
                 }
             }
 

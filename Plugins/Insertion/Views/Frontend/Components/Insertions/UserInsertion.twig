@@ -7,7 +7,7 @@
     </div>
     <div class="product__attribute">
         <span class="product__label">{{ i18n('price') }}</span>
-        <span class="product__value">{{ item.price }} {{ i18n('unit_price') }} {% if (item.tax) %} ({{ i18n('after_tax') }}) {% else %} ({{ i18n('pre_tax') }}){% endif %}</span>
+        <span class="product__value">{{ item.price }} {{ i18n('unit_price') }} {% if (item.tax) %} ({{ i18n('vat_identificationable') }}){% endif %}</span>
     </div>
     <div class="product__attribute">
         <span class="product__label">{{ i18n('duration') }}</span>
@@ -23,9 +23,7 @@
         </div>
         <div class="product__attribute">
             <span class="product__label">{{ i18n('insertion_price') }}</span>
-            <span class="product__value">{{ item.price }} {{ i18n('unit_price') }} {% if (item.tax) %} ({{ i18n('after_tax') }}) {% else %} ({{ i18n('pre_tax') }}){% endif %}</span>
-            <!-- TODO: Snippify -->
-
+            <span class="product__value">{{ item.price }} {{ i18n('unit_price') }} {% if (item.tax) %} ({{ i18n('vat_identificationable') }}){% endif %}</span>
         </div>
         <div class="product__attribute">
             <span class="product__label">{{ i18n('insertion_duration') }}</span>
@@ -44,7 +42,7 @@
             </svg>
         </a>
 
-        <a class="button button--primary highlight" href="#">
+        <a class="button button--primary highlight">
             <span>{{ i18n('highlight') }}</span>
             <svg class="icon icon--light">
                 <use xlink:href="#professional_plus_abo"></use>
@@ -53,7 +51,7 @@
 
         {% if insertion.active %}
             <a class="button button--primary disable"
-               href="{{ url('frontend_account_insertions_disable', {id: item.id}) }}">
+               href="{{ url('frontend_account_insertions_disable', {'id': item.id}) }}">
                 <span>{{ i18n('disable') }}</span>
                 <svg class="icon icon--light">
                     <use xlink:href="#deactivate"></use>
@@ -69,6 +67,7 @@
             </a>
         {% endif %}
         <a class="button button--primary delete"
+           onclick="return confirm('{{ i18n('really-want-to-delete-insertion', 'Willst Du das Inserat wirklich löschen?') }}')"
            href="{{ url('frontend_account_insertions_delete', {id: item.id}) }}">
             <span>{{ i18n('delete') }}</span>
             <svg class="icon icon--light">
@@ -98,7 +97,9 @@
                 </a>
             {% endif %}
 
-            <a class="mobile-button" href="{{ url('frontend_account_insertions_delete', {id: item.id}) }}">
+            <a class="mobile-button"
+               onclick="return confirm('{{ i18n('really-want-to-delete-insertion', 'Willst Du das Inserat wirklich löschen?') }}')"
+               href="{{ url('frontend_account_insertions_delete', {id: item.id}) }}">
                 <svg class="icon icon--primary">
                     <use xlink:href="#delete"></use>
                 </svg>

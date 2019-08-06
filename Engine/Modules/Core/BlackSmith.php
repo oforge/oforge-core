@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/Helper/Functions/functions.php';
 
 use Oforge\Engine\Modules\Core\Abstracts\AbstractTemplateManager;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractViewManager;
@@ -300,6 +301,7 @@ class BlackSmith {
         // Init and load plugins
         $this->pluginManager = PluginManager::getInstance();
         $this->pluginManager->init();
+        $this->pluginManager->load();
 
         // Init and load cache manager
         $this->cacheManager = CacheManager::getInstance();
@@ -312,9 +314,9 @@ class BlackSmith {
         $this->slimRouteManagager = SlimRouteManager::getInstance();
 
         // Let the Blacksmith forge all the things \°/
+
         if ($start) {
             $this->slimRouteManagager->init();
-            $this->pluginManager->load();
             $this->forgeSlimApp->run();
         }
     }

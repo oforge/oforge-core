@@ -27,6 +27,7 @@ class LoginController extends AbstractController {
      * @param Request $request
      * @param Response $response
      *
+     * @return Response
      * @throws ServiceNotFoundException
      * @EndpointAction()
      */
@@ -34,6 +35,11 @@ class LoginController extends AbstractController {
         /** @var RedirectService $redirectService */
         $redirectService = Oforge()->Services()->get('redirect');
         $redirectService->setRedirectUrlName('frontend_login');
+        // if (Oforge()->View()->get('user_logged_in', false)) {
+        //     return RouteHelper::redirect($response, 'frontend_account_dashboard');
+        // }
+
+        return $response;
     }
 
     /**
@@ -42,6 +48,7 @@ class LoginController extends AbstractController {
      *
      * @return Response
      * @throws ServiceNotFoundException
+     * @throws \Doctrine\ORM\ORMException
      * @EndpointAction()
      */
     public function processAction(Request $request, Response $response) {
@@ -107,18 +114,45 @@ class LoginController extends AbstractController {
          */
         if (!array_key_exists('frontend_login_email', $body)
             || !array_key_exists('frontend_login_password', $body)) {
-            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('login_invalid_data', 'Invalid username or password.'));
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('login_invalid_data', [
+                'en' => 'Invalid login data.',
+                'de' => 'Ungültige Zugangsdaten.',
+            ]));
 
             return $response->withRedirect($router->pathFor('frontend_login'), 302);
+        }
+
+        $userStatus = $loginService->getUserStatus($body['frontend_login_email']);
+
+        /** Account doesn't exist */
+        if ($userStatus == 0) {
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('login_account_non_existent', [
+                'en' => 'Account non existent.',
+                'de' => 'Das Konto existiert nicht.',
+            ]));
+
+            return $response->withRedirect($uri, 302);
+        }
+        /** Account is not active */
+        if ($userStatus == 1) {
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('login_account_not_activated', [
+                'en' => 'Your account has not been activated yet. Please check your emails.',
+                'de' => 'Dein Konto wurde noch nicht aktiviert. Bitte überprüfe deine E-Mails.',
+            ]));
+
+            return $response->withRedirect($uri, 302);
         }
 
         $jwt = $loginService->login($body['frontend_login_email'], $body['frontend_login_password']);
 
         /**
-         * $jwt is null if the login credentials are incorrect
+         * Check credentials ($jwt is null if the login credentials are incorrect)
          */
         if (!isset($jwt)) {
-            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('login_invalid_data', 'Invalid username or password.'));
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('login_account_wrong_credentials', [
+                'en' => 'Wrong password.',
+                'de' => 'Falsches Passwort.',
+            ]));
 
             return $response->withRedirect($uri, 302);
         }
@@ -131,10 +165,10 @@ class LoginController extends AbstractController {
         $_SESSION['user_logged_in'] = true;
 
         if (!isset($referrer)) {
-            if (isset($_SESSION["login_redirect_url"])) {
-                $referrer = $_SESSION["login_redirect_url"];
-                $uri = $referrer;
-                unset($_SESSION["login_redirect_url"]);
+            if (isset($_SESSION['login_redirect_url'])) {
+                $referrer = $_SESSION['login_redirect_url'];
+                $uri      = $referrer;
+                unset($_SESSION['login_redirect_url']);
             }
         }
 

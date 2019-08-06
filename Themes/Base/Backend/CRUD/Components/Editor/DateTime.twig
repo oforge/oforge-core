@@ -1,19 +1,26 @@
 <div class="form-group">
-    {% set dateTimePicker = {
-        id: fieldID ~ '_picker',
-        type: fieldType|default('datetime'),
-    } %}
-    <div id="{{ dateTimePicker.id }}" class="input-group oforge-{{ dateTimePicker.type }}-picker"
-         data-configuration="{{ {format: config('system_datetimepicker_format_' ~ dateTimePicker.type)}|json_encode }}"
+    {% set crudDateTimePickerType = crudFieldType|default('datetime') %}
+    {% set crudDateTimePickerValue = item[crudProperty.name]|default(crudProperty.editor.default)|default('') %}
+    {% if crudDateTimePickerType == 'data' %}
+        {% set crudDateTimePickerValue = crudDateTimePickerValue|formatDate %}
+    {% elseif crudDateTimePickerType == 'datetime' %}
+        {% set crudDateTimePickerValue = crudDateTimePickerValue|formatDatetime %}
+    {% elseif crudDateTimePickerType == 'time' %}
+        {% set crudDateTimePickerValue = crudDateTimePickerValue|formatTime %}
+    {% endif %}
+    {% set crudDateTimePickerID = crudFieldID ~ '_picker' %}
+    <div id="{{ crudDateTimePickerID }}" class="input-group oforge-{{ crudDateTimePickerType }}-picker"
+         data-configuration="{{ {format: config('system_datetimepicker_format_' ~ crudDateTimePickerType)}|json_encode }}"
          data-target-input="nearest">
-        <span class="input-group-addon" data-target="#{{ dateTimePicker.id }}" data-toggle="datetimepicker">
-            {% if dateTimePicker.type != 'time' %}
+        <span class="input-group-addon" data-target="#{{ crudDateTimePickerID }}" data-toggle="datetimepicker">
+            {% if crudDateTimePickerType != 'time' %}
                 <span class="fa fa-calendar"></span>
             {% endif %}
-            {% if dateTimePicker.type != 'date' %}
+            {% if crudDateTimePickerType != 'date' %}
                 <span class="fa fa-clock-o"></span>
             {% endif %}
         </span>
-        <input id="{{ fieldID }}" type="text" class="form-control" data-target="#{{ dateTimePicker.id }}" />
+        <input id="{{ crudFieldID }}" type="text" class="form-control" data-target="#{{ crudDateTimePickerID }}"
+               value="{{ crudDateTimePickerValue }}" />
     </div>
 </div>

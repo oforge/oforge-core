@@ -12,10 +12,13 @@
                 {% include 'Plugins/Insertion/Frontend/Components/Content/ProductPanel.twig' with {item: item } %}
             {% endfor %}
         </div>
+        {% block product_pagination %}
+            {% include 'Plugins/Insertion/Frontend/Components/Content/ProductPagination.twig' %}
+        {% endblock product_pagination %}
     </div>
 
     {% block seo_content %}
-        {% set content = content('seo_content_type_' ~ type.name ~ '_' ~  meta.language) %}
+        {% set content = content('seo_content_type_' ~ type.name ~ '_' ~  meta.language.iso) %}
         {% if content %}
             <div class="panel panel--seo">
                 {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}

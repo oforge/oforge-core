@@ -5,7 +5,7 @@
 
         <div class="form-controls">
 
-            <h3 class="form__title">{{ i18n('user_data', 'User data') }}</h3>
+            <h2 class="form__title">{{ i18n('user_data', 'User data') }}</h2>
 
             <div class="form__control form__control--half-medium">
                 {% block user_details_label_first_name %}
@@ -15,7 +15,6 @@
                        type="text"
                        class="form__input form__input"
                        placeholder="{{ i18n('first_name') }}"
-                       required
                        {% if (userDetails) %}value="{{ userDetails.firstName }}"{% endif %}>
 
                 {% block user_details_label_last_name %}
@@ -25,7 +24,6 @@
                        type="text"
                        class="form__input form__input"
                        placeholder="{{ i18n('last_name') }}"
-                       required
                        {% if (userDetails) %}value="{{ userDetails.lastName }}"{% endif %}>
             </div>
         </div>
@@ -48,17 +46,16 @@
 
         <div class="form-controls">
 
-            <h3 class="form__title">{{ i18n('user_contact_data', 'Contact data') }}</h3>
+            <h2 class="form__title">{{ i18n('user_contact_data', 'Contact data') }}</h2>
 
             <div class="form__control">
                 {% block user_details_label_contact_email %}
                 {% endblock user_details_label_contact_email %}
                 <input id="frontend_account_details_contact_email"
                        name="frontend_account_details_contact_email"
-                       type="text"
+                       type="email"
                        class="form__input form__input"
                        placeholder="{{ i18n('contact_email') }}"
-                       required
                        {% if (userDetails) %}value="{{ userDetails.contactEmail }}"{% endif %}>
             </div>
 
@@ -70,7 +67,6 @@
                        type="text"
                        class="form__input form__input"
                        placeholder="{{ i18n('contact_phone') }}"
-                       required
                        {% if (userDetails) %}value="{{ userDetails.phoneNumber }}"{% endif %}>
             </div>
 

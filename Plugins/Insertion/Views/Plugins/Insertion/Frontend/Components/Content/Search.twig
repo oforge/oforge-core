@@ -2,7 +2,7 @@
     <div class="insertion__sidebar">
         <form class="form form--search-filter"
               action=""
-              id="form-search-sidebar"
+              id="form-search"
               method="get">
             <h3 class="form__title">{{ i18n('adjust_search', 'Adjust your search') }}</h3>
 
@@ -27,10 +27,11 @@
             </div>
 
             <div class="form-controls form-controls--row">
-                <div class="form__control">
+                <div class="form__control form__control--floating-button">
                     <input type="submit"
+                           id="floating-button"
                            value="{{ i18n('apply_filter') }}"
-                           class="form__input form__input--submit button">
+                           class="form__input button button--primary">
                 </div>
             </div>
         </form>

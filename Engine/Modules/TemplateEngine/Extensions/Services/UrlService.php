@@ -14,11 +14,13 @@ class UrlService {
     private $router;
 
     /**
-     * @param mixed ...$vars
+     * @param string $name
+     * @param array $namedParams
+     * @param array $queryParams
      *
-     * @return mixed|string
+     * @return string
      */
-    public function getUrl(string $name, array $namedParams = [], array $queryParams = []) {
+    public function getUrl(string $name, array $namedParams = [], array $queryParams = []) : string {
         if (!isset($this->router)) {
             $this->router = Oforge()->App()->getContainer()->get('router');
         }

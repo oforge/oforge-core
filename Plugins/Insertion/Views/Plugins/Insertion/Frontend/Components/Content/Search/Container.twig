@@ -1,8 +1,15 @@
 {% block search_container %}
     {% set values = getInsertionValues(attribute.id) %}
     {% block container_attributes %}
-        {% for value in values.values %}
-            {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ value.subAttributeKey.filterType|capitalize  ~ '.twig' with {'attribute': all_attributes[value.subAttributeKey.id], hidden: true, required: false, isSubAttribute: true} %}
-        {% endfor %}
+        <div class="form__control ">
+
+            {% if omitLabel is not defined or not isSubAttribute %} <label
+                    class="form__label">{{ i18n(attribute.name) }}</label>{% endif %}
+
+            {% for value in values.values %}
+                {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ value.subAttributeKey.filterType|capitalize  ~ '.twig' with {'attribute': all_attributes[value.subAttributeKey.id], hidden: true, required: false, isSubAttribute: true} %}
+            {% endfor %}
+        </div>
+
     {% endblock container_attributes %}
 {% endblock search_container %}

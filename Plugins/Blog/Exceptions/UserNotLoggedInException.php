@@ -15,7 +15,10 @@ class UserNotLoggedInException extends BlogException {
      * UserNotLoggedInException constructor.
      */
     public function __construct() {
-        parent::__construct(I18N::translate('plugin_blog_exception_user_not_logged_in', 'User not logged in!'));
+        parent::__construct(I18N::translate('plugin_blog_exception_user_not_logged_in', [
+            'en' => 'User not logged in!',
+            'de' => 'Benutzer nicht eingeloggt!',
+        ]));
     }
 
 }

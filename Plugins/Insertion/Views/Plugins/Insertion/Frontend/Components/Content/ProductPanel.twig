@@ -3,7 +3,7 @@
         {% block product__image %}
             <a href="{{ url("insertions_detail", {id: item.id}) }}" class="product__image">
                 {% if item.media is defined and item.media|length > 0 and item.media[0].content is defined %}
-                    <img src="{{ media(item.media[0].content, 300) }}" alt="{{ item.content[0].name }}"
+                    <img src="{{ media(item.media[0].content, 600) }}" alt="{{ item.content[0].name }}"
                          class="image">
                 {% else %}
                     <svg class="icon icon--placeholder">
@@ -17,8 +17,11 @@
 
         <div class="product__attributes product__attributes--main">
             {% block attributes__main %}
-
-                {% for topvalue in item.topvalues|slice(0,3) %}
+                <div class="product__attribute">
+                    <span class="product__label">{{ i18n('insertion_name') }}</span>
+                    <span class="product__value">{{ item.content[0].name }}</span>
+                </div>
+                {% for topvalue in item.topvalues|slice(0,2) %}
                     {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
                 {% endfor %}
 
@@ -38,7 +41,7 @@
                             <span class="product__label">{{ i18n('insertion_name') }}</span>
                             <span class="product__value">{{ item.content[0].name }}</span>
                         </div>
-                        {% for topvalue in item.topvalues|slice(1,2) %}
+                        {% for topvalue in item.topvalues|slice(0,2) %}
                             {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
                         {% endfor %}
                     </div>
@@ -46,8 +49,7 @@
 
                 {% block attributes__bottom %}
                     <div class="product__attributes product__attributes--bottom">
-
-                        {% for topvalue in item.topvalues|slice(3,3) %}
+                        {% for topvalue in item.topvalues|slice(2) %}
                             {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
                         {% endfor %}
                     </div>
@@ -56,8 +58,8 @@
                 {% block product__meta %}
                     <div class="product__meta">
                         <div class="product__pricing">
-                            <span class="product__label">price</span>
-                            <span class="product__value">{{ item.price|number_format(0, ',', '.') }}€</span>
+                            <span class="product__label">{{ i18n('price') }}</span>
+                            <span class="product__value">{{ item.price|number_format(0, ',', '.') }} €</span>
                         </div>
                     </div>
                 {% endblock product__meta %}

@@ -6,7 +6,7 @@
         <div class="slider slider--top">
             {% for insertion in slider.insertions %}
                 <a href="{{ url('insertions_detail', {id: insertion.id}) }}" class="slider__link">
-                    <div class="slide">
+                    <div class="slide {% if insertion.media is not defined or insertion.media|length < 1 or insertion.media[0].content is not defined %}has-placeholder-image{% endif %}">
                         {#
                         <div class="badge is--new">
                             <svg class='icon icon--new'>
@@ -19,9 +19,9 @@
                                  alt="{{ insertion.content[0].name }}"
                                  class="image">
                         {% else %}
-                            <!-- TODO add dummy image -->
-                            <img src="https://placeponi.es/300/300" alt="{{ insertion.content[0].title }}"
-                                 title="{{ insertion.content[0].title }}" class="image">
+                            <svg class="icon icon--placeholder pulse-on-hover">
+                                <use xlink:href="#placeholder-insertion"></use>
+                            </svg>
                         {% endif %}
                     </div>
                 </a>

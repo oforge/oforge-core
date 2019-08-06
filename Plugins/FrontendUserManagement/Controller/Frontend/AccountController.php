@@ -60,9 +60,9 @@ class AccountController extends SecureFrontendController {
     public function dashboardAction(Request $request, Response $response) {
         /** @var AccountNavigationService $accountNavigationService */
         $accountNavigationService = Oforge()->Services()->get('frontend.user.management.account.navigation');
-        $sidebarNavigation        = $accountNavigationService->get('sidebar');
+        $backendNavigationService        = $accountNavigationService->get('sidebar');
 
-        Oforge()->View()->assign(['content' => $sidebarNavigation]);
+        Oforge()->View()->assign(['content' => $backendNavigationService]);
     }
 
     /**
@@ -102,7 +102,7 @@ class AccountController extends SecureFrontendController {
         $newPassword              = $body['change_password_new_password'];
         $passwordConfirm          = $body['change_password_new_password_confirm'];
         $uri                      = $router->pathFor('frontend_account_dashboard');
-        $user                     = Oforge()->View()->get('user');
+        $user                     = Oforge()->View()->get('current_user');
         $jwt                      = null;
 
         /**
@@ -214,12 +214,14 @@ class AccountController extends SecureFrontendController {
      * @throws ServiceNotFoundException
      */
     public function initPermissions() {
-        $this->ensurePermissions('indexAction', User::class);
-        $this->ensurePermissions('dashboardAction', User::class);
-        $this->ensurePermissions('editAction', User::class);
-        $this->ensurePermissions('edit_processAction', User::class);
-        $this->ensurePermissions('deleteAction', User::class);
-        $this->ensurePermissions('delete_processAction', User::class);
+        $this->ensurePermissions([
+            'indexAction',
+            'dashboardAction',
+            'editAction',
+            'edit_processAction',
+            'deleteAction',
+            'delete_processAction',
+        ]);
     }
 
 }

@@ -1,0 +1,5 @@
+<div class="col-lg-3 col-xs-6">
+    <div class="small-box {{ widget.cssClass }}">
+        {% include 'Backend/Widgets/' ~ widget.template ~ '.twig' with {data: widget.data, widget: widget} %}
+    </div>
+</div>

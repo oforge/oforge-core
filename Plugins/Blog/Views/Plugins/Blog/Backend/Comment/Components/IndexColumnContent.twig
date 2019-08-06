@@ -1,0 +1,2 @@
+{{ item.content|slice(0, 49)|escape }}
+{% if item.content|length > 50 %}...{% endif %}

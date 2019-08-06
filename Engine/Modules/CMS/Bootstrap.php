@@ -26,6 +26,7 @@ use Oforge\Engine\Modules\CMS\Models\Content\Content;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentParent;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentTypeGroup;
+use Oforge\Engine\Modules\CMS\Models\ContentTypes\Row as RowModel;
 use Oforge\Engine\Modules\CMS\Models\Layout\Layout;
 use Oforge\Engine\Modules\CMS\Models\Layout\Slot;
 use Oforge\Engine\Modules\CMS\Models\Page\Page;
@@ -76,7 +77,7 @@ class Bootstrap extends AbstractBootstrap {
             ContentType::class,
             ContentParent::class,
             Content::class,
-            \Oforge\Engine\Modules\CMS\Models\ContentTypes\Row::class,
+            RowModel::class,
             Page::class,
             PagePath::class,
             PageContent::class,
@@ -99,131 +100,164 @@ class Bootstrap extends AbstractBootstrap {
         ];
     }
 
-    public function install() {
-    }
-
     public function activate() {
         /**
-         * @var BackendNavigationService $sidebarNavigation
+         * @var BackendNavigationService $backendNavigationService
          * @var ContentTypeGroupManagementService $contentTypeGroupManagementService
-         * @var ContentTypeManagementService $managementService
+         * @var ContentTypeManagementService $contentTypeManagementService
          */
-        $sidebarNavigation = Oforge()->Services()->get('backend.navigation');
-        $sidebarNavigation->put([
-            'name'     => 'backend_content',
-            'order'    => 2,
-            'position' => 'sidebar',
-        ]);
-        $sidebarNavigation->put([
+        $backendNavigationService = Oforge()->Services()->get('backend.navigation');
+        $backendNavigationService->add(BackendNavigationService::CONFIG_CONTENT);
+        $backendNavigationService->add([
             'name'     => 'backend_content_pages',
             'order'    => 1,
-            'parent'   => 'backend_content',
+            'parent'   => BackendNavigationService::KEY_CONTENT,
             'icon'     => 'fa fa-sitemap',
             'path'     => 'backend_content_pages',
             'position' => 'sidebar',
         ]);
-        $sidebarNavigation->put([
+        $backendNavigationService->add([
             'name'     => 'backend_content_elements',
-            'order'    => 1,
-            'parent'   => 'backend_content',
+            'order'    => 2,
+            'parent'   => BackendNavigationService::KEY_CONTENT,
             'icon'     => 'fa fa-folder',
             'path'     => 'backend_content_elements',
             'position' => 'sidebar',
         ]);
 
         $contentTypeGroupManagementService = Oforge()->Services()->get('content.type.group.management');
-        $managementService                 = Oforge()->Services()->get('content.type.management');
+        $contentTypeManagementService      = Oforge()->Services()->get('content.type.management');
 
-        $ctgContainerID = $contentTypeGroupManagementService->put([
-            'name'        => 'container',
-            'description' => 'Container',
+        $ctgContainerID = $contentTypeGroupManagementService->add([
+            'name'  => 'container',
+            'label' => [
+                'en' => 'Container',
+                'de' => 'Container',
+            ],
         ]);
-        $managementService->put([
-            'name'        => 'row',
-            'path'        => 'Row',
-            'icon'        => '/Themes/Base/ContentTypes/__assets/img/row.png',
-            'description' => 'Row',
-            'group'       => $ctgContainerID,
-            'classPath'   => Row::class,
+        $contentTypeManagementService->add([
+            'name'      => 'row',
+            'path'      => 'Row',
+            'icon'      => '/Themes/Base/ContentTypes/__assets/img/row.png',
+            'group'     => $ctgContainerID,
+            'classPath' => Row::class,
+            'label'     => [
+                'en' => 'Row',
+                'de' => 'Zeile',
+            ],
         ]);
-        $managementService->put([
-            'name'        => 'list',
-            'path'        => 'List',
-            'icon'        => '/Themes/Base/ContentTypes/__assets/img/row.png',
-            'description' => 'List',
-            'group'       => $ctgContainerID,
-            'classPath'   => EntryList::class,
-        ]);
-
-        $ctgBasicID = $contentTypeGroupManagementService->put([
-            'name'        => 'basic',
-            'description' => 'Basic',
-        ]);
-        $managementService->put([
-            'name'        => 'richtext',
-            'path'        => 'RichText',
-            'icon'        => '/Themes/Base/ContentTypes/__assets/img/richtext.png',
-            'description' => 'RichText',
-            'group'       => $ctgBasicID,
-            'classPath'   => RichText::class,
-        ]);
-        $managementService->put([
-            'name'        => 'text',
-            'path'        => 'Text',
-            'icon'        => '/Themes/Base/ContentTypes/__assets/img/text.png',
-            'description' => 'Text',
-            'group'       => $ctgBasicID,
-            'classPath'   => Text::class,
+        $contentTypeManagementService->add([
+            'name'      => 'list',
+            'path'      => 'List',
+            'icon'      => '/Themes/Base/ContentTypes/__assets/img/row.png',
+            'group'     => $ctgContainerID,
+            'classPath' => EntryList::class,
+            'label'     => [
+                'en' => 'List',
+                'de' => 'Liste',
+            ],
         ]);
 
-        $ctgMediaID = $contentTypeGroupManagementService->put([
-            'name'        => 'media',
-            'description' => 'Media',
+        $ctgBasicID = $contentTypeGroupManagementService->add([
+            'name'  => 'basic',
+            'label' => [
+                'en' => 'Basic',
+                'de' => 'Basis',
+            ],
         ]);
-        $managementService->put([
-            'name'        => 'image',
-            'path'        => 'Image',
-            'icon'        => '/Themes/Base/ContentTypes/__assets/img/image.png',
-            'description' => 'Image',
-            'group'       => $ctgMediaID,
-            'classPath'   => Image::class,
+        $contentTypeManagementService->add([
+            'name'      => 'richtext',
+            'path'      => 'RichText',
+            'icon'      => '/Themes/Base/ContentTypes/__assets/img/richtext.png',
+            'group'     => $ctgBasicID,
+            'classPath' => RichText::class,
+            'label'     => [
+                'en' => 'RichText',
+                'de' => 'RichText',
+            ],
         ]);
-        $managementService->put([
-            'name'        => 'gallery',
-            'path'        => 'Gallery',
-            'icon'        => '/Themes/Base/ContentTypes/__assets/img/gallery.png',
-            'description' => 'Gallery',
-            'group'       => $ctgMediaID,
-            'classPath'   => Gallery::class,
+        $contentTypeManagementService->add([
+            'name'      => 'text',
+            'path'      => 'Text',
+            'icon'      => '/Themes/Base/ContentTypes/__assets/img/text.png',
+            'group'     => $ctgBasicID,
+            'classPath' => Text::class,
+            'label'     => [
+                'en' => 'Text',
+                'de' => 'Text',
+            ],
         ]);
-        $managementService->put([
+
+        $ctgMediaID = $contentTypeGroupManagementService->add([
+            'name'  => 'media',
+            'label' => [
+                'en' => 'Media',
+                'de' => 'Medien',
+            ],
+        ]);
+        $contentTypeManagementService->add([
+            'name'      => 'image',
+            'path'      => 'Image',
+            'icon'      => '/Themes/Base/ContentTypes/__assets/img/image.png',
+            'group'     => $ctgMediaID,
+            'classPath' => Image::class,
+            'label'     => [
+                'en' => 'Image',
+                'de' => 'Bild',
+            ],
+        ]);
+        $contentTypeManagementService->add([
+            'name'      => 'gallery',
+            'path'      => 'Gallery',
+            'icon'      => '/Themes/Base/ContentTypes/__assets/img/gallery.png',
+            'group'     => $ctgMediaID,
+            'classPath' => Gallery::class,
+            'label'     => [
+                'en' => 'Gallery',
+                'de' => 'Gallerie',
+            ],
+        ]);
+        $contentTypeManagementService->add([
             'name'        => 'video_youtube',
             'path'        => 'VideoYoutube',
-            'icon'        => '/Themes/Base/ContentTypes/__assets/img/video_youtube.png',
+            'icon'        => '/Themes/Base/ContentTypes/__assets/img/video_youtube.svg',
             'description' => 'Youtube video',
             'group'       => $ctgMediaID,
             'classPath'   => VideoYoutube::class,
+            'label'       => [
+                'en' => 'Youtube video',
+                'de' => 'Youtube-Video',
+            ],
         ]);
 
-        $ctgNavigationID = $contentTypeGroupManagementService->put([
-            'name'        => 'navigation',
-            'description' => 'Navigation',
+        $ctgNavigationID = $contentTypeGroupManagementService->add([
+            'name'  => 'navigation',
+            'label' => [
+                'en' => 'Navigation',
+                'de' => 'Navigation',
+            ],
         ]);
-        $managementService->put([
-            'name'        => 'entrylist',
-            'path'        => 'List',
-            'icon'        => '/Themes/Base/ContentTypes/__assets/img/icontilebasic.png',
-            'description' => 'entry_list',
-            'group'       => $ctgNavigationID,
-            'classPath'   => EntryList::class,
+        $contentTypeManagementService->add([
+            'name'      => 'navigation_list',
+            'path'      => 'List',
+            'icon'      => '/Themes/Base/ContentTypes/__assets/img/icontilebasic.png',
+            'group'     => $ctgNavigationID,
+            'classPath' => EntryList::class,
+            'label'     => [
+                'en' => 'Navigation List',
+                'de' => 'Navigationsliste',
+            ],
         ]);
-        $managementService->put([
-            'name'        => 'navigationentry',
-            'path'        => 'NavigationEntry',
-            'icon'        => '/Themes/Base/ContentTypes/__assets/img/icontilebasic.png',
-            'description' => 'navigation_entry',
-            'group'       => $ctgNavigationID,
-            'classPath'   => NavigationEntry::class,
+        $contentTypeManagementService->add([
+            'name'      => 'navigation_entry',
+            'path'      => 'NavigationEntry',
+            'icon'      => '/Themes/Base/ContentTypes/__assets/img/icontilebasic.png',
+            'group'     => $ctgNavigationID,
+            'classPath' => NavigationEntry::class,
+            'label'     => [
+                'en' => 'Navigation element',
+                'de' => 'Navigationselement',
+            ],
         ]);
     }
 

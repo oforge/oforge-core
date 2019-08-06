@@ -67,7 +67,10 @@ class ForgotPasswordController extends AbstractController {
          * no token was sent
          */
         if (!isset($body['token']) || empty($body['token'])) {
-            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('form_invalid_token', 'The data has been sent from an invalid form.'));
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('form_invalid_token', [
+                'en' => 'The data has been sent from an invalid form.',
+                'de' => 'Die Daten wurden von einem ungültigen Formular gesendet.',
+            ]));
             Oforge()->Logger()->get()->addWarning('Someone tried to do a backend login with a form without csrf token! Redirecting to backend login.');
 
             return $response->withRedirect($uri, 302);
@@ -77,7 +80,10 @@ class ForgotPasswordController extends AbstractController {
          * invalid token was sent
          */
         if (!hash_equals($_SESSION['token'], $body['token'])) {
-            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('form_invalid_token', 'The data has been sent from an invalid form.'));
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('form_invalid_token', [
+                'en' => 'The data has been sent from an invalid form.',
+                'de' => 'Die Daten wurden von einem ungültigen Formular gesendet.',
+            ]));
             Oforge()->Logger()->get()->addWarning('Someone tried a backend login without a valid form csrf token! Redirecting back to login.');
 
             return $response->withRedirect($uri, 302);
@@ -100,24 +106,38 @@ class ForgotPasswordController extends AbstractController {
 
             return $response->withRedirect($uri, 302);
         }
-
         $passwordResetLink = $passwordResetService->createPasswordResetLink($email);
+
+        /** @var  $registrationService */
+        $registrationService = Oforge()->Services()->get('frontend.user.management.registration');
+        $userDetail          = $registrationService->userExists($email)->getDetail();
+        $userNickName        = $userDetail->getNickName();
+
 
         $mailService = Oforge()->Services()->get('mail');
 
         $mailOptions  = [
             'to'       => [$email => $email],
             'from'     => 'no_reply',
-            'subject'  => I18N::translate('email_subject_password_reset', 'Oforge | Your password reset!'),
+            'subject'  => I18N::translate('mailer_subject_password_reset', 'Oforge | Your password reset!'),
             'template' => 'ResetPassword.twig',
         ];
-        $templateData = ['passwordResetLink' => $passwordResetLink];
+        $templateData = [
+            'passwordResetLink' => $passwordResetLink,
+            'receiver_name'     => $userNickName,
+            'sender_mail'       => $mailService->getSenderAddress('no_reply'),
+        ];
 
         /**
          * Mail could not be sent
          */
         if(!$mailService->send($mailOptions, $templateData)) {
             Oforge()->View()->Flash()->addMessage('error', I18N::translate('password_reset_mail_error', 'The mail to reset your password could not be sent'));
+            Oforge()->View()->Flash()->addMessage('error', I18N::translate('password_reset_mail_error', [
+                'en' => 'The mail to reset your password could not be sent.',
+                'de' => 'Die E-Mail zum Zurücksetzen deines Passworts konnte nicht gesendet werden.',
+            ]));
+
             return $response->withRedirect($uri, 302);
         }
 
@@ -216,7 +236,10 @@ class ForgotPasswordController extends AbstractController {
          * invalid token was sent
          */
         if (!hash_equals($_SESSION['token'], $body['token'])) {
-            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('form_invalid_token', 'The data has been sent from an invalid form.'));
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('form_invalid_token', [
+                'en' => 'The data has been sent from an invalid form.',
+                'de' => 'Die Daten wurden von einem ungültigen Formular gesendet.',
+            ]));
             Oforge()->Logger()->get()->addWarning('Someone tried a backend login without a valid form csrf token! Redirecting back to login.');
 
             return $response->withRedirect($uri, 302);
@@ -260,6 +283,10 @@ class ForgotPasswordController extends AbstractController {
         $uri = $router->pathFor('frontend_account_dashboard');
         Oforge()->View()->Flash()->addMessage('success',
             I18N::translate('password_changed_successfully', 'You have successfully changed your password. You are now logged in.'));
+        Oforge()->View()->Flash()->addMessage('success', I18N::translate('password_changed_successfully', [
+            'en' => 'You have successfully changed your password. You are now logged in.',
+            'de' => 'Dein Password wurde erfolgreich geändert. Du bist nun eingeloggt.',
+        ]));
 
         return $response->withRedirect($uri, 302);
     }

@@ -8,14 +8,14 @@
 
 namespace Oforge\Engine\Modules\UserManagement;
 
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExists;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExists;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistException;
+use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\UserManagement\Controller\Backend\ProfileController;
 use Oforge\Engine\Modules\UserManagement\Controller\Backend\UserManagementController;
 use Oforge\Engine\Modules\UserManagement\Services\BackendUsersCrudService;
@@ -45,25 +45,23 @@ class Bootstrap extends AbstractBootstrap {
 
     /**
      * @throws ORMException
-     * @throws OptimisticLockException
-     * @throws ConfigElementAlreadyExists
-     * @throws ConfigOptionKeyNotExists
      * @throws ParentNotFoundException
      * @throws ServiceNotFoundException
+     * @throws ConfigElementAlreadyExistException
+     * @throws ConfigOptionKeyNotExistException
      */
     public function install() {
-        /** @var BackendNavigationService $backendNavigation */
-        $backendNavigation = Oforge()->Services()->get('backend.navigation');
-
-        $backendNavigation->put([
-            'name'     => 'admin',
-            'order'    => 100,
-            'position' => 'sidebar',
+        I18N::translate('user_management', [
+            'en' => 'User management',
+            'de' => 'Benutzerverwaltung',
         ]);
-        $backendNavigation->put([
+        /** @var BackendNavigationService $backendNavigationService */
+        $backendNavigationService = Oforge()->Services()->get('backend.navigation');
+        $backendNavigationService->add(BackendNavigationService::CONFIG_ADMIN);
+        $backendNavigationService->add([
             'name'     => 'user_management',
             'order'    => 100,
-            'parent'   => 'admin',
+            'parent'   => BackendNavigationService::KEY_ADMIN,
             'icon'     => 'fa fa-user',
             'path'     => 'backend_users',
             'position' => 'sidebar',

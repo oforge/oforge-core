@@ -2,6 +2,7 @@
 
 namespace Oforge\Engine\Modules\Core\Abstracts;
 
+use Exception;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 
 /**
@@ -44,21 +45,26 @@ abstract class AbstractBootstrap {
      */
     protected $order = Statics::DEFAULT_ORDER;
 
+    /** @throws Exception */
     public function install() {
     }
 
     public function update() {
     }
 
+    /** @throws Exception */
     public function uninstall() {
     }
 
+    /** @throws Exception */
     public function activate() {
     }
 
+    /** @throws Exception */
     public function deactivate() {
     }
 
+    /** @throws Exception */
     public function load() {
     }
 

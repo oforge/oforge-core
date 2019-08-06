@@ -1,18 +1,18 @@
-{% if property.list is defined %}
-    <select class="form-control" {% if fieldID %}id="{{ fieldID }}"{% endif %}
-        {% if property.crud[crud.context] == 'editable' %}name="data[{% if crud.context == 'index' %}{{ item.id }}][{% endif %}{{ property.name }}]"
-            {% else %}readonly{% endif %}
-        {% if property.editor.multiple %}multiple{% endif %}
-        {% if property.editor.size %}size="{{ property.editor.size }}"{% endif %}
+{% if crudProperty.list is defined %}
+    <select class="form-control" {% if crudFieldID %}id="{{ crudFieldID }}"{% endif %}
+        {% if crudProperty.crud[crud.context] == 'editable' %}name="data[{% if crud.context == 'index' %}{{ item.id }}][{% endif %}{{ crudProperty.name }}]"{% endif %}
+        {% if crudProperty.editor.required %}required{% endif %}
+        {% if crudProperty.editor.multiple %}multiple{% endif %}
+        {% if crudProperty.editor.size %}size="{{ crudProperty.editor.size }}"{% endif %}
     >
-        {% for value,label in property.list %}
+        {% for value,label in crudProperty.list %}
             {% if label.options is defined %}
                 <optgroup label="{{ label.label }}">
                     {% for value,label in label.options %}
                         {% if crud.context == 'create' %}
-                            {% set selected = (value == meta.route.query[property.name]|default('')) %}
+                            {% set selected = (meta.route.query[crudProperty.name]|default(crudProperty.editor.default)|default('') == value) %}
                         {% else %}
-                            {% set selected = (value == item[property.name]|default(property.editor.default)) %}
+                            {% set selected = (item[crudProperty.name]|default('') == value) %}
                         {% endif %}
                         <option {% if selected %}selected{% endif %} value="{{ value }}">
                             {{ label }}
@@ -21,9 +21,9 @@
                 </optgroup>
             {% else %}
                 {% if crud.context == 'create' %}
-                    {% set selected = (value == meta.route.query[property.name]|default('')) %}
+                    {% set selected = (meta.route.query[crudProperty.name]|default(crudProperty.editor.default)|default('') == value) %}
                 {% else %}
-                    {% set selected = (value == item[property.name]|default(property.editor.default)) %}
+                    {% set selected = (item[crudProperty.name]|default('') == value) %}
                 {% endif %}
                 <option {% if selected %}selected{% endif %} value="{{ value }}">
                     {{ label }}
@@ -33,6 +33,6 @@
     </select>
 {% else %}
     <div class="alert alert-danger" role="alert">
-        Missing select options list configuration for "{{ property.name }}"
+        Missing select options list configuration for "{{ crudProperty.name }}"
     </div>
 {% endif %}

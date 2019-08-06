@@ -29,7 +29,12 @@
 
         .form__control {
             flex: 0 0 100%;
+            max-width: 100%;
             margin-top: $size-large;
+
+            > .form__control {
+                min-width: 100%;
+            }
         }
 
         .form__control--is-sub {
@@ -118,6 +123,10 @@
     }
 }
 
+.action-insertions_createsteps .form__control.form__control--checkbox {
+    margin-bottom: 0;
+}
+
 .form--search .form__control.form__control--new-select {
     min-height: 3.6rem;
 }
@@ -169,10 +178,11 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: $size-medium $size-large;
-    border-left: 1px solid $color-primary;
-    font-size: 1.6rem;
-    min-width: 1rem;
+    padding: $size-medium;
+    border-left: 1px solid rgba(60,60,59,1);
+    font-size: 1rem;
+    min-width: 2rem;
+    height: 100%;
 }
 
 .form__input {
@@ -195,20 +205,20 @@
 
     &.form__input--inside-label {
         display: inline-flex;
-        align-items: stretch;
+        align-items: center;
         width: 100%;
         margin: 0;
-        padding: 0;
+        padding: 0 1px;
 
         .form__input {
             -webkit-appearance: none;
             -moz-appearance: none;
             border: none;
             outline: none;
-            padding: $size-medium;
-            height: auto;
+            padding: .6rem;
             width: 100%;
             min-width: 0;
+            height: 3.2rem;
             text-overflow: fade;
         }
     }
@@ -349,15 +359,38 @@
 }
 
 .form__input--zip + .form__input--distance {
-    margin-top: $size-large;
+    margin-top: 0;
+}
+
+#floating-button {
+    position: fixed;
+    z-index: 4;
+    bottom: $size-large;
+    width: calc(100% - 1.2rem);
+    opacity: 0;
+    transition: all .2s ease-in, width .2s ease-in;
+
+    &.is-visible {
+        opacity: 1;
+        transition: opacity 100ms ease-in-out;
+    }
+
+    &.position-static {
+        position: static;
+        width: 100%;
+        bottom: 0;
+        box-shadow: none;
+        opacity: 1;
+    }
 }
 
 @media screen and (min-width: 480px) {
     .form--search {
         .form-controls {
             &.form-controls--row {
-                .form__control {
+                > .form__control {
                     flex: 0 0 calc(50% - .6rem);
+                    max-width: calc(50% - .6rem);
                 }
             }
         }
@@ -366,14 +399,20 @@
 
 @media screen and (min-width: $screen-medium) {
 
-    .form__input--zip + .form__input--distance {
-        margin-top: 0;
+    #floating-button {
+        width: calc(100% - 2.4rem);
     }
 
     .form-controls {
         &.form-controls--row {
             .form__control {
                 flex: 0 0 calc(50% - .6rem);
+                max-width: calc(50% - .6rem);
+
+                &.form__control--floating-button {
+                    flex: 0 0 100%;
+                    width: 100%;
+                }
             }
         }
     }
@@ -401,8 +440,6 @@
             flex-direction: row;
             align-items: center;
             justify-content: space-between;
-
-
         }
     }
     .form__input--inside-label + .form__input--inside-label {
@@ -410,12 +447,6 @@
     }
 }
 
-
-.form__control.form__control__range {
-    & > .form__control {
-        margin-top: 0;
-    }
-}
 
 .form-controls.form-controls--row, .attribute-group {
     .form__control.form__control__boolean {
@@ -434,6 +465,17 @@
 
         .form__label--checkbox {
             font-weight: normal;
+        }
+    }
+}
+
+@media screen and (min-width: $screen-large) {
+    #floating-button {
+        width: 27.6rem;
+        opacity: 1;
+
+        &.position-static {
+            width: 27.6rem;
         }
     }
 }

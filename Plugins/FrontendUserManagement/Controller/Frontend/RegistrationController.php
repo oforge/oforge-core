@@ -5,6 +5,7 @@ namespace FrontendUserManagement\Controller\Frontend;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Services\RegistrationService;
+use FrontendUserManagement\Services\UserDetailsService;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Auth\Services\PasswordService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
@@ -78,6 +79,7 @@ class RegistrationController extends AbstractController {
         $body                     = null;
         $jwt                      = null;
         $email                    = null;
+        $nickname                 = null;
         $password                 = null;
         $passwordConfirm          = null;
         $user                     = null;
@@ -89,8 +91,11 @@ class RegistrationController extends AbstractController {
             print_r('No session :/');
             die();
         }
-
+        /** @var RegistrationService $registrationService */
         $registrationService = Oforge()->Services()->get('frontend.user.management.registration');
+        /** @var UserDetailsService $userDetailService */
+        $userDetailService   = Oforge()->Services()->get('frontend.user.management.user.details');
+        /** @var Router $router */
         $router              = Oforge()->App()->getContainer()->get('router');
 
         /** @var RedirectService $redirectService */
@@ -117,6 +122,13 @@ class RegistrationController extends AbstractController {
         $passwordConfirm       = $body['frontend_registration_password_confirm'];
         $privacyNoticeAccepted = $body['frontend_registration_privacy_notice_accepted'];
         $referrer              = ArrayHelper::get($body, 'frontend_registration_referrer');
+
+        if (!isset($body['frontend_registration_nickname']) || empty($body['frontend_registration_nickname'])) {
+            $nickname = $userDetailService->generateNickname();
+        } else {
+            $nickname = $body['frontend_registration_nickname'];
+        }
+
         if (isset($referrer)) {
             $uri = $referrer;
         }
@@ -159,9 +171,11 @@ class RegistrationController extends AbstractController {
             return $response->withRedirect($uri, 302);
         }
 
+        /** @var PasswordService $passwordService */
         $passwordService = Oforge()->Services()->get('password');
         $password        = $passwordService->hash($password);
         $user            = $registrationService->register($email, $password);
+        $userDetailService->save(['userId' => $user['id'], 'nickname' => $nickname]);
 
         /**
          * Registration failed
@@ -184,18 +198,21 @@ class RegistrationController extends AbstractController {
         $mailOptions  = [
             'to'       => [$user['email'] => $user['email']],
             'from'     => 'info',
-            'subject'  => I18N::translate('email_subject_registration', 'Oforge | Your registration!'),
+            'subject'  => I18N::translate('mailer_subject_registration', 'Oforge | Your registration!'),
             'template' => 'RegisterConfirm.twig',
         ];
         $templateData = [
             'activationLink' => $activationLink,
             'user_mail'      => $user['email'],
+            'sender_mail'    => $mailService->getSenderAddress('info'),
+            'receiver_name'  => $nickname,
         ];
+
 
         /**
          * Registration Mail could not be sent
          */
-        if(!$mailService->send($mailOptions, $templateData)) {
+        if (!$mailService->send($mailOptions, $templateData)) {
             Oforge()->View()->Flash()->addMessage('error', I18N::translate('registration_mail_error', 'Your registration mail could not be sent'));
             $registrationService->unregister($user);
 

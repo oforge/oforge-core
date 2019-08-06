@@ -2,6 +2,8 @@
 
 namespace Oforge\Engine\Modules\TemplateEngine\Extensions\Twig;
 
+use Doctrine\ORM\ORMException;
+use Exception;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\DashboardWidgetsService;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\UserFavoritesService;
@@ -13,18 +15,21 @@ use Twig_Extension;
 use Twig_ExtensionInterface;
 use Twig_Function;
 
+/**
+ * Class BackendExtension
+ *
+ * @package Oforge\Engine\Modules\TemplateEngine\Extensions\Twig
+ */
 class BackendExtension extends Twig_Extension implements Twig_ExtensionInterface {
     public function getFunctions() {
         return [
-            new Twig_Function('backend_sidebar_navigation', [$this, 'get_sidebar_navigation']),
-            new Twig_Function('backend_topbar_navigation', [$this, 'get_topbar_navigation']),
+            new Twig_Function('backend_sidebar_navigation', [$this, 'getSidebarNavigation']),
+            new Twig_Function('backend_topbar_navigation', [$this, 'getTopbarNavigation']),
             new Twig_Function('backend_breadcrumbs', [$this, 'get_breadcrumbs']),
             new Twig_Function('backend_breadcrumbs_map', [$this, 'get_breadcrumbs_map']),
-            new Twig_Function('backend_has_visible_children', [$this, 'get_visible_navigation_children']),
             new Twig_Function('backend_notifications', [$this, 'get_backend_notifications']),
             new Twig_Function('backend_favorites', [$this, 'get_favorites']),
-            new Twig_Function('backend_widgets', [$this, 'get_widgets']),
-            new Twig_Function('backend_widget_data', [$this, 'get_widgets_data']),
+            new Twig_Function('backend_dashboard_widgets', [$this, 'getDashboardWidgets']),
             new Twig_Function('isFavorite', [$this, 'is_favorite']),
         ];
     }
@@ -35,11 +40,11 @@ class BackendExtension extends Twig_Extension implements Twig_ExtensionInterface
      */
     public function get_backend_notifications() {
         /** @var $authService AuthService */
-        $authService = Oforge()->Services()->get("auth");
-        $user        = $authService->decode($_SESSION["auth"]);
+        $authService = Oforge()->Services()->get('auth');
+        $user        = $authService->decode($_SESSION['auth']);
         if (isset($user) && isset($user['id'])) {
             /** @var BackendNotificationService $notificationService */
-            $notificationService = Oforge()->Services()->get("backend.notifications");
+            $notificationService = Oforge()->Services()->get('backend.notifications');
 
             return $notificationService->getNotifications($user['id'], AbstractNotificationService::UNSEEN);
         }
@@ -48,32 +53,34 @@ class BackendExtension extends Twig_Extension implements Twig_ExtensionInterface
     }
 
     /**
-     * @return mixed
+     * @return array
+     * @throws ORMException
      * @throws ServiceNotFoundException
      */
-    public function get_sidebar_navigation() {
-        /** @var $sidebarNavigation BackendNavigationService */
-        $sidebarNavigation = Oforge()->Services()->get("backend.navigation");
+    public function getSidebarNavigation() {
+        /** @var BackendNavigationService $backendNavigationService */
+        $backendNavigationService = Oforge()->Services()->get('backend.navigation');
 
-        return $sidebarNavigation->get("sidebar");
+        return $backendNavigationService->getNavigationTree('sidebar');
     }
 
     /**
-     * @return mixed
+     * @return array
      * @throws ServiceNotFoundException
+     * @throws ORMException
      */
-    public function get_topbar_navigation() {
-        /** @var $topbarNavigation BackendNavigationService */
-        $topbarNavigation = Oforge()->Services()->get("backend.navigation");
-        $topbarData       = $topbarNavigation->get("topbar");
+    public function getTopbarNavigation() {
+        /** @var BackendNavigationService $backendNavigationService */
+        $backendNavigationService = Oforge()->Services()->get('backend.navigation');
 
+        $topbarData = $backendNavigationService->getNavigationTree('topbar');
         foreach ($topbarData as $key => $element) {
-            $nameSplit = explode("_", $element['name']);
-            foreach ($nameSplit as $index => $subString) {
-                $nameSplit[$index] = ucfirst($subString);
-            }
+            $nameSplit = explode('_', $element['name']);
+            $nameSplit = array_map('ucfirst', $nameSplit);
+
             $element['filename'] = implode('', $nameSplit);
-            $topbarData[$key]    = $element;
+
+            $topbarData[$key] = $element;
         }
 
         return $topbarData;
@@ -86,11 +93,11 @@ class BackendExtension extends Twig_Extension implements Twig_ExtensionInterface
      * @throws ServiceNotFoundException
      */
     public function get_breadcrumbs(...$vars) {
-        /** @var $sidebarNavigation BackendNavigationService */
-        $sidebarNavigation = Oforge()->Services()->get("backend.navigation");
+        /** @var BackendNavigationService $backendNavigationService */
+        $backendNavigationService = Oforge()->Services()->get('backend.navigation');
 
         if (isset($vars) && sizeof($vars) == 1) {
-            return $sidebarNavigation->breadcrumbs($vars[0]);
+            return $backendNavigationService->getBreadcrump($vars[0]);
         }
 
         return [];
@@ -103,15 +110,15 @@ class BackendExtension extends Twig_Extension implements Twig_ExtensionInterface
      * @throws ServiceNotFoundException
      */
     public function get_breadcrumbs_map(...$vars) {
-        /** @var $sidebarNavigation BackendNavigationService */
-        $sidebarNavigation = Oforge()->Services()->get("backend.navigation");
+        /** @var BackendNavigationService $backendNavigationService */
+        $backendNavigationService = Oforge()->Services()->get('backend.navigation');
 
         if (isset($vars) && sizeof($vars) == 1) {
-            $result = $sidebarNavigation->breadcrumbs($vars[0]);
+            $result = $backendNavigationService->getBreadcrump($vars[0]);
             $output = [];
             foreach ($result as $item) {
-                if (isset($item["name"])) {
-                    $output[$item["name"]] = 1;
+                if (isset($item['name'])) {
+                    $output[$item['name']] = 1;
                 }
             }
 
@@ -129,11 +136,11 @@ class BackendExtension extends Twig_Extension implements Twig_ExtensionInterface
      */
     public function is_favorite(...$vars) {
         /** @var $authService AuthService */
-        $authService = Oforge()->Services()->get("auth");
-        $user        = $authService->decode($_SESSION["auth"]);
+        $authService = Oforge()->Services()->get('auth');
+        $user        = $authService->decode($_SESSION['auth']);
         if (isset($user) && isset($user['id']) && sizeof($vars) == 1) {
             /** @var UserFavoritesService $favoritesService */
-            $favoritesService = Oforge()->Services()->get("backend.favorites");
+            $favoritesService = Oforge()->Services()->get('backend.favorites');
 
             return $favoritesService->isFavorite($user['id'], $vars[0]);
         }
@@ -149,11 +156,11 @@ class BackendExtension extends Twig_Extension implements Twig_ExtensionInterface
      */
     public function get_favorites(...$vars) {
         /** @var $authService AuthService */
-        $authService = Oforge()->Services()->get("auth");
-        $user        = $authService->decode($_SESSION["auth"]);
+        $authService = Oforge()->Services()->get('auth');
+        $user        = $authService->decode($_SESSION['auth']);
         if (isset($user) && isset($user['id'])) {
             /** @var UserFavoritesService $favoritesService */
-            $favoritesService = Oforge()->Services()->get("backend.favorites");
+            $favoritesService = Oforge()->Services()->get('backend.favorites');
 
             $instances = $favoritesService->getAll($user['id']);
 
@@ -170,60 +177,16 @@ class BackendExtension extends Twig_Extension implements Twig_ExtensionInterface
     }
 
     /**
-     * @param mixed ...$vars
+     * @param bool $forDashboard
      *
-     * @return bool
-     */
-    public function get_visible_navigation_children(...$vars) {
-        if (isset($vars) && sizeof($vars) == 1 && is_array($vars[0])) {
-            $contains = false;
-            foreach ($vars[0] as $item) {
-                if (isset($item["visible"]) && $item["visible"] == true) {
-                    $contains = true;
-                    break;
-                }
-            }
-
-            return $contains;
-        }
-
-        return false;
-    }
-
-    /**
-     * @return array|object[]
-     * @throws ServiceNotFoundException
-     * @throws \Doctrine\ORM\ORMException
-     */
-    public function get_widgets() {
-        /** @var $authService AuthService */
-        $authService = Oforge()->Services()->get("auth");
-        $user        = $authService->decode($_SESSION["auth"]);
-        if (isset($user) && isset($user['id'])) {
-            /** @var DashboardWidgetsService $widgetService */
-            $widgetService = Oforge()->Services()->get("backend.dashboard.widgets");
-
-            return $widgetService->getUserWidgets($user['id']);
-        }
-
-        return [];
-    }
-
-    /**
-     * @return array|object[]
+     * @return array
      * @throws ServiceNotFoundException
      */
-    public function get_widgets_data(...$vars) {
-        /** @var $authService AuthService */
-        $authService = Oforge()->Services()->get("auth");
-        $user        = $authService->decode($_SESSION["auth"]);
-        if (isset($user) && isset($user['id']) && isset($vars) && sizeof($vars) > 0) {
-            /** @var DashboardWidgetsService $widgetService */
-            $widgetService = Oforge()->Services()->get("backend.dashboard.widgets");
+    public function getDashboardWidgets(bool $forDashboard = true) {
+        /** @var DashboardWidgetsService $dashboardWidgetsService */
+        $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
 
-            return $widgetService->getWidgetsData($vars[0]);
-        }
-
-        return [];
+        return $dashboardWidgetsService->getUserWidgets($forDashboard);
     }
+
 }

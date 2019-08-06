@@ -44,9 +44,9 @@ class Conversation extends AbstractModel {
 
     /**
      * @var string
-     * @ORM\Column(name="conversation_state", type="string", nullable=false)
+     * @ORM\Column(name="conversation_status", type="string", nullable=false)
      */
-    private $state;
+    private $status;
 
     /**
      * @var string
@@ -77,6 +77,18 @@ class Conversation extends AbstractModel {
      * @ORM\Column(name="last_message_timestamp", type="datetime", nullable=true);
      */
     private $lastMessageTimestamp = null;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="requester_last_seen", type="datetime", nullable=true);
+     */
+    private $requesterLastSeen = null;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="requested_last_seen", type="datetime", nullable=true);
+     */
+    private $requestedLastSeen = null;
 
     /**
      * Triggered on insert
@@ -132,19 +144,19 @@ class Conversation extends AbstractModel {
     }
 
     /**
-     * @return string
+     * @return string $status
      */
-    public function getState() : string {
-        return $this->state;
+    public function getStatus() : string {
+        return $this->status;
     }
 
     /**
-     * @param string $state
+     * @param string
      *
      * @return Conversation
      */
-    public function setState(string $state) : Conversation {
-        $this->state = $state;
+    public function setStatus(string $status) : Conversation {
+        $this->status = $status;
 
         return $this;
     }
@@ -204,9 +216,9 @@ class Conversation extends AbstractModel {
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTime|null
      */
-    public function getLastMessageTimestamp() : \DateTime {
+    public function getLastMessageTimestamp() : ?\DateTime {
         return $this->lastMessageTimestamp;
     }
 
@@ -221,9 +233,9 @@ class Conversation extends AbstractModel {
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getLastMessage() : string {
+    public function getLastMessage() : ?string {
         return $this->lastMessage;
     }
 
@@ -271,5 +283,33 @@ class Conversation extends AbstractModel {
         $this->requestedType = $requestedType;
 
         return $this;
+    }
+
+    /**
+     * @return \DateTime|null
+     */
+    public function getRequesterLastSeen() : ?\DateTime {
+        return $this->requesterLastSeen;
+    }
+
+    /**
+     * @param \DateTime $timestamp
+     */
+    public function setRequesterLastSeen(\DateTime $timestamp)  {
+        $this->requesterLastSeen = $timestamp;
+    }
+
+    /**
+     * @return \DateTime|null
+     */
+    public function getRequestedLastSeen() : ?\DateTime {
+        return $this->requestedLastSeen;
+    }
+
+    /**
+     * @param \DateTime $timestamp
+     */
+    public function setRequestedLastSeen(\DateTime $timestamp) {
+        $this->requestedLastSeen = $timestamp;
     }
 }

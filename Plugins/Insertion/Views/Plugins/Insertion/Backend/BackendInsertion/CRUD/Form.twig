@@ -41,11 +41,13 @@
 
                     {% endif %}
                 </form>
+                {% if insertion.moderation %}
+                    <a class="btn btn-primary" href="{{ url('backend_insertions_disapproveInsertion', {id : insertion.id} ) }}">{{ i18n('disapprove') }}</a>
+                {% else %}
+                    <a class="btn btn-primary" href="{{ url('backend_insertions_approveInsertion', {id : insertion.id}) }}">{{ i18n('approve') }}</a>
+                {% endif %}
             </div>
         </div>
     </div>
 </div>
-
-
-{{ o_dump(item) }}
 

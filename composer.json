@@ -1,5 +1,11 @@
 {
     "require": {
+        "php": ">=7.2",
+        "ext-curl": "*",
+        "ext-imagick": "*",
+        "ext-mbstring": "*",
+        "ext-openssl": "*",
+        "ext-xml": "*",
         "slim/slim": "^3.0",
         "monolog/monolog": "^1.23",
         "twig/twig": "dev-environment-inheritance",
@@ -11,8 +17,7 @@
         "firebase/php-jwt": "^5.0",
         "ulrichsg/getopt-php": "^3.0",
         "marcj/topsort": "^1.1",
-        "ext-imagick": "*",
-        "ext-openssl": "*"
+        "pelago/emogrifier": "^2.1.0"
     },
     "repositories": [
         {

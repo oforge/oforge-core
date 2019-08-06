@@ -2,24 +2,20 @@
 
 namespace FrontendUserManagement;
 
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Middleware\AccountNavigationMiddleware;
 use FrontendUserManagement\Middleware\FrontendSecureMiddleware;
 use FrontendUserManagement\Middleware\FrontendUserStateMiddleware;
 use FrontendUserManagement\Models\AccountNavigation;
+use FrontendUserManagement\Models\NickNameValue;
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Models\UserAddress;
 use FrontendUserManagement\Models\UserDetail;
 use FrontendUserManagement\Services\AccountNavigationService;
 use FrontendUserManagement\Widgets\DashboardWidgetHandler;
+use Oforge\Engine\Modules\AdminBackend\Core\Enums\DashboardWidgetPosition;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\DashboardWidgetsService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistException;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
-use Oforge\Engine\Modules\Core\Exceptions\ParentNotFoundException;
-use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 
 /**
  * Class Bootstrap
@@ -38,6 +34,7 @@ class Bootstrap extends AbstractBootstrap {
             Controller\Frontend\AccountController::class,
             Controller\Frontend\UserDetailsController::class,
             Controller\Backend\BackendFrontendUserManagementController::class,
+            Controller\Backend\BackendNickNameGeneratorController::class,
         ];
 
         $this->middlewares = [
@@ -56,6 +53,7 @@ class Bootstrap extends AbstractBootstrap {
             User::class,
             UserDetail::class,
             UserAddress::class,
+            NickNameValue::class,
         ];
 
         $this->services = [
@@ -71,14 +69,31 @@ class Bootstrap extends AbstractBootstrap {
         ];
     }
 
-    /**
-     * @throws ORMException
-     * @throws OptimisticLockException
-     * @throws ConfigElementAlreadyExistException
-     * @throws ConfigOptionKeyNotExistException
-     * @throws ParentNotFoundException
-     * @throws ServiceNotFoundException
-     */
+    /** @inheritDoc */
+    public function install() {
+        /** @var DashboardWidgetsService $dashboardWidgetsService */
+        $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
+        $dashboardWidgetsService->install([
+            'name'     => 'plugin_frontend_user_registrations',
+            'template' => 'FrontendUsersRegistrations',
+            'handler'  => DashboardWidgetHandler::class,
+            'label'    => [
+                'en' => 'User registrations',
+                'de' => 'Nutzerregistrierungen',
+            ],
+            'position' => DashboardWidgetPosition::TOP,
+            'cssClass' => 'box-yellow',
+        ]);
+    }
+
+    /** @inheritDoc */
+    public function uninstall() {
+        /** @var DashboardWidgetsService $dashboardWidgetsService */
+        $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
+        $dashboardWidgetsService->uninstall('plugin_frontend_user_registrations');
+    }
+
+    /** @inheritDoc */
     public function activate() {
         /** @var AccountNavigationService $accountNavigationService */
         $accountNavigationService = Oforge()->Services()->get('frontend.user.management.account.navigation');
@@ -91,9 +106,9 @@ class Bootstrap extends AbstractBootstrap {
             'position' => 'sidebar',
         ]);
         $accountNavigationService->put([
-            'name'     => 'frontend_account_edit',
-            'order'    => 1,
-            'icon'     => 'profile',
+            'name'     => 'frontend_account_change_password',
+            'order'    => 999,
+            'icon'     => 'key',
             'path'     => 'frontend_account_edit',
             'position' => 'sidebar',
         ]);
@@ -105,36 +120,42 @@ class Bootstrap extends AbstractBootstrap {
             'position' => 'sidebar',
         ]);
 
-        /** @var DashboardWidgetsService $dashboardWidgetsService */
-        $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
-        $dashboardWidgetsService->register([
-            'position'     => 'top',
-            'action'       => DashboardWidgetHandler::class,
-            'title'        => 'frontend_users_title',
-            'name'         => 'frontend_users',
-            'cssClass'     => 'bg-yellow',
-            'templateName' => 'FrontendUsers',
-        ]);
-
-        /** @var BackendNavigationService $sidebarNavigation */
-        $sidebarNavigation = Oforge()->Services()->get('backend.navigation');
-        $sidebarNavigation->put([
+        /** @var BackendNavigationService $backendNavigationService */
+        $backendNavigationService = Oforge()->Services()->get('backend.navigation');
+        $backendNavigationService->add(BackendNavigationService::CONFIG_CONTENT);
+        $backendNavigationService->add([
             'name'     => 'backend_frontend_user_management',
             'order'    => 4,
-            'parent'   => 'backend_content',
+            'parent'   => BackendNavigationService::KEY_CONTENT,
             'icon'     => 'fa fa-user',
-            'path'     => 'backend_frontend_user_management',
             'position' => 'sidebar',
         ]);
+        $backendNavigationService->add([
+            'name'     => 'backend_frontend_user_management_list',
+            'order'    => 1,
+            'icon'     => 'fa fa-list',
+            'path'     => 'backend_frontend_user_management',
+            'parent'   => 'backend_frontend_user_management',
+            'position' => 'sidebar',
+        ]);
+        $backendNavigationService->add([
+            'name'     => 'backend_frontend_user_management_nickname_generator',
+            'order'    => 2,
+            'icon'     => 'fa fa-brain',
+            'path'     => 'backend_frontend_user_management_nickname_generator',
+            'parent'   => 'backend_frontend_user_management',
+            'position' => 'sidebar',
+        ]);
+        /** @var DashboardWidgetsService $dashboardWidgetsService */
+        $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
+        $dashboardWidgetsService->activate('plugin_frontend_user_registrations');
     }
 
-    /**
-     * @throws ServiceNotFoundException
-     */
+    /** @inheritDoc */
     public function deactivate() {
         /** @var DashboardWidgetsService $dashboardWidgetsService */
         $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
-        $dashboardWidgetsService->unregister("frontend_users");
+        $dashboardWidgetsService->deactivate("plugin_frontend_user_registrations");
     }
 
 }

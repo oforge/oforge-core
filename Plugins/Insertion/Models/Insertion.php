@@ -63,7 +63,7 @@ class Insertion extends AbstractModel {
 
     /**
      * @var InsertionContact
-     * @ORM\OneToOne(targetEntity="InsertionContact", mappedBy="insertion", fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity="InsertionContact", mappedBy="insertion", cascade={"all"}, fetch="EXTRA_LAZY")
      */
     private $contact;
 
@@ -172,19 +172,19 @@ class Insertion extends AbstractModel {
     /**
      * @return DateTime
      */
-    public function getCreatedAt() : DateTime {
+    public function getCreatedAt() : ?DateTime {
         return $this->createdAt;
     }
 
     /**
      * @return DateTime
      */
-    public function getUpdatedAt() : DateTime {
+    public function getUpdatedAt() : ?DateTime {
         return $this->updatedAt;
     }
 
     /**
-     * @return InsertionMedia[]
+     * @return object|null
      */
     public function getMedia() : ?object {
         return $this->media;

@@ -1,5 +1,5 @@
 {% block helpdesk_list %}
-    {% if content.ticketData|length < 1 %}
+    {% if data.ticketData|length < 1 %}
         <p class="text-center">
             {{ i18n('backend_helpdesk_no_tickets', 'No open Tickets avaiable') }}
         </p>
@@ -23,7 +23,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for ticket in content.ticketData %}
+                {% for ticket in data.ticketData %}
                     <tr>
                         <td class="mailbox-name">
                             <a href="{{ url('backend_helpdesk_messenger', {'id': ticket.id}) }}">
@@ -51,7 +51,7 @@
                         </td>
                         <td class="mailbox-date">
                             <a href="{{ url('backend_helpdesk_messenger', {'id': ticket.id}) }}">
-                            {{ ticket.timestamp|date }}
+                            {{ ticket.created|date }}
                             </a>
                         </td>
                     </tr>

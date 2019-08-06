@@ -127,6 +127,13 @@ class Bootstrap extends AbstractBootstrap {
             'label'   => 'config_debug_session',
         ]);
         $configService->add([
+            'name'    => 'css_source_map',
+            'type'    => ConfigType::BOOLEAN,
+            'group'   => 'debug',
+            'default' => true,
+            'label'   => 'config_css_source_map',
+        ]);
+        $configService->add([
             'name'     => 'system_format_datetime',
             'type'     => ConfigType::STRING,
             'group'    => 'date_format',

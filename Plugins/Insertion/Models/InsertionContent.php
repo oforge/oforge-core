@@ -38,19 +38,19 @@ class InsertionContent extends AbstractModel {
 
     /**
      * @var string
-     * @ORM\Column(name="name", type="string", nullable=false)
+     * @ORM\Column(name="name", type="string", nullable=false, length=100)
      */
     private $name;
 
     /**
      * @var string
-     * @ORM\Column(name="title", type="string", nullable=false)
+     * @ORM\Column(name="title", type="string", nullable=false, length=180)
      */
     private $title;
 
     /**
      * @var string
-     * @ORM\Column(name="description", type="string", nullable=false)
+     * @ORM\Column(name="description", type="text", nullable=false)
      */
     private $description;
 

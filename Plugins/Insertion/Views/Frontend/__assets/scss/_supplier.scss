@@ -10,11 +10,13 @@
             height: 10rem;
         }
     }
+
     .main {
         position: relative;
         top: -10rem;
         margin-bottom: -10rem;
     }
+
     .contact--links {
         display: flex;
         justify-content: flex-end;
@@ -24,40 +26,49 @@
             display: flex;
             justify-content: flex-end;
 
+
             .contact--icon {
-                padding: $size-medium 2.4rem;
                 background: #708e2b;
 
-                &.center {
-                    padding: $size-medium 0;
-                }
                 .icon {
                     fill: $color-light;
                 }
 
                 .wrapper {
                     padding: 0 2.4rem;
-                    border-left: 2px solid $color-light;
+                    margin: $size-medium 0;
                     border-right: 2px solid $color-light;
                 }
+
+                &:last-child .wrapper {
+                    border: none;
+                }
+
             }
         }
     }
+
     .sidebar--insertion {
+        margin-top: $size-large;
+
         .panel {
             padding: $size-large;
+
             &--contact {
                 div {
                     margin: $size-large 0;
                 }
             }
         }
+
         .about__title {
             margin-bottom: $size-large;
         }
+
         .contact.upper {
             margin: 2.4rem 0;
         }
+
         .map__address {
             color: $color-secondary;
             padding-bottom: $size-large;
@@ -70,6 +81,19 @@
     }
 
     .slider--supplier {
+
+        & > * {
+            display: none;
+
+            &:first-child {
+                display: block;
+            }
+        }
+
+        &.slick-initialized > * {
+            display: block;
+        }
+
         margin-top: $size-large;
 
         .slide {
@@ -83,7 +107,6 @@
         .slick-prev {
             left: 25px;
             z-index: 100;
-            top: 35%;
 
             .icon {
                 transform: rotate(180deg) translateX(3px);
@@ -93,7 +116,6 @@
         .slick-next {
             right: 25px;
             z-index: 100;
-            top: 35%;
 
             .icon {
                 transform: translateX(3px);
@@ -105,51 +127,71 @@
             height: auto;
             width: auto;
             padding: $size-large $size-large;
-            background: $color-secondary;
             border-radius: 50%;
             transform: scale(1);
             transition: transform 100ms ease-out;
+            background-color: $color-secondary-transparent-1;
+            position: absolute;
+            top: 40%;
 
             &:before {
                 content: none;
+            }
+
+            .icon {
+                fill: $color-light;
+                width: 2rem;
+                height: 2rem;
+            }
+            .icon {
+                width: 3rem;
+                height: 3rem;
             }
 
             &:focus {
                 background: $color-secondary;
             }
 
-            .icon {
-                fill: $color-light;
-
-            }
-
             &:hover {
-                background: $color-secondary-light;
+                background: $color-secondary-lighter;
                 transform: scale(1.1);
                 transition: transform 100ms ease-in-out;
-
-                .icon {
-
-                }
             }
         }
 
         .slick-slide {
+            position: relative;
+
+            a {
+                text-align: center;
+            }
 
             div, .slide, .slide__image {
                 height: 100%;
             }
 
-            img {
-                transform: scale(1);
-                transition: transform 100ms cubic-bezier(.33, .47, .46, .82);
+            .slide {
+                display: inline-block;
+                height: 300px;
+            }
+
+            img, svg {
+                height: 100%;
                 margin: auto;
+                object-fit: cover;
+                object-position: center;
             }
 
             &:hover {
                 img {
-                    transform: scale(1.05);
                     transition: transform 150ms cubic-bezier(.33, .47, .46, .82);
+                }
+            }
+
+            .icon {
+                &.icon--placeholder {
+                    max-height: none;
+                    max-width: none;
                 }
             }
 
@@ -181,6 +223,25 @@
                 clear: both;
             }
 
+            .insertion--link {
+                background: $color-secondary-transparent-1;
+                height: 50px;
+                width: 100%;
+                position: absolute;
+                bottom: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: $color-light;
+
+                svg {
+                    margin: 0 2rem;
+                    height: 3rem;
+                    width: 3rem;
+                    fill: $color-light;
+                    display: inline;
+                }
+            }
         }
 
         .slick-initialized {
@@ -189,11 +250,34 @@
             }
         }
     }
+
     @media screen and (min-width: $screen-medium) {
         .insertion__supplier {
+            .sidebar--insertion {
+                margin-top: 0;
+            }
+
             .user__picture {
                 width: 16rem;
                 height: 16rem;
+            }
+        }
+
+        .slider--supplier {
+            .slick-arrow {
+                background-color: $color-secondary;
+                .icon {
+                    width: 3rem;
+                    height: 3rem;
+                }
+
+                &:focus {
+                    background: $color-secondary;
+                }
+
+                &:hover {
+                    background: $color-secondary-light;
+                }
             }
         }
         .main {
@@ -203,6 +287,34 @@
 
         .panel--supplier-description {
             padding: 3.6rem;
+        }
+    }
+
+    @media screen and (min-width: 1280px) {
+        .slider--supplier {
+            .slick-slide {
+                .slide {
+                    height: 500px;
+                    width: auto;
+                    margin: auto;
+
+                    .insertion--link {
+                        transform: translate3d(0, 100%, 0);
+                        opacity: 0;
+                        transition: all 70ms cubic-bezier(.33, .47, .46, .82);
+                    }
+
+                    &:hover .insertion--link {
+                        transform: translate3d(0, 0, 0);
+                        opacity: 1;
+                        transition: all 100ms cubic-bezier(.33, .47, .46, .82);
+                    }
+                }
+            }
+
+            .slick-prev, .slick-next {
+                top: 42%;
+            }
         }
     }
 }

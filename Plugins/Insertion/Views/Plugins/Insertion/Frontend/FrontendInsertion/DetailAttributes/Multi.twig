@@ -1,7 +1,14 @@
-{#{% set values = getInsertionValues(attribute.id) %}
-{% if values[attribute.attributeKey.id].value %}#}
-    {#<div class="attribute">#}
-        {#<span class="attribute-label">{{ i18n(attribute.attributeKey.name) }}</span>#}
-        {#<span class="attribute-value">{{ values[attribute.attributeKey.id].value }}</span>#}
-    {#</div>#}
-{#{% endif %}#}
+<div class="product__attribute attribute--multi">
+    <span class="product__label">{{ i18n(attribute.name) }}</span>
+    <span class="product__value">
+        {% if value is not empty %}
+            {% if value is iterable %}
+                {% for v in value %}
+                    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes/Values/Index.twig'  with {'attribute': all_attributes[attribute.attributeKey != null ? attribute.attributeKey : attribute.id], value: v} %}
+                {% endfor %}
+            {% else %}
+                {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes/Values/Index.twig'  with {'attribute': all_attributes[attribute.attributeKey != null ? attribute.attributeKey : attribute.id], value: value} %}
+            {% endif %}
+        {% else %}{{ i18n('not_available') }}
+        {% endif %}</span>
+</div>

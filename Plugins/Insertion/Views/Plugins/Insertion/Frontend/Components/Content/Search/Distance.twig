@@ -1,6 +1,6 @@
 {% block distance %}
     <div class="form__control">
-        <label class="form__label" for="country">{{ i18n('country') }}</label>
+        {% if omitLabel is not defined %}<label class="form__label" for="country">{{ i18n('country') }}</label>{% endif %}
         <div class="form__control">
             <div class="form__input form__input--select">
                 <select class="form__input form__input--no-input" name="country">
@@ -18,7 +18,7 @@
         </div>
     </div>
     <div class="form__control">
-        <label class="form__label" for="country">{{ i18n('range') }}</label>
+        {% if omitLabel is not defined %}<label class="form__label" for="country">{{ i18n('range') }}</label>{% endif %}
         <div class="form__control form__control--half-medium">
             <input type="text"
                    name="zip"

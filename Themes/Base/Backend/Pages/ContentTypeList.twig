@@ -1,23 +1,53 @@
 {% block cms_content_type_list %}
-    <div class="col-xs-3 cms-content-type-list-container" id="cms_content_type_list_container">
-        <div class="cms-content-type-list" id="cms_content_type_list">
-
-            {% for contentTypeGroup in contentTypeGroups %}
-                <div class="row">
-                    <a href="#" class="content-type-group-header"   data-toggle="collapse" data-target="#contenttypegroup_{{ contentTypeGroup.id }}" aria-expanded="false" aria-controls="contenttypegroup_{{ contentTypeGroup.id }}">{{ contentTypeGroup.description }}<span class="caret"></span></a>
-                </div>
-
-                <div class="row collapse in" id="contenttypegroup_{{ contentTypeGroup.id }}">
-                    {% for type in contentTypeGroup.types %}
-                        <div class="content-type-selector jstree_draggable" data-ct-id="{{ type.id }}" title="{{ type.description }}">
-                            <div draggable="false"><img class="content-type-icon" src="{{ type.icon }}"
-                                                        draggable="false">
+    <div class="col-xs-3">
+        {% if post.cms_edit_page_action != 'create' %}
+            <div id="cms_content_type_list_filter_row" class="input-group has-feedback">
+            <span id="cms_content_type_list_collapse_all" class="input-group-addon btn btn-primary"
+                  title="{{ i18n('collapse all', {en: 'collapse all', de: 'alle einklappen'}) }}">
+                <i class="fa fa-minus"></i>
+            </span>
+                <span id="cms_content_type_list_open_all" class="input-group-addon btn btn-primary"
+                      title="{{ i18n('open all', {en: 'open all', de: 'alle aufklappen'}) }}">
+                <i class="fa fa-plus"></i>
+            </span>
+                <input id="cms_content_type_list_filter" type="text" class="form-control"
+                       placeholder="{{ i18n('Search', {en: 'Search', de: 'Suche'}) }}" />
+                <i class="fa fa-search form-control-feedback"></i>
+            </div>
+        {% endif %}
+        <div id="cms_content_type_list_container" class="cms-content-type-list-container">
+            <div class="cms-content-type-list" id="cms_content_type_list">
+                {% for contentTypeGroup in contentTypeGroups %}
+                    <div class="row">
+                        <a href="#" class="content-type-group-header" data-toggle="collapse"
+                           data-target="#contenttypegroup_{{ contentTypeGroup.id }}" aria-expanded="false"
+                           aria-controls="contenttypegroup_{{ contentTypeGroup.id }}">
+                            {{ i18n('cms_content_type_group_label_' ~ contentTypeGroup.name, contentTypeGroup.name) }}
+                            <span class="content-type-group-header-icon"><i class="fa fa-caret-up"></i></span>
+                        </a>
+                    </div>
+                    <div class="row collapse in" id="contenttypegroup_{{ contentTypeGroup.id }}">
+                        {% for contentType in contentTypeGroup.types %}
+                            {% set contentTypeLabel = i18n('cms_content_type_label_' ~ contentType.name, contentType.name) %}
+                            <div class="content-type-selector jstree_draggable" data-ct-id="{{ contentType.id }}"
+                                 title="{{ contentTypeLabel }}">
+                                <div draggable="false">
+                                    <img draggable="false" class="content-type-icon" src="{{ contentType.icon }}" />
+                                    <div class="content-type-description" draggable="false">{{ contentTypeLabel }}</div>
+                                    {% if contentType.hint %}
+                                        <button class="content-type-hint" draggable="false"
+                                                title="{{ i18n(contentType.hint) }}"
+                                                data-toggle="tooltip" data-placement="auto bottom"
+                                                data-container="body">
+                                            <i class="fa fa-info-circle text-primary"></i>
+                                        </button>
+                                    {% endif %}
+                                </div>
                             </div>
-                            <div class="content-type-description" draggable="false">{{ type.description }}</div>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endfor %}
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
 {% endblock cms_content_type_list %}

@@ -9,6 +9,7 @@ use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Services\AttributeService;
 use Insertion\Services\InsertionTypeService;
 use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
+use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
@@ -75,8 +76,9 @@ class BackendInsertionTypeController extends SecureBackendController {
         $attributeService = Oforge()->Services()->get('insertion.attribute');
         /** @var InsertionTypeService $insertionTypeService */
         $insertionTypeService = Oforge()->Services()->get('insertion.type');
-        $insertionTypeId      = $request->getQueryParams()['id'];
-
+        if (isset($request->getQueryParams()['id'])) {
+            $insertionTypeId = $request->getQueryParams()['id'];
+        }
         if ($request->isPost()) {
             $body                             = $request->getParsedBody();
             $body['values']                   = json_decode($body['values'], true);
@@ -86,12 +88,12 @@ class BackendInsertionTypeController extends SecureBackendController {
             $parent = $insertionTypeService->getInsertionTypeById($body['parent']);
             if (isset($request->getQueryParams()['id'])) {
                 /** @var InsertionType $insertionType */
-                $data = [
-                    'name' => $body['name'],
-                    'parent' => $parent,
+                $data          = [
+                    'name'        => $body['name'],
+                    'parent'      => $parent,
                     'quickSearch' => $body['insertionTypeQuickSearch'],
                     'description' => $body['description'],
-                    'image' => $body['image']
+                    'image'       => $body['image'],
                 ];
                 $insertionType = $insertionTypeService->updateInsertionType($insertionTypeId, $data);
                 /** @var InsertionTypeAttribute[] $insertionTypeAttributes */
@@ -199,6 +201,10 @@ class BackendInsertionTypeController extends SecureBackendController {
     }
 
     public function initPermissions() {
-        parent::initPermissions();
+        $this->ensurePermissions([
+            'indexAction',
+            'deleteAction',
+            'editAction',
+        ], BackendUser::ROLE_MODERATOR);
     }
 }

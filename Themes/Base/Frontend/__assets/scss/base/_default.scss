@@ -1,6 +1,7 @@
 * {
     font-family: $font-family;
 }
+
 body {
     font-size: $font-size-4;
     position: relative;
@@ -17,12 +18,13 @@ html body .content {
         position: relative;
         padding: 0;
     }
+
     &.content--no-pad {
         padding: 0;
     }
 }
 
-h1,h2,h3,h4,h5,h6 {
+h1, h2, h3, h4, h5, h6 {
     color: $color-secondary;
     font-weight: bold;
 }
@@ -79,3 +81,12 @@ a {
         padding-left: 20px;
     }
 }
+
+@media screen and (min-width: $screen-medium) {
+    .hide--medium {
+        display: none;
+    }
+}
+
+.text-center { text-align: center; }
+
