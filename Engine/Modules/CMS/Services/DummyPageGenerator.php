@@ -9,12 +9,12 @@
 namespace Oforge\Engine\Modules\CMS\Services;
 
 use Oforge\Engine\Modules\Core\Helper\Statics;
-use Oforge\Engine\Modules\Import\Services\ImportService;
+use Oforge\Engine\Modules\Import\Services\ImportDatabaseCsvService;
 
 class DummyPageGenerator {
     public function create() {
         /**
-         * @var $importService ImportService
+         * @var $importService ImportDatabaseCsvService
          */
         $importService = Oforge()->Services()->get( "import" );
         $files         = [
