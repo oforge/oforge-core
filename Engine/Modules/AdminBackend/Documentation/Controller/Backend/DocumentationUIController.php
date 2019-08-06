@@ -80,13 +80,15 @@ class DocumentationUIController extends SecureBackendController {
     }
 
     public function initPermissions() {
-        $this->ensurePermissions('indexAction', BackendUser::class, BackendUser::ROLE_MODERATOR);
-        $this->ensurePermissions('generalAction', BackendUser::class, BackendUser::ROLE_MODERATOR);
-        $this->ensurePermissions('iconsAction', BackendUser::class, BackendUser::ROLE_MODERATOR);
-        $this->ensurePermissions('buttonsAction ', BackendUser::class, BackendUser::ROLE_MODERATOR);
-        $this->ensurePermissions('modalsAction', BackendUser::class, BackendUser::ROLE_MODERATOR);
-        $this->ensurePermissions('slidersAction', BackendUser::class, BackendUser::ROLE_MODERATOR);
-        $this->ensurePermissions('timelineAction', BackendUser::class, BackendUser::ROLE_MODERATOR);
+        $this->ensurePermissions([
+            'indexAction',
+            'generalAction',
+            'iconsAction',
+            'buttonsAction',
+            'modalsAction',
+            'slidersAction',
+            'timelineAction',
+        ], BackendUser::ROLE_MODERATOR);
     }
 
 }

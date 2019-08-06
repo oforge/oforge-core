@@ -2,7 +2,6 @@
 
 namespace Helpdesk\Services;
 
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Helpdesk\Models\IssueTypeGroup;
 use Helpdesk\Models\IssueTypes;
@@ -65,7 +64,24 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
      * @throws ORMException
      */
     public function getTickets($status = 'open') {
-        return $this->repository()->findBy(['status' => $status]);
+        return $this->repository()->findBy(['status' => $status],['created' => 'DESC']);
+    }
+
+    /**
+     * @param $targetId
+     *
+     * @return string
+     * @throws ORMException
+     * @throws ServiceNotFoundException
+     */
+    public function getAssociatedConversationId($targetId) {
+        /** @var FrontendMessengerService $messengerService */
+        $messengerService = Oforge()->Services()->get('frontend.messenger');
+        /** @var Conversation $conversation */
+        $conversation = $messengerService->repository('conversation')->findOneBy(['type' => 'helpdesk_inquiry', 'targetId' => $targetId]);
+        if(isset($conversation)) {
+            return $conversation->getId();
+        }
     }
 
     /**
@@ -87,7 +103,7 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
      * @throws ServiceNotFoundException
      */
     public function getTicketsByOpener(int $opener, $status = 'open') {
-        $tickets = $this->repository()->findBy(['opener' => $opener, 'status' => $status]);
+        $tickets = $this->repository()->findBy(['opener' => $opener, 'status' => $status],['created' => 'DESC']);
         $result  = [];
 
         /** @var FrontendMessengerService $frontendMessengerService */
@@ -132,7 +148,6 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
      * @param $status
      *
      * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function changeStatus($id, $status) {
         $ticket = $this->getTicketById($id);
@@ -175,5 +190,9 @@ class HelpdeskTicketService extends AbstractDatabaseAccess {
      */
     public function getIssueTypesByGroup($groupName) {
         return $this->repository('IssueTypesGroup')->findOneBy(['issueTypeGroupName' => $groupName]);
+    }
+
+    private function isDuplicate() {
+        // TODO check if this insertion has already been reported for that reason
     }
 }

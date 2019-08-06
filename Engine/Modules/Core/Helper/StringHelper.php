@@ -130,4 +130,21 @@ class StringHelper {
         return $string;
     }
 
+    /**
+     * Returns first non empty value or null.
+     *
+     * @param string ...$values
+     *
+     * @return string|null
+     */
+    public static function firstNonEmpty(string... $values) {
+        foreach ($values as $value) {
+            if (!empty($value)) {
+                return $value;
+            }
+        }
+
+        return null;
+    }
+
 }

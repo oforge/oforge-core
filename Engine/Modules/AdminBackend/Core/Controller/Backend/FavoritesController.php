@@ -2,12 +2,13 @@
 
 namespace Oforge\Engine\Modules\AdminBackend\Core\Controller\Backend;
 
+use Exception;
 use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\UserFavoritesService;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
-use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
+use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -24,27 +25,29 @@ class FavoritesController extends SecureBackendController {
      * @param Response $response
      *
      * @return Response
-     * @throws \Exception
      * @EndpointAction()
      */
     public function toggleAction(Request $request, Response $response) {
-        /** @var AuthService $authService */
-        $authService = Oforge()->Services()->get('auth');
-        $user        = $authService->decode($_SESSION['auth']);
-        $name        = $request->getQueryParam('name');
+        $user      = Oforge()->View()->get('user');
+        $routeName = $request->getQueryParam('name');
 
-        if (isset($user) && isset($user['id']) && !empty($name)) {
-            /** @var UserFavoritesService $favoritesService */
-            $favoritesService = Oforge()->Services()->get('backend.favorites');
-            $favoritesService->toggle($user['id'], $name);
-            $uri = Oforge()->App()->getContainer()->get('router')->pathFor($name);
+        if (isset($user['id']) && isset($routeName)) {
+            try {
+                /** @var UserFavoritesService $favoritesService */
+                $favoritesService = Oforge()->Services()->get('backend.favorites');
+                $favoritesService->toggle($user['id'], $routeName);
+                $routeParams      = $request->getQueryParam('params', []);
+                $routeQueryParams = $request->getQueryParam('query', []);
 
-            return $response->withRedirect($uri, 302);
+                return RouteHelper::redirect($response, $routeName, $routeParams, $routeQueryParams);
+            } catch (Exception $exception) {
+                Oforge()->Logger()->logException($exception);
+            }
         }
     }
 
     public function initPermissions() {
-        $this->ensurePermissions('toggleAction', BackendUser::class, BackendUser::ROLE_MODERATOR);
+        $this->ensurePermission('toggleAction', BackendUser::ROLE_MODERATOR);
     }
 
 }

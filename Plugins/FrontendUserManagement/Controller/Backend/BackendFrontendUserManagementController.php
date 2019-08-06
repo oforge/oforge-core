@@ -36,7 +36,7 @@ class BackendFrontendUserManagementController extends BaseCrudController {
         [
             'name'  => 'email',
             'type'  => CrudDataTypes::EMAIL,
-            'label' => ['key' => 'plugin_frontend_user_management_property_contact_email', 'default' => 'Account email'],
+            'label' => ['key' => 'plugin_frontend_user_management_property_email', 'default' => 'Account email'],
             'crud'  => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
@@ -46,7 +46,7 @@ class BackendFrontendUserManagementController extends BaseCrudController {
             ],
         ],
         [
-            'name'     => 'accountEmail',
+            'name'     => 'contactEmail',
             'type'     => CrudDataTypes::CUSTOM,
             'label'    => ['key' => 'plugin_frontend_user_management_property_contact_email', 'default' => 'Contact email'],
             'crud'     => [
@@ -133,6 +133,24 @@ class BackendFrontendUserManagementController extends BaseCrudController {
             ],
             'renderer' => [
                 'custom' => 'Plugins/FrontendUserManagement/Backend/BackendFrontendUserManagement/CRUD/RenderPhoneNumber.twig',
+            ],
+        ],
+        [
+            'name'  => 'active',
+            'type'  => CrudDataTypes::BOOL,
+            'label' => [
+                'key'     => 'active',
+                'default' => [
+                    'en' => 'Active',
+                    'de' => 'Aktiviert',
+                ],
+            ],
+            'crud'  => [
+                'index'  => 'editable',
+                'view'   => 'readonly',
+                'create' => 'editable',
+                'update' => 'editable',
+                'delete' => 'readonly',
             ],
         ],
     ];

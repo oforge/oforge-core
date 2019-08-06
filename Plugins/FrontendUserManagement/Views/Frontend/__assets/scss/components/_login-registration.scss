@@ -26,7 +26,7 @@
 .panel--registration,
 .panel--forgot-password,
 .panel--forgot-password-reset {
-    max-width: 50%;
+    max-width: 80%;
 }
 
 .benefit {
@@ -44,5 +44,20 @@
 @media screen and (min-width: $screen-medium) {
     .panel--login-registration {
         max-width: 80%;
+    }
+    .panel--login,
+    .panel--registration,
+    .panel--forgot-password,
+    .panel--forgot-password-reset {
+        max-width: 60%;
+    }
+}
+
+@media screen and (min-width: $screen-large) {
+    .panel--login,
+    .panel--registration,
+    .panel--forgot-password,
+    .panel--forgot-password-reset {
+        max-width: 50%;
     }
 }

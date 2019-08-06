@@ -30,7 +30,6 @@ class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
     public function add(InsertionType $insertionType, User $user, array $params) : bool {
         $bookmark = InsertionUserSearchBookmark::create(["insertionType" => $insertionType, "user" => $user, "params" => $params]);
         $this->entityManager()->create($bookmark);
-
         return true;
     }
 
@@ -45,31 +44,38 @@ class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
         return false;
     }
 
-    public function list(User $user) : array {
-        $bookmarks = $this->repository("search")->findBy(["user" => $user]);
-
-        $result = [];
-        if (isset($bookmarks) && sizeof($bookmarks) > 0) {
-            foreach ($bookmarks as $bookmark) {
-                $data = $bookmark->toArray(0);
-
-                $data["url"] = $this->getUrl($data["insertionType"], $data["params"]);
-                $result[]    = $data;
-            }
+    public function list(User $user = null) : array {
+        if (is_null($user)) {
+            return $bookmarks = $this->repository("search")->findAll();
+        } else {
+            return $bookmarks = $this->repository("search")->findBy(["user" => $user]);
         }
+    }
 
-        return $result;
+    public function setLastChecked($bookmark) {
+        if (is_a($bookmark, InsertionUserSearchBookmark::class)) {
+            $bookmark->setChecked();
+            $this->entityManager()->update($bookmark);
+        } elseif (is_int($bookmark)) {
+            $bookmark = $this->repository('search')->find($bookmark);
+            $bookmark->setChecked();
+            $this->entityManager()->update($bookmark);
+        }
+        $this->entityManager()->flush();
     }
 
     public function toggle(InsertionType $insertionType, User $user, array $params) {
         $bookmarks = $this->repository("search")->findBy(["insertionType" => $insertionType, "user" => $user]);
 
         $bookmark = null;
-        /**
-         * @var $found InsertionUserSearchBookmark
-         */
+        /** @var InsertionUserSearchBookmark $found */
         foreach ($bookmarks as $found) {
-            if (sizeof($found->getParams()) == sizeof($params) && !array_diff($found->getParams(), $params) && !array_diff($params, $found->getParams())) {
+            if (!empty(array_diff_key($found->getParams(), $params)) || !empty(array_diff_key($params, $found->getParams()))) {
+                continue;
+            }
+
+            if (empty($this->array_diff_assoc_recursive($found->getParams(), $params))
+                && empty($this->array_diff_assoc_recursive($params, $found->getParams()))) {
                 $bookmark = $found;
             }
         }
@@ -84,11 +90,14 @@ class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
     public function hasBookmark(int $insertionType, int $user, array $params) : bool {
         $bookmarks = $this->repository("search")->findBy(["insertionType" => $insertionType, "user" => $user]);
 
-        /**
-         * @var $found InsertionUserSearchBookmark
-         */
+        /** @var InsertionUserSearchBookmark $found */
         foreach ($bookmarks as $found) {
-            if (sizeof($found->getParams()) == sizeof($params) && !array_diff($found->getParams(), $params) && !array_diff($params, $found->getParams())) {
+            if (!empty(array_diff_key($found->getParams(), $params)) || !empty(array_diff_key($params, $found->getParams()))) {
+                continue;
+            }
+
+            if (empty($this->array_diff_assoc_recursive($found->getParams(), $params))
+                && empty($this->array_diff_assoc_recursive($params, $found->getParams()))) {
                 return true;
             }
         }
@@ -96,25 +105,30 @@ class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
         return false;
     }
 
+    private function array_diff_assoc_recursive($array1, $array2) {
+        $difference = [];
+        foreach ($array1 as $key => $value) {
+            if (is_array($value)) {
+                if (!isset($array2[$key]) || !is_array($array2[$key])) {
+                    $difference[$key] = $value;
+                } else {
+                    $newDiff = $this->array_diff_assoc_recursive($value, $array2[$key]);
+                    if (!empty($newDiff)) {
+                        $difference[$key] = $newDiff;
+                    }
+                }
+            } elseif (!isset($array2[$key]) || $array2[$key] !== $value) {
+                $difference[$key] = $value;
+            }
+        }
+
+        return $difference;
+    }
+
     public function getUrl($id, ?array $params) {
         /** @var Router $router */
         $router = Oforge()->App()->getContainer()->get('router');
-        $url    = $router->pathFor('insertions_listing', ["type" => $id]);
-
-        $first = true;
-
-
-        foreach ($params as $key => $value) {
-            if (is_array($value)) {
-                foreach ($value as $v) {
-                    $url   .= ($first ? "?" : "&") . urlencode($key . '[]') . "=" . urlencode($v);
-                    $first = false;
-                }
-            } else {
-                $url   .= ($first ? "?" : "&") . urlencode($key) . "=" . urlencode($value);
-                $first = false;
-            }
-        }
+        $url    = $router->pathFor('insertions_listing', ["type" => $id], isset($params) ? $params : [] );
 
         return $url;
     }

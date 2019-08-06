@@ -9,7 +9,7 @@
         {% block insertions %}
             <div class="panel panel--insertions flex">
                 {% block seo_content %}
-                    {% set content = content('seo_content_type_search_' ~  meta.language) %}
+                    {% set content = content('seo_content_type_search_' ~  meta.language.iso) %}
                     {% if content %}
                         {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
                     {% endif %}
@@ -20,12 +20,11 @@
                     <div class="grid-boxes grid-boxes--2">
                         {% for type in parent.children %}
                             <div class="grid-box {{ grid_box_classes }}">
-
                                 <a href="{{ url('insertions_listing', { type : type.id}) }}"
                                    class="grid-box__content flex flex--center flex--justify">
                                     {% if type.image.id is defined %}
                                         <img class="icon icon--large icon--light icon--inverted"
-                                             src="{{ media(type.image.id, 300) }}" />
+                                             src="{{ media(type.image.id, 300) }}"/>
                                     {% else %}
                                         <svg class="icon icon--large icon--light">
                                             <use xlink:href="#top_inserat"></use>
@@ -37,7 +36,6 @@
                         {% endfor %}
                     </div>
                 {% endfor %}
-
             </div>
         {% endblock insertions %}
     </div>

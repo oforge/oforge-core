@@ -2,13 +2,14 @@
 
 namespace Insertion\Controller\Backend;
 
-use Doctrine\ORM\ORMException as ORMExceptionAlias;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\ORMException as ORMExceptionAlias;
 use Insertion\Enum\AttributeType;
 use Insertion\Models\AttributeKey;
 use Insertion\Models\AttributeValue;
 use Insertion\Services\AttributeService;
 use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
+use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
@@ -42,8 +43,8 @@ class BackendAttributeController extends SecureBackendController {
         $data             = [];
 
         if (isset($request->getQueryParams()['page']) && is_numeric($request->getQueryParams()['page'])) {
-            $offset = $limit * ($request->getQueryParams()['page']-1);
-            $page = $request->getQueryParams()['page'];
+            $offset = $limit * ($request->getQueryParams()['page'] - 1);
+            $page   = $request->getQueryParams()['page'];
         }
 
         $attributes = $attributeService->getAttributeList($limit, $offset);
@@ -73,7 +74,9 @@ class BackendAttributeController extends SecureBackendController {
     public function editAction(Request $request, Response $response) {
         /** @var AttributeService $attributeService */
         $attributeService = Oforge()->Services()->get('insertion.attribute');
-        $attributeKeyId   = $request->getQueryParams()['id'];
+        if (isset($request->getQueryParams()['id'])) {
+            $attributeKeyId = $request->getQueryParams()['id'];
+        }
 
         if ($request->isPost()) {
             $body           = $request->getParsedBody();
@@ -83,7 +86,7 @@ class BackendAttributeController extends SecureBackendController {
                 $attributeKey = $attributeService->updateAttributeKey($attributeKeyId, $body['name'], $body['type'], $body['filterType']);
                 /** @var AttributeValue[] $attributeValues */
                 $attributeValues = $attributeKey->getValues();
-                $idList = [];
+                $idList          = [];
                 foreach ($attributeValues as $value) {
                     $idList[] = $value->getId();
                 }
@@ -147,7 +150,7 @@ class BackendAttributeController extends SecureBackendController {
             AttributeType::TEXT,
             AttributeType::DATE,
             AttributeType::DATEYEAR,
-            AttributeType::DATEMONTH
+            AttributeType::DATEMONTH,
         ];
 
         $attributeList = [];
@@ -193,6 +196,10 @@ class BackendAttributeController extends SecureBackendController {
     }
 
     public function initPermissions() {
-        parent::initPermissions();
+        $this->ensurePermissions([
+            'indexAction',
+            'deleteAction',
+            'editAction',
+        ], BackendUser::ROLE_MODERATOR);
     }
 }

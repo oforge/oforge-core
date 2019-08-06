@@ -4,8 +4,8 @@ namespace Helpdesk\Controller\Frontend;
 
 use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Abstracts\SecureFrontendController;
-use FrontendUserManagement\Models\User;
 use Helpdesk\Services\HelpdeskTicketService;
+use Messenger\Services\FrontendMessengerService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
@@ -31,7 +31,7 @@ class FrontendHelpdeskController extends SecureFrontendController {
      * @EndpointAction()
      */
     public function indexAction(Request $request, Response $response) {
-        $user = Oforge()->View()->get('user');
+        $user = Oforge()->View()->get('current_user');
 
         /** @var HelpdeskTicketService $helpdeskTicketService */
         $helpdeskTicketService = Oforge()->Services()->get('helpdesk.ticket');
@@ -41,7 +41,6 @@ class FrontendHelpdeskController extends SecureFrontendController {
         foreach ($issueTypes->getIssueTypes() as $issueType) {
             $issueTypesMap[$issueType->getId()] = $issueType->toArray(0);
         }
-
 
         Oforge()->View()->assign([
             'supportTypes' => $issueTypes->toArray(),
@@ -55,15 +54,16 @@ class FrontendHelpdeskController extends SecureFrontendController {
      * @param Response $response
      *
      * @return Response
-     * @throws ServiceNotFoundException
      * @throws ORMException
+     * @throws ServiceNotFoundException
+     * @throws \ReflectionException
      * @EndpointAction()
      */
     public function submitAction(Request $request, Response $response) {
         /** @var Router $router */
         $router       = Oforge()->App()->getContainer()->get('router');
         $uri          = $router->pathFor('frontend_account_support');
-        $user         = Oforge()->View()->get('user');
+        $user         = Oforge()->View()->get('current_user');
         $body         = $request->getParsedBody();
         $issueType    = $body['helpdesk_request'];
         $issueTitle   = $body['helpdesk_request_title'];
@@ -98,11 +98,59 @@ class FrontendHelpdeskController extends SecureFrontendController {
     }
 
     /**
+     * @param Request $request
+     * @param Response $response
+     * @param $args
+     *
+     * @return Response
+     * @throws ORMException
      * @throws ServiceNotFoundException
      */
+    public function closeTicketAction(Request $request, Response $response, $args) {
+        $ticketId = $args["id"];
+        /** @var  $router */
+        $router = Oforge()->App()->getContainer()->get('router');
+        $uri    = $router->pathFor('frontend_account_support');
+
+        /** @var HelpdeskTicketService $ticketService */
+        $ticketService = Oforge()->Services()->get('helpdesk.ticket');
+        $ticketOpener  = $ticketService->getTicketById($ticketId)->getOpener();
+
+        /** @var FrontendMessengerService $messengerService */
+        $messengerService = Oforge()->Services()->get('frontend.messenger');
+
+        /** @var  $userService */
+        $userId = Oforge()->View()->get('current_user')['id'];
+
+        if ($ticketOpener != $userId) {
+            Oforge()->View()->Flash()->addMessage('error', I18N::translate('ticket_closing_violation', "You don't have permission to close this ticket"));
+
+            return $response->withRedirect($uri, 302);
+        }
+
+        try {
+            $ticketService->changeStatus($ticketId, 'closed');
+
+            $conversationId = $ticketService->getAssociatedConversationId($ticketId);
+            $messengerService->changeStatus($conversationId, 'closed');
+
+        } catch (\Exception $e) {
+            Oforge()->View()->Flash()->addMessage('error', I18N::translate('ticket_closing_error', 'Could not close ticket'));
+
+            return $response->withRedirect($uri, 302);
+        }
+
+        Oforge()->View()->Flash()->addMessage('success', I18N::translate('ticket_closing_success', 'Ticket closed'));
+
+        return $response->withRedirect($uri, 302);
+    }
+
     public function initPermissions() {
-        $this->ensurePermissions('indexAction', User::class);
-        $this->ensurePermissions('submitAction', User::class);
+        $this->ensurePermissions([
+            'indexAction',
+            'submitAction',
+            'closeTicketAction',
+        ]);
     }
 
 }

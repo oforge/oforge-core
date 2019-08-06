@@ -13,17 +13,22 @@
     <div class="login-logo">
         <a href="{{ url('backend_login') }}"><b>{{ config('system_project_name') }}</b> {{ i18n('admin_label') }}</a>
     </div>
+    {% if (flashMessages) %}
+        <div>
+            {% include 'Backend/Master/Components/Content/FlashMessages.twig' %}
+        </div>
+    {% endif %}
     <!-- /.login-logo -->
     <div class="login-box-body">
         <p class="login-box-msg">{{ i18n('login') }}</p>
 
         <form action="{{ url('backend_login_process') }}" method="post">
             <div class="form-group has-feedback">
-                <input type="email" name="email" class="form-control" placeholder="{{ i18n('email_placeholder') }}">
+                <input type="email" name="email" class="form-control" placeholder="{{ i18n('email_placeholder') }}" required />
                 <span class="fa fa-envelope form-control-feedback"></span>
             </div>
             <div class="form-group has-feedback">
-                <input type="password" name="password" class="form-control" placeholder="{{ i18n('password_placeholder') }}">
+                <input type="password" name="password" class="form-control" placeholder="{{ i18n('password_placeholder') }}" required />
                 <span class="fa fa-lock form-control-feedback"></span>
                 <input type="hidden" name="token" value="{{ token() }}">
             </div>

@@ -28,12 +28,19 @@ class RouteMiddleware {
     /** @inheritDoc */
     public function __invoke(Request $request, Response $response, $next) {
         $routeInfo = $request->getAttribute('routeInfo');
+        list($uriBasePath, $uriBaseUrl) = $this->getUriBaseData($request);
+
         Oforge()->View()->assign([
             'meta' => [
                 'route' => array_merge($this->endpoint->toArray(), [
-                    'baseUrl' => $this->getUriBaseUrl($request),
-                    'params'  => $routeInfo[2],
-                    'query'   => $request->getQueryParams(),
+                    'basePath' => $uriBasePath,
+                    'baseUrl'  => $uriBaseUrl,
+                    'params'   => $routeInfo[2],
+                    'query'    => $request->getQueryParams(),
+                    'url'      => [
+                        'path'  => $request->getUri()->getPath(),
+                        'query' => $request->getUri()->getQuery(),
+                    ],
                 ]),
             ],
         ]);
@@ -41,7 +48,14 @@ class RouteMiddleware {
         return $next($request, $response);
     }
 
-    private function getUriBaseUrl(Request $request) : string {
+    /**
+     * Get system base data (base path & url) of slim.
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function getUriBaseData(Request $request) : array {
         /** @var Uri $uri */
         $uri      = $request->getUri();
         $scheme   = $uri->getScheme();
@@ -55,7 +69,7 @@ class RouteMiddleware {
 
         $baseUrl = $scheme . $host . $port . $basePath;
 
-        return $baseUrl;
+        return [$basePath, $baseUrl];
     }
 
 }

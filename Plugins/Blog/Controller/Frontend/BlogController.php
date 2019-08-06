@@ -13,7 +13,6 @@ use Blog\Services\RatingService;
 use Doctrine\ORM\ORMException;
 use Exception;
 use FrontendUserManagement\Abstracts\SecureFrontendController;
-use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\FrontendUserService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
@@ -59,11 +58,15 @@ class BlogController extends SecureFrontendController {
     }
 
     public function initPermissions() {
-        $this->ensurePermissions('indexAction', User::class, BlogPermission::PUBLIC);
-        $this->ensurePermissions('viewPostAction', User::class, BlogPermission::PUBLIC);
-        $this->ensurePermissions('createCommentAction', User::class, BlogPermission::LOGGED);
-        $this->ensurePermissions('deleteCommentAction', User::class, BlogPermission::LOGGED);
-        $this->ensurePermissions('leaveRatingAction', User::class, BlogPermission::LOGGED);
+        $this->ensurePermissions([
+            'indexAction',
+            'viewPostAction',
+        ], BlogPermission::PUBLIC);
+        $this->ensurePermissions([
+            'createCommentAction',
+            'deleteCommentAction',
+            'leaveRatingAction',
+        ], BlogPermission::LOGGED);
     }
 
     /**
@@ -188,20 +191,34 @@ class BlogController extends SecureFrontendController {
         if ($request->isPost() && !empty($postData)) {
             $userID  = ArrayHelper::get($postData, 'userID');
             $comment = ArrayHelper::get($postData, 'comment');
-            if (!empty($userID) && !empty($comment) && $userID == Oforge()->View()->get('current_user.id')) {
-                $twigFlash = Oforge()->View()->Flash();
+            $twigFlash = Oforge()->View()->Flash();
+            if (empty($userID) || empty($comment) || $userID != Oforge()->View()->get('current_user.id')) {
+                $twigFlash->addMessage('warning', I18N::translate('plugin_blog_comment_user_not_logged_in', [
+                    'en' => 'You must be logged in to leave a comment.',
+                    'de' => 'Sie müssen angemeldet sein, um einen Kommentar zu hinterlassen.',
+                ]));
+            } else {
                 try {
                     $this->commentService->createComment([
                         'author'  => $userID,
                         'content' => $comment,
                         'post'    => $args['postID'],
                     ]);
-                    $twigFlash->addMessage('success', I18N::translate('plugin_blog_comment_creating_success', 'Your comment has been added successfully.'));
+                    $twigFlash->addMessage('success', I18N::translate('plugin_blog_comment_creating_success', [
+                        'en' => 'Your comment has been added successfully.',
+                        'de' => 'Ihr Kommentar wurde erfolgreich hinzugefügt.',
+                    ]));
                 } catch (UserNotLoggedInException $exception) {
-                    $twigFlash->addMessage('warning', I18N::translate('plugin_blog_comment_user_not_logged_in', 'You must be logged in to leave a comment.'));
+                    $twigFlash->addMessage('warning', I18N::translate('plugin_blog_comment_user_not_logged_in', [
+                        'en' => 'You must be logged in to leave a comment.',
+                        'de' => 'Sie müssen angemeldet sein, um einen Kommentar zu hinterlassen.',
+                    ]));
                 } catch (Exception $exception) {
                     Oforge()->Logger()->logException($exception);
-                    $twigFlash->addMessage('error', I18N::translate('plugin_blog_comment_creating_failed', 'The comment could not be saved.'));
+                    $twigFlash->addMessage('error', I18N::translate('plugin_blog_comment_creating_failed', [
+                        'en' => 'The comment could not be saved.',
+                        'de' => 'Der Kommentar konnte nicht gespeichert werden.',
+                    ]));
                 }
             }
         }
@@ -316,12 +333,21 @@ class BlogController extends SecureFrontendController {
         $twigFlash   = Oforge()->View()->Flash();
         try {
             $this->ratingService->createOrUpdateRating($postID, $ratingValue);
-            $twigFlash->addMessage('success', I18N::translate('plugin_blog_rating_saving_success', 'Your post rating has been saved.'));
+            $twigFlash->addMessage('success', I18N::translate('plugin_blog_rating_saving_success', [
+                'en' => 'Your post rating has been saved.',
+                'de' => 'Deine Beitragsbewertung wurde gespeichert.',
+            ]));
         } catch (UserNotLoggedInException $exception) {
-            $twigFlash->addMessage('warning', I18N::translate('plugin_blog_rating_user_not_logged_in', 'You must be logged in to leave a rating.'));
+            $twigFlash->addMessage('warning', I18N::translate('plugin_blog_rating_user_not_logged_in', [
+                'en' => 'You must be logged in to leave a rating.',
+                'de' => 'Du musst angemeldet sein, um eine Bewertung abzugeben.',
+            ]));
         } catch (ORMException $exception) {
             Oforge()->Logger()->logException($exception);
-            $twigFlash->addMessage('error', I18N::translate('plugin_blog_rating_saving_failed', 'The rating could not be saved.'));
+            $twigFlash->addMessage('error', I18N::translate('plugin_blog_rating_saving_failed', [
+                'en' => 'The rating could not be saved.',
+                'de' => 'Die Bewertung konnte nicht gespeichert werden.',
+            ]));
         }
 
         return RouteHelper::redirect($response, 'frontend_blog_view', $args);

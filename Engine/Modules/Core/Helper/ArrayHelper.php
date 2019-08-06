@@ -53,6 +53,26 @@ class ArrayHelper {
     }
 
     /**
+     * Pop array value or default.
+     *
+     * @param array $array
+     * @param mixed $key
+     * @param mixed $defaultValue
+     *
+     * @return mixed
+     */
+    public static function pop(array &$array, $key, $defaultValue = null) {
+        if (isset($array[$key])) {
+            $value = $array[$key];
+            unset($array[$key]);
+
+            return $value;
+        }
+
+        return $defaultValue;
+    }
+
+    /**
      * Returns array value or default.
      * Check array key with array_key_exists.
      *
@@ -75,7 +95,7 @@ class ArrayHelper {
      *
      * @return array
      */
-    public static function extractArray(array $keys, array $inputArray, $defaultValue = '') : array {
+    public static function extractData(array $keys, array $inputArray, $defaultValue = '') : array {
         $tmp = array_fill_keys($keys, $defaultValue);
 
         return array_replace($tmp, array_intersect_key($inputArray, $tmp));
@@ -185,6 +205,22 @@ class ArrayHelper {
         }
 
         return $result;
+    }
+
+    /**
+     * Removes all unwanted array keys.
+     *
+     * @param array $keys
+     * @param array $inputArray
+     *
+     * @return array
+     */
+    public static function filterByKeys(array $keys, array $inputArray) {
+        $tmp = array_fill_keys($keys, 1);
+
+        return array_filter($inputArray, function ($key) use ($tmp) {
+            return isset($tmp[$key]);
+        }, ARRAY_FILTER_USE_KEY);
     }
 
 }

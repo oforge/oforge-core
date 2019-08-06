@@ -3,7 +3,7 @@
 namespace Oforge\Engine\Modules\CMS\ContentTypes;
 
 use Oforge\Engine\Modules\CMS\Abstracts\AbstractContentType;
-use Oforge\Engine\Modules\CMS\Models\Content\Content;
+use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 
 class VideoYoutube extends AbstractContentType {
 
@@ -26,7 +26,7 @@ class VideoYoutube extends AbstractContentType {
 
     /** @inheritDoc */
     public function setEditData($data) {
-        $this->setContentData($data["videoID"]);
+        $this->setContentData(ArrayHelper::get($data, 'videoID', ''));
 
         return $this;
     }

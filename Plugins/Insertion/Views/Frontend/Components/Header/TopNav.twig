@@ -7,14 +7,20 @@
 
     {{ parent() }}
 
-    {% if user_logged_in %}
+    {% if user_logged_in and current_user is not null %}
 
         <li class="top-nav-list__item item--login">
             <a href="{{ url('frontend_account_insertions_bookmarks') }}"
-               title="bookmarks">
-                <svg class="icon icon--secondary icon--heart">
-                    <use xlink:href="#heart"></use>
-                </svg>
+               title="{{ i18n('frontend_account_insertions_bookmarks_title', 'Meine Merkliste') }}">
+                {% if userHasBookmark() %}
+                    <svg class="icon icon--secondary icon--heart {% if animations.heartbeat %}heartbeat{% endif %}">
+                        <use xlink:href="#heart"></use>
+                    </svg>
+                {% else %}
+                    <svg class="icon icon--secondary icon--heart-empty {% if animations.heartbeat %}heartbeat{% endif %}">
+                        <use xlink:href="#heart_empty"></use>
+                    </svg>
+                {% endif %}
             </a>
         </li>
 

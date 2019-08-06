@@ -11,9 +11,7 @@
         />
         {% set unit = i18n('unit_' ~  attribute.name, '') %}
         {% if unit is not empty %}
-            <span class="input__unit">
-                {{ unit }}
-            </span>
+            <span class="input__unit">{{ unit }}</span>
         {% endif %}
     </label>
 </div>

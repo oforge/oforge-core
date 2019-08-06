@@ -17,7 +17,8 @@
                                     <li class="step step--done {% if i == 5 %}step--feedback{% endif %}">
                                         <a href="{{ url('insertions_createSteps', { type : type.id, page: i}) }}"
                                            class="step__link">
-                                            {{ i }}
+                                            {% set numeral = numberToRomanNumeral(i) %}
+                                            {{ numeral }}
                                         </a>
                                     </li>
                                 {% endfor %}
@@ -61,7 +62,7 @@
 
                             <div class="feedback__description">
                                 <h3 class="form__title">{{ i18n('help_us_improve') }}</h3>
-                                <textarea class="form__input" name="feedback_text">({{ i18n('optional') }})</textarea>
+                                <textarea class="form__input" name="feedback_text" placeholder="({{ i18n('optional') }})"></textarea>
                             </div>
 
                             <div class="form__control">

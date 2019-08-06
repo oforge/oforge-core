@@ -3,7 +3,7 @@
     <form class="form form--helpdesk"
           action="{{ url('frontend_account_support_submit') }}"
           method="post">
-        <h3 class="form__title form__title--helpdesk">{{ i18n('support-ticket', 'Support Ticket') }}</h3>
+        <h2 class="form__title form__title--helpdesk">{{ i18n('support-ticket', 'Support Ticket') }}</h2>
         <div class="form-controls">
             <div class="form__control">
                 {% block helpdesk_label_request %}
@@ -12,15 +12,16 @@
                         {{ i18n('request', 'Request') }}
                     </label>
                 {% endblock helpdesk_label_request %}
-
-                <select id="helpdesk_request"
-                        name="helpdesk_request"
-                        class="form__input form__input--select"
-                        required>
-                    {% for issueType in supportTypes.issueTypes %}
-                        <option value="{{ issueType.id }}">{{ i18n(issueType.issueTypeName) }}</option>
-                    {% endfor %}
-                </select>
+                <div class="form__input form__input--select">
+                    <select id="helpdesk_request"
+                            name="helpdesk_request"
+                            class="form__input form__input--no-input"
+                            required>
+                        {% for issueType in supportTypes.issueTypes %}
+                            <option value="{{ issueType.id }}">{{ i18n(issueType.issueTypeName) }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
             </div>
             <div class="form__control">
                 {% block helpdesk_label_request_title %}

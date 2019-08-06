@@ -39,9 +39,9 @@ class BaseCrudController extends SecureBackendController {
      *              // Property name. Required
      *              'name'      => 'propertyName',
      *               // Text label or i18n array with key and default value.
-     *              'label'     => 'Text' | ['key' => 'label_id', 'default' => 'ID'],
+     *              'label'     => 'i18n-translated-text' | ['key' => 'label_id', 'default' => 'ID'],
      *              'type'      => CrudDataTypes::..., // Required
-     *              'crud'      => [    // default = off (not rendered). (Required)
+     *              'crud'      => [    // default = off (not rendered, if missing off). (Required)
      *                  'index'     => 'off|readonly|editable',
      *                  'view'      => 'off|readonly|editable',
      *                  'create'    => 'off|readonly|editable',
@@ -51,21 +51,23 @@ class BaseCrudController extends SecureBackendController {
      *              // Select with optgroups, key will be ignored in renderer
      *              'list' => 'functionName' | [
      *                  'key'   => [
-     *                      'label'     => 'Text' | ['key' => 'i18nLabel', 'default' => 'DefaultText'],
+     *                      'label'     => 'i18n-translated-text',
      *                      'options'   => [
-     *                          'value' => => 'Text' | ['key' => 'i18nLabel', 'default' => 'DefaultText'],
+     *                          'value' => => 'i18n-translated-text',
      *                      ]
      *                  ],
      *              ],
      *              // Simple select
      *              'list' => 'functionName' | [
-     *                  'value' => 'Text' | ['key' => 'i18nLabel', 'default' => 'DefaultText'], # Simple select
+     *                  'value' => 'i18n-translated-text', # Simple select
      *              ],
      *              'editor' => [       // Configuration for field editor.
+     *                  'hint'          => ''i18n-translated-text'| ['key' => 'label_id', 'default' => 'ID'],     // Hint text (in index colum header and under editor field).(Optional)
      *                  'default'       => '',      // Default value. (Optional)
      *                  'custom'        => '...'    // If type = custom. Twig path for include.
+     *                  'required'      => false,   // (Optional)
      *                  'pattern'       => '...',   // If type = string. (Optional)
-     *                  'placeholder'   => ...,     //. (Optional)
+     *                  'placeholder'   => '...',   // i18n-translated-text. (Optional)
      *                  'maxlength'     => ...,     // If type = string|text. (Optional)
      *                  'min'           => '...',   // If type = int|float|currency. (Optional)
      *                  'max"           => ...,     // If type = string|text. (Optional)
@@ -85,7 +87,7 @@ class BaseCrudController extends SecureBackendController {
      */
     protected $modelProperties = null;
     /**
-     * Enable or disable crud actions for this model with
+     * Enable or disable crud actions (missing = false) for this model with
      *      protected $crudActions = [
      *          'index'     => true, // enable view
      *          'create'    => true, // enable create button and view
@@ -102,6 +104,14 @@ class BaseCrudController extends SecureBackendController {
         'view'   => true,
         'update' => true,
         'delete' => true,
+    ];
+    /** @var int|array<string,int> $crudPermission */
+    protected $crudPermissions = [
+        'index'  => BackendUser::ROLE_MODERATOR,
+        'create' => BackendUser::ROLE_MODERATOR,
+        'view'   => BackendUser::ROLE_MODERATOR,
+        'update' => BackendUser::ROLE_MODERATOR,
+        'delete' => BackendUser::ROLE_MODERATOR,
     ];
     /**
      * Configuration of the filters on the index view.
@@ -160,8 +170,6 @@ class BaseCrudController extends SecureBackendController {
         'default' => 10,
         'buttons' => [10, 25, 50, 100, 250],
     ];
-    /** @var int $crudPermission */
-    protected $crudPermission = BackendUser::ROLE_MODERATOR;
     /** @var GenericCrudService $crudService */
     protected $crudService;
     /** @var string $moduleModelName */
@@ -294,7 +302,7 @@ class BaseCrudController extends SecureBackendController {
             } catch (Exception $exception) {
                 Oforge()->View()->Flash()->addExceptionMessage('error', I18N::translate('backend_crud_msg_create_failed', [
                     'en' => 'Entity creation failed.',
-                    'de' => 'Die Erstellung des Elements ist fehlgeschlagen.',
+                    'de' => 'Erstellung des Elements fehlgeschlagen.',
                 ]), $exception);
                 Oforge()->View()->Flash()->setData($this->moduleModelName, $data);
 
@@ -327,8 +335,7 @@ class BaseCrudController extends SecureBackendController {
      * @param array $args
      *
      * @return Response
-     * @throws ORMException
-     * @EndpointAction(path="/view/{id:\d+}")
+     * @EndpointAction(path="/view/{id}")
      */
     public function viewAction(Request $request, Response $response, array $args) {
         $entity = $this->crudService->getById($this->model, $args['id']);
@@ -353,8 +360,7 @@ class BaseCrudController extends SecureBackendController {
      * @param array $args
      *
      * @return Response
-     * @throws ORMException
-     * @EndpointAction(path="/update/{id:\d+}")
+     * @EndpointAction(path="/update/{id}")
      */
     public function updateAction(Request $request, Response $response, array $args) {
         $postData = $request->getParsedBody();
@@ -366,12 +372,12 @@ class BaseCrudController extends SecureBackendController {
                 $this->crudService->update($this->model, $data);
                 Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_update_success', [
                     'en' => 'Entity successfully updated.',
-                    'de' => 'Entity successfully updated.',
+                    'de' => 'Element erfolgreich aktualisiert.',
                 ]));
             } catch (Exception $exception) {
                 Oforge()->View()->Flash()->addExceptionMessage('error', I18N::translate('backend_crud_msg_update_failed', [
                     'en' => 'Entity update failed.',
-                    'de' => 'Entity update failed.',
+                    'de' => 'Aktualisieren des Elements fehlgeschlagen.',
                 ]), $exception);
                 Oforge()->View()->Flash()->setData($this->moduleModelName, $data);
             }
@@ -405,8 +411,7 @@ class BaseCrudController extends SecureBackendController {
      * @param array $args
      *
      * @return Response
-     * @throws ORMException
-     * @EndpointAction(path="/delete/{id:\d+}")
+     * @EndpointAction(path="/delete/{id}")
      */
     public function deleteAction(Request $request, Response $response, array $args) {
         $postData = $request->getParsedBody();
@@ -432,24 +437,16 @@ class BaseCrudController extends SecureBackendController {
         return $response;
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function initPermissions() {
-        if ($this->crudActions['index'] ?? true) {
-            $this->ensurePermissions('indexAction', BackendUser::class, $this->crudPermission);
-        }
-        if ($this->crudActions['create'] ?? true) {
-            $this->ensurePermissions('createAction', BackendUser::class, $this->crudPermission);
-        }
-        if ($this->crudActions['view'] ?? true) {
-            $this->ensurePermissions('viewAction', BackendUser::class, $this->crudPermission);
-        }
-        if ($this->crudActions['update'] ?? true) {
-            $this->ensurePermissions('updateAction', BackendUser::class, $this->crudPermission);
-        }
-        if ($this->crudActions['delete'] ?? true) {
-            $this->ensurePermissions('deleteAction', BackendUser::class, $this->crudPermission);
+        $actions         = ['index', 'create', 'view', 'update', 'delete',];
+        $crudActions     = $this->crudActions;
+        $crudPermissions = $this->crudPermissions;
+        foreach ($actions as $action) {
+            if (ArrayHelper::get($crudActions, $action, true)) {
+                $actionPermission = is_array($crudPermissions) ? ArrayHelper::get($crudPermissions, $action, BackendUser::ROLE_MODERATOR) : $crudPermissions;
+                $this->ensurePermission($action . 'Action', $actionPermission);
+            }
         }
     }
 
@@ -457,7 +454,7 @@ class BaseCrudController extends SecureBackendController {
      * Process select list callable.
      *
      * @param array $filter
-     * @param string $key
+     * @param string $propertyName
      */
     protected function processSelectListCallable(array &$filter, string $propertyName) {
         if (isset($filter['list']) && is_string($filter['list']) && method_exists($this, $filter['list'])) {
@@ -634,6 +631,7 @@ class BaseCrudController extends SecureBackendController {
                             $comparator = CrudFilterComparator::EQUALS;
                             break;
                         case CrudFilterType::TEXT:
+                        case CrudFilterType::HIDDEN:
                             $comparator = ArrayHelper::get($filterConfig, 'compare', CrudFilterComparator::EQUALS);
                             break;
                         default:
@@ -641,7 +639,13 @@ class BaseCrudController extends SecureBackendController {
                     }
                     switch ($comparator) {
                         case CrudFilterComparator::EQUALS:
+                        case CrudFilterComparator::NOT_EQUALS:
                         case CrudFilterComparator::LIKE:
+                        case CrudFilterComparator::NOT_LIKE:
+                        case CrudFilterComparator::GREATER:
+                        case CrudFilterComparator::GREATER_EQUALS:
+                        case CrudFilterComparator::LESS:
+                        case CrudFilterComparator::LESS_EQUALS:
                             break;
                         default:
                             $comparator = CrudFilterComparator::EQUALS;
@@ -837,7 +841,7 @@ class BaseCrudController extends SecureBackendController {
      * @throws NonUniqueResultException
      * @throws ORMException
      */
-    private function prepareIndexPaginationData(array $queryParams) : array {
+    protected function prepareIndexPaginationData(array $queryParams) : array {
         $queryKeys = $this->indexReservedQueryKeys;;
         $queryKeyPage            = $queryKeys['page'];
         $queryKeyEntitiesPerPage = $queryKeys['entitiesPerPage'];

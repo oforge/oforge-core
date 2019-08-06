@@ -12,7 +12,7 @@
     &.select--is-open {
         height: auto;
         position: absolute;
-        z-index: 2;
+        z-index: 4;
 
         &.select--is-sub {
             height: auto;
@@ -42,6 +42,15 @@
         }
     }
 
+    &__filter {
+        width: calc(100% - 1.2rem);
+        border: 1px solid $color-primary;
+        margin: $size-medium;
+        border-radius: $size-small;
+        padding: $size-small;
+        font-size: $font-size-5;
+    }
+
     &__text {
         position: relative;
         margin: 0;
@@ -55,7 +64,8 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        line-height: normal;
+        font-size: $font-size-5;
+        line-height: 24px;
 
         &::before {
             content: '';
@@ -83,6 +93,7 @@
     }
     &__list {
         height: auto;
+        max-height: 400px;
         list-style: none;
         margin: 0;
         padding: 0;
@@ -105,11 +116,15 @@
             border-radius: $size-small;
         }
 
+        &.select__item--is-hidden {
+            display: none;
+        }
+
         &.select__item--is-checked {
             &:after {
                 position: absolute;
                 left: 1.1rem;
-                top: .8rem;
+                top: 1.1rem;
                 content: ' ';
                 display: block;
                 width: .6rem;
@@ -124,6 +139,19 @@
                 width: 100%;
                 padding-left: 2rem;
             }
+        }
+    }
+    &__value {
+        display: inline-block;
+        width: calc(100% - 24px);
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        line-height: 24px;
+
+        strong {
+            font-weight: bold;
+            color: $color-secondary;
         }
     }
 }

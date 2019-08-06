@@ -1,4 +1,9 @@
-<div class="product__attribute">
+<div class="product__attribute attribute--single">
     <span class="product__label">{{ i18n(attribute.name) }}</span>
-    <span class="product__value">{% if value is not empty %}{{ i18n(getInsertionValue(value).value) }}{% else %}{{ i18n('not_available') }}{% endif %}</span>
+    <span class="product__value">
+        {% if value is not empty %}
+            {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes/Values/Index.twig'  with {'attribute': all_attributes[attribute.attributeKey != null ? attribute.attributeKey : attribute.id], value: value} %}
+        {% else %}{{ i18n('not_available') }}
+        {% endif %}
+    </span>
 </div>

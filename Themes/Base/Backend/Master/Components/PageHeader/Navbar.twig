@@ -44,7 +44,7 @@
                                     <p>
                                         {{ user.email }}
                                         <small>
-                                            {{ i18n("role") }}: {{ user.role }}
+                                            {{ i18n("role") }}: {{ i18n('backend_user_role_' ~ user.role) }}
                                         </small>
                                     </p>
                                 </li>

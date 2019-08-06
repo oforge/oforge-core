@@ -2,6 +2,8 @@
 
 namespace Insertion\Twig;
 
+use DateTime;
+use DateTimeInterface;
 use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\FrontendUserService;
@@ -9,6 +11,7 @@ use FrontendUserManagement\Services\UserService;
 use Insertion\Models\Insertion;
 use Insertion\Services\AttributeService;
 use Insertion\Services\InsertionBookmarkService;
+use Insertion\Services\InsertionProfileService;
 use Insertion\Services\InsertionSearchBookmarkService;
 use Insertion\Services\InsertionService;
 use Insertion\Services\InsertionSliderService;
@@ -16,8 +19,11 @@ use Insertion\Services\InsertionTypeService;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
+use Oforge\Engine\Modules\I18n\Helper\I18N;
+use Oforge\Engine\Modules\TemplateEngine\Extensions\Services\UrlService;
 use Twig_Extension;
 use Twig_ExtensionInterface;
+use Twig_Filter;
 use Twig_Function;
 
 /**
@@ -36,11 +42,41 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
             new Twig_Function('getInsertionAttribute', [$this, 'getAttribute']),
             new Twig_Function('getInsertionValue', [$this, 'getValue']),
             new Twig_Function('hasBookmark', [$this, 'hasBookmark']),
+            new Twig_Function('userHasBookmark', [$this, 'userHasBookmark']),
             new Twig_Function('hasSearchBookmark', [$this, 'hasSearchBookmark']),
             new Twig_Function('getInsertionSliderContent', [$this, 'getInsertionSliderContent']),
+            new Twig_Function('getSimilarInsertion', [$this, 'getSimilarInsertion']),
+            new Twig_Function('getLatestBlogPostTile', [$this, 'getLatestBlogPostTile']),
             new Twig_Function('getQuickSearch', [$this, 'getQuickSearch']),
             new Twig_Function('getChatPartnerInformation', [$this, 'getChatPartnerInformation']),
+            new Twig_Function('numberToRomanNumeral', [$this, 'numberToRomanNumeral']),
         ];
+    }
+
+    /** @inheritDoc */
+    public function getFilters() {
+        return [
+            new Twig_Filter('age', [$this, 'getAge'], [
+                'is_safe' => ['html'],
+            ]),
+        ];
+    }
+
+    /**
+     * @param string|null $dateTimeObject
+     * @param string|null $type
+     *
+     * @return string|null
+     * @throws \Exception
+     */
+    public function getAge(?string $dateTimeObject, ?string $type) : ?string {
+        $bday  = DateTime::createFromFormat('Y-m-d', $dateTimeObject); // Your date of birth
+        $today = new Datetime();
+
+        $diff   = $today->diff($bday);
+        $suffix = $type == 'datemonth' ? I18N::translate('month_suffix') : ($type == 'dateyear' ? I18N::translate('year_suffix') : '');
+
+        return ($type == 'datemonth' ? ($diff->y * 12 + $diff->m) : ($type == 'dateyear' ? $diff->y : $dateTimeObject)) . ' ' . $suffix;
     }
 
     /**
@@ -67,7 +103,8 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
     /**
      * @param mixed ...$vars
      *
-     * @return boolean
+     * @return bool
+     * @throws ORMException
      * @throws ServiceNotFoundException
      */
     public function hasBookmark(...$vars) {
@@ -82,6 +119,28 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
 
                     return $bookmarkService->hasBookmark($vars[0], $user['id']);
                 }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     * @throws ORMException
+     * @throws ServiceNotFoundException
+     */
+    public function userHasBookmark() {
+
+        /** @var $authService AuthService */
+        $authService = Oforge()->Services()->get("auth");
+        if (isset($_SESSION["auth"])) {
+            $user = $authService->decode($_SESSION["auth"]);
+            if (isset($user) && isset($user['id'])) {
+                /** @var InsertionBookmarkService $bookmarkService */
+                $bookmarkService = Oforge()->Services()->get("insertion.bookmark");
+
+                return $bookmarkService->userHasBookmark($user['id']);
             }
         }
 
@@ -122,7 +181,32 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
         $insertions             = $insertionSliderService->getRandomInsertions();
 
         return ['insertions' => $insertions];
+    }
 
+    /**
+     * @param array $vars
+     *
+     * @return array
+     * @throws ORMException
+     * @throws ServiceNotFoundException
+     */
+    public function getSimilarInsertion(...$vars) {
+        /** @var InsertionSliderService $insertionSliderService */
+        $insertionSliderService = Oforge()->Services()->get("insertion.slider");
+        $insertion              = $insertionSliderService->getRandomInsertion(1, $vars[0], $vars[1]);
+
+        return $insertion;
+    }
+
+    /**
+     * @return array
+     * @throws ServiceNotFoundException
+     */
+    public function getLatestBlogPostTile() {
+        $blogService = Oforge()->Services()->get("blog.post");
+        $blogPost    = $blogService->getLatestPost();
+
+        return isset($blogPost) ? $blogPost->toArray(3) : [];
     }
 
     /**
@@ -135,7 +219,7 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
         $insertionTypeService = Oforge()->Services()->get('insertion.type');
         $quickSearch          = $insertionTypeService->getQuickSearchInsertions();
 
-        return ['types' => $quickSearch, 'attributes' => $insertionTypeService->getInsertionTypeAttributeMap()];;
+        return ['types' => $quickSearch, 'attributes' => $insertionTypeService->getInsertionTypeAttributeMap()];
     }
 
     /**
@@ -147,39 +231,56 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
      */
     public function getChatPartnerInformation(...$vars) {
         if (count($vars) === 2) {
+            $imageId = null;
+            $title   = null;
+            $linkId  = null;
             if ($vars[0] === 'requested') {
-
                 /** @var InsertionService $insertionService */
                 $insertionService = Oforge()->Services()->get('insertion');
                 /** @var Insertion $insertion */
                 $insertion = $insertionService->getInsertionById($vars[1]);
+                $linkId    = $vars[1];
 
-                return [
-                    'imageId' => $insertion->getMedia()[0]->getContent()->getId(),
-                    'title'   => $insertion->getContent()[0]->getTitle(),
-                ];
+                try {
+                    $imageId = $insertion->getMedia()[0]->getContent()->getId();
+                } catch (\Throwable $e) {
+                }
+                try {
+                    $title = $insertion->getContent()[0]->getTitle();
+                } catch (\Throwable $e) {
+                }
+
             } else {
                 /** @var UserService $userService */
                 $userService = Oforge()->Services()->get('frontend.user.management.user');
                 /** @var User $user */
                 $user = $userService->getUserById($vars[1]);
-                $userImage = $user->getDetail()->getImage();
-                if($userImage) {
-                    $imageId = $user->getDetail()->getImage()->getId();
-                } else {
-                    $imageId = 'default';
-                }
+                /** @var InsertionProfileService $insertionProfileService */
+                $insertionProfileService = Oforge()->Services()->get('insertion.profile');
 
-                return [
-                    'imageId' => $imageId,
-                    'title' => $user->getDetail()->getNickName(),
-                ];
+                try {
+                    $imageId = $user->getDetail()->getImage()->getId();
+                } catch (\Throwable $e) {
+                };
+                try {
+                    $title = $user->getDetail()->getNickName();
+                } catch (\Throwable $e) {
+                };
+                try {
+                    $linkId = $insertionProfileService->get($vars[1])->getId();
+                } catch (\Throwable $e) {
+                }
             }
+
+            return [
+                'imageId' => $imageId,
+                'title'   => $title,
+                'link'    => $linkId,
+            ];
         }
 
         return false;
     }
-
 
     /**
      * @return array
@@ -190,6 +291,7 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
         if (count($vars) == 1) {
             /** @var InsertionTypeService $insertionTypeService */
             $insertionTypeService = Oforge()->Services()->get('insertion.type');
+
             return $insertionTypeService->getAttribute($vars[0]);
         }
 
@@ -210,5 +312,40 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
         }
 
         return null;
+    }
+
+    /**
+     * @param $number
+     *
+     * @return string
+     */
+    public function numberToRomanNumeral($number) {
+        $map         = [
+            'M'  => 1000,
+            'CM' => 900,
+            'D'  => 500,
+            'CD' => 400,
+            'C'  => 100,
+            'XC' => 90,
+            'L'  => 50,
+            'XL' => 40,
+            'X'  => 10,
+            'IX' => 9,
+            'V'  => 5,
+            'IV' => 4,
+            'I'  => 1,
+        ];
+        $returnValue = '';
+        while ($number > 0) {
+            foreach ($map as $roman => $int) {
+                if ($number >= $int) {
+                    $number      -= $int;
+                    $returnValue .= $roman;
+                    break;
+                }
+            }
+        }
+
+        return $returnValue;
     }
 }

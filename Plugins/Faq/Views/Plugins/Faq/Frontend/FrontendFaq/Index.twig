@@ -1,7 +1,7 @@
 {% extends "@parent/Frontend/Layout.twig" %}
 
 {% block content %}
-
+    {% include 'Plugins/FrontendUserManagement/Frontend/Components/AccountNavBar.twig' with { back_link : true, content_title: i18n('frontend_account_faq', 'FAQ')} %}
     <div class="account content">
         {% block account %}
             <div class="panel panel--account flex">
@@ -12,10 +12,10 @@
                 {% endif %}
                 {% block account__content %}
                     <div class="account__content flex  {% if sidebar_navigation is not defined %}content__faq{% endif %}">
-                        <h3 class="account__title">{{ i18n('faqs') }}</h3>
+                        <h1 class="account__title">{{ i18n('faqs') }}</h1>
 
                         {% block seo_content %}
-                            {% set content = content('faq_header_' ~  meta.language) %}
+                            {% set content = content('faq_header_' ~  meta.language.iso) %}
                             {% if content %}
                                 {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
                             {% endif %}

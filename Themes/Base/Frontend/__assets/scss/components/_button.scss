@@ -26,9 +26,17 @@
         background: $color-secondary;
         color: $text-light;
     }
+
+    &.button--ghost {
+        border: 1px solid $color-primary;
+        background: $color-light;
+        color: $color-primary;
+    }
+
     &.button--shadow {
         box-shadow: 0 $size-small .8rem $color-primary-light;
     }
+
     &.button--uppercase {
         text-transform: uppercase;
     }
@@ -40,14 +48,19 @@
     &.button--flat {
         border-radius: 0;
     }
+
     &.button--small {
         font-size: $font-size-5;
     }
+
     &.button--large {
         height: 3.6rem;
     }
+
     &.button--save-result {
         width: 18rem;
-        max-width: 18rem;
+        height: auto;
+        min-height: 3.6rem;
+        white-space: normal;
     }
 }

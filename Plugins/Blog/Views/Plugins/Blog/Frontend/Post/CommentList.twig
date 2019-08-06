@@ -1,5 +1,5 @@
 <div class="blog-post-comments">
-    <h2>{{ blog.comments_count }} {{ i18n('plugin_blog_comments_count', 'comments') }}</h2>
+    <h2>{{ blog.comments_count }} {{ i18n('plugin_blog_comments_count', {en: 'comments', de: 'Kommentare'}) }}</h2>
     {% if blog.comments %}
         <div id="blog-post-comments-container">
             {% for blogPostComment in blog.comments %}
@@ -13,7 +13,7 @@
                 <button class="button button--primary" data-addmore="true"
                         data-container="#blog-post-comments-container"
                         data-url="{{ url('frontend_blog_more_comments', {postID:blog.post.id, seoUrlPath:blog.post.seoUrlPath}) }}">
-                    {{ i18n('plugin_blog_btn_load_more_comments', 'other comments') }}
+                    {{ i18n('plugin_blog_btn_load_more_comments', {en: 'other comments', de: 'andere Kommentare'}) }}
                 </button>
             </div>
         {% endif %}

@@ -2,10 +2,10 @@
     if (typeof Oforge !== 'undefined') {
         Oforge.register({
             name: 'emptyInput',
-            selector: 'form',
+            selector: '#form-search',
             init: function () {
                 var self = this;
-                var allForms = document.querySelectorAll(self.selector);
+                var form = document.querySelector(self.selector);
 
                 function removeEmptyInputNames(form) {
                     console.log('removing items');
@@ -17,13 +17,10 @@
                     });
                 }
 
-                allForms.forEach(function(formElement) {
-                    formElement.addEventListener('submit', function (evt) {
-                        if (evt.target.matches(self.selector)) {
-                            removeEmptyInputNames(formElement);
-                        }
-                    });
+                form.addEventListener('submit', function (evt) {
+                    removeEmptyInputNames(form);
                 });
+
             }
         });
     } else {

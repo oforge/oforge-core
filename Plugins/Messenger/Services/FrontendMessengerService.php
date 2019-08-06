@@ -2,11 +2,14 @@
 
 namespace Messenger\Services;
 
+use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\QueryBuilder;
 use Messenger\Abstracts\AbstractMessengerService;
 use Messenger\Models\Conversation;
+use Messenger\Models\Message;
 use ReflectionException;
 
 class FrontendMessengerService extends AbstractMessengerService {
@@ -24,7 +27,7 @@ class FrontendMessengerService extends AbstractMessengerService {
 
         $data['requesterType'] = 1;
         $data['requestedType'] = 1;
-        $data['state'] = 'open';
+        $data['status']        = 'open';
 
         $conversation->fromArray($data);
 
@@ -37,28 +40,51 @@ class FrontendMessengerService extends AbstractMessengerService {
     }
 
     /**
+     * @param $conversationId
+     * @param $status
+     *
+     * @throws ORMException
+     */
+    public function changeStatus($conversationId, $status) {
+        /** @var Conversation $conversation */
+        $conversation = parent::getConversationById($conversationId);
+
+        $conversation->setStatus($status);
+        $this->entityManager()->update($conversation);
+    }
+
+    /**
      * @param $userId
      *
      * @return Collection|array
      */
     public function getConversationList($userId) {
-        $queryBuilder = $this->entityManager()->createQueryBuilder();
 
-        $query = $queryBuilder->select('c')->from(Conversation::class, 'c')
-                    ->where(
-                        $queryBuilder->expr()->andX(
-                            $queryBuilder->expr()->eq('c.requester', $userId),
-                            $queryBuilder->expr()->eq('c.requesterType', '1')))
-                    ->orWhere(
-                        $queryBuilder->expr()->andX(
-                            $queryBuilder->expr()->eq('c.requested', $userId),
-                            $queryBuilder->expr()->eq('c.requestedType', '1')))->getQuery();
+        /** @var QueryBuilder $queryBuilder */
+        $queryBuilder = $this->entityManager()->createQueryBuilder();
+        $queryBuilder->setParameter('open', 'open');
+
+        $query = $queryBuilder->select('c')
+                              ->from(Conversation::class, 'c')
+                              ->where($queryBuilder->expr()->andX(
+                                  $queryBuilder->expr()->eq('c.requester', $userId),
+                                  $queryBuilder->expr()->eq('c.requesterType', '1'),
+                                  $queryBuilder->expr()->eq('c.status', ':open')))
+                              ->orWhere($queryBuilder->expr()->andX(
+                                  $queryBuilder->expr()->eq('c.requested', $userId),
+                                  $queryBuilder->expr()->eq('c.requestedType', '1'),
+                                  $queryBuilder->expr()->eq('c.status', ':open')))
+                              ->orderBy('c.lastMessageTimestamp', 'DESC')
+                              ->getQuery();
+
         /** @var Conversation[] $conversations */
         $conversations = $query->execute();
         $result        = [];
 
         foreach ($conversations as $conversation) {
-            $conversation = $conversation->toArray();
+            $conversation                   = $conversation->toArray();
+            $unreadMessages                 = $this->countUnreadMessages($conversation, $userId);
+            $conversation['unreadMessages'] = $unreadMessages;
             if ($conversation['requested'] == $userId) {
                 $conversation['chatPartner'] = $conversation['requester'];
             } else {
@@ -73,30 +99,51 @@ class FrontendMessengerService extends AbstractMessengerService {
     /**
      * @param $conversationId
      *
-     * @return array
+     * @return array|null
      * @throws ORMException
      */
     public function getConversationById($conversationId) {
-        return parent::getConversationById($conversationId)->toArray();
+        $conversation = parent::getConversationById($conversationId);
+        if(isset($conversation)) {
+            return $conversation->toArray();
+        }
     }
 
     /**
      * @param $conversationId
      * @param $userId
      *
-     * @return array
+     * @return object|null
      * @throws ORMException
      */
     public function getConversation($conversationId, $userId) {
         $conversation = $this->getConversationById($conversationId);
-        if ($conversation['requester'] == $userId) {
-            $conversation['chatPartner'] = $conversation['requested'];
-        } else {
-            $conversation['chatPartner'] = $conversation['requester'];
+        if (isset($conversation)) {
+            if ($conversation['requester'] == $userId) {
+                $conversation['chatPartner'] = $conversation['requested'];
+            } else {
+                $conversation['chatPartner'] = $conversation['requester'];
+            }
+            $conversation['messages'] = $this->getMessagesOfConversation($conversationId);
         }
-        $conversation['messages'] = $this->getMessagesOfConversation($conversationId);
 
         return $conversation;
+    }
+
+    /**
+     * @param $conversationId
+     * @param $userId
+     *
+     * @throws ORMException
+     */
+    public function updateLastSeen($conversationId, $userId) {
+        $conversation = parent::getConversationById($conversationId);
+        if ($conversation->toArray()['requester'] == $userId) {
+            $conversation->setRequesterLastSeen(new DateTime("now"));
+        } else {
+            $conversation->setRequestedLastSeen(new DateTime("now"));
+        }
+        $this->entityManager()->update($conversation);
     }
 
     /**
@@ -117,5 +164,96 @@ class FrontendMessengerService extends AbstractMessengerService {
         ]);
 
         return $conversation;
+    }
+
+    /**
+     * Counts user's unread messages
+     *
+     * @param array $conversation
+     * @param $userId
+     *
+     * @return int
+     */
+    public function countUnreadMessages(array $conversation, $userId) {
+        $queryBuilder = $this->entityManager()->createQueryBuilder();
+        $queryBuilder->setParameter('conversationId', $conversation['id']);
+
+        $userLastSeen = $conversation['requester'] == $userId ? 'requesterLastSeen' : 'requestedLastSeen';
+
+        /**
+         * Conversation has no timestamp with user's last call
+         * -> count all messages of chat-partner
+         */
+        if (!isset($conversation[$userLastSeen])) {
+
+            if ($conversation['requester'] == $userId) {
+                $queryBuilder->setParameter('user', $conversation['requester']);
+            } else {
+                $queryBuilder->setParameter('user', $conversation['requested']);
+            }
+            $queryBuilder->select('msg')
+                         ->from(Message::class, 'msg')
+                         ->where('msg.conversationId = :conversationId')
+                         ->andwhere('msg.sender != :user')
+                         ->setMaxResults(10);
+
+            $result = $queryBuilder->getQuery()->getArrayResult();
+
+            return count($result);
+        }
+
+        /**
+         * Conversation has a timestamp with user's last call
+         * -> count all newer messages
+         */
+        if ($conversation['requester'] == $userId) {
+            $queryBuilder->setParameter('lastSeen', $conversation['requesterLastSeen']);
+        } else {
+            $queryBuilder->setParameter('lastSeen', $conversation['requestedLastSeen']);
+        }
+        $queryBuilder->select('msg')->from(Message::class, 'msg')
+                                    ->where('msg.conversationId = :conversationId')
+                                    ->andWhere('msg.timestamp > :lastSeen');
+        $result = $queryBuilder->getQuery()->getArrayResult();
+
+        return count($result);
+    }
+
+    /**
+     * @param $userId
+     *
+     * @return bool
+     */
+    public function hasUnreadMessages($userId) : bool {
+        /** @var QueryBuilder $queryBuilder */
+        $queryBuilder = $this->entityManager()->createQueryBuilder();
+        $queryBuilder->setParameter('open', 'open');
+
+        $query = $queryBuilder->select('c')
+                              ->from(Conversation::class, 'c')
+                              ->where($queryBuilder->expr()->andX(
+                                  $queryBuilder->expr()->eq('c.requester', $userId),
+                                  $queryBuilder->expr()->eq('c.requesterType', '1'),
+                                  $queryBuilder->expr()->eq('c.status', ':open')))
+                              ->orWhere($queryBuilder->expr()->andX(
+                                  $queryBuilder->expr()->eq('c.requested', $userId),
+                                  $queryBuilder->expr()->eq('c.requestedType', '1'),
+                                  $queryBuilder->expr()->eq('c.status', ':open')))
+                              ->getQuery();
+        /** @var Conversation[] $conversations */
+        $conversations = $query->execute();
+        if(!isset($conversations)) {
+            return false;
+        }
+        else {
+            foreach ($conversations as $conversation) {
+                $conversation   = $conversation->toArray();
+                $unreadMessages = $this->countUnreadMessages($conversation, $userId);
+                if ($unreadMessages > 0) {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

@@ -81,7 +81,7 @@ abstract class AbstractMessengerService extends AbstractDatabaseAccess {
     /**
      * @param $conversationId
      *
-     * @return Conversation|object
+     * @return object|null
      * @throws ORMException
      */
     public function getConversationById($conversationId) {

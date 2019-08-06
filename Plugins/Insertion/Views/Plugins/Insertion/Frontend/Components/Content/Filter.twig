@@ -4,44 +4,19 @@
             <div class="tags">
                 <div class="tag-list">
                     {% for f, value in search.filter %}
+
                         {% if f is same as ("price") %}
-                            <div class="tag" data-key="{{ f }}">
-                                <a href="#"
-                                   onclick="window.location.href = Oforge.updateQueryString(encodeURIComponent('{{ f }}[]'))"
-                                   class="close"></a>
-                                <span class="tag__text">{{ i18n(f) }} {{ value[0]|number_format(0, ',', '.') }} {{ i18n(f ~ '_between') }}   {{ value[1]|number_format(0, ',', '.') }}</span>
-                            </div>
+                            {% include 'Plugins/Insertion/Frontend/Components/Content/Filter/Price.twig' %}
                         {% elseif f is same as ("radius") %}
-                            <div class="tag" data-key="{{ f }}">
-                                <a href="#"
-                                   onclick="window.location.href = Oforge.updateQueryString('zip_range', '', Oforge.updateQueryString('zip', ''))"
-                                   class="close"></a>
-                                <span class="tag__text">{{ i18n(f) }} {{ value[0] }} {{ i18n(value.country) }}, {{ value.zip }} {{ i18n('zip_range_' ~ value.zip_range) }}</span>
-                            </div>
-                        {% elseif value is iterable %}
-                            {% for v in value %}
-                                <div class="tag" data-key="{{ f }}" data-value="{{ v }}">
-                                    <a href="#"
-                                       onclick="window.location.href = Oforge.removeQueryString('{{ f }}[]', '{{ v }}')"
-                                       class="close"></a>
-                                    <span class="tag__text">{{ i18n(f) }} {{ search.values[v] }}</span>
-                                </div>
-                            {% endfor %}
+                            {% include 'Plugins/Insertion/Frontend/Components/Content/Filter/Distance.twig' %}
                         {% else %}
-                            <div class="tag" data-key="{{ f }}" data-value="{{ value }}">
-                                <a href="#" onclick="window.location.href = Oforge.updateQueryString('{{ f }}')"
-                                   class="close"></a>
-                                {% if keys[f].type is same as( 'boolean') %}
-                                    <span class="tag__text">{{ i18n(f) }}</span>
-                                {% else %}
-                                    <span class="tag__text">{{ i18n(f) }} {{ search.values[value] }}</span>
-                                {% endif %}
-                            </div>
+                            {% set attribute = all_attributes[f] %}
+                            {% include 'Plugins/Insertion/Frontend/Components/Content/Filter/' ~ attribute.filterType|capitalize ~'.twig' %}
                         {% endif %}
                     {% endfor %}
                 </div>
             </div>
-            <a href="#form-search-sidebar" class="button button--filter-search">
+            <a href="#form-search" class="button button--filter-search">
                 <svg class="icon icon--secondary">
                     <use xlink:href="#magnifier"></use>
                 </svg>

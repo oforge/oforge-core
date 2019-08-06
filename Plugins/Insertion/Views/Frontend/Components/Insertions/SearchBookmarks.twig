@@ -3,6 +3,11 @@
     <div class="search__bookmark" xmlns="http://www.w3.org/1999/html">
         <h3 class="bookmark__title">{{ i18n('search_bookmark_title', 'Gespeicherte Suche') }}
             #{{ searchBookmarkCount }}</h3>
+
+        <span class="tag bookmark__tag">
+            <span class="tag__text">{{ i18n(item.insertionType.name) }}</span>
+        </span>
+
         {% for f, value in item.params %}
             {% if f is same as ("price") %}
                 <span class="tag bookmark__tag" data-key="{{ f }}">
@@ -34,7 +39,7 @@
             </a>
 
             <form method="post"
-                  action="{{ url('frontend_account_insertions_toggleSearchBookmark', {'typeId': item.insertionType }) }}"
+                  action="{{ url('frontend_account_insertions_toggleSearchBookmark', {'typeId': item.insertionType.id }) }}"
                   enctype="multipart/form-data">
                 <input type="hidden" name="filter" value="{{ item.params|json_encode() }}" />
 

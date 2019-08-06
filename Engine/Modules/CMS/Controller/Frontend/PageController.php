@@ -14,9 +14,9 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Slim\Router;
 
 /**
  * Class PageController
@@ -36,52 +36,49 @@ class PageController extends AbstractController {
      * @EndpointAction()
      */
     public function indexAction(Request $request, Response $response) {
-        /**
-         * @var PageService $pagePathService
-         */
+        /** @var PageService $pagePathService */
         $pagePathService = Oforge()->Services()->get('page.path');
-        $path            = $request->getUri()->getPath();
 
-        $cmsContent = $pagePathService->loadContentForPagePath($path);
-        $pagePath   = $pagePathService->getPagePath($path);
+        $data        = Oforge()->View()->fetch();
+        $path        = $request->getUri()->getPath();
+        $language    = $data['meta']['language'];
+        $languageID  = $language['id'];
+        $languageIso = $language['iso'];
 
-        $data     = Oforge()->View()->fetch();
-        $language = $data["meta"]["language"];
+        $pagePath   = $pagePathService->getPagePath($path, $languageID);
+        $cmsContent = $pagePathService->loadContentForPagePath($pagePath);
 
-        if ($cmsContent == null) {
-            $path = "/" . $language . $path;
+        if ($cmsContent === null) {
+            $path = '/' . $languageIso . $path;
 
-            $cmsContent = $pagePathService->loadContentForPagePath($path);
             $pagePath   = $pagePathService->getPagePath($path);
+            $cmsContent = $pagePathService->loadContentForPagePath($pagePath);
         }
 
-        if ($cmsContent !== null) {
-            if ($pagePath->getLanguage()->getIso() != $language) {
+        if ($cmsContent === null) {
+            return RouteHelper::redirect($response, 'not_found');
+        } else {
+            if ($pagePath->getLanguage()->getIso() !== $languageIso) {
                 foreach ($pagePath->getPage()->getPaths() as $path) {
-                    if ($path->getLanguage()->getIso() == $language) {
-                        $response = $response->withRedirect($path->getPath(), 301);
+                    if ($path->getLanguage()->getIso() === $languageIso) {
+                        return $response->withRedirect('/' . $languageIso . $path->getPath(), 302);
                     }
                 }
             }
 
-            // TODO: Remove meta assignment
             Oforge()->View()->assign([
-                'content' => $cmsContent,
-                "cms"     => $pagePath->toArray(),
-                'meta'    => ["header_class" => "cms cms-page " . $pagePath->getPage()->getName(), "title" => $pagePath->getTitle(), "description" => $pagePath->getDescription()],
-                'cache-for' => '1D'
+                'content'   => $cmsContent,
+                'cms'       => $pagePath->toArray(),
+                'meta'      => [
+                    'header_class' => 'cms cms-page ' . $pagePath->getPage()->getName(),
+                    'title'        => $pagePath->getTitle(),
+                    'description'  => $pagePath->getDescription(),
+                ],
+                'cache-for' => '1D',
             ]);
-
-            return $response;
         }
 
-        /** @var Router $router */
-        $router   = Oforge()->App()->getContainer()->get('router');
-        $uri      = $router->pathFor('not_found');
-        $response = $response->withRedirect($uri, 301);
-
         return $response;
-
     }
 
 }
