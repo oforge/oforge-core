@@ -188,7 +188,6 @@
     height: 3.5rem;
     width: 3.5rem;
     position: relative;
-    top: .4rem;
 }
 .unread__messages__flag {
     width: 2rem;
@@ -200,5 +199,10 @@
     right: 0.75rem;
     border: 1px solid white;
     margin-right: -2rem;
+}
+
+.unavailable {
+    pointer-events: none;
+    opacity: .6;
 }
 
