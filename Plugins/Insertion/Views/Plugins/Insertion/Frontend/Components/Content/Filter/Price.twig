@@ -2,5 +2,5 @@
     <a href="#"
        onclick="window.location.href = Oforge.updateQueryString('{{ f }}[]')"
        class="close"></a>
-    <span class="tag__text">{{ value[0]|number_format(0, ',', '.') }} € {{ i18n(f ~ '_between') }}  {{ value[1]|number_format(0, ',', '.') }} €</span>
+    <span class="tag__text">{% if value.min %} {{ i18n(f ~ '_from') }} {{ value.min|number_format(0, ',', '.') }} € {% endif %} {% if value.max %}{{ i18n(f ~ '_to') }} {{ value.max|number_format(0, ',', '.') }} €{% endif %}</span>
 </div>
