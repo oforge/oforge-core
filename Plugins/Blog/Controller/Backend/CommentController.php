@@ -76,6 +76,21 @@ class CommentController extends BaseCrudController {
         ],# author
         [
             'name'  => 'content',
+            'type'  => CrudDataTypes::CUSTOM,
+            'label' => ['key' => 'plugin_blog_property_comment_content', 'default' => 'Content'],
+            'crud'  => [
+                'index'  => 'readonly',
+                'view'   => 'off',
+                'create' => 'off',
+                'update' => 'off',
+                'delete' => 'off',
+            ],
+            'renderer' => [
+                'custom' => 'Plugins/Blog/Backend/Comment/Components/IndexColumnContent.twig',
+            ],
+        ],# content
+        [
+            'name'  => 'content',
             'type'  => CrudDataTypes::STRING,
             'label' => ['key' => 'plugin_blog_property_comment_content', 'default' => 'Content'],
             'crud'  => [
