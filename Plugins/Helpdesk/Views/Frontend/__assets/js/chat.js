@@ -23,6 +23,10 @@ if (typeof Oforge !== 'undefined') {
                 chatInput.scrollIntoView(false);
                 chatInput.focus();
             }
+            else {
+                let chatForm = document.getElementById('message--input-form');
+                chatForm.classList.add('unavailable');
+            }
         }
     });
 } else {

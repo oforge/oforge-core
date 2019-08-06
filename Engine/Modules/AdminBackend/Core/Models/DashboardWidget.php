@@ -1,119 +1,69 @@
 <?php
+
 namespace Oforge\Engine\Modules\AdminBackend\Core\Models;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
+
 /**
- * @ORM\Table(name="oforge_backend_dashboard_widget")
  * @ORM\Entity
+ * @ORM\Table(name="oforge_backend_dashboard_widget")
  */
-class DashboardWidget extends AbstractModel
-{
+class DashboardWidget extends AbstractModel {
     /**
-     * @var int
+     * @var int $id
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-
     /**
-     * @var string
-     * @ORM\Column(name="action", type="string", nullable=true)
-     */
-    private $action = null;
-
-    /**
-     * @var string
-     * @ORM\Column(name="template_name", type="string", nullable=true)
-     */
-    private $templateName = null;
-
-
-    /**
-     * @var string
-     * @ORM\Column(name="icon", type="string", nullable=true)
-     */
-    private $icon = null;
-
-    /**
-     * @var string
-     * @ORM\Column(name="i18n_name", type="string", nullable=false, unique=true)
+     * @var string $name
+     * @ORM\Column(name="name", type="string", nullable=false, unique=true)
      */
     private $name = null;
-
     /**
-     * @var string
-     * @ORM\Column(name="i18n_title", type="string", nullable=true)
+     * @var bool $active
+     * @ORM\Column(name="active", type="boolean", nullable=false, options={"default":false})
      */
-    private $title = null;
-
-
+    private $active = false;
     /**
-     * @var string
-     * @ORM\Column(name="position", type="string", nullable=true)
+     * @var string $template
+     * @ORM\Column(name="template", type="string", nullable=false)
+     */
+    private $template;
+    /**
+     * @var string|null $handler
+     * @ORM\Column(name="handler", type="string", nullable=true, options={"default":null})
+     */
+    private $handler = null;
+    /**
+     * @var string|null $label
+     * @ORM\Column(name="label", type="string", nullable=true, options={"default":null})
+     */
+    private $label = null;
+    /**
+     * @var string|null $position
+     * @ORM\Column(name="position", type="string", nullable=true, options={"default":null})
      */
     private $position = null;
-
     /**
-     * @var string
-     * @ORM\Column(name="css_class", type="string", nullable=true)
+     * @var string|null $cssClass
+     * @ORM\Column(name="css_class", type="string", nullable=true, options={"default":null})
      */
     private $cssClass = null;
 
     /**
      * @return int
      */
-    public function getId(): int
-    {
+    public function getId() : int {
         return $this->id;
     }
 
     /**
      * @return string
      */
-    public function getAction(): ?string
-    {
-        return $this->action;
-    }
-
-    /**
-     * @param string $action
-     *
-     * @return DashboardWidget
-     */
-    public function setAction(string $action)
-    {
-        $this->action = $action;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getIcon(): ?string
-    {
-        return $this->icon;
-    }
-
-    /**
-     * @param string $icon
-     *
-     * @return DashboardWidget
-     */
-    public function setIcon(string $icon)
-    {
-        $this->icon = $icon;
-        return $this;
-    }
-
-
-    /**
-     * @return string
-     */
-    public function getName(): string
-    {
+    public function getName() : string {
         return $this->name;
     }
 
@@ -122,79 +72,118 @@ class DashboardWidget extends AbstractModel
      *
      * @return DashboardWidget
      */
-    public function setName(string $name)
-    {
+    public function setName(string $name) : DashboardWidget {
         $this->name = $name;
+
         return $this;
     }
 
     /**
-     * @return string
+     * @return bool
      */
-    public function getTitle(): ?string
-    {
-        return $this->title;
+    public function isActive() : bool {
+        return $this->active;
     }
 
     /**
-     * @param string $title
+     * @param bool $active
      *
      * @return DashboardWidget
      */
-    public function setTitle(string $title)
-    {
-        $this->title = $title;
+    public function setActive(bool $active) : DashboardWidget {
+        $this->active = $active;
+
         return $this;
     }
 
     /**
      * @return string
      */
-    public function getPosition() : string {
+    public function getTemplate() : string {
+        return $this->template;
+    }
+
+    /**
+     * @param string $template
+     *
+     * @return DashboardWidget
+     */
+    public function setTemplate(string $template) : DashboardWidget {
+        $this->template = $template;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getHandler() : ?string {
+        return $this->handler;
+    }
+
+    /**
+     * @param string|null $handler
+     *
+     * @return DashboardWidget
+     */
+    public function setHandler(?string $handler) : DashboardWidget {
+        $this->handler = $handler;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getLabel() : ?string {
+        return $this->label;
+    }
+
+    /**
+     * @param string|null $label
+     *
+     * @return DashboardWidget
+     */
+    public function setLabel(?string $label) : DashboardWidget {
+        $this->label = $label;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPosition() : ?string {
         return $this->position;
     }
 
     /**
-     * @param string $position
+     * @param string|null $position
      *
      * @return DashboardWidget
      */
-    public function setPosition(string $position) {
+    public function setPosition(?string $position) : DashboardWidget {
         $this->position = $position;
+
         return $this;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getCssClass() : string {
+    public function getCssClass() : ?string {
         return $this->cssClass;
     }
 
     /**
-     * @param string $cssClass
+     * @param string|null $cssClass
      *
      * @return DashboardWidget
      */
-    public function setCssClass(string $cssClass) : DashboardWidget {
+    public function setCssClass(?string $cssClass) : DashboardWidget {
         $this->cssClass = $cssClass;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getTemplateName() : string {
-        return $this->templateName;
-    }
-
-    /**
-     * @param string $templateName
-     *
-     * @return DashboardWidget
-     */
-    public function setTemplateName(string $templateName) : DashboardWidget {
-        $this->templateName = $templateName;
-        return $this;
-    }
 }

@@ -1,0 +1,16 @@
+{% set cssClassValues = [
+    'box-default', 'box-primary', 'box-info', 'box-warning', 'box-success', 'box-danger', 'box-blue',
+    'bg-primary', 'bg-info', 'bg-warning', 'bg-success', 'bg-danger',
+    'bg-red', 'bg-yellow', 'bg-aqua', 'bg-blue', 'bg-light-blue', 'bg-green', 'bg-navy', 'bg-teal', 'bg-olive',
+    'bg-lime', 'bg-orange', 'bg-fuchsia', 'bg-purple', 'bg-maroon', 'bg-black'
+] %}
+    {% set cssClassHint = i18n('Leave clear to inherit parent css class', {en: 'Leave clear to inherit parent css class', de: 'Lassen Sie das Feld leer, um die übergeordnete CSS-Klasse zu erben'}) %}
+<select name="data[{{ widget.id }}][cssClass]" title="{{ cssClassHint }}" class="form-control select2">
+    <option value="">Inherit</option>
+    {% for cssClassValue in cssClassValues %}
+        <option {{ attr({
+            value: cssClassValue,
+            'selected': widget.cssClass == cssClassValue
+        }) }}>{{ cssClassValue }}</option>
+    {% endfor %}
+</select>
