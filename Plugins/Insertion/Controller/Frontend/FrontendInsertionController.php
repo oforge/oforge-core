@@ -28,6 +28,7 @@ use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
+use Oforge\Engine\Modules\Mailer\Services\MailService;
 use ReflectionException;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -185,14 +186,19 @@ class FrontendInsertionController extends SecureFrontendController {
 
         if (isset($user)) {
             /**
-             * @var $createService InsertionCreatorService
+             * @var InsertionCreatorService $createService
              */
             $createService = Oforge()->Services()->get('insertion.creator');
 
             /**
-             * @var $formsService InsertionFormsService
+             * @var InsertionFormsService $formsService
              */
             $formsService = Oforge()->Services()->get('insertion.forms');
+
+            /**
+             * @var MailService $mailService
+             */
+            $mailService = Oforge()->Services()->get('mail');
 
             if ($request->isPost()) {
                 $data = $formsService->processPostData($typeId);
@@ -209,7 +215,7 @@ class FrontendInsertionController extends SecureFrontendController {
                     $insertion = $insertionService->getInsertionById(intval($insertionId));
 
                     if (isset($insertion)) {
-                        $this->sendInsertionInfoMail($user, $insertion);
+                        $mailService->sendInsertionCreateInfoMail($user, $insertion);
                     }
 
                     $uri = $router->pathFor('insertions_feedback');
@@ -405,7 +411,25 @@ class FrontendInsertionController extends SecureFrontendController {
 
         Oforge()->View()->assign(['values' => $values]);
 
-        if (!($insertion->isActive() && $insertion->isModeration())) {
+        // if (!($insertion->isActive() && $insertion->isModeration())) {
+        //     $auth = '';
+        //     if (isset($_SESSION['auth'])) {
+        //         $auth = $_SESSION['auth'];
+        //     }
+        //
+        //     /** @var AuthService $authService */
+        //     $authService = Oforge()->Services()->get('auth');
+        //     $user        = $authService->decode($auth);
+        //
+        //     if ($user['type'] != BackendUser::class && $insertion->getUser()->getId() != $user['id']) {
+        //         return $response->withRedirect('/404', 301);
+        //     }
+        // }
+
+        /**
+         *  Changed the criteria
+         */
+        if (!($insertion->isActive())) {
             $auth = '';
             if (isset($_SESSION['auth'])) {
                 $auth = $_SESSION['auth'];
@@ -750,29 +774,4 @@ class FrontendInsertionController extends SecureFrontendController {
             'reportTypes' => $reportTypes,
         ]);
     }
-
-    /**
-     * @param User $user
-     * @param Insertion $insertion
-     *
-     * @throws ServiceNotFoundException
-     */
-    private function sendInsertionInfoMail(User $user, Insertion $insertion) {
-        $mailService   = Oforge()->Services()->get("mail");
-        $userMail      = $user->getEmail();
-        $mailerOptions = [
-            'to'       => [$userMail => $userMail],
-            'from'     => 'info',
-            'subject'  => I18N::translate('mailer_subject_insertion_created'),
-            'template' => 'InsertionCreated.twig',
-        ];
-        $templateData  = [
-            'insertionId'    => $insertion->getId(),
-            'insertionTitle' => $insertion->getContent()[0]->getTitle(),
-            'receiver_name'  => $user->getDetail()->getNickName(),
-            'sender_mail'    => $mailService->getSenderAddress('no_reply'),
-        ];
-        $mailService->send($mailerOptions, $templateData);
-    }
-
 }
