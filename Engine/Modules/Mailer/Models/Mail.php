@@ -1,6 +1,6 @@
 <?php
 
-namespace oforge\Engine\Modules\Mailer\Models;
+namespace Oforge\Engine\Modules\Mailer\Models;
 
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Doctrine\ORM\Mapping as ORM;
@@ -36,14 +36,36 @@ class Mail extends AbstractModel {
      */
     private $sent = false;
 
+    /**
+     * @param string $method
+     */
     public function setMethod(string $method) {
         $this->method = $method;
     }
 
+    /**
+     * @return string $method
+     */
+    public function getMethod() : string {
+        return $this->method;
+    }
+
+    /**
+     * @param array $params
+     */
     public function setParams(array $params) {
         $this->params = $params;
     }
 
+    /**
+     * @return array|null $params
+     */
+    public function getParams() : ?array {
+        return $this->params;
+    }
+    /**
+     * @param bool $sent
+     */
     public function setSent(bool $sent) {
         $this->sent = $sent;
     }
