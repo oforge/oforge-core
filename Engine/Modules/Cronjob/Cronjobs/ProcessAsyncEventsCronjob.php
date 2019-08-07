@@ -4,6 +4,7 @@ namespace Oforge\Engine\Modules\Cronjob\Cronjobs;
 
 use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Annotation\ORM\Discriminator\DiscriminatorEntry;
+use Oforge\Engine\Modules\Cronjob\Enums\ExecutionInterval;
 use Oforge\Engine\Modules\Cronjob\Models\CommandCronjob;
 
 /**
@@ -20,7 +21,7 @@ class ProcessAsyncEventsCronjob extends CommandCronjob {
         $this->fromArray([
             'name'              => 'oforge:events:process-async',
             'title'             => 'Async events processing',
-            'executionInterval' => 60,
+            'executionInterval' => ExecutionInterval::MINUTELY,
             'command'           => 'oforge:events:process-async',
         ]);
     }
