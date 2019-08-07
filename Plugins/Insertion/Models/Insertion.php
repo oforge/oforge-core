@@ -90,7 +90,7 @@ class Insertion extends AbstractModel {
      * @var boolean
      * @ORM\Column(name="active", type="boolean", nullable=true)
      */
-    private $active = false;
+    private $active = true;
 
     /**
      * @var boolean
