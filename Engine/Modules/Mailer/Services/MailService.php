@@ -23,7 +23,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use Twig_Error_Loader;
 use Twig_Error_Runtime;
 use Twig_Error_Syntax;
-use \Doctrine\ORM\ORMException;
+use Doctrine\ORM\ORMException;
 
 class MailService {
 
@@ -65,7 +65,7 @@ class MailService {
 
                 /**  Mailer Settings */
                 $mail->isSMTP();
-                $mail->setFrom($this->getSenderAddress($options['from']));
+                $mail->setFrom($this->getSenderAddress($options['from']),$configService->get('mailer_from_name'));
                 $mail->Host       = $configService->get("mailer_host");
                 $mail->Username   = $configService->get("mailer_smtp_username");
                 $mail->Port       = $configService->get("mailer_port");
@@ -130,6 +130,7 @@ class MailService {
                 return false;
             }
         }
+        return false;
     }
 
     /**
@@ -306,7 +307,7 @@ class MailService {
     /**
      * @param $userId
      * @param $newResultsCount
-     * @param $searchQuery
+     * @param $searchLink
      *
      * @return bool
      * @throws ConfigElementNotFoundException
@@ -369,8 +370,4 @@ class MailService {
         $this->send($mailerOptions, $templateData);
     }
 
-
-    public function getSystemMails() {
-        //
-    }
 }
