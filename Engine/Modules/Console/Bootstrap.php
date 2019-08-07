@@ -5,6 +5,7 @@ namespace Oforge\Engine\Modules\Console;
 use Oforge\Engine\Modules\Console\Commands\Cleanup\CleanupLogfilesCommand;
 use Oforge\Engine\Modules\Console\Commands\Console\CommandListCommand;
 use Oforge\Engine\Modules\Console\Commands\Core\PingCommand;
+use Oforge\Engine\Modules\Console\Commands\Core\ProcessAsyncEventsCommand;
 use Oforge\Engine\Modules\Console\Commands\Dev\DevCleanupBatchCommand;
 use Oforge\Engine\Modules\Console\Commands\Dev\DevDoctrineOrmCacheCleanupCommand;
 use Oforge\Engine\Modules\Console\Commands\Doctrine\DoctrineOrmWrapperCommand;
@@ -41,6 +42,7 @@ class Bootstrap extends AbstractBootstrap {
             ExampleCommandTwo::class,
             ExampleCommandThree::class,
             PingCommand::class,
+            ProcessAsyncEventsCommand::class,
             ServiceListCommand::class,
             ServiceRunCommand::class,
         ];

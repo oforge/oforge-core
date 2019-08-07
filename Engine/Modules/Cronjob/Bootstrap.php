@@ -7,6 +7,7 @@ use Oforge\Engine\Modules\Core\Models\Module\Module;
 use Oforge\Engine\Modules\Core\Models\Plugin\Plugin;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\Cronjob\Cronjobs\LogCleanupCronjob;
+use Oforge\Engine\Modules\Cronjob\Cronjobs\ProcessAsyncEventsCronjob;
 use Oforge\Engine\Modules\Cronjob\Models\AbstractCronjob;
 use Oforge\Engine\Modules\Cronjob\Services\CronjobService;
 
@@ -23,6 +24,7 @@ class Bootstrap extends AbstractBootstrap {
     public function __construct() {
         $this->cronjobs     = [
             LogCleanupCronjob::class,
+            ProcessAsyncEventsCronjob::class,
         ];
         $this->dependencies = [
             \Oforge\Engine\Modules\Console\Bootstrap::class,

@@ -11,6 +11,7 @@ use Oforge\Engine\Modules\Core\Models\Config\Config;
 use Oforge\Engine\Modules\Core\Models\Config\ConfigType;
 use Oforge\Engine\Modules\Core\Models\Config\Value;
 use Oforge\Engine\Modules\Core\Models\Endpoint\Endpoint;
+use Oforge\Engine\Modules\Core\Models\Event\EventModel;
 use Oforge\Engine\Modules\Core\Models\Module\Module;
 use Oforge\Engine\Modules\Core\Models\Plugin\Middleware;
 use Oforge\Engine\Modules\Core\Models\Plugin\Plugin;
@@ -42,6 +43,7 @@ class Bootstrap extends AbstractBootstrap {
         $this->models = [
             Config::class,
             Endpoint::class,
+            EventModel::class,
             KeyValue::class,
             Middleware::class,
             Module::class,
