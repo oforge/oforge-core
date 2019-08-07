@@ -2,9 +2,12 @@
 
 namespace Insertion\Services;
 
+use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Exception;
 use Insertion\Enum\AttributeType;
 use Insertion\Models\AttributeKey;
 use Insertion\Models\Insertion;
@@ -15,6 +18,7 @@ use Insertion\Models\InsertionZipCoordinates;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Annotation\Cache\Cache;
 use Oforge\Engine\Modules\Core\Annotation\Cache\CacheInvalidation;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 
 /**
@@ -35,13 +39,16 @@ class InsertionListService extends AbstractDatabaseAccess {
     }
 
     /**
+     * Search insertions by insertiontype and filter them by given params
+     *
      * @param $typeId
      * @param $params
-     * @Cache(slot="insertion", duration="T15M")
      *
      * @return array|null
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws DBALException
+     * @throws ORMException
+     * @throws ServiceNotFoundException
+     * @Cache(slot="insertion", duration="T15M")
      */
 
     public function search($typeId, $params) : ?array {
@@ -417,7 +424,7 @@ class InsertionListService extends AbstractDatabaseAccess {
         try {
             // returns null if it cannot be decoded. See https://php.net/manual/en/function.json-decode.php
             $current = json_decode($_COOKIE[$name], true);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
         }
         /**
          * filter by distance

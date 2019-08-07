@@ -2,6 +2,7 @@
 
 namespace Insertion\Controller\Frontend;
 
+use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Exception;
@@ -286,6 +287,7 @@ class FrontendInsertionController extends SecureFrontendController {
      * @return Response
      * @throws ORMException
      * @throws ServiceNotFoundException
+     * @throws DBALException
      * @EndpointAction(path="/search/{type}")
      */
     public function listingAction(Request $request, Response $response, $args) {
