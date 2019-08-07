@@ -43,6 +43,7 @@ class AccessExtension extends Twig_Extension implements Twig_ExtensionInterface 
             new Twig_Filter('ucfirst', 'ucfirst', [
                 'is_safe' => ['html'],
             ]),
+            new Twig_Filter('sortby', [$this, 'sortBy']),
         ];
     }
 
@@ -186,5 +187,12 @@ class AccessExtension extends Twig_Extension implements Twig_ExtensionInterface 
      */
     public function isString($value) {
         return is_string($value);
+    }
+
+    public function sortBy($array, $key) {
+        usort($array, function ($item1, $item2) use ($key) {
+            return $item1[$key] <=> $item2[$key];
+        });
+        return $array;
     }
 }
