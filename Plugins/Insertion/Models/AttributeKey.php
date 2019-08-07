@@ -50,6 +50,12 @@ class AttributeKey extends AbstractModel {
      */
     private $values;
 
+    /**
+     * @var boolean
+     * @ORM\Column(name="sortable", type="boolean", nullable=false)
+     */
+    private $sortable = false;
+
     public function __construct() {
         $this->values = new ArrayCollection();
     }
@@ -153,4 +159,23 @@ class AttributeKey extends AbstractModel {
 
         return $this;
     }
+
+    /**
+     * @return bool
+     */
+    public function isSortable() : bool {
+        return $this->sortable;
+    }
+
+    /**
+     * @param bool $sortable
+     *
+     * @return AttributeKey
+     */
+    public function setSortable(bool $sortable) : AttributeKey {
+        $this->sortable = $sortable;
+
+        return $this;
+    }
+
 }
