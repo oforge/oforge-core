@@ -33,10 +33,10 @@ class InsertionFormsService extends AbstractDatabaseAccess {
     }
 
     public function processPostData($sessionKey) : ?array {
+        $prefix = null;
         if (!isset($_SESSION['insertion' . $sessionKey])) {
             $_SESSION['insertion' . $sessionKey] = [];
         }
-
         $_SESSION['insertion' . $sessionKey] = array_merge($_SESSION['insertion' . $sessionKey], $_POST);
 
         /** @var MediaService $mediaService */
@@ -55,7 +55,13 @@ class InsertionFormsService extends AbstractDatabaseAccess {
                         $file[$k] = $_FILES["images"][$k][$key];
                     }
 
-                    $media     = $mediaService->add($file);
+                    if (isset($_SESSION['insertion' . $sessionKey]['insertion_title'])) {
+                        $prefix = trim($_SESSION['insertion' . $sessionKey]['insertion_title']);
+                        $prefix = preg_replace("/[^[:alnum:][:space:]]/iu", '', $prefix);
+                        $prefix = preg_replace("/\s+/", '_', $prefix);
+                    }
+
+                    $media     = $mediaService->add($file, $prefix);
                     $imageData = $media->toArray();
                     if (isset($_POST['images_temp_interactions']) && isset($_POST['images_temp_interactions'][$key])
                         && $_POST['images_temp_interactions'][$key] == 'main') {
