@@ -321,7 +321,7 @@ class MailService {
      * @throws Twig_Error_Runtime
      * @throws Twig_Error_Syntax
      */
-    public function sendNewSearchResultsInfoMail($userId, $newResultsCount, $searchQuery) {
+    public function sendNewSearchResultsInfoMail($userId, $newResultsCount, $searchLink) {
         /** @var  UserService $userService */
         $userService   = Oforge()->Services()->get('frontend.user.management.user');
 
@@ -337,7 +337,7 @@ class MailService {
         ];
         $templateData = [
             'resultCount' => $newResultsCount,
-            //TODO: 'resultLink'  => ...
+            'searchLink'  => $searchLink,
             'sender_mail' => $this->getSenderAddress('no_reply'),
             'receiver_name' => $user->getDetail()->getNickName(),
 
@@ -349,14 +349,18 @@ class MailService {
      * @param User $user
      * @param Insertion $insertion
      *
+     * @throws ConfigElementNotFoundException
+     * @throws ConfigOptionKeyNotExistException
      * @throws ServiceNotFoundException
+     * @throws Twig_Error_Loader
+     * @throws Twig_Error_Runtime
+     * @throws Twig_Error_Syntax
      */
     public function sendInsertionCreateInfoMail(User $user, Insertion $insertion) {
-        $mailService   = Oforge()->Services()->get("mail");
         $userMail      = $user->getEmail();
         $mailerOptions = [
             'to'       => [$userMail => $userMail],
-            'from'     => 'info',
+            'from'     => 'no_reply',
             'subject'  => I18N::translate('mailer_subject_insertion_created','Insertion was created'),
             'template' => 'InsertionCreated.twig',
         ];
@@ -364,14 +368,11 @@ class MailService {
             'insertionId'    => $insertion->getId(),
             'insertionTitle' => $insertion->getContent()[0]->getTitle(),
             'receiver_name'  => $user->getDetail()->getNickName(),
-            'sender_mail'    => $mailService->getSenderAddress('no_reply'),
+            'sender_mail'    => $this->getSenderAddress('no_reply'),
         ];
-        $mailService->send($mailerOptions, $templateData);
+        $this->send($mailerOptions, $templateData);
     }
 
-    public function batchSend() {
-        //
-    }
 
     public function getSystemMails() {
         //
