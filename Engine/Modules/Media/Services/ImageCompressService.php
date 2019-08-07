@@ -5,6 +5,7 @@ namespace Oforge\Engine\Modules\Media\Services;
 use Doctrine\ORM\ORMException;
 use Imagick;
 use ImagickException;
+use Insertion\Models\InsertionMedia;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Media\Models\Media;
@@ -17,7 +18,7 @@ use Oforge\Engine\Modules\Media\Models\Media;
 class ImageCompressService extends AbstractDatabaseAccess {
 
     public function __construct() {
-        parent::__construct(['default' => Media::class]);
+        parent::__construct(['default' => Media::class, 'insertionMedia' => InsertionMedia::class]);
     }
 
     /**
@@ -47,7 +48,7 @@ class ImageCompressService extends AbstractDatabaseAccess {
             $fileExtension = $this->getFileExtension($media);
 
             if (!empty($fileExtension)) {
-                $cacheUrl = substr($media->getPath(), 0, -strlen($fileExtension)) . '_' . $width . '.' . $fileExtension;
+                $cacheUrl = substr($media->getPath(), 0, -strlen($fileExtension) -1) . '_' . $width . '.' . $fileExtension;
                 //File is already compressed and stored
                 if (file_exists(ROOT_PATH . $cacheUrl)) {
                     return $cacheUrl;
@@ -56,6 +57,11 @@ class ImageCompressService extends AbstractDatabaseAccess {
                 if (extension_loaded('imagick')) {
                     $oldMedia = $media;
                     $media = $this->compress($media);
+
+                    // if compression fails
+                    if ($media === null) {
+                        $media = $oldMedia;
+                    }
 
                     if ($oldMedia !== $media) {
                         $this->entityManager()->update($media);
@@ -122,6 +128,9 @@ class ImageCompressService extends AbstractDatabaseAccess {
 
                 } elseif ($image_types[2] === IMAGETYPE_GIF) {
                     $imagick->setImageFormat('gif');
+                } else {
+                    // not supported file type
+                    return null;
                 }
 
                 $imagick->writeImage(ROOT_PATH . $media->getPath());
@@ -145,6 +154,21 @@ class ImageCompressService extends AbstractDatabaseAccess {
             }
         } catch (ImagickException $e) {
             Oforge()->Logger()->get()->error('ImagickException', $e->getTrace());
+        }
+    }
+
+    /**
+     * go through all medias that are stored in the database and compress them.
+     * @throws ORMException
+     */
+    public function convertAllImages() {
+        $allMedia = $this->repository()->findAll();
+
+        foreach($allMedia as $media) {
+            $media = $this->compress($media);
+            if ($media) {
+                $this->entityManager()->update($media);
+            }
         }
     }
 }

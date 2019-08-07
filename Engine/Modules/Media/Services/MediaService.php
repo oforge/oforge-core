@@ -6,6 +6,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\FileSystemHelper;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\Media\Models\Media;
@@ -22,11 +23,14 @@ class MediaService extends AbstractDatabaseAccess {
     }
 
     /**
+     * add a file to the filesystem and to the database
+     *
      * @param $file
+     * @param $prefix
      *
      * @return Media|null
      * @throws ORMException
-     * @throws OptimisticLockException
+     * @throws ServiceNotFoundException
      */
     public function add($file, $prefix = null) : ?Media {
         if (isset($file['error']) && $file['error'] == 0 && isset($file['size']) && $file['size'] > 0) {
@@ -51,13 +55,11 @@ class MediaService extends AbstractDatabaseAccess {
                 ]);
 
                 $media = $imageCompressService->compress($media);
-
                 $this->entityManager()->create($media);
 
                 return $media;
             }
         }
-
         return null;
     }
 
@@ -75,7 +77,7 @@ class MediaService extends AbstractDatabaseAccess {
         /** @var Media|null $result */
         $result = $this->repository()->findOneBy([
             'id' => $id,
-        ]);;
+        ]);
 
         return $result;
     }
@@ -90,7 +92,7 @@ class MediaService extends AbstractDatabaseAccess {
         /** @var Media|null $result */
         $result = $this->repository()->findOneBy([
             'path' => $path,
-        ]);;
+        ]);
 
         return $result;
     }
@@ -115,5 +117,4 @@ class MediaService extends AbstractDatabaseAccess {
         return $result;
 
     }
-
 }
