@@ -121,13 +121,22 @@ class Bootstrap extends AbstractBootstrap {
             'order'    => 7,
         ]);
         $configService->add([
+            'name'     => 'mailer_from_name',
+            'type'     => ConfigType::STRING,
+            'group'    => 'mailer',
+            'default'  => '',
+            'label'    => 'config_mailer_from_name',
+            'required' => false,
+            'order'    => 8
+        ]);
+        $configService->add([
             'name'     => 'mailer_from_host',
             'type'     => ConfigType::STRING,
             'group'    => 'mailer',
             'default'  => '',
             'label'    => 'config_mailer_from_host',
             'required' => true,
-            'order'    => 8,
+            'order'    => 9,
         ]);
         $configService->add([
             'name'     => 'mailer_from_info',
@@ -136,7 +145,7 @@ class Bootstrap extends AbstractBootstrap {
             'default'  => 'info',
             'label'    => 'config_mailer_from_info',
             'required' => false,
-            'order'    => 9,
+            'order'    => 10,
         ]);
         $configService->add([
             'name'     => 'mailer_from_no_reply',
@@ -145,7 +154,7 @@ class Bootstrap extends AbstractBootstrap {
             'default'  => 'no-reply',
             'label'    => 'config_mailer_from_no_reply',
             'required' => false,
-            'order'    => 10,
+            'order'    => 11,
         ]);
     }
 }
