@@ -17,11 +17,10 @@ class EventIdGenerator extends AbstractIdGenerator {
     public function generate(EntityManager $entityManager, $entity) {
         /** @var EventModel $entity */
         $now       = new DateTimeImmutable('now');
-        $timestamp = $now->format('Ymd-His-u');
+        $timestamp = $now->format('Y-m-d-H:i:s.u');
         $eventName = $entity->getEventName();
-        $rand      = md5(rand(0, 9));
 
-        return "$timestamp-$eventName-$rand";
+        return "$timestamp---$eventName";
     }
 
 }

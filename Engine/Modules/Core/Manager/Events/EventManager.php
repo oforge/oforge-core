@@ -43,7 +43,7 @@ class EventManager extends AbstractDatabaseAccess {
 
     /**
      * @param string $eventName
-     * @param int $sync
+     * @param int $sync One of [Event::ASYNC, Event::BOTH, Event::SYNC]
      * @param callable $callable
      * @param int $priority
      */
@@ -60,9 +60,11 @@ class EventManager extends AbstractDatabaseAccess {
     }
 
     /**
+     * Remove single event listener. It can be removed sync, async or both listeners.
+     *
      * @param string $eventName
      * @param callable $callable
-     * @param int $sync
+     * @param int $sync One of [Event::ASYNC, Event::BOTH, Event::SYNC]
      */
     public function detach(string $eventName, callable $callable, int $sync = Event::BOTH) {
         $listeners = &$this->listeners;
@@ -91,6 +93,8 @@ class EventManager extends AbstractDatabaseAccess {
     }
 
     /**
+     * Removes all event listeners for event name.
+     *
      * @param string $eventName
      */
     public function clearListeners(string $eventName) {
@@ -103,7 +107,7 @@ class EventManager extends AbstractDatabaseAccess {
      * @return mixed
      */
     public function trigger(Event $event) {
-        $listeners = $this->getListeners($event->getEventName(), Event::ASYNC);
+        $listeners = $this->getListeners($event, Event::ASYNC);
         if (!empty($listeners)) {
             $eventModel = $event->toEventModel();
             try {
@@ -112,7 +116,7 @@ class EventManager extends AbstractDatabaseAccess {
                 Oforge()->Logger()->logException($exception);
             }
         }
-        $listeners = $this->getListeners($event->getEventName(), Event::SYNC);
+        $listeners = $this->getListeners($event, Event::SYNC);
 
         return $this->processEvent($event, $listeners);
     }
@@ -161,6 +165,7 @@ class EventManager extends AbstractDatabaseAccess {
     }
 
     /**
+     * Registration of Event meta information (for developer preview in backend).
      * Array keys:<br>
      * <ul>
      *   <li><strong>name</strong>(required): Name of Event</li>
@@ -184,9 +189,7 @@ class EventManager extends AbstractDatabaseAccess {
         $this->eventMeta[$meta['name']] = $meta;
     }
 
-    /**
-     * @return array
-     */
+    /** @return array */
     public function getEventMeta() : array {
         $eventMeta = $this->eventMeta;
         foreach ($this->listeners as $eventName => $callables) {
@@ -222,13 +225,14 @@ class EventManager extends AbstractDatabaseAccess {
     }
 
     /**
-     * @param string $eventName
+     * @param Event $event
      * @param int $sync
      *
      * @return array
      */
-    protected function getListeners(string $eventName, int $sync = Event::SYNC) : array {
-        $list = [];
+    protected function getListeners(Event $event, int $sync = Event::SYNC) : array {
+        $eventName = $event->getEventName();
+        $list      = [];
         if (isset($this->listeners[$eventName])) {
             if (isset($this->sortedListeners[$eventName])) {
                 $callables = $this->sortedListeners[$eventName];
