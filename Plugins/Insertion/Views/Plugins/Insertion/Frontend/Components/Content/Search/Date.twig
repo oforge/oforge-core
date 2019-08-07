@@ -6,9 +6,9 @@
         <label for="{{ attribute.name }}_0"
                class="form__input form__input--inside-label">
             <input type="number"
-                   name="{{ attribute.name }}[]"
+                   name="{{ attribute.name }}[min]"
                    id="{{ attribute.name }}_0"
-                   value="{% if search.filter[attribute.name] is defined %}{{ search.filter[attribute.name][0] }}{% else %}{% endif %}"
+                   value="{% if search.filter[attribute.name] is defined %}{{ search.filter[attribute.name]['min'] }}{% else %}{% endif %}"
                    step="1"
                    min="0"
                    placeholder="{{ i18n('from') }}"
@@ -23,9 +23,9 @@
         <label for="{{ attribute.name }}_1"
                class="form__input form__input--inside-label">
             <input type="number"
-                   name="{{ attribute.name }}[]"
+                   name="{{ attribute.name }}[max]"
                    id="{{ attribute.name }}_1"
-                   value="{% if search.filter[attribute.name] is defined %}{{ search.filter[attribute.name][1] }}{% else %}{% endif %}"
+                   value="{% if search.filter[attribute.name] is defined %}{{ search.filter[attribute.name]['max'] }}{% else %}{% endif %}"
                    step="1"
                    min="0"
                    placeholder="{{ i18n('to') }}"

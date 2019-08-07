@@ -4,6 +4,7 @@ namespace Oforge\Engine\Modules\Cronjob\Cronjobs;
 
 use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Annotation\ORM\Discriminator\DiscriminatorEntry;
+use Oforge\Engine\Modules\Cronjob\Enums\ExecutionInterval;
 use Oforge\Engine\Modules\Cronjob\Models\CommandCronjob;
 
 /**
@@ -20,7 +21,7 @@ class LogCleanupCronjob extends CommandCronjob {
         $this->fromArray([
             'name'              => 'oforge:cleanup:logs',
             'title'             => 'Cleanup log files',
-            'executionInterval' => 7 * 24 * 60 * 60,
+            'executionInterval' => ExecutionInterval::WEEKLY,
             'command'           => 'oforge:cleanup:logs',
         ]);
     }
