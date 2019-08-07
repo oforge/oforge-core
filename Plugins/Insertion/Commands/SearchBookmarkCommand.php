@@ -56,8 +56,9 @@ class SearchBookmarkCommand extends AbstractCommand {
             $insertionList      = $insertionListService->search($bookmark->getInsertionType()->getId(), $params);
 
             $newInsertionsCount = sizeof($insertionList["query"]["items"]);
-            if($newInsertionsCount > 0) {
-                $mailService->sendNewSearchResultsInfoMail($user->getId(), $newInsertionsCount, $searchQuery=[] );
+            if ($newInsertionsCount > 0) {
+                $searchLink = $searchBookmarkService->getUrl($bookmark->getInsertionType(), $params);
+                $mailService->sendNewSearchResultsInfoMail($user->getId(), $newInsertionsCount, $searchLink);
             }
 
             $searchBookmarkService->setLastChecked($bookmark);
