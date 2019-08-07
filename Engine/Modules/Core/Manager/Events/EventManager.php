@@ -2,39 +2,35 @@
 
 namespace Oforge\Engine\Modules\Core\Manager\Events;
 
-use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
+use Doctrine\ORM\ORMException;
+use Exception;
+use InvalidArgumentException;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Helper\Statics;
+use Oforge\Engine\Modules\Core\Models\Event\EventModel;
 
 /**
  * Class EventManager
  *
  * @package Oforge\Engine\Modules\Core\Manager\Events
  */
-class EventManager {
+class EventManager extends AbstractDatabaseAccess {
     /** @var EventManager $instance */
     private static $instance;
     /** @var array $eventMeta */
     private $eventMeta = [];
     /** @var array<string, array> $syncListeners */
     private $listeners = [];
-    /** @var array<string, int> $asynclistenerCounter */
-    private $asynclistenerCounter = [];
+    /** @var array<string, array> $sortedListeners */
+    private $sortedListeners = [];
 
     protected function __construct() {
-        $this->attach('test1', true, 'trim');
-        $this->attach('test3', false, 'trim', 3);
-        $this->attach('test4', false, 'rtrim', 1);
-        echo "<pre>";
-        print_r($this->listeners);
-        print_r($this->asynclistenerCounter);
-        $this->detach('test3', 'trim');
-        print_r($this->asynclistenerCounter);
-
-        print_r($this->getListeners('test3', false));
-        die();
+        parent::__construct(EventModel::class);
     }
 
     /**
+     * @param bool $webStart
+     *
      * @return EventManager
      */
     public static function getInstance() : EventManager {
@@ -45,74 +41,212 @@ class EventManager {
         return self::$instance;
     }
 
-    public function registerEvent(array $eventMeta) {
-    }
-
-    public function getEvents() : array {
-        //TODO
-        return [];
-    }
-
-    public function attach(string $eventName, bool $sync, callable $callable, int $priority = Statics::DEFAULT_ORDER) {
+    /**
+     * @param string $eventName
+     * @param int $sync
+     * @param callable $callable
+     * @param int $priority
+     */
+    public function attach(string $eventName, int $sync, callable $callable, int $priority = Statics::DEFAULT_ORDER) {
+        $this->sortedListeners[$eventName] = null;
         if (!isset($this->listeners[$eventName])) {
             $this->listeners[$eventName] = [];
         }
-        $this->listeners[$eventName][]          = [
+        $this->listeners[$eventName][] = [
             'callable' => $callable,
             'sync'     => $sync,
             'priority' => $priority,
         ];
-        $this->asynclistenerCounter[$eventName] = ArrayHelper::get($this->asynclistenerCounter, $eventName, 0) + ($sync ? 0 : 1);
     }
 
-    public function detach(string $eventName, callable $callable, ?bool $sync = null) {
+    /**
+     * @param string $eventName
+     * @param callable $callable
+     * @param int $sync
+     */
+    public function detach(string $eventName, callable $callable, int $sync = Event::BOTH) {
         $listeners = &$this->listeners;
         if (isset($listeners[$eventName])) {
             $callables = &$listeners[$eventName];
             $indices   = [];
             foreach ($callables as $index => $data) {
-                if ($data['callable'] === $callable && ($sync === null || $sync === $data['sync'])) {
-                    $indices[] = $index;
-                    if (!$data['sync']) {
-                        $this->asynclistenerCounter[$eventName]--;
+                if ($data['callable'] === $callable) {
+                    if ($sync === $data['sync']) {
+                        $indices[] = $index;
+                    } else {
+                        $callables[$index]['sync'] = $data['sync'] - $sync;
+                        if ($callables[$index]['sync'] < 0) {
+                            $indices[] = $index;
+                        }
                     }
                 }
             }
-            foreach ($indices as $index) {
-                unset($callables[$index]);
+            if (!empty($indices)) {
+                foreach ($indices as $index) {
+                    unset($callables[$index]);
+                }
+                $this->sortedListeners[$eventName] = null;
             }
         }
     }
 
-    public function getListeners(string $eventName, ?bool $sync = null) : array {
+    /**
+     * @param string $eventName
+     */
+    public function clearListeners(string $eventName) {
+        $this->listeners[$eventName] = [];
+    }
+
+    /**
+     * @param Event $event
+     *
+     * @return mixed
+     */
+    public function trigger(Event $event) {
+        $listeners = $this->getListeners($event->getEventName(), Event::ASYNC);
+        if (!empty($listeners)) {
+            $eventModel = $event->toEventModel();
+            try {
+                $this->entityManager()->create($eventModel);
+            } catch (ORMException $exception) {
+                Oforge()->Logger()->logException($exception);
+            }
+        }
+        $listeners = $this->getListeners($event->getEventName(), Event::SYNC);
+
+        return $this->processEvent($event, $listeners);
+    }
+
+    public function processAsyncEvents() {
+        /** @var EventModel[] $eventModels */
+        try {
+            $eventModels = $repository = $this->repository()->findBy(['processed' => false], ['id' => 'ASC']);
+        } catch (ORMException $exception) {
+            Oforge()->Logger()->logException($exception);
+
+            return;
+        }
+        foreach ($eventModels as $eventModel) {
+            $eventModel->setProcessed();
+            try {
+                $this->entityManager()->update($eventModel);
+            } catch (ORMException $exception) {
+                Oforge()->Logger()->logException($exception);
+            }
+        }
+        foreach ($eventModels as $eventModel) {
+            $event     = Event::createFromEventModel($eventModel);
+            $listeners = $this->getListeners($event, Event::ASYNC);
+            $success   = true;
+            try {
+                $this->processEvent($event, $listeners);
+            } catch (Exception $exception) {
+                Oforge()->Logger()->logException($exception);
+                $success = false;
+                $eventModel->setProcessed(false);
+                try {
+                    $this->entityManager()->update($eventModel);
+                } catch (ORMException $exception) {
+                    Oforge()->Logger()->logException($exception);
+                }
+            }
+            if ($success) {
+                try {
+                    $this->entityManager()->remove($eventModel);
+                } catch (Exception $exception) {
+                    Oforge()->Logger()->logException($exception);
+                }
+            }
+        }
+    }
+
+    /**
+     * Array keys:<br>
+     * <ul>
+     *   <li><strong>name</strong>(required): Name of Event</li>
+     *   <li><strong>stoppable</strong>(required): Is event stoppable</li>
+     *   <li><strong>returnType</strong>(recommended): Type of return value</li>
+     *   <li><strong>data</strong>(recommended): Array of<ul>
+     *      <li>key: Data key name</li>
+     *      <li>value: Description of data value. Should contain the data type of value. I18n label key</li>
+     *     </ul>
+     *   </li>
+     * </ul>
+     *
+     * @param array $meta
+     */
+    public function registerEventMeta(array $meta) {
+        foreach (['name', 'stoppable'] as $key) {
+            if (!isset($meta[$key])) {
+                throw new InvalidArgumentException("Missing key '$key' in event meta.");
+            }
+        }
+        $this->eventMeta[$meta['name']] = $meta;
+    }
+
+    /**
+     * @return array
+     */
+    public function getEventMeta() : array {
+        $eventMeta = $this->eventMeta;
+        foreach ($this->listeners as $eventName => $callables) {
+            if (!isset($eventMeta[$eventName])) {
+                $eventMeta[$eventName] = [
+                    'name'       => $eventName,
+                    'stoppable'  => null,
+                    'returnType' => null,
+                    'data'       => null,
+                ];
+            }
+            $eventMeta[$eventName]['callables'] = count($callables);
+        }
+        ksort($eventMeta);
+
+        return $eventMeta;
+    }
+
+    /**
+     * @param Event $event
+     * @param array $listeners
+     *
+     * @return mixed|null
+     */
+    protected function processEvent(Event $event, array $listeners) {
+        foreach ($listeners as $listener) {
+            if (!$event->isPropagationStopped()) {
+                $listener['callable']($event);
+            }
+        }
+
+        return $event->getReturnValue();
+    }
+
+    /**
+     * @param string $eventName
+     * @param int $sync
+     *
+     * @return array
+     */
+    protected function getListeners(string $eventName, int $sync = Event::SYNC) : array {
         $list = [];
         if (isset($this->listeners[$eventName])) {
-            $callables = $this->listeners[$eventName];
+            if (isset($this->sortedListeners[$eventName])) {
+                $callables = $this->sortedListeners[$eventName];
+            } else {
+                $callables = $this->listeners[$eventName];
+                usort($callables, function ($a, $b) {
+                    return $a['priority'] - $b['priority'];
+                });
+                $this->sortedListeners[$eventName] = $callables;
+            }
             foreach ($callables as $index => $data) {
-                if ($sync === null || $sync === $data['sync']) {
+                if ($sync & $data['sync']) {
                     $list[] = $data;
                 }
             }
         }
-        usort($list, function ($a, $b) {
-            return $a['priority'] - $b['priority'];
-        });
 
         return $list;
-    }
-
-    public function clearListeners(string $eventName) {
-        if (isset($this->listeners[$eventName])) {
-            unset($this->listeners[$eventName]);
-        }
-    }
-
-    public function trigger(string $eventName, array $data = []) {
-        $this->triggerEvent(Event::create($eventName, $data));
-    }
-
-    public function triggerEvent(Event $event) {
-        //TODO
     }
 
 }
