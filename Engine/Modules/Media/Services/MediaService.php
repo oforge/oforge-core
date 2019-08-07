@@ -34,7 +34,7 @@ class MediaService extends AbstractDatabaseAccess {
      */
     public function add($file, $prefix = null) : ?Media {
         if (isset($file['error']) && $file['error'] == 0 && isset($file['size']) && $file['size'] > 0) {
-            $filename         = md5(basename($file['name']) . '_' . microtime()) . '.' . pathinfo($file['name'],PATHINFO_EXTENSION);
+            $filename = md5(basename($file['name']) . '_' . microtime()) . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
             if ($prefix !== null) {
                 $filename = strtolower($prefix . '_' . $filename);
             }
@@ -46,7 +46,7 @@ class MediaService extends AbstractDatabaseAccess {
             if (move_uploaded_file($file['tmp_name'], ROOT_PATH . $relativeFilePath)) {
                 /** @var ImageCompressService $imageCompressService */
                 $imageCompressService = Oforge()->Services()->get('image.compress');
-                $size = getimagesize(ROOT_PATH . $relativeFilePath);
+                $size                 = getimagesize(ROOT_PATH . $relativeFilePath);
 
                 $media = Media::create([
                     'type' => $file['type'],
@@ -60,11 +60,18 @@ class MediaService extends AbstractDatabaseAccess {
                 return $media;
             }
         }
+
         return null;
     }
 
     public function delete($id) {
-        //TODO
+        /** @var Media $target */
+        $target = $this->repository()->find($id);
+        if (FileSystemHelper::delete($target->getPath())) {
+            $this->entityManager()->remove($target);
+            return true;
+        }
+        return false;
     }
 
     /**
