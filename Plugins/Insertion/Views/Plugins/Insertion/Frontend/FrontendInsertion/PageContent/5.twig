@@ -7,7 +7,7 @@
             <div class="preview">
                 {% if data.images %}
                 <div class="preview__images">
-                    <img src="{{ data.images[0].path }}" alt="{{ data.images[0].name }}" class="preview__image">
+                    <img src="{{ media(data.images[0].path, 300) }}" alt="{{ data.images[0].name }}" class="preview__image">
                 </div>
                 {% endif %}
                 <div class="preview__content">
@@ -77,7 +77,11 @@
                 'route.referrer': url('insertions_createSteps', {type:  type.id, page: page}),
             })) %}
 
-            {% embed 'Plugins/FrontendUserManagement/Frontend/Components/Content/LoginRegistration.twig' %}
+            {% embed 'Plugins/FrontendUserManagement/Frontend/Components/Content/LoginRegistration.twig' with {
+                meta: mergeRecursive(meta|default({}), dotToNested({
+                    'route.referrer': url(meta.route.name, meta.route.params),
+                }))
+            }%}
                 {% block login_registration_subtitle %}{% endblock login_registration_subtitle %}
                 {% block login_registration__registration_benefits %}{% endblock login_registration__registration_benefits %}
             {% endembed %}

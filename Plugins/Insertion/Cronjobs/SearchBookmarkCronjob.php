@@ -4,6 +4,7 @@ namespace Insertion\Cronjobs;
 
 use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Annotation\ORM\Discriminator\DiscriminatorEntry;
+use Oforge\Engine\Modules\Cronjob\Enums\ExecutionInterval;
 use Oforge\Engine\Modules\Cronjob\Models\CommandCronjob;
 
 
@@ -26,7 +27,7 @@ class SearchBookmarkCronjob extends CommandCronjob {
         $this->fromArray([
             'name'              => 'oforge:insertion:searchBookmark',
             'title'             => 'Send notification mails for new insertions of search bookmark',
-            'executionInterval' => 24 * 60 * 60,
+            'executionInterval' => ExecutionInterval::DAILY,
             'command'           => 'oforge:plugin:insertion:searchBookmark',
         ]);
     }
