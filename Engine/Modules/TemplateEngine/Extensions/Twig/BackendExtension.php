@@ -3,12 +3,12 @@
 namespace Oforge\Engine\Modules\TemplateEngine\Extensions\Twig;
 
 use Doctrine\ORM\ORMException;
-use Exception;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\DashboardWidgetsService;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\UserFavoritesService;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Notifications\Abstracts\AbstractNotificationService;
 use Oforge\Engine\Modules\Notifications\Services\BackendNotificationService;
 use Twig_Extension;
@@ -186,7 +186,10 @@ class BackendExtension extends Twig_Extension implements Twig_ExtensionInterface
         /** @var DashboardWidgetsService $dashboardWidgetsService */
         $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
 
-        return $dashboardWidgetsService->getUserWidgets($forDashboard);
+        $user   = Oforge()->View()->get('user');
+        $userID = ArrayHelper::get($user, 'id');
+
+        return $dashboardWidgetsService->getUserWidgets($userID, $forDashboard);
     }
 
 }
