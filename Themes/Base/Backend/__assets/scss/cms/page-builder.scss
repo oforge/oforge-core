@@ -123,3 +123,12 @@
     padding: 10px 15px;
 }
 
+#cms_page_builder_container {
+    .alert {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 99999;
+    }
+}
