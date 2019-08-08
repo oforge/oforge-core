@@ -215,12 +215,24 @@ class FrontendInsertionController extends SecureFrontendController {
                     $insertion = $insertionService->getInsertionById(intval($insertionId));
 
                     if (isset($insertion)) {
-                        $mailService->sendInsertionCreateInfoMail($user, $insertion);
+                        try {
+                            $mailService->sendInsertionCreateInfoMail($user, $insertion);
+                        } catch (Exception $exception) {
+                            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('confirmation_mail_not_sent', [
+                                'en' => 'Confirmation could not be sent.',
+                                'de' => 'Bestätigungs-Mail konnte nicht versandt werden.',
+                            ]));
+                        }
                     }
 
                     $uri = $router->pathFor('insertions_feedback');
 
                     $formsService->clearProcessedData($typeId);
+
+                    Oforge()->View()->Flash()->addMessage('success', I18N::translate('insertion_created', [
+                        'en' => 'Insertion creation was successful.',
+                        'de' => 'Deine Inseratserstellung war erfolgreich.',
+                    ]));
 
                     return $response->withRedirect($uri, 301);
                 } catch (Exception $exception) {
@@ -341,6 +353,7 @@ class FrontendInsertionController extends SecureFrontendController {
      * @param $args
      *
      * @return Response
+     * @throws ORMException
      * @throws ServiceNotFoundException
      * @EndpointAction(path="/detailsearch/{type}")
      */
