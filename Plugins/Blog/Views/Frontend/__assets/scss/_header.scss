@@ -1,15 +1,25 @@
 .blog-header {
     position: absolute;
-    top: 100px;
+    top: 150px;
+    width: 100%;
+    transition: top .2s ease;
+}
 
-    @media only screen and (min-width: 480px) {
-        top: 240px;
+@media screen and (min-width: 480px) {
+    .blog-header {
+        top: 140px;
     }
+}
 
-    @media only screen and (min-width: 800px) {
+@media screen and (min-width: $screen-medium) {
+    .blog-header {
+        top: 120px;
+    }
+}
+
+@media screen and (min-width: $screen-large) {
+    .blog-header {
+        max-width: 1280px;
         top: 400px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100%;
     }
 }

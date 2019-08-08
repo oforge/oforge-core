@@ -10,7 +10,7 @@
         <div class="main">
             <div class="insertion__supplier">
                 <div class="user__picture"
-                     {% if profile.user.detail.image is defined %}style="background-image: url('{{ media(profile.user.detail.image, 300) }}');"{% endif %}></div>
+                     {% if profile.user.detail.image is not empty %}style="background-image: url('{{ media(profile.user.detail.image, 300) }}');"{% endif %}></div>
             </div>
 
             <div class="contact--links flex">
