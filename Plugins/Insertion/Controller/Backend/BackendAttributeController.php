@@ -153,6 +153,7 @@ class BackendAttributeController extends SecureBackendController {
             AttributeType::DATE,
             AttributeType::DATEYEAR,
             AttributeType::DATEMONTH,
+            AttributeType::PEDIGREE
         ];
 
         $attributeList = [];
