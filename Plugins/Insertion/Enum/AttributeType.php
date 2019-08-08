@@ -13,4 +13,5 @@ abstract class AttributeType {
     const NUMBER    = 'number';
     const TEXT      = 'text';
     const CONTAINER   = 'container';
+    const PEDIGREE = 'pedigree';
 }
