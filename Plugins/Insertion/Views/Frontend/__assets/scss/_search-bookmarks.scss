@@ -77,8 +77,12 @@
         }
 
         &:hover {
-            transform: scale(1.2);
-            transition: transform 150ms cubic-bezier(.33, .47, .46, .82);
+            cursor: pointer;
+
+            .icon {
+                transform: scale(1.2);
+                transition: transform 150ms cubic-bezier(.33, .47, .46, .82);
+            }
         }
     }
 }
