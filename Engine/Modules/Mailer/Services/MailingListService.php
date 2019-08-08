@@ -5,6 +5,7 @@ namespace Oforge\Engine\Modules\Mailer\Services;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Mailer\Models\Mail;
 use Doctrine\ORM\ORMException;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 
 class MailingListService extends AbstractDatabaseAccess {
 
@@ -25,8 +26,30 @@ class MailingListService extends AbstractDatabaseAccess {
         $this->entityManager()->create($mail);
     }
 
-    public function createNewDummyMail() {
-        $this->createNewMail('dummy_method', [1,2,3]);
+    /**
+     * @throws ORMException
+     */
+    public function createNewDummyMails() {
+        $this->createNewMail('sendInsertionApprovedInfoMail', [1]);
+        $this->createNewMail('sendInsertionApprovedInfoMail', [1]);
+        $this->createNewMail('sendInsertionApprovedInfoMail', [1]);
     }
 
+    /**
+     * @throws ORMException
+     * @throws ServiceNotFoundException
+     */
+    public function batchSend() {
+        /** @var MailService $mailService */
+        $mailService = Oforge()->Services()->get('mail');
+        /** @var Mail[] $unsentMails */
+        $unsentMails = $this->repository()->findBy(['sent' => false]);
+
+        foreach ($unsentMails as $mail) {
+            if (call_user_func_array([$mailService, $mail->getMethod()], $mail->getParams())) {
+               $mail->setSent(true);
+               $this->entityManager()->update($mail);
+            }
+        }
+    }
 }
