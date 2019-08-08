@@ -71,17 +71,18 @@ class AttributeService extends AbstractDatabaseAccess {
      * @param $name
      * @param $type
      * @param $filterType
+     * @param bool $sortable
      *
      * @return AttributeKey
      * @throws ORMException
-     * @throws OptimisticLockException
      */
-    public function updateAttributeKey($id, $name, $type, $filterType) {
+    public function updateAttributeKey($id, $name, $type, $filterType, $sortable = false) {
         /** @var AttributeKey $attributeKey */
         $attributeKey = $this->repository('attributeKey')->find($id);
         $attributeKey->setName($name);
         $attributeKey->setType($type);
         $attributeKey->setFilterType($filterType);
+        $attributeKey->setSortable($sortable);
 
         $this->entityManager()->update($attributeKey);
 

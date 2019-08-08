@@ -30,31 +30,42 @@
                                            value="{{ content.attribute.name }}">
                                 </div>
                                 <div class="form-group">
-                                    <label for="attributeType">{{ i18n("attribute_input_type", "Attribute Input Type") }}</label>
+                                    <label
+                                        for="attributeType">{{ i18n("attribute_input_type", "Attribute Input Type") }}</label>
                                     <select name="type" id="attributeType" class="form-control select2">
                                         {% for type in content.types %}
                                             <option value="{{ type }}"
-                                                    {% if content.attribute.type is same as(type) %}
+                                                {% if content.attribute.type is same as(type) %}
                                             selected
-                                                    {% endif %}>
+                                                {% endif %}>
                                                 {{ type }}
                                             </option>
                                         {% endfor %}
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="attributeFilterType">{{ i18n("attribute_filter_type", "Attribute Filter Type") }}</label>
+                                    <label
+                                        for="attributeFilterType">{{ i18n("attribute_filter_type", "Attribute Filter Type") }}</label>
                                     <select name="filterType" id="attributeFilterType" class="form-control select2">
                                         {% for type in content.types %}
                                             <option value="{{ type }}"
-                                                    {% if content.attribute.filterType is same as(type) %}
+                                                {% if content.attribute.filterType is same as(type) %}
                                             selected
-                                                    {% endif %}>
+                                                {% endif %}>
                                                 {{ type }}
                                             </option>
                                         {% endfor %}
                                     </select>
                                 </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="sortable">
+                                    {{ i18n("is-sortable", "Sortable") }}
+                                </label>
+                                <input name="sortable" type="checkbox"
+                                       id="sortable"
+                                       {{ content.attribute.sortable ? 'checked' : '' }}>
                             </div>
 
                             <div data-editable-table class="table-editable">
@@ -98,9 +109,9 @@
                                                     <option value="0" selected>{{ i18n('none', 'None') }}</option>
                                                     {% for attribute in content.attributeList %}
                                                         <option value="{{ attribute.id }}"
-                                                                {% if value.subAttributeKey.id is defined and value.subAttributeKey.id == attribute.id %}
-                                                                    selected
-                                                                {% endif %}
+                                                            {% if value.subAttributeKey.id is defined and value.subAttributeKey.id == attribute.id %}
+                                                                selected
+                                                            {% endif %}
                                                         >{{ attribute.name }}</option>
                                                     {% endfor %}
                                                 </select>

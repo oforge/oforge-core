@@ -22,7 +22,7 @@
 
 @media screen and (min-width: $screen-medium) {
     .attribute-group {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
 
         .form__control {
             margin-bottom: $size-large;

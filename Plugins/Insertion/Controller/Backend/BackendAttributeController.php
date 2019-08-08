@@ -81,9 +81,11 @@ class BackendAttributeController extends SecureBackendController {
         if ($request->isPost()) {
             $body           = $request->getParsedBody();
             $body['values'] = json_decode($body['values'], true);
+            $sortable = isset($body['sortable']) && $body['sortable'] === 'on';
+
             if (isset($request->getQueryParams()['id'])) {
                 /** @var AttributeKey $attributeKey */
-                $attributeKey = $attributeService->updateAttributeKey($attributeKeyId, $body['name'], $body['type'], $body['filterType']);
+                $attributeKey = $attributeService->updateAttributeKey($attributeKeyId, $body['name'], $body['type'], $body['filterType'], $sortable);
                 /** @var AttributeValue[] $attributeValues */
                 $attributeValues = $attributeKey->getValues();
                 $idList          = [];
