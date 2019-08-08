@@ -1,6 +1,6 @@
 {% extends "@parent/Frontend/Layout.twig" %}
 {% block content %}
-    {% include 'Plugins/FrontendUserManagement/Frontend/Components/AccountNavBar.twig' with { back_link : true, content_title: i18n('user_details', 'User details')} %}
+    {% include 'Plugins/FrontendUserManagement/Frontend/Components/AccountNavBar.twig' with { back_link : true, content_title: i18n('frontend_account_insertions_profile', 'My Profile')} %}
     <div class="account content content--edit">
         {% block account %}
             <div class="panel panel--account flex">
@@ -97,7 +97,7 @@
                                            value="{{ profile.imprintCompanyTaxId }}" />
                                 </div>
                                 <div class="submit">
-                                    <input type="submit" class="form__input form__input--submit button" />
+                                    <input type="submit" class="form__input form__input--submit button" value="{{ i18n('save') }}"/>
                                 </div>
                             </div>
                         </form>

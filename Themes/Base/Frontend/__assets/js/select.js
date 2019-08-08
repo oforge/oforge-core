@@ -23,10 +23,12 @@
                     selectItemIsChecked: '.' + classNames.selectItemIsChecked,
                     selectValue: '.' + classNames.selectValue,
                     subSelect: '[data-sub-select]',
-                    selectFilter: '[data-select-filter]'
+                    selectFilter: '[data-select-filter]',
+                    noSubSelect: '.select:not(.select--is-sub)[data-sortable]'
                 };
                 var selectList = document.querySelectorAll(self.selector);
                 var currentOpenSelectFilterInputSelector = selectors.selectIsOpen + ' ' + selectors.selectFilter;
+                var noSubSelectListSortable = document.querySelectorAll(selectors.noSubSelect);
 
                 function addHiddenInputToCheckItem(check) {
                     var input = document.createElement('input');
@@ -179,7 +181,6 @@
 
                     if (evt.target.matches(selectors.selectText)) {
                         var select = evt.target.closest(self.selector);
-
                         var parentSelectList = document.querySelectorAll('.select:not(.select--is-sub)');
 
                         if (select) {
@@ -200,8 +201,30 @@
                     }
                 }
 
+                function sortValues(list, items) {
+                    var arr = [];
+                    items.forEach(function(item) {
+                        arr.push(item);
+                    });
+                    arr.sort(function(a, b) {
+                        return a.innerHTML == b.innerHTML ? 0 : (a.innerHTML > b.innerHTML ? 1 : -1);
+                    });
+                    arr.forEach(function(item) {
+                        list.appendChild(item);
+                    });
+                }
+
+                if (noSubSelectListSortable.length > 0) {
+                    noSubSelectListSortable.forEach(function (select) {
+                        var list = select.querySelector('.simplebar-content');
+                        var items = select.querySelectorAll('.select__item:not(.select__item--sub)');
+                        sortValues(list, items);
+                    });
+                }
+
                 if (selectList.length > 0) {
                     selectList.forEach(function (select) {
+
                         select.checkedValues = [];
                         select.checkedNames = [];
 
@@ -231,9 +254,3 @@
         })
     }
 })();
-
-
-
-
-
-

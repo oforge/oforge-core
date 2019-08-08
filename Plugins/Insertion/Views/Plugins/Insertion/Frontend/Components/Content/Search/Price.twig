@@ -5,9 +5,9 @@
         <label for="price-from"
                class="form__input form__input--inside-label">
             <input type="number"
-                   name="price[]"
+                   name="price[min]"
                    id="price-from"
-                   value="{% if search.filter['price'] is defined %}{{ search.filter['price'][0] }}{% else %}{% endif %}"
+                   value="{% if search.filter['price'] is defined %}{{ search.filter['price']['min'] }}{% else %}{% endif %}"
                    step="1"
                    min="0"
                    max="2000000"
@@ -24,9 +24,9 @@
         <label for="price-to"
                class="form__input form__input--inside-label">
             <input type="number"
-                   name="price[]"
+                   name="price[max]"
                    id="price-to"
-                   value="{% if search.filter['price'] is defined %}{{ search.filter['price'][1] }}{% else %}{% endif %}"
+                   value="{% if search.filter['price'] is defined %}{{ search.filter['price']['max'] }}{% else %}{% endif %}"
                    step="1"
                    min="0"
                    max="2000000"

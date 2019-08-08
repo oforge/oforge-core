@@ -96,7 +96,6 @@
                     </svg>
                 </a>
             {% endif %}
-
             <a class="mobile-button"
                onclick="return confirm('{{ i18n('really-want-to-delete-insertion', 'Willst Du das Inserat wirklich löschen?') }}')"
                href="{{ url('frontend_account_insertions_delete', {id: item.id}) }}">

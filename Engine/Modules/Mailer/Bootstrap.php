@@ -5,14 +5,13 @@ namespace Oforge\Engine\Modules\Mailer;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Models\Config\ConfigType;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\Mailer\Services\InlineCssService;
 use Oforge\Engine\Modules\Mailer\Services\MailService;
-use SystemMailService\SystemMailService;
+use Oforge\Engine\Modules\Mailer\Services\MailingListService;
 
 /**
  * Class Bootstrap
@@ -23,15 +22,15 @@ class Bootstrap extends AbstractBootstrap {
 
     public function __construct() {
         $this->services = [
-            'mail'       => MailService::class,
-            'inline.css' => InlineCssService::class,
+            'mail'         => MailService::class,
+            'mailing.list' => MailingListService::class,
+            'inline.css'   => InlineCssService::class,
         ];
     }
 
     /**
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws ConfigElementAlreadyExistException
      * @throws ConfigOptionKeyNotExistException
      * @throws ServiceNotFoundException
      */
@@ -122,13 +121,22 @@ class Bootstrap extends AbstractBootstrap {
             'order'    => 7,
         ]);
         $configService->add([
+            'name'     => 'mailer_from_name',
+            'type'     => ConfigType::STRING,
+            'group'    => 'mailer',
+            'default'  => '',
+            'label'    => 'config_mailer_from_name',
+            'required' => false,
+            'order'    => 8
+        ]);
+        $configService->add([
             'name'     => 'mailer_from_host',
             'type'     => ConfigType::STRING,
             'group'    => 'mailer',
             'default'  => '',
             'label'    => 'config_mailer_from_host',
             'required' => true,
-            'order'    => 8,
+            'order'    => 9,
         ]);
         $configService->add([
             'name'     => 'mailer_from_info',
@@ -137,7 +145,7 @@ class Bootstrap extends AbstractBootstrap {
             'default'  => 'info',
             'label'    => 'config_mailer_from_info',
             'required' => false,
-            'order'    => 9,
+            'order'    => 10,
         ]);
         $configService->add([
             'name'     => 'mailer_from_no_reply',
@@ -146,7 +154,7 @@ class Bootstrap extends AbstractBootstrap {
             'default'  => 'no-reply',
             'label'    => 'config_mailer_from_no_reply',
             'required' => false,
-            'order'    => 10,
+            'order'    => 11,
         ]);
     }
 }

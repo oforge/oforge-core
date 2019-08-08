@@ -8,21 +8,21 @@ use Oforge\Engine\Modules\Cronjob\Enums\ExecutionInterval;
 use Oforge\Engine\Modules\Cronjob\Models\CommandCronjob;
 
 /**
- * Class LogCleanupCronjob
- *
+ * Class ProcessAsyncEventsCronjob
  * @ORM\Entity
  * @DiscriminatorEntry()
+ *
  * @package Oforge\Engine\Modules\Cronjob\Cronjobs
  */
-class LogCleanupCronjob extends CommandCronjob {
+class ProcessAsyncEventsCronjob extends CommandCronjob {
 
     public function __construct() {
         parent::__construct();
         $this->fromArray([
-            'name'              => 'oforge:cleanup:logs',
-            'title'             => 'Cleanup log files',
-            'executionInterval' => ExecutionInterval::WEEKLY,
-            'command'           => 'oforge:cleanup:logs',
+            'name'              => 'oforge:events:process-async',
+            'title'             => 'Async events processing',
+            'executionInterval' => ExecutionInterval::MINUTELY,
+            'command'           => 'oforge:events:process-async',
         ]);
     }
 
