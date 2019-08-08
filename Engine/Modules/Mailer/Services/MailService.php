@@ -10,6 +10,7 @@ use InvalidArgumentException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Forge\ForgeSlimApp;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
@@ -60,7 +61,7 @@ class MailService {
                 $configService = Oforge()->Services()->get("config");
                 $exceptions    = $configService->get("mailer_exceptions");
 
-                /** @var  $mail */
+                /** @var PHPMailer $mail */
                 $mail          = new PHPMailer($exceptions);
 
                 /**  Mailer Settings */
@@ -72,8 +73,8 @@ class MailService {
                 $mail->SMTPAuth   = $configService->get("mailer_smtp_auth");
                 $mail->Password   = $configService->get("mailer_smtp_password");
                 $mail->SMTPSecure = $configService->get("mailer_smtp_secure");
-                $mail->Encoding = 'base64';
-                $mail->CharSet = 'UTF-8';
+                $mail->Encoding   = 'base64';
+                $mail->CharSet    = 'UTF-8';
 
                 /** Add Recipients ({to,cc,bcc}Addresses) */
                 foreach ($options["to"] as $key => $value) {
@@ -297,7 +298,7 @@ class MailService {
         ];
         $templateData = [
             'insertionId'      => $insertionId,
-            // 'insertionTitle'   => $insertion->getContent(),
+            // TODO: add title 'insertionTitle'   => $insertion->getContent(),
             'receiver_name'    => $user->getDetail()->getNickName(),
             'sender_mail'      => $this->getSenderAddress('no_reply'),
         ];
