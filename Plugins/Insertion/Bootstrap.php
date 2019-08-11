@@ -4,6 +4,7 @@ namespace Insertion;
 
 use Doctrine\DBAL\Cache\QueryCacheProfile;
 use FrontendUserManagement\Services\AccountNavigationService;
+use Insertion\Services\InsertionProfileProgressService;
 use Insertion\Commands\ReminderCommand;
 use Insertion\Commands\SearchBookmarkCommand;
 use Insertion\Controller\Backend\BackendAttributeController;
@@ -82,6 +83,7 @@ class Bootstrap extends AbstractBootstrap {
             'insertion.profile'         => InsertionProfileService::class,
             'insertion.slider'          => InsertionSliderService::class,
             'insertion.zip'             => InsertionZipService::class,
+            'insertion.profile.progress'=> InsertionProfileProgressService::class,
         ];
 
         $this->models = [
