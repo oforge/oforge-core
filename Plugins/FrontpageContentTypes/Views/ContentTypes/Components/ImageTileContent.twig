@@ -1,6 +1,6 @@
 {% block image_tile_content %}
     {% if data.link %}
-        <a href="{{ url(data.link) }}">
+        <a href="{{ url(data.link) }}" {% if data.targetBlank %}target="_blank"{% endif %}>
     {% endif %}
     <div class="content" style="background-color:{{ data.backgroundcolor }}">
         <div class="image-container">
