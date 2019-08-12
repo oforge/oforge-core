@@ -7,7 +7,7 @@
         {% set inputValue = search.filter[inputName] %}
     {% endif %}
 
-    <h3 class="title">{{ i18n(attribute.name) }}</h3>
+    <h3 class="title">{{ i18n('search_' ~ attribute.name) }}</h3>
     {% set inputName = 'search_ancestor' %}
     <div class="form__control form__control--pedigree">
         <label for="{{ attribute.name ~ '[' ~ inputName ~ '_1]' }}" class="form__label">{{ i18n(inputName ~ '_1') }}</label>
