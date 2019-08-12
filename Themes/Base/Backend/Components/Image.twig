@@ -1,7 +1,7 @@
 <a href="#" class="image-field" data-config="{{ config|default({})|json_encode }}">
     <div class="preview-image">
         {% set imagePlaceholder = '/Themes/Base/ContentTypes/__assets/img/image.png' %}
-        {% set imageUrl = (data is empty ? imagePlaceholder : media(data, 200)) %}
+        {% set imageUrl = (data is empty or data == 0 ? imagePlaceholder : media(data, 200)) %}
         <img data-preview="{{ name }}" width="200" title="{{ data }}" src="{{ imageUrl }}" data-current="{{ imageUrl }}"
              data-placeholder="{{ imagePlaceholder }}" />
     </div>
