@@ -240,49 +240,71 @@ class InsertionListService extends AbstractDatabaseAccess
 
                                 break;
                             case AttributeType::PEDIGREE:
+                                //TODO: Refactoring necessary
                                 /** @var AttributeKey $subAttributeKeys */
                                 $subAttributeValues = $attributeKey->getValues();
                                 $pedigreeAttributeCount = $attributeCount;
 
-                                $sqlQueryWhere .= " and (";
+                                if (sizeof($subAttributeValues) > 0) {
+                                    $sqlQueryWhere .= " and ";
 
-                                $first = true;
-                                /** @var AttributeValue $subAttributeValue */
-                                foreach ($subAttributeValues as $subAttributeValue) {
-                                    $attributeCount++;
+                                    if (isset($value['search_ancestor_1'])) {
+                                        $sqlQueryWhere .= "(";
+                                        $args["v" . $pedigreeAttributeCount . "value1"] = $value['search_ancestor_1'];
+                                        $first = true;
+                                        /** @var AttributeValue $subAttributeValue */
+                                        foreach ($subAttributeValues as $subAttributeValue) {
+                                            $attributeCount++;
 
-                                    $subAttributeKeysId = $subAttributeValue->getSubAttributeKey()->getId();
+                                            $subAttributeKeysId = $subAttributeValue->getSubAttributeKey()->getId();
 
-                                    if (!$first) {
-                                        $sqlQueryWhere .= " or ";
-                                    }
+                                            if (!$first) {
+                                                $sqlQueryWhere .= " or ";
+                                            }
 
-                                    $first = false;
+                                            $first = false;
 
-                                    $sqlQueryWhere .= " v$attributeCount.attribute_key  = :v" . $attributeCount . "key and (";
+                                            $sqlQueryWhere .= " v$attributeCount.attribute_key  = :v" . $attributeCount . "key and (";
+                                            $sqlQueryWhere .= "v$attributeCount.insertion_attribute_value = :v" . $pedigreeAttributeCount . "value1";
+                                            $sqlQueryWhere .= ")";
 
-                                    $valueCount = 1;
-                                    $firstValue = true;
-
-                                    foreach ($value as $singleValue) {
-
-                                        if (!$firstValue) {
-                                            $sqlQueryWhere .= " or ";
+                                            $sqlQuery .= " left join oforge_insertion_insertion_attribute_value v$attributeCount on v$attributeCount.insertion_id = i.id and v$attributeCount.attribute_key = :v"
+                                                . $attributeCount . "key";
+                                            $args["v" . $attributeCount . "key"] = "$subAttributeKeysId";
                                         }
-                                        $firstValue = false;
 
-                                        $sqlQueryWhere .= "v$attributeCount.insertion_attribute_value = :v" . $pedigreeAttributeCount . "value$valueCount";
-
-                                        $searchAncestor = $singleValue;
-                                        $args["v" . $pedigreeAttributeCount . "value" . $valueCount++] = $searchAncestor;
+                                        $sqlQueryWhere .= ")";
                                     }
-                                    $sqlQueryWhere .= ")";
 
-                                    $sqlQuery .= " left join oforge_insertion_insertion_attribute_value v$attributeCount on v$attributeCount.insertion_id = i.id and v$attributeCount.attribute_key = :v"
-                                        . $attributeCount . "key";
-                                    $args["v" . $attributeCount . "key"] = "$subAttributeKeysId";
+                                    if (isset($value['search_ancestor_1']) && isset($value['search_ancestor_2'])) {
+                                        $sqlQueryWhere .= " and ";
+                                    }
+
+                                    if (isset($value['search_ancestor_2'])) {
+                                        $sqlQueryWhere .= " (";
+                                        $args["v" . $pedigreeAttributeCount . "value2"] = $value['search_ancestor_2'];
+                                        $first = true;
+                                        /** @var AttributeValue $subAttributeValue */
+                                        foreach ($subAttributeValues as $subAttributeValue) {
+                                            $attributeCount++;
+
+                                            $subAttributeKeysId = $subAttributeValue->getSubAttributeKey()->getId();
+
+                                            if (!$first) {
+                                                $sqlQueryWhere .= " or ";
+                                            }
+                                            $first = false;
+
+                                            $sqlQueryWhere .= " v$attributeCount.attribute_key  = :v" . $attributeCount . "key and (";
+                                            $sqlQueryWhere .= "v$attributeCount.insertion_attribute_value = :v" . $pedigreeAttributeCount . "value2)";
+
+                                            $sqlQuery .= " left join oforge_insertion_insertion_attribute_value v$attributeCount on v$attributeCount.insertion_id = i.id and v$attributeCount.attribute_key = :v"
+                                                . $attributeCount . "key";
+                                            $args["v" . $attributeCount . "key"] = "$subAttributeKeysId";
+                                        }
+                                        $sqlQueryWhere .= ")";
+                                    }
                                 }
-                                $sqlQueryWhere .= ")";
 
                                 break;
 
