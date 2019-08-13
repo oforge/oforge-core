@@ -54,7 +54,7 @@ class MediaService extends AbstractDatabaseAccess {
                     'path' => str_replace('\\', '/', $relativeFilePath),
                 ]);
 
-                $media = $imageCompressService->compress($media);
+              //  $media = $imageCompressService->compress($media);
                 $this->entityManager()->create($media);
 
                 return $media;
