@@ -39,6 +39,7 @@ class ImageTileMedium extends AbstractContentType {
             'linktext'        => ArrayHelper::get($contentData, 'linktext'),
             'backgroundcolor' => ArrayHelper::get($contentData, 'backgroundcolor'),
             'fontcolor'       => ArrayHelper::get($contentData, 'fontcolor'),
+            'targetBlank'     => ArrayHelper::get($contentData, 'targetBlank', false),
         ];
 
         return $data;
@@ -61,6 +62,7 @@ class ImageTileMedium extends AbstractContentType {
             'linktext'        => ArrayHelper::get($data, 'linktext', ''),
             'backgroundcolor' => ArrayHelper::get($data, 'backgroundcolor', ''),
             'fontcolor'       => ArrayHelper::get($data, 'fontcolor', ''),
+            'targetBlank'     => ArrayHelper::get($data, 'targetBlank', false),
         ];
 
         if (isset($_FILES["image"])) {
@@ -100,6 +102,7 @@ class ImageTileMedium extends AbstractContentType {
             'linktext'        => ArrayHelper::get($contentData, 'linktext'),
             'backgroundcolor' => ArrayHelper::get($contentData, 'backgroundcolor'),
             'fontcolor'       => ArrayHelper::get($contentData, 'fontcolor'),
+            'targetBlank'     => ArrayHelper::get($contentData, 'targetBlank', false),
         ];
 
         return $data;

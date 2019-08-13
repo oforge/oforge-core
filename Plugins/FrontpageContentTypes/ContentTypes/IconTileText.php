@@ -37,6 +37,7 @@ class IconTileText extends AbstractContentType {
             'link'            => ArrayHelper::get($contentData, 'link'),
             'backgroundcolor' => ArrayHelper::get($contentData, 'backgroundcolor'),
             'fontcolor'       => ArrayHelper::get($contentData, 'fontcolor'),
+            'targetBlank'     => ArrayHelper::get($contentData, 'targetBlank', false),
         ];
 
         return $data;
@@ -57,6 +58,7 @@ class IconTileText extends AbstractContentType {
             'link'            => ArrayHelper::get($data, 'link', ''),
             'backgroundcolor' => ArrayHelper::get($data, 'backgroundcolor', ''),
             'fontcolor'       => ArrayHelper::get($data, 'fontcolor', ''),
+            'targetBlank'     => ArrayHelper::get($data, 'targetBlank', false),
         ];
 
         if (isset($_FILES["icon"])) {
@@ -95,6 +97,7 @@ class IconTileText extends AbstractContentType {
             'link'            => ArrayHelper::get($contentData, 'link'),
             'backgroundcolor' => ArrayHelper::get($contentData, 'backgroundcolor'),
             'fontcolor'       => ArrayHelper::get($contentData, 'fontcolor'),
+            'targetBlank'     => ArrayHelper::get($contentData, 'targetBlank', false),
         ];
 
         return $data;
