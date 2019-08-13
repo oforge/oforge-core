@@ -5,14 +5,14 @@ namespace Oforge\Engine\Modules\Mailer;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
-use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Models\Config\ConfigType;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\Mailer\Services\InlineCssService;
 use Oforge\Engine\Modules\Mailer\Services\MailService;
-use SystemMailService\SystemMailService;
+use Oforge\Engine\Modules\Mailer\Services\MailingListService;
+use Oforge\Engine\Modules\I18n\Helper\I18N;
 
 /**
  * Class Bootstrap
@@ -23,29 +23,72 @@ class Bootstrap extends AbstractBootstrap {
 
     public function __construct() {
         $this->services = [
-            'mail'       => MailService::class,
-            'inline.css' => InlineCssService::class,
+            'mail'         => MailService::class,
+            'mailing.list' => MailingListService::class,
+            'inline.css'   => InlineCssService::class,
         ];
     }
 
     /**
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws ConfigElementAlreadyExistException
      * @throws ConfigOptionKeyNotExistException
      * @throws ServiceNotFoundException
      */
     public function install() {
-        // TODO in import csv
-        // I18N::translate('config_mailer_host', 'Server', 'en');
-        // I18N::translate('config_mailer_port', 'Server Port', 'en');
-        // I18N::translate('config_mailer_username', 'Username', 'en');
-        // I18N::translate('config_mailer_exceptions', 'Exceptions', 'en');
-        // I18N::translate('config_mailer_smtp_password', 'Password', 'en');
-        // I18N::translate('config_mailer_smtp_debug', 'Debug', 'en');
-        // I18N::translate('config_mailer_smtp_auth', 'Auth', 'en');
-        // I18N::translate('config_mailer_smtp_secure', 'TLS encryption', 'en');
-        // I18N::translate('config_mailer_from', 'From', 'en');
+        I18N::translate('config_mailer_host',[
+          'en' => 'Mailer Host',
+          'de' => 'Mailer Host',
+        ]);
+        I18N::translate('config_mailer_port',[
+            'en' => 'Mailer Port',
+            'de' => 'Mailer Port',
+        ]);
+        I18N::translate('config_mailer_smtp_username',[
+            'en' => 'SMTP Username',
+            'de' => 'SMTP Benutzername',
+        ]);
+        I18N::translate('config_mailer_smtp_password',[
+            'en' => 'SMTP Password',
+            'de' => 'SMTP Passwort',
+        ]);
+        I18N::translate('config_mailer_smtp_secure',[
+            'en' => 'Activate SMTP Authentication',
+            'de' => 'Aktiviere SMTP Authentifizierung',
+        ]);
+        I18N::translate('config_mailer_smtp_auth',[
+            'en' => 'SMTP Encription (tls or ssl)',
+            'de' => 'SMTP Verschlüsselung (tls oder ssl)',
+        ]);
+        I18N::translate('mailer_smtp_debug',[
+            'en' => 'SMTP Debug Level (0 - 4)',
+            'de' => 'SMTP Debug Level (0 - 4)',
+        ]);
+        I18N::translate('config_mailer_exceptions',[
+            'en' => 'Mailer Exceptions',
+            'de' => 'Mailer Exceptions',
+        ]);
+        I18N::translate('config_mailer_from_name',[
+            'en' => 'Sender Name',
+            'de' => 'Absendername',
+        ]);
+        I18N::translate('config_mailer_from_host',[
+            'en' => 'Sender Hostname',
+            'de' => 'Absender Hostname',
+        ]);
+        I18N::translate('config_mailer_from_host',[
+            'en' => 'Sender Hostname',
+            'de' => 'Absender Hostname',
+        ]);
+        I18N::translate('config_mailer_from_info',[
+            'en' => 'Sender Prefix for Info Mails',
+            'de' => 'Absender Präfix für Info-Mails',
+        ]);
+        I18N::translate('config_mailer_from_no_reply',[
+            'en' => 'Sender Prefix for No-Reply Mails',
+            'de' => 'Absender Präfix für No-Reply Mails',
+        ]);
+
         /** @var ConfigService $configService */
         $configService = Oforge()->Services()->get('config');
 
@@ -122,13 +165,22 @@ class Bootstrap extends AbstractBootstrap {
             'order'    => 7,
         ]);
         $configService->add([
+            'name'     => 'mailer_from_name',
+            'type'     => ConfigType::STRING,
+            'group'    => 'mailer',
+            'default'  => '',
+            'label'    => 'config_mailer_from_name',
+            'required' => false,
+            'order'    => 8
+        ]);
+        $configService->add([
             'name'     => 'mailer_from_host',
             'type'     => ConfigType::STRING,
             'group'    => 'mailer',
             'default'  => '',
             'label'    => 'config_mailer_from_host',
             'required' => true,
-            'order'    => 8,
+            'order'    => 9,
         ]);
         $configService->add([
             'name'     => 'mailer_from_info',
@@ -137,7 +189,7 @@ class Bootstrap extends AbstractBootstrap {
             'default'  => 'info',
             'label'    => 'config_mailer_from_info',
             'required' => false,
-            'order'    => 9,
+            'order'    => 10,
         ]);
         $configService->add([
             'name'     => 'mailer_from_no_reply',
@@ -146,7 +198,7 @@ class Bootstrap extends AbstractBootstrap {
             'default'  => 'no-reply',
             'label'    => 'config_mailer_from_no_reply',
             'required' => false,
-            'order'    => 10,
+            'order'    => 11,
         ]);
     }
 }

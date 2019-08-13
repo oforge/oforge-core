@@ -14,9 +14,15 @@
     {% endif %}
 
     <script>
+        $("#messageContainer .alert-dismissible button, #messageContainerMeta .alert-dismissible button").click(function() {
+            $(this).parent().parent().empty();
+        });
         window.setTimeout(function() {
-            $(".alert").fadeOut(500, function(){
-                $(".alert").remove();
+            $("#messageContainer .alert").fadeOut(500, function(){
+                $("#messageContainer").empty();
+            });
+            $("#messageContainerMeta .alert").fadeOut(500, function(){
+                $("#messageContainerMeta").empty();
             });
         }, 3000);
     </script>

@@ -143,10 +143,12 @@ class FrontendUsersInsertionController extends SecureFrontendController {
         return $this->modifyInsertion($request, $response, $args, 'disable');
     }
 
+
     /**
      * @param Request $request
      * @param Response $response
      *
+     * @throws ORMException
      * @throws ServiceNotFoundException
      */
     public function bookmarksAction(Request $request, Response $response) {
@@ -163,7 +165,11 @@ class FrontendUsersInsertionController extends SecureFrontendController {
 
         $bookmarks = $bookmarkService->list($user);
 
-        Oforge()->View()->assign(["bookmarks" => $bookmarks]);
+        Oforge()->View()->assign([
+            "bookmarks"  => $bookmarks,
+            "animations" => Oforge()->View()->Flash()->getData('animations'),
+        ]);
+        Oforge()->View()->Flash()->clearData('animations');
     }
 
     /**
@@ -356,6 +362,8 @@ class FrontendUsersInsertionController extends SecureFrontendController {
         if (isset($refererHeader) && sizeof($refererHeader) > 0) {
             $url = $refererHeader[0];
         }
+
+        Oforge()->View()->Flash()->setData('animations', ['heartbeat' => true]);
 
         return $response->withRedirect($url, 301);
     }
