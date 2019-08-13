@@ -19,3 +19,4 @@ node_modules
 var
 vendor
 Themes/*.lnk
+/Themes/AllYourHorses/

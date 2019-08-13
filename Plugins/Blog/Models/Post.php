@@ -66,10 +66,15 @@ class Post extends AbstractModel {
      */
     private $headerSubtext = null;
     /**
-     * @var int|null $headerImage
-     * @ORM\Column(name="header_image", type="integer", nullable=true, options={"default":null})
+     * @var int|null $headerImagePreview
+     * @ORM\Column(name="header_image_preview", type="integer", nullable=true, options={"default":null})
      */
-    private $headerImage = null;
+    private $headerImagePreview = null;
+    /**
+     * @var int|null $headerImageLarge
+     * @ORM\Column(name="header_image_large", type="integer", nullable=true, options={"default":null})
+     */
+    private $headerImageLarge = null;
     /**
      * @var string $excerpt
      * @ORM\Column(name="excerpt", type="text", nullable=false, options={"default":""})
@@ -231,17 +236,35 @@ class Post extends AbstractModel {
     /**
      * @return int|null
      */
-    public function getHeaderImage() : ?int {
-        return $this->headerImage;
+    public function getHeaderImageLarge() : ?int {
+        return $this->headerImageLarge;
     }
 
     /**
-     * @param int|null $headerImage
+     * @param int|null $headerImageLarge
      *
      * @return Post
      */
-    public function setHeaderImage(?int $headerImage) : Post {
-        $this->headerImage = $headerImage;
+    public function setHeaderImageLarge(?int $headerImageLarge) : Post {
+        $this->headerImageLarge = $headerImageLarge;
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getHeaderImagePreview() : ?int {
+        return $this->headerImagePreview;
+    }
+
+    /**
+     * @param int|null $headerImagePreview
+     *
+     * @return Post
+     */
+    public function setHeaderImagePreview(?int $headerImagePreview) : Post {
+        $this->headerImagePreview = $headerImagePreview;
 
         return $this;
     }
