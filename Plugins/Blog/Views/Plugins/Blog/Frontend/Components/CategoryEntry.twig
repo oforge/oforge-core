@@ -6,7 +6,9 @@
             <svg class="icon icon--secondary">
                 <use xlink:href="#{{ blogCategory.icon|default(config('blog_category_icon_default')) }}"></use>
             </svg>
-            {{ blogCategory.name }}
+            <span>
+                {{ blogCategory.name }}
+            </span>
         </a>
     </div>
 {% else %}

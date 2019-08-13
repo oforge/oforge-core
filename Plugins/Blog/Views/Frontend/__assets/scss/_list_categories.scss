@@ -6,6 +6,7 @@
         justify-content: center;
         flex-wrap: wrap;
     }
+
     &__category {
         padding: $size-small;
         width: 10rem;
@@ -17,12 +18,14 @@
                 background: $color-secondary;
                 color: $color-light;
                 text-align: center;
+
                 .icon {
                     fill: $color-light;
                 }
             }
         }
     }
+
     &__category-link {
         background: $color-light;
         display: flex;
@@ -40,6 +43,13 @@
             width: 4rem;
             height: 4rem;
             transition: width .2s ease, height .2s ease;
+        }
+
+        span {
+            width: 90%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
     }
 }
