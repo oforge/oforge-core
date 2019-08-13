@@ -1,5 +1,6 @@
 {% block icontilebasic %}
     <a href="{% if data.link %}{{ url(data.link) }}{% endif %}" class="{{ data.css }} icon-tile--text"
+       {% if data.targetBlank %}target="_blank"{% endif %}
        style="background-color:{{ data.backgroundcolor }};">
         <div class="content">
             <img class="lazy" data-src="{{ media(data.url, 300) }}" alt="brr">
