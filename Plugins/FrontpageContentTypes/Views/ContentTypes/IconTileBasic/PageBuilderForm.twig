@@ -3,11 +3,11 @@
         <label>{{ i18n('type_icon', 'icon') }}</label>
         {% if data.url %}
             <div class="preview-image">
-                <img src="{{ media(data.url, 200) }}" width="200" title="{{ data.url }}"/>
+                <img src="{{ media(data.url, 200) }}" width="200" title="{{ data.url }}" />
             </div>
         {% endif %}
 
-        <input class="form-control" name="icon" type="file" accept=".svg" >
+        <input class="form-control" name="icon" type="file" accept=".svg">
     </div>
 
     <div class="form-group">
@@ -19,14 +19,26 @@
         <label>{{ i18n('icon_tile_link', 'Link') }}</label>
         <input type="text" name="link" class="form-control" value="{{ data.link }}">
     </div>
-    <div>
+    <div class="form-group">
+        <label>{{ i18n('open_in_new_tab', {en: 'Open in new Tab', de: 'In neuem Tab öffnen'}) }}</label>
+        <div>
+            {% include 'Backend/Components/Form/Switch.twig' with {
+                name: 'targetBlank',
+                checked: data.externalLink,
+            } only %}
+        </div>
+    </div>
+    <div class="form-group">
         <label>{{ i18n('background_color', 'Hintergrundfarbe') }}</label>
-        <input type="color" name="backgroundcolor"
-               value="{% if data.backgroundcolor %}{{ data.backgroundcolor }}{% else %}#ffffff{% endif %}">
+        <div>
+            <input type="color" name="backgroundcolor" value="{{ data.backgroundcolor|default('#ffffff') }}" />
+        </div>
     </div>
-    <div>
+    <div class="form-group">
         <label>{{ i18n('font_color', 'Schriftfarbe') }}</label>
-        <input type="color" name="fontcolor"
-               value="{% if data.fontcolor %}{{ data.fontcolor }}{% else %}#6f8e2b{% endif %}">
+        <div>
+            <input type="color" name="fontcolor" value="{{ data.fontcolor|default('#6f8e2b') }}" />
+        </div>
     </div>
+
 </div>
