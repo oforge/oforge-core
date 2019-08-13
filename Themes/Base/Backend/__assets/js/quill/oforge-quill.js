@@ -33,7 +33,6 @@ var OforgeQuill = (function ($) {
                     BindFormField: $inputField.get(0),
                     HtmlSourceEditor: true,
                 },
-
                 // placeholder: 'Compose an epic...',
                 debug: 'error',
                 theme: 'snow'
