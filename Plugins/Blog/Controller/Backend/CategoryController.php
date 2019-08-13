@@ -34,7 +34,13 @@ class CategoryController extends BaseCrudController {
         [
             'name'   => 'name',
             'type'   => CrudDataTypes::STRING,
-            'label'  => ['key' => 'plugin_blog_property_category_name', 'default' => 'Name'],
+            'label' => [
+                'key'     => 'plugin_blog_property_category_name',
+                'default' => [
+                    'en' => 'Name',
+                    'de' => 'Name',
+                ],
+            ],
             'crud'   => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
@@ -49,7 +55,13 @@ class CategoryController extends BaseCrudController {
         [
             'name'  => 'language',
             'type'  => CrudDataTypes::SELECT,
-            'label' => ['key' => 'plugin_blog_property_category_language', 'default' => 'Language'],
+            'label' => [
+                'key'     => 'plugin_blog_property_category_language',
+                'default' => [
+                    'en' => 'Language',
+                    'de' => 'Sprache',
+                ],
+            ],
             'crud'  => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
@@ -62,7 +74,13 @@ class CategoryController extends BaseCrudController {
         [
             'name'   => 'active',
             'type'   => CrudDataTypes::BOOL,
-            'label'  => ['key' => 'plugin_blog_property_category__active', 'default' => 'Active'],
+            'label' => [
+                'key'     => 'plugin_blog_property_category__active',
+                'default' => [
+                    'en' => 'Active',
+                    'de' => 'Aktiv',
+                ],
+            ],
             'crud'   => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
@@ -77,7 +95,13 @@ class CategoryController extends BaseCrudController {
         [
             'name'  => 'seoUrlPath',
             'type'  => CrudDataTypes::STRING,
-            'label' => ['key' => 'plugin_blog_property_category_seoUrlPath', 'default' => 'SEO url path'],
+            'label' => [
+                'key'     => 'plugin_blog_property_category_seoUrlPath',
+                'default' => [
+                    'en' => 'SEO url path',
+                    'de' => 'SEO URL-Pfad',
+                ],
+            ],
             'crud'  => [
                 'index'  => 'off',
                 'view'   => 'readonly',
@@ -89,7 +113,13 @@ class CategoryController extends BaseCrudController {
         [
             'name'  => 'icon',
             'type'  => CrudDataTypes::STRING,
-            'label' => ['key' => 'plugin_blog_property_category_icon', 'default' => 'Icon'],
+            'label' => [
+                'key'     => 'plugin_blog_property_category_icon',
+                'default' => [
+                    'en' => 'Icon',
+                    'de' => 'Icon',
+                ],
+            ],
             'crud'  => [
                 'index'  => 'off',
                 'view'   => 'readonly',
@@ -101,7 +131,13 @@ class CategoryController extends BaseCrudController {
         [
             'name'  => 'cssClass',
             'type'  => CrudDataTypes::STRING,
-            'label' => ['key' => 'plugin_blog_property_category_cssClasses', 'default' => 'CSS classes'],
+            'label' => [
+                'key'     => 'plugin_blog_property_category_cssClasses',
+                'default' => [
+                    'en' => 'CSS classes',
+                    'de' => 'CSS Klassen',
+                ],
+            ],
             'crud'  => [
                 'index'  => 'off',
                 'view'   => 'readonly',
@@ -113,7 +149,13 @@ class CategoryController extends BaseCrudController {
         [
             'name'  => 'headerTitle',
             'type'  => CrudDataTypes::STRING,
-            'label' => ['key' => 'plugin_blog_property_category_headerTitle', 'default' => 'Header title'],
+            'label' => [
+                'key'     => 'plugin_blog_property_category_headerTitle',
+                'default' => [
+                    'en' => 'Header title',
+                    'de' => 'Header-Titel',
+                ],
+            ],
             'crud'  => [
                 'index'  => 'off',
                 'view'   => 'readonly',
@@ -125,7 +167,13 @@ class CategoryController extends BaseCrudController {
         [
             'name'  => 'headerSubtext',
             'type'  => CrudDataTypes::TEXT,
-            'label' => ['key' => 'plugin_blog_property_category_headerSubtext', 'default' => 'Header subtext'],
+            'label' => [
+                'key'     => 'plugin_blog_property_category_headerSubtext',
+                'default' => [
+                    'en' => 'Header subtext',
+                    'de' => 'Header-Subtext',
+                ],
+            ],
             'crud'  => [
                 'index'  => 'off',
                 'view'   => 'readonly',
@@ -137,7 +185,13 @@ class CategoryController extends BaseCrudController {
         [
             'name'  => 'headerImage',
             'type'  => CrudDataTypes::IMAGE,
-            'label' => ['key' => 'plugin_blog_property_category_headerImage', 'default' => 'Header image'],
+            'label' => [
+                'key'     => 'plugin_blog_property_category_headerImage',
+                'default' => [
+                    'en' => 'Header image',
+                    'de' => 'Headerbild',
+                ],
+            ],
             'crud'  => [
                 'index'  => 'off',
                 'view'   => 'readonly',
@@ -149,7 +203,13 @@ class CategoryController extends BaseCrudController {
         [
             'name'     => 'goto',
             'type'     => CrudDataTypes::CUSTOM,
-            'label'    => ['key' => 'plugin_blog_goto', 'default' => 'Go-to'],
+            'label'    => [
+                'key'     => 'plugin_blog_goto',
+                'default' => [
+                    'en' => 'Go-to',
+                    'de' => 'Gehe zu',
+                ],
+            ],
             'crud'     => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
@@ -164,7 +224,13 @@ class CategoryController extends BaseCrudController {
         [
             'name'     => 'notice',
             'type'     => CrudDataTypes::CUSTOM,
-            'label'    => ['key' => 'plugin_blog_delete_notice', 'default' => 'Notice'],
+            'label'    => [
+                'key'     => 'plugin_blog_delete_notice',
+                'default' => [
+                    'en' => 'Notice',
+                    'de' => 'Anmerkung',
+                ],
+            ],
             'crud'     => [
                 'index'  => 'off',
                 'view'   => 'off',
@@ -181,12 +247,24 @@ class CategoryController extends BaseCrudController {
     protected $indexFilter = [
         'language' => [
             'type'  => CrudFilterType::SELECT,
-            'label' => ['key' => 'plugin_blog_filter_category_language', 'default' => 'Select language'],
+            'label'   => [
+                'key'     => 'plugin_blog_filter_category_language',
+                'default' => [
+                    'en' => 'Search in language',
+                    'de' => 'Sprache auswählen',
+                ],
+            ],
             'list'  => 'getSelectLanguages',
         ],
         'name'     => [
             'type'    => CrudFilterType::TEXT,
-            'label'   => ['key' => 'plugin_blog_filter_category_name', 'default' => 'Search in name'],
+            'label'   => [
+                'key'     => 'plugin_blog_filter_category_name',
+                'default' => [
+                    'en' => 'Search in name',
+                    'de' => 'Im Namen suchen',
+                ],
+            ],
             'compare' => CrudFilterComparator::LIKE,
         ],
     ];
