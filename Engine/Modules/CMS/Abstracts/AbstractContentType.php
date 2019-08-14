@@ -4,9 +4,11 @@ namespace Oforge\Engine\Modules\CMS\Abstracts;
 
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
-use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
+use Oforge\Engine\Modules\CMS\Exceptions\DuplicateException;
 use Oforge\Engine\Modules\CMS\Models\Content\Content;
+use Oforge\Engine\Modules\CMS\Models\Content\ContentParent;
+use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 
 abstract class AbstractContentType extends AbstractDatabaseAccess {
     protected $forgeEntityManager = null;
@@ -40,12 +42,12 @@ abstract class AbstractContentType extends AbstractDatabaseAccess {
 
         $this->contentTypeEntity = $this->repository('contentType')->findOneBy(["classPath" => get_class($this)]);
 
-        $this->id          = $this->contentTypeEntity->getId();
-        $this->groupId     = $this->contentTypeEntity->getGroup()->getId();
-        $this->name        = $this->contentTypeEntity->getName();
-        $this->path        = $this->contentTypeEntity->getPath();
-        $this->icon        = $this->contentTypeEntity->getIcon();
-        $this->class_path  = $this->contentTypeEntity->getClassPath();
+        $this->id         = $this->contentTypeEntity->getId();
+        $this->groupId    = $this->contentTypeEntity->getGroup()->getId();
+        $this->name       = $this->contentTypeEntity->getName();
+        $this->path       = $this->contentTypeEntity->getPath();
+        $this->icon       = $this->contentTypeEntity->getIcon();
+        $this->class_path = $this->contentTypeEntity->getClassPath();
     }
 
     /**
@@ -244,9 +246,10 @@ abstract class AbstractContentType extends AbstractDatabaseAccess {
      * @return mixed
      */
     public function getContentData() {
-        if($this->contentData === null) {
+        if ($this->contentData === null) {
             $this->contentData = [];
         }
+
         return $this->contentData;
     }
 
@@ -309,17 +312,20 @@ abstract class AbstractContentType extends AbstractDatabaseAccess {
     /**
      * Load content entity from database to $content
      *
-     * @param int $id content id
+     * @param int|Content $contentOrContentID ID of content entity
      *
      * @return AbstractContentType $this
      * @throws ORMException
      */
-    public function load(int $id) {
-        if (!$id) {
+    public function load($contentOrContentID) {
+        if (!isset($contentOrContentID)) {
             return $this;
         }
-
-        $this->contentEntity = $this->repository('content')->findOneBy(["id" => $id]);
+        if (is_int($contentOrContentID)) {
+            $this->contentEntity = $this->repository('content')->findOneBy(["id" => $contentOrContentID]);
+        } elseif (is_object($contentOrContentID) && is_subclass_of($contentOrContentID, Content::class)) {
+            $this->contentEntity = $contentOrContentID;
+        }
 
         if ($this->contentEntity && $this->contentEntity->getId() > 0 && $this->contentEntity->getType()
             && $this->contentEntity->getType()->getId() === $this->id) {
@@ -343,4 +349,27 @@ abstract class AbstractContentType extends AbstractDatabaseAccess {
 
     public function setOrder($order) {
     }
+
+    /**
+     * Duplicates content entity. An error returns null.
+     *
+     * @return Content|null
+     * @throws ORMException
+     */
+    public function duplicate() : Content {
+        /** @var Content $srcContent */
+        $srcContent = $this->contentEntity;
+        $dstContent = Content::create($srcContent->toArray(0, ['id', 'parent']));
+        $dstContent->setName(uniqid());
+        $dstContent->setParent(null);
+        if ($srcContent->getParent() !== null) {
+            /** @var ContentParent $srcContentParent */
+            $srcContentParent = $srcContent->getParent();
+            //TODO folder handling???
+        }
+        $this->entityManager()->create($dstContent);
+
+        return $dstContent;
+    }
+
 }
