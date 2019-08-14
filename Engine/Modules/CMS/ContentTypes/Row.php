@@ -5,7 +5,6 @@ namespace Oforge\Engine\Modules\CMS\ContentTypes;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\CMS\Abstracts\AbstractContentType;
-use Oforge\Engine\Modules\CMS\Exceptions\DuplicateException;
 use Oforge\Engine\Modules\CMS\Models\Content\Content;
 use Oforge\Engine\Modules\CMS\Models\ContentTypes\Row as RowModel;
 
