@@ -1,6 +1,6 @@
 <div class="tag" data-key="{{ f }}">
     <a href="#"
-       onclick="window.location.href = Oforge.updateQueryString('{{ f }}[]')"
+       onclick="window.location.href = Oforge.updateQueryString('price[min]', undefined, Oforge.updateQueryString('price[max]'))"
        class="close"></a>
     <span class="tag__text">{% if value.min %} {{ i18n(f ~ '_from') }} {{ value.min|number_format(0, ',', '.') }} € {% endif %} {% if value.max %}{{ i18n(f ~ '_to') }} {{ value.max|number_format(0, ',', '.') }} €{% endif %}</span>
 </div>
