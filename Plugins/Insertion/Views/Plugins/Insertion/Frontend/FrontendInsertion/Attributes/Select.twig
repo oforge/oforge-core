@@ -6,10 +6,14 @@
          data-select="insertion[{{ attribute.id }}]{{ attribute.type == 'multi' ? '[]' : '' }}">
         <p class="select__text" data-select-text=""></p>
         {% if not isSubAttribute %}
-        <input type="text"
-               class="select__filter"
-               data-select-filter=""
-               placeholder="{{ i18n('search') }}">
+            {# Invisible input needed to make the select element required #}
+            {% if required %}
+                <input class="select__require-input" type="text" required tabindex="-1" value="">
+            {% endif %}
+            <input type="text"
+                   class="select__filter"
+                   data-select-filter=""
+                   placeholder="{{ i18n('search') }}">
         {% endif %}
         <ul class="select__list"
             data-select-list=""
