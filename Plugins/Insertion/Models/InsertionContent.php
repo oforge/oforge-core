@@ -38,7 +38,7 @@ class InsertionContent extends AbstractModel {
 
     /**
      * @var string
-     * @ORM\Column(name="name", type="string", nullable=false, length=100)
+     * @ORM\Column(name="name", type="string", nullable=true, length=100)
      */
     private $name;
 
@@ -99,7 +99,7 @@ class InsertionContent extends AbstractModel {
     /**
      * @param string $name
      */
-    public function setName(string $name) : void {
+    public function setName(?string $name) : void {
         $this->name = $name;
     }
 
