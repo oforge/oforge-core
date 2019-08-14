@@ -4,9 +4,15 @@
         {% for attributeGroup in attributes %}
             {% if attributeGroup.items|length > 0 and not  (attributeGroup.name == 'main' or attributeGroup.name == 'contact') %}
                 <div class="attribute-group">
-                    <h2 class="title title--attribute-group">{{i18n('attribute_group_' ~ attributeGroup.name)  }}</h2>
+                    <h2 class="title title--attribute-group">{{ i18n('attribute_group_' ~ attributeGroup.name) }}</h2>
                     {% for attribute in attributeGroup.items %}
-                        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': attribute.required } %}
+                        {% set required = false %}
+                        {% for insertionType in attribute.attributeKey.insertionTypes %}
+                            {% if insertionType.insertionType == type.id %}
+                                {% set required = insertionType.required %}
+                            {% endif %}
+                        {% endfor %}
+                        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': required } %}
                     {% endfor %}
                 </div>
             {% endif %}
