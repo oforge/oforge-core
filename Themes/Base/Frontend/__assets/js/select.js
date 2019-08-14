@@ -13,6 +13,7 @@
                     selectItemIsChecked: 'select__item--is-checked',
                     selectValue: 'select__value',
                     subSelect: 'form__control--is-sub',
+                    selectRequireInput: 'select__require-input',
                     selectValues: []
                 };
                 var selectors = {
@@ -21,6 +22,7 @@
                     selectText: '.' + classNames.selectText,
                     selectItem: '.' + classNames.selectItem,
                     selectItemIsChecked: '.' + classNames.selectItemIsChecked,
+                    selectRequireInput: '.' + classNames.selectRequireInput,
                     selectValue: '.' + classNames.selectValue,
                     subSelect: '[data-sub-select]',
                     selectFilter: '[data-select-filter]',
@@ -29,6 +31,7 @@
                 var selectList = document.querySelectorAll(self.selector);
                 var currentOpenSelectFilterInputSelector = selectors.selectIsOpen + ' ' + selectors.selectFilter;
                 var noSubSelectListSortable = document.querySelectorAll(selectors.noSubSelect);
+                var selectedItems = [];
 
                 function addHiddenInputToCheckItem(check) {
                     var input = document.createElement('input');
@@ -82,12 +85,28 @@
 
                         if (toggleState) {
                             addHiddenInputToCheckItem(selectItem);
+                            selectedItems.push(valueId);
                             parentSelect.checkedValues.push(valueId);
                             parentSelect.checkedNames.push(valueName);
                             parentSelect.querySelector(selectors.selectText).innerHTML = parentSelect.checkedNames.join(', ');
                         } else {
+                            selectedItems.pop(valueId);
                             unselectItem(selectItem);
                         }
+                        updateRequiredInput(selectItem);
+                    }
+                }
+
+                //Fills out an invisible form element to make the select element required
+                function updateRequiredInput(selectItem) {
+                    let parentSelect = selectItem.closest(self.selector);
+                    let requiredInput = parentSelect.querySelector(selectors.selectRequireInput);
+
+                    console.log(requiredInput);
+                    if (selectedItems.length > 0) {
+                        requiredInput.value = ' ';
+                    } else {
+                        requiredInput.value = '';
                     }
                 }
 
