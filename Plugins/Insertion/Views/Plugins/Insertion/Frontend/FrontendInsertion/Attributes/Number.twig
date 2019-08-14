@@ -8,6 +8,7 @@
                min="0"
                class="form__input"
                placeholder="{{ i18n(attribute.name) }}"
+               {% if required %}required{% endif %}
         />
         {% set unit = i18n('unit_' ~  attribute.name, '') %}
         {% if unit is not empty %}
