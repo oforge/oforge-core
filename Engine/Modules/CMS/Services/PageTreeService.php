@@ -84,7 +84,6 @@ class PageTreeService extends AbstractDatabaseAccess
 
             /** @var PagePath[] $pathEntities */
             $pathEntities = $pageEntity->getPaths();
-            // var_dump($pathEntities);
             $paths = [];
             if (!empty($pathEntities)) {
                 foreach ($pathEntities as $pathEntity) {
