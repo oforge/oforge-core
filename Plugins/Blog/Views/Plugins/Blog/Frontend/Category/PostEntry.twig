@@ -4,7 +4,7 @@
             <div class="blog-post-entry-image">
                 {% set blogPostHeaderImage = (blogPost.headerImagePreview ?: (blogPost.headerImageLarge ?: null))%}
                 {% if blogPostHeaderImage %}
-                    <img src="{{ media(blogPostHeaderImage, 600) }}"/>
+                    <img src="{{ media(blogPostHeaderImage, 800) }}"/>
                 {% endif %}
             </div>
             <div class="blog-post-entry-text">
