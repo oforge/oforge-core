@@ -20,6 +20,7 @@
         display: inline-block;
         overflow: hidden;
         text-align: left;
+        width: calc(100% - 110px);
 
         .cms-customer-name {
             font-weight: bold;
