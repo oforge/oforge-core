@@ -311,7 +311,7 @@ abstract class AbstractContentType extends AbstractDatabaseAccess {
     /**
      * Load content entity from database to $content
      *
-     * @param int|Content $contentOrContentID ID of content entity
+     * @param int|Content $contentOrContentID ID of content entity or content entity itself
      *
      * @return AbstractContentType $this
      * @throws ORMException
