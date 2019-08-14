@@ -2,7 +2,7 @@
     {% if blog.posts %}
         <div class="blog-post-lastblog">
             {% if blog.posts|length >= 1 %}
-                {% include 'Plugins/Blog/Frontend/Category/PostEntry.twig' with {blogPost : blog.posts[0]} %}
+                {% include 'Plugins/Blog/Frontend/Category/PostEntry.twig' with {blogPost : blog.posts[0], lastblog : true} %}
             {% endif %}
         </div>
         <div id="blog-posts-container" data-masonry="true">
