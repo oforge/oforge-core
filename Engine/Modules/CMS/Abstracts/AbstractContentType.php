@@ -4,7 +4,6 @@ namespace Oforge\Engine\Modules\CMS\Abstracts;
 
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Oforge\Engine\Modules\CMS\Exceptions\DuplicateException;
 use Oforge\Engine\Modules\CMS\Models\Content\Content;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentParent;
 use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
