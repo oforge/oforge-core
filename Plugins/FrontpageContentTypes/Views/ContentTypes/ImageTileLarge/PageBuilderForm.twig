@@ -32,15 +32,25 @@
         {% endblock image_tile_large_text %}
 
         {% block image_tile_large_appearance_form %}
-            <div>
-                <label>{{ i18n('background_color', 'Hintergrundfarbe') }}</label>
-                <input type="color" name="backgroundcolor"
-                       value="{% if data.backgroundcolor %}{{ data.backgroundcolor }}{% else %}#ffffff{% endif %}">
-            </div>
-            <div>
-                <label>{{ i18n('font_color', 'Schriftfarbe') }}</label>
-                <input type="color" name="fontcolor"
-                       value="{% if data.fontcolor %}{{ data.fontcolor }}{% else %}#6f8e2b{% endif %}">
+            {% include 'Backend/Components/ColorPicker.twig' with {
+                label: i18n('background_color', 'Hintergrundfarbe'),
+                name: 'backgroundcolor',
+                value: data.backgroundcolor,
+                default: '#ffffff',
+            } only %}
+            {% include 'Backend/Components/ColorPicker.twig' with {
+                label: i18n('font_color', 'Schriftfarbe'),
+                name: 'fontcolor',
+                value: data.fontcolor,
+                default: '#6f8e2b',
+            } only %}
+            <div class="form-group">
+                <label>{{ i18n('colors_preview', {en: 'Preview of colors', de: 'Vorschau der Farben'}) }}</label>
+                {% include 'Backend/Components/ColorPreview.twig' with {
+                    text: '#cms_content_type_editor_wrapper input[name=caption]',
+                    background: '#cms_content_type_editor_wrapper #color_picker_backgroundcolor',
+                    foreground: '#cms_content_type_editor_wrapper #color_picker_fontcolor',
+                } only %}
             </div>
         {% endblock image_tile_large_appearance_form %}
     </div>
