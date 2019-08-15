@@ -99,6 +99,13 @@ class Bootstrap extends AbstractBootstrap {
         $accountNavigationService = Oforge()->Services()->get('frontend.user.management.account.navigation');
 
         $accountNavigationService->put([
+            'name'     => 'frontend_account_dashboard',
+            'order'    => 1,
+            'path'     => 'frontend_account_dashboard',
+            'position' => 'sidebar',
+        ]);
+
+        $accountNavigationService->put([
             'name'     => 'frontend_account_details',
             'order'    => 1,
             'icon'     => 'contact',
