@@ -1,5 +1,5 @@
 <div class="form__control">
-    <label class="form__label">{{ i18n(attribute.name) }}</label>
+    <label class="form__label">{{ i18n(attribute.name) }}{% if required %}<span class="required">*</span>{% endif %}</label>
     <label for="insertion[{{ attribute.id }}"
            class="form__input form__input--inside-label">
         <input type="number"
