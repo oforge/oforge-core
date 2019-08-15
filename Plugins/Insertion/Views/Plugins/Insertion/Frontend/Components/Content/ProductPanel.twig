@@ -17,11 +17,11 @@
 
         <div class="product__attributes product__attributes--main">
             {% block attributes__main %}
-                <div class="product__attribute">
-                    <span class="product__label">{{ i18n('insertion_name') }}</span>
-                    <span class="product__value">{{ item.content[0].name }}</span>
-                </div>
-                {% for topvalue in item.topvalues|slice(0,2) %}
+                {#<div class="product__attribute">#}
+                    {#<span class="product__label">{{ i18n('insertion_name') }}</span>#}
+                    {#<span class="product__value">{{ item.content[0].name }}</span>#}
+                {#</div>#}
+                {% for topvalue in item.topvalues|slice(0,3) %}
                     {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
                 {% endfor %}
 
@@ -37,11 +37,11 @@
                 {% block attributes__top %}
                     <div class="product__attributes product__attributes--top">
 
-                        <div class="product__attribute">
-                            <span class="product__label">{{ i18n('insertion_name') }}</span>
-                            <span class="product__value">{{ item.content[0].name }}</span>
-                        </div>
-                        {% for topvalue in item.topvalues|slice(0,2) %}
+                        {#<div class="product__attribute">#}
+                            {#<span class="product__label">{{ i18n('insertion_name') }}</span>#}
+                            {#<span class="product__value">{{ item.content[0].name }}</span>#}
+                        {#</div>#}
+                        {% for topvalue in item.topvalues|slice(0,3) %}
                             {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
                         {% endfor %}
                     </div>
@@ -49,7 +49,7 @@
 
                 {% block attributes__bottom %}
                     <div class="product__attributes product__attributes--bottom">
-                        {% for topvalue in item.topvalues|slice(2) %}
+                        {% for topvalue in item.topvalues|slice(3) %}
                             {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
                         {% endfor %}
                     </div>
