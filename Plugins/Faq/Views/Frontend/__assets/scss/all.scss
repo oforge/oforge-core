@@ -1,5 +1,19 @@
 .content {
     .content__faq {
         width: 100%;
+
+        a {
+            color: $color-secondary;
+            text-decoration: underline;
+        }
+    }
+}
+
+.action-frontend_account_faq {
+    .account__content {
+        a {
+            color: $color-secondary;
+            text-decoration: underline;
+        }
     }
 }
