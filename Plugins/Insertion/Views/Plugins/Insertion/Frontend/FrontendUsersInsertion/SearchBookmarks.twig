@@ -11,11 +11,8 @@
                 {% block account__content %}
                     <div class="account__content">
                         <h1>{{ i18n('frontend_user_search_bookmarks_headline', 'Meine gespeicherten Suchen') }}</h1>
-                        <div class="">
-                            <div class="search-bookmarks__header">
-                                <h2>{{ i18n('search_bookmarks', 'Suchen') }}</h2>
-                            </div>
-
+                        <div>
+                            <h2 class="account__title title--has-secondary-background">{{ i18n('search_bookmarks', 'Suchen') }}</h2>
                             <div id="bookmarks-container" class="search-bookmarks__container">
                                 {% include 'Frontend/Components/Insertions/SearchBookmarks.twig' %}
                             </div>

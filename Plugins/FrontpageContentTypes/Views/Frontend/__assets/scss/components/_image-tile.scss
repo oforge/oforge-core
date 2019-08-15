@@ -33,17 +33,29 @@
     }
 
     .image__badge {
-        display: inline-block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         background-color: $color-light;
         color: $color-primary;
         position: absolute;
-        top: 10px;
-        right: 5px;
-        padding: .5rem 1rem;
+        top: 0;
+        right: 2rem;
+        padding: .5rem;
         box-shadow: $color-primary-transparent-2 -7px 7px 15px;
         border: 1px $color-primary-lighter solid;
         transition: right 100ms cubic-bezier(.33, .47, .46, .82);
         z-index: 1;
+        width: 8rem;
+        height: 8rem;
+
+
+        .icon {
+            margin: 0;
+            fill: $color-secondary;
+            width: 100%;
+            height: 100%;
+        }
     }
 }
 
