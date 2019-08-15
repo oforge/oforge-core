@@ -9,7 +9,7 @@
            class="form__input form__input--checkbox"
            name="{{ attribute.name }}"
            id="{{ attribute.name }}"
-            {% if data['insertion'][attribute.id] == 'on' %}
+            {% if data['insertion'][attribute.id] == 'on' or search.filter[attribute.name] == 'on' %}
                 checked="checked"
             {% endif %}>
 </div>

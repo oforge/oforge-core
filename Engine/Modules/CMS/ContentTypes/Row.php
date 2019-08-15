@@ -5,28 +5,10 @@ namespace Oforge\Engine\Modules\CMS\ContentTypes;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\CMS\Abstracts\AbstractContentType;
-use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
 use Oforge\Engine\Modules\CMS\Models\Content\Content;
 use Oforge\Engine\Modules\CMS\Models\ContentTypes\Row as RowModel;
 
 class Row extends AbstractContentType {
-    /**
-     * Return row entities for given row id
-     *
-     * @param int $rowId
-     *
-     * @return Row[]|NULL
-     */
-    private function getRowEntities(?int $rowId) {
-        $rowEntities = $this->forgeEntityManager->getRepository(RowModel::class)->findBy(["row" => $rowId], ["order" => "ASC"]);
-
-        if ($rowEntities) {
-            return $rowEntities;
-        }
-
-        return null;
-    }
-
     /**
      * Return whether or not content type is a container type like a row
      *
@@ -155,9 +137,10 @@ class Row extends AbstractContentType {
      * @throws OptimisticLockException
      */
     public function deleteChild($contentElementId, $contentElementAtOrderIndex) {
-        $rowEntity = $this->forgeEntityManager->getRepository(RowModel::class)->findOneBy(["row"     => $this->getContentId(),
-                                                                                           "content" => $contentElementId,
-                                                                                           "order"   => $contentElementAtOrderIndex,
+        $rowEntity = $this->forgeEntityManager->getRepository(RowModel::class)->findOneBy([
+            "row"     => $this->getContentId(),
+            "content" => $contentElementId,
+            "order"   => $contentElementAtOrderIndex,
         ]);
 
         if ($rowEntity) {
@@ -200,10 +183,6 @@ class Row extends AbstractContentType {
         foreach ($data as $order) {
             $map[explode('-', $order["id"])[1]] = $order;
         }
-
-        /**
-         * @var $entity RowModel
-         */
         foreach ($rowEntities as $entity) {
             if (isset($map[$entity->getContent()->getId()])) {
                 $entity->setOrder($map[$entity->getContent()->getId()]["order"]);
@@ -211,4 +190,44 @@ class Row extends AbstractContentType {
             }
         }
     }
+
+    /** @inheritDoc */
+    public function duplicate() : Content {
+        $dstRowContent = parent::duplicate();
+        /** @var RowModel[] $srcRowModels */
+        $srcRowModels = $this->getRowEntities($this->getContentId());
+        foreach ($srcRowModels as $srcRowModel) {
+            $srcContent = $srcRowModel->getContent();
+            /** @var AbstractContentType $srcContentType */
+            $srcContentTypeClass = $srcContent->getType()->getClassPath();
+            $srcContentType      = new $srcContentTypeClass();
+            $srcContentType->load($srcContent);
+            $dstContent  = $srcContentType->duplicate();
+            $dstRowModel = RowModel::create($srcRowModel->toArray(0, ['id', 'content', 'row']));
+            $dstRowModel->setContent($dstContent);
+            $this->entityManager()->create($dstContent);
+            $dstRowModel->setRow($dstRowContent->getId());
+            $this->entityManager()->create($dstRowModel);
+        }
+
+        return $dstRowContent;
+    }
+
+    /**
+     * Return row entities for given row id
+     *
+     * @param int $rowId
+     *
+     * @return Row[]|NULL
+     */
+    private function getRowEntities(?int $rowId) {
+        $rowEntities = $this->forgeEntityManager->getRepository(RowModel::class)->findBy(["row" => $rowId], ["order" => "ASC"]);
+
+        if ($rowEntities) {
+            return $rowEntities;
+        }
+
+        return null;
+    }
+
 }
