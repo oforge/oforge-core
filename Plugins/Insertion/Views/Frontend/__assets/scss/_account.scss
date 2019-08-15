@@ -166,3 +166,15 @@
         }
     }
 }
+.action-frontend_account_insertions_searchbookmarks {
+    .panel--account h1 {
+        font-size: 25px;
+        padding-left: 20px;
+        @media screen and(min-width: $screen-medium) {
+            padding-left: 0;
+            font-style: inherit;
+        }
+    }
+}
+
+

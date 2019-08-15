@@ -5,11 +5,17 @@
     -webkit-overflow-scrolling: touch;
     width: calc(100% - 12.4rem);
 }
+
+.filter--products-filter-available {
+    .button.button--filter-search {
+        border-left: 1px solid $color-secondary;
+        width: 18rem;
+    }
+}
 .button.button--filter-search {
     align-items: center;
     justify-content: space-between;
     border-radius: 0;
-    border-left: 1px solid $color-secondary;
     display: flex;
     margin-left: $size-small;
     width: 15rem;

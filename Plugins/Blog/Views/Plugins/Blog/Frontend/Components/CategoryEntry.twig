@@ -6,9 +6,7 @@
             <svg class="icon icon--secondary">
                 <use xlink:href="#{{ blogCategory.icon|default(config('blog_category_icon_default')) }}"></use>
             </svg>
-            <span>
-                {{ blogCategory.name }}
-            </span>
+            <span>{{ blogCategory.name }}</span>
         </a>
     </div>
 {% else %}
@@ -19,7 +17,7 @@
             <svg class="icon icon--secondary">
                 <use xlink:href="#{{ blogCategory.icon|default(config('blog_category_icon_default')) }}"></use>
             </svg>
-            {{ i18n('plugin_blog_frontend_blog_home', {en: 'Blog', de: 'Blog'}) }}
+            <span>{{ i18n('plugin_blog_frontend_blog_home', {en: 'Blog', de: 'Blog'}) }}</span>
         </a>
     </div>
 {% endif %}

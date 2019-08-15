@@ -141,7 +141,6 @@ class InsertionFormsService extends AbstractDatabaseAccess {
             ],
             "content"             => [
                 "language"    => $language,
-                "name"        => $pageData["insertion_name"],
                 "title"       => $pageData["insertion_title"],
                 "description" => $pageData["insertion_description"],
             ],
