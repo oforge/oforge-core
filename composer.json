@@ -17,7 +17,8 @@
         "firebase/php-jwt": "^5.0",
         "ulrichsg/getopt-php": "^3.0",
         "marcj/topsort": "^1.1",
-        "pelago/emogrifier": "^2.1.0"
+        "pelago/emogrifier": "^2.1.0",
+        "ext-fileinfo": "*"
     },
     "repositories": [
         {

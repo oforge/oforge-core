@@ -5,27 +5,10 @@ namespace Oforge\Engine\Modules\CMS\ContentTypes;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\CMS\Abstracts\AbstractContentType;
-use Oforge\Engine\Modules\CMS\Models\Content\ContentType;
 use Oforge\Engine\Modules\CMS\Models\Content\Content;
 use Oforge\Engine\Modules\CMS\Models\ContentTypes\Row as RowModel;
 
 class EntryList extends AbstractContentType {
-    /**
-     * Return row entities for given row id
-     *
-     * @param int $rowId
-     *
-     * @return Row[]|NULL
-     */
-    private function getRowEntities(?int $rowId) {
-        $rowEntities = $this->forgeEntityManager->getRepository(RowModel::class)->findBy(["row" => $rowId], ["order" => "ASC"]);
-
-        if ($rowEntities) {
-            return $rowEntities;
-        }
-
-        return null;
-    }
 
     /**
      * Return whether or not content type is a container type like a row
@@ -201,10 +184,6 @@ class EntryList extends AbstractContentType {
         foreach ($data as $order) {
             $map[explode('-', $order["id"])[1]] = $order;
         }
-
-        /**
-         * @var $entity RowModel
-         */
         foreach ($rowEntities as $entity) {
             if (isset($map[$entity->getContent()->getId()])) {
                 $entity->setOrder($map[$entity->getContent()->getId()]["order"]);
@@ -212,4 +191,44 @@ class EntryList extends AbstractContentType {
             }
         }
     }
+
+    /** @inheritDoc */
+    public function duplicate() : Content {
+        $dstListContent = parent::duplicate();
+        /** @var RowModel[] $srcRowModels */
+        $srcRowModels = $this->getRowEntities($this->getContentId());
+        foreach ($srcRowModels as $srcRowModel) {
+            $srcContent = $srcRowModel->getContent();
+            /** @var AbstractContentType $srcContentType */
+            $srcContentTypeClass = $srcContent->getType()->getClassPath();
+            $srcContentType      = new $srcContentTypeClass();
+            $srcContentType->load($srcContent);
+            $dstContent  = $srcContentType->duplicate();
+            $dstRowModel = RowModel::create($srcRowModel->toArray(0, ['id', 'content', 'row']));
+            $dstRowModel->setContent($dstContent);
+            $this->entityManager()->create($dstContent);
+            $dstRowModel->setRow($dstListContent->getId());
+            $this->entityManager()->create($dstRowModel);
+        }
+
+        return $dstListContent;
+    }
+
+    /**
+     * Return row entities for given row id
+     *
+     * @param int $rowId
+     *
+     * @return Row[]|NULL
+     */
+    private function getRowEntities(?int $rowId) {
+        $rowEntities = $this->forgeEntityManager->getRepository(RowModel::class)->findBy(["row" => $rowId], ["order" => "ASC"]);
+
+        if ($rowEntities) {
+            return $rowEntities;
+        }
+
+        return null;
+    }
+
 }

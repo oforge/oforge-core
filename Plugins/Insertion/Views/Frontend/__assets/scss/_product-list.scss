@@ -167,6 +167,12 @@
         &__attribute {
             margin-top: $size-large;
             width: 33.33333333%;
+
+            .product__value {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
         }
     }
 }

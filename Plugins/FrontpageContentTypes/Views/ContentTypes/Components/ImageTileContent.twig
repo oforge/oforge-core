@@ -4,6 +4,9 @@
     {% endif %}
     <div class="content" style="background-color:{{ data.backgroundcolor }}">
         <div class="image-container">
+            {% if data.badge is not empty %}
+                <div class="image__badge">{{ data.badge }}</div>
+            {% endif %}
             <picture class="lazy">
                 <source class="lazy" data-srcset="{{ media(data.url, 800) }}" media="(min-width: 640px)" />
                 <source class="lazy" data-srcset="{{ media(data.url, 600) }}" media="(min-width: 480px)" />
