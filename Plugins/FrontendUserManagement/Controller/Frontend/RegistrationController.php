@@ -281,6 +281,9 @@ class RegistrationController extends AbstractController {
         Oforge()->View()->Flash()
                 ->addMessage('success', I18N::translate('registration_success_logined', 'Your account was activated successfully. You are now logged in.'));
 
+        $newRegistration = ["newRegistration" => true];
+        Oforge()->View()->assign($newRegistration);
+
         return $response->withRedirect($uri, 302);
     }
 
