@@ -2,9 +2,10 @@
 
 namespace Oforge\Engine\Modules\CMS\Services;
 
-use Oforge\Engine\Modules\I18n\Models\Language;
 use Oforge\Engine\Modules\CMS\Models\Page\Page;
+use Oforge\Engine\Modules\CMS\Models\Page\PagePath;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
+use Oforge\Engine\Modules\I18n\Models\Language;
 
 class PageTreeService extends AbstractDatabaseAccess
 {
@@ -80,20 +81,21 @@ class PageTreeService extends AbstractDatabaseAccess
             $page["site"]   = $pageEntity->getSite();
             $page["name"]   = $pageEntity->getName();
             $page["parent"] = $pageEntity->getParent();
-            
+
+            /** @var PagePath[] $pathEntities */
             $pathEntities = $pageEntity->getPaths();
-            
             $paths = [];
-            foreach($pathEntities as $pathEntity)
-            {
-                $path = [];
-                $path["id"]       = $pathEntity->getId();
-                $path["language"] = $this->getLanguageArray($pathEntity->getLanguage());
-                $path["path"]     = $pathEntity->getPath();
-                
-                $paths[$path["language"]["id"]] = $path;
+            if (!empty($pathEntities)) {
+                foreach ($pathEntities as $pathEntity) {
+                    $path             = [];
+                    $path["id"]       = $pathEntity->getId();
+                    $path["language"] = $this->getLanguageArray($pathEntity->getLanguage());
+                    $path["path"]     = $pathEntity->getPath();
+
+                    $paths[$path["language"]["id"]] = $path;
+                }
             }
-            
+
             $page["paths"] = $paths;
             
             $pages[] = $page;

@@ -12,14 +12,9 @@
                     <div class="account__content">
                         <h1 class="form__title">{{ i18n('frontend_user_insertions_headline') }}</h1>
                         <div class="user--insertions">
-                            <a href="{{ url( 'insertions_create') }}"
-                               class="button button--secondary button--shadow button--uppercase button--header">
-                                {{ i18n('frontend_user_insertion_create', 'Jetzt inserieren!') }}
-                            </a>
+
                             {% if insertions|length > 0 %}
-                                <div class="insertions__banner">
-                                    <h2 class="form__title">{{ i18n('insertions') }}</h2>
-                                </div>
+                                <h2 class="form__title form__title--helpdesk">{{ i18n('insertions') }}</h2>
                             {% endif %}
                             <div id="insertion-container" class="">
                                 {% include 'Frontend/Components/Insertions/UserList.twig' with { insertions : insertions } %}

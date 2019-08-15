@@ -13,6 +13,13 @@
         </div>
     {% endblock image_tile_small_image %}
 
+    {% block image_tile_badge %}
+        <div class="form-group">
+            <label>{{ i18n('image_tile_badge', 'Badge') }}</label>
+            <input type="text" name="badge" class="form-control" value="{{ data.badge }}">
+        </div>
+    {% endblock image_tile_badge %}
+
     {% block image_tile_text_caption %}
         <div class="form-group">
             <label>{{ i18n('image_tile_caption', 'Überschrift') }}</label>
