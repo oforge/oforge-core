@@ -39,6 +39,8 @@ class ImageTileMedium extends AbstractContentType {
             'linktext'        => ArrayHelper::get($contentData, 'linktext'),
             'backgroundcolor' => ArrayHelper::get($contentData, 'backgroundcolor'),
             'badge'           => ArrayHelper::get($contentData, 'badge'),
+            'badge_offset_y'  => ArrayHelper::get($contentData, 'badge_offset_x'),
+            'badge_offset_y'  => ArrayHelper::get($contentData, 'badge_offset_y'),
             'fontcolor'       => ArrayHelper::get($contentData, 'fontcolor'),
             'targetBlank'     => ArrayHelper::get($contentData, 'targetBlank', false),
         ];
@@ -63,6 +65,8 @@ class ImageTileMedium extends AbstractContentType {
             'linktext'        => ArrayHelper::get($data, 'linktext', ''),
             'backgroundcolor' => ArrayHelper::get($data, 'backgroundcolor', ''),
             'badge'           => ArrayHelper::get($data, 'badge'),
+            'badge_offset_x'    => ArrayHelper::get($data, 'badge_offset_x'),
+            'badge_offset_y'    => ArrayHelper::get($data, 'badge_offset_y'),
             'fontcolor'       => ArrayHelper::get($data, 'fontcolor', ''),
             'targetBlank'     => ArrayHelper::get($data, 'targetBlank', false),
         ];
@@ -104,6 +108,8 @@ class ImageTileMedium extends AbstractContentType {
             'linktext'        => ArrayHelper::get($contentData, 'linktext'),
             'backgroundcolor' => ArrayHelper::get($contentData, 'backgroundcolor'),
             'badge'           => ArrayHelper::get($contentData, 'badge'),
+            'badge_offset_x'  => ArrayHelper::get($contentData, 'badge_offset_x'),
+            'badge_offset_y'  => ArrayHelper::get($contentData, 'badge_offset_y'),
             'fontcolor'       => ArrayHelper::get($contentData, 'fontcolor'),
             'targetBlank'     => ArrayHelper::get($contentData, 'targetBlank', false),
         ];
