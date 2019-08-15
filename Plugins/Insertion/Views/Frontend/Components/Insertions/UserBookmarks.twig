@@ -1,10 +1,12 @@
 {% extends  'Frontend/Components/Insertions/UserInsertion.twig' %}
 {% block attributes__main %}
 
+    {% if item.content[0].name is not empty %}
     <div class="product__attribute">
         <span class="product__label">{{ i18n('name') }}</span>
         <span class="product__value">{{ item.content[0].name }}</span>
     </div>
+    {% endif %}
     <div class="product__attribute">
         <span class="product__label">{{ i18n('price') }}</span>
         <span class="product__value">{{ item.price }} € {% if (item.tax) %} (Netto) {% else %} (Brutto){% endif %}</span>

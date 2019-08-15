@@ -1,10 +1,12 @@
 {% extends 'Plugins/Insertion/Frontend/Components/Content/ProductPanel.twig' %}
 
 {% block attributes__main %}
+    {% if item.content[0].name is not empty %}
     <div class="product__attribute">
         <span class="product__label">{{ i18n('name') }}</span>
         <span class="product__value">{{ item.content[0].name }}</span>
     </div>
+    {% endif %}
     <div class="product__attribute">
         <span class="product__label">{{ i18n('price') }}</span>
         <span class="product__value">{{ item.price }} {{ i18n('unit_price') }} {% if (item.tax) %} ({{ i18n('vat_identificationable') }}){% endif %}</span>
