@@ -5,7 +5,11 @@
     <div class="content" style="background-color:{{ data.backgroundcolor }}">
         <div class="image-container">
             {% if data.badge is not empty %}
-                <div class="image__badge">{{ data.badge }}</div>
+                <div class="image__badge">
+                    <svg class="icon icon--secondary">
+                        <use xlink:href="#{{ data.badge }}"></use>
+                    </svg>
+                </div>
             {% endif %}
             <picture class="lazy">
                 <source class="lazy" data-srcset="{{ media(data.url, 800) }}" media="(min-width: 640px)" />

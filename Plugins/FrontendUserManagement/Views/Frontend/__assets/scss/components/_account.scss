@@ -9,8 +9,18 @@
 
     h2 {
         color: $color-primary;
+
+        &.form__title, &.account__title.title--has-secondary-background {
+            margin: 1.2rem 0;
+            padding: .6rem .6rem .6rem 1.2rem;
+            background: $color-secondary-light;
+            color: $color-light;
+            font-weight: 700;
+        }
     }
+
 }
+
 
 .panel--detail {
     padding: $size-large;
@@ -21,14 +31,15 @@
         }
 
         .form__title {
-            color: $color-secondary;
+            color: $color-light;
             margin: 0;
         }
 
         .form__control {
             margin-top: $size-large;
+
             &.form__control--half-medium > * {
-                 margin-top: 0;
+                margin-top: 0;
             }
         }
     }

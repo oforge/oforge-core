@@ -439,11 +439,19 @@
 
         .features__wrapper {
             margin: 0 auto;
+
+            .product__title {
+                color: $color-light;
+            }
         }
 
         .container__banner {
             display: flex;
             justify-content: center;
+
+            .banner__cycle {
+                margin-bottom: 3rem;
+            }
         }
     }
 }
