@@ -1,10 +1,14 @@
 <div class="input-group oforge-color-picker colorpicker-element">
+    <div class="input-group-addon oforge-color-picker--button">
+        <i></i>
+    </div>
     {% include 'Backend/CRUD/Components/Editor/Input.twig' with {
         crudFieldEditor: {
             type: 'text',
         }
     } %}
-    <div class="input-group-addon">
-        <i></i>
+    <div class="input-group-addon oforge-color-picker--reset"
+         data-color="{{ item[crudProperty.name]|default(crudProperty.editor.default)|default('#000') }}">
+        <i class="fa fa-undo"></i>
     </div>
 </div>
