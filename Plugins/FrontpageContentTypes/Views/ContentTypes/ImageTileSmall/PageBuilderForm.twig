@@ -20,6 +20,15 @@
         </div>
     {% endblock image_tile_badge %}
 
+    {% block image_tile_badge_offset %}
+        <div class="form-group">
+            <label>{{ i18n('image_tile_badge_offset_x', 'Badge Offset X') }}</label>
+            <input type="text" name="badge_offset_x" class="form-control" value="{{ data.badge_offset_x }}">
+            <label>{{ i18n('image_tile_badge_offset_y', 'Badge Offset Y') }}</label>
+            <input type="text" name="badge_offset_y" class="form-control" value="{{ data.badge_offset_y }}">
+        </div>
+    {% endblock image_tile_badge_offset %}
+
     {% block image_tile_text_caption %}
         <div class="form-group">
             <label>{{ i18n('image_tile_caption', 'Überschrift') }}</label>
