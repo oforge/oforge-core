@@ -45,11 +45,6 @@
 
             <div class="panel panel--top-attributes">
                 <div class="top-attributes">
-                    <div class="product__attribute">
-                        <span class="attribute-label">{{ i18n('insertion_detail_name', 'Name') }}</span>
-                        <span class="attribute-value">{{ insertion.content[0].name }}</span>
-                    </div>
-
                     {% for attribute in top_values %}
                         {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes/' ~ attribute.type|capitalize  ~ '.twig'  with {'attribute': attribute, 'value' : insertion_values[attribute.attributeKey]} %}
                     {% endfor %}
