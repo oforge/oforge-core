@@ -125,7 +125,11 @@ class SlimExtension extends Twig_Extension {
                 continue;
             }
             if (is_string($value)) {
-                $result .= " $value";
+                if (is_numeric($index)) {
+                    $result .= " $value";
+                } else {
+                    $result .= " $index=\"$value\"";
+                }
             }
         }
 
