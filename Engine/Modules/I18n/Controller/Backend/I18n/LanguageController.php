@@ -153,7 +153,7 @@ class LanguageController extends BaseCrudController {
             /** @var LanguageService $languageService */
             try {
                 $languageService = Oforge()->Services()->get('i18n.language');
-                // $languageService->updateCurrentLanguage();
+                $languageService->updateCurrentLanguage();
             } catch (ServiceNotFoundException $exception) {
                 Oforge()->Logger()->logException($exception);
             }
