@@ -42,6 +42,13 @@ class InsertionUrlService {
 
                 return "/" . urlencode($typeTitle) . "/" . urlencode($title) . "/" . $insertion->getId();
             }
+        } elseif ($name == 'insertions_profile' && isset($namedParams["id"])) {
+            /** @var InsertionProfileService $service */
+            $service = Oforge()->Services()->get('insertion.profile');
+            $profile = $service->getById($namedParams["id"]);
+            $title     = str_replace(" ", "-", strtolower($profile->getImprintName()));
+
+            return "/" . urlencode(I18N::translate('insertion_url_profile')) . "/" . urlencode($title) . "/" . $namedParams["id"];
         }
 
         return $this->instance->getUrl($name, $namedParams, $queryParams);
