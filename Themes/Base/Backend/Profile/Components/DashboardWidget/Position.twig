@@ -1,4 +1,3 @@
-{% set widgetPositionConstantPrefix = 'Oforge\\Engine\\Modules\\AdminBackend\\Core\\Enums\\DashboardWidgetPosition::' %}
 {% set widgetPositionOptions = [
     { constant: 'top', label: i18n('top', {en: 'top', de: 'oben'}), cond: 'top,bottom' },
     { constant: 'left', label: i18n('left', {en: 'left', de: 'links'}), cond: 'left,right' },
@@ -9,8 +8,8 @@
     <option value="">Inherit</option>
     {% for widgetPositionOption in widgetPositionOptions if widget.position in widgetPositionOption.cond %}
         <option {{ attr({
-            value: widgetPositionOption.constant,
-            'selected': widget.position == widgetPositionOption.constant
+            'value': widgetPositionOption.constant,
+            'selected': select_compare(widget.position, widgetPositionOption.constant)
         }) }}>{{ widgetPositionOption.label }}</option>
     {% endfor %}
 </select>
