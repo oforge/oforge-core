@@ -6,7 +6,7 @@
         <div class="image-container">
             {% if data.badge is not empty %}
                 <div class="image__badge">
-                    <svg class="icon icon--secondary">
+                    <svg class="icon icon--secondary" style="transform: translate3d({{ data.badge_offset_x ? : 0 }}, {{ data.badge_offset_y ? : 0 }}, 0)">
                         <use xlink:href="#{{ data.badge }}"></use>
                     </svg>
                 </div>
