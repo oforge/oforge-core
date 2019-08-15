@@ -9,7 +9,9 @@
                         <div
                             class="group__label">{{ i18n('insertion_detail_group_label_' ~ attributeGroup.name) }}</div>
                         {% for attribute in attributeGroup.items %}
+                            {% if insertion_values[attribute.attributeKey.id] is not empty %}
                             {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'value' : insertion_values[attribute.attributeKey.id]} %}
+                            {% endif %}
                         {% endfor %}
                     </div>
                 {% endif %}
