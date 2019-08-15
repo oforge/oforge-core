@@ -10,7 +10,7 @@
     {% for widgetPositionOption in widgetPositionOptions if widget.position in widgetPositionOption.cond %}
         <option {{ attr({
             value: widgetPositionOption.constant,
-            'selected': widget.position == widgetPositionOption.constant
+            'selected': select_compare(widget.position, widgetPositionOption.constant)
         }) }}>{{ widgetPositionOption.label }}</option>
     {% endfor %}
 </select>
