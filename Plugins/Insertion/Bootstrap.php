@@ -156,7 +156,7 @@ class Bootstrap extends AbstractBootstrap {
                 'de' => 'Anzahl Inserate',
             ],
             'position' => DashboardWidgetPosition::TOP,
-            'cssClass' => 'box-gray',
+            'cssClass' => 'bg-purple',
         ]);
         $dashboardWidgetsService->install([
             'name'     => 'plugin_insertion_moderation',
@@ -167,7 +167,7 @@ class Bootstrap extends AbstractBootstrap {
                 'de' => 'Inserate benötigen Moderation',
             ],
             'position' => DashboardWidgetPosition::TOP,
-            'cssClass' => 'box-gray',
+            'cssClass' => 'bg-maroon',
         ]);
     }
 
