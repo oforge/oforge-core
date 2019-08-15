@@ -49,7 +49,7 @@
                                         <option value="0">None</option>
                                         {% for type in content.insertionTypeList %}
                                             <option value="{{ type.id }}"
-                                                    {% if content.insertionType.parent.name is same as(type.name) %}
+                                                    {% if select_compare(content.insertionType.parent.name, type.name) %}
                                             selected
                                                     {% endif %}>
                                                 {{ type.name }}
@@ -125,7 +125,7 @@
                                                 <select class="form-control select2">
                                                     {% for attribute in content.attributeList %}
                                                         <option value="{{ attribute.id }}"
-                                                                {% if value.attributeKey.id is defined and value.attributeKey.id == attribute.id %}
+                                                                {% if value.attributeKey.id is defined and select_compare(value.attributeKey.id, attribute.id) %}
                                                                     selected
                                                                 {% endif %}
                                                         >{{ attribute.name }}</option>
@@ -153,7 +153,7 @@
                                                 <select class="form-control select2">
                                                     {% for attributeGroup in content.attributeGroupList %}
                                                         <option value="{{ attributeGroup.id }}"
-                                                                {% if value.attributeGroup.id is defined and value.attributeGroup.id == attributeGroup.id %}
+                                                                {% if value.attributeGroup.id is defined and select_compare(value.attributeGroup.id, attributeGroup.id) %}
                                                                     selected
                                                                 {% endif %}
                                                         >{{ attributeGroup.name }}</option>

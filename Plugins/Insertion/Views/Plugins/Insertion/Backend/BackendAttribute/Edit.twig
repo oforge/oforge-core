@@ -35,9 +35,7 @@
                                     <select name="type" id="attributeType" class="form-control select2">
                                         {% for type in content.types %}
                                             <option value="{{ type }}"
-                                                {% if content.attribute.type is same as(type) %}
-                                            selected
-                                                {% endif %}>
+                                                {% if select_compare(content.attribute.type, type) %}selected{% endif %}>
                                                 {{ type }}
                                             </option>
                                         {% endfor %}
@@ -49,9 +47,7 @@
                                     <select name="filterType" id="attributeFilterType" class="form-control select2">
                                         {% for type in content.types %}
                                             <option value="{{ type }}"
-                                                {% if content.attribute.filterType is same as(type) %}
-                                            selected
-                                                {% endif %}>
+                                                {% if select_compare(content.attribute.filterType, ) %}selected{% endif %}>
                                                 {{ type }}
                                             </option>
                                         {% endfor %}
@@ -109,7 +105,7 @@
                                                     <option value="0" selected>{{ i18n('none', 'None') }}</option>
                                                     {% for attribute in content.attributeList %}
                                                         <option value="{{ attribute.id }}"
-                                                            {% if value.subAttributeKey.id is defined and value.subAttributeKey.id == attribute.id %}
+                                                            {% if value.subAttributeKey.id is defined and select_compare(value.subAttributeKey.id, attribute.id) %}
                                                                 selected
                                                             {% endif %}
                                                         >{{ attribute.name }}</option>
