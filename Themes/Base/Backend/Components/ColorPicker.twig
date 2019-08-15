@@ -1,0 +1,17 @@
+{% with  {id: id, name: name, label: label, value: value, default: default } only %}
+    {% set id = id|default('color_picker_' ~ name) %}
+    {% set value = value|default(default|default('#000')) %}
+    <div class="form-group">
+        <label for="{{ id }}">{{ label }}</label>
+        <div class="input-group oforge-color-picker colorpicker-element">
+            <div class="input-group-addon oforge-color-picker--button">
+                <i></i>
+            </div>
+            <input type="text" name="{{ name }}" value="{{ value }}" id="{{ id }}" class="form-control" />
+            <div class="input-group-addon oforge-color-picker--reset" data-color="{{ value }}">
+                <i class="fa fa-undo"></i>
+            </div>
+        </div>
+    </div>
+{% endwith %}
+
