@@ -1,14 +1,5 @@
 {% extends '@parent/Frontend/Components/Header/TopNav.twig' %}
 
-{% block master__additional_meta %}
-    {% if newRegistration %}
-        {% block google_conversion_tracker %}
-            <!-- Event snippet for Account-Registrierung conversion page -->
-            <script> gtag('event', 'conversion', {'send_to': 'AW-725011354/--t7CM_V6acBEJqX29kC'}); </script>
-        {% endblock google_conversion_tracker %}
-    {% endif %}
-{% endblock master__additional_meta %}
-
 {% block top_nav_links %}
     {{ parent() }}
     <li class="top-nav-list__item item--login">
