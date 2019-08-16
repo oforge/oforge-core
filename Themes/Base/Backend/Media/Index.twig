@@ -10,25 +10,34 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-xs-6">
-                            <div class="input-group">
-
-                                <span class="input-group-addon"><i class="fa fa-fw fa-image"></i></span>
-                                <form id="upload-media-form">
-                                    <label class="form-control" class="upload-media"
+                            <form id="upload-media-form">
+                                <div class="input-group media-chooser--upload-button">
+                                    <label class="form-control upload-media"
                                            for="upload-media">{{ i18n('upload_media') }}</label>
                                     <input type="file" style="visibility: hidden; position: absolute"
                                            name="upload-media" id="upload-media"
                                            accept="image/*" />
-                                </form>
-                            </div>
+                                    <label class="input-group-addon upload-media" for="upload-media">
+                                        <i class="fa fa-fw fa-upload"></i>
+                                    </label>
+                                </div>
+                            </form>
                         </div>
-
                         <div class="col-xs-6">
                             <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-fw fa-search"></i></span>
                                 <input type="text" class="form-control" id="search-media"
                                        placeholder="{{ i18n('search_media') }}" />
+                                <span class="input-group-addon"><i class="fa fa-fw fa-search"></i></span>
                             </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <small>{{- i18n('Click or drop file in popup to upload new file.', {
+                                    en: 'Click button or drop file in popup to upload new file.',
+                                    de: 'Klicken Sie auf die Schaltfläche oder legen Sie die Datei im Popup-Fenster ab, um eine neue Datei hochzuladen.',
+                                }) -}}
+                            </small>
                         </div>
                     </div>
                     <hr class="my-4" />
@@ -48,6 +57,14 @@
 
             <div class="overlay">
                 <i class="fa fa-refresh fa-spin"></i>
+            </div>
+
+            <div class="drop-overlay">
+                <span>{{- i18n('Upload dropped file', {
+                        en: 'Upload file',
+                        de: 'Datei hochladen',
+                    }) -}}
+                </span>
             </div>
             <!-- /.modal-content -->
         </div>
