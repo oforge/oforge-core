@@ -49,7 +49,6 @@
                         {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes/' ~ attribute.type|capitalize  ~ '.twig'  with {'attribute': attribute, 'value' : insertion_values[attribute.attributeKey]} %}
                     {% endfor %}
 
-
                     <div class="product__attribute">
                     <span
                         class="attribute-label">{{ i18n('price_' ~ insertion.insertionType.name, i18n('price')) }}</span>
