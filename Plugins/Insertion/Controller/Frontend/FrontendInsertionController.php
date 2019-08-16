@@ -236,7 +236,7 @@ class FrontendInsertionController extends SecureFrontendController {
                     ]));
 
                     return $response->withRedirect($uri, 301);
-                } catch (Exception $exception) {
+                } catch (\Exception $exception) {
                     Oforge()->Logger()->get()->error('insertion_creation', $data);
                     Oforge()->Logger()->get()->error('insertion_creation_stack', $exception->getTrace());
 
