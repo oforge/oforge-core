@@ -47,7 +47,7 @@
                                     <select name="filterType" id="attributeFilterType" class="form-control select2">
                                         {% for type in content.types %}
                                             <option value="{{ type }}"
-                                                {% if select_compare(content.attribute.filterType, ) %}selected{% endif %}>
+                                                {% if select_compare(content.attribute.filterType, type ) %}selected{% endif %}>
                                                 {{ type }}
                                             </option>
                                         {% endfor %}
