@@ -37,7 +37,12 @@ class InsertionFormsService extends AbstractDatabaseAccess {
         if (!isset($_SESSION['insertion' . $sessionKey])) {
             $_SESSION['insertion' . $sessionKey] = [];
         }
+
+        $insertion = array_merge($_SESSION['insertion' . $sessionKey]["insertion"], $_POST["insertion"]);
+
         $_SESSION['insertion' . $sessionKey] = array_merge($_SESSION['insertion' . $sessionKey], $_POST);
+
+        $_SESSION['insertion' . $sessionKey]["insertion"] = $insertion;
 
         /** @var MediaService $mediaService */
         $mediaService = Oforge()->Services()->get('media');
