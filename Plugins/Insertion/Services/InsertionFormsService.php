@@ -16,6 +16,7 @@ use Insertion\Models\InsertionMedia;
 use Insertion\Models\InsertionType;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Core\Helper\StringHelper;
 use Oforge\Engine\Modules\I18n\Models\Language;
 use Oforge\Engine\Modules\Media\Models\Media;
@@ -35,9 +36,22 @@ class InsertionFormsService extends AbstractDatabaseAccess {
     public function processPostData($sessionKey) : ?array {
         $prefix = null;
         if (!isset($_SESSION['insertion' . $sessionKey])) {
-            $_SESSION['insertion' . $sessionKey] = [];
+            $_SESSION['insertion' . $sessionKey]              = [];
+            $_SESSION['insertion' . $sessionKey]["insertion"] = [];
         }
-        $_SESSION['insertion' . $sessionKey] = array_merge($_SESSION['insertion' . $sessionKey], $_POST);
+
+        if (!isset($_SESSION['insertion' . $sessionKey]["insertion"]) || empty($_SESSION['insertion' . $sessionKey]["insertion"])) {
+            $_SESSION['insertion' . $sessionKey]["insertion"] = [];
+        }
+
+        $insertion = $_SESSION['insertion' . $sessionKey]["insertion"];
+
+        if (isset($_POST["insertion"])) {
+            $insertion = ArrayHelper::mergeRecursive($_SESSION['insertion' . $sessionKey]["insertion"],  $_POST["insertion"]);
+        }
+
+        $_SESSION['insertion' . $sessionKey]              = array_merge($_SESSION['insertion' . $sessionKey], $_POST);
+        $_SESSION['insertion' . $sessionKey]["insertion"] = $insertion;
 
         /** @var MediaService $mediaService */
         $mediaService = Oforge()->Services()->get('media');
@@ -137,7 +151,7 @@ class InsertionFormsService extends AbstractDatabaseAccess {
                 "phone"   => $pageData["contact_phone"],
                 "zip"     => $pageData["contact_zip"],
                 "city"    => $pageData["contact_city"],
-                "visible" => isset($pageData["contact_visible"]) && !empty($pageData["contact_visible"]) && $pageData["contact_visible"] != "off" ,
+                "visible" => isset($pageData["contact_visible"]) && !empty($pageData["contact_visible"]) && $pageData["contact_visible"] != "off",
             ],
             "content"             => [
                 "language"    => $language,
