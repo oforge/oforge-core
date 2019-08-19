@@ -25,7 +25,6 @@ use function DI\value;
 
 /**
  * Class InsertionListService
- * @Cache()
  *
  * @package Insertion\Services
  */
