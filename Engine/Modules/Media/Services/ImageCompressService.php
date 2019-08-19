@@ -48,7 +48,7 @@ class ImageCompressService extends AbstractDatabaseAccess {
             $fileExtension = $this->getFileExtension($media);
 
             if (!empty($fileExtension)) {
-                $cacheUrl = substr($media->getPath(), 0, -strlen($fileExtension) -1) . '_' . $width . '.' . $fileExtension;
+                $cacheUrl = substr($media->getPath(), 0, -strlen($fileExtension) - 1) . '_' . $width . '.' . $fileExtension;
                 //File is already compressed and stored
                 if (file_exists(ROOT_PATH . $cacheUrl)) {
                     return $cacheUrl;
@@ -56,7 +56,7 @@ class ImageCompressService extends AbstractDatabaseAccess {
                 //File should be compressed
                 if (extension_loaded('imagick')) {
                     $oldMedia = $media;
-                    $media = $this->compress($media);
+                    $media    = $this->compress($media);
 
                     // if compression fails
                     if ($media === null) {
@@ -75,22 +75,21 @@ class ImageCompressService extends AbstractDatabaseAccess {
                 }
             }
         }
+
         return $media->getPath();
     }
 
     public function getFileExtension(Media $media) {
-        $fileExtension = '';
+        $fileExtension    = '';
+        $tmpFileExtension = pathinfo($media->getPath(), PATHINFO_EXTENSION);
         switch ($media->getType()) {
             case 'image/jpeg':
-                $fileExtension = 'jpeg';
-                break;
             case 'image/jpg':
-                $fileExtension = 'jpg';
-                break;
             case 'image/png':
-                $fileExtension = 'png';
+                $fileExtension = $tmpFileExtension;
                 break;
         }
+
         return $fileExtension;
     }
 
@@ -102,7 +101,7 @@ class ImageCompressService extends AbstractDatabaseAccess {
     public function compress(Media $media) : ?Media {
         try {
             if (extension_loaded('imagick')) {
-                $imagick = new Imagick(ROOT_PATH . $media->getPath());
+                $imagick     = new Imagick(ROOT_PATH . $media->getPath());
                 $image_types = getimagesize(ROOT_PATH . $media->getPath());
                 // Compress image
 
@@ -140,13 +139,14 @@ class ImageCompressService extends AbstractDatabaseAccess {
         } catch (ImagickException $e) {
             Oforge()->Logger()->get()->error('ImagickException', $e->getTrace());
         }
+
         return null;
     }
 
     public function scale(Media $media, int $width, string $cacheUrl) {
         try {
             if (extension_loaded('imagick')) {
-                $imagick = new Imagick(ROOT_PATH . $media->getPath());
+                $imagick       = new Imagick(ROOT_PATH . $media->getPath());
                 $widthCurrent  = $imagick->getImageWidth();
                 $heightCurrent = $imagick->getImageHeight();
                 $imagick->scaleImage($width, (int) (1.0 * $width / $widthCurrent * $heightCurrent));
@@ -159,12 +159,13 @@ class ImageCompressService extends AbstractDatabaseAccess {
 
     /**
      * go through all medias that are stored in the database and compress them.
+     *
      * @throws ORMException
      */
     public function convertAllImages() {
         $allMedia = $this->repository()->findAll();
 
-        foreach($allMedia as $media) {
+        foreach ($allMedia as $media) {
             $media = $this->compress($media);
             if ($media) {
                 $this->entityManager()->update($media);

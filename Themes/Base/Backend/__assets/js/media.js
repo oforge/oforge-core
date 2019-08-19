@@ -4,7 +4,7 @@ if (typeof Oforge !== 'undefined') {
             if (event) {
                 event.preventDefault();
             }
-            $.get("/backend/media", function (data) {
+            $.get("/backend/media/ajax", function (data) {
                 $("#media-chooser").remove();
                 $("body").append($(data));
                 Oforge.Media._init();
@@ -152,7 +152,7 @@ if (typeof Oforge !== 'undefined') {
         __uploadAction(self, formData) {
             self.__overlay.show();
             $.ajax({
-                url: "/backend/media/upload",
+                url: "/backend/media/ajax/upload",
                 type: "POST",
                 cache: false,
                 contentType: false,
@@ -176,7 +176,7 @@ if (typeof Oforge !== 'undefined') {
         __reloadItems: function () {
             var self = this;
             self.__overlay.show();
-            $.get("/backend/media/search", {query: this.__query, page: this.__page}, function (data) {
+            $.get("/backend/media/ajax/search", {query: this.__query, page: this.__page}, function (data) {
                 self.__imageContainer.html(data);
                 self.__bindDynamicItemsClickEvents();
                 self.__overlay.hide();
