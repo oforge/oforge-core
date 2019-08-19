@@ -128,9 +128,9 @@ class BackendUserDetail extends AbstractModel {
     }
 
     /**
-     * @return Media
+     * @return Media|null
      */
-    public function getImage() : Media {
+    public function getImage() : ?Media {
         return $this->image;
     }
 
