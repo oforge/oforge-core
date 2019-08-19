@@ -16,6 +16,7 @@ use Insertion\Models\InsertionMedia;
 use Insertion\Models\InsertionType;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Core\Helper\StringHelper;
 use Oforge\Engine\Modules\I18n\Models\Language;
 use Oforge\Engine\Modules\Media\Models\Media;
@@ -44,8 +45,9 @@ class InsertionFormsService extends AbstractDatabaseAccess {
         }
 
         $insertion = $_SESSION['insertion' . $sessionKey]["insertion"];
+
         if (isset($_POST["insertion"])) {
-            $insertion = array_merge($_SESSION['insertion' . $sessionKey]["insertion"], $_POST["insertion"]);
+            $insertion = ArrayHelper::mergeRecursive($_SESSION['insertion' . $sessionKey]["insertion"],  $_POST["insertion"]);
         }
 
         $_SESSION['insertion' . $sessionKey]              = array_merge($_SESSION['insertion' . $sessionKey], $_POST);
