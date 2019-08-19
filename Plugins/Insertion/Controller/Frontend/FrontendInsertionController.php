@@ -247,7 +247,7 @@ class FrontendInsertionController extends SecureFrontendController {
                 }
             }
         } else {
-            Oforge()->View()->Flash()->addMessage('error', 'missing_user');
+            Oforge()->View()->Flash()->addMessage('error', I18N::translate('missing_user'));
             $uri = $router->pathFor('insertions_createSteps', ['type' => $typeId, 'page' => '5']);
 
             return $response->withRedirect($uri, 301);
