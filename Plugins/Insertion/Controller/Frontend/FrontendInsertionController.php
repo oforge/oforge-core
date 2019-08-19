@@ -209,6 +209,7 @@ class FrontendInsertionController extends SecureFrontendController {
                 $data = $formsService->processPostData($typeId);
                 try {
                     $processData = $formsService->parsePageData($data);
+                    Oforge()->Logger()->get('create')->info("processed data ", $data);
 
                     $insertionId = $createService->create($typeId, $user, $processData);
 
