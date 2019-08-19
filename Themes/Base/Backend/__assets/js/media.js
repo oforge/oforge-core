@@ -4,7 +4,7 @@ if (typeof Oforge !== 'undefined') {
             if (event) {
                 event.preventDefault();
             }
-            $.get("/backend/media", function (data) {
+            $.get("/backend/media/ajax", function (data) {
                 $("#media-chooser").remove();
                 $("body").append($(data));
                 Oforge.Media._init();
@@ -26,6 +26,36 @@ if (typeof Oforge !== 'undefined') {
             this.__bindDynamicItemsClickEvents();
             this.__modalElement.find("#upload-media").on("change", this, this.__imageUploadChanged);
             this.__searchField.on("keyup", this, this.__searchChanged);
+
+            this.__dropOverlay = this.__modalElement.find('.drop-overlay');
+            this.__modalElement.find('.modal-content').on('dragover', this, function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }).on('dragenter', this, function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (e.originalEvent.dataTransfer && e.originalEvent.dataTransfer.types && e.originalEvent.dataTransfer.types.some(function (type) {
+                    return type === "Files";
+                })) {
+                    e.data.__dropOverlay.show();
+                }
+            }).on('dragleave', this, function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                e.data.__dropOverlay.hide();
+            }).on('drop', this, function (e) {
+                if (e.originalEvent.dataTransfer && e.originalEvent.dataTransfer.files.length) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var self = e.data;
+                    self.__dropOverlay.hide();
+                    ([...e.originalEvent.dataTransfer.files]).forEach(function (file) {
+                        var formData = new FormData();
+                        formData.append('upload-media', file);
+                        self.__uploadAction(self, formData);
+                    });
+                }
+            });
         },
         __bindDynamicItemsClickEvents: function () {
             this.__modalElement.find(".media-item").on("click", this, this.__mediaClicked);
@@ -116,18 +146,21 @@ if (typeof Oforge !== 'undefined') {
             var file = this.files[0];
             var self = e.data;
             if (file != null) {
-                self.__overlay.show();
-                $.ajax({
-                    url: "/backend/media/upload",
-                    type: "POST",
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    data: new FormData($('#upload-media-form')[0])
-                }).done(function () {
-                    self.__reloadItems();
-                });
+                self.__uploadAction(self, new FormData($('#upload-media-form')[0]))
             }
+        },
+        __uploadAction(self, formData) {
+            self.__overlay.show();
+            $.ajax({
+                url: "/backend/media/ajax/upload",
+                type: "POST",
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: formData
+            }).done(function () {
+                self.__reloadItems();
+            });
         },
         __searchChanged: function (e) {
             var self = e.data;
@@ -138,12 +171,12 @@ if (typeof Oforge !== 'undefined') {
                 self.__query = self.__searchField.val();
                 self.__page = 1;
                 self.__reloadItems();
-            }, 200);
+            }, 300);
         },
         __reloadItems: function () {
             var self = this;
             self.__overlay.show();
-            $.get("/backend/media/search", {query: this.__query, page: this.__page}, function (data) {
+            $.get("/backend/media/ajax/search", {query: this.__query, page: this.__page}, function (data) {
                 self.__imageContainer.html(data);
                 self.__bindDynamicItemsClickEvents();
                 self.__overlay.hide();

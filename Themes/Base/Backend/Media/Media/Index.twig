@@ -1,0 +1,63 @@
+{% extends 'Backend/Master/Index.twig' %}
+
+{% block pagecontent %}
+    <section class="content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box box-primary">
+                    <div class="box-body">
+                        {% include 'Backend/CRUD/Components/Index/FilterBar.twig' with {
+                            crud: crud,
+                            meta: meta
+                        } %}
+                        <div class="row">
+                            {% for mediaItem in media.items %}
+                            <div class="col-xs-3 text-center">
+                                <div>
+                                    <a href="{{ mediaItem.path }}" title="{{ i18n('open') }}" target="_blank">
+                                        <i class="fa fa-external-link"></i>
+                                    </a>
+                                    {#                                        <a href="{{ url('backend_media_edit', {id: mediaItem.id}) }}"#}
+                                    {#                                           title="{{ i18n('edit') }}">#}
+                                    {#                                            <i class="fa fa-pencil-square-o"></i>#}
+                                    {#                                        </a>#}
+                                    <a href="{{ url('backend_media_replace', {id: mediaItem.id}) }}"
+                                       title="{{ i18n('replace') }}">
+                                        <i class="fa fa-refresh"></i>
+                                    </a>
+                                </div>
+                                <div>
+                                    {% if mediaItem.type starts with 'image' %}
+                                        <img src="{{ media(mediaItem.path, 100) }}" alt="{{ mediaItem.name }}"
+                                             width="100" />
+                                    {% else %}
+                                        <div></div>
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    {{ mediaItem.name }}
+                                </div>
+                            </div>
+                            {{ o_dump(loop) }}
+                            {% if loop.index % 4 == 0 %}
+                        </div>
+                        <div class="row">
+                            {% endif %}
+                            {% else %}
+                                {{ i18n('No media item yet', {
+                                    en: 'No media item yet',
+                                    de: 'Noch kein Medienelement',
+                                }) }}
+                            {% endfor %}
+                        </div>
+                        {% include 'Backend/CRUD/Components/Index/PaginationRow.twig' with {
+                            pagination: crud.pagination,
+                            queryKeys: crud.queryKeys,
+                            route: meta.route
+                        } only %}
+                    </div>{# /.box-body #}
+                </div>{# /.box #}
+            </div>
+        </div>
+    </section>
+{% endblock %}
