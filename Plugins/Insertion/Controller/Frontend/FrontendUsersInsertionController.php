@@ -371,10 +371,11 @@ class FrontendUsersInsertionController extends SecureFrontendController {
     /**
      * @param Request $request
      * @param Response $response
-     * @EndpointAction(path = "/profile")
      *
      * @throws ORMException
      * @throws ServiceNotFoundException
+     * @throws \ReflectionException
+     * @EndpointAction(path = "/profile")
      */
     public function profileAction(Request $request, Response $response) {
         /**
@@ -395,7 +396,6 @@ class FrontendUsersInsertionController extends SecureFrontendController {
                 /**
                  * @var UserDetailsService $userDetailsService
                  */
-
                 $userDetailsService = Oforge()->Services()->get('frontend.user.management.user.details');
 
                 $user = $userDetailsService->updateImage($user, $_FILES["profile"]);
