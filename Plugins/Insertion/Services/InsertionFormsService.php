@@ -35,13 +35,16 @@ class InsertionFormsService extends AbstractDatabaseAccess {
     public function processPostData($sessionKey) : ?array {
         $prefix = null;
         if (!isset($_SESSION['insertion' . $sessionKey])) {
-            $_SESSION['insertion' . $sessionKey] = [];
+            $_SESSION['insertion' . $sessionKey]              = [];
+            $_SESSION['insertion' . $sessionKey]["insertion"] = [];
         }
 
-        $insertion = array_merge($_SESSION['insertion' . $sessionKey]["insertion"], $_POST["insertion"]);
+        $insertion = $_SESSION['insertion' . $sessionKey]["insertion"];
+        if (isset($_POST["insertion"])) {
+            $insertion = array_merge($_SESSION['insertion' . $sessionKey]["insertion"], $_POST["insertion"]);
+        }
 
         $_SESSION['insertion' . $sessionKey] = array_merge($_SESSION['insertion' . $sessionKey], $_POST);
-
         $_SESSION['insertion' . $sessionKey]["insertion"] = $insertion;
 
         /** @var MediaService $mediaService */
@@ -142,7 +145,7 @@ class InsertionFormsService extends AbstractDatabaseAccess {
                 "phone"   => $pageData["contact_phone"],
                 "zip"     => $pageData["contact_zip"],
                 "city"    => $pageData["contact_city"],
-                "visible" => isset($pageData["contact_visible"]) && !empty($pageData["contact_visible"]) && $pageData["contact_visible"] != "off" ,
+                "visible" => isset($pageData["contact_visible"]) && !empty($pageData["contact_visible"]) && $pageData["contact_visible"] != "off",
             ],
             "content"             => [
                 "language"    => $language,
