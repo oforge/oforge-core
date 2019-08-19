@@ -21,6 +21,16 @@
     .panel--account {
         //background: none;
     }
+    .user--insertions {
+        .product__attribute {
+            width: 100%;
+            .product__value {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+    }
 }
 
 @media(min-width: $screen-medium) {

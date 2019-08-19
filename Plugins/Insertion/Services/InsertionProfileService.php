@@ -6,7 +6,8 @@ use FrontendUserManagement\Models\User;
 use Insertion\Models\InsertionProfile;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Media\Services\MediaService;
-use Oforge\Engine\Modules\I18n\Helper\I18N;
+use Doctrine\ORM\ORMException;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 
 class InsertionProfileService extends AbstractDatabaseAccess {
     public function __construct() {
@@ -19,7 +20,7 @@ class InsertionProfileService extends AbstractDatabaseAccess {
      * @param int $user
      *
      * @return InsertionProfile|null
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      */
     public function get(int $user) : ?InsertionProfile {
         /**
@@ -34,7 +35,7 @@ class InsertionProfileService extends AbstractDatabaseAccess {
      * @param int $id
      *
      * @return InsertionProfile|null
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      */
     public function getById($id): ?InsertionProfile {
         /**
@@ -45,6 +46,15 @@ class InsertionProfileService extends AbstractDatabaseAccess {
         return $result;
     }
 
+    /**
+     * @param User $user
+     * @param array $params
+     *
+     * @return mixed
+     * @throws ORMException
+     * @throws ServiceNotFoundException
+     * @throws \ReflectionException
+     */
     public function update(User $user, array $params) {
         /**
          * @var $result InsertionProfile
@@ -93,7 +103,6 @@ class InsertionProfileService extends AbstractDatabaseAccess {
             "imprintStreet"        => $params["imprint_street"],
             "imprintZipCity"       => $params["imprint_zipCity"],
             "imprintPhone"         => $params["imprint_phone"],
-            "imprintFax"           => $params["imprint_fax"],
             "imprintEmail"         => $params["imprint_email"],
             "imprintFacebook"      => $params["imprint_facebook"],
             "imprintWebsite"       => $imprintWebsite,

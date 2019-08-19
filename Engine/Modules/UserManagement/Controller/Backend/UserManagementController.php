@@ -8,6 +8,7 @@ use Oforge\Engine\Modules\Auth\Services\PasswordService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
+use Oforge\Engine\Modules\Core\Manager\Events\Event;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
 use Oforge\Engine\Modules\CRUD\Enum\CrudFilterComparator;
@@ -192,16 +193,20 @@ class UserManagementController extends BaseCrudController {
             'de' => 'System',
         ]);
 
-        return [
-            BackendUser::ROLE_MODERATOR     => I18N::translate('backend_user_role_' . BackendUser::ROLE_MODERATOR, [
-                'en' => 'Moderator',
-                'de' => 'Moderator',
-            ]),
+        $roles = [
             BackendUser::ROLE_ADMINISTRATOR => I18N::translate('backend_user_role_' . BackendUser::ROLE_ADMINISTRATOR, [
                 'en' => 'Administrator',
                 'de' => 'Administrator',
             ]),
+            BackendUser::ROLE_MODERATOR     => I18N::translate('backend_user_role_' . BackendUser::ROLE_MODERATOR, [
+                'en' => 'Moderator',
+                'de' => 'Moderator',
+            ]),
         ];
+        $roles = Oforge()->Events()->trigger(Event::create(__METHOD__, [], $roles));
+        unset($roles[BackendUser::ROLE_SYSTEM], $roles[BackendUser::ROLE_PUBLIC]);
+
+        return $roles;
     }
 
     /**
@@ -246,7 +251,6 @@ class UserManagementController extends BaseCrudController {
      * @param array $args
      *
      * @return bool
-     * @throws \Doctrine\ORM\ORMException
      */
     protected function checkUserType(array $args) {
         /** @var BackendUser|null $entity */
