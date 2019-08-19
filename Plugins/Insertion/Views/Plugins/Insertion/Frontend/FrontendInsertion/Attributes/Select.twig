@@ -11,6 +11,7 @@
                 <input class="select__require-input" type="text" required tabindex="-1" value="">
             {% endif %}
             <input type="text"
+                   tabindex="-1"
                    class="select__filter"
                    data-select-filter=""
                    placeholder="{{ i18n('search') }}">
@@ -19,7 +20,7 @@
             data-select-list=""
             {% if not isSubAttribute %}data-simplebar=""{% endif %}>
             {% for value in attribute.values %}
-                <li class="select__item {% if value.id in data['insertion'][attribute.id] %}select__item--is-checked{% endif %}{% if isSubAttribute %}select__item--sub{% endif %}"
+                <li class="select__item {% if data['insertion'][attribute.id] is array ? (value.id in data['insertion'][attribute.id]) : (value.id == data['insertion'][attribute.id]) %}select__item--is-checked{% endif %}{% if isSubAttribute %}select__item--sub{% endif %}"
                     data-selected="false"
                     data-index="{{ loop.index0 }}"
                     data-value-id="{{ value.id }}">
