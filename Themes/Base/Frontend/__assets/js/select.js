@@ -40,6 +40,7 @@
                     input.setAttribute('data-select-input', check.dataset.valueId);
                     input.setAttribute('value', check.dataset.valueId);
                     check.closest(self.selector).appendChild(input);
+                    updateRequiredInput(check);
                 }
 
                 function filterSelect() {
@@ -85,12 +86,10 @@
 
                         if (toggleState) {
                             addHiddenInputToCheckItem(selectItem);
-                            selectedItems.push(valueId);
                             parentSelect.checkedValues.push(valueId);
                             parentSelect.checkedNames.push(valueName);
                             parentSelect.querySelector(selectors.selectText).innerHTML = parentSelect.checkedNames.join(', ');
                         } else {
-                            selectedItems.pop(valueId);
                             unselectItem(selectItem);
                         }
                         updateRequiredInput(selectItem);
@@ -102,8 +101,7 @@
                     let parentSelect = selectItem.closest(self.selector);
                     let requiredInput = parentSelect.querySelector(selectors.selectRequireInput);
 
-                    console.log(requiredInput);
-                    if (selectedItems.length > 0) {
+                    if (parentSelect.checkedValues.length > 0) {
                         requiredInput.value = ' ';
                     } else {
                         requiredInput.value = '';
@@ -213,6 +211,7 @@
                             select.classList.toggle(classNames.selectIsOpen);
                         }
                     } else if (evt.target.matches(selectors.selectItem)) {
+                        console.log(evt.target);
                         toggleOneItem(evt.target);
                     } else if (evt.target.matches(selectors.selectValue)) {
                         var selectItem = evt.target.closest(selectors.selectItem);
@@ -257,6 +256,7 @@
                             select.checkedValues.push(checkedElement.dataset.valueId);
                             select.checkedNames.push(checkedName);
                             addHiddenInputToCheckItem(checkedElement);
+                            updateRequiredInput(checkedElement);
                         });
                         if (select.checkedNames.length > 0) {
                             selectText.innerHTML = select.checkedNames.join(', ');
@@ -268,6 +268,11 @@
                     if (evt.button === 0) {
                         fireClick(evt);
                     }
+                });
+
+                //Fixes a weird scrolling bug
+                document.getElementsByClassName('simplebar-content-wrapper').forEach(function (simplebar) {
+                    simplebar.setAttribute('tabindex', -1);
                 });
             }
         })
