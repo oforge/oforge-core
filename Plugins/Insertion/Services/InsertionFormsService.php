@@ -137,7 +137,7 @@ class InsertionFormsService extends AbstractDatabaseAccess {
                 "phone"   => $pageData["contact_phone"],
                 "zip"     => $pageData["contact_zip"],
                 "city"    => $pageData["contact_city"],
-                "visible" => isset($pageData["contact_visible"]) && !empty($pageData["contact_visible"]),
+                "visible" => isset($pageData["contact_visible"]) && !empty($pageData["contact_visible"]) && $pageData["contact_visible"] != "off" ,
             ],
             "content"             => [
                 "language"    => $language,
