@@ -111,7 +111,7 @@ class GenericCrudService extends AbstractDatabaseAccess {
     }
 
     /**
-     * Get single entity data (by toArray) or null if not exist.
+     * Get single entity or null if not exist.
      *
      * @param string $class
      * @param int|string $id
