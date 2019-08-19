@@ -94,11 +94,20 @@
             display: none;
         }
 
+
+
         .upload__label {
             display: flex;
             &:hover {
                 cursor: pointer;
             }
+        }
+    }
+
+    .img-profile:hover, .img-background:hover {
+        .icon {
+            transform: scale(1.2);
+            opacity: 1;
         }
     }
 
