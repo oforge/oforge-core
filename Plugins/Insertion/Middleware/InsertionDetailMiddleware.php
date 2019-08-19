@@ -31,6 +31,7 @@ class InsertionDetailMiddleware {
                 if ($insertion != null) {
                     $typeTitle = str_replace(" ", "-", strtolower(I18N::translate($insertion->getInsertionType()->getName())));
                     $title     = str_replace(" ", "-", strtolower($insertion->getContent()[0]->getTitle()));
+                    $title     = str_replace("/", "", $title);
 
                     if ($typeTitle == $pathChunks[1]) {
                         if (urlencode($title) != $pathChunks[2]) {
@@ -55,6 +56,8 @@ class InsertionDetailMiddleware {
                 if($profile != null) {
                     if (urlencode(I18N::translate('insertion_url_profile')) == $pathChunks[1]) {
                         $title     = urlencode(str_replace(" ", "-", strtolower($profile->getImprintName())));
+                        $title     = str_replace("/", "", $title);
+
                         if($title == $pathChunks[2]) {
                             $result = $router->pathFor('insertions_profile', ["id" => $pathChunks[3]]);
 

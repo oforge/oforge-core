@@ -38,6 +38,7 @@ class InsertionUrlService {
             $insertion = $service->getInsertionById($namedParams["id"]);
             if ($insertion != null) {
                 $title     = str_replace(" ", "-", strtolower($insertion->getContent()[0]->getTitle()));
+                $title     = str_replace("/", "", $title);
                 $typeTitle = str_replace(" ", "-", strtolower(I18N::translate($insertion->getInsertionType()->getName())));
 
                 return "/" . urlencode($typeTitle) . "/" . urlencode($title) . "/" . $insertion->getId();
@@ -47,6 +48,7 @@ class InsertionUrlService {
             $service = Oforge()->Services()->get('insertion.profile');
             $profile = $service->getById($namedParams["id"]);
             $title     = str_replace(" ", "-", strtolower($profile->getImprintName()));
+            $title     = str_replace("/", "", $title);
 
             return "/" . urlencode(I18N::translate('insertion_url_profile')) . "/" . urlencode($title) . "/" . $namedParams["id"];
         }
