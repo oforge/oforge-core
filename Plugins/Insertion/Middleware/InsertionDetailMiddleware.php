@@ -41,14 +41,12 @@ class InsertionDetailMiddleware {
                             return $response->withRedirect($url, 301);
                         }
 
-
                         $result = $router->pathFor('insertions_detail', ["id" => $pathChunks[3]]);
 
                         $newUri  = $uri->withPath($result);
                         $request = $request->withUri($newUri);
                     }
                 }
-
 
                 /** @var InsertionProfileService $serviceProfile */
                 $serviceProfile = Oforge()->Services()->get('insertion.profile');
