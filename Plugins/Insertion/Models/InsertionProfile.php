@@ -87,11 +87,6 @@ class InsertionProfile extends AbstractModel
     private $imprintPhone;
     /**
      * @var string
-     * @ORM\Column(name="imprint_fax", type="string")
-     */
-    private $imprintFax;
-    /**
-     * @var string
      * @ORM\Column(name="imprint_email", type="string")
      */
     private $imprintEmail;
@@ -305,26 +300,6 @@ class InsertionProfile extends AbstractModel
     public function setImprintPhone(string $imprintPhone): InsertionProfile
     {
         $this->imprintPhone = $imprintPhone;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getImprintFax(): ?string
-    {
-        return $this->imprintFax;
-    }
-
-    /**
-     * @param string $imprintFax
-     *
-     * @return InsertionProfile
-     */
-    public function setImprintFax(string $imprintFax): InsertionProfile
-    {
-        $this->imprintFax = $imprintFax;
 
         return $this;
     }

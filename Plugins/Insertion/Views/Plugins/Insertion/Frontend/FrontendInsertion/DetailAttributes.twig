@@ -10,7 +10,7 @@
                             class="group__label">{{ i18n('insertion_detail_group_label_' ~ attributeGroup.name) }}</div>
                         {% for attribute in attributeGroup.items %}
                             {% if insertion_values[attribute.attributeKey.id] is not empty %}
-                            {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'value' : insertion_values[attribute.attributeKey.id]} %}
+                                {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'value' : insertion_values[attribute.attributeKey.id]} %}
                             {% endif %}
                         {% endfor %}
                     </div>
@@ -18,9 +18,11 @@
             {% endfor %}
         </div>
         {% block detail_attributes__timestamp %}
+            {#
             <div class="timestamp">
                 <span>{{ i18n('insertion_created_at') }} </span><span>{{ insertion.createdAt.date|date("d.m.Y") }}</span><span> - {{ i18n('insertion_updated_at') }} </span><span>{{ insertion.updatedAt.date|date("d.m.Y") }}</span>
             </div>
+            #}
         {% endblock detail_attributes__timestamp %}
     </div>
 {% endblock detail_attributes %}
