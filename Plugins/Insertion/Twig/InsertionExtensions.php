@@ -69,8 +69,10 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
      * @return string|null
      * @throws \Exception
      */
-    public function getAge(?string $dateTimeObject, ?string $type) : ?string {
-        $bday  = DateTime::createFromFormat('Y-m-d', $dateTimeObject); // Your date of birth
+    public function getAge(?string $dateTimeObject, string $type = 'dateyear') : ?string { // why not set type to dateyear by default?
+
+
+        $bday  = DateTime::createFromFormat('Y-m-d', $dateTimeObject);
         $today = new Datetime();
 
         $diff   = $today->diff($bday);
@@ -152,6 +154,7 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
      *
      * @return boolean
      * @throws ServiceNotFoundException
+     * @throws ORMException
      */
     public function hasSearchBookmark(...$vars) {
         if (count($vars) == 2) {
@@ -174,6 +177,7 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
     /**
      * @return array
      * @throws ServiceNotFoundException
+     * @throws ORMException
      */
     public function getInsertionSliderContent() {
         /** @var InsertionSliderService $insertionSliderService */
@@ -189,6 +193,7 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
      * @return array
      * @throws ORMException
      * @throws ServiceNotFoundException
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function getSimilarInsertion(...$vars) {
         /** @var InsertionSliderService $insertionSliderService */
@@ -283,7 +288,7 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
     }
 
     /**
-     * @return array
+     * @return \Insertion\Models\AttributeKey
      * @throws ServiceNotFoundException
      * @throws ORMException
      */
@@ -299,7 +304,7 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
     }
 
     /**
-     * @return array
+     * @return \Insertion\Models\AttributeValue
      * @throws ServiceNotFoundException
      * @throws ORMException
      */
