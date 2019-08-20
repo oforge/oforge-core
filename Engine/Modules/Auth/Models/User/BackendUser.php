@@ -51,6 +51,7 @@ class BackendUser extends BaseUser {
     public function initDetail() : void {
         if (!isset($this->detail)) {
             $this->detail = new BackendUserDetail();
+            $this->detail->setUser($this);
         }
     }
 
