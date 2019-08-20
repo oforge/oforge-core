@@ -6,7 +6,7 @@
     var elem = document.querySelector('.main-nav');
     var hidden = false;
 
-    if (document.documentElement.clientWidth > 640) {
+    if (document.documentElement.clientWidth >= 640) {
         window.addEventListener('resize', function(evt) {
             clearTimeout(resizeTimer);
             resizeTimer = setTimeout(function() {
