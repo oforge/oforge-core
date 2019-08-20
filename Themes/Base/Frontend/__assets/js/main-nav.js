@@ -6,24 +6,27 @@
     var elem = document.querySelector('.main-nav');
     var hidden = false;
 
-    window.addEventListener('resize', function(evt) {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(function() {
-            elem.style.display = 'block';
-            hidden = false;
-        }, 250);
-
-        if (!hidden) {
-            if (!window.matchMedia('(min-width: 1280px').matches) {
-                elem.style.display = 'none';
-                hidden = true;
-            } else {
+    if (document.documentElement.clientWidth >= 640) {
+        window.addEventListener('resize', function(evt) {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function() {
                 elem.style.display = 'block';
+                hidden = false;
+            }, 250);
+
+            if (!hidden) {
+                if (!window.matchMedia('(min-width: 1280px').matches) {
+                    elem.style.display = 'none';
+                    hidden = true;
+                } else {
+                    elem.style.display = 'block';
+                }
             }
-        }
-    });
+        });
+    }
+
     /*
-     * Add no-scroll to body class to prevent unwanted mobile behaviour
+     * Add no-scroll to body class to prevent unwanted behaviour
      */
     let burger = document.getElementById('burger');
     if (burger) {
