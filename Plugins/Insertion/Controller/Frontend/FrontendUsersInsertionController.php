@@ -374,6 +374,7 @@ class FrontendUsersInsertionController extends SecureFrontendController {
      * @param Request $request
      * @param Response $response
      *
+     * @return Response
      * @throws ORMException
      * @throws ServiceNotFoundException
      * @throws \ReflectionException
@@ -412,14 +413,7 @@ class FrontendUsersInsertionController extends SecureFrontendController {
             $user2         = $user->toArray(1, ['password']);
             $user2["type"] = User::class;
             $jwt           = $authService->createJWT($user2);
-            /**
-             * $jwt is null if the login credentials are incorrect
-             */
-            if (!isset($jwt)) {
-                Oforge()->View()->Flash()->addMessage('warning', I18N::translate('invalid_login_credentials', 'Invalid login credentials.'));
 
-                return $response->withRedirect('/404');
-            }
             $_SESSION['auth'] = $jwt;
         }
 
