@@ -22,4 +22,13 @@
             }
         }
     });
+    /*
+     * Add no-scroll to body class to prevent unwanted mobile behaviour
+     */
+    let burger = document.getElementById('burger');
+    if (burger) {
+        burger.addEventListener('click', function() {
+            document.body.classList.toggle('no-scroll');
+        });
+    }
 })();
