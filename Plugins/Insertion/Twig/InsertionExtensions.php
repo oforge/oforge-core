@@ -182,7 +182,7 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
     public function getInsertionSliderContent() {
         /** @var InsertionSliderService $insertionSliderService */
         $insertionSliderService = Oforge()->Services()->get("insertion.slider");
-        $insertions             = $insertionSliderService->getRandomInsertions();
+        $insertions             = $insertionSliderService->getRandomInsertions(10);
 
         return ['insertions' => $insertions];
     }
