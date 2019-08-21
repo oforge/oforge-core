@@ -7,8 +7,8 @@
     flex-direction: column;
     padding: 2rem;
     background: $color-primary;
+    border: 2px solid $color-secondary;
     transition: opacity 1s ease;
-    padding-bottom: 6rem;
 
     &.visible {
         opacity: 1;
@@ -22,8 +22,14 @@
     }
 
     .cookie__msg {
+        font-size: $font-size-6;
         color: $color-light;
         flex: 1 1 0;
+    }
+    .cookie__buttons {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
     }
 
     @media screen and (min-width: $screen-medium ) {
@@ -36,6 +42,7 @@
 
         .cookie__msg {
             margin-right: $size-large;
+            font-size: $font-size-5;
         }
     }
 }
