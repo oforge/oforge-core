@@ -1,0 +1,41 @@
+#cookie__consent {
+    opacity: 0;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    background: $color-primary;
+    transition: opacity 1s ease;
+
+    &.visible {
+        opacity: 1;
+    }
+
+    div {
+        text-align: center;
+    }
+    div + div {
+        margin-top: $size-large;
+    }
+
+    .cookie__msg {
+        color: $color-light;
+        flex: 1 1 0;
+    }
+
+    @media screen and (min-width: $screen-medium ) {
+        flex-direction: row;
+        justify-content: space-between;
+
+        div + div {
+            margin: 0;
+        }
+
+        .cookie__msg {
+            margin-right: $size-large;
+        }
+    }
+}
+
