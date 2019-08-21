@@ -22,16 +22,27 @@
                     try {
                         accept_btn.addEventListener('click', function() {
                             localStorage.setItem('cookie_consent', 'true');
-                            container.classList.toggle('visible');
+                            fadeOut(container);
+
                         });
                         decline_btn.addEventListener('click', function() {
                             localStorage.setItem('cookie_consent', 'false');
-                            container.classList.toggle('visible');
+                            fadeOut(container);
                         })
 
                     } catch(e) {
                         console.error(e);
                     }
+                }
+                // consent has been set and we don't want the container to block
+                else {
+                    container.style.display = 'none';
+                }
+                function fadeOut(element) {
+                    element.classList.toggle('visible');
+                    setTimeout(() => {
+                        element.style.display = 'none';
+                    }, 2000);
                 }
             }
         });
