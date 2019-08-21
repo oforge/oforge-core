@@ -89,11 +89,12 @@
                 function updateRequiredInput(selectItem) {
                     let parentSelect = selectItem.closest(self.selector);
                     let requiredInput = parentSelect.querySelector(selectors.selectRequireInput);
-
-                    if (parentSelect.checkedValues.length > 0) {
-                        requiredInput.value = ' ';
-                    } else {
-                        requiredInput.value = '';
+                    if (requiredInput) {
+                        if (parentSelect.checkedValues.length > 0) {
+                            requiredInput.value = ' ';
+                        } else {
+                            requiredInput.value = '';
+                        }
                     }
                 }
 
