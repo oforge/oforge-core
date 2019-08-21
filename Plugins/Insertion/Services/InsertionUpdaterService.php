@@ -32,6 +32,11 @@ class InsertionUpdaterService extends AbstractDatabaseAccess {
         ]);
     }
 
+    /**
+     * @param Insertion $insertion
+     *
+     * @return array|null
+     */
     public function getFormData(Insertion $insertion) : ?array {
         $result = ["id" => $insertion->getId()];
 
@@ -75,7 +80,7 @@ class InsertionUpdaterService extends AbstractDatabaseAccess {
                     }
 
                 } else {
-                    $result["insertion"][$value->getAttributeKey()->getId()] = $value->getValue();;
+                    $result["insertion"][$value->getAttributeKey()->getId()] = $value->getValue();
                 }
 
             }
@@ -84,6 +89,15 @@ class InsertionUpdaterService extends AbstractDatabaseAccess {
         return $result;
     }
 
+    /**
+     * @param Insertion $insertion
+     * @param array $data
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ServiceNotFoundException
+     * @throws \ReflectionException
+     */
     public function update(Insertion $insertion, array $data) {
         if ($insertion->getContent() == null || sizeof($insertion->getContent()) == 0) {
             $content = InsertionContent::create($data["content"]);
@@ -207,18 +221,33 @@ class InsertionUpdaterService extends AbstractDatabaseAccess {
         $this->entityManager()->flush();
     }
 
+    /**
+     * @param Insertion $insertion
+     *
+     * @throws ORMException
+     */
     public function deactivate(Insertion $insertion) {
         $insertion->setActive(false);
         $insertion->setDeleted(false);
         $this->entityManager()->update($insertion);
     }
 
+    /**
+     * @param Insertion $insertion
+     *
+     * @throws ORMException
+     */
     public function activate(Insertion $insertion) {
         $insertion->setActive(true);
         $insertion->setDeleted(false);
         $this->entityManager()->update($insertion);
     }
 
+    /**
+     * @param Insertion $insertion
+     *
+     * @throws ORMException
+     */
     public function delete(Insertion $insertion) {
         $insertion->setActive(false);
         $insertion->setDeleted(true);
