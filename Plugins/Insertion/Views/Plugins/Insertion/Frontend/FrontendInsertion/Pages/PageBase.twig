@@ -2,7 +2,7 @@
     {% include "Plugins/Insertion/Frontend/FrontendInsertion/Pages/Header.twig" %}
 
     {% block form_content %}
-        <form class="form form--insertion"
+        <form class="form form--insertion form--submit--loading"
               action="{% if page == pagecount %}
                     {{ url('insertions_processSteps', { type : type.id}) }}
                   {% else %}
@@ -11,16 +11,22 @@
               method="post"
               enctype="multipart/form-data">
 
-                {% block page_content %}
-                {% endblock page_content %}
+            {% block page_content %}
+            {% endblock page_content %}
 
             <div class="form-controls">
                 <div class="form__control form__control--end">
                     <input type="hidden" name="token" value="{{ token() }}">
                     <input type="hidden" name="current_page" value="{{ page }}">
-                    <input type="submit"
-                           value="{% if page == pagecount %}{{ i18n('insertion_create') }}{% else %}{{ i18n('save_and_next_step') }}{% endif %}"
-                           class="form__input form__input--submit button">
+                    <button type="submit"
+                            class="form__input form__input--submit button form__input--submit--loading">
+                        <span class="default-text">
+                        {% if page == pagecount %}{{ i18n('insertion_create') }}{% else %}{{ i18n('save_and_next_step') }}{% endif %}
+                            </span>
+                        <span class="submit-text">
+                            {{ i18n('insertion_post_processing') }}
+                        </span>
+                    </button>
                 </div>
             </div>
         </form>
