@@ -95,9 +95,9 @@ class RegistrationController extends AbstractController {
         /** @var RegistrationService $registrationService */
         $registrationService = Oforge()->Services()->get('frontend.user.management.registration');
         /** @var UserDetailsService $userDetailService */
-        $userDetailService   = Oforge()->Services()->get('frontend.user.management.user.details');
+        $userDetailService = Oforge()->Services()->get('frontend.user.management.user.details');
         /** @var Router $router */
-        $router              = Oforge()->App()->getContainer()->get('router');
+        $router = Oforge()->App()->getContainer()->get('router');
 
         /** @var RedirectService $redirectService */
         $redirectService = Oforge()->Services()->get('redirect');
@@ -209,7 +209,6 @@ class RegistrationController extends AbstractController {
             'receiver_name'  => $nickname,
         ];
 
-
         /**
          * Registration Mail could not be sent
          */
@@ -223,8 +222,8 @@ class RegistrationController extends AbstractController {
         if (!isset($referrer)) {
             $uri = $router->pathFor('frontend_login');
         }
-        Oforge()->View()->Flash()->addMessage('success', I18N::translate('registration_mail_success',
-            'Registration successful. You will receive an email with information about you account activation.'));
+        Oforge()->View()->Flash()->addMessage('success',
+            I18N::translate('registration_mail_success', 'Registration successful. You will receive an email with information about you account activation.'));
 
         return $response->withRedirect($uri, 302);
     }
@@ -255,6 +254,18 @@ class RegistrationController extends AbstractController {
          */
         if (!$guid) {
             return $response->withRedirect($uri, 302);
+        }
+        /**
+         * check if user is already activated
+         */
+        $is_active = $registrationService->userIsActive($guid);
+        if ($is_active) {
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('frontend_user_already_active', [
+                'en' => 'Your account has already been activated and you are able to log in.',
+                'de' => 'Dein Profil wurde schon aktiviert und du kannst dich einloggen.',
+            ]));
+
+            return $response->withRedirect($router->pathFor('frontend_login'), 302);
         }
 
         $user = $registrationService->activate($guid);
