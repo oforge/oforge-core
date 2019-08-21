@@ -71,9 +71,14 @@
 {% block cookie__consent %}
     <div id="cookie__consent">
         <div class="cookie__msg">
-            {{ i18n('cookie_consent_msg')}}
+            {% set content = content('cookie_consent_msg_' ~ meta.language.iso) %}
+            {% if content %}
+                <div class="content">
+                    {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
+                </div>
+            {% endif %}
         </div>
-        <div>
+        <div class="cookie__buttons">
             <div id="cookie__accept" class="button button--secondary">
                 {{ i18n('allow_cookies') }}
             </div>
