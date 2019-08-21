@@ -19,19 +19,21 @@ if (typeof Oforge !== 'undefined') {
                 input.setAttribute('type', 'file');
                 input.setAttribute('name', 'images[]');
                 input.setAttribute('accept', 'image/*');
-                input.setAttribute('multiple', 'multiple');
                 input.setAttribute('data-file-input', uploadId);
                 input.setAttribute('style', 'display: none;');
 
                 input.onchange = function (evt) {
                     if (input.files != null) {
                         for (var i = 0; i < input.files.length; i++) {
+                            var file = input.files[i];
+
                             uploadItemElement = createImageListItem(
                                 uploadId,
-                                window.URL.createObjectURL(input.files[i]),
+                                window.URL.createObjectURL(file),
                                 uploadImageList,
                                 input.files[i].size
                             );
+
                         }
 
                         uploadItemElement.appendChild(input);
@@ -48,7 +50,7 @@ if (typeof Oforge !== 'undefined') {
             function checkSizeUpload() {
                 var items = document.querySelectorAll('[data-new-item]');
 
-                var maxSize = 30 * 1024 * 1024;
+                var maxSize = 31 * 1024 * 1024;
                 var totalSize = 0;
                 items.forEach(function (item, index) {
                     enableImageItem(item);
