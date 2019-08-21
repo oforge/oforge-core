@@ -20,6 +20,7 @@
     &.form-controls--container {
         overflow: hidden;
     }
+
     &.form-controls--row {
         display: flex;
         flex-direction: row;
@@ -69,6 +70,7 @@
             flex: 0 0 49%;
             max-width: 49%;
         }
+
         .form__input--inside-label + .form__input--inside-label {
             margin-top: 0;
         }
@@ -179,7 +181,7 @@
     align-items: center;
     justify-content: center;
     padding: $size-medium;
-    border-left: 1px solid rgba(60,60,59,1);
+    border-left: 1px solid rgba(60, 60, 59, 1);
     font-size: 1rem;
     min-width: 2rem;
     height: 100%;
@@ -261,6 +263,10 @@
     &.form__input--submit {
         background: $color-primary;
         color: $text-light;
+
+        &.form__input--submitted {
+            opacity: 0.5;
+        }
     }
 
     &.form__input--textarea {
@@ -369,6 +375,7 @@
     width: calc(100% - 1.2rem);
     opacity: 0;
     transition: all .2s ease-in, width .2s ease-in;
+    font-size: $font-size-3;
 
     &.is-visible {
         opacity: 1;
@@ -476,6 +483,41 @@
 
         &.position-static {
             width: 27.6rem;
+        }
+    }
+}
+
+.limitations {
+    font-size: 80%;
+    font-weight: normal;
+    padding-left: 10px;
+}
+
+.form--submit--loading {
+    .form__input--submit--loading {
+        position: relative;
+
+        .submit-text {
+            display: none;
+        }
+
+        &[disabled=disabled] {
+            .submit-text {
+                line-height: 20px;
+
+                &::before {
+
+                    content: "";
+                    float: left;
+                    width: 30px;
+                    height: 20px;
+                    background-size: contain;
+                    background-position: center left;
+                    background-repeat: no-repeat;
+
+                    background-image: url('/var/public/__assets/Frontend/img/loading.svg');
+                }
+            }
         }
     }
 }

@@ -1,6 +1,6 @@
 {% block image_upload %}
     <span class="form__label form__label--title">
-        {{ i18n('image_upload_title') }}
+        {{ i18n('image_upload_title') }} <span class="limitations">{{ i18n('image_upload_limitations') }}</span>
     </span>
     <div class="upload upload--image"
          data-upload>
@@ -37,8 +37,12 @@
             </li>
         </ul>
     </div>
+    <div class="upload__max-size-exceeded hidden">
+        <p class="description description--upload">{{ i18n('upload_max_size_exceeded') }}</p>
+    </div>
+
     <div class="upload__description">
         <div class="upload__main-icon"></div>
-        <p class="description description--upload">{{ i18n('main_image_description') }}</p>
+        <p class="description ">{{ i18n('main_image_description') }}</p>
     </div>
 {% endblock image_upload %}
