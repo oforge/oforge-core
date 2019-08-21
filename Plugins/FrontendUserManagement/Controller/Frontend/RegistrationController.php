@@ -2,6 +2,7 @@
 
 namespace FrontendUserManagement\Controller\Frontend;
 
+use Doctrine\DBAL\Schema\View;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Services\RegistrationService;
@@ -281,8 +282,7 @@ class RegistrationController extends AbstractController {
         Oforge()->View()->Flash()
                 ->addMessage('success', I18N::translate('registration_success_logined', 'Your account was activated successfully. You are now logged in.'));
 
-        $newRegistration = ["newRegistration" => true];
-        Oforge()->View()->assign($newRegistration);
+        Oforge()->View()->Flash()->setData("new_registration", ['newRegistration' => true]);
 
         return $response->withRedirect($uri, 302);
     }
