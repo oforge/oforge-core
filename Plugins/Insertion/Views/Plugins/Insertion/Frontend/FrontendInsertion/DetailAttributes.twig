@@ -1,7 +1,7 @@
 {% block detail_attributes %}
     <div class="panel panel--product-attributes">
         <h3 class="panel__header has--bottom-separator">{{ i18n('insertion_detail_attribute_header') }}</h3>
-        <div class="attribute-columns">
+        <div class="attribute-columns {% if attributes|length == 1 %}single-attribute{% endif %}">
             {% for attributeGroup in attributes %}
                 {% if attributeGroup.items|length > 0 %}
                     <div
