@@ -22,7 +22,8 @@
         {% endif %}
     {% endblock master__styles %}
 </head>
-<body class="{% block body_class %}controller-{{ meta.route.parentName|lower }} module-{{ meta.route.context|lower }} action-{{ meta.route.name|lower }} {{ meta.body_class|lower }} {% endblock body_class %}">
+<body
+    class="{% block body_class %}controller-{{ meta.route.parentName|lower }} module-{{ meta.route.context|lower }} action-{{ meta.route.name|lower }} {{ meta.body_class|lower }} {% endblock body_class %}">
 
 {% if debug.console %}
     {{ o_dump() }}
@@ -66,6 +67,23 @@
         </div>
     {% endif %}
 {% endblock master__meta %}
+
+{% block cookie__consent %}
+    <div id="cookie__consent">
+        <div class="cookie__msg">
+            {{ i18n('cookie_consent_msg')}}
+        </div>
+        <div>
+            <div id="cookie__accept" class="button button--secondary">
+                {{ i18n('allow_cookies') }}
+            </div>
+            <div id="cookie__decline" class="button button--secondary">
+                {{ i18n('decline_cookies') }}
+            </div>
+
+        </div>
+    </div>
+{% endblock cookie__consent %}
 
 </body>
 </html>
