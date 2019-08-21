@@ -26,6 +26,7 @@ if (typeof Oforge !== 'undefined') {
                 input.onchange = function (evt) {
                     if (input.files != null) {
                         for (var i = 0; i < input.files.length; i++) {
+                            console.log(input.files[i]);
                             uploadItemElement = createImageListItem(
                                 uploadId,
                                 window.URL.createObjectURL(input.files[i]),
@@ -80,6 +81,7 @@ if (typeof Oforge !== 'undefined') {
                 var imageItem = document.createElement('img');
                 var deleteItem = document.createElement('div');
                 var mainItem = document.createElement('div');
+                var sizeItem = document.createElement('span');
 
                 imageListItem.setAttribute('class', 'upload__item');
                 imageListItem.setAttribute('data-upload-id', uploadId);
@@ -88,6 +90,10 @@ if (typeof Oforge !== 'undefined') {
                 imageItem.setAttribute('class', 'upload__image');
                 imageItem.setAttribute('src', imageUrl);
                 imageItem.setAttribute('data-upload-image', uploadId);
+
+               // sizeItem.setAttribute('class', 'upload__image');
+              //  sizeItem.setAttribute('src', imageUrl);
+               // sizeItem.innerHTML = ;
 
                 deleteItem.setAttribute('class', 'upload__delete');
                 deleteItem.setAttribute('data-upload-delete', uploadId);
