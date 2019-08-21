@@ -13,14 +13,14 @@
         <label for="{{ attribute.name ~ '[' ~ inputName ~ '_1]' }}" class="form__label">{{ i18n(inputName ~ '_1') }}</label>
         <input type="text"
                name="{{ attribute.name ~ '[' ~ inputName ~ '_1]' }}"
-               value=""
+               value="{{ search.filter[attribute.name][inputName ~ '_1']}}"
                placeholder="{{ i18n(inputName ~ '_1') }}" class="form__input"/>
     </div>
     <div class="form__control form__control--pedigree">
         <label for="{{ attribute.name ~ '[' ~ inputName ~ '_2]' }}" class="form__label">{{ i18n(inputName ~ '_2') }}</label>
         <input type="text"
                name="{{ attribute.name ~ '[' ~ inputName ~ '_2]' }}"
-               value=""
+               value="{{ search.filter[attribute.name][inputName ~ '_2']}}"
                placeholder="{{ i18n(inputName ~ '_2') }}" class="form__input"/>
     </div>
 {% endblock pedigree_inputs %}
