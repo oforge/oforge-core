@@ -69,16 +69,19 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
      * @return string|null
      * @throws \Exception
      */
-    public function getAge(?string $dateTimeObject, string $type = 'dateyear') : ?string { // why not set type to dateyear by default?
-
-
+    public function getAge(?string $dateTimeObject, string $type = 'dateyear') : ?string {
         $bday  = DateTime::createFromFormat('Y-m-d', $dateTimeObject);
         $today = new Datetime();
 
-        $diff   = $today->diff($bday);
+        $diff = $today->diff($bday);
+        // don't continue if $diff is not set
+        if (!$diff) {
+            return null;
+        }
         $suffix = $type == 'datemonth' ? I18N::translate('month_suffix') : ($type == 'dateyear' ? I18N::translate('year_suffix') : '');
 
         return ($type == 'datemonth' ? ($diff->y * 12 + $diff->m) : ($type == 'dateyear' ? $diff->y : $dateTimeObject)) . ' ' . $suffix;
+
     }
 
     /**
@@ -133,7 +136,6 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
      * @throws ServiceNotFoundException
      */
     public function userHasBookmark() {
-
         /** @var $authService AuthService */
         $authService = Oforge()->Services()->get("auth");
         if (isset($_SESSION["auth"])) {
