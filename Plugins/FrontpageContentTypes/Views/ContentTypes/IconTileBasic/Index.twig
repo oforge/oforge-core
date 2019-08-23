@@ -1,5 +1,7 @@
 {% block icontilebasic %}
+{#    {{ o_dump(data) }}#}
     <a href="{% if data.link %}{{ url(data.link) }}{% endif %}" class="{{ data.css }} icon-tile icon-tile--basic"
+        {% if data.targetBlank %}target="_blank"{% endif %}
        style="background-color:{{ data.backgroundcolor }};">
         <div class="content">
             <picture class="lazy">

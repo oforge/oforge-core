@@ -9,6 +9,14 @@
     {{ title|length > 35 ? title|slice(0, 35) : title }}{{ i18n('title_separator', {en: ' | ', de: ' | '}) }}{{ config('system_project_name') }}
 {% endblock title %}
 
+{% block description %}
+    {% if blog.post is defined %}
+        {{- blog.post.excerpt -}}
+    {% else %}
+        {{- blog.category is defined ? blog.category.headerSubtext : i18n('plugin_blog_frontend_blog_home', {en: 'Blog', de: 'Blog'}) -}}
+    {% endif %}
+{% endblock description %}
+
 {% block content %}
     <div class="content">
         {% block blog_content %}

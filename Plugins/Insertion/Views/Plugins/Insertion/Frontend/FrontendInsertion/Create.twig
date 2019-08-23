@@ -2,7 +2,7 @@
 
 {% block content %}
     {% include 'Plugins/FrontendUserManagement/Frontend/Components/AccountNavBar.twig'
-        with { back_link : true, content_title: i18n('insertions_create', 'Create Insertion')} %}
+        with { content_title: i18n('insertions_create', 'Create Insertion')} %}
 
     <div class="content content--insertions">
         {% block insertions %}

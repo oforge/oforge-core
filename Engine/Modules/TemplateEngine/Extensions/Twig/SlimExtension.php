@@ -32,6 +32,9 @@ class SlimExtension extends Twig_Extension {
             new Twig_Function('attr', [$this, 'getSlimAttr'], [
                 'is_safe' => ['html'],
             ]),
+            new Twig_Function('select_compare', [$this, 'getSlimSelectValueComparator'], [
+                'is_safe' => ['html'],
+            ]),
         ];
     }
 
@@ -90,6 +93,16 @@ class SlimExtension extends Twig_Extension {
     }
 
     /**
+     * @param mixed $var1
+     * @param mixed $var2
+     *
+     * @return bool
+     */
+    public function getSlimSelectValueComparator($var1, $var2) : bool {
+        return ((string) $var1) === ((string) $var2);
+    }
+
+    /**
      * @param array $array
      *
      * @return string
@@ -112,7 +125,11 @@ class SlimExtension extends Twig_Extension {
                 continue;
             }
             if (is_string($value)) {
-                $result .= " $value";
+                if (is_numeric($index)) {
+                    $result .= " $value";
+                } else {
+                    $result .= " $index=\"$value\"";
+                }
             }
         }
 

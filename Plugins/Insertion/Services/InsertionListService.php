@@ -10,6 +10,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Exception;
 use Insertion\Enum\AttributeType;
 use Insertion\Models\AttributeKey;
+use Insertion\Models\AttributeValue;
 use Insertion\Models\Insertion;
 use Insertion\Models\InsertionType;
 use Insertion\Models\InsertionTypeAttribute;
@@ -20,10 +21,10 @@ use Oforge\Engine\Modules\Core\Annotation\Cache\Cache;
 use Oforge\Engine\Modules\Core\Annotation\Cache\CacheInvalidation;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\Statics;
+use function DI\value;
 
 /**
  * Class InsertionListService
- * @Cache()
  *
  * @package Insertion\Services
  */
@@ -62,8 +63,19 @@ class InsertionListService extends AbstractDatabaseAccess {
         /** @var InsertionType $type */
         $typeAttributes = $this->repository("type")->find($typeId)->getAttributes();
         $keys           = [];
+        /**
+         * @var $typeAttribute InsertionTypeAttribute
+         */
         foreach ($typeAttributes as $typeAttribute) {
             $keys[] = $typeAttribute->getAttributeKey();
+            if ($typeAttribute->getAttributeKey()->getValues() != null) {
+                foreach ($typeAttribute->getAttributeKey()->getValues() as $value) {
+                    $tmp = $this->getAttributeKeys($value);
+                    if (sizeof($tmp) > 0) {
+                        $keys = array_merge($keys, $tmp);
+                    }
+                }
+            }
         }
 
         $result = ["filter" => [], "query" => [], 'order' => $params["order"]];
@@ -142,6 +154,7 @@ class InsertionListService extends AbstractDatabaseAccess {
         if (sizeof($keys) > 0) {
             $attributeCount = 0;
 
+            /** @var AttributeKey $attributeKey */
             foreach ($keys as $attributeKey) {
                 $name = $attributeKey->getName();
                 $name = str_replace(" ", "_", $name);
@@ -163,12 +176,14 @@ class InsertionListService extends AbstractDatabaseAccess {
                                 $sqlQueryWhere .= " and v$attributeCount.attribute_key = :v" . $attributeCount . "key";
 
                                 if (isset($value['min'])) {
-                                    $sqlQueryWhere                         .= " and v$attributeCount.insertion_attribute_value >= :v" . $attributeCount . "value";
+                                    $sqlQueryWhere                         .= " and v$attributeCount.insertion_attribute_value >= :v" . $attributeCount
+                                                                              . "value";
                                     $min                                   = $value['min'];
                                     $args["v" . $attributeCount . "value"] = $min;
                                 }
                                 if (isset($value['max'])) {
-                                    $sqlQueryWhere                          .= " and v$attributeCount.insertion_attribute_value <= :v" . $attributeCount . "value2";
+                                    $sqlQueryWhere                          .= " and v$attributeCount.insertion_attribute_value <= :v" . $attributeCount
+                                                                               . "value2";
                                     $max                                    = $value['max'];
                                     $args["v" . $attributeCount . "value2"] = $max;
                                 }
@@ -233,6 +248,75 @@ class InsertionListService extends AbstractDatabaseAccess {
                                 }
 
                                 break;
+                            case AttributeType::PEDIGREE:
+                                //TODO: Refactoring necessary
+                                /** @var AttributeKey $subAttributeKeys */
+                                $subAttributeValues     = $attributeKey->getValues();
+                                $pedigreeAttributeCount = $attributeCount;
+
+                                if (sizeof($subAttributeValues) > 0) {
+                                    $sqlQueryWhere .= " and ";
+
+                                    if (isset($value['search_ancestor_1'])) {
+                                        $sqlQueryWhere                                  .= "(";
+                                        $args["v" . $pedigreeAttributeCount . "value1"] = $value['search_ancestor_1'];
+                                        $first                                          = true;
+                                        /** @var AttributeValue $subAttributeValue */
+                                        foreach ($subAttributeValues as $subAttributeValue) {
+                                            $attributeCount++;
+
+                                            $subAttributeKeysId = $subAttributeValue->getSubAttributeKey()->getId();
+
+                                            if (!$first) {
+                                                $sqlQueryWhere .= " or ";
+                                            }
+
+                                            $first = false;
+
+                                            $sqlQueryWhere .= " v$attributeCount.attribute_key  = :v" . $attributeCount . "key and (";
+                                            $sqlQueryWhere .= "v$attributeCount.insertion_attribute_value = :v" . $pedigreeAttributeCount . "value1";
+                                            $sqlQueryWhere .= ")";
+
+                                            $sqlQuery                            .= " left join oforge_insertion_insertion_attribute_value v$attributeCount on v$attributeCount.insertion_id = i.id and v$attributeCount.attribute_key = :v"
+                                                                                    . $attributeCount . "key";
+                                            $args["v" . $attributeCount . "key"] = "$subAttributeKeysId";
+                                        }
+
+                                        $sqlQueryWhere .= ")";
+                                    }
+
+                                    if (isset($value['search_ancestor_1']) && isset($value['search_ancestor_2'])) {
+                                        $sqlQueryWhere .= " and ";
+                                    }
+
+                                    if (isset($value['search_ancestor_2'])) {
+                                        $sqlQueryWhere                                  .= " (";
+                                        $args["v" . $pedigreeAttributeCount . "value2"] = $value['search_ancestor_2'];
+                                        $first                                          = true;
+                                        /** @var AttributeValue $subAttributeValue */
+                                        foreach ($subAttributeValues as $subAttributeValue) {
+                                            $attributeCount++;
+
+                                            $subAttributeKeysId = $subAttributeValue->getSubAttributeKey()->getId();
+
+                                            if (!$first) {
+                                                $sqlQueryWhere .= " or ";
+                                            }
+                                            $first = false;
+
+                                            $sqlQueryWhere .= " v$attributeCount.attribute_key  = :v" . $attributeCount . "key and (";
+                                            $sqlQueryWhere .= "v$attributeCount.insertion_attribute_value = :v" . $pedigreeAttributeCount . "value2)";
+
+                                            $sqlQuery                            .= " left join oforge_insertion_insertion_attribute_value v$attributeCount on v$attributeCount.insertion_id = i.id and v$attributeCount.attribute_key = :v"
+                                                                                    . $attributeCount . "key";
+                                            $args["v" . $attributeCount . "key"] = "$subAttributeKeysId";
+                                        }
+                                        $sqlQueryWhere .= ")";
+                                    }
+                                }
+
+                                break;
+
                             default: //multi
 
                                 $sqlQueryWhere .= " and v$attributeCount.attribute_key = :v" . $attributeCount . "key and (";
@@ -283,6 +367,7 @@ class InsertionListService extends AbstractDatabaseAccess {
                 }
             }
         }
+
         if (isset($params["after_date"])) {
             $params['after_date'] = date_format($params["after_date"], 'Y-m-d h:i:s');
             $sqlQueryWhere        .= " and DATEDIFF(i.created_at, :ad) > 0";
@@ -448,6 +533,20 @@ class InsertionListService extends AbstractDatabaseAccess {
         if ($value->getSubAttributeKey() != null) {
             foreach ($value->getSubAttributeKey()->getValues() as $v) {
                 $temp += $this->getValueMap($v);
+            }
+        }
+
+        return $temp;
+    }
+
+    private function getAttributeKeys($value) {
+        $temp = [];
+
+        if ($value->getSubAttributeKey() != null) {
+            $temp[] = $value->getSubAttributeKey();
+
+            foreach ($value->getSubAttributeKey()->getValues() as $v) {
+                $temp = array_merge($temp, $this->getAttributeKeys($v));
             }
         }
 

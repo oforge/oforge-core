@@ -1,6 +1,6 @@
 <?php
 
-namespace Oforge\Engine\Modules\Media\Controller\Backend;
+namespace Oforge\Engine\Modules\Media\Controller\Backend\Media;
 
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -18,9 +18,9 @@ use Slim\Http\Response;
  * Class MediaController
  *
  * @package Oforge\Engine\Modules\Media\Controller\Backend;
- * @EndpointClass(path="/backend/media", name="backend_media", assetScope="Backend")
+ * @EndpointClass(path="/backend/media/ajax", name="backend_media_ajax", assetScope="Backend")
  */
-class MediaController extends SecureBackendController {
+class AjaxController extends SecureBackendController {
 
     /**
      * @param Request $request

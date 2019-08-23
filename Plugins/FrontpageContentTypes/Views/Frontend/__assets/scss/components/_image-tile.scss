@@ -1,239 +1,268 @@
 [class*='image-tile'] {
-  overflow: hidden;
-  float: left;
-  width: 100%;
-  margin-bottom: 4%;
+    overflow: hidden;
+    float: left;
+    width: 100%;
+    margin-bottom: 4%;
 
-  picture {
+    picture {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
+
+    .content {
+        height: 100%;
+        padding: 0
+    }
+
+    .image-container {
+        height: 240px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
+
+    .text-container {
+        padding: 1.6rem 1.6rem 4rem 1.6rem;
+    }
+
+    h2, h3 {
+        font-size: 2rem;
+    }
+
+    .image__badge {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: $color-light;
+        color: $color-primary;
+        position: absolute;
+        top: 0;
+        right: 2rem;
+        padding: .5rem;
+        box-shadow: $color-primary-transparent-2 -7px 7px 15px;
+        border: 1px $color-primary-lighter solid;
+        transition: right 100ms cubic-bezier(.33, .47, .46, .82);
+        z-index: 1;
+        width: 8rem;
+        height: 8rem;
+
+
+        .icon {
+            margin: 0;
+            fill: $color-secondary;
+            width: 70%;
+            height: 70%;
+        }
+    }
+}
+
+.tile__image {
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: center;
-  }
-
-  .content {
-    height: 100%;
-    padding: 0
-  }
-
-  .image-container {
-    height: 240px;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-  }
-
-  .text-container {
-    padding: 1.6rem 1.6rem 4rem 1.6rem;
-  }
-
-  h2, h3 {
-    font-size: 2rem;
-  }
-}
-
-.tile__image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
 }
 
 .image-tile--medium.is--right {
-  float: right;
-  margin-right: 0;
+    float: right;
+    margin-right: 0;
 }
 
 .image-tile--small, .image-tile--medium {
-  max-height: 750px;
+    max-height: 750px;
 
-  a {
-    text-decoration: none;
-  }
-
-  .text-container {
-    height: 50%;
-    position: relative;
-    font-size: $font-size-5;
-
-    .link {
-      text-align: right;
-
-      .link-text {
-        color: $color-primary;
-        position: absolute;
-        bottom: 1rem;
-        right: 3rem;
+    a {
         text-decoration: none;
-        transform: translateX(0px);
-        transition: all 100ms ease-in-out;
-      }
+    }
 
-      &:hover {
-        .link-text {
-          transform: translateX(10px);
-          transition: all 150ms ease-in-out;
+    .text-container {
+        height: 50%;
+        position: relative;
+        font-size: $font-size-5;
+
+        .link {
+            text-align: right;
+
+            .link-text {
+                color: $color-primary;
+                position: absolute;
+                bottom: 1rem;
+                right: 3rem;
+                text-decoration: none;
+                transform: translateX(0px);
+                transition: all 100ms ease-in-out;
+            }
+
+            &:hover {
+                .link-text {
+                    transform: translateX(10px);
+                    transition: all 150ms ease-in-out;
+                }
+            }
         }
-      }
+
+        h2 {
+            margin-bottom: 15px;
+        }
+
+        p {
+            position: relative;
+            max-height: 300px;
+            overflow: hidden;
+        }
+
+        &.has-link {
+            p:after {
+                content: "";
+                background-image: linear-gradient(0deg, #ffffff, rgba(255, 255, 255, 0));
+                pointer-events: none;
+                display: block;
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                z-index: 0;
+                bottom: 0;
+            }
+        }
     }
 
-    h2 {
-      margin-bottom: 15px;
+    .icon {
+        float: right;
+        margin-left: 2rem;
+        position: relative;
+        bottom: 5px;
     }
 
-    p {
-      position: relative;
-      max-height: 300px;
-      overflow: hidden;
-    }
-
-    &.has-link {
-      p:after {
-        content: "";
-        background-image: linear-gradient(0deg, #ffffff, rgba(255, 255, 255, 0));
-        pointer-events: none;
-        display: block;
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        z-index: 0;
-        bottom: 0;
-      }
-    }
-  }
-
-  .icon {
-    float: right;
-    margin-left: 2rem;
-    position: relative;
-    bottom: 5px;
-  }
-
-  img {
-    transform: scale(1);
-    transition: transform 200ms cubic-bezier(.33, .47, .46, .82);
-  }
-
-  &:hover {
     img {
-      transform: scale(1.05);
-      transition: transform 400ms cubic-bezier(.33, .47, .46, .82);
+        transform: scale(1);
+        transition: transform 200ms cubic-bezier(.33, .47, .46, .82);
     }
-  }
+
+    &:hover {
+        img {
+            transform: scale(1.05);
+            transition: transform 400ms cubic-bezier(.33, .47, .46, .82);
+        }
+    }
 }
 
 .image-tile--large {
-  .text-container {
-    text-align: center;
-    padding: 2rem;
+    .text-container {
+        text-align: center;
+        padding: 2rem;
 
-    h2 {
-      margin: 15px 0 15px 0;
+        h2 {
+            margin: 15px 0 15px 0;
+        }
+
+        h3 {
+            margin-bottom: 15px
+        }
+
+        p {
+            margin-bottom: 1rem;
+            font-size: $font-size-5;
+
+            &:last-child {
+                margin-bottom: 5rem;
+            }
+        }
     }
-
-    h3 {
-      margin-bottom: 15px
-    }
-
-    p {
-      margin-bottom: 1rem;
-      font-size: $font-size-5;
-
-      &:last-child {
-        margin-bottom: 5rem;
-      }
-    }
-  }
 }
 
 @media screen and (min-width: $screen-medium) {
-  [class*='image-tile'] {
-    height: 500px;
-    margin-bottom: 2%;
+    [class*='image-tile'] {
+        height: 500px;
+        margin-bottom: 2%;
 
-    &:first-child {
-      margin-right: 2%;
+        &:first-child {
+            margin-right: 2%;
+        }
+
+        .image-container {
+            height: 60%;
+        }
+
+        .text-container {
+            height: 40%;
+        }
+
+        .text-container p {
+            height: 80px;
+        }
     }
 
-    .image-container {
-      height: 60%;
-    }
-    .text-container {
-      height: 40%;
-    }
+    .image-tile--medium {
+        width: 49%;
 
-    .text-container p {
-      height: 80px;
-    }
-  }
+        &.is--right {
+            margin-right: 0;
+        }
 
-  .image-tile--medium {
-    width: 49%;
-
-    &.is--right {
-      margin-right: 0;
+        &.full-width {
+            width: 100%;
+        }
     }
 
-    &.full-width {
-      width: 100%;
-    }
-  }
+    .image-tile--small {
+        width: 49%;
 
-  .image-tile--small {
-    width: 49%;
-
-    .link strong {
-      display: none;
+        .link strong {
+            display: none;
+        }
     }
-  }
-  .image-tile--large {
-    height: auto;
+    .image-tile--large {
+        height: auto;
 
-    .text-container p {
-      height: auto;
+        .text-container p {
+            height: auto;
+        }
     }
-  }
 }
 
 @media screen and (min-width: $screen-large) {
-  .image-tile--small {
-    width: 33%;
-    .link strong {
-      display: inline;
-    }
-  }
+    .image-tile--small {
+        width: 33%;
 
-  .image-tile--medium {
-    width: 65%;
-
-    &:first-child {
-      margin-right: 2%;
+        .link strong {
+            display: inline;
+        }
     }
 
-    &.is--right {
-      margin-right: 0;
-    }
-  }
+    .image-tile--medium {
+        width: 65%;
 
-  .image-tile--large {
-    height: auto;
+        &:first-child {
+            margin-right: 2%;
+        }
 
-    .content {
-      display: flex;
-    }
-
-    .image-container {
-      width: 33.3333333%;
-      height: auto;
-      display: flex;
+        &.is--right {
+            margin-right: 0;
+        }
     }
 
-    .text-container {
-      width: 66.6666666%;
-
-      p {
+    .image-tile--large {
         height: auto;
-      }
+
+        .content {
+            display: flex;
+        }
+
+        .image-container {
+            width: 33.3333333%;
+            height: auto;
+            display: flex;
+        }
+
+        .text-container {
+            width: 66.6666666%;
+
+            p {
+                height: auto;
+            }
+        }
     }
-  }
 }

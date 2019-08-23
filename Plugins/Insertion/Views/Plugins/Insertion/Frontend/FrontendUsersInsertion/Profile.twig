@@ -63,25 +63,30 @@
                                 </div>
                                 <div class="impress--edit">
                                     <h2 class="form__title">{{ i18n('insertion_profile_contact') }}</h2>
-                                    <input class="form__input" type="text" name="imprint_name" placeholder="{{ i18n('imprint_name') }}"
+                                    <input class="form__input" type="text" name="imprint_name"
+                                           placeholder="{{ i18n('imprint_name') }}"
                                            value="{{ profile.imprintName }}" />
-                                    <input class="form__input" type="text" name="imprint_street" placeholder="{{ i18n('imprint_street') }}"
+                                    <input class="form__input" type="text" name="imprint_street"
+                                           placeholder="{{ i18n('imprint_street') }}"
                                            value="{{ profile.imprintStreet }}" />
-                                    <input class="form__input" type="text" name="imprint_zipCity" placeholder="{{ i18n('imprint_zipCity') }}"
+                                    <input class="form__input" type="text" name="imprint_zipCity"
+                                           placeholder="{{ i18n('imprint_zipCity') }}"
                                            value="{{ profile.imprintZipCity }}" />
-                                    <input class="form__input" type="phone" name="imprint_phone" placeholder="{{ i18n('imprint_phone') }}"
+                                    <input class="form__input" type="phone" name="imprint_phone"
+                                           placeholder="{{ i18n('imprint_phone') }}"
                                            value="{{ profile.imprintPhone }}" />
-                                    <input class="form__input" type="fax" name="imprint_fax" placeholder={{ i18n('imprint_fax') }}
-                                           value="{{ profile.imprintFax }}" />
-                                    <input class="form__input" type="email" name="imprint_email" placeholder="{{ i18n('imprint_email') }}"
+                                    <input class="form__input" type="email" name="imprint_email"
+                                           placeholder="{{ i18n('imprint_email') }}"
                                            value="{{ profile.imprintEmail }}" />
                                     <div class="form__input">
                                         <label for="imprint_facebook">
-                                            {{ i18n('facebook_base_url', 'https://www.facebook.com/') }}</label><input
-                                            class="input__facebook" type="text"
-                                            name="imprint_facebook"
-                                            placeholder="{{ i18n('facebook_page_placeholder') }}"
-                                            value="{{ profile.imprintFacebook }}" />
+                                            {{ i18n('facebook_base_url', 'https://www.facebook.com/') }}
+                                        </label>
+                                        <input
+                                                class="input__facebook" type="text"
+                                                name="imprint_facebook"
+                                                placeholder="{{ i18n('facebook_page_placeholder') }}"
+                                                value="{{ profile.imprintFacebook }}" />
                                     </div>
                                     <input class="form__input" type="text" name="imprint_website"
                                            placeholder="{{ i18n('imprint_website') }}"
@@ -97,7 +102,8 @@
                                            value="{{ profile.imprintCompanyTaxId }}" />
                                 </div>
                                 <div class="submit">
-                                    <input type="submit" class="form__input form__input--submit button" value="{{ i18n('save') }}"/>
+                                    <input type="submit" class="form__input form__input--submit button"
+                                           value="{{ i18n('save') }}" />
                                 </div>
                             </div>
                         </form>

@@ -10,7 +10,7 @@
     {% for cssClassValue in cssClassValues %}
         <option {{ attr({
             value: cssClassValue,
-            'selected': widget.cssClass == cssClassValue
+            'selected': select_compare(widget.cssClass, cssClassValue)
         }) }}>{{ cssClassValue }}</option>
     {% endfor %}
 </select>

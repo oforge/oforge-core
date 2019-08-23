@@ -1,9 +1,15 @@
 <div class="inner">
-    <h3>{{ content.count}}</h3>
-    <p>{{ i18n('insertions_need_moderation') }}</p>
+    <h3>{{ data.count|default(0) }}</h3>
+    <p>
+        {{ i18n('backend_dashboard_widget_plugin_insertion_moderation', {
+            en: 'Insertions require moderation',
+            de: 'Inserate benötigen Moderation'
+        }) }}
+    </p>
 </div>
 <div class="icon">
     <i class="ion ion-stats-bars"></i>
 </div>
-
-<a href="{{ url('backend_insertions') }}?moderation=0" class="small-box-footer">{{ i18n('more_info') }} <i class="fa fa-arrow-circle-right"></i></a>
+<a href="{{ url('backend_insertions', {}, {moderation: 0}) }}" class="small-box-footer">
+    {{ i18n('more_info') }} <i class="fa fa-arrow-circle-right"></i>
+</a>

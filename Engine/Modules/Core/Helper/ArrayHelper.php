@@ -107,16 +107,16 @@ class ArrayHelper {
      *
      * @return array
      */
-    public static function mergeRecursive(array $array1, array $array2) {
+    public static function mergeRecursive(array $array1, array $array2, bool $override = false) {
         foreach ($array2 as $key => &$value) {
             if (is_array($value) && isset($array1[$key]) && is_array($array1[$key])) {
                 if (is_string($key)) {
-                    $array1[$key] = is_array($array1[$key]) ? self::mergeRecursive($array1[$key], $value) : $value;
+                    $array1[$key] = is_array($array1[$key]) ? self::mergeRecursive($array1[$key], $value, $override) : $value;
                 } else {
                     $array1[] = $value;
                 }
             } elseif (is_numeric($key)) {
-                if (isset($array1[$key])) {
+                if (isset($array1[$key]) && !$override) {
                     $array1[] = $value;
                 } else {
                     $array1[$key] = $value;

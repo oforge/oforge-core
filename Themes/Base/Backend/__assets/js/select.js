@@ -79,6 +79,20 @@
                         } else {
                             unselectItem(selectItem);
                         }
+                        updateRequiredInput(selectItem);
+                    }
+                }
+
+                //Fills out an invisible form element to make the select element required
+                function updateRequiredInput(selectItem) {
+                    let parentSelect = selectItem.closest(self.selector);
+                    let requiredInput = parentSelect.querySelector(selectors.selectRequireInput);
+                    if (requiredInput) {
+                        if (parentSelect.checkedValues.length > 0) {
+                            requiredInput.value = ' ';
+                        } else {
+                            requiredInput.value = '';
+                        }
                     }
                 }
 
@@ -175,6 +189,7 @@
                             select.checkedValues.push(checkedElement.dataset.valueId);
                             select.checkedNames.push(checkedElement.querySelector(selectors.selectValue).innerHTML);
                             addHiddenInputToCheckItem(checkedElement);
+                            updateRequiredInput(checkedElement);
                         });
                         if (select.checkedNames.length > 0) {
                             selectText.innerHTML = select.checkedNames.join(', ');
@@ -186,6 +201,11 @@
                     if (evt.button === 0) {
                         fireClick(evt);
                     }
+                });
+
+                //Fixes a weird scrolling bug
+                document.getElementsByClassName('simplebar-content-wrapper').forEach(function (simplebar) {
+                    simplebar.setAttribute('tabindex', -1);
                 });
             }
         })
