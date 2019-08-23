@@ -34,10 +34,13 @@ class MediaService extends AbstractDatabaseAccess {
      */
     public function add($file, $prefix = null) : ?Media {
         if (isset($file['error']) && $file['error'] == 0 && isset($file['size']) && $file['size'] > 0) {
-            $filename         = md5(basename($file['name']) . '_' . microtime()) . '.' . pathinfo($file['name'],PATHINFO_EXTENSION);
+            $filename = urlencode(basename($file['name']));
+      // why??
+            //      $filename         = md5(basename($file['name']) . '_' . microtime()) . '.' . pathinfo($file['name'],PATHINFO_EXTENSION);
             if ($prefix !== null) {
                 $filename = strtolower($prefix . '_' . $filename);
             }
+
             $relativeFilePath = Statics::IMAGES_DIR . DIRECTORY_SEPARATOR . substr(md5(rand()), 0, 2) . DIRECTORY_SEPARATOR . substr(md5(rand()), 0, 2)
                                 . DIRECTORY_SEPARATOR . $filename;
 
@@ -54,7 +57,7 @@ class MediaService extends AbstractDatabaseAccess {
                     'path' => str_replace('\\', '/', $relativeFilePath),
                 ]);
 
-                $media = $imageCompressService->compress($media);
+              //  $media = $imageCompressService->compress($media);
                 $this->entityManager()->create($media);
 
                 return $media;

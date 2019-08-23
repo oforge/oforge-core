@@ -186,10 +186,13 @@ class BackendExtension extends Twig_Extension implements Twig_ExtensionInterface
         /** @var DashboardWidgetsService $dashboardWidgetsService */
         $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
 
-        $user   = Oforge()->View()->get('user');
-        $userID = ArrayHelper::get($user, 'id');
+        $user = Oforge()->View()->get('user');
+        if ($user != null) {
+            $userID = ArrayHelper::get($user, 'id');
+            return $dashboardWidgetsService->getUserWidgets($userID, $forDashboard);
+        }
 
-        return $dashboardWidgetsService->getUserWidgets($userID, $forDashboard);
+        return [];
     }
 
 }

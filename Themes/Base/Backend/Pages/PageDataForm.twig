@@ -24,7 +24,7 @@
                         class="form-control">
                     {% for language in languages %}
                         <option value="{{ language.id }}"
-                                {% if post.cms_page_selected_language == language.id %}selected{% endif %}>{{ language.name }}</option>
+                                {% if select_compare(post.cms_page_selected_language, language.id) %}selected{% endif %}>{{ language.name }}</option>
                     {% endfor %}
                 </select>
             </div>

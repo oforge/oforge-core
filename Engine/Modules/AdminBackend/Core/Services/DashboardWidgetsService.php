@@ -175,6 +175,9 @@ class DashboardWidgetsService extends AbstractDatabaseAccess {
         foreach ($data as $widgetID => $userSettings) {
             $dataKeys       = ['active', 'order', 'position', 'cssClass'];
             $userSettings   = ArrayHelper::filterByKeys($dataKeys, $userSettings);
+            if (isset($userSettings['order']) && $userSettings['order'] === '') {
+                $userSettings['order'] = 0;
+            }
             $baseWidgetData = [
                 'widgetId' => $widgetID,
                 'userId'   => $user['id'],
@@ -192,8 +195,6 @@ class DashboardWidgetsService extends AbstractDatabaseAccess {
                     $tmp                 = $dashboardWidget->toArray();
                     $tmp                 = ArrayHelper::filterByKeys($dataKeys, $tmp);
                     $userDashboardWidget = UserDashboardWidget::create($baseWidgetData);
-                    // Oforge()->Logger()->get()->debug('x2', $tmp);
-                    // Oforge()->Logger()->get()->debug('x3', $userSettings);
                     $userDashboardWidget->fromArray($tmp);
                     $userDashboardWidget->fromArray($userSettings);
                     $this->entityManager()->create($userDashboardWidget);

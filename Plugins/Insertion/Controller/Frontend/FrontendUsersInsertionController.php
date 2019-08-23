@@ -17,9 +17,11 @@ use Insertion\Services\InsertionSearchBookmarkService;
 use Insertion\Services\InsertionService;
 use Insertion\Services\InsertionTypeService;
 use Insertion\Services\InsertionUpdaterService;
+use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -371,10 +373,12 @@ class FrontendUsersInsertionController extends SecureFrontendController {
     /**
      * @param Request $request
      * @param Response $response
-     * @EndpointAction(path = "/profile")
      *
+     * @return Response
      * @throws ORMException
      * @throws ServiceNotFoundException
+     * @throws \ReflectionException
+     * @EndpointAction(path = "/profile")
      */
     public function profileAction(Request $request, Response $response) {
         /**
@@ -395,12 +399,22 @@ class FrontendUsersInsertionController extends SecureFrontendController {
                 /**
                  * @var UserDetailsService $userDetailsService
                  */
-
                 $userDetailsService = Oforge()->Services()->get('frontend.user.management.user.details');
 
                 $user = $userDetailsService->updateImage($user, $_FILES["profile"]);
             }
 
+            /**
+             * Update Session with new User Data
+             */
+
+            /** @var  AuthService $authService */
+            $authService   = Oforge()->Services()->get('auth');
+            $user2         = $user->toArray(1, ['password']);
+            $user2["type"] = User::class;
+            $jwt           = $authService->createJWT($user2);
+
+            $_SESSION['auth'] = $jwt;
         }
 
         $result = $service->get($user->getId());

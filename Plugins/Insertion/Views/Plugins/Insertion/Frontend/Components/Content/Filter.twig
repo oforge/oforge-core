@@ -1,6 +1,7 @@
 {% block product_filter %}
-    {% if search.filter|length > 0 %}
-        <div class="panel panel--filter filter filter--product">
+
+    <div class="panel panel--filter filter filter--product {% if search.filter|length > 0 %} filter--products-filter-available{% endif %}">
+        {% if search.filter|length > 0 %}
             <div class="tags">
                 <div class="tag-list">
                     {% for f, value in search.filter %}
@@ -16,12 +17,13 @@
                     {% endfor %}
                 </div>
             </div>
-            <a href="#form-search" class="button button--filter-search">
-                <svg class="icon icon--secondary">
-                    <use xlink:href="#magnifier"></use>
-                </svg>
-                <span class="filter-search-text">{{ i18n('edit_search', 'Edit search') }}</span>
-            </a>
-        </div>
-    {% endif %}
+        {% endif %}
+        <a href="#form-search" class="button button--filter-search">
+            <svg class="icon icon--secondary">
+                <use xlink:href="#magnifier"></use>
+            </svg>
+            <span class="filter-search-text">{{ i18n('edit_search', 'Edit search') }}</span>
+        </a>
+    </div>
+
 {% endblock product_filter %}

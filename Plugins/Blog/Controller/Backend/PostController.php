@@ -39,7 +39,13 @@ class PostController extends BaseCrudController {
         [
             'name'  => 'created',
             'type'  => CrudDataTypes::DATETIME,
-            'label' => ['key' => 'plugin_blog_property_post_created', 'default' => 'Created'],
+            'label' => [
+                'key'     => 'plugin_blog_property_post_created',
+                'default' => [
+                    'en' => 'Created',
+                    'de' => 'Erstellt',
+                ],
+            ],
             'crud'  => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
@@ -51,7 +57,13 @@ class PostController extends BaseCrudController {
         [
             'name'  => 'updated',
             'type'  => CrudDataTypes::DATETIME,
-            'label' => ['key' => 'plugin_blog_property_post_updated', 'default' => 'Updated'],
+            'label' => [
+                'key'     => 'plugin_blog_property_post_updated',
+                'default' => [
+                    'en' => 'Updated',
+                    'de' => 'Aktualisiert',
+                ],
+            ],
             'crud'  => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
@@ -63,7 +75,13 @@ class PostController extends BaseCrudController {
         [
             'name'  => 'language',
             'type'  => CrudDataTypes::SELECT,
-            'label' => ['key' => 'plugin_blog_property_post_language', 'default' => 'Language'],
+            'label' => [
+                'key'     => 'plugin_blog_property_post_language',
+                'default' => [
+                    'en' => 'Language',
+                    'de' => 'Sprache',
+                ],
+            ],
             'crud'  => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
@@ -76,7 +94,13 @@ class PostController extends BaseCrudController {
         [
             'name'  => 'category',
             'type'  => CrudDataTypes::SELECT,
-            'label' => ['key' => 'plugin_blog_property_post_category', 'default' => 'Category'],
+            'label' => [
+                'key'     => 'plugin_blog_property_post_category',
+                'default' => [
+                    'en' => 'Category',
+                    'de' => 'Kategorie',
+                ],
+            ],
             'crud'  => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
@@ -89,7 +113,13 @@ class PostController extends BaseCrudController {
         [
             'name'  => 'seoUrlPath',
             'type'  => CrudDataTypes::STRING,
-            'label' => ['key' => 'plugin_blog_property_post_seoUrlPath', 'default' => 'SEO url path'],
+            'label' => [
+                'key'     => 'plugin_blog_property_post_seoUrlPath',
+                'default' => [
+                    'en' => 'SEO url path',
+                    'de' => 'SEO URL-Pfad',
+                ],
+            ],
             'crud'  => [
                 'index'  => 'off',
                 'view'   => 'readonly',
@@ -101,7 +131,13 @@ class PostController extends BaseCrudController {
         [
             'name'   => 'headerTitle',
             'type'   => CrudDataTypes::STRING,
-            'label'  => ['key' => 'plugin_blog_property_post_headerTitle', 'default' => 'Header title'],
+            'label'  => [
+                'key'     => 'plugin_blog_property_post_headerTitle',
+                'default' => [
+                    'en' => 'Header title',
+                    'de' => 'Überschrift-Titel',
+                ],
+            ],
             'crud'   => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
@@ -116,7 +152,13 @@ class PostController extends BaseCrudController {
         [
             'name'  => 'headerSubtext',
             'type'  => CrudDataTypes::HTML,
-            'label' => ['key' => 'plugin_blog_property_post_headerSubtext', 'default' => 'Header subtext'],
+            'label' => [
+                'key'     => 'plugin_blog_property_post_headerSubtext',
+                'default' => [
+                    'en' => 'Header subtext',
+                    'de' => 'Überschrift-Subtext',
+                ],
+            ],
             'crud'  => [
                 'index'  => 'off',
                 'view'   => 'readonly',
@@ -126,9 +168,15 @@ class PostController extends BaseCrudController {
             ],
         ],# headerSubtext
         [
-            'name'  => 'headerImage',
+            'name'  => 'headerImagePreview',
             'type'  => CrudDataTypes::IMAGE,
-            'label' => ['key' => 'plugin_blog_property_post_headerImage', 'default' => 'Header image'],
+            'label' => [
+                'key'     => 'plugin_blog_property_post_headerImagePreview',
+                'default' => [
+                    'en' => 'Header image (small preview)',
+                    'de' => 'Kopfbild (kleine Vorschau)',
+                ],
+            ],
             'crud'  => [
                 'index'  => 'off',
                 'view'   => 'readonly',
@@ -136,11 +184,35 @@ class PostController extends BaseCrudController {
                 'update' => 'editable',
                 'delete' => 'off',
             ],
-        ],# headerImage
+        ],# headerImagePreview
+        [
+            'name'  => 'headerImageLarge',
+            'type'  => CrudDataTypes::IMAGE,
+            'label' => [
+                'key'     => 'plugin_blog_property_post_headerImageLarge',
+                'default' => [
+                    'en' => 'Header image (full width)',
+                    'de' => 'Kopfbild (volle Breite)',
+                ],
+            ],
+            'crud'  => [
+                'index'  => 'off',
+                'view'   => 'readonly',
+                'create' => 'editable',
+                'update' => 'editable',
+                'delete' => 'off',
+            ],
+        ],# headerImageLarge
         [
             'name'  => 'excerpt',
             'type'  => CrudDataTypes::TEXT,
-            'label' => ['key' => 'plugin_blog_property_post_excerpt', 'default' => 'Excerpt'],
+            'label' => [
+                'key'     => 'plugin_blog_property_post_excerpt',
+                'default' => [
+                    'en' => 'Excerpt',
+                    'de' => 'Auszug',
+                ],
+            ],
             'crud'  => [
                 'index'  => 'off',
                 'view'   => 'readonly',
@@ -152,7 +224,13 @@ class PostController extends BaseCrudController {
         [
             'name'  => 'content',
             'type'  => CrudDataTypes::HTML,
-            'label' => ['key' => 'plugin_blog_property_post_content', 'default' => 'Content'],
+            'label' => [
+                'key'     => 'plugin_blog_property_post_content',
+                'default' => [
+                    'en' => 'Content',
+                    'de' => 'Inhalt',
+                ],
+            ],
             'crud'  => [
                 'index'  => 'off',
                 'view'   => 'readonly',
@@ -164,7 +242,13 @@ class PostController extends BaseCrudController {
         [
             'name'  => 'author',
             'type'  => CrudDataTypes::SELECT,
-            'label' => ['key' => 'plugin_blog_property_post_author', 'default' => 'Author'],
+            'label' => [
+                'key'     => 'plugin_blog_property_post_author',
+                'default' => [
+                    'en' => 'Author',
+                    'de' => 'Autor',
+                ],
+            ],
             'crud'  => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
@@ -177,7 +261,13 @@ class PostController extends BaseCrudController {
         [
             'name'   => 'active',
             'type'   => CrudDataTypes::BOOL,
-            'label'  => ['key' => 'plugin_blog_property_post__active', 'default' => 'Active'],
+            'label'  => [
+                'key'     => 'plugin_blog_property_post__active',
+                'default' => [
+                    'en' => 'Active',
+                    'de' => 'Aktiv',
+                ],
+            ],
             'crud'   => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
@@ -192,7 +282,13 @@ class PostController extends BaseCrudController {
         [
             'name'     => 'rating',
             'type'     => CrudDataTypes::CUSTOM,
-            'label'    => ['key' => 'plugin_blog_property_post_rating', 'default' => 'Rating'],
+            'label'    => [
+                'key'     => 'plugin_blog_property_post_rating',
+                'default' => [
+                    'en' => 'Rating',
+                    'de' => 'Bewertung',
+                ],
+            ],
             'crud'     => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
@@ -207,7 +303,13 @@ class PostController extends BaseCrudController {
         [
             'name'     => 'goto',
             'type'     => CrudDataTypes::CUSTOM,
-            'label'    => ['key' => 'plugin_blog_goto', 'default' => 'Go-to'],
+            'label'    => [
+                'key'     => 'plugin_blog_goto',
+                'default' => [
+                    'en' => 'Go-to',
+                    'de' => 'Gehe zu',
+                ],
+            ],
             'crud'     => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
@@ -222,7 +324,13 @@ class PostController extends BaseCrudController {
         [
             'name'     => 'notice',
             'type'     => CrudDataTypes::CUSTOM,
-            'label'    => ['key' => 'plugin_blog_delete_notice', 'default' => 'Notice'],
+            'label'    => [
+                'key'     => 'plugin_blog_delete_notice',
+                'default' => [
+                    'en' => 'Notice',
+                    'de' => 'Anmerkung',
+                ],
+            ],
             'crud'     => [
                 'index'  => 'off',
                 'view'   => 'off',
@@ -239,27 +347,57 @@ class PostController extends BaseCrudController {
     protected $indexFilter = [
         'language'    => [
             'type'  => CrudFilterType::SELECT,
-            'label' => ['key' => 'plugin_blog_filter_post_language', 'default' => 'Select language'],
+            'label' => [
+                'key'     => 'plugin_blog_filter_post_language',
+                'default' => [
+                    'en' => 'Select language',
+                    'de' => 'Sprache auswählen',
+                ],
+            ],
             'list'  => 'getSelectLanguages',
         ],
         'category'    => [
             'type'  => CrudFilterType::SELECT,
-            'label' => ['key' => 'plugin_blog_filter_post_category', 'default' => 'Select category'],
+            'label' => [
+                'key'     => 'plugin_blog_filter_post_category',
+                'default' => [
+                    'en' => 'Select category',
+                    'de' => 'Kategorie auswählen',
+                ],
+            ],
             'list'  => 'getSelectCategories',
         ],
         'author'      => [
             'type'  => CrudFilterType::SELECT,
-            'label' => ['key' => 'plugin_blog_filter_post_author', 'default' => 'Select author'],
+            'label' => [
+                'key'     => 'plugin_blog_filter_post_author',
+                'default' => [
+                    'en' => 'Select author',
+                    'de' => 'Autor auswählen',
+                ],
+            ],
             'list'  => 'getSelectBackendUsers',
         ],
         'headerTitle' => [
             'type'    => CrudFilterType::TEXT,
-            'label'   => ['key' => 'plugin_blog_filter_post_headerTitle', 'default' => 'Search in header title'],
+            'label'   => [
+                'key'     => 'plugin_blog_filter_post_headerTitle',
+                'default' => [
+                    'en' => 'Search in header title',
+                    'de' => 'Im Überschrift-Titel suchen',
+                ],
+            ],
             'compare' => CrudFilterComparator::LIKE,
         ],
         'content'     => [
             'type'    => CrudFilterType::TEXT,
-            'label'   => ['key' => 'plugin_blog_filter_post_content', 'default' => 'Search in content'],
+            'label'   => [
+                'key'     => 'plugin_blog_filter_post_content',
+                'default' => [
+                    'en' => 'Search in content',
+                    'de' => 'Im Inhalt suchen',
+                ],
+            ],
             'compare' => CrudFilterComparator::LIKE,
         ],
     ];

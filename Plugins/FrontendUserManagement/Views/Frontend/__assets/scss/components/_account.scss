@@ -1,16 +1,26 @@
 .panel--account {
     flex-direction: column;
-    padding: 0;
 
     h1 {
         color: $color-secondary;
-        font-weight: bold;
+        font-weight: 400;
+        font-size: 2.8rem;
     }
 
     h2 {
         color: $color-primary;
+
+        &.form__title, &.account__title.title--has-secondary-background {
+            margin: 1.2rem 0;
+            padding: .6rem .6rem .6rem 1.2rem;
+            background: $color-secondary-light;
+            color: $color-light;
+            font-weight: 700;
+        }
     }
+
 }
+
 
 .panel--detail {
     padding: $size-large;
@@ -21,12 +31,16 @@
         }
 
         .form__title {
-            color: $color-secondary;
+            color: $color-light;
             margin: 0;
         }
 
         .form__control {
             margin-top: $size-large;
+
+            &.form__control--half-medium > * {
+                margin-top: 0;
+            }
         }
     }
 }
@@ -76,6 +90,10 @@
         text-align: center;
         font-size: $font-size-3;
         color: $color-light;
+        white-space: nowrap;
+        overflow: hidden;
+        width: 73%;
+        text-overflow: ellipsis;
     }
 }
 
