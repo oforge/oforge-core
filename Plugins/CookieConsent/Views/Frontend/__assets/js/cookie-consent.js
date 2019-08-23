@@ -21,12 +21,12 @@
 
                     try {
                         accept_btn.addEventListener('click', function() {
-                            localStorage.setItem('cookie_consent', 'true');
+                            localStorage.setItem('cookie_consent', 'accepted');
                             fadeOut(container);
 
                         });
                         decline_btn.addEventListener('click', function() {
-                            localStorage.setItem('cookie_consent', 'false');
+                            localStorage.setItem('cookie_consent', 'declined');
                             fadeOut(container);
                         })
 
@@ -34,15 +34,15 @@
                         console.error(e);
                     }
                 }
-                // consent has been set and we don't want the container to block
+                // consent has been set and we don't want the container to block underlying elements
                 else {
                     container.style.display = 'none';
                 }
                 function fadeOut(element) {
-                    element.classList.toggle('visible');
+                    element.classList.toggle('visible');  // run css animation
                     setTimeout(() => {
                         element.style.display = 'none';
-                    }, 2000);
+                    }, 1000);
                 }
             }
         });
