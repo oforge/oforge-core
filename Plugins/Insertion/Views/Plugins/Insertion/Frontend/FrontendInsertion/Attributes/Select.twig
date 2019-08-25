@@ -1,21 +1,35 @@
 <div class="form__control form__control--new-select form__control--{{ attribute.filterType }} {{ isSubAttribute ? 'form__control--is-sub' : '' }}">
-    {% if omitLabel is not defined or not isSubAttribute %}<label class="form__label">{{ i18n(attribute.name) }}</label>{% endif %}
+    {% if omitLabel is not defined or not isSubAttribute %}<label
+            class="form__label">{{ i18n(attribute.name) }}{% if required %}<span class="required">*</span>{% endif %}
+        </label>{% endif %}
     <div class="select {{ isSubAttribute ? 'select--is-sub' : '' }}"
          data-select-type="{{ attribute.type }}"
          data-placeholder="{{ i18n(attribute.name) }}"
          data-select="insertion[{{ attribute.id }}]{{ attribute.type == 'multi' ? '[]' : '' }}">
         <p class="select__text" data-select-text=""></p>
+
+        {% if data['insertion'][attribute.id] is not empty %}
+            <input type="hidden" name="insertion[{{ attribute.id }}]{{ attribute.type == 'multi' ? '[]' : '' }}"
+                   value="" />
+        {% endif %}
+
         {% if not isSubAttribute %}
-        <input type="text"
-               class="select__filter"
-               data-select-filter=""
-               placeholder="{{ i18n('search') }}">
+            {# Invisible input needed to make the select element required #}
+            {% if required %}
+                <input class="select__require-input" type="text" required tabindex="-1" value="">
+            {% endif %}
+            <input type="text"
+                   tabindex="-1"
+                   class="select__filter"
+                   data-select-filter=""
+                   placeholder="{{ i18n('search') }}">
         {% endif %}
         <ul class="select__list"
             data-select-list=""
             {% if not isSubAttribute %}data-simplebar=""{% endif %}>
             {% for value in attribute.values %}
-                <li class="select__item {% if value.id in data['insertion'][attribute.id] %}select__item--is-checked{% endif %}{% if isSubAttribute %}select__item--sub{% endif %}"
+                {% set isChecked =  data['insertion'][attribute.id] is array ? (value.id in data['insertion'][attribute.id]) : (value.id == data['insertion'][attribute.id]) %}
+                <li class="select__item {% if (isChecked and not isSubAttribute) or (isChecked and isSubAttribute and parentIsChecked ) %}select__item--is-checked{% endif %} {% if isSubAttribute %}select__item--sub{% endif %}"
                     data-selected="false"
                     data-index="{{ loop.index0 }}"
                     data-value-id="{{ value.id }}">
@@ -23,7 +37,7 @@
                     {% if value.subAttributeKey is not null %}
                         <div class="sub-attribute-container" data-sub-select="">
                             <em class="sub-attribute-container__text">{{ i18n('please_choose') }}</em>
-                            {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ all_attributes[value.subAttributeKey].filterType|capitalize  ~ '.twig'  with {'attribute': all_attributes[value.subAttributeKey], hidden: true, required: false, isSubAttribute: true, 'omitLabel': true} %}
+                            {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ all_attributes[value.subAttributeKey].filterType|capitalize  ~ '.twig'  with {'attribute': all_attributes[value.subAttributeKey], hidden: true, required: false, isSubAttribute: true, 'omitLabel': true, parentIsChecked: isChecked} %}
                         </div>
                     {% endif %}
                 </li>

@@ -9,12 +9,15 @@
 .search-bookmarks__header {
   background: $color-secondary-light;
   padding-left: 3rem;
-
-  h2 {
-    color: $color-light;
-  }
 }
 
+.search-bookmarks {
+    .panel--header {
+        h2 {
+            color: $color-light;
+        }
+    }
+}
 .search__bookmark {
   border-bottom: 2px $color-primary solid;
 

@@ -13,7 +13,7 @@
                 {% set orderItems = ['price_asc', 'price_desc', 'date_asc', 'date_desc'] %}
                 {% for orderItem in orderItems %}
                     <option value="{{ orderItem }}"
-                            {% if search.order is same as(orderItem) %}selected="selected"{% endif %} >{{ i18n(orderItem) }}</option>
+                            {% if select_compare(search.order, orderItem) %}selected="selected"{% endif %} >{{ i18n(orderItem) }}</option>
                 {% endfor %}
             </select>
         </div>

@@ -52,11 +52,11 @@ class Bootstrap extends AbstractBootstrap {
             'en' => 'SMTP Password',
             'de' => 'SMTP Passwort',
         ]);
-        I18N::translate('config_mailer_smtp_secure',[
+        I18N::translate('config_mailer_smtp_auth',[
             'en' => 'Activate SMTP Authentication',
             'de' => 'Aktiviere SMTP Authentifizierung',
         ]);
-        I18N::translate('config_mailer_smtp_auth',[
+        I18N::translate('config_mailer_smtp_secure',[
             'en' => 'SMTP Encription (tls or ssl)',
             'de' => 'SMTP Verschlüsselung (tls oder ssl)',
         ]);
@@ -132,7 +132,7 @@ class Bootstrap extends AbstractBootstrap {
             'name'     => 'mailer_smtp_secure',
             'type'     => ConfigType::STRING,
             'group'    => 'mailer',
-            'default'  => 'ssl',
+            'default'  => 'tls',
             'label'    => 'config_mailer_smtp_secure',
             'required' => true,
             'order'    => 4,

@@ -34,25 +34,33 @@ var cmsPagesControllerModule = (function() {
 		var node = data.node;
 		var text = data.text;
 		var old = data.old;
-		
+
 		if ($('#cms_edit_page_action').val() != 'create') {
 			$('#cms_edit_page_id').val(node.id);
 			$('#cms_edit_page_action').val('rename');
 		}
-		
+
 		$('#cms_edit_page_name').val(node.text);
 		$('#cms_page_jstree_form').submit();
 	});
 
-	// called after deleting a jstree node
-	$('#cms_pages_controller_jstree').on('delete_node.jstree', function (event, data) {
-		var node = data.node;
-		var parent = data.parent;
-		
-		$('#cms_edit_page_id').val(node.id);
-		$('#cms_edit_page_action').val('delete');
-		$('#cms_page_jstree_form').submit();
+	// called after user finished editing the node's name
+	$('#cms_pages_controller_jstree').on('duplicate_node.jstree', function (event, node) {
+        $('#cms_edit_page_id').val(node.id);
+        $('#cms_edit_page_parent_id').val(node.parent);
+        $('#cms_edit_page_action').val('duplicate');
+        $('#cms_page_jstree_form').submit();
 	});
+
+    // called after deleting a jstree node
+    $('#cms_pages_controller_jstree').on('delete_node.jstree', function (event, data) {
+        var node = data.node;
+        var parent = data.parent;
+
+        $('#cms_edit_page_id').val(node.id);
+        $('#cms_edit_page_action').val('delete');
+        $('#cms_page_jstree_form').submit();
+    });
 
 	// on click create new root page
 	$('#cms-page-builder-create-new-root-page').click(
@@ -146,6 +154,13 @@ var cmsPagesControllerModule = (function() {
 							var node = tree.get_node(obj.reference);
 							
 							tree.edit(node);
+						}
+					},
+					"duplicateItem": {
+						"label": "Duplicate",
+						"action": function (obj) {
+							var tree = $('#cms_pages_controller_jstree').jstree(true);
+                            tree.trigger('duplicate_node', tree.get_node(obj.reference));
 						}
 					},
 					"deleteItem": {

@@ -1,0 +1,54 @@
+{% extends 'Backend/Master/Index.twig' %}
+{% set meta = mergeRecursive(meta|default({}), dotToNested({
+    'backend.favoriteButton': false,
+})) %}
+{% set breadcrumbs = backend_breadcrumbs(meta.route.parentName)|default({})|merge([{
+    path: meta.route.name,
+    pathArgs: {id: meta.route.params.id},
+    visible: true,
+    name: i18n('replace'),
+}]) %}
+{% set page_header = i18n(meta.route.parentName) %}
+{% set page_header_description = i18n('replace') %}
+
+{% block pagecontent %}
+    <section class="content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box box-primary">
+                    <div class="box-body">
+                        {% if media.item %}
+                            <form method="POST" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <label>{{ i18n('Name') }}</label>
+                                    <input name="name" type="text" class="form-control"
+                                           value="{{ media.item.name|default('') }}" />
+                                </div>
+                                <div class="form-group">
+                                    <label>{{ i18n('File') }}</label>
+                                    <input name="file" type="file" class="form-control" />
+                                </div>
+                                <a href="{{ url(meta.route.parentName) }}" class="btn btn-default">
+                                    {{ i18n('backend_crud_btn_back2index', {en: 'back to overwiew', de: 'zurück zur Übersicht'}) }}
+                                </a>
+                                <button class="btn btn-primary" type="submit">{{ i18n('update') }}</button>
+                            </form>
+                        {% else %}
+                            <p>
+                                {{ i18n('Media item does not exist.', {
+                                    en: 'Media item does not exist.',
+                                    de: 'Medienelement existiert nicht.',
+                                }) }}
+                            </p>
+                            <div>
+                                <a href="{{ url(meta.route.parentName) }}" class="btn btn-default">
+                                    {{ i18n('backend_crud_btn_back2index', {en: 'back to overwiew', de: 'zurück zur Übersicht'}) }}
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>{# /.box-body #}
+                </div>{# /.box #}
+            </div>
+        </div>
+    </section>
+{% endblock %}

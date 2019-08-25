@@ -17,7 +17,6 @@ use PHPUnit\Framework\Constraint\Attribute;
 
 /**
  * Class InsertionTypeService
- * @Cache(enabled=true)
  *
  * @package Insertion\Services
  */

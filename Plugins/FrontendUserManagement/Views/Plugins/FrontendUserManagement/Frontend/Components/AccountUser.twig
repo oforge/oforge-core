@@ -1,7 +1,7 @@
 {# block sidebar__account_user #}
 {% block account_user %}
     <div class="account__user">
-        {% set userimage = profile.user.detail.image %}
+        {% set userimage = profile is defined ? profile.user.detail.image : current_user.detail.image %}
         {% if label %}
             <label class="center__label flex flex--row" for="input__profile">
                 <div class="user__picture img-profile"

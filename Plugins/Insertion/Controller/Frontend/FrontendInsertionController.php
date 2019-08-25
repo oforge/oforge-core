@@ -23,6 +23,7 @@ use Insertion\Services\InsertionTypeService;
 use Insertion\Services\InsertionUpdaterService;
 use Messenger\Models\Conversation;
 use Messenger\Services\FrontendMessengerService;
+use Monolog\Logger;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
@@ -135,6 +136,7 @@ class FrontendInsertionController extends SecureFrontendController {
         $formsService = Oforge()->Services()->get('insertion.forms');
 
         if ($request->isPost()) {
+            Oforge()->Logger()->get('create')->info("log data ", $_POST);
             $formsService->processPostData($typeId);
         }
 
@@ -202,9 +204,12 @@ class FrontendInsertionController extends SecureFrontendController {
             $mailService = Oforge()->Services()->get('mail');
 
             if ($request->isPost()) {
+                Oforge()->Logger()->get('create')->info("process data ", $_POST);
+
                 $data = $formsService->processPostData($typeId);
                 try {
                     $processData = $formsService->parsePageData($data);
+                    Oforge()->Logger()->get('create')->info("processed data ", $data);
 
                     $insertionId = $createService->create($typeId, $user, $processData);
 
@@ -236,7 +241,7 @@ class FrontendInsertionController extends SecureFrontendController {
                     ]));
 
                     return $response->withRedirect($uri, 301);
-                } catch (Exception $exception) {
+                } catch (\Exception $exception) {
                     Oforge()->Logger()->get()->error('insertion_creation', $data);
                     Oforge()->Logger()->get()->error('insertion_creation_stack', $exception->getTrace());
 
@@ -247,7 +252,7 @@ class FrontendInsertionController extends SecureFrontendController {
                 }
             }
         } else {
-            Oforge()->View()->Flash()->addMessage('error', 'missing_user');
+            Oforge()->View()->Flash()->addMessage('error', I18N::translate('missing_user'));
             $uri = $router->pathFor('insertions_createSteps', ['type' => $typeId, 'page' => '5']);
 
             return $response->withRedirect($uri, 301);

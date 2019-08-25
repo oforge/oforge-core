@@ -1,9 +1,16 @@
 {% block image_tile_content %}
     {% if data.link %}
-        <a href="{{ url(data.link) }}">
+        <a href="{{ url(data.link) }}" {% if data.targetBlank %}target="_blank"{% endif %}>
     {% endif %}
     <div class="content" style="background-color:{{ data.backgroundcolor }}">
         <div class="image-container">
+            {% if data.badge is not empty %}
+                <div class="image__badge">
+                    <svg class="icon icon--secondary" style="transform: translate3d({{ data.badge_offset_x ? : 0 }}, {{ data.badge_offset_y ? : 0 }}, 0)">
+                        <use xlink:href="#{{ data.badge }}"></use>
+                    </svg>
+                </div>
+            {% endif %}
             <picture class="lazy">
                 <source class="lazy" data-srcset="{{ media(data.url, 800) }}" media="(min-width: 640px)" />
                 <source class="lazy" data-srcset="{{ media(data.url, 600) }}" media="(min-width: 480px)" />

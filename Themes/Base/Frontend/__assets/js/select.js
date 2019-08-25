@@ -13,6 +13,7 @@
                     selectItemIsChecked: 'select__item--is-checked',
                     selectValue: 'select__value',
                     subSelect: 'form__control--is-sub',
+                    selectRequireInput: 'select__require-input',
                     selectValues: []
                 };
                 var selectors = {
@@ -21,6 +22,7 @@
                     selectText: '.' + classNames.selectText,
                     selectItem: '.' + classNames.selectItem,
                     selectItemIsChecked: '.' + classNames.selectItemIsChecked,
+                    selectRequireInput: '.' + classNames.selectRequireInput,
                     selectValue: '.' + classNames.selectValue,
                     subSelect: '[data-sub-select]',
                     selectFilter: '[data-select-filter]',
@@ -29,6 +31,7 @@
                 var selectList = document.querySelectorAll(self.selector);
                 var currentOpenSelectFilterInputSelector = selectors.selectIsOpen + ' ' + selectors.selectFilter;
                 var noSubSelectListSortable = document.querySelectorAll(selectors.noSubSelect);
+                var selectedItems = [];
 
                 function addHiddenInputToCheckItem(check) {
                     var input = document.createElement('input');
@@ -37,6 +40,7 @@
                     input.setAttribute('data-select-input', check.dataset.valueId);
                     input.setAttribute('value', check.dataset.valueId);
                     check.closest(self.selector).appendChild(input);
+                    updateRequiredInput(check);
                 }
 
                 function filterSelect() {
@@ -87,6 +91,20 @@
                             parentSelect.querySelector(selectors.selectText).innerHTML = parentSelect.checkedNames.join(', ');
                         } else {
                             unselectItem(selectItem);
+                        }
+                        updateRequiredInput(selectItem);
+                    }
+                }
+
+                //Fills out an invisible form element to make the select element required
+                function updateRequiredInput(selectItem) {
+                    let parentSelect = selectItem.closest(self.selector);
+                    let requiredInput = parentSelect.querySelector(selectors.selectRequireInput);
+                    if (requiredInput) {
+                        if (parentSelect.checkedValues.length > 0) {
+                            requiredInput.value = ' ';
+                        } else {
+                            requiredInput.value = '';
                         }
                     }
                 }
@@ -194,6 +212,7 @@
                             select.classList.toggle(classNames.selectIsOpen);
                         }
                     } else if (evt.target.matches(selectors.selectItem)) {
+                        console.log(evt.target);
                         toggleOneItem(evt.target);
                     } else if (evt.target.matches(selectors.selectValue)) {
                         var selectItem = evt.target.closest(selectors.selectItem);
@@ -238,6 +257,7 @@
                             select.checkedValues.push(checkedElement.dataset.valueId);
                             select.checkedNames.push(checkedName);
                             addHiddenInputToCheckItem(checkedElement);
+                            updateRequiredInput(checkedElement);
                         });
                         if (select.checkedNames.length > 0) {
                             selectText.innerHTML = select.checkedNames.join(', ');
@@ -249,6 +269,11 @@
                     if (evt.button === 0) {
                         fireClick(evt);
                     }
+                });
+
+                //Fixes a weird scrolling bug
+                document.getElementsByClassName('simplebar-content-wrapper').forEach(function (simplebar) {
+                    simplebar.setAttribute('tabindex', -1);
                 });
             }
         })
