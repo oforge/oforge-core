@@ -6,6 +6,13 @@
     width: calc(100% - 12.4rem);
     padding: $size-small $size-large;
 }
+
+.filter--products-filter-available {
+    .button.button--filter-search {
+        border-left: 1px solid $color-secondary;
+        width: 18rem;
+    }
+}
 .button.button--filter-search {
     align-items: center;
     justify-content: space-between;

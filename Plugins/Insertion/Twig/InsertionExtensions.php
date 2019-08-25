@@ -69,14 +69,19 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
      * @return string|null
      * @throws \Exception
      */
-    public function getAge(?string $dateTimeObject, ?string $type) : ?string {
-        $bday  = DateTime::createFromFormat('Y-m-d', $dateTimeObject); // Your date of birth
+    public function getAge(?string $dateTimeObject, string $type = 'dateyear') : ?string {
+        $bday  = DateTime::createFromFormat('Y-m-d', $dateTimeObject);
         $today = new Datetime();
 
-        $diff   = $today->diff($bday);
+        $diff = $today->diff($bday);
+        // don't continue if $diff is not set
+        if (!$diff) {
+            return null;
+        }
         $suffix = $type == 'datemonth' ? I18N::translate('month_suffix') : ($type == 'dateyear' ? I18N::translate('year_suffix') : '');
 
         return ($type == 'datemonth' ? ($diff->y * 12 + $diff->m) : ($type == 'dateyear' ? $diff->y : $dateTimeObject)) . ' ' . $suffix;
+
     }
 
     /**
@@ -131,7 +136,6 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
      * @throws ServiceNotFoundException
      */
     public function userHasBookmark() {
-
         /** @var $authService AuthService */
         $authService = Oforge()->Services()->get("auth");
         if (isset($_SESSION["auth"])) {
@@ -152,6 +156,7 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
      *
      * @return boolean
      * @throws ServiceNotFoundException
+     * @throws ORMException
      */
     public function hasSearchBookmark(...$vars) {
         if (count($vars) == 2) {
@@ -174,11 +179,12 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
     /**
      * @return array
      * @throws ServiceNotFoundException
+     * @throws ORMException
      */
     public function getInsertionSliderContent() {
         /** @var InsertionSliderService $insertionSliderService */
         $insertionSliderService = Oforge()->Services()->get("insertion.slider");
-        $insertions             = $insertionSliderService->getRandomInsertions();
+        $insertions             = $insertionSliderService->getRandomInsertions(10);
 
         return ['insertions' => $insertions];
     }
@@ -189,6 +195,7 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
      * @return array
      * @throws ORMException
      * @throws ServiceNotFoundException
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function getSimilarInsertion(...$vars) {
         /** @var InsertionSliderService $insertionSliderService */
@@ -283,7 +290,7 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
     }
 
     /**
-     * @return array
+     * @return \Insertion\Models\AttributeKey
      * @throws ServiceNotFoundException
      * @throws ORMException
      */
@@ -299,7 +306,7 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
     }
 
     /**
-     * @return array
+     * @return \Insertion\Models\AttributeValue
      * @throws ServiceNotFoundException
      * @throws ORMException
      */

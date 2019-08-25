@@ -1,10 +1,13 @@
-<div class="blog-post-rating">
+<div class="post__rating-container rating-container--disabled">
+    <span class="tooltip blog-post-rating__tooltip">{{ i18n('sign_in_to_rate', {en: "Please <a href='/login'> sign in </a> to leave a rating"}) }}</span>
+    <div class="blog-post-rating">
     <span class="blog-post-rating-up">
         {{ blogPost.ratings.up }}
         {% include 'Plugins/Blog/Frontend/Components/RatingUpIcon.twig' %}
     </span>
-    <span class="blog-post-rating-down">
+        <span class="blog-post-rating-down">
         {% include 'Plugins/Blog/Frontend/Components/RatingDownIcon.twig' %}
-        {{ blogPost.ratings.down }}
+            {{ blogPost.ratings.down }}
     </span>
+    </div>
 </div>

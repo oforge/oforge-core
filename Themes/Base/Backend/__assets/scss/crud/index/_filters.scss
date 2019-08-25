@@ -1,0 +1,16 @@
+#oforge-crud-filters {
+    margin-bottom: 1rem;
+
+    .select2-container {
+        min-width: 177px;
+
+        .select2-selection {
+            height: 34px;
+            padding-top: 9px;
+        }
+
+        .select2-selection__arrow {
+            top: 4px;
+        }
+    }
+}

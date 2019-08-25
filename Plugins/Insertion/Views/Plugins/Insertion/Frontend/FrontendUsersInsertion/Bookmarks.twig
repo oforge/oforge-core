@@ -12,10 +12,9 @@
                     <div class="account__content">
                         <h1>{{ i18n('frontend_user_bookmarks_headline') }}</h1>
                         <div class="">
-
                             <div class="">
                                 {% if bookmarks|length > 0 %}
-                                    <h2>{{ i18n('insertions') }}</h2>
+                                    <h2 class="account__title title--has-secondary-background">{{ i18n('insertions') }}</h2>
                                 {% else %}
                                     <div>{{ i18n('no_bookmarks_saved') }}</div>
                                 {% endif %}

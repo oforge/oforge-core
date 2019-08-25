@@ -1,0 +1,5 @@
+{% include 'Backend/Components/ColorPreview.twig' with {
+    text: crudProperty.colorsPreview.text ? ('input[name="data[' ~ crudProperty.colorsPreview.text ~ ']"]') : null,
+    background: crudProperty.colorsPreview.background ? ('input[name="data[' ~ crudProperty.colorsPreview.background ~ ']"]') : null,
+    foreground: crudProperty.colorsPreview.foreground ? ('input[name="data[' ~ crudProperty.colorsPreview.foreground ~ ']"]') : null,
+} only %}

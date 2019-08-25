@@ -7,6 +7,7 @@ namespace PHPSTORM_META {
             'cms.order'                     => \Oforge\Engine\Modules\CMS\Services\CmsOrderService::class,
             'dummy.page.generator'          => \Oforge\Engine\Modules\CMS\Services\DummyPageGenerator::class,
             'page.path'                     => \Oforge\Engine\Modules\CMS\Services\PageService::class,
+            'page.duplicate'                => \Oforge\Engine\Modules\CMS\Services\PageDuplicateService::class,
             'pages.controller.service'      => \Oforge\Engine\Modules\CMS\Services\PagesControllerService::class,
             'page.tree.service'             => \Oforge\Engine\Modules\CMS\Services\PageTreeService::class,
             'page.builder.service'          => \Oforge\Engine\Modules\CMS\Services\PageBuilderService::class,

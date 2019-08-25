@@ -9,6 +9,7 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistException;
 use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
+use Oforge\Engine\Modules\Core\Manager\Events\Event;
 use Oforge\Engine\Modules\CRUD\Enum\CrudFilterComparator;
 use ReflectionException;
 
@@ -111,7 +112,7 @@ class GenericCrudService extends AbstractDatabaseAccess {
     }
 
     /**
-     * Get single entity data (by toArray) or null if not exist.
+     * Get single entity or null if not exist.
      *
      * @param string $class
      * @param int|string $id
@@ -158,6 +159,7 @@ class GenericCrudService extends AbstractDatabaseAccess {
 
         $this->entityManager()->create($instance);
         $repository->clear();
+        Oforge()->Events()->trigger(Event::create($class . '::created', $instance->toArray(0)));
 
         return $instance;
     }
@@ -189,6 +191,8 @@ class GenericCrudService extends AbstractDatabaseAccess {
             }
             $entity->fromArray($options);
             $this->entityManager()->update($entity, false);
+            $options['id'] = $id;
+            Oforge()->Events()->trigger(Event::create($class . '::updated', $entity->toArray(0)));
         } elseif (isset($options['data'])) {
             $objectsData = $options['data'];
             foreach ($objectsData as $id => $objectData) {
@@ -202,6 +206,7 @@ class GenericCrudService extends AbstractDatabaseAccess {
                 }
                 $entity->fromArray($objectData);
                 $this->entityManager()->update($entity, false);
+                Oforge()->Events()->trigger(Event::create($class . '::updated', $entity->toArray(0)));
             }
         }
         if ($flush) {
@@ -232,6 +237,7 @@ class GenericCrudService extends AbstractDatabaseAccess {
         }
         $this->entityManager()->remove($entity);
         $repository->clear();
+        Oforge()->Events()->trigger(Event::create($class . '::deleted', $entity->toArray(0)));
     }
 
     /**

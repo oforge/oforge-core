@@ -51,7 +51,7 @@ class InsertionService extends AbstractDatabaseAccess {
         $content = new InsertionContent();
         $insertion->setContent([$content]);
 
-        $content->setName($name);
+     //   $content->setName($name);
         $content->setDescription($description);
         $content->setTitle($title);
         $content->setInsertion($insertion);
