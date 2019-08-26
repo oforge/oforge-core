@@ -52,7 +52,7 @@
                            placeholder="{{ i18n('phone') }}">
                 </div>
                 <div class="form__control columns">
-                    <h3 class="form__sub-title">{{ i18n('address') }}</h3>
+                    <h3 class="form__sub-title">{{ i18n('address') }}<span class="required">*</span></h3>
                     <div class="column column--one-third">
                         <input type="text"
                                name="contact_zip"
@@ -97,7 +97,7 @@
         <div class="form-controls">
             <div class="attribute-group">
                 <label for="price"
-                       class="title title--attribute-group">{{ i18n('price_' ~ type.name, i18n('price')) }}</label>
+                       class="title title--attribute-group">{{ i18n('price_' ~ type.name, i18n('price')) }}<span class="required">*</span></label>
                 <div class="form__control">
                     <label for="price"
                            class="form__input form__input--inside-label">
