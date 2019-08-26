@@ -2,31 +2,37 @@
 
 {% block attributes__main %}
     {% if item.content[0].name is not empty %}
-    <div class="product__attribute">
-        <span class="product__label">{{ i18n('name') }}</span>
-        <span class="product__value">{{ item.content[0].name }}</span>
-    </div>
+        <div class="product__attribute">
+            <span class="product__label">{{ i18n('name') }}</span>
+            <span class="product__value">{{ item.content[0].name }}</span>
+        </div>
     {% endif %}
     <div class="product__attribute">
         <span class="product__label">{{ i18n('price') }}</span>
-        <span class="product__value">{{ item.price }} {{ i18n('unit_price') }} {% if (item.tax) %} ({{ i18n('vat_identificationable') }}){% endif %}</span>
+        <span
+            class="product__value">{{ item.price }} {{ i18n('unit_price') }} {% if (item.tax) %} ({{ i18n('vat_identificationable') }}){% endif %}</span>
     </div>
     <div class="product__attribute">
         <span class="product__label">{{ i18n('duration') }}</span>
-        <span class="product__value">unbegrenzt</span>
+        <span class="product__value">unbegrenzt</span>s
     </div>
 {% endblock attributes__main %}
 
 {% block attributes__top %}
     <div class="product__attributes product__attributes--top">
+        {% if item.content[0].name is not empty %}
         <div class="product__attribute">
             <span class="product__label">{{ i18n('insertion_name') }}</span>
             <span class="product__value">{{ item.content[0].name }}</span>
         </div>
+        {% endif %}
+        {% if item.price is not empty %}
         <div class="product__attribute">
             <span class="product__label">{{ i18n('insertion_price') }}</span>
-            <span class="product__value">{{ item.price }} {{ i18n('unit_price') }} {% if (item.tax) %} ({{ i18n('vat_identificationable') }}){% endif %}</span>
+            <span
+                class="product__value">{{ item.price }} {{ i18n('unit_price') }} {% if (item.tax) %} ({{ i18n('vat_identificationable') }}){% endif %}</span>
         </div>
+        {% endif %}
         <div class="product__attribute">
             <span class="product__label">{{ i18n('insertion_duration') }}</span>
             <span class="product__value">unbegrenzt</span>

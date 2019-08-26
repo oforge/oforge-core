@@ -63,6 +63,14 @@ class AccountController extends SecureFrontendController {
         $backendNavigationService        = $accountNavigationService->get('sidebar');
 
         Oforge()->View()->assign(['content' => $backendNavigationService]);
+
+
+        if(Oforge()->View()->Flash()->hasData('new_registration')) {
+            $newRegistration = Oforge()->View()->Flash()->getData('new_registration');
+            Oforge()->View()->assign($newRegistration);
+            Oforge()->View()->Flash()->clearData('new_registration');
+        }
+
     }
 
     /**
