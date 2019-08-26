@@ -28,10 +28,12 @@ class SearchBookmarkCommand extends AbstractCommand {
      * @param Input $input
      * @param Logger $output
      *
-     * @throws \Doctrine\ORM\ORMException
      * @throws Exceptions\ConfigElementNotFoundException
      * @throws Exceptions\ConfigOptionKeyNotExistException
      * @throws Exceptions\ServiceNotFoundException
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
@@ -48,8 +50,10 @@ class SearchBookmarkCommand extends AbstractCommand {
         /** @var InsertionUserSearchBookmark[] $bookmarks */
         $bookmarks = $searchBookmarkService->list();
         foreach ($bookmarks as $bookmark) {
+            print('start looking ' . $bookmark->getId());
             /** @var User $user */
             $user                 = $bookmark->getUser();
+            print($user->getEmail());
             $params               = $bookmark->getParams();
             $params['after_date'] = $bookmark->getLastChecked();
 
@@ -57,8 +61,9 @@ class SearchBookmarkCommand extends AbstractCommand {
 
             $newInsertionsCount = sizeof($insertionList["query"]["items"]);
             if ($newInsertionsCount > 0) {
-                $searchLink = $searchBookmarkService->getUrl($bookmark->getInsertionType(), $params);
-                $mailService->sendNewSearchResultsInfoMail($user->getId(), $newInsertionsCount, $searchLink);
+                // $searchLink = $searchBookmarkService->getUrl($bookmark->getInsertionType(), $params);
+                // $mailService->sendNewSearchResultsInfoMail($user->getId(), $newInsertionsCount, $searchLink);
+                print("found results for " . $user->getEmail() . "\n"); continue;
             }
 
             $searchBookmarkService->setLastChecked($bookmark);
