@@ -3,6 +3,7 @@
 namespace Insertion\Controller\Frontend;
 
 use Doctrine\ORM\ORMException;
+use FastRoute\Route;
 use FrontendUserManagement\Abstracts\SecureFrontendController;
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\FrontendUserService;
@@ -10,6 +11,7 @@ use FrontendUserManagement\Services\UserDetailsService;
 use FrontendUserManagement\Services\UserService;
 use Insertion\Models\Insertion;
 use Insertion\Models\InsertionTypeAttribute;
+use Insertion\Models\InsertionUserSearchBookmark;
 use Insertion\Services\InsertionBookmarkService;
 use Insertion\Services\InsertionListService;
 use Insertion\Services\InsertionProfileService;
@@ -21,10 +23,12 @@ use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Models\Endpoint\EndpointMethod;
 use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Slim\Interfaces\RouterInterface;
 use Slim\Router;
 
 /**
@@ -300,6 +304,8 @@ class FrontendUsersInsertionController extends SecureFrontendController {
         $service       = Oforge()->Services()->get("insertion.type");
         $insertionType = $service->getInsertionTypeById(intval($id));
 
+        print_r($request->getParsedBody());
+
         if (!isset($insertionType) || $insertionType == null) {
             return $response->withRedirect("/404", 301);
         }
@@ -344,7 +350,48 @@ class FrontendUsersInsertionController extends SecureFrontendController {
      * @return Response
      * @throws ORMException
      * @throws ServiceNotFoundException
-     * @EndpointAction(path="/removeBookmark/{id}")
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @EndpointAction(path="/remove-searchBookmark/{searchBookmarkId:\d+}", method=EndpointMethod::POST)
+     */
+    public function removeSearchBookmarkAction(Request $request, Response $response, $args) {
+        $id = $args["searchBookmarkId"];
+
+        /** @var InsertionSearchBookmarkService $searchBookmarkService */
+        $searchBookmarkService = Oforge()->Services()->get('insertion.search.bookmark');
+        /** @var InsertionUserSearchBookmark $searchBookmark */
+        $searchBookmark        = $searchBookmarkService->get($id);
+
+        $user = Oforge()->View()->get('current_user');
+
+        if (!isset($searchBookmark) || !isset($user['id']) || $user['id'] != $searchBookmark->getUser()->getId()) {
+            return $response->withRedirect('/404');
+        }
+
+        $searchBookmarkService->remove($id);
+
+        Oforge()->View()->Flash()->addMessage('success', I18n::translate('remove_search_bookmark_success', [
+            'en' => 'Search entry has been deleted.',
+            'de' => 'Sucheintrag wurde erfolgreich gelöscht.',
+        ]));
+
+        /** @var Router $router */
+        $router = Oforge()->App()->getContainer()->get('router');
+
+        $url = $router->pathFor('frontend_account_insertions_searchBookmarks');
+
+        return $response->withRedirect($url, 301);
+
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param $args
+     *
+     * @return Response
+     * @throws ORMException
+     * @throws ServiceNotFoundException
+     * @EndpointAction(path="/removeBookmark/{id:\d+}")
      */
     public function removeBookmarkAction(Request $request, Response $response, $args) {
         /**
@@ -354,7 +401,10 @@ class FrontendUsersInsertionController extends SecureFrontendController {
         $id              = $args["id"];
 
         $bookmarkService->remove($id);
-        Oforge()->View()->Flash()->addMessage('success', I18n::translate('remove_bookmark_success'));
+        Oforge()->View()->Flash()->addMessage('success', I18n::translate('remove_bookmark_success', [
+            'en' => 'Insertion has been deleted.',
+            'de' => 'Inserat wurde erfolgreich vom Merkzettel entfernt',
+        ]));
 
         /** @var Router $router */
         $router = Oforge()->App()->getContainer()->get('router');
@@ -438,6 +488,7 @@ class FrontendUsersInsertionController extends SecureFrontendController {
             'toggleSearchBookmarkAction',
             'profileAction',
             'removeBookmarkAction',
+            'removeSearchBookmarkAction',
         ]);
     }
 
