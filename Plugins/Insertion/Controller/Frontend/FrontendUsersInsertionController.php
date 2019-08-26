@@ -400,7 +400,7 @@ class FrontendUsersInsertionController extends SecureFrontendController {
         $bookmarkService = Oforge()->Services()->get("insertion.bookmark");
         $id              = $args["id"];
 
-        if($bookmarkService->remove($id)) {
+        if(!$bookmarkService->remove($id)) {
             return $response->withRedirect('/404');
         }
 
