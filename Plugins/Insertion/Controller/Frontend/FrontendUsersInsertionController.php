@@ -374,7 +374,7 @@ class FrontendUsersInsertionController extends SecureFrontendController {
             'de' => 'Sucheintrag wurde erfolgreich gelöscht.',
         ]));
 
-        /** @var Router $router */
+        /** @var R $router */
         $router = Oforge()->App()->getContainer()->get('router');
 
         $url = $router->pathFor('frontend_account_insertions_searchBookmarks');
@@ -400,7 +400,10 @@ class FrontendUsersInsertionController extends SecureFrontendController {
         $bookmarkService = Oforge()->Services()->get("insertion.bookmark");
         $id              = $args["id"];
 
-        $bookmarkService->remove($id);
+        if($bookmarkService->remove($id)) {
+            return $response->withRedirect('/404');
+        }
+
         Oforge()->View()->Flash()->addMessage('success', I18n::translate('remove_bookmark_success', [
             'en' => 'Insertion has been deleted.',
             'de' => 'Inserat wurde erfolgreich vom Merkzettel entfernt',
