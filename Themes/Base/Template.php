@@ -23,4 +23,3 @@ class Template extends AbstractTemplate {
         );
     }
 }
-

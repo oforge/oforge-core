@@ -73,12 +73,10 @@
 
                         if (toggleState) {
                             addHiddenInputToCheckItem(selectItem);
-                            selectedItems.push(valueId);
                             parentSelect.checkedValues.push(valueId);
                             parentSelect.checkedNames.push(valueName);
                             parentSelect.querySelector(selectors.selectText).innerHTML = parentSelect.checkedNames.join(', ');
                         } else {
-                            selectedItems.pop(valueId);
                             unselectItem(selectItem);
                         }
                         updateRequiredInput(selectItem);
@@ -89,11 +87,12 @@
                 function updateRequiredInput(selectItem) {
                     let parentSelect = selectItem.closest(self.selector);
                     let requiredInput = parentSelect.querySelector(selectors.selectRequireInput);
-
-                    if (parentSelect.checkedValues.length > 0) {
-                        requiredInput.value = ' ';
-                    } else {
-                        requiredInput.value = '';
+                    if (requiredInput) {
+                        if (parentSelect.checkedValues.length > 0) {
+                            requiredInput.value = ' ';
+                        } else {
+                            requiredInput.value = '';
+                        }
                     }
                 }
 

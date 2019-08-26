@@ -104,4 +104,16 @@ class RegistrationService extends AbstractDatabaseAccess {
     public function userExists(string $email) {
         return $this->repository()->findOneBy(['email' => $email]);
     }
+
+    /**
+     * @param string $guid
+     *
+     * @return bool
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function userIsActive(string $guid) {
+        /** @var User $user */
+        $user = $this->repository()->findOneBy(['guid' => $guid]);
+        return $user->isActive();
+    }
 }
