@@ -304,8 +304,6 @@ class FrontendUsersInsertionController extends SecureFrontendController {
         $service       = Oforge()->Services()->get("insertion.type");
         $insertionType = $service->getInsertionTypeById(intval($id));
 
-        print_r($request->getParsedBody());
-
         if (!isset($insertionType) || $insertionType == null) {
             return $response->withRedirect("/404", 301);
         }
