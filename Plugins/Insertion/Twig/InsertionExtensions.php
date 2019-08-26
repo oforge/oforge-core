@@ -91,7 +91,9 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
                 // TODO: think about adding type horseyear
                 if($horseYears) {
                     // return age in horseyears
-                    return $today->format('y') - $bday->format('y') . ' ' . $suffix;
+                    $age = (int)$today->format('y') - (int)$bday->format('y');
+
+                    return $age . ' ' . $suffix;
                 }
                 else {
                     // return age in years
