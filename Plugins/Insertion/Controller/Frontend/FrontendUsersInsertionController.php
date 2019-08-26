@@ -23,6 +23,7 @@ use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Oforge\Engine\Modules\Core\Models\Endpoint\EndpointMethod;
 use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
@@ -353,6 +354,11 @@ class FrontendUsersInsertionController extends SecureFrontendController {
      */
     public function removeSearchBookmarkAction(Request $request, Response $response, $args) {
         $id = $args["searchBookmarkId"];
+        /** @var R $router */
+        $router = Oforge()->App()->getContainer()->get('router');
+
+        $url = $router->pathFor('frontend_account_insertions_searchBookmarks');
+
 
         /** @var InsertionSearchBookmarkService $searchBookmarkService */
         $searchBookmarkService = Oforge()->Services()->get('insertion.search.bookmark');
@@ -361,8 +367,23 @@ class FrontendUsersInsertionController extends SecureFrontendController {
 
         $user = Oforge()->View()->get('current_user');
 
-        if (!isset($searchBookmark) || !isset($user['id']) || $user['id'] != $searchBookmark->getUser()->getId()) {
-            return $response->withRedirect('/404');
+        if (!isset($user['id'])) {
+            return $response->withRedirect($url, 301);
+        }
+
+        if (!isset($searchBookmark)) {
+            Oforge()->View()->Flash()->addMessage('error', I18N::translate('search_bookmark_entity_not_exist', [
+                'en' => 'Bookmark entry does not exist.',
+                'de' => 'Sucheintrag existiert nicht.',
+            ]));
+            return $response->withRedirect($url, 301);
+        }
+        if ($user['id'] != $searchBookmark->getUser()->getId()) {
+            Oforge()->View()->Flash()->addMessage('error', I18N::translate('search_bookmark_invalid_user', [
+                'en' => 'Permission denied.',
+                'de' => 'Keine Befugnis.',
+            ]));
+            return $response->withRedirect($url, 301);
         }
 
         $searchBookmarkService->remove($id);
@@ -372,13 +393,7 @@ class FrontendUsersInsertionController extends SecureFrontendController {
             'de' => 'Sucheintrag wurde erfolgreich gelöscht.',
         ]));
 
-        /** @var R $router */
-        $router = Oforge()->App()->getContainer()->get('router');
-
-        $url = $router->pathFor('frontend_account_insertions_searchBookmarks');
-
         return $response->withRedirect($url, 301);
-
     }
 
     /**
