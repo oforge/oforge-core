@@ -38,6 +38,15 @@ class BackendInsertionFeedbackController extends BaseCrudController {
                 'delete' => 'readonly',
                 'view'   => 'readonly',
             ]
+        ],
+        [
+            'name' => 'rating',
+            'type' => CrudDataTypes::INT,
+            'crud' => [
+                'index'  => 'readonly',
+                'delete' => 'readonly',
+                'view'   => 'readonly',
+            ]
         ]
     ];
     protected $indexFilter = [
