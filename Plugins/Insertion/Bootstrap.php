@@ -4,6 +4,7 @@ namespace Insertion;
 
 use Doctrine\DBAL\Cache\QueryCacheProfile;
 use FrontendUserManagement\Services\AccountNavigationService;
+use Insertion\Controller\Backend\BackendInsertionFeedbackController;
 use Insertion\Services\InsertionProfileProgressService;
 use Insertion\Commands\ReminderCommand;
 use Insertion\Commands\SearchBookmarkCommand;
@@ -68,6 +69,7 @@ class Bootstrap extends AbstractBootstrap {
             BackendInsertionController::class,
             BackendInsertionTypeController::class,
             BackendInsertionTypeGroupController::class,
+            BackendInsertionFeedbackController::class,
         ];
 
         $this->services = [
@@ -176,11 +178,11 @@ class Bootstrap extends AbstractBootstrap {
            'template'  => 'InsertionFeedback',
            'handler'   => Widgets\InsertionFeedbackWidget::class,
            'label'     => [
-               'en' => 'Feedback',
-               'de' => 'Feedback',
+               'en' => 'Insertion Feedback',
+               'de' => 'Inserate Feedback',
                ],
                'position' => DashboardWidgetPosition::TOP,
-               'cssClass' => 'bg-maroon',
+               'cssClass' => 'bg-green',
         ]);
     }
 
