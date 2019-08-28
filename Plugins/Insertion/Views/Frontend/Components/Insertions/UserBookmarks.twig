@@ -1,15 +1,18 @@
 {% extends  'Frontend/Components/Insertions/UserInsertion.twig' %}
+{% block panel__classes %}
+   {{ parent() }} {% if item.deleted == true %}is--deleted{% endif %}
+{% endblock panel__classes %}
 {% block attributes__main %}
-
     {% if item.content[0].name is not empty %}
-    <div class="product__attribute">
-        <span class="product__label">{{ i18n('name') }}</span>
-        <span class="product__value">{{ item.content[0].name }}</span>
-    </div>
+        <div class="product__attribute">
+            <span class="product__label">{{ i18n('name') }}</span>
+            <span class="product__value">{{ item.content[0].name }}</span>
+        </div>
     {% endif %}
     <div class="product__attribute">
         <span class="product__label">{{ i18n('price') }}</span>
-        <span class="product__value">{{ item.price }} € {% if (item.tax) %} (Netto) {% else %} (Brutto){% endif %}</span>
+        <span
+            class="product__value">{{ item.price }} € {% if (item.tax) %} (Netto) {% else %} (Brutto){% endif %}</span>
         <!-- TODO: Snippify -->
     </div>
     <div class="product__attribute">
@@ -19,6 +22,11 @@
 {% endblock attributes__main %}
 
 {% block attributes__top %}
+    {% if item.deleted == true %}
+        <div class="insertion_deleted_notice">
+            {{ i18n('insertion_deleted_by_user')}}
+        </div>
+    {% endif %}
     <div class="product__attributes product__attributes--top">
         <div class="product__attribute">
             <span class="product__label">{{ i18n('insertion_name') }}</span>
@@ -26,7 +34,8 @@
         </div>
         <div class="product__attribute">
             <span class="product__label">{{ i18n('insertion_price') }}</span>
-            <span class="product__value">{{ item.price }} {{ i18n('unit_price') }} {% if (item.tax) %} ({{ i18n('vat_identificationable') }}){% endif %}</span>
+            <span
+                class="product__value">{{ item.price }} {{ i18n('unit_price') }} {% if (item.tax) %} ({{ i18n('vat_identificationable') }}){% endif %}</span>
         </div>
         <div class="product__attribute">
             <span class="product__label">{{ i18n('seller') }}</span>
