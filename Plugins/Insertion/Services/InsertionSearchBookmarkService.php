@@ -188,4 +188,14 @@ class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
         return $url;
     }
 
+    /**
+     * @param $searchBookmarkId
+     *
+     * @return object|null
+     * @throws ORMException
+     */
+    public function get($searchBookmarkId) {
+        return $this->repository('search')->find($searchBookmarkId);
+    }
+
 }
