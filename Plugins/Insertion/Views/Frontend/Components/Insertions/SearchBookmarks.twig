@@ -39,9 +39,8 @@
             </a>
 
             <form method="post"
-                  action="{{ url('frontend_account_insertions_toggleSearchBookmark', {'typeId': item.insertionType.id }) }}"
+                  action="{{ url('frontend_account_insertions_removeSearchBookmark', {'searchBookmarkId': item.id }) }}"
                   enctype="multipart/form-data">
-                <input type="hidden" name="filter" value="{{ item.params|json_encode() }}" />
 
                 <label class="delete-bookmark">
                     <input type="submit"
@@ -51,7 +50,6 @@
                     </svg>
                 </label>
             </form>
-
         </div>
     </div>
 

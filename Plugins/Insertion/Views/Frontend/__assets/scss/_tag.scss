@@ -4,6 +4,7 @@
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
     width: calc(100% - 12.4rem);
+    padding: $size-small $size-large;
 }
 
 .filter--products-filter-available {
@@ -31,6 +32,11 @@
         color: $color-secondary;
     }
 }
+
+.tags + .button--filter-search {
+    border-left: 1px solid $color-secondary;
+}
+
 .tag-list {
     white-space: nowrap;
     padding-bottom: $size-small;
