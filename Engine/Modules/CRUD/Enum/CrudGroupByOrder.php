@@ -3,11 +3,11 @@
 namespace Oforge\Engine\Modules\CRUD\Enum;
 
 /**
- * Class CrudGroubByOrder
+ * Class CrudGroupByOrder
  *
  * @package Oforge\Engine\Modules\CRUD\Enum
  */
-class CrudGroubByOrder {
+class CrudGroupByOrder {
     public const ASC = 'ASC';
     public const DESC = 'DESC';
 }

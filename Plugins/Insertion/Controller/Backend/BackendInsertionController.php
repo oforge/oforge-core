@@ -22,7 +22,7 @@ use Oforge\Engine\Modules\Core\Helper\SessionHelper;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
 use Oforge\Engine\Modules\CRUD\Enum\CrudFilterType;
-use Oforge\Engine\Modules\CRUD\Enum\CrudGroubByOrder;
+use Oforge\Engine\Modules\CRUD\Enum\CrudGroupByOrder;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\Mailer\Services\MailService;
 use phpDocumentor\Reflection\Types\This;
@@ -151,7 +151,7 @@ class BackendInsertionController extends BaseCrudController {
 
     /** @var array $indexOrderBy */
     protected $indexOrderBy = [
-        'createdAt' => CrudGroubByOrder::DESC,
+        'createdAt' => CrudGroupByOrder::DESC,
     ];
 
     public function __construct() {

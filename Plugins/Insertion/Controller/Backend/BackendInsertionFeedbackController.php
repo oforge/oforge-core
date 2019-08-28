@@ -7,7 +7,9 @@ use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
-
+use Oforge\Engine\Modules\CRUD\Enum\CrudFilterComparator;
+use Oforge\Engine\Modules\CRUD\Enum\CrudFilterType;
+use Oforge\Engine\Modules\CRUD\Enum\CrudGroupByOrder;
 
 /**
  * Class BackendInsertionFeedbackController
@@ -32,9 +34,43 @@ class BackendInsertionFeedbackController extends BaseCrudController {
             'name' => 'text',
             'type' => CrudDataTypes::STRING,
             'crud' => [
-                'index' => 'readonly',
+                'index'  => 'readonly',
+                'delete' => 'readonly',
+                'view'   => 'readonly',
             ]
         ]
+    ];
+    protected $indexFilter = [
+
+        'text'  => [
+            'type'    => CrudFilterType::TEXT,
+            'label'   => [
+                'key'     => 'plugin_insertion_feedback_filter_text',
+                'default' => [
+                    'en' => 'Search in text',
+                    'de' => 'Suche im Text',
+                ],
+            ],
+            'compare' => CrudFilterComparator::LIKE,
+        ],
+    ];
+    /**
+     * Configuration of the orderBy on the index view.
+     *      protected $indexOrderBy = [
+     *          'propertyName' => CrudGroupByOrder::ASC|DESC,
+     *      ];
+     *
+     * @var array $indexOrderBy
+     */
+    protected $indexOrderBy = [
+        'id' => CrudGroupByOrder::DESC,
+    ];
+    protected $crudActions = [
+        'index'  => true,
+        'create' => false,
+        'view'   => true,
+        'update' => false,
+        'delete' => true,
     ];
 
     public function __construct() {
