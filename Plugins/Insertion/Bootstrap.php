@@ -171,6 +171,17 @@ class Bootstrap extends AbstractBootstrap {
             'position' => DashboardWidgetPosition::TOP,
             'cssClass' => 'bg-maroon',
         ]);
+        $dashboardWidgetsService->install([
+           'name'      => 'plugin_insertion_feedback',
+           'template'  => 'InsertionFeedback',
+           'handler'   => Widgets\InsertionFeedbackWidget::class,
+           'label'     => [
+               'en' => 'Feedback',
+               'de' => 'Feedback',
+               ],
+               'position' => DashboardWidgetPosition::TOP,
+               'cssClass' => 'bg-maroon',
+        ]);
     }
 
     public function uninstall() {
@@ -178,6 +189,7 @@ class Bootstrap extends AbstractBootstrap {
         $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
         $dashboardWidgetsService->uninstall('plugin_insertion_count');
         $dashboardWidgetsService->uninstall('plugin_insertion_moderation');
+        $dashboardWidgetsService->uninstall('plugin_insertion_feedback');
     }
 
     public function deactivate() {
@@ -185,6 +197,8 @@ class Bootstrap extends AbstractBootstrap {
         $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
         $dashboardWidgetsService->deactivate('plugin_insertion_count');
         $dashboardWidgetsService->deactivate('plugin_insertion_moderation');
+        $dashboardWidgetsService->deactivate('plugin_insertion_feedback');
+
     }
 
     public function activate() {
@@ -265,6 +279,7 @@ class Bootstrap extends AbstractBootstrap {
         $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
         $dashboardWidgetsService->activate('plugin_insertion_count');
         $dashboardWidgetsService->activate('plugin_insertion_moderation');
+        $dashboardWidgetsService->activate('plugin_insertion_feedback');
     }
 
 }
