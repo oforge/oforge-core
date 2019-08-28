@@ -7,26 +7,31 @@
         }
     }
 }
+
 .insertions__banner {
     margin-top: 1.2rem;
     margin-bottom: -1.2rem;
     background-color: $color-secondary-light;
     border-bottom: 2px solid rgb(60, 60, 59);
+
     h2 {
         color: $color-light;
         padding-left: $size-large;
     }
 }
+
 .action-frontend_account_insertions {
     .panel--account {
         //background: none;
     }
+
     .user--insertions {
         position: relative;
         padding-bottom: 3rem;
 
         .product__attribute {
             width: 100%;
+
             .product__value {
                 white-space: nowrap;
                 overflow: hidden;
@@ -57,6 +62,7 @@
             border: none;
             margin-bottom: 0;
         }
+
         .product {
             &__attributes.product__attributes--top, &__actions {
                 border-top: 1px solid $color-secondary;
@@ -143,6 +149,7 @@
             &:hover {
                 cursor: default;
             }
+
             opacity: .5;
             order: 1;
             max-width: 22rem;
@@ -277,12 +284,28 @@
     }
 }
 
+/**
+ * User Bookmarks
+ */
+
 #bookmarks-container {
+    .is--deleted {
+
+        .open, .product__title-link, .product__image {
+            opacity: .5;
+            pointer-events: none;
+        }
+    }
+
     .product__actions {
         justify-content: space-evenly;
+
         .open {
             margin-right: $size-large;
         }
+    }
+    .insertion_deleted_notice {
+        font-size: $font-size-5;
     }
 
     @media (min-width: $screen-medium) {
@@ -308,7 +331,7 @@
     }
 }
 
-@media screen and (min-width: $screen-large){
+@media screen and (min-width: $screen-large) {
     .insertion {
         &__content {
             display: flex;
