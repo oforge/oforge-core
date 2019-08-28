@@ -239,7 +239,7 @@ use any input types that you want to be autofilled
                 }
 
                 function assignRandomId(element) {
-                    //Generates a random base64 id and assigns it to thae calling element
+                    //Generates a random base64 id and assigns it to the calling element
                     let id = btoa(Math.floor(Math.random() * defaults.maxIds).toString());
                     while (!autofillIds.includes(id)) {
                         id = btoa(Math.floor(Math.random() * defaults.maxIds).toString());
