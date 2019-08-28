@@ -6,7 +6,7 @@ use Insertion\Models\InsertionTypeGroup;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
-use Oforge\Engine\Modules\CRUD\Enum\CrudGroubByOrder;
+use Oforge\Engine\Modules\CRUD\Enum\CrudGroupByOrder;
 
 /**
  * Class CategoryController
@@ -59,7 +59,7 @@ class BackendInsertionTypeGroupController extends BaseCrudController{
 
     /** @var array $indexOrderBy */
     protected $indexOrderBy = [
-        'order' => CrudGroubByOrder::ASC,
+        'order' => CrudGroupByOrder::ASC,
     ];
 
     public function __construct() {
