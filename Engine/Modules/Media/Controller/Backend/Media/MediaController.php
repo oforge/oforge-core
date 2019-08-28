@@ -127,10 +127,10 @@ class MediaController extends SecureBackendController {
                         FileSystemHelper::mkdir(dirname(ROOT_PATH . $relativeFilePath));
                         if (move_uploaded_file($fileData['tmp_name'], ROOT_PATH . $relativeFilePath)) {
                             $media->setType($fileData['type'])->setPath(str_replace('\\', '/', $relativeFilePath));
-                            Oforge()->DB()->getForgeEntityManager()->update($media);
                         }
                     }
                 }
+                Oforge()->DB()->getForgeEntityManager()->update($media);
 
                 return RouteHelper::redirect($response, 'backend_media');
             }
