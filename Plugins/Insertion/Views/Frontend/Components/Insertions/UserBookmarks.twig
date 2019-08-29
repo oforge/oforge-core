@@ -22,11 +22,6 @@
 {% endblock attributes__main %}
 
 {% block attributes__top %}
-    {% if item.deleted == true %}
-        <div class="insertion_deleted_notice">
-            {{ i18n('insertion_deleted_by_user')}}
-        </div>
-    {% endif %}
     <div class="product__attributes product__attributes--top">
         <div class="product__attribute">
             <span class="product__label">{{ i18n('insertion_name') }}</span>
@@ -46,7 +41,7 @@
 
 {% block attributes__bottom %}
     <div class="product__actions">
-        <a class="button button--primary open"
+        <a class="button button--primary open" title="insertion has been deleted"
            href="{{ url("insertions_detail", {id: item.id}) }}">
             <span>{{ i18n('open_insertion') }}</span>
             <svg class="icon icon--light">
@@ -62,4 +57,18 @@
             </svg>
         </a>
     </div>
+{#    <div class="mobile__buttons">#}
+{#        <a class="button button--primary open"#}
+{#           href="{{ url("insertions_detail", {id: item.id}) }}">#}
+{#            <svg class="icon icon--light">#}
+{#                <use xlink:href="#preview"></use>#}
+{#            </svg>#}
+{#        </a>#}
+{#        <a class="button button--primary remove"#}
+{#           href="{{ url('frontend_account_insertions_removeBookmark' , {id: bookmark.id}) }}">#}
+{#            <svg class="icon icon--light">#}
+{#                <use xlink:href="#delete"></use>#}
+{#            </svg>#}
+{#        </a>#}
+{#    </div>#}
 {% endblock attributes__bottom %}
