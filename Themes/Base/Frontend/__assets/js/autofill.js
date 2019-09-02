@@ -5,7 +5,7 @@ use any input types that you want to be autofilled
     //turn default autocomplete off
     autocomplete="off"
 
-    //selector the javascript plugin
+    //selector for the javascript plugin
     data-autofill="true"
 
     //define the endpoint from which the autofill-data should be fetched
