@@ -1,5 +1,6 @@
 <div class="form__control">
-    <label class="form__label">{{ i18n(attribute.name) }}</label>
+    <label class="form__label">{{ i18n(attribute.name) }}{% if required %}<span class="required">*</span>{% endif %}
+    </label>
     <label for="insertion[{{ attribute.id }}"
            class="form__input form__input--inside-label">
         <input type="number"
@@ -8,7 +9,11 @@
                min="0"
                class="form__input"
                placeholder="{{ i18n(attribute.name) }}"
+               {% if required %}required{% endif %}
+            {%  block input__attributes %}
+            {% endblock input__attributes %}
         />
+
         {% set unit = i18n('unit_' ~  attribute.name, '') %}
         {% if unit is not empty %}
             <span class="input__unit">{{ unit }}</span>

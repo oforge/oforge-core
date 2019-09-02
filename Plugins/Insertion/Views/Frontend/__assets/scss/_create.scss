@@ -22,6 +22,8 @@
 
             img {
                 display: inline-block;
+                transform: scale(1);
+                transition: transform 70ms cubic-bezier(.32, .31, .56, .85);
             }
         }
 
@@ -42,12 +44,13 @@
                 content: '';
                 display: block;
                 position: absolute;
-                width: 70%;
+                width: 60%;
                 height: 3px;
                 bottom: -1rem;
                 left: 50%;
                 transform: translateX(-50%);
                 background-color: #FFF;
+                transition: width cubic-bezier(.32, .31, .56, .85) 70ms;
             }
 
         }
@@ -58,6 +61,20 @@
 
         &:nth-child(2n) {
             background-color: $color-primary;
+        }
+
+        &:hover {
+            .type--name {
+                &:after {
+                    width: 70%;
+                    transition: width cubic-bezier(.32, .31, .56, .85) 100ms;
+                }
+            }
+
+            img {
+                transform: scale(1.05);
+                transition: transform 100ms cubic-bezier(.32, .31, .56, .85);
+            }
         }
     }
 }
@@ -110,4 +127,9 @@
 
         }
     }
+}
+
+
+.required {
+    color: $color-secondary;
 }

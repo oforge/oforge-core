@@ -1,20 +1,39 @@
 {% extends  'Frontend/Components/Insertions/UserInsertion.twig' %}
 {% block attributes__main %}
 
+    {% if item.content[0].name is not empty %}
     <div class="product__attribute">
         <span class="product__label">{{ i18n('name') }}</span>
         <span class="product__value">{{ item.content[0].name }}</span>
     </div>
+    {% endif %}
     <div class="product__attribute">
         <span class="product__label">{{ i18n('price') }}</span>
         <span class="product__value">{{ item.price }} € {% if (item.tax) %} (Netto) {% else %} (Brutto){% endif %}</span>
         <!-- TODO: Snippify -->
     </div>
     <div class="product__attribute">
-        <span class="product__label">{{ i18n('race') }}</span>
-        <span class="product__value"></span>
+        <span class="product__label">{{ i18n('seller') }}</span>
+        <span class="product__value">{{ item.user.detail.nickName }}</span>
     </div>
 {% endblock attributes__main %}
+
+{% block attributes__top %}
+    <div class="product__attributes product__attributes--top">
+        <div class="product__attribute">
+            <span class="product__label">{{ i18n('insertion_name') }}</span>
+            <span class="product__value">{{ item.content[0].name }}</span>
+        </div>
+        <div class="product__attribute">
+            <span class="product__label">{{ i18n('insertion_price') }}</span>
+            <span class="product__value">{{ item.price }} {{ i18n('unit_price') }} {% if (item.tax) %} ({{ i18n('vat_identificationable') }}){% endif %}</span>
+        </div>
+        <div class="product__attribute">
+            <span class="product__label">{{ i18n('seller') }}</span>
+            <span class="product__value">{{ item.user.detail.nickName }}</span>
+        </div>
+    </div>
+{% endblock attributes__top %}
 
 {% block attributes__bottom %}
     <div class="product__actions">

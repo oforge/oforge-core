@@ -1,15 +1,14 @@
-{# endblock blog_posts__post_entry #}
-
 {% block post_entry %}
     <div class="blog-posts-entry" title="{{ blogPost.headerTitle }}">
         <div class="blog-posts-entry-content" data-masonry-content="true">
             <div class="blog-post-entry-image">
-                {% if blogPost.headerImage %}
-                    <img src="{{ media(blogPost.headerImage, 600) }}"/>
+                {% set blogPostHeaderImage = (blogPost.headerImagePreview ?: (blogPost.headerImageLarge ?: null))%}
+                {% if blogPostHeaderImage %}
+                    <img src="{{ media(blogPostHeaderImage, 800) }}"/>
                 {% endif %}
             </div>
             <div class="blog-post-entry-text">
-                {% if blog.category is not defined %}
+                {% if blog.category is defined %}
                     <div class="blog-post-entry-category">{{ blogPost.category.name }}</div>
                 {% endif %}
                 <div class="blog-post-entry-created">{{ blogPost.created|formatDatetime }}</div>

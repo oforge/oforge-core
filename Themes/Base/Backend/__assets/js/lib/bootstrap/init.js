@@ -1,6 +1,4 @@
 (function ($) {
-    $('.oforge-color-picker').colorpicker();
-
     var $dataTimePickerConfiguration = {
         toolbarPlacement: 'top',
         widgetPositioning: {horizontal: 'left', vertical: 'auto'},

@@ -4,6 +4,7 @@ namespace Insertion;
 
 use Doctrine\DBAL\Cache\QueryCacheProfile;
 use FrontendUserManagement\Services\AccountNavigationService;
+use Insertion\Services\InsertionProfileProgressService;
 use Insertion\Commands\ReminderCommand;
 use Insertion\Commands\SearchBookmarkCommand;
 use Insertion\Controller\Backend\BackendAttributeController;
@@ -48,7 +49,9 @@ use Insertion\Services\InsertionUpdaterService;
 use Insertion\Services\InsertionUrlService;
 use Insertion\Services\InsertionZipService;
 use Insertion\Twig\InsertionExtensions;
+use Oforge\Engine\Modules\AdminBackend\Core\Enums\DashboardWidgetPosition;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
+use Oforge\Engine\Modules\AdminBackend\Core\Services\DashboardWidgetsService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\TemplateEngine\Core\Services\TemplateRenderService;
 
@@ -82,6 +85,7 @@ class Bootstrap extends AbstractBootstrap {
             'insertion.profile'         => InsertionProfileService::class,
             'insertion.slider'          => InsertionSliderService::class,
             'insertion.zip'             => InsertionZipService::class,
+            'insertion.profile.progress'=> InsertionProfileProgressService::class,
         ];
 
         $this->models = [
@@ -133,15 +137,54 @@ class Bootstrap extends AbstractBootstrap {
             Oforge()->App()->add(new InsertionDetailMiddleware());
         }
 
-
         $urlService = Oforge()->Services()->get("url");
 
         $seoUrlService = new InsertionUrlService($urlService);
         Oforge()->Services()->set("url", $seoUrlService);
 
-
         //what is this??
         new QueryCacheProfile(0, "asd");
+    }
+
+    public function install() {
+        /** @var DashboardWidgetsService $dashboardWidgetsService */
+        $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
+        $dashboardWidgetsService->install([
+            'name'     => 'plugin_insertion_count',
+            'template' => 'InsertionCount',
+            'handler'  => Widgets\InsertionCountWidget::class,
+            'label'    => [
+                'en' => 'Number of insertions',
+                'de' => 'Anzahl Inserate',
+            ],
+            'position' => DashboardWidgetPosition::TOP,
+            'cssClass' => 'bg-purple',
+        ]);
+        $dashboardWidgetsService->install([
+            'name'     => 'plugin_insertion_moderation',
+            'template' => 'InsertionModeration',
+            'handler'  => Widgets\InsertionModerationWidget::class,
+            'label'    => [
+                'en' => 'Insertions require moderation',
+                'de' => 'Inserate benötigen Moderation',
+            ],
+            'position' => DashboardWidgetPosition::TOP,
+            'cssClass' => 'bg-maroon',
+        ]);
+    }
+
+    public function uninstall() {
+        /** @var DashboardWidgetsService $dashboardWidgetsService */
+        $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
+        $dashboardWidgetsService->uninstall('plugin_insertion_count');
+        $dashboardWidgetsService->uninstall('plugin_insertion_moderation');
+    }
+
+    public function deactivate() {
+        /** @var DashboardWidgetsService $dashboardWidgetsService */
+        $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
+        $dashboardWidgetsService->deactivate('plugin_insertion_count');
+        $dashboardWidgetsService->deactivate('plugin_insertion_moderation');
     }
 
     public function activate() {
@@ -190,7 +233,6 @@ class Bootstrap extends AbstractBootstrap {
 
         /** @var AccountNavigationService $accountNavigationService */
         $accountNavigationService = Oforge()->Services()->get('frontend.user.management.account.navigation');
-
         $accountNavigationService->put([
             'name'     => 'frontend_account_insertions',
             'order'    => 1,
@@ -198,7 +240,6 @@ class Bootstrap extends AbstractBootstrap {
             'path'     => 'frontend_account_insertions',
             'position' => 'sidebar',
         ]);
-
         $accountNavigationService->put([
             'name'     => 'frontend_account_insertions_profile',
             'order'    => 2,
@@ -206,7 +247,6 @@ class Bootstrap extends AbstractBootstrap {
             'path'     => 'frontend_account_insertions_profile',
             'position' => 'sidebar',
         ]);
-
         $accountNavigationService->put([
             'name'     => 'frontend_account_insertions_bookmarks',
             'order'    => 3,
@@ -214,7 +254,6 @@ class Bootstrap extends AbstractBootstrap {
             'path'     => 'frontend_account_insertions_bookmarks',
             'position' => 'sidebar',
         ]);
-
         $accountNavigationService->put([
             'name'     => 'frontend_account_insertions_searchBookmarks',
             'order'    => 4,
@@ -222,6 +261,10 @@ class Bootstrap extends AbstractBootstrap {
             'path'     => 'frontend_account_insertions_searchBookmarks',
             'position' => 'sidebar',
         ]);
+        /** @var DashboardWidgetsService $dashboardWidgetsService */
+        $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
+        $dashboardWidgetsService->activate('plugin_insertion_count');
+        $dashboardWidgetsService->activate('plugin_insertion_moderation');
     }
 
 }

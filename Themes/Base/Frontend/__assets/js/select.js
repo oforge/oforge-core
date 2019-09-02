@@ -13,6 +13,7 @@
                     selectItemIsChecked: 'select__item--is-checked',
                     selectValue: 'select__value',
                     subSelect: 'form__control--is-sub',
+                    selectRequireInput: 'select__require-input',
                     selectValues: []
                 };
                 var selectors = {
@@ -21,12 +22,16 @@
                     selectText: '.' + classNames.selectText,
                     selectItem: '.' + classNames.selectItem,
                     selectItemIsChecked: '.' + classNames.selectItemIsChecked,
+                    selectRequireInput: '.' + classNames.selectRequireInput,
                     selectValue: '.' + classNames.selectValue,
                     subSelect: '[data-sub-select]',
-                    selectFilter: '[data-select-filter]'
+                    selectFilter: '[data-select-filter]',
+                    noSubSelect: '.select:not(.select--is-sub)[data-sortable]'
                 };
                 var selectList = document.querySelectorAll(self.selector);
                 var currentOpenSelectFilterInputSelector = selectors.selectIsOpen + ' ' + selectors.selectFilter;
+                var noSubSelectListSortable = document.querySelectorAll(selectors.noSubSelect);
+                var selectedItems = [];
 
                 function addHiddenInputToCheckItem(check) {
                     var input = document.createElement('input');
@@ -35,6 +40,7 @@
                     input.setAttribute('data-select-input', check.dataset.valueId);
                     input.setAttribute('value', check.dataset.valueId);
                     check.closest(self.selector).appendChild(input);
+                    updateRequiredInput(check);
                 }
 
                 function filterSelect() {
@@ -85,6 +91,20 @@
                             parentSelect.querySelector(selectors.selectText).innerHTML = parentSelect.checkedNames.join(', ');
                         } else {
                             unselectItem(selectItem);
+                        }
+                        updateRequiredInput(selectItem);
+                    }
+                }
+
+                //Fills out an invisible form element to make the select element required
+                function updateRequiredInput(selectItem) {
+                    let parentSelect = selectItem.closest(self.selector);
+                    let requiredInput = parentSelect.querySelector(selectors.selectRequireInput);
+                    if (requiredInput) {
+                        if (parentSelect.checkedValues.length > 0) {
+                            requiredInput.value = ' ';
+                        } else {
+                            requiredInput.value = '';
                         }
                     }
                 }
@@ -179,7 +199,6 @@
 
                     if (evt.target.matches(selectors.selectText)) {
                         var select = evt.target.closest(self.selector);
-
                         var parentSelectList = document.querySelectorAll('.select:not(.select--is-sub)');
 
                         if (select) {
@@ -193,6 +212,7 @@
                             select.classList.toggle(classNames.selectIsOpen);
                         }
                     } else if (evt.target.matches(selectors.selectItem)) {
+                        console.log(evt.target);
                         toggleOneItem(evt.target);
                     } else if (evt.target.matches(selectors.selectValue)) {
                         var selectItem = evt.target.closest(selectors.selectItem);
@@ -200,8 +220,30 @@
                     }
                 }
 
+                function sortValues(list, items) {
+                    var arr = [];
+                    items.forEach(function(item) {
+                        arr.push(item);
+                    });
+                    arr.sort(function(a, b) {
+                        return a.innerHTML == b.innerHTML ? 0 : (a.innerHTML > b.innerHTML ? 1 : -1);
+                    });
+                    arr.forEach(function(item) {
+                        list.appendChild(item);
+                    });
+                }
+
+                if (noSubSelectListSortable.length > 0) {
+                    noSubSelectListSortable.forEach(function (select) {
+                        var list = select.querySelector('.simplebar-content');
+                        var items = select.querySelectorAll('.select__item:not(.select__item--sub)');
+                        sortValues(list, items);
+                    });
+                }
+
                 if (selectList.length > 0) {
                     selectList.forEach(function (select) {
+
                         select.checkedValues = [];
                         select.checkedNames = [];
 
@@ -215,6 +257,7 @@
                             select.checkedValues.push(checkedElement.dataset.valueId);
                             select.checkedNames.push(checkedName);
                             addHiddenInputToCheckItem(checkedElement);
+                            updateRequiredInput(checkedElement);
                         });
                         if (select.checkedNames.length > 0) {
                             selectText.innerHTML = select.checkedNames.join(', ');
@@ -227,13 +270,12 @@
                         fireClick(evt);
                     }
                 });
+
+                //Fixes a weird scrolling bug
+                document.getElementsByClassName('simplebar-content-wrapper').forEach(function (simplebar) {
+                    simplebar.setAttribute('tabindex', -1);
+                });
             }
         })
     }
 })();
-
-
-
-
-
-

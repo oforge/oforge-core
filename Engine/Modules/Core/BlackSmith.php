@@ -9,6 +9,7 @@ use Oforge\Engine\Modules\Core\Forge\ForgeSettings;
 use Oforge\Engine\Modules\Core\Forge\ForgeSlimApp;
 use Oforge\Engine\Modules\Core\Manager\Bootstrap\BootstrapManager;
 use Oforge\Engine\Modules\Core\Manager\Cache\CacheManager;
+use Oforge\Engine\Modules\Core\Manager\Events\EventManager;
 use Oforge\Engine\Modules\Core\Manager\Logger\LoggerManager;
 use Oforge\Engine\Modules\Core\Manager\Modules\ModuleManager;
 use Oforge\Engine\Modules\Core\Manager\Plugins\PluginManager;
@@ -49,6 +50,8 @@ class BlackSmith {
      * @var ForgeDatabase $db
      */
     private $db = null;
+    /** @var EventManager $eventManager */
+    private $eventManager = null;
     /**
      * App
      *
@@ -154,13 +157,13 @@ class BlackSmith {
         return $this->bootstrapManager;
     }
 
-    /** @return ForgeDatabase */
-    public function DB() : ForgeDatabase {
-        if (!isset($this->db)) {
+    /** @return CacheManager */
+    public function Cache() : CacheManager {
+        if (!isset($this->cacheManager)) {
             throw new RuntimeException(self::INIT_RUNTIME_EXCEPTION_MESSAGE);
         }
 
-        return $this->db;
+        return $this->cacheManager;
     }
 
     /** @return Container */
@@ -172,6 +175,24 @@ class BlackSmith {
         return $this->container;
     }
 
+    /** @return ForgeDatabase */
+    public function DB() : ForgeDatabase {
+        if (!isset($this->db)) {
+            throw new RuntimeException(self::INIT_RUNTIME_EXCEPTION_MESSAGE);
+        }
+
+        return $this->db;
+    }
+
+    /** @return EventManager */
+    public function Events() : EventManager {
+        if (!isset($this->eventManager)) {
+            throw new RuntimeException(self::INIT_RUNTIME_EXCEPTION_MESSAGE);
+        }
+
+        return $this->eventManager;
+    }
+
     /** @return LoggerManager */
     public function Logger() : LoggerManager {
         if (!isset($this->logger)) {
@@ -179,15 +200,6 @@ class BlackSmith {
         }
 
         return $this->logger;
-    }
-
-    /** @return CacheManager */
-    public function Cache() : CacheManager {
-        if (!isset($this->cacheManager)) {
-            throw new RuntimeException(self::INIT_RUNTIME_EXCEPTION_MESSAGE);
-        }
-
-        return $this->cacheManager;
     }
 
     /** @return ModuleManager */
@@ -274,6 +286,8 @@ class BlackSmith {
         // Connect to database
         $this->db = ForgeDatabase::getInstance();
         $this->db->init($this->settings->get('db'));
+
+        $this->eventManager = EventManager::getInstance();
 
         // Start service manager
         $this->services = ServiceManager::getInstance();

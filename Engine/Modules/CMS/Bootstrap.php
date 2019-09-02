@@ -42,6 +42,7 @@ use Oforge\Engine\Modules\CMS\Services\ElementsControllerService;
 use Oforge\Engine\Modules\CMS\Services\ElementTreeService;
 use Oforge\Engine\Modules\CMS\Services\NamedContentService;
 use Oforge\Engine\Modules\CMS\Services\PageBuilderService;
+use Oforge\Engine\Modules\CMS\Services\PageDuplicateService;
 use Oforge\Engine\Modules\CMS\Services\PagesControllerService;
 use Oforge\Engine\Modules\CMS\Services\PageService;
 use Oforge\Engine\Modules\CMS\Services\PageTreeService;
@@ -87,6 +88,7 @@ class Bootstrap extends AbstractBootstrap {
 
             'dummy.page.generator'          => DummyPageGenerator::class,
             'page.path'                     => PageService::class,
+            'page.duplicate'                => PageDuplicateService::class,
             'pages.controller.service'      => PagesControllerService::class,
             'page.tree.service'             => PageTreeService::class,
             'page.builder.service'          => PageBuilderService::class,

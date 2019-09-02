@@ -139,9 +139,6 @@ class ProfileController extends SecureBackendController {
         $postData = $request->getParsedBody();
         if ($request->isPost() && isset($postData['data'])) {
             $data = $postData['data'];
-            if (isset($data['order']) && $data['order'] === '') {
-                $data['order'] = 0;
-            }
             try {
                 /**  @var DashboardWidgetsService $dashboardWidgetsService */
                 $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');

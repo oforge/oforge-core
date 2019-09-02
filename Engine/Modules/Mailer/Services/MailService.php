@@ -3,7 +3,6 @@
 namespace Oforge\Engine\Modules\Mailer\Services;
 
 use FrontendUserManagement\Models\User;
-use FrontendUserManagement\Services\FrontendUserService;
 use FrontendUserManagement\Services\UserService;
 use Insertion\Models\Insertion;
 use Insertion\Services\InsertionService;
@@ -11,10 +10,9 @@ use InvalidArgumentException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Forge\ForgeSlimApp;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
-use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Oforge\Engine\Modules\Core\Helper\Statics;
-use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\Media\Twig\MediaExtension;
 use Oforge\Engine\Modules\TemplateEngine\Core\Twig\CustomTwig;
@@ -23,12 +21,10 @@ use Oforge\Engine\Modules\TemplateEngine\Extensions\Twig\AccessExtension;
 use Oforge\Engine\Modules\TemplateEngine\Extensions\Twig\SlimExtension;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
-use Pimple\Tests\Fixtures\Service;
-use Slim\Router;
 use Twig_Error_Loader;
 use Twig_Error_Runtime;
 use Twig_Error_Syntax;
-use \Doctrine\ORM\ORMException;
+use Doctrine\ORM\ORMException;
 
 class MailService {
 
@@ -65,20 +61,20 @@ class MailService {
                 $configService = Oforge()->Services()->get("config");
                 $exceptions    = $configService->get("mailer_exceptions");
 
-                /** @var  $mail */
+                /** @var PHPMailer $mail */
                 $mail          = new PHPMailer($exceptions);
 
                 /**  Mailer Settings */
                 $mail->isSMTP();
-                $mail->setFrom($this->getSenderAddress($options['from']));
+                $mail->setFrom($this->getSenderAddress($options['from']),$configService->get('mailer_from_name'));
                 $mail->Host       = $configService->get("mailer_host");
                 $mail->Username   = $configService->get("mailer_smtp_username");
                 $mail->Port       = $configService->get("mailer_port");
                 $mail->SMTPAuth   = $configService->get("mailer_smtp_auth");
                 $mail->Password   = $configService->get("mailer_smtp_password");
                 $mail->SMTPSecure = $configService->get("mailer_smtp_secure");
-                $mail->Encoding = 'base64';
-                $mail->CharSet = 'UTF-8';
+                $mail->Encoding   = 'base64';
+                $mail->CharSet    = 'UTF-8';
 
                 /** Add Recipients ({to,cc,bcc}Addresses) */
                 foreach ($options["to"] as $key => $value) {
@@ -127,6 +123,7 @@ class MailService {
                 $mail->send();
 
                 Oforge()->Logger()->get("mailer")->info("Message has been sent",[$options, $templateData]);
+
                 return true;
 
             } catch (Exception $e) {
@@ -134,6 +131,7 @@ class MailService {
                 return false;
             }
         }
+        return false;
     }
 
     /**
@@ -193,7 +191,7 @@ class MailService {
             $templatePath = Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . Statics::DEFAULT_THEME . DIRECTORY_SEPARATOR . 'MailTemplates';
         }
 
-        $twig = new CustomTwig($templatePath);
+        $twig = new CustomTwig($templatePath, ['cache' =>  ROOT_PATH . DIRECTORY_SEPARATOR . Statics::CACHE_DIR . '/mailer']);
         $twig->addExtension(new \Oforge\Engine\Modules\CMS\Twig\AccessExtension());
         $twig->addExtension(new AccessExtension());
         $twig->addExtension(new MediaExtension());
@@ -300,7 +298,7 @@ class MailService {
         ];
         $templateData = [
             'insertionId'      => $insertionId,
-            // 'insertionTitle'   => $insertion->getContent(),
+            // TODO: add title 'insertionTitle'   => $insertion->getContent(),
             'receiver_name'    => $user->getDetail()->getNickName(),
             'sender_mail'      => $this->getSenderAddress('no_reply'),
         ];
@@ -310,7 +308,7 @@ class MailService {
     /**
      * @param $userId
      * @param $newResultsCount
-     * @param $searchQuery
+     * @param $searchLink
      *
      * @return bool
      * @throws ConfigElementNotFoundException
@@ -321,7 +319,7 @@ class MailService {
      * @throws Twig_Error_Runtime
      * @throws Twig_Error_Syntax
      */
-    public function sendNewSearchResultsInfoMail($userId, $newResultsCount, $searchQuery) {
+    public function sendNewSearchResultsInfoMail($userId, $newResultsCount, $searchLink) {
         /** @var  UserService $userService */
         $userService   = Oforge()->Services()->get('frontend.user.management.user');
 
@@ -337,7 +335,7 @@ class MailService {
         ];
         $templateData = [
             'resultCount' => $newResultsCount,
-            //TODO: 'resultLink'  => ...
+            'searchLink'  => $searchLink,
             'sender_mail' => $this->getSenderAddress('no_reply'),
             'receiver_name' => $user->getDetail()->getNickName(),
 
@@ -349,14 +347,18 @@ class MailService {
      * @param User $user
      * @param Insertion $insertion
      *
+     * @throws ConfigElementNotFoundException
+     * @throws ConfigOptionKeyNotExistException
      * @throws ServiceNotFoundException
+     * @throws Twig_Error_Loader
+     * @throws Twig_Error_Runtime
+     * @throws Twig_Error_Syntax
      */
     public function sendInsertionCreateInfoMail(User $user, Insertion $insertion) {
-        $mailService   = Oforge()->Services()->get("mail");
         $userMail      = $user->getEmail();
         $mailerOptions = [
             'to'       => [$userMail => $userMail],
-            'from'     => 'info',
+            'from'     => 'no_reply',
             'subject'  => I18N::translate('mailer_subject_insertion_created','Insertion was created'),
             'template' => 'InsertionCreated.twig',
         ];
@@ -364,16 +366,9 @@ class MailService {
             'insertionId'    => $insertion->getId(),
             'insertionTitle' => $insertion->getContent()[0]->getTitle(),
             'receiver_name'  => $user->getDetail()->getNickName(),
-            'sender_mail'    => $mailService->getSenderAddress('no_reply'),
+            'sender_mail'    => $this->getSenderAddress('no_reply'),
         ];
-        $mailService->send($mailerOptions, $templateData);
+        $this->send($mailerOptions, $templateData);
     }
 
-    public function batchSend() {
-        //
-    }
-
-    public function getSystemMails() {
-        //
-    }
 }

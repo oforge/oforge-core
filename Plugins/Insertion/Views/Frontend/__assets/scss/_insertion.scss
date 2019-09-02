@@ -10,7 +10,7 @@
 .insertions__banner {
     margin-top: 1.2rem;
     margin-bottom: -1.2rem;
-    background-color: $color-secondary;
+    background-color: $color-secondary-light;
     border-bottom: 2px solid rgb(60, 60, 59);
     h2 {
         color: $color-light;
@@ -20,6 +20,34 @@
 .action-frontend_account_insertions {
     .panel--account {
         //background: none;
+    }
+    .user--insertions {
+        position: relative;
+        padding-bottom: 3rem;
+
+        .product__attribute {
+            width: 100%;
+            .product__value {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+
+        #insertion-container {
+            margin-bottom: 2rem;
+        }
+
+        .button.button--primary {
+            position: absolute;
+            right: 0;
+        }
+
+        .panel--product {
+            .button.button--primary {
+                position: static;
+            }
+        }
     }
 }
 

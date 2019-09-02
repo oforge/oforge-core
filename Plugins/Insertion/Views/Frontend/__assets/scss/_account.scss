@@ -11,7 +11,7 @@
         background-size: cover;
         background-position: center top;
         background-repeat: no-repeat;
-        background-image: url('/Themes/AllYourHorses/Frontend/__assets/img/title_image_placeholder.svg');
+        background-image: url('../img/title_image_placeholder.svg');
 
     }
 
@@ -94,11 +94,20 @@
             display: none;
         }
 
+
+
         .upload__label {
             display: flex;
             &:hover {
                 cursor: pointer;
             }
+        }
+    }
+
+    .img-profile:hover, .img-background:hover {
+        .icon {
+            transform: scale(1.2);
+            opacity: 1;
         }
     }
 
@@ -166,3 +175,15 @@
         }
     }
 }
+.action-frontend_account_insertions_searchbookmarks {
+    .panel--account h1 {
+        font-size: 25px;
+        padding-left: 20px;
+        @media screen and(min-width: $screen-medium) {
+            padding-left: 0;
+            font-style: inherit;
+        }
+    }
+}
+
+

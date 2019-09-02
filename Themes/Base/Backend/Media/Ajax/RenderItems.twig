@@ -15,8 +15,10 @@
             {% endif %}
             {% for i in -2..2 %}
                 {% if media.query.page + i >= 1 and media.query.page + i <= media.query.pageCount %}
-                    <li {% if i == 0 %}class="active"{% endif %}><a href="#" class="pagination-item"
-                                                                    data-page="{{ media.query.page + i }}">{{ media.query.page + i }}</a>
+                    <li {% if i == 0 %}class="active"{% endif %}>
+                        <a href="#" class="pagination-item" data-page="{{ media.query.page + i }}">
+                            {{ media.query.page + i }}
+                        </a>
                     </li>
                 {% endif %}
             {% endfor %}

@@ -13,10 +13,10 @@ use Insertion\Models\InsertionTypeGroup;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Annotation\Cache\Cache;
 use Oforge\Engine\Modules\Core\Annotation\Cache\CacheInvalidation;
+use PHPUnit\Framework\Constraint\Attribute;
 
 /**
  * Class InsertionTypeService
- * @Cache(enabled=true)
  *
  * @package Insertion\Services
  */
@@ -27,7 +27,7 @@ class InsertionTypeService extends AbstractDatabaseAccess {
             'insertionTypeAttribute' => InsertionTypeAttribute::class,
             'group'                  => InsertionTypeGroup::class,
             'attributeKey'           => AttributeKey::class,
-            'value'           => AttributeValue::class,
+            'value'                  => AttributeValue::class,
         ]);
     }
 
@@ -103,7 +103,7 @@ class InsertionTypeService extends AbstractDatabaseAccess {
 
         $result = [];
         foreach ($attributes as $attribute) {
-            $result[$attribute->getId()] = $attribute->toArray();
+            $result[$attribute->getId()]   = $attribute->toArray();
             $result[$attribute->getName()] = $attribute->toArray();
         }
 
@@ -237,8 +237,8 @@ class InsertionTypeService extends AbstractDatabaseAccess {
      * @param $id
      * @CacheInvalidation(slot="insertion")
      *
+     * @return AttributeKey|null
      * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function getAttribute($id) {
         $attr = $this->repository('attributeKey')->find($id);
@@ -246,18 +246,17 @@ class InsertionTypeService extends AbstractDatabaseAccess {
         return $attr != null ? $attr->toArray(3) : null;
     }
 
-
     /**
      * @param $id
      * @CacheInvalidation(slot="insertion")
      *
+     * @return AttributeValue|null
      * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function getValue($id) {
-        $attr = $this->repository('value')->find($id);
+        $value = $this->repository('value')->find($id);
 
-        return $attr != null ? $attr->toArray(2) : null;
+        return $value != null ? $value->toArray(2) : null;
     }
 
     /**

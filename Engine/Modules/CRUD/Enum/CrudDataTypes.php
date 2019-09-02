@@ -19,6 +19,11 @@ class CrudDataTypes {
      */
     public const COLOR = 'color';
     /**
+     * Renderer: Preview of colors with optional text listeners<br/>
+     * Editor: Not editable.<br/>
+     */
+    public const COLORS_PREVIEW = 'colorsPreview';
+    /**
      * Renderer: Custom render twig template path.<br/>
      * Editor: Custom editor twig template path.<br/>
      */

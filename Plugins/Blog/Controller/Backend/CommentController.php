@@ -27,7 +27,13 @@ class CommentController extends BaseCrudController {
         [
             'name'  => 'created',
             'type'  => CrudDataTypes::STRING,
-            'label' => ['key' => 'plugin_blog_property_comment_created', 'default' => 'Created'],
+            'label' => [
+                'key'     => 'plugin_blog_property_comment_created',
+                'default' => [
+                    'en' => 'Created',
+                    'de' => 'Erstellt',
+                ],
+            ],
             'crud'  => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
@@ -39,7 +45,13 @@ class CommentController extends BaseCrudController {
         [
             'name'  => 'updated',
             'type'  => CrudDataTypes::STRING,
-            'label' => ['key' => 'plugin_blog_property_comment_updated', 'default' => 'Updated'],
+            'label' => [
+                'key'     => 'plugin_blog_property_comment_updated',
+                'default' => [
+                    'en' => 'Updated',
+                    'de' => 'Aktualisiert',
+                ],
+            ],
             'crud'  => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
@@ -51,7 +63,13 @@ class CommentController extends BaseCrudController {
         [
             'name'  => 'post',
             'type'  => CrudDataTypes::SELECT,
-            'label' => ['key' => 'plugin_blog_property_comment_post', 'default' => 'Post'],
+            'label' => [
+                'key'     => 'plugin_blog_property_comment_post',
+                'default' => [
+                    'en' => 'Post',
+                    'de' => 'Beitrag',
+                ],
+            ],
             'crud'  => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
@@ -64,7 +82,13 @@ class CommentController extends BaseCrudController {
         [
             'name'  => 'author',
             'type'  => CrudDataTypes::SELECT,
-            'label' => ['key' => 'plugin_blog_property_comment_author', 'default' => 'Author'],
+            'label' => [
+                'key'     => 'plugin_blog_property_comment_author',
+                'default' => [
+                    'en' => 'Author',
+                    'de' => 'Autor',
+                ],
+            ],
             'crud'  => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
@@ -75,10 +99,16 @@ class CommentController extends BaseCrudController {
             'list'  => 'getSelectCommentUsers',
         ],# author
         [
-            'name'  => 'content',
-            'type'  => CrudDataTypes::CUSTOM,
-            'label' => ['key' => 'plugin_blog_property_comment_content', 'default' => 'Content'],
-            'crud'  => [
+            'name'     => 'content',
+            'type'     => CrudDataTypes::CUSTOM,
+            'label'    => [
+                'key'     => 'plugin_blog_property_comment_content',
+                'default' => [
+                    'en' => 'Content',
+                    'de' => 'Inhalt',
+                ],
+            ],
+            'crud'     => [
                 'index'  => 'readonly',
                 'view'   => 'off',
                 'create' => 'off',
@@ -92,7 +122,13 @@ class CommentController extends BaseCrudController {
         [
             'name'  => 'content',
             'type'  => CrudDataTypes::STRING,
-            'label' => ['key' => 'plugin_blog_property_comment_content', 'default' => 'Content'],
+            'label' => [
+                'key'     => 'plugin_blog_property_comment_content',
+                'default' => [
+                    'en' => 'Content',
+                    'de' => 'Inhalt',
+                ],
+            ],
             'crud'  => [
                 'index'  => 'off',
                 'view'   => 'readonly',
@@ -104,7 +140,13 @@ class CommentController extends BaseCrudController {
         [
             'name'     => 'notice',
             'type'     => CrudDataTypes::CUSTOM,
-            'label'    => ['key' => 'plugin_blog_delete_notice', 'default' => 'Notice'],
+            'label'    => [
+                'key'     => 'plugin_blog_delete_notice',
+                'default' => [
+                    'en' => 'Notice',
+                    'de' => 'Anmerkung',
+                ],
+            ],
             'crud'     => [
                 'index'  => 'off',
                 'view'   => 'off',
@@ -122,17 +164,35 @@ class CommentController extends BaseCrudController {
     protected $indexFilter = [
         'post'    => [
             'type'  => CrudFilterType::SELECT,
-            'label' => ['key' => 'plugin_blog_filter_comment_post', 'default' => 'Select post'],
+            'label' => [
+                'key'     => 'plugin_blog_filter_comment_post',
+                'default' => [
+                    'en' => 'Select post',
+                    'de' => 'Beitrag auswählen',
+                ],
+            ],
             'list'  => 'getSelectPosts',
         ],
         'author'  => [
             'type'  => CrudFilterType::SELECT,
-            'label' => ['key' => 'plugin_blog_filter_comment_author', 'default' => 'Select author'],
+            'label' => [
+                'key'     => 'plugin_blog_filter_comment_author',
+                'default' => [
+                    'en' => 'Select author',
+                    'de' => 'Autor auswählen',
+                ],
+            ],
             'list'  => 'getSelectCommentUsers',
         ],
         'content' => [
             'type'    => CrudFilterType::TEXT,
-            'label'   => ['key' => 'plugin_blog_filter_comment_content', 'default' => 'Search in content'],
+            'label'   => [
+                'key'     => 'plugin_blog_filter_comment_content',
+                'default' => [
+                    'en' => 'Search in content',
+                    'de' => 'Im Inhalt suchen',
+                ],
+            ],
             'compare' => CrudFilterComparator::LIKE,
         ],
     ];
