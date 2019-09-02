@@ -62,7 +62,7 @@ use any input types that you want to be autofilled
                 function autofill(autofillInput, autofillData) {
                     let currentFocus;
 
-                    autofillInput.addEventListener("input", function (event) {
+                    autofillInput.addEventListener(selectors.input, function (event) {
                         let value = this.value;
                         let suggestionsFound = false;
                         let minCharacters = this.dataset.autofillMinCharacters !== null ? this.dataset.autofillMinCharacters : defaults.minCharacters;
@@ -90,7 +90,7 @@ use any input types that you want to be autofilled
                                 //emphasize matching characters
                                 autofillOption.innerHTML = emphasizeValueInOption(autofillData[i], value);
 
-                                //insert a input field that will hold the current array item's value
+                                //insert an input field that will hold the current array item's value
                                 autofillOption.innerHTML += "<input type='hidden' value='" + autofillData[i] + "'>";
                                 autofillOption.addEventListener("click", function (event) {
                                     autofillInput.value = this.getElementsByTagName(selectors.input)[0].value;
@@ -100,7 +100,7 @@ use any input types that you want to be autofilled
                             }
                         }
 
-                        if(suggestionsFound) {
+                        if (suggestionsFound) {
                             this.parentNode.appendChild(autofillItems);
                         } else if (autofillInput.dataset.autofillPlaceholder) {
                             //append a placeholder if defined
@@ -134,7 +134,6 @@ use any input types that you want to be autofilled
                             }
                         }
                     });
-
 
                     function addActive(element) {
                         //adds 'active' class to selected element and removes it from all remaining elements
