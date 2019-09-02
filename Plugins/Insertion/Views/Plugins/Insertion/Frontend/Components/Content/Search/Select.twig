@@ -3,7 +3,8 @@
     <div class="select {{ isSubAttribute ? 'select--is-sub' : '' }}"
          data-select-type="{{ attribute.filterType }}"
          data-placeholder="{{ i18n(attribute.name) }}"
-         data-select="{{ attribute.name }}[]">
+         data-select="{{ attribute.name }}[]"
+         {{ attribute.sortable ? 'data-sortable=""' : '' }}>
         <p class="select__text" data-select-text=""></p>
         {% if not isSubAttribute %}
         <input type="text"

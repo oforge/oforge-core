@@ -110,6 +110,30 @@ if (typeof Oforge !== 'undefined') {
         }
     });
 
+    // if it exists, it should have the register function, so register your module
+    // the properties "name", "selector" and "init" are required
+    // name: the name of your module
+    // selector: the html selector to search for. If it is found, the module can be initialized
+    // init: the function to initialize the module. This function gets called automatically from the module-loader.js
+    // when the DOMContentLoaded event is triggered.
+    Oforge.register({
+        name: 'form-with-loading-icon',
+        selector: '.form--submit--loading',
+        init: function () {
+            var self = this;
+            var $target = $(self.selector);
+
+            $target.on("submit", function (event) {
+                $submitButton = $target.find(".form__input--submit--loading")
+                if ($submitButton.length > 0) {
+                    $submitButton.attr("disabled", "disabled");
+                    $submitButton.children(".default-text").hide();
+                    $submitButton.children(".submit-text").show();
+                }
+            });
+        }
+    });
+
 
 }
 

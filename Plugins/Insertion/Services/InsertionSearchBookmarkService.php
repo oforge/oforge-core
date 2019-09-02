@@ -27,12 +27,27 @@ class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
         ]);
     }
 
+    /**
+     * @param InsertionType $insertionType
+     * @param User $user
+     * @param array $params
+     *
+     * @return bool
+     * @throws ORMException
+     */
     public function add(InsertionType $insertionType, User $user, array $params) : bool {
         $bookmark = InsertionUserSearchBookmark::create(["insertionType" => $insertionType, "user" => $user, "params" => $params]);
         $this->entityManager()->create($bookmark);
         return true;
     }
 
+    /**
+     * @param int $id
+     *
+     * @return bool
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     public function remove(int $id) : bool {
         $bookmark = $this->repository("search")->find($id);
         if (isset($bookmark)) {
@@ -44,6 +59,12 @@ class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
         return false;
     }
 
+    /**
+     * @param User|null $user
+     *
+     * @return array
+     * @throws ORMException
+     */
     public function list(User $user = null) : array {
         if (is_null($user)) {
             return $bookmarks = $this->repository("search")->findAll();
@@ -52,6 +73,12 @@ class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
         }
     }
 
+    /**
+     * @param $bookmark
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     public function setLastChecked($bookmark) {
         if (is_a($bookmark, InsertionUserSearchBookmark::class)) {
             $bookmark->setChecked();
@@ -64,6 +91,14 @@ class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
         $this->entityManager()->flush();
     }
 
+    /**
+     * @param InsertionType $insertionType
+     * @param User $user
+     * @param array $params
+     *
+     * @return bool
+     * @throws ORMException
+     */
     public function toggle(InsertionType $insertionType, User $user, array $params) {
         $bookmarks = $this->repository("search")->findBy(["insertionType" => $insertionType, "user" => $user]);
 
@@ -87,6 +122,14 @@ class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
         return $this->add($insertionType, $user, $params);
     }
 
+    /**
+     * @param int $insertionType
+     * @param int $user
+     * @param array $params
+     *
+     * @return bool
+     * @throws ORMException
+     */
     public function hasBookmark(int $insertionType, int $user, array $params) : bool {
         $bookmarks = $this->repository("search")->findBy(["insertionType" => $insertionType, "user" => $user]);
 
@@ -105,6 +148,12 @@ class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
         return false;
     }
 
+    /**
+     * @param $array1
+     * @param $array2
+     *
+     * @return array
+     */
     private function array_diff_assoc_recursive($array1, $array2) {
         $difference = [];
         foreach ($array1 as $key => $value) {
@@ -125,12 +174,28 @@ class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
         return $difference;
     }
 
-    public function getUrl($id, ?array $params) {
+    /**
+     * @param $typeId
+     * @param array|null $params
+     *
+     * @return string
+     */
+    public function getUrl($typeId, ?array $params) {
         /** @var Router $router */
         $router = Oforge()->App()->getContainer()->get('router');
-        $url    = $router->pathFor('insertions_listing', ["type" => $id], isset($params) ? $params : [] );
+        $url    = $router->pathFor('insertions_listing', ["type" => $typeId], isset($params) ? $params : [] );
 
         return $url;
+    }
+
+    /**
+     * @param $searchBookmarkId
+     *
+     * @return object|null
+     * @throws ORMException
+     */
+    public function get($searchBookmarkId) {
+        return $this->repository('search')->find($searchBookmarkId);
     }
 
 }

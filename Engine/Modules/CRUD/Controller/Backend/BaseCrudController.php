@@ -80,6 +80,11 @@ class BaseCrudController extends SecureBackendController {
      *                  'custom'    => '...',   // If type = custom. Twig path for include.
      *                  'width'     => 200,     // if type = image (Optional)
      *              ],
+     *              'colorsPreview' => [
+     *                  'text'          => 'textPropertyName',              // Name of listening text property (Optional)
+     *                  'background'    => 'backgroundColorPropertyName',   // Name of listening background color property (Optional)
+     *                  'foreground'    => 'foregroundColorPropertyName',   // Name of listening foreground color property (Optional)
+     *              ],
      *          ], ...
      *      ];
      *

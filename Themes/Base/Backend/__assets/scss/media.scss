@@ -14,7 +14,7 @@
             background: rgba(0, 0, 0, 0.2);
             top: 0;
             left: 0;
-            z-index: 2;
+            z-index: 9;
             display: none;
 
             i {
@@ -26,6 +26,29 @@
                 margin-left: -42px;
                 margin-top: -50px;
                 color: #708f2b;
+            }
+        }
+
+        .drop-overlay {
+            display: none;
+            position: absolute;
+            bottom: 0.5rem;
+            right: .5rem;
+            background: rgba(255, 255, 255, 0.7);
+            top: .5rem;
+            left: .5rem;
+            z-index: 9;
+            border: 2px dashed gray;
+            pointer-events: none;
+
+            > span {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 200%;
+                font-weight: bold;
+                white-space: nowrap;
             }
         }
     }

@@ -2,6 +2,8 @@
 
 {% block title %}{% set title = search.query.count ~ ' ' ~ i18n('insertion_' ~ type.name ~ '_count') %}{{ title|length > 35 ? title|slice(0, 35) : title }}{{ i18n('title_separator', {en: ' | ', de: ' | '}) }}{{ config('system_project_name') }}{% endblock title %}
 
+{% block description %}{% if type.description is not empty %}{{ i18n(type.description) }}{% endif %}{% endblock description %}
+
 {% block content %}
     {% include '@parent/Frontend/Components/MobileNavBar.twig' with { back_link : 'insertions_listAll', nav_title: i18n('insertion', 'FrontendInsertion')} %}
     <div class="content content--insertion">

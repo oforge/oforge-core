@@ -1,0 +1,26 @@
+{% block pedigree_inputs %}
+    {% set inputName = 'insertion[' ~ attribute.id ~ ']' %}
+    {% set inputValue = data['insertion'][attribute.id] %}
+
+    {% if search %}
+        {% set inputName = 'pedigree[' ~  attribute.name ~ ']' %}
+        {% set inputValue = search.filter[inputName] %}
+    {% endif %}
+
+    <h3 class="title">{{ i18n('search_' ~ attribute.name) }}</h3>
+    {% set inputName = 'search_ancestor' %}
+    <div class="form__control form__control--pedigree">
+        <label for="{{ attribute.name ~ '[' ~ inputName ~ '_1]' }}" class="form__label">{{ i18n(inputName ~ '_1') }}</label>
+        <input type="text"
+               name="{{ attribute.name ~ '[' ~ inputName ~ '_1]' }}"
+               value="{{ search.filter[attribute.name][inputName ~ '_1']}}"
+               placeholder="{{ i18n(inputName ~ '_1') }}" class="form__input"/>
+    </div>
+    <div class="form__control form__control--pedigree">
+        <label for="{{ attribute.name ~ '[' ~ inputName ~ '_2]' }}" class="form__label">{{ i18n(inputName ~ '_2') }}</label>
+        <input type="text"
+               name="{{ attribute.name ~ '[' ~ inputName ~ '_2]' }}"
+               value="{{ search.filter[attribute.name][inputName ~ '_2']}}"
+               placeholder="{{ i18n(inputName ~ '_2') }}" class="form__input"/>
+    </div>
+{% endblock pedigree_inputs %}

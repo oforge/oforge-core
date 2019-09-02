@@ -106,12 +106,13 @@ class DashboardWidgetsService extends AbstractDatabaseAccess {
     /**
      * Get widgets for current user.
      *
+     * @param string|int|null $userID
      * @param bool $forDashboard
      *
      * @return array
      * @throws Exception
      */
-    public function getUserWidgets(bool $forDashboard = true) : array {
+    public function getUserWidgets($userID, bool $forDashboard = true) : array {
         $result = [];
         try {
             /** @var DashboardWidget[] $widgets */
@@ -123,10 +124,9 @@ class DashboardWidgetsService extends AbstractDatabaseAccess {
 
                 $result[$widget->getId()] = $widgetData;
             }
-            $user = Oforge()->View()->get('user');
-            if (isset($user['id'])) {
+            if ($userID !== null) {
                 /** @var UserDashboardWidget[] $widgets */
-                $widgets = $this->repository('user')->findBy(['userId' => $user['id']]);
+                $widgets = $this->repository('user')->findBy(['userId' => $userID]);
                 foreach ($widgets as $widget) {
                     $widgetData = &$result[$widget->getWidgetId()];
                     $tmp        = $widget->toArray();
@@ -164,6 +164,9 @@ class DashboardWidgetsService extends AbstractDatabaseAccess {
         return $result;
     }
 
+    /**
+     * @param array $data
+     */
     public function saveUserSettings(array $data) {
         $user = Oforge()->View()->get('user');
         if (!isset($user['id'])) {
@@ -172,6 +175,9 @@ class DashboardWidgetsService extends AbstractDatabaseAccess {
         foreach ($data as $widgetID => $userSettings) {
             $dataKeys       = ['active', 'order', 'position', 'cssClass'];
             $userSettings   = ArrayHelper::filterByKeys($dataKeys, $userSettings);
+            if (isset($userSettings['order']) && $userSettings['order'] === '') {
+                $userSettings['order'] = 0;
+            }
             $baseWidgetData = [
                 'widgetId' => $widgetID,
                 'userId'   => $user['id'],
@@ -189,8 +195,6 @@ class DashboardWidgetsService extends AbstractDatabaseAccess {
                     $tmp                 = $dashboardWidget->toArray();
                     $tmp                 = ArrayHelper::filterByKeys($dataKeys, $tmp);
                     $userDashboardWidget = UserDashboardWidget::create($baseWidgetData);
-                    // Oforge()->Logger()->get()->debug('x2', $tmp);
-                    // Oforge()->Logger()->get()->debug('x3', $userSettings);
                     $userDashboardWidget->fromArray($tmp);
                     $userDashboardWidget->fromArray($userSettings);
                     $this->entityManager()->create($userDashboardWidget);
