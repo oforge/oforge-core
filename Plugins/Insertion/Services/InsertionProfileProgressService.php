@@ -2,29 +2,36 @@
 
 namespace Insertion\Services;
 
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use \Doctrine\ORM\ORMException;
 
-class InsertionProfileProgressService  {
+class InsertionProfileProgressService {
+
     /**
+     * Checks for each value in $keys if the data entry for the user is set.
+     * Returns the percentage of progress
+     *
      * @param $userId
+     * @param array $keys
      *
      * @return int
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
+     * @throws ORMException
+     * @throws ServiceNotFoundException
      */
-    public function calculateProgress($userId) {
+    public function calculateProgress($userId, $keys) {
+        $count = 0;
+
         /** @var InsertionProfileService $insertionProfileService */
         $insertionProfileService = Oforge()->Services()->get('insertion.profile');
-        $userProfile = $insertionProfileService->get($userId)->toArray(4);
-        $keys = [
-            'background',
-            'description',
-            'imprintName',
-            'imprintStreet',
-            'imprintZipCity',
-            'imprintPhone',
-            'imprintEMail',
-            ];
-        $count = 0;
-        return $userProfile;
+        $userProfile             = $insertionProfileService->get($userId)->toArray(0);
+
+        foreach ($keys as $key) {
+            if(!empty($userProfile[$key])) {
+                $count++;
+            }
+        }
+        o_print([$keys, $userProfile, $count]);
+
+        return 100 * $count / sizeof($keys);
     }
 }

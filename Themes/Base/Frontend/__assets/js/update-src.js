@@ -12,7 +12,8 @@
             name: 'update',
             selector: '[data-update]',
             init: function () {
-                const triggers = document.querySelectorAll('[data-update]');
+                var self = this;
+                const triggers = document.querySelectorAll(self.selector);
                 triggers.forEach(function (trigger) {
                     trigger.addEventListener('change', function () {
                         let items = document.getElementsByClassName(trigger.dataset.update);
