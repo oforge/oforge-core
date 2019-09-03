@@ -2,6 +2,9 @@
 {% block content %}
     <div class="content content--insertions">
         <div class="panel panel--insertions">
+            <a class="button button--primary back__button"
+               href="{{ url('frontend_account_insertions') }}">{{ i18n('back') }}
+            </a>
             <form class="form form--insertion"
                   action="{{ url('insertions_edit', { id : data.id}) }}"
                   method="post"
@@ -22,6 +25,11 @@
                     </div>
                 </div>
             </form>
+            <div class="panel" style="padding-left: 0">
+                <a class="button button--primary back__button"
+                   href="{{ url('frontend_account_insertions') }}">{{ i18n('back') }}
+                </a>
+            </div>
         </div>
     </div>
 
