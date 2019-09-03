@@ -46,10 +46,11 @@
                 <div class="map__address"><span class="adress__zip">{{ contact.zip }}</span> <span
                         class="adress__city">{{ contact.city }}</span></div>
                 <div class="map__view">
-                    <iframe class="external--content content--iframe"
-                            src="https://maps.google.com/maps?ie=UTF8&amp;Iwloc=near&amp;output=embed&amp;t=m&amp;z=15&amp;q={{ contact.zip }}+{{ contact.city }}"
-                            width="100%" height="100%" frameborder="0">
-                    </iframe>
+                    <div class="external--content content--iframe"
+                         data-src="https://maps.google.com/maps?ie=UTF8&amp;Iwloc=near&amp;output=embed&amp;t=m&amp;z=15&amp;q={{ contact.zip }}+{{ contact.city }}"
+                         data-width="100%" data-height="100%" data-frameborder="0"
+                         data-iframe="true">
+                    </div>
                 </div>
             </div>
         {% endblock sidebar__panel_map %}
