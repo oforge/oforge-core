@@ -8,7 +8,7 @@ use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
 use Oforge\Engine\Modules\CRUD\Enum\CrudFilterComparator;
 use Oforge\Engine\Modules\CRUD\Enum\CrudFilterType;
-use Oforge\Engine\Modules\CRUD\Enum\CrudGroubByOrder;
+use Oforge\Engine\Modules\CRUD\Enum\CrudGroupByOrder;
 
 /**
  * Class CategoryController
@@ -185,7 +185,7 @@ class BackendFrontendUserManagementController extends BaseCrudController {
     ];
     /** @var array $indexOrderBy */
     protected $indexOrderBy = [
-        'id' => CrudGroubByOrder::ASC,
+        'id' => CrudGroupByOrder::ASC,
     ];
 
     public function __construct() {

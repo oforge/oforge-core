@@ -1,4 +1,4 @@
-(function () {
+;(function () {
     if (typeof Oforge !== 'undefined') {
         Oforge.register({
             name: 'selectTypes',
@@ -41,10 +41,6 @@
                     input.setAttribute('value', check.dataset.valueId);
                     check.closest(self.selector).appendChild(input);
                     updateRequiredInput(check);
-                }
-
-                function filterSelect() {
-
                 }
 
                 function hasSubSelect(selectItem) {

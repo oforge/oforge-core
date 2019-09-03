@@ -4,6 +4,7 @@ namespace Insertion;
 
 use Doctrine\DBAL\Cache\QueryCacheProfile;
 use FrontendUserManagement\Services\AccountNavigationService;
+use Insertion\Controller\Backend\BackendInsertionFeedbackController;
 use Insertion\Services\InsertionProfileProgressService;
 use Insertion\Commands\ReminderCommand;
 use Insertion\Commands\SearchBookmarkCommand;
@@ -68,6 +69,7 @@ class Bootstrap extends AbstractBootstrap {
             BackendInsertionController::class,
             BackendInsertionTypeController::class,
             BackendInsertionTypeGroupController::class,
+            BackendInsertionFeedbackController::class,
         ];
 
         $this->services = [
@@ -171,6 +173,17 @@ class Bootstrap extends AbstractBootstrap {
             'position' => DashboardWidgetPosition::TOP,
             'cssClass' => 'bg-maroon',
         ]);
+        $dashboardWidgetsService->install([
+           'name'      => 'plugin_insertion_feedback',
+           'template'  => 'InsertionFeedback',
+           'handler'   => Widgets\InsertionFeedbackWidget::class,
+           'label'     => [
+               'en' => 'Insertion Feedback',
+               'de' => 'Inserate Feedback',
+               ],
+               'position' => DashboardWidgetPosition::TOP,
+               'cssClass' => 'bg-green',
+        ]);
     }
 
     public function uninstall() {
@@ -178,6 +191,7 @@ class Bootstrap extends AbstractBootstrap {
         $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
         $dashboardWidgetsService->uninstall('plugin_insertion_count');
         $dashboardWidgetsService->uninstall('plugin_insertion_moderation');
+        $dashboardWidgetsService->uninstall('plugin_insertion_feedback');
     }
 
     public function deactivate() {
@@ -185,6 +199,8 @@ class Bootstrap extends AbstractBootstrap {
         $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
         $dashboardWidgetsService->deactivate('plugin_insertion_count');
         $dashboardWidgetsService->deactivate('plugin_insertion_moderation');
+        $dashboardWidgetsService->deactivate('plugin_insertion_feedback');
+
     }
 
     public function activate() {
@@ -265,6 +281,7 @@ class Bootstrap extends AbstractBootstrap {
         $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
         $dashboardWidgetsService->activate('plugin_insertion_count');
         $dashboardWidgetsService->activate('plugin_insertion_moderation');
+        $dashboardWidgetsService->activate('plugin_insertion_feedback');
     }
 
 }
