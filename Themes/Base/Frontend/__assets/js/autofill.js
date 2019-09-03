@@ -78,6 +78,7 @@ use any input types that you want to be autofilled
                         //create a div element that will contain the autofill items
                         let autofillItems = document.createElement("div");
                         autofillItems.setAttribute("id", this.id + classNames.autofillItems);
+                        autofillItems.setAttribute("data-simplebar", "");
                         autofillItems.classList.add(classNames.autofillItems);
 
                         for (let i = 0; i < autofillData.length; i++) {
