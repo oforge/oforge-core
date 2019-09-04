@@ -255,6 +255,16 @@
  * Account Bookmarks
  */
 #bookmarks-container {
+    .product__actions {
+        display: none;
+    }
+    .product__actions__mobile {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        padding: $size-large;
+        order: 3;
+    }
     .is--deleted {
 
         .open, .product__title-link, .product__image {
@@ -272,6 +282,12 @@
     }
 
     @media (min-width: $screen-medium) {
+        .product__actions__mobile {
+            display: block;
+            width: 45%;
+            border-top: 1px solid $color-secondary;
+        }
+
         .product__actions {
             .open {
                 margin-right: 0;
@@ -296,6 +312,15 @@
             justify-content: flex-start;
             margin-left: $size-large;
             width: calc(100% - 30rem - #{$size-large});
+        }
+    }
+    #bookmarks-container {
+        .product__actions__mobile {
+            display: none;
+        }
+
+        .product__actions {
+            display: flex;
         }
     }
 }
