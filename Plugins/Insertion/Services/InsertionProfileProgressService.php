@@ -9,7 +9,7 @@ class InsertionProfileProgressService {
 
     /**
      * Checks for each value in $keys if the data entry for the user is set.
-     * Returns the percentage of progress
+     * Returns the percentage of set data entries
      *
      * @param $userId
      * @param array $keys
@@ -30,7 +30,6 @@ class InsertionProfileProgressService {
                 $count++;
             }
         }
-        o_print([$keys, $userProfile, $count]);
 
         return 100 * $count / sizeof($keys);
     }
