@@ -292,10 +292,10 @@ class BlackSmith {
         // Start service manager
         $this->services = ServiceManager::getInstance();
 
+        // Start slim application
+        $this->forgeSlimApp = ForgeSlimApp::getInstance();
+        $this->container    = $this->App()->getContainer();
         if ($start) {
-            // Start slim application
-            $this->forgeSlimApp = ForgeSlimApp::getInstance();
-            $this->container    = $this->App()->getContainer();
 
             $this->forgeSlimApp->sessionStart();
 
@@ -329,8 +329,8 @@ class BlackSmith {
 
         // Let the Blacksmith forge all the things \°/
 
+        $this->slimRouteManagager->init();
         if ($start) {
-            $this->slimRouteManagager->init();
             $this->forgeSlimApp->run();
         }
     }

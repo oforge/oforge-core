@@ -9,6 +9,7 @@ use Insertion\Services\InsertionSearchBookmarkService;
 use Monolog\Logger;
 use Oforge\Engine\Modules\Console\Abstracts\AbstractCommand;
 use Oforge\Engine\Modules\Console\Lib\Input;
+use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Oforge\Engine\Modules\Mailer\Services\MailService;
 use Oforge\Engine\Modules\Core\Exceptions;
 
@@ -28,10 +29,12 @@ class SearchBookmarkCommand extends AbstractCommand {
      * @param Input $input
      * @param Logger $output
      *
-     * @throws \Doctrine\ORM\ORMException
      * @throws Exceptions\ConfigElementNotFoundException
      * @throws Exceptions\ConfigOptionKeyNotExistException
      * @throws Exceptions\ServiceNotFoundException
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
@@ -51,13 +54,13 @@ class SearchBookmarkCommand extends AbstractCommand {
             /** @var User $user */
             $user                 = $bookmark->getUser();
             $params               = $bookmark->getParams();
-            $params['after_date'] = $bookmark->getLastChecked();
+            $insertionList        = $insertionListService->search($bookmark->getInsertionType()->getId(), $params);
 
-            $insertionList      = $insertionListService->search($bookmark->getInsertionType()->getId(), $params);
+            $baseUrl = ''; // TODO: get BaseUrl   $baseUrl    = Oforge()->Settings()->get("host_url");
+            $searchLink = $baseUrl . $searchBookmarkService->getUrl($bookmark->getInsertionType()->getId(), $params);
 
             $newInsertionsCount = sizeof($insertionList["query"]["items"]);
             if ($newInsertionsCount > 0) {
-                $searchLink = $searchBookmarkService->getUrl($bookmark->getInsertionType(), $params);
                 $mailService->sendNewSearchResultsInfoMail($user->getId(), $newInsertionsCount, $searchLink);
             }
 
