@@ -124,8 +124,8 @@
                     var valueIndex = null;
 
                     if (parentSelect) {
-                        input = parentSelect.querySelector('[data-select-input][value="' + selectItem.dataset.valueId + '"]');
-                        valueIndex = parentSelect.checkedValues.indexOf(selectItem.dataset.valueId);
+                       input = parentSelect.querySelector('[data-select-input][value="' + selectItem.dataset.valueId + '"]');
+                       valueIndex = parentSelect.checkedValues.indexOf(selectItem.dataset.valueId);
                     }
 
                     selectItem.classList.remove(classNames.selectItemIsChecked);
