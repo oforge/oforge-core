@@ -22,7 +22,7 @@
                     </div>
 
                     <div class="box-body">
-                        <form method="POST">
+                        <form method="POST" data-attribute-edit>
                             <div>
                                 <div class="form-group">
                                     <label for="attributeName">{{ i18n("attribute_name", "Attribute Name") }}</label>
@@ -34,7 +34,7 @@
                                         for="attributeType">{{ i18n("attribute_input_type", "Attribute Input Type") }}</label>
                                     <select name="type" id="attributeType" class="form-control select2">
                                         {% for type in content.types %}
-                                            <option value="{{ type }}"
+                                            <option value="{{ type }}" {% if type == 'multi' %}data-additional-input="max-options"{% endif %}
                                                 {% if select_compare(content.attribute.type, type) %}selected{% endif %}>
                                                 {{ type }}
                                             </option>
