@@ -26,6 +26,7 @@ if (typeof Oforge !== 'undefined') {
                     if (input.files != null) {
                         for (var i = 0; i < input.files.length; i++) {
                             var file = input.files[i];
+                            console.log(file);
 
                             uploadItemElement = createImageListItem(
                                 uploadId,

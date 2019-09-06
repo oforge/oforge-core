@@ -1,0 +1,16 @@
+{% block video_upload %}
+    <span class="form__label form__label--title">
+        {{ i18n('video_upload_title') }} <span class="limitations">{{ i18n('video_upload_limitations') }}</span>
+    </span>
+    <div class="upload upload--video">
+        <input type="file" accept="video/mp4">
+    </div>
+    <div class="upload__max-size-exceeded hidden">
+        <p class="description description--upload">{{ i18n('upload_max_size_exceeded') }}</p>
+    </div>
+
+    <div class="upload__description">
+        <div class="upload__main-icon"></div>
+        <p class="description ">{{ i18n('main_image_description') }}</p>
+    </div>
+{% endblock video_upload %}
