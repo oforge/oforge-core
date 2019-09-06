@@ -1,11 +1,12 @@
 .upload {
-
-
     &__max-size-exceeded {
         &.hidden {
             display: none;
         }
-            }
+        .description {
+            color: $error;
+        }
+    }
     &__list_max-size-exceeded {
         .upload__size {
             display: block;
@@ -14,6 +15,14 @@
             img {
                 opacity: .25;
             }
+        }
+    }
+    &__image-corrupted {
+        &.hidden {
+            display: none;
+        }
+        .description {
+            color: $error;
         }
     }
 
@@ -111,8 +120,11 @@
     }
 }
 
+.description.description--main {
+    margin-left: $size-small;
+}
 .description.description--upload {
-    margin-left: $size-large;
+    margin-left: $size-small;
 }
 
 .upload__item + .upload__item {

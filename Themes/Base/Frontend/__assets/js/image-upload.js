@@ -40,6 +40,10 @@ if (typeof Oforge !== 'undefined') {
                         console.warn('error, no image');
                         deleteListItem(uploadId);
                         checkPlaceholderItem();
+                        document.querySelector('.upload__image-corrupted').classList.remove('hidden');
+                        setTimeout(function () {
+                            document.querySelector('.upload__image-corrupted').classList.add('hidden');
+                        }, 10000);
                         return false;
                     }
 
