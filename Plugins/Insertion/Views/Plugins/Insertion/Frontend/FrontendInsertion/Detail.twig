@@ -63,7 +63,7 @@
 
             <div class="panel panel--product-description ">
                 <div class="description__head">
-                    <h3 class="panel__header has--bottom-separator">{{ i18n('insertion_detail_description_title', 'Beschreibung') }}</h3>
+                    <h3 class="panel__header has--bottom-separator">{{ i18n('insertion_detail_description_title_' ~ insertion.insertionType.name, i18n('insertion_detail_description_title')) }}</h3>
                     <div class="language-switch"></div>
                 </div>
                 <div class="description__body">
