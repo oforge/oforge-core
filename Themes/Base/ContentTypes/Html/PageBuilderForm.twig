@@ -1,0 +1,22 @@
+<div class="content-type-form-html">
+    <div class="form-group">
+        <label for="content-type-form-html-text">
+            {{ i18n('cms_html_editor', {
+                en: 'Html editor',
+                de: 'Html Editor',
+            }) }}
+        </label>
+        <textarea class="form-control" id="content-type-form-html-text" name="text">{{ data.text|default() }}</textarea>
+    </div>
+    <div>
+        <label for="content-type-form-html-text">
+            {{ i18n('cms_html_preview', {
+                en: 'Preview',
+                de: 'Vorschau',
+            }) }}
+        </label>
+        <div id="content-type-form-html-text-preview" class="form-control">
+            {{ data.text|default()|raw }}
+        </div>
+    </div>
+</div>

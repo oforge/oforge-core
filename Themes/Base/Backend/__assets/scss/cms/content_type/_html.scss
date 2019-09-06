@@ -1,0 +1,11 @@
+.content-type-form-html {
+    #content-type-form-html {
+        &-text {
+            min-height: 20rem;
+
+            &-preview {
+                min-height: 20rem;
+            }
+        }
+    }
+}
