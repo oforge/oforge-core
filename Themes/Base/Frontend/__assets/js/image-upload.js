@@ -53,6 +53,10 @@ if (typeof Oforge !== 'undefined') {
 
                             if (imageTypes.indexOf(file.type) < 0) {
                                 console.warn('no image');
+                                document.querySelector('.upload__image-corrupted').classList.remove('hidden');
+                                setTimeout(function () {
+                                    document.querySelector('.upload__image-corrupted').classList.add('hidden');
+                                }, 10000);
                                 return false;
                             }
 
