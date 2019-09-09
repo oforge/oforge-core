@@ -27,6 +27,14 @@
                                 <div class="form-group">
                                     <label>{{ i18n('File') }}</label>
                                     <input name="file" type="file" class="form-control" />
+                                    <div>
+                                        <small>
+                                            {{ i18n('module_media_replace_optional_file_upload', {
+                                                'en': 'If no file is uploaded, only the name will be overwritten.',
+                                                'de': 'Wenn keine Datei hochgeladen wird, wird nur der name überschrieben.'
+                                            }) }}
+                                        </small>
+                                    </div>
                                 </div>
                                 <a href="{{ url(meta.route.parentName) }}" class="btn btn-default">
                                     {{ i18n('backend_crud_btn_back2index', {en: 'back to overwiew', de: 'zurück zur Übersicht'}) }}
