@@ -59,7 +59,11 @@
                     <div class="product__meta">
                         <div class="product__pricing">
                             <span class="product__label">{{ i18n('price') }}</span>
-                            <span class="product__value">{{ item.price|number_format(0, ',', '.') }} €</span>
+                            {% if item.priceType is same as("on_demand")  %}
+                                <span class="product__value">{{ i18n('price_on_demand') }}</span>
+                            {% else %}
+                                <span class="product__value">{% if item.priceType is same as("negotiable") %}{{ i18n('price_negotiable') }}{% endif %} {{ item.price|number_format(0, ',', '.') }} €</span>
+                            {% endif %}
                         </div>
                     </div>
                 {% endblock product__meta %}
