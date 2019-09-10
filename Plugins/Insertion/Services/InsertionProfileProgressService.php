@@ -23,7 +23,14 @@ class InsertionProfileProgressService {
 
         /** @var InsertionProfileService $insertionProfileService */
         $insertionProfileService = Oforge()->Services()->get('insertion.profile');
-        $userProfile             = $insertionProfileService->get($userId)->toArray(0);
+
+        $userProfile             = $insertionProfileService->get($userId);
+
+        if(is_null($userProfile)) {
+            return 0;
+        }
+
+        $userProfile = $userProfile->toArray(0);
 
         foreach ($keys as $key) {
             if(!empty($userProfile[$key])) {
