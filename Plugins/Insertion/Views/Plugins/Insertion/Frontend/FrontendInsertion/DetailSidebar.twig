@@ -24,21 +24,28 @@
         {% set contact = insertion.contact %}
 
         {% block sidebar__panel_contact %}
-            {% if contact.visible == 'true' %}
-                <div class="panel panel--contact contact">
-                    <div class="contact__name">{{ contact.name }}</div>
-                    <div class="contact__address"><span class="adress__zip">{{ contact.zip }}</span> <span
-                            class="adress__city">{{ contact.city }}</span></div>
-                    {% if contact.phone is not empty %}
-                        <div
-                            class="contact__phone">{{ i18n ('insertion_detail_telephone', 'Tel.:') }} {{ contact.phone }}</div>
-                    {% endif %}
-                    <a href="{{ url("insertions_contact", {id: insertion.id}) }}"
-                       class="button button--secondary">{{ i18n('insertion_detail_contact_advertiser', 'Anbieter Kontaktieren') }}</a>
-                    <a href="{{ url('frontend_account_insertions_toggleBookmark', {insertionId: insertion.id }) }}"
-                       class="button button--secondary">{% if hasBookmark(insertion.id) %} {{ i18n('insertion_detail_contact_remove_from_wishlist', 'Aus meinem Stall entfernen') }} {% else %}{{ i18n('insertion_detail_contact_add_to_wishlist', 'In meinen Stall stellen') }}{% endif %}</a>
-                </div>
+
+            <div class="panel panel--contact contact">
+                {#
+                    contact.visible means: only visible for logged in users!!!!!!!!!
+                    yes someone who we don't mention (ms) decided to troll us all.
+                #}
+            {% if contact.visible == false or user_logged_in %}
+                <div class="contact__name">{{ contact.name }}</div>
+                <div class="contact__address"><span class="adress__zip">{{ contact.zip }}</span> <span
+                        class="adress__city">{{ contact.city }}</span></div>
+                {% if contact.phone is not empty %}
+                    <div
+                        class="contact__phone">{{ i18n ('insertion_detail_telephone', 'Tel.:') }} {{ contact.phone }}</div>
+                {% endif %}
+            {% else %}
+                <div class="contact__name">{{ i18n('insertion_login_to_see_contact_data', 'Bitte melde Dich an, um die Kontaktdaten einsehen zu können') }}</div>
             {% endif %}
+                <a href="{{ url("insertions_contact", {id: insertion.id}) }}"
+                   class="button button--secondary">{{ i18n('insertion_detail_contact_advertiser', 'Anbieter Kontaktieren') }}</a>
+                <a href="{{ url('frontend_account_insertions_toggleBookmark', {insertionId: insertion.id }) }}"
+                   class="button button--secondary">{% if hasBookmark(insertion.id) %} {{ i18n('insertion_detail_contact_remove_from_wishlist', 'Aus meinem Stall entfernen') }} {% else %}{{ i18n('insertion_detail_contact_add_to_wishlist', 'In meinen Stall stellen') }}{% endif %}</a>
+            </div>
         {% endblock sidebar__panel_contact %}
 
         {% block sidebar__panel_map %}
