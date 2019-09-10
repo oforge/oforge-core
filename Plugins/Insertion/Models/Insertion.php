@@ -83,15 +83,15 @@ class Insertion extends AbstractModel
 
     /**
      * @var float
-     * @ORM\Column(name="min_price", type="float" nullable=true)
+     * @ORM\Column(name="min_price", type="float", nullable=true)
      */
-    private $minPrice;
+    private $minPrice = null;
 
     /**
      * @var string
      * @ORM\Column(name="price_type", type="string")
      */
-    private $priceType;
+    private $priceType = "fixed";
 
     /**
      * @var boolean
@@ -377,10 +377,10 @@ class Insertion extends AbstractModel
     }
 
     /**
-     * @param float $minPricehttp://localhost:1337/#
+     * @param float|null $minPrice
      * @return Insertion
      */
-    public function setMinPrice(float $minPrice): Insertion
+    public function setMinPrice(?float $minPrice): Insertion
     {
         $this->minPrice = $minPrice;
 
