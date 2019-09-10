@@ -9,6 +9,12 @@ if (typeof Oforge !== 'undefined') {
         init: function () {
 
             var self = this;
+            var imageTypes = [
+                'image/jpg',
+                'image/jpeg',
+                'image/gif',
+                'image/png',
+            ];
             checkPlaceholderItem();
 
             function createFileInput(uploadImageList) {
@@ -23,9 +29,39 @@ if (typeof Oforge !== 'undefined') {
                 input.setAttribute('style', 'display: none;');
 
                 input.onchange = function (evt) {
+                    var i = null,
+                        file = null,
+                        image = null;
+
+                    image = new Image();
+
+                    function setError() {
+                        this.removeEventListener('error', setError);
+                        console.warn('error, no image');
+                        deleteListItem(uploadId);
+                        checkPlaceholderItem();
+                        document.querySelector('.upload__image-corrupted').classList.remove('hidden');
+                        setTimeout(function () {
+                            document.querySelector('.upload__image-corrupted').classList.add('hidden');
+                        }, 10000);
+                        return false;
+                    }
+
                     if (input.files != null) {
-                        for (var i = 0; i < input.files.length; i++) {
-                            var file = input.files[i];
+                        for (i = 0; i < input.files.length; i++) {
+                            file = input.files[i];
+
+                            if (imageTypes.indexOf(file.type) < 0) {
+                                console.warn('no image');
+                                document.querySelector('.upload__image-corrupted').classList.remove('hidden');
+                                setTimeout(function () {
+                                    document.querySelector('.upload__image-corrupted').classList.add('hidden');
+                                }, 10000);
+                                return false;
+                            }
+
+                            image.addEventListener('error', setError);
+                            image.src = window.URL.createObjectURL(file);
 
                             uploadItemElement = createImageListItem(
                                 uploadId,
@@ -33,9 +69,7 @@ if (typeof Oforge !== 'undefined') {
                                 uploadImageList,
                                 input.files[i].size
                             );
-
                         }
-
                         uploadItemElement.appendChild(input);
                     }
                     checkPlaceholderItem();
