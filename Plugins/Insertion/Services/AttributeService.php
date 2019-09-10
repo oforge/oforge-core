@@ -6,14 +6,18 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Insertion\Models\AttributeKey;
 use Insertion\Models\AttributeValue;
+use Insertion\Models\InsertionAttributeValue;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 
-class AttributeService extends AbstractDatabaseAccess {
+class AttributeService extends AbstractDatabaseAccess
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct([
-            'attributeKey'   => AttributeKey::class,
+            'attributeKey' => AttributeKey::class,
             'attributeValue' => AttributeValue::class,
+            'insertionAttributeValue' => InsertionAttributeValue::class
         ]);
     }
 
@@ -26,7 +30,8 @@ class AttributeService extends AbstractDatabaseAccess {
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function createNewAttributeKey($name, $inputType, $filterType) {
+    public function createNewAttributeKey($name, $inputType, $filterType)
+    {
         $attributeKey = new AttributeKey();
         $attributeKey->setName($name);
         $attributeKey->setType($inputType);
@@ -45,7 +50,8 @@ class AttributeService extends AbstractDatabaseAccess {
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function createNewAttributeValue($value, $attributeKey, $subAttributeKey = null) {
+    public function createNewAttributeValue($value, $attributeKey, $subAttributeKey = null)
+    {
         $attributeValue = new AttributeValue();
         $attributeValue->setAttributeKey($attributeKey);
         $attributeValue->setValue($value);
@@ -60,7 +66,8 @@ class AttributeService extends AbstractDatabaseAccess {
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function createNewAttributeValues($values) {
+    public function createNewAttributeValues($values)
+    {
         foreach ($values as $value) {
             $this->createNewAttributeValue($value['value'], $value['$subAttributeKey']);
         }
@@ -76,7 +83,8 @@ class AttributeService extends AbstractDatabaseAccess {
      * @return AttributeKey
      * @throws ORMException
      */
-    public function updateAttributeKey($id, $name, $type, $filterType, $sortable = false) {
+    public function updateAttributeKey($id, $name, $type, $filterType, $sortable = false)
+    {
         /** @var AttributeKey $attributeKey */
         $attributeKey = $this->repository('attributeKey')->find($id);
         $attributeKey->setName($name);
@@ -97,7 +105,8 @@ class AttributeService extends AbstractDatabaseAccess {
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function updateAttributeValue($id, $value, $subAttributeKey = null) {
+    public function updateAttributeValue($id, $value, $subAttributeKey = null)
+    {
         /** @var AttributeValue $attributeValue */
         $attributeValue = $this->repository('attributeValue')->find($id);
         $attributeValue->setValue($value);
@@ -112,7 +121,8 @@ class AttributeService extends AbstractDatabaseAccess {
      * @return AttributeKey|null
      * @throws ORMException
      */
-    public function getAttribute($id) {
+    public function getAttribute($id)
+    {
         /** @var AttributeKey $attributeKey */
         $attributeKey = $this->repository('attributeKey')->find($id);
 
@@ -126,16 +136,18 @@ class AttributeService extends AbstractDatabaseAccess {
      * @return array
      * @throws ORMException
      */
-    public function getAttributeList($limit = null, $offset = null) {
+    public function getAttributeList($limit = null, $offset = null)
+    {
         return $this->repository('attributeKey')->findBy([], null, $limit, $offset);
     }
 
     /**
      * @throws ORMException
      */
-    public function getAttributeCount() {
+    public function getAttributeCount()
+    {
         $queryBuilder = $this->entityManager()->createQueryBuilder();
-        $result       = $queryBuilder->select($queryBuilder->expr()->count('a.id'))->from(AttributeKey::class, 'a');
+        $result = $queryBuilder->select($queryBuilder->expr()->count('a.id'))->from(AttributeKey::class, 'a');
 
         return $result->getQuery()->getSingleScalarResult();
     }
@@ -146,7 +158,8 @@ class AttributeService extends AbstractDatabaseAccess {
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function deleteAttributeKey($id) {
+    public function deleteAttributeKey($id)
+    {
         $attributeKey = $this->repository('attributeKey')->find($id);
         $this->entityManager()->remove($attributeKey);
         $this->repository('attributeKey')->clear();
@@ -158,8 +171,31 @@ class AttributeService extends AbstractDatabaseAccess {
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function deleteAttributeValue($id) {
+    public function deleteAttributeValue($id)
+    {
         $attributeValue = $this->repository('attributeValue')->find($id);
         $this->entityManager()->remove($attributeValue);
+    }
+
+    /**
+     * @param array $attributeKeys
+     * @return array $attributeValues
+     * @throws ORMException
+     */
+    public function getAllAttributeValues($attributeKeys)
+    {
+        $attributeValues = [];
+        //Find all attribute containing the given attribute keys and push their value
+        foreach ($attributeKeys as $attributeKey) {
+            /** @var InsertionAttributeValue $attribute */
+            foreach ($this->repository('insertionAttributeValue')->findBy(['attributeKey' => $attributeKey]) as $attribute) {
+                /** @var string $attributeValue */
+                $attributeValue = $attribute->getValue();
+                if ($attributeValue !== null ? $attributeValue != "" : false) {
+                    array_push($attributeValues, $attributeValue);
+                }
+            }
+        }
+        return array_unique($attributeValues);
     }
 }

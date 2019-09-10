@@ -1,0 +1,15 @@
+<div class="inner">
+    <h3>{{ data.count|default(0) }}</h3>
+    <p>
+        {{ i18n('backend_dashboard_widget_plugin_feedback_count', {
+            en: 'Insertion Feedback',
+            de: 'Inserate Feedback'
+        }) }}
+    </p>
+</div>
+<div class="icon">
+    <i class="ion ion-icecream"></i>
+</div>
+<a href="{{ url('backend_insertions_feedback') }}" class="small-box-footer">
+    {{ i18n('more_info') }} <i class="fa fa-arrow-circle-right"></i>
+</a>
