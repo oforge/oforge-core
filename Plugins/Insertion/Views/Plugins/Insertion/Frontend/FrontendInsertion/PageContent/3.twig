@@ -52,7 +52,7 @@
                            placeholder="{{ i18n('phone') }}">
                 </div>
                 <div class="form__control columns">
-                    <h3 class="form__sub-title">{{ i18n('address') }}</h3>
+                    <h3 class="form__sub-title">{{ i18n('address') }}<span class="required">*</span></h3>
                     <div class="column column--one-third">
                         <input type="text"
                                name="contact_zip"
@@ -96,8 +96,36 @@
         </div>
         <div class="form-controls">
             <div class="attribute-group">
-                <label for="price"
-                       class="title title--attribute-group">{{ i18n('price_' ~ type.name, i18n('price')) }}</label>
+
+                <label for="price-type">{{ i18n("price-type") }}</label>
+                <select name="price-type" id="price-type">
+                    <option value="fixed">{{ i18n('price_fixed') }}</option>
+                    <option value="negotiable">{{ i18n('price_negotiable') }}</option>
+                    <option value="on_demand">{{ i18n('price_on_demand') }}</option>
+                </select>
+
+                <label for="price-min"
+                       class="title title--attribute-group">{{ i18n('price_' ~ type.name, i18n('price')) }}<span class="required">*</span></label>
+                <div class="form__control">
+                    <label for="price-min"
+                           class="form__input form__input--inside-label">
+                        <input type="number"
+                               name="price-min"
+                               id="price-min"
+                               min="0"
+                               max="2000000"
+                               value="{{ data['price_min'] }}"
+                               class="form__input"
+                               placeholder="{{ i18n('from') }}"
+                               required />
+                        {% if i18nExists('unit_price') %}
+                            <span class="input__unit">
+                        {{ i18n('unit_price') }}
+                    </span>
+                        {% endif %}
+                    </label>
+                </div>
+
                 <div class="form__control">
                     <label for="price"
                            class="form__input form__input--inside-label">
@@ -108,6 +136,7 @@
                                max="2000000"
                                value="{{ data['price'] }}"
                                class="form__input"
+                               placeholder="{{ i18n('to') }}"
                                required />
                         {% if i18nExists('unit_price') %}
                             <span class="input__unit">
