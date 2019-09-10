@@ -8,7 +8,7 @@ use Oforge\Engine\Modules\Core\Models\Store\KeyValue;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
 use Oforge\Engine\Modules\CRUD\Enum\CrudFilterType;
-use Oforge\Engine\Modules\CRUD\Enum\CrudGroubByOrder;
+use Oforge\Engine\Modules\CRUD\Enum\CrudGroupByOrder;
 
 /**
  * Class KeyValueStoreController
@@ -79,7 +79,7 @@ class KeyValueStoreController extends BaseCrudController {
     ];
     /** @var array $indexOrderBy */
     protected $indexOrderBy = [
-        'name' => CrudGroubByOrder::ASC,
+        'name' => CrudGroupByOrder::ASC,
     ];
     /** @var array $crudActions */
     protected $crudActions = [

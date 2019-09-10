@@ -11,16 +11,30 @@
     {% set inputName = 'search_ancestor' %}
     <div class="form__control form__control--pedigree">
         <label for="{{ attribute.name ~ '[' ~ inputName ~ '_1]' }}" class="form__label">{{ i18n(inputName ~ '_1') }}</label>
+        {% set first = true %}
         <input type="text"
                name="{{ attribute.name ~ '[' ~ inputName ~ '_1]' }}"
                value="{{ search.filter[attribute.name][inputName ~ '_1']}}"
-               placeholder="{{ i18n(inputName ~ '_1') }}" class="form__input"/>
+               placeholder="{{ i18n(inputName ~ '_1') }}" class="form__input"
+               autocomplete="off"
+               data-autofill="true"
+               data-autofill-endpoint="{{ url('insertions_getAllAttributeValues') }}"
+               data-autofill-attribute-keys="[{% for attributeValue in attribute.values %}{% if not first %}, {% endif %}{% set first = false %}{{ attributeValue.subAttributeKey }}{% endfor %}]"
+               data-autofill-min-characters="2"
+               data-autofill-placeholder="{{ i18n('no_suggestions') }}"/>
     </div>
     <div class="form__control form__control--pedigree">
         <label for="{{ attribute.name ~ '[' ~ inputName ~ '_2]' }}" class="form__label">{{ i18n(inputName ~ '_2') }}</label>
+        {% set first = true %}
         <input type="text"
                name="{{ attribute.name ~ '[' ~ inputName ~ '_2]' }}"
                value="{{ search.filter[attribute.name][inputName ~ '_2']}}"
-               placeholder="{{ i18n(inputName ~ '_2') }}" class="form__input"/>
+               placeholder="{{ i18n(inputName ~ '_2') }}" class="form__input"
+               autocomplete="off"
+               data-autofill="true"
+               data-autofill-endpoint="{{ url('insertions_getAllAttributeValues') }}"
+               data-autofill-attribute-keys="[{% for attributeValue in attribute.values %}{% if not first %}, {% endif %}{% set first = false %}{{ attributeValue.subAttributeKey }}{% endfor %}]"
+               data-autofill-min-characters="2"
+               data-autofill-placeholder="{{ i18n('no_suggestions') }}"/>
     </div>
 {% endblock pedigree_inputs %}

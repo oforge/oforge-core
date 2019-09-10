@@ -13,6 +13,7 @@ use Helpdesk\Services\HelpdeskTicketService;
 use Insertion\Models\Insertion;
 use Insertion\Models\InsertionType;
 use Insertion\Models\InsertionTypeAttribute;
+use Insertion\Services\AttributeService;
 use Insertion\Services\InsertionCreatorService;
 use Insertion\Services\InsertionFeedbackService;
 use Insertion\Services\InsertionFormsService;
@@ -793,5 +794,21 @@ class FrontendInsertionController extends SecureFrontendController {
             'insertion'   => $data,
             'reportTypes' => $reportTypes,
         ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @throws ORMException
+     * @throws ServiceNotFoundException
+     * @EndpointAction(path="/all_attribute_values")
+     */
+    public function getAllAttributeValuesAction(Request $request, Response $response) {
+        $queryParams = $request->getQueryParams();
+
+        /** @var AttributeService $attributeService */
+        $attributeService = Oforge()->Services()->get('insertion.attribute');
+        $attributeValues = $attributeService->getAllAttributeValues($queryParams['attributekeys']);
+        Oforge()->View()->assign(['json' => $attributeValues]);
     }
 }

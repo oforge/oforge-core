@@ -13,7 +13,7 @@ use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
 use Oforge\Engine\Modules\CRUD\Enum\CrudFilterComparator;
 use Oforge\Engine\Modules\CRUD\Enum\CrudFilterType;
-use Oforge\Engine\Modules\CRUD\Enum\CrudGroubByOrder;
+use Oforge\Engine\Modules\CRUD\Enum\CrudGroupByOrder;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -181,7 +181,7 @@ class UserManagementController extends BaseCrudController {
     ];
     /** @var array $indexOrderBy */
     protected $indexOrderBy = [
-        'email' => CrudGroubByOrder::ASC,
+        'email' => CrudGroupByOrder::ASC,
     ];
     /** @var int|array<string,int> $crudPermission */
     protected $crudPermissions = BackendUser::ROLE_ADMINISTRATOR;

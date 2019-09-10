@@ -115,10 +115,11 @@
                         {{ profile.imprintZipCity }}
                     </div>
                     <div class="map__view">
-                        <iframe class="external--content content--iframe"
-                                src="https://www.google.com/maps?ie=UTF8&amp;Iwloc=near&amp;output=embed&amp;t=m&amp;z=15&amp;q={% if profile.imprintStreet is not empty %}{{ profile.imprintStreet }}+{% endif %}{{ profile.imprintZipCity }}"
-                                width="100%" height="100%" frameborder="0">
-                        </iframe>
+                        <div class="external--content content--iframe"
+                             data-src="https://maps.google.com/maps?ie=UTF8&amp;Iwloc=near&amp;output=embed&amp;t=m&amp;z=15&amp;q={% if profile.imprintStreet is not empty %}{{ profile.imprintStreet }}+{% endif %}{{ profile.imprintZipCity }}"
+                             data-width="100%" data-height="100%" data-frameborder="0"
+                             data-iframe="true">
+                        </div>
                     </div>
                 </div>
             {% endif %}
