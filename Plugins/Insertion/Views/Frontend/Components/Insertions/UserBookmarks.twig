@@ -57,18 +57,18 @@
             </svg>
         </a>
     </div>
-{#    <div class="mobile__buttons">#}
-{#        <a class="button button--primary open"#}
-{#           href="{{ url("insertions_detail", {id: item.id}) }}">#}
-{#            <svg class="icon icon--light">#}
-{#                <use xlink:href="#preview"></use>#}
-{#            </svg>#}
-{#        </a>#}
-{#        <a class="button button--primary remove"#}
-{#           href="{{ url('frontend_account_insertions_removeBookmark' , {id: bookmark.id}) }}">#}
-{#            <svg class="icon icon--light">#}
-{#                <use xlink:href="#delete"></use>#}
-{#            </svg>#}
-{#        </a>#}
-{#    </div>#}
+    <div class="product__actions__mobile">
+        <a class="button button--primary open"
+           href="{{ url("insertions_detail", {id: item.id}) }}">
+            <svg class="icon icon--light">
+                <use xlink:href="#preview"></use>
+            </svg>
+        </a>
+        <a class="button button--primary remove"
+           href="{{ url('frontend_account_insertions_removeBookmark' , {id: bookmark.id}) }}">
+            <svg class="icon icon--light">
+                <use xlink:href="#delete"></use>
+            </svg>
+        </a>
+    </div>
 {% endblock attributes__bottom %}
