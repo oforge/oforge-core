@@ -11,6 +11,7 @@ namespace Oforge\Engine\Modules\CMS;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\CMS\ContentTypes\EntryList;
 use Oforge\Engine\Modules\CMS\ContentTypes\Gallery;
+use Oforge\Engine\Modules\CMS\ContentTypes\Html;
 use Oforge\Engine\Modules\CMS\ContentTypes\Image;
 use Oforge\Engine\Modules\CMS\ContentTypes\NavigationEntry;
 use Oforge\Engine\Modules\CMS\ContentTypes\RichText;
@@ -187,6 +188,17 @@ class Bootstrap extends AbstractBootstrap {
             'label'     => [
                 'en' => 'Text',
                 'de' => 'Text',
+            ],
+        ]);
+        $contentTypeManagementService->add([
+            'name'      => 'html',
+            'path'      => 'Html',
+            'icon'      => '/Themes/Base/ContentTypes/__assets/img/html.svg',
+            'group'     => $ctgBasicID,
+            'classPath' => Html::class,
+            'label'     => [
+                'en' => 'Html',
+                'de' => 'Html',
             ],
         ]);
 
