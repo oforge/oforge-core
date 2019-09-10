@@ -60,6 +60,10 @@
     position: relative;
     min-height: 3.6rem;
 
+    &.is-hidden {
+        display: none;
+    }
+
     &.form__control--half-medium {
         display: flex;
         flex-direction: row;
