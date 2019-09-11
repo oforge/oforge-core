@@ -55,19 +55,8 @@ class ImageCompressService extends AbstractDatabaseAccess {
                 }
                 //File should be compressed
                 if (extension_loaded('imagick')) {
-                    $oldMedia = $media;
-                    $media    = $this->compress($media);
-
-                    // if compression fails
-                    if ($media === null) {
-                        $media = $oldMedia;
-                    }
-
-                    if ($oldMedia !== $media) {
-                        $this->entityManager()->update($media);
-                    }
-
                     $this->scale($media, $width, $cacheUrl);
+                    $this->compress($cacheUrl);
 
                     if (file_exists(ROOT_PATH . $cacheUrl)) {
                         return $cacheUrl;
@@ -94,19 +83,17 @@ class ImageCompressService extends AbstractDatabaseAccess {
     }
 
     /**
-     * @param Media $media
-     *
-     * @return Media|null
+     * @param string $imagePath
      */
-    public function compress(Media $media) : ?Media {
+    public function compress(string $imagePath) {
         try {
             if (extension_loaded('imagick')) {
-                $imagick     = new Imagick(ROOT_PATH . $media->getPath());
-                $image_types = getimagesize(ROOT_PATH . $media->getPath());
+                $imagick     = new Imagick(ROOT_PATH . $imagePath);
+                $image_types = getimagesize(ROOT_PATH . $imagePath);
                 // Compress image
 
                 // Set image as based its own type
-                if ($image_types[2] === IMAGETYPE_JPEG || $image_types[2] === IMAGETYPE_PNG) {
+                if ($image_types[2] === IMAGETYPE_JPEG) {
                     $imagick->setImageFormat('jpeg');
                     $imagick->setImageCompressionQuality(40);
                     $imagick->setSamplingFactors(['2x2', '1x1', '1x1']);
@@ -119,28 +106,22 @@ class ImageCompressService extends AbstractDatabaseAccess {
                     $imagick->setInterlaceScheme(Imagick::INTERLACE_JPEG);
                     $imagick->setColorspace(Imagick::COLORSPACE_SRGB);
 
-                    if ($image_types[2] === IMAGETYPE_PNG) {
-                        $media->setName(str_replace('.png', '.jpeg', $media->getName()));
-                        $media->setPath(str_replace('.png', '.jpeg', $media->getPath()));
-                        $media->setType('image/jpeg');
-                    }
 
                 } elseif ($image_types[2] === IMAGETYPE_GIF) {
                     $imagick->setImageFormat('gif');
-                } else {
+                } elseif ($image_types[2] === IMAGETYPE_PNG) {
+                    $imagick->stripImage();
+                    $imagick->setImageDepth(8);
+                }
+                else {
                     // not supported file type
-                    return null;
                 }
 
-                $imagick->writeImage(ROOT_PATH . $media->getPath());
-
-                return $media;
+                $imagick->writeImage(ROOT_PATH . $imagePath);
             }
         } catch (ImagickException $e) {
             Oforge()->Logger()->get()->error('ImagickException', $e->getTrace());
         }
-
-        return null;
     }
 
     public function scale(Media $media, int $width, string $cacheUrl) {
@@ -154,22 +135,6 @@ class ImageCompressService extends AbstractDatabaseAccess {
             }
         } catch (ImagickException $e) {
             Oforge()->Logger()->get()->error('ImagickException', $e->getTrace());
-        }
-    }
-
-    /**
-     * go through all medias that are stored in the database and compress them.
-     *
-     * @throws ORMException
-     */
-    public function convertAllImages() {
-        $allMedia = $this->repository()->findAll();
-
-        foreach ($allMedia as $media) {
-            $media = $this->compress($media);
-            if ($media) {
-                $this->entityManager()->update($media);
-            }
         }
     }
 }

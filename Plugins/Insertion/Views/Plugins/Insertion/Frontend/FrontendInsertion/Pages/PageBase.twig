@@ -6,8 +6,12 @@
               action="{% if page == pagecount %}
                     {{ url('insertions_processSteps', { type : type.id}) }}
                   {% else %}
+                  {# If the insertion type has no 'feature-attributes' then skip the next step #}
+                  {% if attributes[2].items|length == 0 %}
+                    {{ url('insertions_createSteps', { type : type.id, page: page + 2}) }}
+                    {% else %}
                     {{ url('insertions_createSteps', { type : type.id, page: page + 1}) }}
-                  {% endif %}"
+                  {% endif %}{% endif %}"
               method="post"
               enctype="multipart/form-data">
 

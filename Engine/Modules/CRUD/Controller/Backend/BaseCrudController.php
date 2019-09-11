@@ -135,7 +135,7 @@ class BaseCrudController extends SecureBackendController {
     /**
      * Configuration of the orderBy on the index view.
      *      protected $indexOrderBy = [
-     *          'propertyName' => CrudGroubByOrder::ASC|DESC,
+     *          'propertyName' => CrudGroupByOrder::ASC|DESC,
      *      ];
      *
      * @var array $indexOrderBy
