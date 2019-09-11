@@ -169,6 +169,8 @@ class InsertionFormsService extends AbstractDatabaseAccess {
             "media"               => [],
             "attributes"          => [],
             "price"               => isset($pageData["price"]) ? $pageData["price"] : 0,
+            "min_price"           => isset($pageData["price_min"]) ? $pageData["price_min"] : null,
+            "price_type"          => $pageData["price_type"],
             "tax"                 => isset($pageData["tax"]) ? $pageData["tax"] == "on" : 0,
             'images_interactions' => $pageData["images_interactions"],
         ];
