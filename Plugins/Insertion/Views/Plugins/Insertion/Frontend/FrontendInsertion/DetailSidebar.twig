@@ -32,7 +32,7 @@
                 #}
             {% if contact.visible == false or user_logged_in %}
                 <div class="contact__name">{{ contact.name }}</div>
-                <div class="contact__address"><span class="adress__zip">{{ contact.zip }}</span> <span
+                <div class="contact__address"><span class="address__zip">{{ contact.zip }}</span> <span
                         class="adress__city">{{ contact.city }}</span></div>
                 {% if contact.phone is not empty %}
                     <div
@@ -50,7 +50,7 @@
 
         {% block sidebar__panel_map %}
             <div class="panel panel--map map">
-                <div class="map__address"><span class="adress__zip">{{ contact.zip }}</span> <span
+                <div class="map__address"><span class="address__zip">{{ contact.zip }}</span> <span
                         class="adress__city">{{ contact.city }}</span></div>
                 <div class="map__view">
                     <div class="external--content content--iframe"
