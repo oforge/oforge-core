@@ -1,3 +1,10 @@
 .upload {
-    // TODO maybe add some special scss for video upload...
+    &__video {
+        display: none;
+    }
+}
+.upload--video {
+    .upload__list {
+        border: none;
+    }
 }
