@@ -1,0 +1,25 @@
+{% block insertion_id %}
+    <form class="form form--search"
+          id="form-search-by-id"
+          method="get"
+          action="{{ url('insertions_findById') }}">
+        <div class="search_by_id search__content tab__content--visible">
+
+            <div class="form-controls">
+                <div class="form__control form__control--half-medium">
+
+                    <input class="form__input"
+                           id="insertion_id"
+                           type="number"
+                           min="1"
+                           name="id"
+                           placeholder="{{ i18n('insertion_input_find_by_id') }}"
+                           required>
+
+                    <input type="submit" class="form__input button button--primary"
+                           value="{{ i18n('id_search_submit') }}" />
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock insertion_id %}
