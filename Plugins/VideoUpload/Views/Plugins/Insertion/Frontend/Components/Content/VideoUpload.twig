@@ -19,17 +19,17 @@
             </li>
             <li class="upload__item upload__item--new-button">
                 <div class="upload__image upload__image--new"
-                     data-upload-button>
+                     data-video-upload-button>
                     {{ i18n('new_video') }}
                 </div>
             </li>
+            <input type="file"
+                   name="upload__video"
+                   data-file-input-video
+                   accept="video/mp4">
         </ul>
     </div>
-
-    <div class="upload upload--video">
-        <input type="file" accept="video/mp4">
-    </div>
-    <div class="upload__max-size-exceeded hidden">
+    <div class="upload--video upload__max-size-exceeded hidden">
         <p class="description description--upload">{{ i18n('upload_max_size_exceeded') }}</p>
     </div>
 {% endblock video_upload %}
