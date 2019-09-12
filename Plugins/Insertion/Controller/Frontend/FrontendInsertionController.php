@@ -835,10 +835,18 @@ class FrontendInsertionController extends SecureFrontendController {
         /** @var UrlService $urlService */
         $urlService = Oforge()->Services()->get('url');
 
-        if(!isset($insertion) || $insertion->isDeleted()) {
+        if (!isset($insertion)) {
             Oforge()->View()->Flash()->addMessage('error', I18N::translate('insertion_not_exist', [
-                'en' => "Insertion doesn't exist",
-                'de' => "Inserat existiert nicht",
+                'en' => "The provided ID does not belong to an insertion.",
+                'de' => "Zu der gegebenen ID existiert kein Inserat.",
+            ]));
+
+            return $response->withRedirect('/');
+        }
+        if ($insertion->isDeleted()) {
+            Oforge()->View()->Flash()->addmessage('error', I18N::translate('insertion_not_available', [
+                'en' => 'The insertion you are looking for is not available anymore.',
+                'de' => 'Das von dir gesuchte Inserat ist leider nicht mehr verfügbar.',
             ]));
 
             return $response->withRedirect('/');
