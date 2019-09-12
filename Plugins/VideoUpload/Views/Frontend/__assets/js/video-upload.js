@@ -32,6 +32,15 @@ if (typeof Oforge !== 'undefined') {
                             return false;
                         }
                         fileUrl = window.URL.createObjectURL(file);
+
+                        $.ajax({
+                            method: "POST",
+                            url: "/vimeo-api/test",
+                            data: { videoFile: fileUrl }
+                        })
+                        .done(function( msg ) {
+                            console.log('Video upload started.', msg);
+                        });
                     }
                 });
             });
