@@ -30,8 +30,13 @@ var OforgeQuill = (function ($) {
                         displaySize: true
                     },
                     toolbar: toolbarConfig,
-                    BindFormField: $inputField.get(0),
-                    HtmlSourceEditor: true,
+                    BindFormField: {
+                        formField: $inputField.get(0)
+                    },
+                    HtmlSourceEditor: {
+                        formField: $inputField.get(0)
+                    },
+                    WhitespaceButton: true,
                 },
                 // placeholder: 'Compose an epic...',
                 debug: 'error',
