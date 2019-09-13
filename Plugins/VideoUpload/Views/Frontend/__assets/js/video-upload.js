@@ -25,21 +25,55 @@ if (typeof Oforge !== 'undefined') {
                 var fileUrl = "";
 
                 input.files.forEach(function (file) {
+                    console.log(file);
+
                     if (videoTypes.indexOf(file.type) > -1) {
                         fileSize += file.size;
                         if (checkFileSize(fileSize) === false) {
                             input.value = "";
                             return false;
                         }
-                        fileUrl = window.URL.createObjectURL(file);
 
-                        $.ajax({
-                            method: "POST",
-                            url: "/vimeo-api/test",
-                            data: { videoFile: fileUrl }
-                        })
-                        .done(function( msg ) {
-                            console.log('Video upload started.', msg);
+                        var fileReader = new FileReader();
+                        //fileUrl = window.URL.createObjectURL(file);
+                        fileReader.readAsDataURL(file);
+                        fileReader.addEventListener('loadend', function (e) {
+                            $.ajax({
+                                method: "POST",
+                                url: 'https://api.vimeo.com/me/videos',
+                                headers: {
+                                    "Authorization": "Bearer "
+                                },
+                                data: {
+                                    upload: {
+                                        approach: "tus",
+                                        size: file.size
+                                    }
+                                },
+                                dataType: "json"
+                            })
+                            .fail(function (e) {
+                                console.log(e);
+                            })
+                            .done(function (response) {
+                                $.ajax({
+                                    method: "PATCH",
+                                    url: response.upload.upload_link,
+                                    headers: {
+                                        "Tus-Resumable": "1.0.0",
+                                        "Upload-Offset": "0",
+                                        "Content-Type": "application/offset+octet-stream",
+                                        "Accept": "application/vnd.vimeo.*+json;version=3.4"
+                                    },
+                                    data: fileReader.result
+                                })
+                                .fail(function (e) {
+                                    console.log(e);
+                                })
+                                .done(function (msg) {
+                                    console.log(msg);
+                                });
+                            });
                         });
                     }
                 });
