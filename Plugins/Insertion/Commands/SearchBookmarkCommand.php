@@ -10,6 +10,7 @@ use Monolog\Logger;
 use Oforge\Engine\Modules\Console\Abstracts\AbstractCommand;
 use Oforge\Engine\Modules\Console\Lib\Input;
 use Oforge\Engine\Modules\Core\Helper\RouteHelper;
+use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\Mailer\Services\MailService;
 use Oforge\Engine\Modules\Core\Exceptions;
 
@@ -25,6 +26,8 @@ class SearchBookmarkCommand extends AbstractCommand {
 
     /**
      * Command handle function
+     * Iterate over all saved searchBookmarks and collect those which have 'new' (depending on user's last checked datetime) search results.
+     * Generate link to search results and send notification mail.
      *
      * @param Input $input
      * @param Logger $output
@@ -41,22 +44,28 @@ class SearchBookmarkCommand extends AbstractCommand {
      */
     public function handle(Input $input, Logger $output) : void {
         /** @var InsertionSearchBookmarkService $searchBookmarkService */
-        /** @var InsertionListService $insertionListService */
         $searchBookmarkService = Oforge()->Services()->get('insertion.search.bookmark');
+
+        /** @var InsertionListService $insertionListService */
         $insertionListService  = Oforge()->Services()->get('insertion.list');
 
         /** @var MailService $mailService */
         $mailService           = Oforge()->Services()->get('mail');
 
+        /** @var ConfigService $configService */
+        $configService = Oforge()->Services()->get('config');
+
         /** @var InsertionUserSearchBookmark[] $bookmarks */
         $bookmarks = $searchBookmarkService->list();
+
         foreach ($bookmarks as $bookmark) {
             /** @var User $user */
             $user                 = $bookmark->getUser();
+
             $params               = $bookmark->getParams();
             $insertionList        = $insertionListService->search($bookmark->getInsertionType()->getId(), $params);
 
-            $baseUrl = ''; // TODO: get BaseUrl   $baseUrl    = Oforge()->Settings()->get("host_url");
+            $baseUrl    = $configService->get('system_project_domain_name');
             $searchLink = $baseUrl . $searchBookmarkService->getUrl($bookmark->getInsertionType()->getId(), $params);
 
             $newInsertionsCount = sizeof($insertionList["query"]["items"]);
