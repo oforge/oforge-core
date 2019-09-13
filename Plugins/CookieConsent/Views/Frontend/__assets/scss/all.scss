@@ -29,6 +29,7 @@
     }
     .cookie__buttons {
         display: flex;
+        padding-right: 3rem; // avoid overlap with 'scroll_to_top' - button
         flex-direction: column;
         justify-content: space-around;
     }
