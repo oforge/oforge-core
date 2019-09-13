@@ -26,6 +26,7 @@ use Oforge\Engine\Modules\Core\Services\PluginAccessService;
 use Oforge\Engine\Modules\Core\Services\PluginStateService;
 use Oforge\Engine\Modules\Core\Services\RedirectService;
 use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
+use Oforge\Engine\Modules\I18n\Helper\I18N;
 
 /**
  * Class Core-Bootstrap
@@ -68,21 +69,47 @@ class Bootstrap extends AbstractBootstrap {
     }
 
     /**
-     * @throws Exceptions\ConfigElementAlreadyExistException
      * @throws Exceptions\ConfigOptionKeyNotExistException
      * @throws Exceptions\ServiceNotFoundException
      * @throws ORMException
      * @throws OptimisticLockException
      */
     public function install() {
-        //TODO in import csv
-        // I18N::translate('config_system_project_name', 'Project name', 'en');
-        // I18N::translate('config_system_project_short', 'Project short name', 'en');
-        // I18N::translate('config_debug_mode', 'Debug mode', 'en');
-        // I18N::translate('debug_console', 'Console output', 'en');
-        // I18N::translate('config_debug_session', 'Include session data', 'en');
+
+        // TODO: translations won't work here, since this module is pre-loaded before anything else
+
+        // I18N::translate('config_system_project_name',[
+        //     'en' => 'Project name',
+        //     'de' => 'Projektname',
+        // ]);
+        // I18N::translate('config_system_project_short',[
+        //     'en' => 'Project short name',
+        //     'de' => 'Projektname kurzform',
+        // ]);
+        // I18N::translate('config_system_project_copyright',[
+        //     'en' => 'Project Copyright',
+        //     'de' => 'Projekt Copyright',
+        // ]);
+        // I18N::translate('config_system_domain_name',[
+        //     'en' => 'Domain name',
+        //     'de' => 'Domain Name',
+        // ]);
+        // I18N::translate('config_debug_mode',[
+        //     'en' => 'Debug mode',
+        //     'de' => 'Debug Modus',
+        // ]);
+        // I18N::translate('debug_console',[
+        //     'en' => 'Console output',
+        //     'de' => 'Debug Konsole',
+        // ]);
+        // I18N::translate('config_debug_session',[
+        //     'en' => 'Include session data',
+        //     'de' => 'Zeige Sitzungsdaten',
+        // ]);
+
         /** @var ConfigService $configService */
         $configService = Oforge()->Services()->get('config');
+
         $configService->add([
             'name'     => 'system_project_name',
             'type'     => ConfigType::STRING,
@@ -105,6 +132,14 @@ class Bootstrap extends AbstractBootstrap {
             'group'    => 'system',
             'default'  => 'Oforge',
             'label'    => 'config_system_project_copyright',
+            'required' => true,
+        ]);
+        $configService->add([
+            'name'     => 'system_project_domain_name',
+            'type'     => ConfigType::STRING,
+            'group'    => 'system',
+            'default'  => '',
+            'label'    => 'config_system_domain_name',
             'required' => true,
         ]);
         $configService->add([
