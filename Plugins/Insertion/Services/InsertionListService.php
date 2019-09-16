@@ -63,7 +63,7 @@ class InsertionListService extends AbstractDatabaseAccess
             $params['order'] = 'price_asc';
         }
 
-        $order = 'idy';
+        $order = 'id';
         $orderDir = 'asc';
 
         if (isset($params['order'])) {
