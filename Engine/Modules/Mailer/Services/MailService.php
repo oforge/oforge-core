@@ -10,7 +10,6 @@ use InvalidArgumentException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
-use Oforge\Engine\Modules\Core\Forge\ForgeSlimApp;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
@@ -334,11 +333,10 @@ class MailService {
             'template' => 'NewSearchResults.twig',
         ];
         $templateData = [
-            'resultCount' => $newResultsCount,
-            'searchLink'  => $searchLink,
-            'sender_mail' => $this->getSenderAddress('no_reply'),
+            'resultCount'   => $newResultsCount,
+            'searchLink'    => $searchLink,
+            'sender_mail'   => $this->getSenderAddress('no_reply'),
             'receiver_name' => $user->getDetail()->getNickName(),
-
         ];
         return $this->send($mailerOptions, $templateData);
     }

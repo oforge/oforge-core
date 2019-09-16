@@ -16,7 +16,7 @@ use Oforge\Engine\Modules\Core\Helper\StringHelper;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
 use Oforge\Engine\Modules\CRUD\Enum\CrudFilterComparator;
 use Oforge\Engine\Modules\CRUD\Enum\CrudFilterType;
-use Oforge\Engine\Modules\CRUD\Enum\CrudGroubByOrder;
+use Oforge\Engine\Modules\CRUD\Enum\CrudGroupByOrder;
 use Oforge\Engine\Modules\CRUD\Services\GenericCrudService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\Media\Models\Media;
@@ -135,7 +135,7 @@ class BaseCrudController extends SecureBackendController {
     /**
      * Configuration of the orderBy on the index view.
      *      protected $indexOrderBy = [
-     *          'propertyName' => CrudGroubByOrder::ASC|DESC,
+     *          'propertyName' => CrudGroupByOrder::ASC|DESC,
      *      ];
      *
      * @var array $indexOrderBy
@@ -684,8 +684,8 @@ class BaseCrudController extends SecureBackendController {
         unset($queryParams[$queryKeyOrderBy], $queryParams[$queryKeyOrder]);
         if (isset($propertyName)) {
             if (isset($order)) {
-                if ($order !== CrudGroubByOrder::ASC && $order !== CrudGroubByOrder::DESC) {
-                    $order = CrudGroubByOrder::ASC;
+                if ($order !== CrudGroupByOrder::ASC && $order !== CrudGroupByOrder::DESC) {
+                    $order = CrudGroupByOrder::ASC;
                 }
             }
             $orderBy = [
@@ -694,8 +694,8 @@ class BaseCrudController extends SecureBackendController {
         } elseif (!empty($this->indexOrderBy)) {
             $orderBy = [];
             foreach ($this->indexOrderBy as $propertyName => $order) {
-                if ($order !== CrudGroubByOrder::ASC && $order !== CrudGroubByOrder::DESC) {
-                    $order = CrudGroubByOrder::ASC;
+                if ($order !== CrudGroupByOrder::ASC && $order !== CrudGroupByOrder::DESC) {
+                    $order = CrudGroupByOrder::ASC;
                 }
                 $orderBy[$propertyName] = $order;
             }

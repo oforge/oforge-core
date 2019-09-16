@@ -1,65 +1,72 @@
 {% block product_panel %}
-    <div class="panel panel--product product">
-        {% block product__image %}
-            <a href="{{ url("insertions_detail", {id: item.id}) }}" class="product__image">
-                {% if item.media is defined and item.media|length > 0 and item.media[0].content is defined %}
-                    <img src="{{ media(item.media[0].content, 600) }}" alt="{{ item.content[0].name }}"
-                         class="image">
-                {% else %}
-                    <svg class="icon icon--placeholder">
-                        <use xlink:href="#placeholder-insertion"></use>
-                    </svg>
-                {% endif %}
-                <div class="badge badge--image badge--top-left"></div>
-                <div class="label label--image label--top-right"></div>
-            </a>
-        {% endblock product__image %}
 
-        <div class="product__attributes product__attributes--main">
-            {% block attributes__main %}
-                {#<div class="product__attribute">#}
+        <div class="{% block panel__classes %}panel panel--product product{% endblock panel__classes %}">
+
+    {% block product__image %}
+        <a href="{{ url("insertions_detail", {id: item.id}) }}" class="product__image">
+            {% if item.media is defined and item.media|length > 0 and item.media[0].content is defined %}
+                <img src="{{ media(item.media[0].content, 600) }}" alt="{{ item.content[0].name }}"
+                     class="image">
+            {% else %}
+                <svg class="icon icon--placeholder">
+                    <use xlink:href="#placeholder-insertion"></use>
+                </svg>
+            {% endif %}
+            <div class="badge badge--image badge--top-left"></div>
+            <div class="label label--image label--top-right"></div>
+        </a>
+    {% endblock product__image %}
+
+    <div class="product__attributes product__attributes--main">
+        {% block attributes__main %}
+            {#<div class="product__attribute">#}
+            {#<span class="product__label">{{ i18n('insertion_name') }}</span>#}
+            {#<span class="product__value">{{ item.content[0].name }}</span>#}
+            {#</div>#}
+            {% for topvalue in item.topvalues|slice(0,3) %}
+                {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
+            {% endfor %}
+
+        {% endblock attributes__main %}
+    </div>
+
+    {% block product__content %}
+        <div class="product__content">
+            {% block content__title %}
+                <a class="product__title-link" href="{{ url("insertions_detail", {id: item.id}) }}"><h3
+                        class="product__title">{{ item.content[0].title }}</h3></a>
+            {% endblock content__title %}
+
+            {% block attributes__top %}
+                <div class="product__attributes product__attributes--top">
+
+                    {#<div class="product__attribute">#}
                     {#<span class="product__label">{{ i18n('insertion_name') }}</span>#}
                     {#<span class="product__value">{{ item.content[0].name }}</span>#}
-                {#</div>#}
-                {% for topvalue in item.topvalues|slice(0,3) %}
-                    {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
-                {% endfor %}
+                    {#</div>#}
+                    {% for topvalue in item.topvalues|slice(0,3) %}
+                        {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
+                    {% endfor %}
+                </div>
+            {% endblock attributes__top %}
 
-            {% endblock attributes__main %}
-        </div>
-
-        {% block product__content %}
-            <div class="product__content">
-                {% block content__title %}
-                    <a class="product__title-link" href="{{ url("insertions_detail", {id: item.id}) }}"><h3 class="product__title">{{ item.content[0].title }}</h3></a>
-                {% endblock content__title %}
-
-                {% block attributes__top %}
-                    <div class="product__attributes product__attributes--top">
-
-                        {#<div class="product__attribute">#}
-                            {#<span class="product__label">{{ i18n('insertion_name') }}</span>#}
-                            {#<span class="product__value">{{ item.content[0].name }}</span>#}
-                        {#</div>#}
-                        {% for topvalue in item.topvalues|slice(0,3) %}
-                            {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
-                        {% endfor %}
-                    </div>
-                {% endblock attributes__top %}
-
-                {% block attributes__bottom %}
-                    <div class="product__attributes product__attributes--bottom">
-                        {% for topvalue in item.topvalues|slice(3) %}
-                            {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
-                        {% endfor %}
-                    </div>
-                {% endblock attributes__bottom %}
+            {% block attributes__bottom %}
+                <div class="product__attributes product__attributes--bottom">
+                    {% for topvalue in item.topvalues|slice(3) %}
+                        {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
+                    {% endfor %}
+                </div>
+            {% endblock attributes__bottom %}
 
                 {% block product__meta %}
                     <div class="product__meta">
                         <div class="product__pricing">
                             <span class="product__label">{{ i18n('price') }}</span>
-                            <span class="product__value">{{ item.price|number_format(0, ',', '.') }} €</span>
+                            {% if item.priceType is same as("on_demand")  %}
+                                <span class="product__value">{{ i18n('price_on_demand') }}</span>
+                            {% else %}
+                                <span class="product__value">{% if item.priceType is same as("negotiable") %}{{ i18n('price_negotiable') }}{% endif %} {{ item.price|number_format(0, ',', '.') }} €</span>
+                            {% endif %}
                         </div>
                     </div>
                 {% endblock product__meta %}

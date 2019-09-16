@@ -41,9 +41,16 @@
                    maxlength="180"
                    required>
         </div>
+        {% block image__upload %}
         <div class="form__control">
             {% include 'Plugins/Insertion/Frontend/Components/Content/ImageUpload.twig' %}
         </div>
+        {% endblock image__upload %}
+        {% block video__upload %}
+        <div class="form__control">
+            {% include 'Plugins/Insertion/Frontend/Components/Content/VideoUpload.twig' %}
+        </div>
+        {% endblock video__upload %}
     </div>
 
     <span class="required">{{ i18n('required_inputs') }}</span>

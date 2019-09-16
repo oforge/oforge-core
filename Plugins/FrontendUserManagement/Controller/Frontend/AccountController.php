@@ -8,6 +8,7 @@ use FrontendUserManagement\Abstracts\SecureFrontendController;
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\AccountNavigationService;
 use FrontendUserManagement\Services\PasswordResetService;
+use Insertion\Services\InsertionProfileProgressService;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Auth\Services\PasswordService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
@@ -54,16 +55,44 @@ class AccountController extends SecureFrontendController {
      * @param Request $request
      * @param Response $response
      *
+     * @throws ORMException
      * @throws ServiceNotFoundException
      * @EndpointAction()
      */
     public function dashboardAction(Request $request, Response $response) {
         /** @var AccountNavigationService $accountNavigationService */
         $accountNavigationService = Oforge()->Services()->get('frontend.user.management.account.navigation');
-        $backendNavigationService        = $accountNavigationService->get('sidebar');
+        $backendNavigationService = $accountNavigationService->get('sidebar');
 
         Oforge()->View()->assign(['content' => $backendNavigationService]);
 
+        /**
+         *  Check Insertion Profile Progress
+         */
+        $keys = [
+            'background',
+            'description',
+            'imprintName',
+            'imprintZipCity',
+            'imprintEmail',
+        ];
+
+        $user = Oforge()->View()->get('current_user');
+
+        /** @var InsertionProfileProgressService $profileProgressService */
+        $profileProgressService = Oforge()->Services()->get('insertion.profile.progress');
+        $progress = $profileProgressService->calculateProgress($user['id'], $keys);
+
+        if($progress < 100) {
+
+            $message = I18N::translate('insertion_profile_progress', [
+                'en' => 'Status of your Insertion:',
+                'de' => 'Status deines Profils:',
+            ]);
+
+            $flashMessage = ['dismissible' => true, 'type' =>'info', 'message' => $message . ' ' .  $progress . '%'];
+            Oforge()->View()->assign(['flashMessages' => array($flashMessage)]);
+        }
 
         if(Oforge()->View()->Flash()->hasData('new_registration')) {
             $newRegistration = Oforge()->View()->Flash()->getData('new_registration');

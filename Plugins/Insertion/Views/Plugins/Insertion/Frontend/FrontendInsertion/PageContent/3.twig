@@ -52,7 +52,7 @@
                            placeholder="{{ i18n('phone') }}">
                 </div>
                 <div class="form__control columns">
-                    <h3 class="form__sub-title">{{ i18n('address') }}</h3>
+                    <h3 class="form__sub-title">{{ i18n('address') }}<span class="required">*</span></h3>
                     <div class="column column--one-third">
                         <input type="text"
                                name="contact_zip"
@@ -96,8 +96,38 @@
         </div>
         <div class="form-controls">
             <div class="attribute-group">
+                <label class="title title--attribute-group" for="price-type">{{ i18n("price_type") }}</label>
+                <div class="form__input form__input--select">
+                    <select class="form__input form__input--no-input"
+                            name="price_type"
+                            id="price_type"
+                            required>
+                        <option value="" {% if not data['price_type'] %} selected {% endif %} disabled>{{ i18n('price_type') }}</option>
+                        <option value="fixed" {% if data['price_type'] is same as('fixed') %} selected {% endif %} data-placeholder="{{ i18n('price') }}" >{{ i18n('price_fixed') }}</option>
+                        <option value="negotiable" {% if data['price_type'] is same as('negotiable')  %} selected {% endif %} data-placeholder="{{ i18n('price') }}">{{ i18n('price_negotiable') }}</option>
+                        <option value="on_demand" {% if data['price_type'] is same as('on_demand') %} selected {% endif %} data-placeholder="{{ i18n('to') }}">{{ i18n('price_on_demand') }}</option>
+                    </select>
+                </div>
                 <label for="price"
-                       class="title title--attribute-group">{{ i18n('price_' ~ type.name, i18n('price')) }}</label>
+                       class="title title--attribute-group">{{ i18n('price_' ~ type.name, i18n('price')) }}<span class="required">*</span></label>
+                <div class="form__control is-hidden">
+                    <label for="price-min"
+                           class="form__input form__input--inside-label">
+                        <input type="number"
+                               id="price_min"
+                               min="0"
+                               max="2000000"
+                               value="{{ data['price_min'] }}"
+                               class="form__input"
+                               placeholder="{{ i18n('from') }}" />
+                        {% if i18nExists('unit_price') %}
+                            <span class="input__unit">
+                        {{ i18n('unit_price') }}
+                    </span>
+                        {% endif %}
+                    </label>
+                </div>
+
                 <div class="form__control">
                     <label for="price"
                            class="form__input form__input--inside-label">
@@ -108,6 +138,7 @@
                                max="2000000"
                                value="{{ data['price'] }}"
                                class="form__input"
+                               placeholder="{{ i18n('price') }}"
                                required />
                         {% if i18nExists('unit_price') %}
                             <span class="input__unit">
