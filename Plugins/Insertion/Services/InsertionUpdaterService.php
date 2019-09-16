@@ -52,6 +52,8 @@ class InsertionUpdaterService extends AbstractDatabaseAccess {
         }
 
         $result["price"] = $insertion->getPrice();
+        $result["price_min"] = $insertion->getMinPrice();
+        $result["price_type"] = $insertion->getPriceType();
         $result["tax"]   = $insertion->isTax();
 
         $result["images"] = [];
@@ -122,6 +124,8 @@ class InsertionUpdaterService extends AbstractDatabaseAccess {
         }
 
         $insertion->setPrice($data["price"]);
+        $insertion->setMinPrice($data["min_price"]);
+        $insertion->setPriceType($data["price_type"]);
         $insertion->setTax($data["tax"]);
 
         $values = $insertion->getValues();

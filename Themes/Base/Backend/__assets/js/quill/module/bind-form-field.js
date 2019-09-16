@@ -5,14 +5,17 @@
     }
 
     class BindFormField {
-        constructor(quill, field) {
+        constructor(quill, options) {
             this.quill = quill;
-            this.field = field;
+            this.options = options;
             this.quill.on('text-change', this.onQuillChange.bind(this));
         }
 
         onQuillChange() {
-            this.field.value = this.quill.root.innerHTML;
+            if(this.update) {
+                this.options.formField.value = this.quill.root.innerHTML;
+            }
+            this.update = true;
         }
     }
 

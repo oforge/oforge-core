@@ -21,23 +21,30 @@ use Oforge\Engine\Modules\I18n\Models\Language;
 use Oforge\Engine\Modules\Media\Models\Media;
 use Oforge\Engine\Modules\Media\Services\MediaService;
 
-class InsertionCreatorService extends AbstractDatabaseAccess {
-    public function __construct() {
+class InsertionCreatorService extends AbstractDatabaseAccess
+{
+    public function __construct()
+    {
         parent::__construct([
-            'default'  => Insertion::class,
-            'key'      => AttributeKey::class,
-            'type'     => InsertionType::class,
+            'default' => Insertion::class,
+            'key' => AttributeKey::class,
+            'type' => InsertionType::class,
             'language' => Language::class,
-            'media'    => Media::class,
+            'media' => Media::class,
         ]);
     }
 
 
-    public function create(int $typeId, User $user, array $data) : ?int {
+    public function create(int $typeId, User $user, array $data): ?int
+    {
         $type = $this->repository("type")->findOneBy(["id" => $typeId]);
 
         if (isset($type)) {
-            $insertion = Insertion::create(["insertionType" => $type, "user" => $user, "price" => $data["price"]]);
+            $insertion = Insertion::create([
+                "insertionType" => $type,
+                "user" => $user,
+                "price" => $data["price"]
+            ]);
 
             $content = InsertionContent::create($data["content"]);
             $content->setInsertion($insertion);
@@ -66,6 +73,8 @@ class InsertionCreatorService extends AbstractDatabaseAccess {
             $insertion->setMedia($media);
             $insertion->setValues($attributeValues);
             $insertion->setTax($data["tax"]);
+            $insertion->setMinPrice($data["min_price"]);
+            $insertion->setPriceType($data["price_type"]);
 
             $this->entityManager()->create($content, false);
             $this->entityManager()->create($contact, false);

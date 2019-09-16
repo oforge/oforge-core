@@ -32,6 +32,7 @@ use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\Mailer\Services\MailService;
+use Oforge\Engine\Modules\TemplateEngine\Extensions\Services\UrlService;
 use ReflectionException;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -810,5 +811,50 @@ class FrontendInsertionController extends SecureFrontendController {
         $attributeService = Oforge()->Services()->get('insertion.attribute');
         $attributeValues = $attributeService->getAllAttributeValues($queryParams['attributekeys']);
         Oforge()->View()->assign(['json' => $attributeValues]);
+    }
+
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     *
+     * @return Response
+     * @throws ORMException
+     * @throws ServiceNotFoundException
+     * @EndpointAction(path="/find_by_id")
+     */
+    public function findByIdAction(Request $request, Response $response) {
+        $id = $request->getQueryParam('id');
+
+        /** @var InsertionService $insertionService */
+        $insertionService = Oforge()->Services()->get('insertion');
+
+        /** @var Insertion $insertion */
+        $insertion = $insertionService->getInsertionById($id);
+
+        /** @var UrlService $urlService */
+        $urlService = Oforge()->Services()->get('url');
+
+        if (!isset($insertion)) {
+            Oforge()->View()->Flash()->addMessage('error', I18N::translate('insertion_not_exist', [
+                'en' => "The provided ID does not belong to an insertion.",
+                'de' => "Zu der gegebenen ID existiert kein Inserat.",
+            ]));
+
+            return $response->withRedirect('/');
+        }
+        if ($insertion->isDeleted()) {
+            Oforge()->View()->Flash()->addmessage('error', I18N::translate('insertion_not_available', [
+                'en' => 'The insertion you are looking for is not available anymore.',
+                'de' => 'Das von dir gesuchte Inserat ist leider nicht mehr verfügbar.',
+            ]));
+
+            return $response->withRedirect('/');
+        }
+
+        $url = $urlService->getUrl('insertions_detail', ['id' => $id]);
+
+        return $response->withRedirect($url);
+
     }
 }
