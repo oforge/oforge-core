@@ -106,7 +106,7 @@ class AccountNewsletterController extends SecureFrontendController
         $mailchimpNewsletterService = Oforge()->Services()->get('mailchimp.newsletter');
         $router                     = Oforge()->Container()->get('router');
         $body                       = $request->getParsedBody();
-        $email                      = $body['frontend_newsletter_email'];
+        $email                      = $user['email'];
         $userId                     = $user['id'];
         $uri                        = $router->pathFor('frontend_account_newsletter');
 
