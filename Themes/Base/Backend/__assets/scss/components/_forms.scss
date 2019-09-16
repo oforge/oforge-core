@@ -116,6 +116,10 @@
         align-items: center;
         justify-content: flex-end;
     }
+
+    &.is-hidden {
+        display: none;
+    }
 }
 
 .form--search .form__control.form__control--new-select {
