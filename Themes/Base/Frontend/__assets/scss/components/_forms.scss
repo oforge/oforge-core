@@ -470,7 +470,7 @@
         .form__input--checkbox {
             width: 2rem;
             height: 2rem;
-            margin-left: 0px;
+            margin-left: 0;
             margin-right: .6rem;
         }
 
@@ -524,4 +524,9 @@
             }
         }
     }
+}
+
+#form-search-by-id .search_by_id {
+    padding-top: $size-large;
+    border-top: 1px solid $color-light;
 }
