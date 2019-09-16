@@ -60,28 +60,33 @@ class InsertionListService extends AbstractDatabaseAccess
         $pageSize = isset($params["pageSize"]) ? $params["pageSize"] : 10;
 
         if (!isset($params['order'])) {
-            $params['order'] = 'price_asc';
+            $params['order'] = 'date_desc';
         }
 
         $order = 'id';
+        $orderNative = 'id';
         $orderDir = 'asc';
 
         if (isset($params['order'])) {
             switch ($params['order']) {
                 case 'price_asc':
                     $order = 'price';
+                    $orderNative = 'price';
                     $orderDir = 'asc';
                     break;
                 case 'price_desc':
                     $order = 'price';
+                    $orderNative = 'price';
                     $orderDir = 'desc';
                     break;
                 case 'date_asc':
                     $order = 'createdAt';
+                    $orderNative = 'created_at';
                     $orderDir = 'asc';
                     break;
                 case  'date_desc':
                     $order = 'createdAt';
+                    $orderNative = 'created_at';
                     $orderDir = 'desc';
                     break;
             }
@@ -400,7 +405,7 @@ class InsertionListService extends AbstractDatabaseAccess
             $args["ad"] = $params["after_date"];
         }
 
-        $sqlQueryOrderBy = " ORDER BY " . $order . " " . $orderDir;
+        $sqlQueryOrderBy = " ORDER BY " . $orderNative . " " . $orderDir;
 
         $sqlResult = $this->entityManager()->getEntityManager()->getConnection()->executeQuery($sqlQuery . $sqlQueryWhere . $sqlQueryOrderBy, $args);
         $ids = $sqlResult->fetchAll();
