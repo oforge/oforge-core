@@ -8,6 +8,7 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Media\Services\MediaService;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use ReflectionException;
 
 class InsertionProfileService extends AbstractDatabaseAccess {
     public function __construct() {
@@ -50,10 +51,9 @@ class InsertionProfileService extends AbstractDatabaseAccess {
      * @param User $user
      * @param array $params
      *
-     * @return mixed
      * @throws ORMException
      * @throws ServiceNotFoundException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function update(User $user, array $params) {
         /**
@@ -92,7 +92,7 @@ class InsertionProfileService extends AbstractDatabaseAccess {
 
         foreach($disallowed as $d) {
             if(strpos($imprintWebsite, $d) === 0) {
-                return str_replace($d, '', $imprintWebsite);
+                $imprintWebsite = str_replace($d, '', $imprintWebsite);
             }
         }
 
@@ -117,7 +117,4 @@ class InsertionProfileService extends AbstractDatabaseAccess {
             $this->entityManager()->update($result);
         }
     }
-
-
-
 }
