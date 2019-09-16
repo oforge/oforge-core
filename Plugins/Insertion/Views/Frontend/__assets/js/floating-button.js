@@ -6,7 +6,7 @@ if (typeof Oforge !== 'undefined') {
             var self = this;
             var floatingButton = document.querySelector(self.selector);
             var insertionSidebar = floatingButton.closest('.insertion__sidebar');
-            var searchForm = document.querySelector('#form-search')
+            var searchForm = document.querySelector('#form-search');
             var raf = window.requestAnimationFrame ||
                 window.webkitRequestAnimationFrame ||
                 window.mozRequestAnimationFrame ||

@@ -6,7 +6,7 @@ var OforgeQuill = (function ($) {
         [{header: [1, 2, 3, 4, 5, 6, false]}],
         [{font: []}],
         [{size: ['small', false, 'large', 'huge']}], // custom dropdown
-        ['bold', 'italic', 'underline', 'strike', {script: 'sub'}, {script: 'super'}], // toggled buttons, superscript/subscript
+        ['bold', 'italic', 'underline', 'strike', {script: 'sub'}, {script: 'super'}, 'WhitespaceButton'], // toggled buttons, superscript/subscript
         [{color: []}, {background: []}], // dropdown with defaults from theme
         [{align: []}, {indent: '-1'}, {indent: '+1'}], // outdent/indent
 
@@ -30,8 +30,13 @@ var OforgeQuill = (function ($) {
                         displaySize: true
                     },
                     toolbar: toolbarConfig,
-                    BindFormField: $inputField.get(0),
-                    HtmlSourceEditor: true,
+                    BindFormField: {
+                        formField: $inputField.get(0)
+                    },
+                    HtmlSourceEditor: {
+                        formField: $inputField.get(0)
+                    },
+                    WhitespaceButton: true,
                 },
                 // placeholder: 'Compose an epic...',
                 debug: 'error',

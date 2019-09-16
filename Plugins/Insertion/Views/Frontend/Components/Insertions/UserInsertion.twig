@@ -14,7 +14,7 @@
     </div>
     <div class="product__attribute">
         <span class="product__label">{{ i18n('duration') }}</span>
-        <span class="product__value">unbegrenzt</span>s
+        <span class="product__value">unbegrenzt</span>
     </div>
 {% endblock attributes__main %}
 
@@ -29,8 +29,11 @@
         {% if item.price is not empty %}
         <div class="product__attribute">
             <span class="product__label">{{ i18n('insertion_price') }}</span>
-            <span
-                class="product__value">{{ item.price }} {{ i18n('unit_price') }} {% if (item.tax) %} ({{ i18n('vat_identificationable') }}){% endif %}</span>
+            {% if item.priceType is same as("on_demand")  %}
+                <span class="product__value">{{ i18n('price_on_demand') }}</span>
+            {% else %}
+                <span class="product__value">{% if item.priceType is same as("negotiable") %}{{ i18n('price_negotiable') }}{% endif %} {{ item.price|number_format(0, ',', '.') }} € {% if (item.tax) %} ({{ i18n('vat_identificationable') }}){% endif %}</span>
+            {% endif %}
         </div>
         {% endif %}
         <div class="product__attribute">

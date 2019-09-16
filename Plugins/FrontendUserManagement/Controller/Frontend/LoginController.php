@@ -3,6 +3,7 @@
 namespace FrontendUserManagement\Controller\Frontend;
 
 use FrontendUserManagement\Services\FrontendUserLoginService;
+use Insertion\Services\InsertionProfileProgressService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
@@ -176,6 +177,9 @@ class LoginController extends AbstractController {
             $uri = $router->pathFor('frontend_account_dashboard');
         }
         Oforge()->View()->Flash()->addMessage('success', I18N::translate('login_success', 'You have successfully logged in!'));
+
+        // TODO: set cookie consent in local storage
+        Oforge()->View()->assign(['cookie_consent' => true]);
 
         return $response->withRedirect($uri, 302);
     }
