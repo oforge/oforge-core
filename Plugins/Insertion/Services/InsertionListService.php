@@ -42,7 +42,7 @@ class InsertionListService extends AbstractDatabaseAccess
     }
 
     /**
-     * Search insertions by insertiontype and filter them by given params
+     * Search insertions by InsertionType and filter them by given params
      *
      * @param $typeId
      * @param $params
@@ -61,6 +61,30 @@ class InsertionListService extends AbstractDatabaseAccess
 
         if (!isset($params['order'])) {
             $params['order'] = 'price_asc';
+        }
+
+        $order = 'id';
+        $orderDir = 'asc';
+
+        if (isset($params['order'])) {
+            switch ($params['order']) {
+                case 'price_asc':
+                    $order = 'price';
+                    $orderDir = 'asc';
+                    break;
+                case 'price_desc':
+                    $order = 'price';
+                    $orderDir = 'desc';
+                    break;
+                case 'date_asc':
+                    $order = 'createdAt';
+                    $orderDir = 'asc';
+                    break;
+                case  'date_desc':
+                    $order = 'createdAt';
+                    $orderDir = 'desc';
+                    break;
+            }
         }
 
         /** @var InsertionType $type */
@@ -376,7 +400,9 @@ class InsertionListService extends AbstractDatabaseAccess
             $args["ad"] = $params["after_date"];
         }
 
-        $sqlResult = $this->entityManager()->getEntityManager()->getConnection()->executeQuery($sqlQuery . $sqlQueryWhere, $args);
+        $sqlQueryOrderBy = " ORDER BY " . $order . " " . $orderDir;
+
+        $sqlResult = $this->entityManager()->getEntityManager()->getConnection()->executeQuery($sqlQuery . $sqlQueryWhere . $sqlQueryOrderBy, $args);
         $ids = $sqlResult->fetchAll();
 
         $result["query"]["count"] = sizeof($ids);
@@ -405,30 +431,6 @@ class InsertionListService extends AbstractDatabaseAccess
 
             foreach ($attribute->getAttributeKey()->getValues() as $value) {
                 $valueMap += $this->getValueMap($value);
-            }
-        }
-
-        $order = 'id';
-        $orderDir = 'desc';
-
-        if (isset($params['order'])) {
-            switch ($params['order']) {
-                case 'price_asc':
-                    $order = 'price';
-                    $orderDir = 'asc';
-                    break;
-                case 'price_desc':
-                    $order = 'price';
-                    $orderDir = 'desc';
-                    break;
-                case 'date_asc':
-                    $order = 'createdAt';
-                    $orderDir = 'asc';
-                    break;
-                case  'date_desc':
-                    $order = 'createdAt';
-                    $orderDir = 'desc';
-                    break;
             }
         }
 
