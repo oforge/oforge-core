@@ -1,0 +1,10 @@
+.upload {
+    &__video {
+        display: none;
+    }
+}
+.upload--video {
+    .upload__list {
+        border: none;
+    }
+}
