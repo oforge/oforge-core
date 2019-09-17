@@ -54,6 +54,7 @@
     }
     .horse-info__image {
         width: 200px;
+        max-width: 200px;
         margin: 0 0 $size-large 0
     }
     .horse-info__text {
