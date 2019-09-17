@@ -3,7 +3,6 @@ if (typeof Oforge !== 'undefined') {
         name: 'attributeEdit',
         selector: '[data-attribute-edit]',
         init: function () {
-            console.log('blub');
             var self = this;
             var classNames = {};
             var selectors = {
