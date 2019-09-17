@@ -10,3 +10,61 @@
 .form-controls .form__control > .form__control {
     margin-top: 0;
 }
+
+.form-controls--step-1 {
+    position: relative;
+}
+
+.cms--horse-info {
+    display: flex;
+    flex-direction: column;
+    margin: $size-large auto;
+}
+.horse-info__image {
+    max-width: 320px;
+    width: 100%;
+    margin: 0 auto $size-large auto;
+}
+.horse-info__text {
+    font-size: $font-size-5;
+}
+
+@media screen and (min-width: 400px) {
+    .cms--horse-info {
+        flex-direction: row;
+        margin: $size-large auto;
+    }
+    .horse-info__image {
+        max-width: 40%;
+        margin: 0 0 $size-large 0;
+    }
+    .horse-info__text {
+        font-size: $font-size-5;
+        margin-left: $size-large;
+    }
+}
+
+@media screen and (min-width: $screen-medium) {
+    .cms--horse-info {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        flex-direction: column;
+        margin: 0 0 0 $size-large;
+    }
+    .horse-info__image {
+        width: 200px;
+        margin: 0 0 $size-large 0
+    }
+    .horse-info__text {
+        margin: 0;
+    }
+    .form__control.form__control--s-left {
+        width: 50%;
+        margin: 0;
+    }
+    .form__control.form__control--s-left ~ .form__control.form__control--s-left {
+        margin-top: $size-large;
+    }
+
+}
