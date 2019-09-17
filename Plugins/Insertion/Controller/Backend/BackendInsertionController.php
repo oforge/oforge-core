@@ -130,6 +130,18 @@ class BackendInsertionController extends BaseCrudController {
                 'delete' => 'readonly',
             ],
         ],
+        [
+            'name' => 'views',
+            'type' => CrudDataTypes::INT,
+            'lable' => ['key' => 'plugin_insertion_views', 'default' => 'Views'],
+            'crud' => [
+                'index'  => 'readonly',
+                'view'   => 'readonly',
+                'create' => 'off',
+                'update' => 'readonly',
+                'delete' => 'readonly',
+            ],
+        ],
     ];
 
 
