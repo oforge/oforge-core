@@ -1,4 +1,3 @@
-
 .select {
     width: 100%;
     position: relative;
@@ -163,6 +162,37 @@
         strong {
             font-weight: bold;
             color: $color-secondary;
+        }
+    }
+
+    &__max-options {
+        padding: 0 $size-large;
+        display: inline-block;
+        font-weight: normal;
+        color: $color-primary-light;
+
+        &.max-options--highlight {
+            -webkit-animation-name: shake;
+            animation-name: shake;
+            animation-duration: 500ms;
+        }
+    }
+
+    &.select--limit-reached {
+        .select__item {
+            color: $color-primary-light;
+
+            &::before {
+                border-color: $color-primary-light;
+            }
+
+            &.select__item--is-checked {
+                color: $color-primary;
+
+                &::before {
+                    border-color: $color-primary;
+                }
+            }
         }
     }
 }

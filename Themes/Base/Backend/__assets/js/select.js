@@ -6,6 +6,7 @@
             init: function () {
                 var self = this;
                 var classNames = {
+                    formControl: 'form__control',
                     select: 'select',
                     selectIsOpen: 'select--is-open',
                     selectText: 'select__text',
@@ -14,9 +15,13 @@
                     selectValue: 'select__value',
                     subSelect: 'form__control--is-sub',
                     selectRequireInput: 'select__require-input',
+                    selectMaxOptionsLabel: 'select__max-options',
+                    selectMaxOptionsLabelHighlight: 'max-options--highlight',
+                    selectLimitReached: 'select--limit-reached',
                     selectValues: []
                 };
                 var selectors = {
+                    formControl: '.' + classNames.formControl,
                     select: '.' + classNames.select,
                     selectIsOpen: '.' + classNames.selectIsOpen,
                     selectText: '.' + classNames.selectText,
@@ -26,6 +31,9 @@
                     selectValue: '.' + classNames.selectValue,
                     subSelect: '[data-sub-select]',
                     selectFilter: '[data-select-filter]',
+                    selectMaxOptions: '[data-select-max-options]',
+                    selectMaxOptionsLabel: '.' + classNames.selectMaxOptionsLabel,
+                    selectLimitReached: '.' + classNames.selectLimitReached,
                     noSubSelect: '.select:not(.select--is-sub)[data-sortable]'
                 };
                 var selectList = document.querySelectorAll(self.selector);
@@ -74,21 +82,30 @@
                     if (selectItem) {
                         parentSelect = selectItem.closest(self.selector);
 
-                        if (parentSelect.dataset.selectType === 'single') {
-                            unselectAllExceptCurrent(selectItem);
-                        }
-                        toggleState = selectItem.classList.toggle(classNames.selectItemIsChecked);
-                        selectItem.dataset.selected = toggleState.toString();
 
-                        if (toggleState) {
-                            addHiddenInputToCheckItem(selectItem);
-                            parentSelect.checkedValues.push(valueId);
-                            parentSelect.checkedNames.push(valueName);
-                            parentSelect.querySelector(selectors.selectText).innerHTML = parentSelect.checkedNames.join(', ');
+                        if(!parentSelect.dataset.selectMaxOptions || parseInt(parentSelect.dataset.selectMaxOptions) > parentSelect.checkedValues.length || selectItem.classList.contains(classNames.selectItemIsChecked)) {
+                            if (parentSelect.dataset.selectType === 'single') {
+                                unselectAllExceptCurrent(selectItem);
+                            }
+                            toggleState = selectItem.classList.toggle(classNames.selectItemIsChecked);
+                            selectItem.dataset.selected = toggleState.toString();
+
+                            if (toggleState) {
+                                addHiddenInputToCheckItem(selectItem);
+                                parentSelect.checkedValues.push(valueId);
+                                parentSelect.checkedNames.push(valueName);
+
+                                if(parseInt(parentSelect.dataset.selectMaxOptions) <= parentSelect.checkedValues.length) {
+                                    parentSelect.classList.add(classNames.selectLimitReached);
+                                }
+                                parentSelect.querySelector(selectors.selectText).innerHTML = parentSelect.checkedNames.join(', ');
+                            } else {
+                                unselectItem(selectItem);
+                            }
+                            updateRequiredInput(selectItem);
                         } else {
-                            unselectItem(selectItem);
+                            highlightLabel(parentSelect);
                         }
-                        updateRequiredInput(selectItem);
                     }
                 }
 
@@ -103,6 +120,16 @@
                             requiredInput.value = '';
                         }
                     }
+                }
+
+                function highlightLabel(select) {
+                    let formControl = select.closest(selectors.formControl);
+                    let selectOptionsLabel = formControl.querySelector(selectors.selectMaxOptionsLabel);
+                    selectOptionsLabel.classList.add(classNames.selectMaxOptionsLabelHighlight);
+
+                    setTimeout(function() {
+                        selectOptionsLabel.classList.remove(classNames.selectMaxOptionsLabelHighlight);
+                    }, 1000);
                 }
 
                 function unselectAllExceptCurrent(selectItem) {
@@ -124,8 +151,12 @@
                     var valueIndex = null;
 
                     if (parentSelect) {
-                       input = parentSelect.querySelector('[data-select-input][value="' + selectItem.dataset.valueId + '"]');
-                       valueIndex = parentSelect.checkedValues.indexOf(selectItem.dataset.valueId);
+                        input = parentSelect.querySelector('[data-select-input][value="' + selectItem.dataset.valueId + '"]');
+                        valueIndex = parentSelect.checkedValues.indexOf(selectItem.dataset.valueId);
+
+                        if(parseInt(parentSelect.dataset.selectMaxOptions) >= parentSelect.checkedValues.length) {
+                            parentSelect.classList.remove(classNames.selectLimitReached);
+                        }
                     }
 
                     selectItem.classList.remove(classNames.selectItemIsChecked);
@@ -208,7 +239,6 @@
                             select.classList.toggle(classNames.selectIsOpen);
                         }
                     } else if (evt.target.matches(selectors.selectItem)) {
-                        console.log(evt.target);
                         toggleOneItem(evt.target);
                     } else if (evt.target.matches(selectors.selectValue)) {
                         var selectItem = evt.target.closest(selectors.selectItem);
@@ -257,6 +287,9 @@
                         });
                         if (select.checkedNames.length > 0) {
                             selectText.innerHTML = select.checkedNames.join(', ');
+                        }
+                        if(parseInt(select.dataset.selectMaxOptions) <= select.checkedValues.length) {
+                            select.classList.add(classNames.selectLimitReached);
                         }
                     });
                 }
