@@ -33,22 +33,22 @@
                     <input type="text"
                            name="contact_name"
                            class="form__input form-control"
-                           value="{{ data['contact_name'] }}"
-                           placeholder="{{ i18n('name') }}" />
+                           value="{% if data['contact_name'] %}{{ data['contact_name'] }}{% elseif lastContact.name %}{{ lastContact.name }}{% endif %}"
+                           placeholder="{{ i18n('name') }}"/>
                 </div>
                 <div class="form__control">
                     <h3 class="form__sub-title">{{ i18n('contact_data') }}</h3>
                     <input type="email"
                            name="contact_email"
                            class="form__input form-control"
-                           value="{{ data['contact_email'] }}"
-                           placeholder="{{ i18n('email') }}" />
+                           value="{% if data['contact_email'] %}{{ data['contact_email'] }}{% elseif lastContact.email %}{{ lastContact.email }}{% endif %}"
+                           placeholder="{{ i18n('email') }}"/>
                 </div>
                 <div class="form__control">
                     <input type="tel"
                            name="contact_phone"
                            class="form__input form-control"
-                           value="{{ data['contact_phone'] }}"
+                           value="{% if data['contact_phone'] %}{{ data['contact_phone'] }}{% elseif lastContact.phone %}{{ lastContact.phone }}{% endif %}"
                            placeholder="{{ i18n('phone') }}">
                 </div>
                 <div class="form__control columns">
@@ -58,36 +58,43 @@
                                name="contact_zip"
                                required
                                class="form__input form-control"
-                               value="{{ data['contact_zip'] }}"
-                               placeholder="{{ i18n('zip') }}" />
+                               value="{% if data['contact_zip'] %}{{ data['contact_zip'] }}{% elseif lastContact.zip %}{{ lastContact.zip }}{% endif %}"
+                               placeholder="{{ i18n('zip') }}"/>
                     </div>
                     <div class="column column--two-third">
                         <input type="text"
                                name="contact_city"
                                class="form__input form-control"
-                               value="{{ data['contact_city'] }}"
-                               placeholder="{{ i18n('city') }}" />
+                               value="{% if data['contact_city'] %}{{ data['contact_city'] }}{% elseif lastContact.city %}{{ lastContact.city }}{% endif %}"
+                               placeholder="{{ i18n('city') }}"/>
                     </div>
                 </div>
 
 
                 <div class="form__control">
                     <div class="form__input form__input--select">
+                        {% if data['contact_country'] %}
+                            {% set country = data['contact_country'] %}
+                        {% elseif lastContact.country %}
+                            {% set country = lastContact.country %}
+                        {% else %}
+                            {% set country = null %}
+                        {% endif %}
                         <select class="form__input form__input--no-input" name="contact_country">
-                            <option value="germany" selected="selected">{{ i18n('germany') }}</option>
-                            <option value="austria">{{ i18n('austria') }}</option>
-                            <option value="switzerland">{{ i18n('switzerland') }}</option>
-                            <option value="netherlands">{{ i18n('netherlands') }}</option>
+                            <option value="germany" {% if country is null or country is same as('germany') %}selected="selected"{% endif %}>{{ i18n('germany') }}</option>
+                            <option value="austria" {% if country is same as('austria') %}selected="selected"{% endif %}>{{ i18n('austria') }}</option>
+                            <option value="switzerland" {% if country is same as('switzerland') %}selected="selected"{% endif %}>{{ i18n('switzerland') }}</option>
+                            <option value="netherlands" {% if country is same as('netherlands') %}selected="selected"{% endif %}>{{ i18n('netherlands') }}</option>
                         </select>
                     </div>
                 </div>
                 <div class="form__control">
                     <label class="form__label form__label--checkbox">
-                        <input type="hidden" value="off" name="contact_visible" />
+                        <input type="hidden" value="off" name="contact_visible"/>
                         <input type="checkbox"
                                name="contact_visible"
-                               {% if data['contact_visible'] == 'on' %}checked="checked"{% endif %}
-                               class="form__input form__input--checkbox form__input--checkbox-small" />
+                               {% if data['contact_visible'] == 'on' %}checked="checked" {% elseif lastContact.visible %}checked="checked"{% endif %}
+                               class="form__input form__input--checkbox form__input--checkbox-small"/>
                         {{ i18n('contact_data_visible', 'My contact data should be visible for registered users only.') }}
                     </label>
                 </div>
@@ -102,14 +109,21 @@
                             name="price_type"
                             id="price_type"
                             required>
-                        <option value="" {% if not data['price_type'] %} selected {% endif %} disabled>{{ i18n('price_type') }}</option>
-                        <option value="fixed" {% if data['price_type'] is same as('fixed') %} selected {% endif %} data-placeholder="{{ i18n('price') }}" >{{ i18n('price_fixed') }}</option>
-                        <option value="negotiable" {% if data['price_type'] is same as('negotiable')  %} selected {% endif %} data-placeholder="{{ i18n('price') }}">{{ i18n('price_negotiable') }}</option>
-                        <option value="on_demand" {% if data['price_type'] is same as('on_demand') %} selected {% endif %} data-placeholder="{{ i18n('to') }}">{{ i18n('price_on_demand') }}</option>
+                        <option value="" {% if not data['price_type'] %} selected {% endif %}
+                                disabled>{{ i18n('price_type') }}</option>
+                        <option value="fixed" {% if data['price_type'] is same as('fixed') %} selected {% endif %}
+                                data-placeholder="{{ i18n('price') }}">{{ i18n('price_fixed') }}</option>
+                        <option
+                            value="negotiable" {% if data['price_type'] is same as('negotiable') %} selected {% endif %}
+                            data-placeholder="{{ i18n('price') }}">{{ i18n('price_negotiable') }}</option>
+                        <option
+                            value="on_demand" {% if data['price_type'] is same as('on_demand') %} selected {% endif %}
+                            data-placeholder="{{ i18n('to') }}">{{ i18n('price_on_demand') }}</option>
                     </select>
                 </div>
                 <label for="price"
-                       class="title title--attribute-group">{{ i18n('price_' ~ type.name, i18n('price')) }}<span class="required">*</span></label>
+                       class="title title--attribute-group">{{ i18n('price_' ~ type.name, i18n('price')) }}<span
+                        class="required">*</span></label>
                 <div class="form__control is-hidden">
                     <label for="price-min"
                            class="form__input form__input--inside-label">
@@ -119,7 +133,7 @@
                                max="2000000"
                                value="{{ data['price_min'] }}"
                                class="form__input"
-                               placeholder="{{ i18n('from') }}" />
+                               placeholder="{{ i18n('from') }}"/>
                         {% if i18nExists('unit_price') %}
                             <span class="input__unit">
                         {{ i18n('unit_price') }}
@@ -139,7 +153,7 @@
                                value="{{ data['price'] }}"
                                class="form__input"
                                placeholder="{{ i18n('price') }}"
-                               required />
+                               required/>
                         {% if i18nExists('unit_price') %}
                             <span class="input__unit">
                         {{ i18n('unit_price') }}
@@ -150,14 +164,14 @@
 
                 <div class="form__control form__control--checkbox">
                     <label for="tax" class="form__label form__label--checkbox"> {{ i18n('tax') }}</label>
-                    <input type="hidden" name="tax" value="off" />
+                    <input type="hidden" name="tax" value="off"/>
                     <input type="checkbox"
                            class="form__input form__input--checkbox"
                            name="tax"
                            id="tax"
-                            {% if data['tax'] == 'on' %}
+                        {% if data['tax'] == 'on' %}
                         checked="checked"
-                            {% endif %}>
+                        {% endif %}>
                 </div>
             </div>
         </div>
