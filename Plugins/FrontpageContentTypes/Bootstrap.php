@@ -10,6 +10,7 @@ use FrontpageContentTypes\ContentTypes\ImageTileLarge;
 use FrontpageContentTypes\ContentTypes\ImageTileMedium;
 use FrontpageContentTypes\ContentTypes\ImageTileSmall;
 use FrontpageContentTypes\ContentTypes\TextIconPrefix;
+use FrontpageContentTypes\ContentTypes\Banner;
 use Oforge\Engine\Modules\CMS\Services\ContentTypeGroupManagementService;
 use Oforge\Engine\Modules\CMS\Services\ContentTypeManagementService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
@@ -133,6 +134,18 @@ class Bootstrap extends AbstractBootstrap {
             'label'     => [
                 'en' => 'Customers',
                 'de' => 'Kunden',
+            ],
+        ]);
+
+        $contentTypeManagementService->add([
+            'name'      => 'banner',
+            'path'      => 'Banner',
+            'icon'      => '/Themes/Base/ContentTypes/__assets/img/imagetile.png',
+            'group'     => $ctgOtherID,
+            'classPath' => Banner::class,
+            'label'     => [
+                'en' => 'Banner',
+                'de' => 'Banner',
             ],
         ]);
     }

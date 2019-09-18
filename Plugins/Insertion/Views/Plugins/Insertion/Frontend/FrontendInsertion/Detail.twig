@@ -13,8 +13,8 @@
 {% endblock layout__header %}
 
 {% block content %}
-    <div
-        class="content content--insertion flex {% if profile.background.id is not empty %} has-header-image {% endif %}">
+    <div data-insertionid="{{ insertion.id }}"
+        class="content content--insertion flex{% if profile.background.id is not empty %} has-header-image{% endif %} content--insertion-counter">
         <div class="main">
             {% if not insertion.moderation %}
                 {% block insertion_detail__flash_message %}
@@ -76,6 +76,12 @@
                 </div>
                 <div class="description__body">
                     {{ insertion.content[0].description|nl2br }}
+                </div>
+                <div class="description__view-counter">
+                    <svg class="icon icon--small">
+                        <use xlink:href="#preview"></use>
+                    </svg>
+                    <span class="counter">{{ "%04d"|format(insertion.views) }}</span>
                 </div>
             </div>
 

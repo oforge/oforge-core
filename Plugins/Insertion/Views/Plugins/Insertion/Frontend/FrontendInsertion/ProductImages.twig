@@ -6,7 +6,7 @@
                     {% for item in insertion.media %}
                         <div class="slide thumbnail">
                             {% if item is defined and item.content|length > 0 and item.content.path is defined %}
-                                <img src="{{ item.content.path }}" alt="{{ item.content.name }}"
+                                <img src="{{ media(item.content.path, 600) }}" alt="{{ item.content.name }}"
                                      class="thumbnail__image">
                             {% endif %}
                         </div>
@@ -18,7 +18,7 @@
                     {% for item in insertion.media %}
                         <div class="slide thumbnail">
                             {% if item is defined and item.content|length > 0 and item.content.path is defined %}
-                                <img src="{{ item.content.path }}" alt="{{ item.content.name }}"
+                                <img src="{{ media(item.content.path, 400) }}" alt="{{ item.content.name }}"
                                      class="thumbnail__image">
                             {% endif %}
                         </div>
