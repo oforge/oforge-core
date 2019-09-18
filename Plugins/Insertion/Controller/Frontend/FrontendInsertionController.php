@@ -32,6 +32,7 @@ use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\Mailer\Services\MailService;
+use Oforge\Engine\Modules\Media\Services\MediaService;
 use Oforge\Engine\Modules\TemplateEngine\Extensions\Services\UrlService;
 use ReflectionException;
 use Slim\Http\Request;
@@ -855,6 +856,22 @@ class FrontendInsertionController extends SecureFrontendController {
         $url = $urlService->getUrl('insertions_detail', ['id' => $id]);
 
         return $response->withRedirect($url);
+    }
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     *
+     * @throws ORMException
+     * @throws ServiceNotFoundException
+     * @EndpointAction(path="/add_view")
+     */
+    public function trackViewAction(Request $request, Response $response) {
+        if($request->isPost()) {
+            $id = $request->getParsedBody()["id"];
+            /** @var InsertionService $insertionService */
+            $insertionService = Oforge()->Services()->get('insertion');
+            $insertionService->countUpInsertionViews($id);
+        }
     }
 }
