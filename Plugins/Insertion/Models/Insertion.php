@@ -117,6 +117,11 @@ class Insertion extends AbstractModel
      */
     private $moderation = false;
 
+    /**
+     * @var int
+     * @ORM\Column(name="views", type="integer")
+     */
+    private $views = 0;
 
     /**
      * @ORM\PrePersist
@@ -387,4 +392,21 @@ class Insertion extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return int
+     */
+    public function getViews(): int
+    {
+        return $this->views;
+    }
+
+    /**
+     * @param int $views
+     * @return Insertion
+     */
+    public function countUpViews(): Insertion
+    {
+        $this->views = $this->views + 1;
+        return $this;
+    }
 }
