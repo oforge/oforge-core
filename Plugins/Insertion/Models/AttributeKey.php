@@ -32,6 +32,18 @@ class AttributeKey extends AbstractModel {
      */
     private $type;
 
+    //TODO: Handle restrictions in a more general way
+    /**
+     * Restrictions right now are only being used to define how many options a user can select in a multi select element.
+     * Other relevant files are attribute-edit.js and Views/Plugins/Insertion/Backend/BackendAttribute/Edit.twig
+     */
+
+    /**
+     * @var string
+     * @ORM\Column(name="attribute_key_restrictions", type="string", nullable=true)
+     */
+    private $restrictions;
+
     /**
      * @var string
      * @ORM\Column(name="attribute_key_filter_type", type="string", nullable=false)
@@ -112,6 +124,21 @@ class AttributeKey extends AbstractModel {
     public function setType(string $type) : void {
         $this->type = $type;
     }
+
+    /**
+     * @return string|null
+     */
+    public function getRestrictions() : string {
+        return $this->restrictions;
+    }
+
+    /**
+     * @param string $restrictions
+     */
+    public function setRestrictions(string $restrictions) : void {
+        $this->restrictions = $restrictions;
+    }
+
 
     /**
      * @return string
