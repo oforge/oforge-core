@@ -99,12 +99,14 @@ class InsertionTypeService extends AbstractDatabaseAccess {
      * @throws ORMException
      */
     public function getInsertionTypeAttributeMap() {
+        /** @var AttributeKey[] $attributes */
         $attributes = $this->repository("attributeKey")->findAll();
 
         $result = [];
         foreach ($attributes as $attribute) {
-            $result[$attribute->getId()]   = $attribute->toArray();
-            $result[$attribute->getName()] = $attribute->toArray();
+            $attribute = $attribute->toArray();
+            $result[$attribute['id']] = $attribute;
+            $result[$attribute['name']] = $attribute;
         }
 
         return $result;

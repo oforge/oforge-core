@@ -128,17 +128,16 @@ class AttributeKey extends AbstractModel {
     /**
      * @return string|null
      */
-    public function getRestrictions() : string {
+    public function getRestrictions() : ?string {
         return $this->restrictions;
     }
 
     /**
-     * @param string $restrictions
+     * @param string|null $restrictions
      */
-    public function setRestrictions(string $restrictions) : void {
+    public function setRestrictions(?string $restrictions) : void {
         $this->restrictions = $restrictions;
     }
-
 
     /**
      * @return string
