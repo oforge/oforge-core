@@ -25,17 +25,19 @@ class AttributeService extends AbstractDatabaseAccess
      * @param $name
      * @param $inputType
      * @param $filterType
+     * @param $inputTypeRestrictions
      *
      * @return AttributeKey
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function createNewAttributeKey($name, $inputType, $filterType)
+    public function createNewAttributeKey($name, $inputType, $filterType, $inputTypeRestrictions = null)
     {
         $attributeKey = new AttributeKey();
         $attributeKey->setName($name);
         $attributeKey->setType($inputType);
         $attributeKey->setFilterType($filterType);
+        $attributeKey->setRestrictions($inputTypeRestrictions);
 
         $this->entityManager()->create($attributeKey);
 
