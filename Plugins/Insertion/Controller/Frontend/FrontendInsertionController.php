@@ -133,7 +133,10 @@ class FrontendInsertionController extends SecureFrontendController
                 $user = $userService->getUser();
                 /** @var Insertion $lastInsertion */
                 $lastInsertion = $insertionService->getLatestInsertionOfUser($user->getId());
-                $result['lastContact'] = $lastInsertion->getContact()->toArray(1);
+
+                if(isset($lastInsertion)) {
+                    $result['lastContact'] = $lastInsertion->getContact()->toArray(1);
+                }
             }
         }
 
