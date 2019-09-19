@@ -131,11 +131,14 @@ class FrontendInsertionController extends SecureFrontendController
                 /** @var InsertionService $insertionService */
                 $insertionService = Oforge()->Services()->get('insertion');
                 $user = $userService->getUser();
-                /** @var Insertion $lastInsertion */
-                $lastInsertion = $insertionService->getLatestInsertionOfUser($user->getId());
 
-                if(isset($lastInsertion)) {
-                    $result['lastContact'] = $lastInsertion->getContact()->toArray(1);
+                if(isset($user)) {
+                    /** @var Insertion $lastInsertion */
+                    $lastInsertion = $insertionService->getLatestInsertionOfUser($user->getId());
+
+                    if (isset($lastInsertion)) {
+                        $result['lastContact'] = $lastInsertion->getContact()->toArray(1);
+                    }
                 }
             }
         }
