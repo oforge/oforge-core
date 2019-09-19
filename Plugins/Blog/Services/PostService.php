@@ -51,6 +51,7 @@ class PostService extends AbstractDatabaseAccess {
         $query        = $queryBuilder
             ->select('p')
             ->from(Post::class, 'p')
+            ->where('p.active = true')
             ->orderBy('p.created', 'DESC')->setMaxResults(1)
             ->getQuery();
         $result = $query->execute()[0];
