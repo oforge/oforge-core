@@ -45,6 +45,10 @@
 }
 
 @media screen and (min-width: $screen-medium) {
+    .form__control--s + .form__control--s,
+    .form__control--s-left + .form__control--s-left {
+        margin-top: $size-large;
+    }
     .cms--horse-info {
         position: absolute;
         top: 0;
