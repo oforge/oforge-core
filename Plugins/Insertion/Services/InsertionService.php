@@ -3,6 +3,7 @@
 namespace Insertion\Services;
 
 use DateTime;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Services\UserService;
@@ -15,12 +16,14 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\I18n\Models\Language;
 
-class InsertionService extends AbstractDatabaseAccess {
-    public function __construct() {
+class InsertionService extends AbstractDatabaseAccess
+{
+    public function __construct()
+    {
         parent::__construct([
-            'default'                 => Insertion::class,
+            'default' => Insertion::class,
             'insertionAttributeValue' => InsertionAttributeValue::class,
-            'language'                => Language::class,
+            'language' => Language::class,
         ]);
     }
 
@@ -36,7 +39,8 @@ class InsertionService extends AbstractDatabaseAccess {
      * @throws OptimisticLockException
      * @throws ServiceNotFoundException
      */
-    public function createNewInsertion($insertionType, $name, $title, $description, $iso = 'de') {
+    public function createNewInsertion($insertionType, $name, $title, $description, $iso = 'de')
+    {
         $insertion = new Insertion();
 
         /** @var UserService $userService */
@@ -51,7 +55,7 @@ class InsertionService extends AbstractDatabaseAccess {
         $content = new InsertionContent();
         $insertion->setContent([$content]);
 
-     //   $content->setName($name);
+        //   $content->setName($name);
         $content->setDescription($description);
         $content->setTitle($title);
         $content->setInsertion($insertion);
@@ -76,9 +80,10 @@ class InsertionService extends AbstractDatabaseAccess {
      * @return array
      * @throws ORMException
      */
-    public function list(string $type, array $criteria = [], string $orderBy = null, $offset = null, $limit = null) : array {
+    public function list(string $type, array $criteria = [], string $orderBy = null, $offset = null, $limit = null): array
+    {
         $queryBuilder = $this->entityManager()->createQueryBuilder();
-        $result       = $queryBuilder->select(['i'])->from(Insertion::class, 'i')->where($queryBuilder->expr()->eq('i.type', $type));
+        $result = $queryBuilder->select(['i'])->from(Insertion::class, 'i')->where($queryBuilder->expr()->eq('i.type', $type));
         foreach ($criteria as $criteriaKey => $criteriaValue) {
             switch ($criteriaValue['type']) {
                 case 'multi':
@@ -106,11 +111,13 @@ class InsertionService extends AbstractDatabaseAccess {
      * @return object|null
      * @throws ORMException
      */
-    public function getInsertionById($id) {
+    public function getInsertionById($id)
+    {
         return $this->repository()->find($id);
     }
 
-    public function updateInsertion($id) {
+    public function updateInsertion($id)
+    {
     }
 
     /**
@@ -119,7 +126,8 @@ class InsertionService extends AbstractDatabaseAccess {
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function deleteInsertion($id) {
+    public function deleteInsertion($id)
+    {
         $insertion = $this->repository()->find($id);
         $this->entityManager()->remove($insertion);
         $this->repository()->clear();
@@ -134,7 +142,8 @@ class InsertionService extends AbstractDatabaseAccess {
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function addAttributeValueToInsertion($insertion, $attributeKey, $value) {
+    public function addAttributeValueToInsertion($insertion, $attributeKey, $value)
+    {
         $insertionAttributeValue = new InsertionAttributeValue();
         $insertionAttributeValue->setAttributeKey($attributeKey)->setInsertion($insertion)->setValue($value->getValue());
 
@@ -149,15 +158,44 @@ class InsertionService extends AbstractDatabaseAccess {
      *
      * @return Insertion[]
      */
-    public function getInsertionByDays(DateTime $from, DateTime $to) {
+    public function getInsertionByDays(DateTime $from, DateTime $to)
+    {
         $queryBuilder = $this->entityManager()->createQueryBuilder();
         $queryBuilder
             ->select(['i'])->from(Insertion::class, 'i')
-                           ->where('i.createdAt BETWEEN :from AND :to')
-                           ->setParameter('from', $from)
-                           ->setParameter('to', $to);
+            ->where('i.createdAt BETWEEN :from AND :to')
+            ->setParameter('from', $from)
+            ->setParameter('to', $to);
         /** @var Insertion[] $result */
         $result = $queryBuilder->getQuery()->getResult();
         return $result;
+    }
+
+    /**
+     * @param $id
+     * @throws ORMException
+     */
+    public function countUpInsertionViews($id) {
+        /** @var Insertion $insertion */
+        $insertion = $this->repository()->find($id);
+        $insertion = $insertion->countUpViews();
+        $this->entityManager()->flush($insertion);
+    }
+
+    /**
+     * @param $userId
+     * @return mixed
+     * @throws NonUniqueResultException
+     */
+    public function getLatestInsertionOfUser($userId)
+    {
+        $queryBuilder = $this->entityManager()->createQueryBuilder();
+        $queryBuilder
+            ->select(['i'])->from(Insertion::class, 'i')
+            ->where("i.user = :user")
+            ->setParameter('user', $userId)
+            ->orderBy('i.createdAt', 'DESC')
+            ->setMaxResults(1);
+        return $queryBuilder->getQuery()->getOneOrNullResult();
     }
 }

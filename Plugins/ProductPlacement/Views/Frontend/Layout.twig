@@ -1,0 +1,20 @@
+{% extends '@parent/Frontend/Layout.twig' %}
+    {% set context = meta.route.context|lower %}
+    {% set content_before = content('product-placement_' ~ context ~ '_before_' ~ meta.language.iso) %}
+    {% set content_after = content('product-placement_' ~ context ~ '_after_' ~ meta.language.iso) %}
+
+    {% block content_before %}
+        {% if (content_before) %}
+        <div class="product-placement {{ context }} before">
+            {{ content_before.text|raw }}
+        </div>
+        {% endif %}
+    {% endblock content_before %}
+
+    {% block content_after %}
+        {% if (content_after) %}
+        <div class="product-placement {{ context }} after">
+            {{ content_after.text|raw }}
+        </div>
+        {% endif %}
+    {% endblock content_after %}

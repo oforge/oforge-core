@@ -1,0 +1,28 @@
+html {
+    overflow-x: hidden;
+}
+
+.product-placement {
+    position: absolute;
+    width: 200px;
+    height: 600px;
+    background: lime;
+    top: 152px;
+
+    &.before {
+        left: calc(50% - 860px);
+    }
+    &.after {
+        left: calc(50% + 660px)
+    }
+}
+
+.home .product-placement {
+    top: 956px;
+}
+.top-banner + .wrap .product-placement {
+    top: 203px;
+}
+.top-banner + .wrap.home .product-placement {
+    top: 1008px;
+}
