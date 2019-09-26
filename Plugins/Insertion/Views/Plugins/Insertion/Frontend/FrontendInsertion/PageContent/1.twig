@@ -1,46 +1,42 @@
 {% block page_content %}
-    {# Main details #}
-    {#<div class="form-controls">#}
-        {#<div class="form__control form__control--xs">#}
-            {#{% set label = i18n('insertion_name_' ~ type.name, '' ) is empty ? i18n('insertion_name') :  i18n('insertion_name_' ~ type.name) %}#}
-            {#<label for="insertion_name"#}
-                   {#class="form__label form__label--title">{{ label }}</label>#}
-            {#<input name="insertion_name"#}
-                   {#value="{{ data['insertion_name'] }}"#}
-                   {#type="text"#}
-                   {#class="form__input form-control"#}
-                   {#placeholder="{{ i18n('insertion_name_placeholder') }}"#}
-                   {#data-required#}
-                   {#maxlength="100"#}
-                   {#required>#}
-        {#</div>#}
-    {#</div>#}
 
-    <div class="form-controls">
-        {% for attributeGroup in attributes %}
-            {% if attributeGroup.items|length > 0 and attributeGroup.name == 'main' %}
-                {% for attribute in attributeGroup.items %}
-                    <div class="form__control form__control--s">
-                        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': attribute.required, 'label_class': 'form__label--title' } %}
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endfor %}
+<div class="form-controls form-controls--step-1">
+    {% set hasContent = false %}
+    {% for attributeGroup in attributes %}
+        {% if attributeGroup.items|length > 0 and attributeGroup.name == 'main' %}
+            {% for attribute in attributeGroup.items %}
+                {% set content = content('html_' ~ type.name ~ '_' ~ attribute.attributeKey.name ~ '_' ~ meta.language.iso) %}
+
+                {% if content %}
+                    {% set hasContent = true %}
+                {% endif %}
+
+                <div class="form__control form__control--s {{ hasContent ? 'form__control--s-left' : '' }}">
+                    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': attribute.required, 'label_class': 'form__label--title' } %}
+                </div>
+
+                {% if content %}
+                    {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+
+    <div class="form__control form__control--s {{ hasContent ? 'form__control--s-left' : '' }}">
+        <label for="insertion_title"
+               class="form__label form__label--title">{{ i18n('insertion_title') }}<span class="required">*</span></label>
+        <input name="insertion_title"
+               value="{{ data['insertion_title'] }}"
+               type="text"
+               class="form__input form-control"
+               placeholder="{{ i18n('insertion_title_placeholder') }}"
+               data-required
+               maxlength="180"
+               required>
     </div>
+</div>
 
-    <div class="form-controls">
-        <div class="form__control form__control--s">
-            <label for="insertion_title"
-                   class="form__label form__label--title">{{ i18n('insertion_title') }}<span class="required">*</span></label>
-            <input name="insertion_title"
-                   value="{{ data['insertion_title'] }}"
-                   type="text"
-                   class="form__input form-control"
-                   placeholder="{{ i18n('insertion_title_placeholder') }}"
-                   data-required
-                   maxlength="180"
-                   required>
-        </div>
+<div class="form-controls">
         {% block image__upload %}
         <div class="form__control">
             {% include 'Plugins/Insertion/Frontend/Components/Content/ImageUpload.twig' %}

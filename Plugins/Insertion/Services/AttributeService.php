@@ -25,17 +25,19 @@ class AttributeService extends AbstractDatabaseAccess
      * @param $name
      * @param $inputType
      * @param $filterType
+     * @param $inputTypeRestrictions
      *
      * @return AttributeKey
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function createNewAttributeKey($name, $inputType, $filterType)
+    public function createNewAttributeKey($name, $inputType, $filterType, $inputTypeRestrictions = null)
     {
         $attributeKey = new AttributeKey();
         $attributeKey->setName($name);
         $attributeKey->setType($inputType);
         $attributeKey->setFilterType($filterType);
+        $attributeKey->setRestrictions($inputTypeRestrictions);
 
         $this->entityManager()->create($attributeKey);
 
@@ -79,17 +81,19 @@ class AttributeService extends AbstractDatabaseAccess
      * @param $type
      * @param $filterType
      * @param bool $sortable
+     * @param $inputTypeRestrictions
      *
      * @return AttributeKey
      * @throws ORMException
      */
-    public function updateAttributeKey($id, $name, $type, $filterType, $sortable = false)
+    public function updateAttributeKey($id, $name, $type, $filterType, $inputTypeRestrictions = "", $sortable = false)
     {
         /** @var AttributeKey $attributeKey */
         $attributeKey = $this->repository('attributeKey')->find($id);
         $attributeKey->setName($name);
         $attributeKey->setType($type);
         $attributeKey->setFilterType($filterType);
+        $attributeKey->setRestrictions($inputTypeRestrictions != null ? $inputTypeRestrictions : "");
         $attributeKey->setSortable($sortable);
 
         $this->entityManager()->update($attributeKey);
