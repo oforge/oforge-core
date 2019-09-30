@@ -10,20 +10,21 @@
         <ul class="upload__list"
             data-upload-video
             data-text-snippet="{{ i18n('delete') }}">
-            <li class="upload__item upload__item--placeholder">
-                <div class="upload__image">
-                    <svg class="icon icon--secondary">
-                        <use xlink:href="#videocamera"></use>
-                    </svg>
-                </div>
-            </li>
-            <li class="upload__item upload__item--new-button">
-                <div class="upload__image upload__image--new"
-                     data-video-upload-button>
-                    {{ i18n('new_video') }}
-                </div>
+            <li class="upload__item upload__item--new-button" id="thumbnail-container">
+                    <div class="upload__image upload__image--new"
+                         data-video-upload-button>
+                        <svg class="icon icon--secondary">
+                            <use xlink:href="#videocamera"></use>
+                        </svg>
+                        {{ i18n('new_video') }}
+                    </div>
+
+                    <div class="progress-container">
+                        <progress class="progress" value="0" max="100" id="upload-progress"></progress>
+                    </div>
             </li>
             <input type="file"
+                   hidden
                    name="upload__video"
                    data-file-input-video
                    accept="video/mp4">
@@ -31,5 +32,8 @@
     </div>
     <div class="upload--video upload__max-size-exceeded hidden">
         <p class="description description--upload">{{ i18n('upload_max_size_exceeded') }}</p>
+    </div>
+    <div class="upload--video upload__error-message hidden">
+        <p class="description description--upload">{{ i18n('vimeo_upload_error_message') }}</p>
     </div>
 {% endblock video_upload %}

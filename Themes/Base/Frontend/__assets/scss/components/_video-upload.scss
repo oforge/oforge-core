@@ -3,8 +3,91 @@
         display: none;
     }
 }
+
 .upload--video {
     .upload__list {
         border: none;
+        justify-content: center;
+    }
+
+    .upload__item {
+        &.upload__item--new-button {
+            display: block;
+        }
+    }
+
+    .upload__image.upload__image--new {
+        z-index: 1;
+        .icon {
+            transition: opacity 200ms, transform 200ms ease-in-out;
+            position: absolute;
+            top: 3rem;
+            width: 4rem;
+            height: 4rem;
+
+        }
+
+        &:before, &:after {
+            transition: opacity 200ms, transform 200ms ease-in-out;
+            transform: rotate(-180deg) scale(.5);
+            opacity: 0;
+        }
+
+        &:hover {
+            .icon {
+                transition-duration: 300ms;
+                transform: rotate(180deg) scale(.5);
+                opacity: 0;
+            }
+
+            &:before, &:after {
+                transition-duration: 300ms;
+                transform: rotate(0deg) scale(1);
+                opacity: 1;
+            }
+        }
+
+        &.hidden {
+            display: none;
+        }
+    }
+
+    .upload__image {
+        &.processing {
+            content: "FAKE CONTENT";
+            color: transparent;
+            position: relative;
+            &:before {
+                content: "";
+                float: left;
+                width: 30px;
+                height: 20px;
+                background-size: contain;
+                background-position: center left;
+                background-repeat: no-repeat;
+                background-image: url(/var/public/__assets/Frontend/img/loading.svg);
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+        }
+    }
+
+    .upload__image.default-image {
+        background-image: url("../img/placeholder_horse.svg");
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-color: $color-primary-light;
+    }
+
+    .progress-container {
+        width: 100%;
+        padding: $size-large;
+        padding-top: 0;
+        z-index: 1;
+    };
+    .progress {
+        width: 100%;
     }
 }
