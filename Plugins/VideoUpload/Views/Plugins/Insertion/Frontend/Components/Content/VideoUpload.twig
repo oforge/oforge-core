@@ -11,17 +11,22 @@
             data-upload-video
             data-text-snippet="{{ i18n('delete') }}">
             <li class="upload__item upload__item--new-button" id="thumbnail-container">
-                    <div class="upload__image upload__image--new"
-                         data-video-upload-button>
-                        <svg class="icon icon--secondary">
-                            <use xlink:href="#videocamera"></use>
-                        </svg>
-                        {{ i18n('new_video') }}
-                    </div>
+                <div class="upload__image upload__image--new"
+                     data-video-upload-button>
+                    <svg class="icon icon--secondary">
+                        <use xlink:href="#videocamera"></use>
+                    </svg>
+                    {{ i18n('new_video') }}
+                </div>
 
-                    <div class="progress-container">
-                        <progress class="progress" value="0" max="100" id="upload-progress"></progress>
-                    </div>
+                <div class="upload__delete hidden"
+                     id="video-delete">
+                    {{ i18n('delete') }}
+                </div>
+
+                <div class="progress-container hidden">
+                    <progress class="progress" value="0" max="100" id="upload-progress"></progress>
+                </div>
             </li>
             <input type="file"
                    hidden
@@ -30,10 +35,27 @@
                    accept="video/mp4">
         </ul>
     </div>
-    <div class="upload--video upload__max-size-exceeded hidden">
-        <p class="description description--upload">{{ i18n('upload_max_size_exceeded') }}</p>
-    </div>
-    <div class="upload--video upload__error-message hidden">
-        <p class="description description--upload">{{ i18n('vimeo_upload_error_message') }}</p>
+    <div class="upload--video upload__messages">
+        <div class="upload--video upload--message upload__max-size-exceeded hidden">
+            <p class="description description--upload">{{ i18n('upload_max_size_exceeded') }}</p>
+        </div>
+        <div class="upload--video upload--message upload__error-message hidden">
+            <p class="description description--upload">{{ i18n('vimeo_upload_error_message') }}</p>
+        </div>
+        <div class="upload--video upload--message upload__uploading-message hidden">
+            <p class="description description--upload">{{ i18n('vimeo_upload_uploading_message', {'en' : 'Uploading...'}) }}</p>
+        </div>
+        <div class="upload--video upload--message upload__processing-message hidden">
+            <p class="description description--upload">{{ i18n('vimeo_upload_processing_message', {'en' : 'Processing...'}) }}</p>
+        </div>
+        <div class="upload--video upload--message upload__success-message hidden">
+            <p class="description description--upload">{{ i18n('vimeo_upload_success_message', {'en' : 'Upload Successful.'}) }}</p>
+        </div>
+        <div class="upload--video upload--message upload__deleting-message hidden">
+            <p class="description description--upload">{{ i18n('vimeo_upload_deleting_message', {'en' : 'Deleting...'}) }}</p>
+        </div>
+        <div class="upload--video upload--message upload__delete-success-message hidden">
+            <p class="description description--upload">{{ i18n('vimeo_upload_delete_success_message', {'en' : 'Successfully deleted.'}) }}</p>
+        </div>
     </div>
 {% endblock video_upload %}
