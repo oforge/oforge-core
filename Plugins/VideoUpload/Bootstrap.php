@@ -15,7 +15,7 @@ use VideoUpload\Controller\Frontend\VideoUploadController;
 class Bootstrap extends AbstractBootstrap {
 
     /*
-     *         'client_id' => '1096cac8f6676464e317bb98be0be54d23c61deb',
+     *  'client_id' => '1096cac8f6676464e317bb98be0be54d23c61deb',
         'client_secret' => 'CiVTC7r6uRznTtWX3erWP3XuYAO2MiNI69ZliAa7TwMV1eLSv7TQ19SukG5ua9sK2H5AkY21yTr5s/Cy4Z83mSxPi1ihqxO+bpEoP90G8//1E6mI39zBfDxEAJ+zLej2',
         'access_token' => 'cf13093b3e1c21db56d3adb152f12882'
      */
@@ -63,7 +63,7 @@ class Bootstrap extends AbstractBootstrap {
             'type'     => ConfigType::STRING,
             'group'    => 'vimeo',
             'default'  => '',
-            'value'    => 'cf13093b3e1c21db56d3adb152f12882',
+            'value'    => '98cc11b80aa5107bc60f38cb31f944c9',
             'label'    => 'vimeo_access_token',
             'required' => true,
             'order'    => 2,

@@ -1,5 +1,5 @@
 .upload {
-    &__max-size-exceeded {
+    &__max-size-exceeded, &__error-message {
         &.hidden {
             display: none;
         }

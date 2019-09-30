@@ -50,10 +50,10 @@ class VideoUploadController
         if (isset($vimeoGroupConfigs) && !empty($vimeoGroupConfigs)) {
             $client = new Vimeo($vimeoGroupConfigs['vimeo_client_id'], $vimeoGroupConfigs['vimeo_client_secret'], $vimeoGroupConfigs['vimeo_access_token']);
 
-          // $apiResponse = $client->upload(ROOT_PATH . '/var/public/videos/Horses_3.mp4');
+            //$apiResponse = $client->upload(ROOT_PATH . '/var/public/videos/Horses_3.mp4');
 
             //$apiResponse = $client->request('/tutorial', array(), 'GET');
-           // Oforge()->View()->assign(['json' => $apiResponse]);
+            //Oforge()->View()->assign(['json' => $apiResponse]);
         }
     }
 }
