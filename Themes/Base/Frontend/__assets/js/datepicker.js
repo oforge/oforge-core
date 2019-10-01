@@ -7,7 +7,7 @@ if (typeof Oforge !== 'undefined') {
             var picker = new Pikaday({
                 field: document.getElementById('datepicker'),
                 maxDate: new Date(),
-                yearRange: 40,
+                minDate: new Date() - 50,
             });
             console.log(picker);
         }
