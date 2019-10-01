@@ -1,10 +1,11 @@
 <div class="form__control form__control--{{ attribute.filterType }}">
     <label for="insertion[{{ attribute.id }}]"
            class="form__label {{ label_class }}">{{ i18n(attribute.name) }}{% if required %}<span class="required">*</span>{% endif %}</label>
-    <input type="date"
+    <input type="text"
            name="insertion[{{ attribute.id }}]"
            value="{{ data['insertion'][attribute.id] }}"
            class="form__input form-control"
+           id="datepicker"
            placeholder="{{ i18n(attribute.name) }}"
            {% if required %}required{% endif %}/>
 </div>
