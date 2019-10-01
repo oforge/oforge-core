@@ -26,10 +26,10 @@ class ProductPlacement extends AbstractModel {
     private $source;
 
     /**
-     * @var string
-     * @ORM\Column(name="format", type="string", nullable=false)
+     * @var array
+     * @ORM\Column(name="tags", type="array", nullable=false)
      */
-    private $format;
+    private $tags;
 
     /**
      * @return int
@@ -57,19 +57,19 @@ class ProductPlacement extends AbstractModel {
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function getFormat() : string {
-        return $this->format;
+    public function getTags() : array {
+        return $this->tags;
     }
 
     /**
-     * @param string $format
+     * @param array $tags
      *
      * @return ProductPlacement
      */
-    public function setFormat(string $format) : ProductPlacement {
-        $this->format = $format;
+    public function setTags(array $tags) : ProductPlacement {
+        $this->tags = $tags;
 
         return $this;
     }

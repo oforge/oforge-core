@@ -2,7 +2,7 @@
     {% set context = meta.route.context|lower %}
 
     {% block content_before %}
-        {% set content_before = product_placements(2, 'vertical') %}
+        {% set content_before = product_placements(2, ['vertical', 'small', 'insertion', 'detail']) %}
         {% if (content_before) %}
         <div class="product-placement {{ context }} before">
             {% for content in content_before %}

@@ -37,22 +37,22 @@ class ProductPlacementController extends BaseCrudController {
             ],
         ],# source
         [
-            'name'  => 'format',
-            'type'  => CrudDataTypes::STRING,
+            'name'  => 'tags',
+            'type'  => CrudDataTypes::CUSTOM,
             'label' => [
-                'key'     => 'plugin_product_placement_property_format',
+                'key'     => 'plugin_product_placement_property_tags',
                 'default' => [
-                    'en' => 'Format',
-                    'de' => 'Format',
+                    'en' => 'Tags',
+                    'de' => 'Tags',
                 ],
             ],
             'crud'  => [
                 'index'  => 'readonly',
-                'view'   => 'readonly',
-                'create' => 'editable',
-                'update' => 'editable',
-                'delete' => 'readonly',
+                'create' => 'readonly',
             ],
-        ],#format
+            'renderer' => [
+                'custom' => 'Plugins/ProductPlacement/Backend/ProductPlacement/CRUD/RenderTags.twig',
+            ],
+        ],#tags
     ];
 }
