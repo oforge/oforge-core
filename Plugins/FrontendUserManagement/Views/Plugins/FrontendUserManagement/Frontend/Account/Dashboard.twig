@@ -11,10 +11,11 @@
                         <use xlink:href="#info"></use>
                     </svg>
                     <p class="flash__message">
-                        Du hast dein Inseratsprofil zu {{ insertionProfileProgress }}% vervollständigt.
-                        <a href="{{ url('frontend_account_insertions_profile') }}">
-                            HIER
-                        </a> kannst du dein Profil anpassen.
+                        {{ i18n('state_of_insertion_profile_pretext') }} {{ insertionProfileProgress }}% {{ i18n('state_of_insertion_profile_posttext') }}.
+
+                        <a class="button button--secondary" href="{{ url('frontend_account_insertions_profile') }}">
+                            {{ i18n('complete_insertion_profile') }}
+                        </a>
                     </p>
                 </div>
             </div>
