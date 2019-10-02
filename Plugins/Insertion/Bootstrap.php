@@ -18,6 +18,7 @@ use Insertion\Cronjobs\Reminder14DaysCronjob;
 use Insertion\Cronjobs\Reminder30DaysCronjob;
 use Insertion\Cronjobs\Reminder3DaysCronjob;
 use Insertion\Cronjobs\SearchBookmarkCronjob;
+use Insertion\Middleware\InsertionProfileProgressMiddleware;
 use Insertion\Middleware\InsertionDetailMiddleware;
 use Insertion\Models\AttributeKey;
 use Insertion\Models\AttributeValue;
@@ -72,6 +73,13 @@ class Bootstrap extends AbstractBootstrap {
             BackendInsertionFeedbackController::class,
         ];
 
+        $this->middlewares = [
+            'frontend_account_dashboard' => [
+                'class' => InsertionProfileProgressMiddleware::class,
+                'position' => 1,
+            ],
+        ];
+
         $this->services = [
             'insertion'                 => InsertionService::class,
             'insertion.type'            => InsertionTypeService::class,
@@ -87,7 +95,6 @@ class Bootstrap extends AbstractBootstrap {
             'insertion.profile'         => InsertionProfileService::class,
             'insertion.slider'          => InsertionSliderService::class,
             'insertion.zip'             => InsertionZipService::class,
-            'insertion.profile.progress'=> InsertionProfileProgressService::class,
         ];
 
         $this->models = [
