@@ -17,10 +17,17 @@ class InsertionProfileProgressMiddleware {
      * @param Request $request
      * @param Response $response
      *
+     * @return int
      * @throws \Doctrine\ORM\ORMException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
     public function prepend(Request $request, Response $response) {
+        $user = Oforge()->View()->get('current_user');
+
+        if(is_null($user)) {
+            return 0;
+        }
+
         /** @var array $keys - insertion profile entries to check */
         $keys = [
             'background',
@@ -29,8 +36,6 @@ class InsertionProfileProgressMiddleware {
             'imprintZipCity',
             'imprintEmail',
         ];
-
-        $user = Oforge()->View()->get('current_user');
 
         /** @var int $count - represents the profile entries from $keys which have been set by the user */
         $count = 0;
@@ -57,6 +62,8 @@ class InsertionProfileProgressMiddleware {
                 $this->assignProgressToView(100 * $count / sizeof($keys));
             }
         }
+
+        return 1;
     }
 
     private function assignProgressToView(int $progress = 0) {
