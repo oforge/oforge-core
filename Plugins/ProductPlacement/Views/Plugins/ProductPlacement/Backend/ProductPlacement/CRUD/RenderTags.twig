@@ -1,3 +1,38 @@
-<div><span>TODO: Render Tag List and do multiselect</span></div>
-<input type="text" name="data[tags]" id="form_create_productplacement_productplacement_tags">
+<div
+    class="form__control form__control--new-select">
+    <div class="select select--render-tags"
+         data-select-type="multi"
+         data-placeholder="{{ i18n('tags') }}"
+         data-select="data[tags][]">
+        <p class="select__text" data-select-text=""></p>
+        {% if item['tags'] is not empty %}
+            <input type="hidden" name="data[tags][]"
+                   value=""/>
+        {% endif %}
 
+        {% if not isSubAttribute %}
+            {# Invisible input needed to make the select element required #}
+            {% if required %}
+                <input class="select__require-input" type="text" required tabindex="-1" value="">
+            {% endif %}
+            <input type="text"
+                   tabindex="-1"
+                   class="select__filter"
+                   data-select-filter=""
+                   placeholder="{{ i18n('search') }}">
+        {% endif %}
+        <ul class="select__list"
+            data-select-list=""
+            data-simplebar="">
+            {% for tag in tags %}
+                {% set isChecked = tag.id in item['tags'] %}
+                <li class="select__item {% if (isChecked) %}select__item--is-checked{% endif %}"
+                    data-selected="false"
+                    data-index="{{ loop.index0 }}"
+                    data-value-id="{{ tag.id }}">
+                    <span class="select__value">{{ i18n(tag.name) }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>

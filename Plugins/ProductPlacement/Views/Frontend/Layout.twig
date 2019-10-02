@@ -3,10 +3,11 @@
 
     {% block content_before %}
         {% set content_before = product_placements(2, ['vertical', 'small', 'insertion', 'detail']) %}
-        {% if (content_before) %}
+        {% if (content_before and content_before|length > 0) %}
+            {{ o_dump(content_before) }}
         <div class="product-placement {{ context }} before">
             {% for content in content_before %}
-                <span>{{ content.source }}</span> <span>{{ content.format }}</span>
+                <span>{{ content.source }}</span> <span>{{ content.tag }}</span>
 
             {% endfor %}
         </div>
