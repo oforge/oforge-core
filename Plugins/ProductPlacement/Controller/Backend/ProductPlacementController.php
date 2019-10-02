@@ -6,6 +6,7 @@ use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
 use ProductPlacement\Models\ProductPlacement;
+use ProductPlacement\Services\ProductPlacementService;
 
 /**
  * Class CategoryController
@@ -53,6 +54,14 @@ class ProductPlacementController extends BaseCrudController {
             'renderer' => [
                 'custom' => 'Plugins/ProductPlacement/Backend/ProductPlacement/CRUD/RenderTags.twig',
             ],
+            'list' => 'getTags',
         ],#tags
     ];
+
+    protected function getTags() {
+        /** @var ProductPlacementService $productPlacementService */
+        $productPlacementService = Oforge()->Services()->get('product.placement');
+        $tags = $productPlacementService->getAllTags();
+        Oforge()->View()->assign(['tags' => $tags]);
+    }
 }

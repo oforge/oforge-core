@@ -4,7 +4,6 @@ namespace ProductPlacement\Services;
 
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
-use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use ProductPlacement\Models\ProductPlacement;
 use ProductPlacement\Models\ProductPlacementTag;
 
@@ -21,18 +20,60 @@ class ProductPlacementService extends AbstractDatabaseAccess {
      * @throws ORMException
      */
     public function get(int $amount, ?array $tags = null) {
-        $queryBuilder = $this->repository()->createQueryBuilder('pp');
+        $result = [];
+        /** @var ProductPlacement[] $productPlacements */
+        $productPlacements = $this->repository()->findAll();
         if ($tags !== null && sizeof($tags) > 0) {
-            $this->findOrCreateTags($tags);
-            $queryBuilder = $queryBuilder->where('pp.tags = :tags')->setParameter('tags', $tags);
+            $tagIds = $this->findOrCreateTags($tags);
+            foreach ($productPlacements as $productPlacement) {
+                $found = true;
+                foreach ($productPlacement->getTags() as $tag) {
+                    if (!in_array($tag, $tagIds)) {
+                        $found = false;
+                        break;
+                    }
+                }
+
+                if ($found) {
+                    $result[] = $productPlacement->toArray();
+                }
+            }
         }
-        $query  = $queryBuilder->select()->getQuery();
-        $result = $query->getArrayResult();
         shuffle($result);
-        return array_slice($result,0, $amount);
+
+        return array_slice($result, 0, $amount);
     }
 
-    private function findOrCreateTags(array $tags) {
-        // TODO: find or create every tag
+    /**
+     * @param array $tags
+     *
+     * @return array
+     * @throws ORMException
+     */
+    private function findOrCreateTags(array $tags) : array {
+        $result = [];
+        $newTag = null;
+        foreach ($tags as $tag) {
+            $tagToFind = $this->repository('tags')->findOneBy(['name' => $tag]);
+            if ($tagToFind === null) {
+                $newTag = new ProductPlacementTag();
+                $newTag->setName($tag);
+                $this->entityManager()->create($newTag);
+            }
+            array_push($result, $this->repository('tags')->findOneBy(['name' => $tag])->getId());
+        }
+
+        return $result;
+    }
+
+    public function getAllTags() {
+        $result = [];
+        /** @var ProductPlacementTag[] $tags */
+        $tags = $this->repository('tags')->findAll();
+        foreach ($tags as $tag) {
+            array_push($result, $tag->toArray());
+        }
+
+        return $result;
     }
 }
