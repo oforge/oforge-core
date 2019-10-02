@@ -6,8 +6,8 @@ if (typeof Oforge !== 'undefined') {
         init: function () {
             var picker = new Pikaday({
                 field: document.getElementById('datepicker'),
-                maxDate: new Date(),
-                minDate: new Date() - 50,
+                maxDate: moment().toDate(),
+                minDate: moment().subtract(40, 'years').toDate(),
             });
             console.log(picker);
         }
