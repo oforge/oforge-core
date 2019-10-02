@@ -66,34 +66,6 @@ class AccountController extends SecureFrontendController {
 
         Oforge()->View()->assign(['content' => $backendNavigationService]);
 
-        /**
-         *  Check Insertion Profile Progress
-         */
-        $keys = [
-            'background',
-            'description',
-            'imprintName',
-            'imprintZipCity',
-            'imprintEmail',
-        ];
-
-        $user = Oforge()->View()->get('current_user');
-
-        /** @var InsertionProfileProgressService $profileProgressService */
-        $profileProgressService = Oforge()->Services()->get('insertion.profile.progress');
-        $progress = $profileProgressService->calculateProgress($user['id'], $keys);
-
-        if($progress < 100) {
-
-            $message = I18N::translate('insertion_profile_progress', [
-                'en' => 'Status of your Insertion:',
-                'de' => 'Status deines Profils:',
-            ]);
-
-            $flashMessage = ['dismissible' => true, 'type' =>'info', 'message' => $message . ' ' .  $progress . '%'];
-            Oforge()->View()->assign(['flashMessages' => array($flashMessage)]);
-        }
-
         if(Oforge()->View()->Flash()->hasData('new_registration')) {
             $newRegistration = Oforge()->View()->Flash()->getData('new_registration');
             Oforge()->View()->assign($newRegistration);
