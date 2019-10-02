@@ -25,7 +25,7 @@ class InsertionProfileProgressMiddleware {
         $user = Oforge()->View()->get('current_user');
 
         if(is_null($user)) {
-            return 0;
+            return null;
         }
 
         /** @var array $keys - insertion profile entries to check */
@@ -62,8 +62,6 @@ class InsertionProfileProgressMiddleware {
                 $this->assignProgressToView(100 * $count / sizeof($keys));
             }
         }
-
-        return 1;
     }
 
     private function assignProgressToView(int $progress = 0) {
