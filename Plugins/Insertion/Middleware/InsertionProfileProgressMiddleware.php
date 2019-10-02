@@ -22,7 +22,9 @@ class InsertionProfileProgressMiddleware {
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException
      */
     public function prepend(Request $request, Response $response) {
-        if(!isset($user)) {
+        $user = Oforge()->View()->get('current_user');
+
+        if(is_null($user)) {
             return 0;
         }
 
@@ -67,6 +69,4 @@ class InsertionProfileProgressMiddleware {
     private function assignProgressToView(int $progress = 0) {
         Oforge()->View()->assign(['insertionProfileProgress' => $progress]);
     }
-
-
 }
