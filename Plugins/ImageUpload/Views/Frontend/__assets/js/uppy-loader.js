@@ -24,6 +24,7 @@ if (typeof Oforge !== 'undefined') {
             });
 
             uppy.on('upload-success', function(file, response) {
+                console.log(response);
                 // TODO: Remove file from upload queue
                 // TODO: if last file activate next button
             });
