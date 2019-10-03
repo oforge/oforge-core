@@ -1,0 +1,7 @@
+{% block uppy %}
+    {% if uppyUploadURL %}
+        <div id="drag-drop-area" data-url="{{ uppyUploadURL }}"></div>
+    {% else %}
+        <p>please provide an url for upload</p>
+    {% endif %}
+{% endblock uppy %}
