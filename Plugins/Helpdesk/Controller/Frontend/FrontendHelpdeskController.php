@@ -105,9 +105,11 @@ class FrontendHelpdeskController extends SecureFrontendController {
      * @return Response
      * @throws ORMException
      * @throws ServiceNotFoundException
+     * @EndpointAction(path="/closeTicket/{id}")
      */
     public function closeTicketAction(Request $request, Response $response, $args) {
         $ticketId = $args["id"];
+
         /** @var  $router */
         $router = Oforge()->App()->getContainer()->get('router');
         $uri    = $router->pathFor('frontend_account_support');
@@ -123,7 +125,10 @@ class FrontendHelpdeskController extends SecureFrontendController {
         $userId = Oforge()->View()->get('current_user')['id'];
 
         if ($ticketOpener != $userId) {
-            Oforge()->View()->Flash()->addMessage('error', I18N::translate('ticket_closing_violation', "You don't have permission to close this ticket"));
+            Oforge()->View()->Flash()->addMessage('error', I18N::translate('ticket_closing_violation', [
+                'en' => 'You don\'t have permission to close this ticket.',
+                'de' => 'Du hast keine Befugnis dieses Ticket zu löschen.',
+            ]));
 
             return $response->withRedirect($uri, 302);
         }
@@ -135,12 +140,18 @@ class FrontendHelpdeskController extends SecureFrontendController {
             $messengerService->changeStatus($conversationId, 'closed');
 
         } catch (\Exception $e) {
-            Oforge()->View()->Flash()->addMessage('error', I18N::translate('ticket_closing_error', 'Could not close ticket'));
+            Oforge()->View()->Flash()->addMessage('error', I18N::translate('ticket_closing_error', [
+                'en' => 'Could not close ticket.',
+                'de' => 'Das Ticket konnte nicht geschlossen werden.',
+            ]));
 
             return $response->withRedirect($uri, 302);
         }
 
-        Oforge()->View()->Flash()->addMessage('success', I18N::translate('ticket_closing_success', 'Ticket closed'));
+        Oforge()->View()->Flash()->addMessage('success', I18N::translate('ticket_closing_success', [
+                'en' => 'Your Ticket has been closed.',
+                'de' => 'Dein Ticket wurde geschlossen.',
+            ]));
 
         return $response->withRedirect($uri, 302);
     }
