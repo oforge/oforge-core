@@ -9,6 +9,10 @@
     background: $color-light;
     cursor: pointer;
 
+    &.select--render-tags {
+        position: absolute;
+    }
+
     &.select--is-open {
         height: auto;
         position: absolute;
@@ -169,4 +173,9 @@
 
 .sub-attribute-container {
     display: none;
+}
+
+/* hackyhack */
+.table-responsive.table-responsive {
+    overflow: visible;
 }
