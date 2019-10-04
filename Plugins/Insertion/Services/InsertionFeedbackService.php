@@ -4,6 +4,7 @@ namespace Insertion\Services;
 
 use Insertion\Models\InsertionFeedback;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
+use Doctrine\ORM\ORMException;
 
 class InsertionFeedbackService extends AbstractDatabaseAccess {
     public function __construct() {
@@ -12,6 +13,9 @@ class InsertionFeedbackService extends AbstractDatabaseAccess {
         ]);
     }
 
+    /**
+     * @throws ORMException
+     */
     public function savePostData() {
         if (!empty($_POST)) {
 
