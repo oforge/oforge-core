@@ -8,6 +8,7 @@
 
 namespace Oforge\Engine\Modules\Media\Twig;
 
+use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Media\Services\ImageCompressService;
 use Twig_Extension;
@@ -15,7 +16,7 @@ use Twig_ExtensionInterface;
 use Twig_Function;
 
 /**
- * Class AccessExtension
+ * Class MediaExtension
  *
  * @package Oforge\Engine\Modules\TemplateEngine\Extensions\Twig
  */
@@ -35,6 +36,7 @@ class MediaExtension extends Twig_Extension implements Twig_ExtensionInterface {
      *
      * @return mixed|string
      * @throws ServiceNotFoundException
+     * @throws ORMException
      */
     public function getMedia(...$vars) {
         $result    = '';
