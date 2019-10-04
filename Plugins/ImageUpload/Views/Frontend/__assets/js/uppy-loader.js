@@ -4,7 +4,7 @@ if (typeof Oforge !== 'undefined') {
         selector: '#drag-drop-area',
         init: function () {
             var self = this;
-            var fileQueue = [];
+            var fileQueue = 0;
             var url = document.querySelector(self.selector).dataset.url;
             var uppy = Uppy.Core();
             uppy.use(Uppy.Dashboard, {
@@ -17,16 +17,19 @@ if (typeof Oforge !== 'undefined') {
                 fieldName: 'files[]',
             });
 
-            // TODO: Upload queue
             uppy.on('file-added', function(file) {
-                // TODO: Add file to upload queue
-                // TODO: disable next button
+                // Todo: disable button
+                fileQueue += 1;
             });
 
             uppy.on('upload-success', function(file, response) {
                 console.log(response);
-                // TODO: Remove file from upload queue
-                // TODO: if last file activate next button
+                if(response.status >= 200 && response.status < 300) {
+                    fileQueue -= 1;
+                    if(fileQueue === 0) {
+                        // Todo: activate button
+                    }
+                }
             });
         }
     });
