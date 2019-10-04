@@ -2,10 +2,30 @@
 {% block content %}
     {% include 'Plugins/FrontendUserManagement/Frontend/Components/AccountNavBar.twig' with { content_title: i18n('overview', 'Overview') } %}
 
+    {# The data for the following block is generated in the Insertion Plugin (Middleware) #}
+    {% block insertion__progress %}
+        {% if insertionProfileProgress is not empty %}
+            <div class="content">
+                <div class="flash flash--info">
+                    <svg class="icon icon--info">
+                        <use xlink:href="#info"></use>
+                    </svg>
+                    <p class="flash__message">
+                        {{ i18n('state_of_insertion_profile_pretext') }} {{ insertionProfileProgress }}% {{ i18n('state_of_insertion_profile_posttext') }}.
+
+                        <a class="button button--secondary" href="{{ url('frontend_account_insertions_profile') }}">
+                            {{ i18n('complete_insertion_profile') }}
+                        </a>
+                    </p>
+                </div>
+            </div>
+        {% endif %}
+    {% endblock insertion__progress %}
 
     <div class="account content">
         {% block account %}
             <div class="panel panel--account flex">
+
                 {% block account__sidebar %}
                     {% include 'Plugins/FrontendUserManagement/Frontend/Components/Sidebar.twig' %}
                 {% endblock account__sidebar %}
