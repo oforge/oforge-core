@@ -6,7 +6,9 @@ if (typeof Oforge !== 'undefined') {
             var self = this;
             var fileQueue = 0;
             var url = document.querySelector(self.selector).dataset.url;
-            var uppy = Uppy.Core();
+            var uppy = Uppy.Core({
+                autoProceed: true
+            });
             uppy.use(Uppy.Dashboard, {
                 inline: true,
                 target: self.selector,
@@ -16,6 +18,7 @@ if (typeof Oforge !== 'undefined') {
                 formData: true,
                 fieldName: 'files[]',
             });
+            console.log("blub");
 
             uppy.on('file-added', function(file) {
                 // Todo: disable button
