@@ -127,7 +127,7 @@ class FrontendHelpdeskController extends SecureFrontendController {
         if ($ticketOpener != $userId) {
             Oforge()->View()->Flash()->addMessage('error', I18N::translate('ticket_closing_violation', [
                 'en' => 'You don\'t have permission to close this ticket.',
-                'de' => 'Du hast keine Befugnis dieses Ticket zu löschen.',
+                'de' => 'Du hast keine Befugnis dieses Ticket zu schließen.',
             ]));
 
             return $response->withRedirect($uri, 302);
