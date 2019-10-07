@@ -37,10 +37,14 @@ class PageDuplicateService extends AbstractDatabaseAccess {
 
     /**
      * @param string|int $pageID
+     * @param string|null $pageNameSuffix
      *
      * @return false|array
      */
-    public function duplicate($pageID) {
+    public function duplicate($pageID, string $pageNameSuffix = null) {
+        if ($pageNameSuffix === null) {
+            $pageNameSuffix = ' - ' . I18N::translate('copy', ['en' => 'copy', 'de' => 'Kopie']);
+        }
         try {
             /** @var Page|null $srcPage */
             $srcPage = $this->repository('page')->find($pageID);
@@ -54,7 +58,7 @@ class PageDuplicateService extends AbstractDatabaseAccess {
                 // echo "Page:";
                 // o_print($srcPageData);
                 $dstPage = Page::create($srcPageData);
-                $dstPage->setName($srcPage->getName() . ' - ' . I18N::translate('copy', ['en' => 'copy', 'de' => 'Kopie']));
+                $dstPage->setName($srcPage->getName() . $pageNameSuffix);
                 $this->entityManager()->create($dstPage);
                 $this->duplicatePagePaths($srcPage, $dstPage);
                 $this->entityManager()->getEntityManager()->commit();
