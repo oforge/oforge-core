@@ -250,6 +250,10 @@
                 border: 2px solid $color-light;
             }
         }
+
+        .title {
+            padding-bottom: 2rem;
+        }
     }
 
     @media screen and (min-width: $screen-medium) {
