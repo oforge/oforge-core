@@ -1,7 +1,26 @@
 {% block image_upload %}
-    <span class="form__label form__label--title">
-        {{ i18n('image_upload_title') }} <span class="limitations">{{ i18n('image_upload_limitations') }}</span>
+    <span class="form__label form__label--title label--upload-image">
+        {{ i18n('image_upload_title') }}
     </span>
+    <div class="limitations">{{ i18n('image_upload_limitations') }}</div>
+    <a class="link link--insertion-create"
+       data-modal-view="1">{{ i18n('image_upload_tips', 'Tipps für das Hochladen von Bildern') }}</a>
+    {% set content_320 = content('insertion_create_image_tipps_320') %}
+    {% set content_640 = content('insertion_create_image_tipps_640') %}
+    {% if content_320 and content_640 %}
+    <div data-modal-content="1"
+         class="modal-view">
+        <div class="modal-view__close"
+             data-modal-close="1">✕</div>
+        <div class="modal-view__content">
+
+            <picture class="lazy">
+                <source class="lazy" data-srcset="{{ media(content_640['url']) }}" media="(min-width: 640px)" />
+                <img class="lazy" data-src="{{ media(content_320['url']) }}" alt="{{ i18n('image_upload_tips') }}" />
+            </picture>
+        </div>
+    </div>
+    {% endif %}
     <div class="upload upload--image"
          data-upload>
         <ul class="upload__list"

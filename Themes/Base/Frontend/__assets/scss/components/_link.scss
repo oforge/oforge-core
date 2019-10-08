@@ -21,4 +21,11 @@
     &.link--sub {
         font-size: $font-size-6;
     }
+    &.link--insertion-create {
+        font-size: 1.4rem;
+        cursor: pointer;
+        display: block;
+        text-align: center;
+        margin: $size-medium 0;
+    }
 }
