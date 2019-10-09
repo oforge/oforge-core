@@ -2,6 +2,7 @@
 
 namespace FrontendUserManagement\Controller\Backend;
 
+use Doctrine\ORM\QueryBuilder;
 use FrontendUserManagement\Models\User;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
@@ -61,9 +62,9 @@ class BackendFrontendUserManagementController extends BaseCrudController {
             ],
         ],
         [
-            'name'  => 'image_id',
-            'type'  => CrudDataTypes::CUSTOM,
-            'lable' => ['key' => 'plugin_frontend_user_management_property_profile_image', 'default' => 'Profile image'],
+            'name'     => 'image_id',
+            'type'     => CrudDataTypes::CUSTOM,
+            'lable'    => ['key' => 'plugin_frontend_user_management_property_profile_image', 'default' => 'Profile image'],
             'crud'     => [
                 'index'  => 'off',
                 'view'   => 'readonly',
@@ -168,19 +169,22 @@ class BackendFrontendUserManagementController extends BaseCrudController {
     /** @var array $indexFilter */
     protected $indexFilter = [
         'contactEmail' => [
-            'type'    => CrudFilterType::TEXT,
-            'label'   => ['key' => 'plugin_frontend_user_management_filter_email', 'default' => 'Search in email'],
-            'compare' => CrudFilterComparator::LIKE,
+            'type'     => CrudFilterType::TEXT,
+            'label'    => ['key' => 'plugin_frontend_user_management_filter_email', 'default' => 'Search in email'],
+            'compare'  => CrudFilterComparator::LIKE,
+            'callable' => 'customFilterQuery',
         ],
         'lastName'     => [
-            'type'    => CrudFilterType::TEXT,
-            'label'   => ['key' => 'plugin_frontend_user_management_filter_last_name', 'default' => 'Search in last name'],
-            'compare' => CrudFilterComparator::LIKE,
+            'type'     => CrudFilterType::TEXT,
+            'label'    => ['key' => 'plugin_frontend_user_management_filter_last_name', 'default' => 'Search in last name'],
+            'compare'  => CrudFilterComparator::LIKE,
+            'callable' => 'customFilterQuery',
         ],
         'nickName'     => [
-            'type'    => CrudFilterType::TEXT,
-            'label'   => ['key' => 'plugin_frontend_user_management_filter_nickname', 'default' => 'Search in nickname'],
-            'compare' => CrudFilterComparator::LIKE,
+            'type'     => CrudFilterType::TEXT,
+            'label'    => ['key' => 'plugin_frontend_user_management_filter_nickname', 'default' => 'Search in nickname'],
+            'compare'  => CrudFilterComparator::LIKE,
+            'callable' => 'customFilterQuery',
         ],
     ];
     /** @var array $indexOrderBy */
@@ -191,4 +195,28 @@ class BackendFrontendUserManagementController extends BaseCrudController {
     public function __construct() {
         parent::__construct();
     }
+
+    public function initPermissions() {
+        parent::initPermissions();
+    }
+
+    /**
+     * @param QueryBuilder $queryBuilder
+     * @param array $queryValues
+     */
+    protected function customFilterQuery(QueryBuilder $queryBuilder, array $queryValues) {
+        $and  = $queryBuilder->expr()->andX();
+        $keys = ['contactEmail', 'lastName', 'nickName'];
+        foreach ($keys as $key) {
+            if (isset($queryValues[$key])) {
+                $and->add($queryBuilder->expr()->like('d.' . $key, ':' . $key));
+                $queryBuilder->setParameter($key, '%' . $queryValues[$key] . '%');
+            }
+        }
+        if (!empty($and->getParts())) {
+            $queryBuilder->leftJoin('e.detail', 'd');
+            $queryBuilder->where($and);
+        }
+    }
+
 }
