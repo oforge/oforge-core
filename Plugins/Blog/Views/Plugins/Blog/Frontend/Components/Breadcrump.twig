@@ -10,7 +10,7 @@
         </span>
         {% if blog.post is defined %}
             <span>
-                <a href="{{ url('frontend_view', {postID: blog.post.id, seoUrlPath: blog.post.seoUrlPath}) }}">
+                <a href="{{ url('frontend_blog_view', {postID: blog.post.id, seoUrlPath: blog.post.seoUrlPath}) }}">
                     {{ blog.post.headerTitle }}
                 </a>
             </span>
