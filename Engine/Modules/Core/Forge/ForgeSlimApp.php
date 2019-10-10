@@ -62,13 +62,14 @@ TAG;
 
                     /** @var TemplateManagementService $templateManagementService */
                     $templateManagementService = Oforge()->Services()->get("template.management");
-                    $activeTheme = $templateManagementService->getActiveTemplate()->getName();
+                    $activeTheme               = $templateManagementService->getActiveTemplate()->getName();
 
                     $activeTheme500 = Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . $activeTheme . DIRECTORY_SEPARATOR . "500.html";
                     if (file_exists($activeTheme500)) {
                         return $response->withRedirect($activeTheme500, 307);
-                       } else {
-                        return $response->withRedirect(Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . Statics::DEFAULT_THEME . DIRECTORY_SEPARATOR . "500.html", 307);
+                    } else {
+                        return $response->withRedirect(Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . Statics::DEFAULT_THEME . DIRECTORY_SEPARATOR . "500.html",
+                            307);
                     }
                 }
             };
@@ -118,7 +119,6 @@ TAG;
         $mailer->addStringAttachment($this->parseLogs($_SESSION), 'session.log');
         $mailer->addStringAttachment($html, 'error.html');
 
-
         $mailer->Subject = 'oforge error 500';
         $mailer->setFrom($mailer_settings['smtp_from'], 'Oforge');
         $mailer->addAddress($mailer_settings['receiver_address'], 'Dev');
@@ -136,8 +136,7 @@ TAG;
     <dt>$e</dt>
 </dl>
 Tag;
-                }
-
+            }
 
         }
     }
