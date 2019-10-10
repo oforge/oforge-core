@@ -15,10 +15,10 @@
                     <ul class="preview__summary-list">
                         <li class="preview__item">
                             <span class="preview__key">{{ i18n('price') }}</span>
-                            {% if data.price-type is same as("on_demand")  %}
+                            {% if data.price_type == "on_demand"  %}
                                 <span class="preview__value">{{ i18n('price_on_demand') }}</span>
                             {% else %}
-                                <span class="preview__value">{% if data.price-type is same as("negotiable") %}{{ i18n('price_negotiable') }}{% endif %} {{ data.price|number_format(0, ',', '.') }} €</span>
+                                <span class="preview__value">{% if data.price_type == "negotiable" %}{{ i18n('price_negotiable') }}{% endif %} {{ data.price|number_format(0, ',', '.') }} €</span>
                             {% endif %}
                         </li>
                         <li class="preview__item">
