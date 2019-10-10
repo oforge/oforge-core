@@ -5,6 +5,7 @@
             <h2>{{ i18n('detail_search_' ~ type.name) }}</h2>
             <form id="form-search"
                   class="form form--detail-search"
+                  data-remove-empty-input
                   method="get"
                   action="{{ url('insertions_listing', {'type': typeId }  ) }}">
                 {% for group in attributes %}
