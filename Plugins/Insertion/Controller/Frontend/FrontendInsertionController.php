@@ -39,8 +39,6 @@ use ReflectionException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
-use VideoUpload\Services\VideoUploadService;
-
 /**
  * Class MessengerController
  *
@@ -230,11 +228,6 @@ class FrontendInsertionController extends SecureFrontendController
              */
             $mailService = Oforge()->Services()->get('mail');
 
-            /**
-             * @var VideoUploadService $videoUploadService
-             */
-            $videoUploadService = Oforge()->Services()->get('video.upload');
-
             if ($request->isPost()) {
                 Oforge()->Logger()->get('create')->info("process data ", $_POST);
 
@@ -253,9 +246,6 @@ class FrontendInsertionController extends SecureFrontendController
                     $insertion = $insertionService->getInsertionById(intval($insertionId));
 
                     if (isset($insertion)) {
-                        if(isset($data['insertion']['vimeo_video_id'])) {
-                            $videoUploadService->updateOrCreateVideoKey(intval($insertionId), $data['insertion']['vimeo_video_id']);
-                        }
                         try {
                             $mailService->sendInsertionCreateInfoMail($user, $insertion);
                         } catch (Exception $exception) {
@@ -549,16 +539,7 @@ class FrontendInsertionController extends SecureFrontendController
                 }
             }
         }
-
-
-        /**
-         * @var VideoUploadService $videoUploadService
-         */
-        $videoUploadService = Oforge()->Services()->get('video.upload');
-        $videoKey = $videoUploadService->getVideoKey($id);
-
         Oforge()->View()->assign([
-            "video_id" => $videoKey,
             "top_values" => $topValues,
             "attributes" => $typeAttributes,
             "all_attributes" => $insertionTypeService->getInsertionTypeAttributeMap(),
