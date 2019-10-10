@@ -1,6 +1,6 @@
 {% if crudFilterConfig.list is defined %}
     <span>
-        <select name="{{ crudPropertyName }}" class="form-control select2" title="{{ crudFilterTitle }}
+        <select name="{{ crudPropertyName }}" class="form-control select2" title="{{ crudFilterTitle }}"
                 data-placeholder="{{ crudFilterTitle }}">
             <option {% if meta.route.query[crudPropertyName] is not defined %}selected{% endif %} value="">
                 {{ crudFilterTitle }}
