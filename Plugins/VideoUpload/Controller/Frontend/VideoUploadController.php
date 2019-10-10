@@ -56,4 +56,16 @@ class VideoUploadController
             //Oforge()->View()->assign(['json' => $apiResponse]);
         }
     }
+
+    public function credentialsAction(Request $request, Response $response) {
+        $configService = Oforge()->Services()->get('config');
+        /** @var Config[] $groupConfigs */
+        $groupConfigs = $configService->getGroupConfigs('vimeo');
+        foreach ($groupConfigs as $config) {
+            $vimeoGroupConfigs[$config->getName()] = $config->getValues()[0]->getValue();
+        }
+        if (isset($vimeoGroupConfigs) && !empty($vimeoGroupConfigs)) {
+            Oforge()->View()->assign(['json' => $vimeoGroupConfigs]);
+        }
+    }
 }
