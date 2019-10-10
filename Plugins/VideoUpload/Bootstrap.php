@@ -6,6 +6,7 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Models\Config\ConfigType;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 use VideoUpload\Controller\Frontend\VideoUploadController;
+use VideoUpload\Middleware\VideoUploadMiddleware;
 use VideoUpload\Models\VideoKey;
 use VideoUpload\Services\VideoUploadService;
 
@@ -19,10 +20,6 @@ class Bootstrap extends AbstractBootstrap
 
     public function __construct()
     {
-        $this->dependencies = [
-            \Insertion\Bootstrap::class,
-        ];
-
         $this->endpoints = [
             VideoUploadController::class,
         ];
@@ -34,6 +31,16 @@ class Bootstrap extends AbstractBootstrap
         $this->services = [
             'video.upload' => VideoUploadService::class
         ];
+
+        /*
+        $this->middlewares = [
+            'insertions_processSteps' => [
+                'class' => VideoUploadMiddleware::class,
+                'position' => 1,
+            ],
+        ];
+        */
+
     }
 
     public function install()
