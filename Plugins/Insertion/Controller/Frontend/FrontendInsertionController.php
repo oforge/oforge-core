@@ -238,6 +238,10 @@ class FrontendInsertionController extends SecureFrontendController
 
                     $insertionId = $createService->create($typeId, $user, $processData);
 
+                    if (isset($_SESSION['insertion' . $typeId])) {
+                        $_SESSION['insertion_id'] = $insertionId;
+                    }
+
                     $insertionService = Oforge()->Services()->get('insertion');
 
                     /**
