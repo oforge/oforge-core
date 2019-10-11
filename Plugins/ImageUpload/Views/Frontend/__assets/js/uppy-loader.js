@@ -15,8 +15,6 @@ if (typeof Oforge !== 'undefined') {
             var uploadImageList = uploadItem.querySelector('[data-upload-images]');
             var uploadItemElement = null;
 
-            var input = document.createElement('input');
-
             var uppy = Uppy.Core({
                 locale: Uppy.locales.de_DE,
                 autoProceed: true,
@@ -58,7 +56,7 @@ if (typeof Oforge !== 'undefined') {
                 if (response.status >= 200 && response.status < 300) {
                     var res = response.body.imageData;
                     uploadItemElement = createImageListItem(res.id, res.path, uploadImageList);
-                    uploadItemElement.appendChild(input);
+                    createFileInput(uploadImageList, res);
                     checkPlaceholderItem();
                 }
             });
@@ -145,17 +143,16 @@ if (typeof Oforge !== 'undefined') {
 
                 if (!input) {
                     input = document.createElement('input');
+                    input.setAttribute('type', 'hidden');
+                    input.setAttribute('name', inputName);
+                    input.setAttribute('value', 'main');
+                    input.setAttribute('data-main', 'true');
                     inputCreated = true;
                 }
 
                 if (isTemp) {
                     inputName = 'images_temp_interactions[' + mainId + ']';
                 }
-
-                input.setAttribute('type', 'hidden');
-                input.setAttribute('name', inputName);
-                input.setAttribute('value', 'main');
-                input.setAttribute('data-main', 'true');
 
                 if (inputCreated) {
                     uploadItem.appendChild(input);
@@ -186,34 +183,19 @@ if (typeof Oforge !== 'undefined') {
                 });
             }
 
-            function createFileInput(uploadImageList) {
-                var uploadId = document.querySelectorAll('[data-new-item]').length;
+            function createFileInput(uploadImageList, mediaObject) {
                 var input = document.createElement('input');
                 var uploadItemElement = null;
 
                 input.setAttribute('type', 'hidden');
                 input.setAttribute('name', 'images[]');
-                input.setAttribute('accept', 'image/*');
-                input.setAttribute('data-file-input', uploadId);
-                input.setAttribute('style', 'display: none;');
+                input.setAttribute('data-file-input', mediaObject.id);
+                input.setAttribute('value', mediaObject.id);
 
-                input.onchange = function (evt) {
-                    checkPlaceholderItem();
-                    var button = uploadImageList.querySelector(self.selectors.uploadButton).closest('.upload__item--new-button');
-                    button.remove();
-                    uploadImageList.appendChild(button);
-                }
-                input.click();
+                uploadImageList.appendChild(input);
             }
 
             document.addEventListener('click', function (evt) {
-                if (evt.target.matches(self.selectors.uploadButton)) {
-                    var uploadItem = evt.target.closest(self.selectors.uploader);
-                    var uploadImageList = uploadItem.querySelector('[data-upload-images]');
-
-                    createFileInput(uploadImageList);
-                }
-
                 if (evt.target.matches('[data-upload-delete]')) {
                     var elementToDelete = evt.target;
 
