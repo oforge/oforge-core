@@ -98,13 +98,13 @@
 }
 
 .uppy-size--md .uppy-c-textInput {
-    padding: 8px 10px
+    padding: 8px 10px;
 }
 
 .uppy-c-textInput:focus {
-    border-color: rgba(34, 117, 215, .6);
+    border-color: $color-secondary;
     outline: none;
-    box-shadow: 0 0 0 3px rgba(34, 117, 215, .15)
+    box-shadow: 0 0 0 3px $color-secondary-transparent-2;
 }
 
 .uppy-c-btn {
@@ -135,7 +135,7 @@
     font-size: 14px;
     padding: 10px 18px;
     border-radius: 4px;
-    background-color: #2275d7;
+    background-color: $color-secondary;
     color: #fff
 }
 
@@ -144,12 +144,12 @@
 }
 
 .uppy-c-btn-primary:hover {
-    background-color: #1b5dab
+    background-color: $color-secondary;
 }
 
 .uppy-c-btn-primary:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(34, 117, 215, .4)
+    box-shadow: 0 0 0 3px $color-secondary-transparent-2;
 }
 
 .uppy-c-btn-link {
@@ -171,7 +171,7 @@
 
 .uppy-c-btn-link:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(34, 117, 215, .25)
+    box-shadow: 0 0 0 3px $color-secondary-transparent-2;
 }
 
 .uppy-c-btn--small {
@@ -510,7 +510,7 @@
 }
 
 .uppy-StatusBar-progress {
-    background-color: #2275d7;
+    background-color: $color-secondary;
     height: 2px;
     position: absolute;
     z-index: 1001;
@@ -644,7 +644,7 @@
 }
 
 .uppy-StatusBar-actionCircleBtn:focus {
-    box-shadow: 0 0 0 3px rgba(34, 117, 215, .5)
+    box-shadow: 0 0 0 3px rgba(169, 185, 134, .75)
 }
 
 .uppy-StatusBar-actionCircleBtn:hover {
@@ -664,7 +664,7 @@
     vertical-align: middle;
     font-size: 10px;
     line-height: inherit;
-    color: #2275d7
+    color: $color-secondary;
 }
 
 .uppy-size--md .uppy-StatusBar-actionBtn {
@@ -691,7 +691,7 @@
 }
 
 .uppy-StatusBar-actionBtn--retry:focus {
-    box-shadow: 0 0 0 3px rgba(34, 117, 215, .5)
+    box-shadow: 0 0 0 3px rgba(169, 185, 134, .75)
 }
 
 .uppy-StatusBar-actionBtn--retry:hover {
@@ -724,7 +724,7 @@
 
 .uppy-StatusBar:not(.is-waiting) .uppy-StatusBar-actionBtn--upload {
     background-color: transparent;
-    color: #2275d7
+    color: $color-secondary;
 }
 
 .uppy-StatusBar-actionBtn--uploadNewlyAdded {
@@ -743,7 +743,7 @@
 }
 
 .uppy-StatusBar-actionBtn--uploadNewlyAdded:focus {
-    box-shadow: 0 0 0 3px rgba(34, 117, 215, .5)
+    box-shadow: 0 0 0 3px rgba(169, 185, 134, .75)
 }
 
 .uppy-StatusBar-details {
@@ -775,7 +775,7 @@
     animation-iteration-count: infinite;
     animation-timing-function: linear;
     margin-right: 10px;
-    fill: #2275d7
+    fill: $color-secondary;
 }
 
 .uppy-StatusBar.is-postprocessing .uppy-StatusBar-spinner, .uppy-StatusBar.is-preprocessing .uppy-StatusBar-spinner {
@@ -858,7 +858,7 @@
 
 .uppy-ProviderBrowser-viewType--grid button.uppy-ProviderBrowserItem-inner:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(34, 117, 215, .9)
+    box-shadow: 0 0 0 3px $color-secondary
 }
 
 .uppy-ProviderBrowser-viewType--grid button.uppy-ProviderBrowserItem-inner img, .uppy-ProviderBrowser-viewType--grid button.uppy-ProviderBrowserItem-inner svg {
@@ -874,7 +874,7 @@
     right: 16px;
     width: 26px;
     height: 26px;
-    background-color: #2275d7;
+    background-color: $color-secondary;
     border-radius: 50%;
     z-index: 1002;
     opacity: 0
@@ -914,8 +914,8 @@
 }
 
 .uppy-ProviderBrowser-viewType--list .uppy-ProviderBrowserItem-fakeCheckbox:focus {
-    border: 1px solid #2275d7;
-    box-shadow: 0 0 0 3px rgba(34, 117, 215, .25);
+    border: 1px solid $color-secondary;
+    box-shadow: 0 0 0 3px $color-secondary-transparent-2;
     outline: none
 }
 
@@ -928,8 +928,8 @@
 }
 
 .uppy-ProviderBrowser-viewType--list .uppy-ProviderBrowserItem-fakeCheckbox--is-checked {
-    background-color: #2275d7;
-    border-color: #2275d7
+    background-color: $color-secondary;
+    border-color: $color-secondary;
 }
 
 .uppy-ProviderBrowser-viewType--list .uppy-ProviderBrowserItem-fakeCheckbox--is-checked:after {
@@ -1065,7 +1065,7 @@
 }
 
 .uppy-Provider-breadcrumbs button:hover {
-    color: #1b5dab
+    color: $color-secondary;
 }
 
 .uppy-Provider-breadcrumbs button:focus {
@@ -1219,7 +1219,7 @@
 .uppy-ProviderBrowser-userLogout {
     cursor: pointer;
     line-height: inherit;
-    color: #2275d7;
+    color: $color-secondary;
     padding: 4px;
     border-radius: 3px
 }
@@ -1233,7 +1233,7 @@
 }
 
 .uppy-ProviderBrowser-userLogout:hover {
-    color: #1b5dab
+    color: $color-secondary;
 }
 
 .uppy-ProviderBrowser-userLogout:focus {
@@ -1336,7 +1336,7 @@
 }
 
 .uppy-DashboardItem-previewLink:focus {
-    box-shadow: inset 0 0 0 3px #76abe9
+    box-shadow: inset 0 0 0 3px $color-secondary-lighter;
 }
 
 .uppy-DashboardItem-preview img.uppy-DashboardItem-previewImg {
@@ -1377,7 +1377,7 @@
 }
 
 .uppy-DashboardItem-progressIndicator:focus svg.retry, .uppy-DashboardItem-progressIndicator:focus svg.UppyIcon-progressCircle .bg {
-    fill: #76abe9
+    fill: $color-secondary-lighter;
 }
 
 svg.UppyIcon-progressCircle {
@@ -1568,7 +1568,7 @@ svg.UppyIcon.retry {
 }
 
 .uppy-DashboardItem-action:focus {
-    box-shadow: 0 0 0 3px rgba(34, 117, 215, .5)
+    box-shadow: 0 0 0 3px rgba(169, 185, 134, .75)
 }
 
 .uppy-DashboardItem-action:hover {
@@ -2139,16 +2139,14 @@ svg.UppyIcon.retry {
 
 .uppy-size--md .uppy-DashboardAddFiles-info {
     position: absolute;
-    bottom: 30px;
     left: 0;
     right: 0;
-    padding-top: 30px;
-    padding-bottom: 0
+    padding: 0;
 }
 
 .uppy-Dashboard-browse {
     cursor: pointer;
-    color: rgba(34, 117, 215, .9)
+    color: $color-secondary
 }
 
 .uppy-Dashboard-browse:focus {
@@ -2160,7 +2158,7 @@ svg.UppyIcon.retry {
 }
 
 .uppy-Dashboard-browse:focus, .uppy-Dashboard-browse:hover {
-    border-bottom: 2px solid #2275d7
+    border-bottom: 2px solid $color-secondary;
 }
 
 .uppy-DashboardTabs-list {
@@ -2353,7 +2351,7 @@ svg.UppyIcon.retry {
     font-size: 12px;
     font-weight: 400;
     cursor: pointer;
-    color: #2275d7;
+    color: $color-secondary;
     padding: 7px 6px;
     margin: 0 0 0 -6px
 }
@@ -2367,7 +2365,7 @@ svg.UppyIcon.retry {
 }
 
 .uppy-DashboardContent-back:hover {
-    color: #1b5dab
+    color: $color-secondary;
 }
 
 .uppy-DashboardContent-back:focus {
@@ -2389,7 +2387,7 @@ svg.UppyIcon.retry {
     border-radius: 3px;
     font-weight: 500;
     cursor: pointer;
-    color: #2275d7;
+    color: $color-secondary;
     width: 29px;
     height: 29px;
     padding: 7px 8px;
@@ -2405,7 +2403,7 @@ svg.UppyIcon.retry {
 }
 
 .uppy-DashboardContent-addMore:hover {
-    color: #1b5dab
+    color: $color-secondary;
 }
 
 .uppy-DashboardContent-addMore:focus {
@@ -2528,7 +2526,7 @@ svg.UppyIcon.retry {
     bottom: 7px;
     left: 7px;
     padding-top: 90px;
-    border: 1px dashed #2275d7;
+    border: 1px dashed $color-secondary;
     border-radius: 3px;
     z-index: 2000;
     text-align: center;
@@ -2564,7 +2562,7 @@ svg.UppyIcon.retry {
 
 .uppy-size--md .uppy-Dashboard-dropFilesTitle {
     max-width: 470px;
-    font-size: 27px
+    font-size: 16px;
 }
 
 .uppy-Dashboard-note {
@@ -2688,7 +2686,7 @@ a.uppy-Dashboard-poweredBy {
 
 .uppy-DragDrop-container:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(34, 117, 215, .4)
+    box-shadow: 0 0 0 3px $color-secondary-transparent-2;
 }
 
 .uppy-DragDrop-container::-moz-focus-inner {
@@ -2723,7 +2721,7 @@ a.uppy-Dashboard-poweredBy {
 }
 
 .uppy-DragDrop--isDraggingOver {
-    border: 2px dashed #2275d7;
+    border: 2px dashed $color-secondary;
     background: #eaeaea
 }
 
@@ -2744,7 +2742,7 @@ a.uppy-Dashboard-poweredBy {
 }
 
 .uppy-DragDrop-browse {
-    color: #2275d7
+    color: $color-secondary;
 }
 
 .uppy-FileInput-container {
@@ -2762,14 +2760,14 @@ a.uppy-Dashboard-poweredBy {
     font-family: sans-serif;
     font-size: .85em;
     padding: 10px 15px;
-    color: #14457f;
-    border: 1px solid #14457f;
+    color: $color-secondary-transparent-2;
+    border: 1px solid $color-secondary-transparent-2;
     border-radius: 8px;
     cursor: pointer
 }
 
 .uppy-FileInput-btn:hover {
-    background-color: #14457f;
+    background-color: $color-secondary-transparent-2;
     color: #fff
 }
 
@@ -2788,8 +2786,8 @@ a.uppy-Dashboard-poweredBy {
 }
 
 .uppy-ProgressBar-inner {
-    background-color: #2275d7;
-    box-shadow: 0 0 10px rgba(34, 117, 215, .7);
+    background-color: $color-secondary;
+    box-shadow: 0 0 10px $color-secondary-transparent-2;
     height: 100%;
     width: 0;
     transition: width .4s ease
@@ -2923,7 +2921,7 @@ a.uppy-Dashboard-poweredBy {
 
 .uppy-Webcam-button:focus {
     outline: none;
-    box-shadow: 0 0 0 .2rem rgba(34, 117, 215, .5)
+    box-shadow: 0 0 0 .2rem rgba(169, 185, 134, .75)
 }
 
 .uppy-Webcam-button--picture {

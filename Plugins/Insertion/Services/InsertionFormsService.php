@@ -51,9 +51,6 @@ class InsertionFormsService extends AbstractDatabaseAccess
 
         if (isset($_POST["insertion"])) {
             foreach ($_POST["insertion"] as $key => $value) {
-                if($key === "images") {
-                    echo "sdf";
-                }
                 if (empty($value)) {
                     if (isset($insertion[$key])) {
                         unset($insertion[$key]);
@@ -64,7 +61,6 @@ class InsertionFormsService extends AbstractDatabaseAccess
             }
         }
 
-
         /** @var MediaService $mediaService */
         $mediaService = Oforge()->Services()->get('media');
 
@@ -74,7 +70,12 @@ class InsertionFormsService extends AbstractDatabaseAccess
             }
 
             foreach ($_POST["images"] as $value1) {
-                $imageData = $mediaService->getById($value1)->toArray();
+                $imageData = $mediaService->getById($value1);
+                if (isset($imageData)) {
+                    $imageData = $imageData->toArray();
+                }
+
+                //$value1 = (is_numeric($value1)) ? (int)$value1 : $value1;
 
                 if (isset($_POST['images_interactions']) && isset($_POST['images_interactions'][$value1])
                     && $_POST['images_interactions'][$value1] == 'main') {

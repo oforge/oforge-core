@@ -56,7 +56,7 @@ if (typeof Oforge !== 'undefined') {
                 if (response.status >= 200 && response.status < 300) {
                     var res = response.body.imageData;
                     uploadItemElement = createImageListItem(res.id, res.path, uploadImageList);
-                    createFileInput(uploadImageList, res);
+                    createHiddenImageInput(uploadImageList, res);
                     checkPlaceholderItem();
                 }
             });
@@ -183,7 +183,7 @@ if (typeof Oforge !== 'undefined') {
                 });
             }
 
-            function createFileInput(uploadImageList, mediaObject) {
+            function createHiddenImageInput(uploadImageList, mediaObject) {
                 var input = document.createElement('input');
                 var uploadItemElement = null;
 
