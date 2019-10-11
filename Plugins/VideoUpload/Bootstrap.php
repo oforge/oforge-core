@@ -32,14 +32,16 @@ class Bootstrap extends AbstractBootstrap
             'video.upload' => VideoUploadService::class
         ];
 
-        /*
         $this->middlewares = [
             'insertions_processSteps' => [
                 'class' => VideoUploadMiddleware::class,
                 'position' => 1,
             ],
         ];
-        */
+
+        $this->dependencies = [
+            \Insertion\Bootstrap::class
+        ];
 
     }
 
