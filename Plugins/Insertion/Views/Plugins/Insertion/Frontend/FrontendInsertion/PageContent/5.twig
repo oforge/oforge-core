@@ -16,7 +16,7 @@
                         <li class="preview__item">
                             <span class="preview__key">{{ i18n('price') }}</span>
                             {% if data.price_type == "on_demand"  %}
-                                <span class="preview__value">{{ i18n('price_on_demand') }}</span>
+                                <span class="preview__value">{{ i18n('price_on_demand') }}({{ i18n('price_hidden', 'Preis nicht sichtbar') }})</span>
                             {% else %}
                                 <span class="preview__value">{% if data.price_type == "negotiable" %}{{ i18n('price_negotiable') }}{% endif %} {{ data.price|number_format(0, ',', '.') }} €</span>
                             {% endif %}
