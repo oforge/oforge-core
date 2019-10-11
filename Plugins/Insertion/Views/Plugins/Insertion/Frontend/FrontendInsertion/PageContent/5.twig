@@ -7,7 +7,11 @@
             <div class="preview">
                 {% if data.images %}
                 <div class="preview__images">
-                    <img src="{{ media(data.images[0].path, 300) }}" alt="{{ data.images[0].name }}" class="preview__image">
+                    {% for image in data.images %}
+                        {% if image.main == true %}
+                            <img src="{{ media(image.path, 300) }}" alt="{{ image.name }}" class="preview__image">
+                        {% endif %}
+                    {% endfor %}
                 </div>
                 {% endif %}
                 <div class="preview__content">
