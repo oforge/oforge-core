@@ -8,7 +8,7 @@
     {% if analyticsKey is not empty %}
     {# check if user has agreed and then start tracking #}
     <script>
-        let cookie_consent = localStorage.getItem('cookie_consent');
+        var cookie_consent = localStorage.getItem('cookie_consent');
         if (cookie_consent === "accepted") {
             let body = document.querySelector('body');
             let script = document.createElement('script');
@@ -28,17 +28,6 @@
         }
     </script>
     {% endif %}
-
-    {% if newRegistration %}
-        <script>
-            let cookie_consent = localStorage.getItem('cookie_consent');
-            if (cookie_consent === "accepted") {
-                gtag('event', 'conversion', {'send_to': 'AW-725011354/--t7CM_V6acBEJqX29kC'});
-                console.log('conversion tracking');
-            }
-        </script>
-    {% endif %}
-
 
 {% endblock master__footer_scripts %}
 

@@ -40,6 +40,12 @@
             <span class="product__label">{{ i18n('insertion_duration') }}</span>
             <span class="product__value">unbegrenzt</span>
         </div>
+        <div class="product__view-counter">
+            <svg class="icon icon--small">
+                <use xlink:href="#preview"></use>
+            </svg>
+            <span class="counter">{{ "%04d"|format(item.views) }}</span>
+        </div>
     </div>
 {% endblock attributes__top %}
 

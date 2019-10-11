@@ -1,16 +1,25 @@
 {% block detail__sidebar %}
     <div
-        class="sidebar sidebar--insertion {% if profile.user.detail.image is not empty %}has-provider-image{% endif %}">
+        class="sidebar sidebar--insertion {% if profile %}has-provider-image{% endif %}">
 
         {% block sidebar__panel_provider %}
-            {% if profile.user.detail.image is not empty %}
+            {% if profile %}
                 <div class="panel panel--provider">
                     <h3 class="provider_title">{{ i18n('insertion_detail_provider_headline') }}</h3>
                     <div class="provider_image-container">
+
+                        {#
+                    {% if profile.user.detail.image is not empty %}
                         <img src="{{ media(profile.user.detail.image, 500) }}" class="provider_image"
                              alt="{{ profile.imprintName }}">
-                    </div>
+                    {% elseif %}
 
+                    {% endif %}
+                    #}
+                        <div class="user__picture"
+                             {% if profile.user.detail.image is not empty %}style="background-image: url('{{ media(profile.user.detail.image, 300) }}');"{% endif %}></div>
+
+                    </div>
                     <a href="{{ url('insertions_profile', {id: profile.id}) }}"
                        class="provider_link">{{ i18n('insertion_detail_provider_link') }}
                         <svg class="icon icon--primary">
@@ -19,6 +28,7 @@
                     </a>
                 </div>
             {% endif %}
+
         {% endblock sidebar__panel_provider %}
 
         {% set contact = insertion.contact %}

@@ -1,0 +1,29 @@
+html {
+    overflow-x: hidden;
+}
+
+.product-placement {
+    position: absolute;
+    top: 152px;
+    width: 200px;
+
+    &.before {
+        left: calc(50% - 860px);
+    }
+    &.after {
+        left: calc(50% + 660px)
+    }
+}
+
+.home .product-placement {
+    top: 956px;
+}
+.top-banner + .wrap .product-placement {
+    top: 203px;
+}
+.top-banner + .wrap.home .product-placement {
+    top: 1008px;
+}
+.action-insertions_detail .header__image ~ .product-placement {
+    top: 52rem;
+}

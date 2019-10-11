@@ -181,6 +181,7 @@
                 margin: auto;
                 object-fit: cover;
                 object-position: center;
+                max-height: 453px;
             }
 
             &:hover {
@@ -249,6 +250,10 @@
             .slick-slide {
                 border: 2px solid $color-light;
             }
+        }
+
+        .title {
+            padding-bottom: 2rem;
         }
     }
 
@@ -323,4 +328,8 @@
             }
         }
     }
+}
+
+.about__description {
+    word-wrap: break-word;
 }
