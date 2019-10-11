@@ -2,6 +2,10 @@
     overflow: hidden;
     margin: 2rem 0;
 
+    @media screen and (min-width: $screen-medium) {
+        display: flex;
+    }
+
     @media screen and (min-width: $screen-large) {
         margin: 2rem $size-large * -10;
     }

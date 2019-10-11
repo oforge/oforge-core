@@ -42,4 +42,21 @@ return [
         // 'method' => 'aes-128-gcm', // Default: aes-128-gcm
         'key' => 'my awesome salt',
     ],
+
+    // host_url needed in specific cases (i.e. cronjobs generating domain specific links)
+    'host_url'   => '', // your domain
+
+    // Configuration for detailed error reporting (in case of server error) via mail (over smtp)
+    'error_mail_report' => [
+        'active'          => 'false',  // enable/disable error reporting
+        'mailer_settings' => [
+            'smtp_host'        => '',  // set the SMTP server to send through
+            'smtp_port'        => 587,
+            'smtp_user'        => '',  // SMTP username
+            'smtp_pw'          => '',  // SMTP password
+            'smtp_encryption'  => '',  // ssl/tls
+            'smtp_from'        => '',  // sender address
+            'receiver_address' => '',  // recipient address
+        ],
+    ],
 ];

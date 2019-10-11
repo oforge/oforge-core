@@ -13,9 +13,14 @@
             {% include '@parent/Frontend/Components/FlashMessages.twig' %}
         {% endblock flash_messages %}
 
-        {% block content %}
-
-        {% endblock content %}
+        {% block content_container %}
+            {% block content_before %}
+            {% endblock content_before %}
+            {% block content %}
+            {% endblock content %}
+            {% block content_after %}
+            {% endblock content_after %}
+        {% endblock content_container %}
 
         {% block layout__footer %}
             {% include 'Frontend/Components/Footer/Footer.twig' %}
