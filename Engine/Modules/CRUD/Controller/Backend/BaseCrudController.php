@@ -123,10 +123,15 @@ class BaseCrudController extends SecureBackendController {
      * Configuration of the filters on the index view.
      *      protected $indexFilter = [
      *          'propertyName' => [
-     *              'type'      => CrudFilterType::...,
-     *              'label'     => 'Text' | ['key' => 'i18nLabel', 'default' => 'DefaultText'],
-     *              'compare'   => CrudFilterComparator::#Default = equals
-     *              'list'      => ''# Required list for type=select, array or protected function name.
+     *              'type'              => CrudFilterType::...,
+     *              'label'             => 'Text' | ['key' => 'i18nLabel', 'default' => 'DefaultText'],
+     *              'compare'           => CrudFilterComparator::...,    #Default = equals
+     *              'list'              => '',   # Required list for type=select, array or protected function name.
+     *              'customFilterQuery' => callable|'<ThisClassMethodName>', #Callable or method name (of this object).
+     *                  # Parameters (\Doctrine\ORM\QueryBuilder $queryBuilder, array $queryValues),
+     *                  # the queryValues parameter contains only existing and not empty query values.
+     *                  # If this key is contained in one of the filters configs, the filtering must be written completely (also for all other properties).
+     *                  # Only the first filter callable will be used, all others are ignored.
      *          ],
      *      ];
      *
@@ -637,9 +642,9 @@ class BaseCrudController extends SecureBackendController {
                     $propertyNameValue                      = $queryParams[$propertyName];
                     $customFilterQueryValues[$propertyName] = $propertyNameValue;
                 }
-                if (isset($filterConfig['callable']) && $customFilterCallable === null) {
-                    if (isset($filterConfig['callable'])) {
-                        $callable = $filterConfig['callable'];
+                if (isset($filterConfig['customFilterQuery']) && $customFilterCallable === null) {
+                    if (isset($filterConfig['customFilterQuery'])) {
+                        $callable = $filterConfig['customFilterQuery'];
                         if (is_callable($callable)) {
                             $customFilterCallable = $callable;
                         } elseif (is_string($callable) && method_exists($this, $callable)) {

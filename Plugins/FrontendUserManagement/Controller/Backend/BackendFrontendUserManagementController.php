@@ -169,22 +169,22 @@ class BackendFrontendUserManagementController extends BaseCrudController {
     /** @var array $indexFilter */
     protected $indexFilter = [
         'contactEmail' => [
-            'type'     => CrudFilterType::TEXT,
-            'label'    => ['key' => 'plugin_frontend_user_management_filter_email', 'default' => 'Search in email'],
-            'compare'  => CrudFilterComparator::LIKE,
-            'callable' => 'customFilterQuery',
+            'type'              => CrudFilterType::TEXT,
+            'label'             => ['key' => 'plugin_frontend_user_management_filter_email', 'default' => 'Search in email'],
+            'compare'           => CrudFilterComparator::LIKE,
+            'customFilterQuery' => 'customFilterQuery',
         ],
         'lastName'     => [
-            'type'     => CrudFilterType::TEXT,
-            'label'    => ['key' => 'plugin_frontend_user_management_filter_last_name', 'default' => 'Search in last name'],
-            'compare'  => CrudFilterComparator::LIKE,
-            'callable' => 'customFilterQuery',
+            'type'              => CrudFilterType::TEXT,
+            'label'             => ['key' => 'plugin_frontend_user_management_filter_last_name', 'default' => 'Search in last name'],
+            'compare'           => CrudFilterComparator::LIKE,
+            'customFilterQuery' => 'customFilterQuery',
         ],
         'nickName'     => [
-            'type'     => CrudFilterType::TEXT,
-            'label'    => ['key' => 'plugin_frontend_user_management_filter_nickname', 'default' => 'Search in nickname'],
-            'compare'  => CrudFilterComparator::LIKE,
-            'callable' => 'customFilterQuery',
+            'type'              => CrudFilterType::TEXT,
+            'label'             => ['key' => 'plugin_frontend_user_management_filter_nickname', 'default' => 'Search in nickname'],
+            'compare'           => CrudFilterComparator::LIKE,
+            'customFilterQuery' => 'customFilterQuery',
         ],
     ];
     /** @var array $indexOrderBy */
