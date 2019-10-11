@@ -172,19 +172,19 @@ class BackendFrontendUserManagementController extends BaseCrudController {
             'type'              => CrudFilterType::TEXT,
             'label'             => ['key' => 'plugin_frontend_user_management_filter_email', 'default' => 'Search in email'],
             'compare'           => CrudFilterComparator::LIKE,
-            'customFilterQuery' => 'customFilterQuery',
+            'customFilterQuery' => 'customIndexFilterQuery',
         ],
         'lastName'     => [
             'type'              => CrudFilterType::TEXT,
             'label'             => ['key' => 'plugin_frontend_user_management_filter_last_name', 'default' => 'Search in last name'],
             'compare'           => CrudFilterComparator::LIKE,
-            'customFilterQuery' => 'customFilterQuery',
+            'customFilterQuery' => 'customIndexFilterQuery',
         ],
         'nickName'     => [
             'type'              => CrudFilterType::TEXT,
             'label'             => ['key' => 'plugin_frontend_user_management_filter_nickname', 'default' => 'Search in nickname'],
             'compare'           => CrudFilterComparator::LIKE,
-            'customFilterQuery' => 'customFilterQuery',
+            'customFilterQuery' => 'customIndexFilterQuery',
         ],
     ];
     /** @var array $indexOrderBy */
@@ -204,7 +204,7 @@ class BackendFrontendUserManagementController extends BaseCrudController {
      * @param QueryBuilder $queryBuilder
      * @param array $queryValues
      */
-    protected function customFilterQuery(QueryBuilder $queryBuilder, array $queryValues) {
+    protected function customIndexFilterQuery(QueryBuilder $queryBuilder, array $queryValues) {
         $and  = $queryBuilder->expr()->andX();
         $keys = ['contactEmail', 'lastName', 'nickName'];
         foreach ($keys as $key) {
