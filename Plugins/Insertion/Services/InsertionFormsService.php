@@ -22,21 +22,24 @@ use Oforge\Engine\Modules\I18n\Models\Language;
 use Oforge\Engine\Modules\Media\Models\Media;
 use Oforge\Engine\Modules\Media\Services\MediaService;
 
-class InsertionFormsService extends AbstractDatabaseAccess {
-    public function __construct() {
+class InsertionFormsService extends AbstractDatabaseAccess
+{
+    public function __construct()
+    {
         parent::__construct([
-            'default'  => Insertion::class,
-            'key'      => AttributeKey::class,
-            'type'     => InsertionType::class,
+            'default' => Insertion::class,
+            'key' => AttributeKey::class,
+            'type' => InsertionType::class,
             'language' => Language::class,
-            'media'    => Media::class,
+            'media' => Media::class,
         ]);
     }
 
-    public function processPostData($sessionKey) : ?array {
+    public function processPostData($sessionKey): ?array
+    {
         $prefix = null;
         if (!isset($_SESSION['insertion' . $sessionKey])) {
-            $_SESSION['insertion' . $sessionKey]              = [];
+            $_SESSION['insertion' . $sessionKey] = [];
             $_SESSION['insertion' . $sessionKey]["insertion"] = [];
         }
 
@@ -48,8 +51,11 @@ class InsertionFormsService extends AbstractDatabaseAccess {
 
         if (isset($_POST["insertion"])) {
             foreach ($_POST["insertion"] as $key => $value) {
+                if($key === "images") {
+                    echo "sdf";
+                }
                 if (empty($value)) {
-                    if(isset($insertion[$key])) {
+                    if (isset($insertion[$key])) {
                         unset($insertion[$key]);
                     }
                 } else {
@@ -58,45 +64,33 @@ class InsertionFormsService extends AbstractDatabaseAccess {
             }
         }
 
-        $_SESSION['insertion' . $sessionKey]              = ArrayHelper::mergeRecursive($_SESSION['insertion' . $sessionKey], $_POST, true);
-        $_SESSION['insertion' . $sessionKey]["insertion"] = $insertion;
 
         /** @var MediaService $mediaService */
         $mediaService = Oforge()->Services()->get('media');
 
-        if (isset($_FILES["images"])) {
+        if (isset($_POST["images"])) {
             if (!isset($_SESSION['insertion' . $sessionKey]["images"])) {
                 $_SESSION['insertion' . $sessionKey]["images"] = [];
             }
 
-            foreach ($_FILES["images"]["error"] as $key => $error) {
-                if ($error == UPLOAD_ERR_OK) {
-                    $file = [];
+            foreach ($_POST["images"] as $value1) {
+                $imageData = $mediaService->getById($value1)->toArray();
 
-                    foreach ($_FILES["images"] as $k => $v) {
-                        $file[$k] = $_FILES["images"][$k][$key];
+                if (isset($_POST['images_interactions']) && isset($_POST['images_interactions'][$value1])
+                    && $_POST['images_interactions'][$value1] == 'main') {
+                    foreach ($_SESSION['insertion' . $sessionKey]["images"] as $imageKey => $value2) {
+                        $_SESSION['insertion' . $sessionKey]["images"][$imageKey]["main"] = false;
                     }
-
-                    if (isset($_SESSION['insertion' . $sessionKey]['insertion_title'])) {
-                        $prefix = trim($_SESSION['insertion' . $sessionKey]['insertion_title']);
-                        $prefix = preg_replace("/[^[:alnum:][:space:]]/iu", '', $prefix);
-                        $prefix = preg_replace("/\s+/", '_', $prefix);
-                    }
-
-                    $media     = $mediaService->add($file, $prefix);
-                    $imageData = $media->toArray();
-                    if (isset($_POST['images_temp_interactions']) && isset($_POST['images_temp_interactions'][$key])
-                        && $_POST['images_temp_interactions'][$key] == 'main') {
-                        foreach ($_SESSION['insertion' . $sessionKey]["images"] as $imageKey => $value) {
-                            $_SESSION['insertion' . $sessionKey]["images"][$imageKey]["main"] = false;
-                        }
-                        $imageData["main"] = true;
-                    }
-
-                    $_SESSION['insertion' . $sessionKey]["images"][] = $imageData;
+                    $imageData["main"] = true;
                 }
+
+                $_SESSION['insertion' . $sessionKey]["images"][] = $imageData;
             }
+            unset($_POST["images"]);
         }
+
+        $_SESSION['insertion' . $sessionKey] = ArrayHelper::mergeRecursive($_SESSION['insertion' . $sessionKey], $_POST, true);
+        $_SESSION['insertion' . $sessionKey]["insertion"] = $insertion;
 
         $mainIndex = 0;
 
@@ -137,41 +131,45 @@ class InsertionFormsService extends AbstractDatabaseAccess {
         return $_SESSION['insertion' . $sessionKey];
     }
 
-    public function clearProcessedData($sessionKey) {
+    public function clearProcessedData($sessionKey)
+    {
         unset($_SESSION['insertion' . $sessionKey]);
     }
 
-    public function getProcessedData($sessionKey) {
+    public function getProcessedData($sessionKey)
+    {
         return $_SESSION['insertion' . $sessionKey];
     }
 
-    public function setProcessedData($sessionKey, $data) {
+    public function setProcessedData($sessionKey, $data)
+    {
         return $_SESSION['insertion' . $sessionKey] = $data;
     }
 
-    public function parsePageData(array $pageData) : array {
+    public function parsePageData(array $pageData): array
+    {
         $language = $this->repository("language")->findOneBy(["iso" => "de"]);
 
         $data = [
-            "contact"             => [
-                "name"    => $pageData["contact_name"],
-                "email"   => $pageData["contact_email"],
-                "phone"   => $pageData["contact_phone"],
-                "zip"     => $pageData["contact_zip"],
-                "city"    => $pageData["contact_city"],
+            "contact" => [
+                "name" => $pageData["contact_name"],
+                "email" => $pageData["contact_email"],
+                "phone" => $pageData["contact_phone"],
+                "zip" => $pageData["contact_zip"],
+                "city" => $pageData["contact_city"],
                 "visible" => isset($pageData["contact_visible"]) && !empty($pageData["contact_visible"]) && $pageData["contact_visible"] != "off",
             ],
-            "content"             => [
-                "language"    => $language,
-                "title"       => $pageData["insertion_title"],
+            "content" => [
+                "language" => $language,
+                "title" => $pageData["insertion_title"],
                 "description" => $pageData["insertion_description"],
             ],
-            "media"               => [],
-            "attributes"          => [],
-            "price"               => isset($pageData["price"]) ? $pageData["price"] : 0,
-            "min_price"           => isset($pageData["price_min"]) ? $pageData["price_min"] : null,
-            "price_type"          => $pageData["price_type"],
-            "tax"                 => isset($pageData["tax"]) ? $pageData["tax"] == "on" : 0,
+            "media" => [],
+            "attributes" => [],
+            "price" => isset($pageData["price"]) ? $pageData["price"] : 0,
+            "min_price" => isset($pageData["price_min"]) ? $pageData["price_min"] : null,
+            "price_type" => $pageData["price_type"],
+            "tax" => isset($pageData["tax"]) ? $pageData["tax"] == "on" : 0,
             'images_interactions' => $pageData["images_interactions"],
         ];
 
