@@ -66,9 +66,9 @@ TAG;
 
                     $activeTheme500 = Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . $activeTheme . DIRECTORY_SEPARATOR . "500.html";
                     if (file_exists($activeTheme500)) {
-                        return $response->withRedirect($activeTheme500, 307);
+                        return $response->withRedirect(DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . $activeTheme . DIRECTORY_SEPARATOR . "500.html", 307);
                     } else {
-                        return $response->withRedirect(Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . Statics::DEFAULT_THEME . DIRECTORY_SEPARATOR . "500.html",
+                        return $response->withRedirect(DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . Statics::DEFAULT_THEME . DIRECTORY_SEPARATOR . "500.html",
                             307);
                     }
                 }
