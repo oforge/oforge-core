@@ -48,7 +48,7 @@ return [
 
     // Configuration for detailed error reporting (in case of server error) via mail (over smtp)
     'error_mail_report' => [
-        'active'          => 'false',  // enable/disable error reporting
+        'active'          => false,  // enable/disable error reporting
         'mailer_settings' => [
             'smtp_host'        => '',  // set the SMTP server to send through
             'smtp_port'        => 587,
