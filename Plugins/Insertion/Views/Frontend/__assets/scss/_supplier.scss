@@ -181,6 +181,7 @@
                 margin: auto;
                 object-fit: cover;
                 object-position: center;
+                max-height: 453px;
             }
 
             &:hover {
@@ -327,4 +328,8 @@
             }
         }
     }
+}
+
+.about__description {
+    word-wrap: break-word;
 }
