@@ -1,11 +1,11 @@
 {% block page_content %}
 
-<div class="form-controls form-controls--step-1">
-    {% set hasContent = false %}
-    {% for attributeGroup in attributes %}
-        {% if attributeGroup.items|length > 0 and attributeGroup.name == 'main' %}
-            {% for attribute in attributeGroup.items %}
-                {% set content = content('html_' ~ type.name ~ '_' ~ attribute.attributeKey.name ~ '_' ~ meta.language.iso) %}
+    <div class="form-controls form-controls--step-1">
+        {% set hasContent = false %}
+        {% for attributeGroup in attributes %}
+            {% if attributeGroup.items|length > 0 and attributeGroup.name == 'main' %}
+                {% for attribute in attributeGroup.items %}
+                    {% set content = content('html_' ~ type.name ~ '_' ~ attribute.attributeKey.name ~ '_' ~ meta.language.iso) %}
 
                     {% if content %}
                         {% set hasContent = true %}
@@ -36,6 +36,30 @@
                    required>
         </div>
     </div>
+    {% block modal__view %}
+        {# Only laod selector if content is available, otherwise we will produce js tpye error (see modal-view.js) #}
+        {% set content_320 = content('insertion_create_image_tipps_320') %}
+        {% set content_640 = content('insertion_create_image_tipps_640') %}
+
+        {% if content_320 and content_640 %}
+
+            <a class="link link--insertion-create"
+           data-modal-view="1">{{ i18n('image_upload_tips', 'Tipps für das Hochladen von Bildern') }}</a>
+
+            <div data-modal-content="1"
+                 class="modal-view">
+                <div class="modal-view__close"
+                     data-modal-close="1">✕</div>
+                <div class="modal-view__content">
+
+                    <picture class="lazy">
+                        <source class="lazy" data-srcset="{{ media(content_640['url']) }}" media="(min-width: 640px)" />
+                        <img class="lazy" data-src="{{ media(content_320['url']) }}" alt="{{ i18n('image_upload_tips') }}" />
+                    </picture>
+                </div>
+            </div>
+        {% endif %}
+    {% endblock modal__view %}
 
     <div class="form-controls">
         {% block image__upload %}
