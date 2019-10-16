@@ -64,6 +64,7 @@
                         {% for insertion in insertions %}
                             <a href="{{ url('insertions_detail', {id: insertion.id}) }}">
                                 <div class="slide">
+                                    <h3 class="title title--3 title--product">{{ insertion.content[0].title }}</h3>
                                     {% if insertion.media is defined and insertion.media|length > 0 and insertion.media[0].content is defined %}
                                         <img src="{{ media(insertion.media[0].content, 1024) }}"
                                              alt="{{ insertion.content[0].name }}"

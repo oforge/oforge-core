@@ -51,10 +51,27 @@ class PageDuplicateService extends AbstractDatabaseAccess {
             try {
                 $this->entityManager()->getEntityManager()->beginTransaction();
                 $srcPageData = $srcPage->toArray(0, ['id', 'paths']);
-                // echo "Page:";
-                // o_print($srcPageData);
+
+                $dstName = $srcPage->getName() . ' - ' . I18N::translate('copy', ['en' => 'copy', 'de' => 'Kopie']);
+
+                $queryBuilder = $this->repository('page')->createQueryBuilder('p');
+                $results      = $queryBuilder->select('p.name')#
+                                             ->where($queryBuilder->expr()->like('p.name', "'" . $dstName . "%'"))#
+                                             ->getQuery()->getScalarResult();
+                if (!empty($results)) {
+                    $results = array_map(function ($entry) {
+                        return $entry['name'];
+                    }, $results);
+                    for ($i = 2; $i < 100; $i++) {
+                        $dstName2 = $dstName . ' ' . $i;
+                        if (!in_array($dstName2, $results)) {
+                            $dstName = $dstName2;
+                            break;
+                        }
+                    }
+                }
                 $dstPage = Page::create($srcPageData);
-                $dstPage->setName($srcPage->getName() . ' - ' . I18N::translate('copy', ['en' => 'copy', 'de' => 'Kopie']));
+                $dstPage->setName($dstName);
                 $this->entityManager()->create($dstPage);
                 $this->duplicatePagePaths($srcPage, $dstPage);
                 $this->entityManager()->getEntityManager()->commit();
