@@ -49,7 +49,7 @@ class InsertionFormsService extends AbstractDatabaseAccess {
         if (isset($_POST["insertion"])) {
             foreach ($_POST["insertion"] as $key => $value) {
                 if (empty($value)) {
-                    if(isset($insertion[$key])) {
+                    if (isset($insertion[$key])) {
                         unset($insertion[$key]);
                     }
                 } else {
@@ -58,52 +58,51 @@ class InsertionFormsService extends AbstractDatabaseAccess {
             }
         }
 
-        $_SESSION['insertion' . $sessionKey]              = ArrayHelper::mergeRecursive($_SESSION['insertion' . $sessionKey], $_POST, true);
-        $_SESSION['insertion' . $sessionKey]["insertion"] = $insertion;
-
         /** @var MediaService $mediaService */
         $mediaService = Oforge()->Services()->get('media');
 
-        if (isset($_FILES["images"])) {
+        if (isset($_POST["images"])) {
             if (!isset($_SESSION['insertion' . $sessionKey]["images"])) {
                 $_SESSION['insertion' . $sessionKey]["images"] = [];
             }
 
-            foreach ($_FILES["images"]["error"] as $key => $error) {
-                if ($error == UPLOAD_ERR_OK) {
-                    $file = [];
-
-                    foreach ($_FILES["images"] as $k => $v) {
-                        $file[$k] = $_FILES["images"][$k][$key];
-                    }
-
-                    if (isset($_SESSION['insertion' . $sessionKey]['insertion_title'])) {
-                        $prefix = trim($_SESSION['insertion' . $sessionKey]['insertion_title']);
-                        $prefix = preg_replace("/[^[:alnum:][:space:]]/iu", '', $prefix);
-                        $prefix = preg_replace("/\s+/", '_', $prefix);
-                    }
-
-                    $media     = $mediaService->add($file, $prefix);
-                    $imageData = $media->toArray();
-                    if (isset($_POST['images_temp_interactions']) && isset($_POST['images_temp_interactions'][$key])
-                        && $_POST['images_temp_interactions'][$key] == 'main') {
-                        foreach ($_SESSION['insertion' . $sessionKey]["images"] as $imageKey => $value) {
-                            $_SESSION['insertion' . $sessionKey]["images"][$imageKey]["main"] = false;
-                        }
-                        $imageData["main"] = true;
-                    }
-
-                    $_SESSION['insertion' . $sessionKey]["images"][] = $imageData;
+            foreach ($_POST["images"] as $value1) {
+                $imageData = $mediaService->getById($value1);
+                if (isset($imageData)) {
+                    $imageData = $imageData->toArray();
                 }
+
+                //$value1 = (is_numeric($value1)) ? (int)$value1 : $value1;
+
+                if (isset($_POST['images_interactions'])
+                    && isset($_POST['images_interactions'][$value1])
+                    && $_POST['images_interactions'][$value1] == 'main') {
+                    foreach ($_SESSION['insertion' . $sessionKey]["images"] as $imageKey => $value2) {
+                        $_SESSION['insertion' . $sessionKey]["images"][$imageKey]["main"] = false;
+                    }
+                    $imageData["main"] = true;
+                }
+
+                $_SESSION['insertion' . $sessionKey]["images"][] = $imageData;
             }
+            unset($_POST["images"]);
         }
 
+        $_SESSION['insertion' . $sessionKey]              = ArrayHelper::mergeRecursive($_SESSION['insertion' . $sessionKey], $_POST, true);
+        $_SESSION['insertion' . $sessionKey]["insertion"] = $insertion;
+
         $mainIndex = 0;
+
+        foreach ($_SESSION['insertion' . $sessionKey]["images"] as $index => $image) {
+            if ($_SESSION['insertion' . $sessionKey]["images"][$index]["main"] == true) {
+                $mainIndex = -1;
+            }
+        }
 
         if (isset($_POST['images_interactions'])) {
             $imgs = [];
 
-            //delete images
+               //delete images
             if ($_SESSION['insertion' . $sessionKey]["images"]) {
                 foreach ($_SESSION['insertion' . $sessionKey]["images"] as $index => $image) {
                     if (isset($image["id"]) && isset($_POST["images_interactions"][$image["id"]])
@@ -128,8 +127,10 @@ class InsertionFormsService extends AbstractDatabaseAccess {
             }
         }
 
-        if (isset($_SESSION['insertion' . $sessionKey]["images"][$mainIndex])) {
-            $_SESSION['insertion' . $sessionKey]["images"][$mainIndex]["main"] = true;
+        if ($mainIndex >= 0) {
+            if (isset($_SESSION['insertion' . $sessionKey]["images"][$mainIndex])) {
+                $_SESSION['insertion' . $sessionKey]["images"][$mainIndex]["main"] = true;
+            }
         }
 
         $_SESSION['insertion' . $sessionKey]["images_interactions"] = $_POST['images_interactions'];
