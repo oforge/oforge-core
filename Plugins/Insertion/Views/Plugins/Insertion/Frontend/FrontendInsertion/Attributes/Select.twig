@@ -10,7 +10,8 @@
          data-select-type="{{ attribute.type }}"
          data-placeholder="{{ i18n(attribute.name) }}"
          data-select="insertion[{{ attribute.id }}]{{ attribute.type == 'multi' ? '[]' : '' }}"
-         {% if attribute.restrictions|length > 0 %}data-select-max-options="{{ attribute.restrictions }}"{% endif %}>
+         {% if attribute.restrictions|length > 0 %}data-select-max-options="{{ attribute.restrictions }}"{% endif %}
+        {{ attribute.sortable ? 'data-sortable=""' : '' }}>
         <p class="select__text" data-select-text=""></p>
         {% if data['insertion'][attribute.id] is not empty %}
             <input type="hidden" name="insertion[{{ attribute.id }}]{{ attribute.type == 'multi' ? '[]' : '' }}"

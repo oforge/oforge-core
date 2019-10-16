@@ -176,3 +176,17 @@
         }
     }
 }
+
+.product__view-counter {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    color: $background;
+    .icon {
+        fill: $background;
+    }
+    .counter {
+        margin-left: $size-medium
+    }
+}
