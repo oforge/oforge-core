@@ -24,6 +24,8 @@ use Vimeo\Vimeo;
 class VideoUploadController
 {
     /**
+     * @param Request $request
+     * @param Response $response
      * @EndpointAction()
      */
     public function indexAction(Request $request, Response $response) {
@@ -57,8 +59,11 @@ class VideoUploadController
 
         /** @var VideoKey $videoKey */
         $videoKey = $videoUploadService->getVideoKey($insertionId);
-        $jsonResponse['vimeo_video_key'] = $videoKey->getVideoKey();
 
-        Oforge()->View()->assign(['json' => $jsonResponse]);
+        if($videoKey !== null) {
+            $jsonResponse['vimeo_video_key'] = $videoKey->getVideoKey();
+
+            Oforge()->View()->assign(['json' => $jsonResponse]);
+        }
     }
 }

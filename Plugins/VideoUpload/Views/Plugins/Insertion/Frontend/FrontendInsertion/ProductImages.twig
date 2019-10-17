@@ -1,0 +1,33 @@
+{% extends '@parent/Plugins/Insertion/Frontend/FrontendInsertion/ProductImages.twig' %}
+{% block product_images %}
+    <div class="product-images {% if insertion.media|length == 1 %}single-image{% endif %}">
+        <div class="product-view__image">
+            <div class="slider slider--detail-for">
+                <div class="slide video" data-vimeo-video data-insertion-id="{{ insertion.id }}"
+                     data-endpoint="{{ url('vimeoApi') }}/id"></div>
+                {% for item in insertion.media %}
+                    <div class="slide thumbnail">
+                        {% if item is defined and item.content|length > 0 and item.content.path is defined %}
+                            <img src="{{ media(item.content.path, 600) }}" alt="{{ item.content.name }}"
+                                 class="thumbnail__image">
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="thumbnails thumbnails--product">
+            <div class="slider slider--detail-nav">
+                <div class="slide video" data-vimeo-video data-insertion-id="{{ insertion.id }}"
+                     data-endpoint="{{ url('vimeoApi') }}/id"></div>
+                {% for item in insertion.media %}
+                    <div class="slide thumbnail">
+                        {% if item is defined and item.content|length > 0 and item.content.path is defined %}
+                            <img src="{{ media(item.content.path, 400) }}" alt="{{ item.content.name }}"
+                                 class="thumbnail__image">
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock product_images %}
