@@ -256,14 +256,20 @@ class RegistrationController extends AbstractController {
         return $response->withRedirect($uri, 302);
     }
 
+
     /**
      * @param Request $request
      * @param Response $response
      *
      * @return Response
+     * @throws ConfigElementNotFoundException
+     * @throws ConfigOptionKeyNotExistException
      * @throws ORMException
      * @throws ServiceNotFoundException
-     * @EndpointAction()
+     * @throws Twig_Error_Loader
+     * @throws Twig_Error_Runtime
+     * @throws Twig_Error_Syntax
+     * @EndpointAction
      */
     public function activateAction(Request $request, Response $response) {
         /** @var SessionManagementService $sessionManagementService */ /** @var RegistrationService $registrationService */
@@ -290,7 +296,7 @@ class RegistrationController extends AbstractController {
         if ($is_active) {
             Oforge()->View()->Flash()->addMessage('warning', I18N::translate('frontend_user_already_active', [
                 'en' => 'Your account has already been activated and you are able to log in.',
-                'de' => 'Dein Profil wurde schon aktiviert und du kannst dich einloggen.',
+                'de' => 'Dein Account wurde schon aktiviert und du kannst dich einloggen.',
             ]));
 
             return $response->withRedirect($router->pathFor('frontend_login'), 302);
@@ -325,6 +331,23 @@ class RegistrationController extends AbstractController {
                 ]));
 
         Oforge()->View()->Flash()->setData("new_registration", ['newRegistration' => true]);
+
+
+        /**
+         * Send Welcome Mail (requires RegistrationGiftCertificate.twig)
+         */
+
+        /** @var MailService $mailService */
+        $mailService = Oforge()->Services()->get('mail');
+
+        $options = [
+            'to'       => [$user['email'] => $user['email']],
+            'from'     => 'info',
+            'subject'  => I18N::translate('mailer_subject_registration_gift_cert'),
+            'template' => 'RegistrationGiftCertificate.twig'
+        ];
+
+        $mailService->send($options);
 
         return $response->withRedirect($uri, 302);
     }
