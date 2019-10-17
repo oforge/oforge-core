@@ -4,6 +4,7 @@ namespace Oforge\Engine\Modules\CRUD\Controller\Backend;
 
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\QueryBuilder;
 use Exception;
 use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
@@ -122,10 +123,15 @@ class BaseCrudController extends SecureBackendController {
      * Configuration of the filters on the index view.
      *      protected $indexFilter = [
      *          'propertyName' => [
-     *              'type'      => CrudFilterType::...,
-     *              'label'     => 'Text' | ['key' => 'i18nLabel', 'default' => 'DefaultText'],
-     *              'compare'   => CrudFilterComparator::#Default = equals
-     *              'list'      => ''# Required list for type=select, array or protected function name.
+     *              'type'              => CrudFilterType::...,
+     *              'label'             => 'Text' | ['key' => 'i18nLabel', 'default' => 'DefaultText'],
+     *              'compare'           => CrudFilterComparator::...,    #Default = equals
+     *              'list'              => '',   # Required list for type=select, array or protected function name.
+     *              'customFilterQuery' => callable|'<ThisClassMethodName>', #Callable or method name (of this object).
+     *                  # Parameters (\Doctrine\ORM\QueryBuilder $queryBuilder, array $queryValues),
+     *                  # the queryValues parameter contains only existing and not empty query values.
+     *                  # If this key is contained in one of the filters configs, the filtering must be written completely (also for all other properties).
+     *                  # Only the first filter callable will be used, all others are ignored.
      *          ],
      *      ];
      *
@@ -617,20 +623,35 @@ class BaseCrudController extends SecureBackendController {
      *
      * @param array $queryParams
      *
-     * @return array
+     * @return array|callable
      */
-    protected function evaluateIndexFilter(array $queryParams) : array {
+    protected function evaluateIndexFilter(array $queryParams) {
         $queryKeys               = $this->indexReservedQueryKeys;
         $queryKeyPage            = $queryKeys['page'];
         $queryKeyEntitiesPerPage = $queryKeys['entitiesPerPage'];
         unset($queryParams[$queryKeyPage], $queryParams[$queryKeyEntitiesPerPage]);
 
-        $filters = [];
+        $customFilterCallable    = null;
+        $customFilterQueryValues = [];
+        $filters                 = [];
 
         if (!empty($this->indexFilter)) {
             foreach ($this->indexFilter as $propertyName => $filterConfig) {
+                $propertyNameValue = null;
                 if (isset($queryParams[$propertyName]) && $queryParams[$propertyName] !== '') {
-                    $propertyNameValue = $queryParams[$propertyName];
+                    $propertyNameValue                      = $queryParams[$propertyName];
+                    $customFilterQueryValues[$propertyName] = $propertyNameValue;
+                }
+                if (isset($filterConfig['customFilterQuery']) && $customFilterCallable === null) {
+                    if (isset($filterConfig['customFilterQuery'])) {
+                        $callable = $filterConfig['customFilterQuery'];
+                        if (is_callable($callable)) {
+                            $customFilterCallable = $callable;
+                        } elseif (is_string($callable) && method_exists($this, $callable)) {
+                            $customFilterCallable = [$this, $callable];
+                        }
+                    }
+                } elseif ($propertyNameValue !== null) {
                     switch ($filterConfig['type']) {
                         case CrudFilterType::SELECT:
                             $comparator = CrudFilterComparator::EQUALS;
@@ -660,6 +681,12 @@ class BaseCrudController extends SecureBackendController {
                         'value'      => $propertyNameValue,
                     ];
                 }
+            }
+
+            if ($customFilterCallable !== null) {
+                $filters = function (QueryBuilder $queryBuilder) use ($customFilterCallable, $customFilterQueryValues) {
+                    $customFilterCallable($queryBuilder, $customFilterQueryValues);
+                };
             }
         }
 
