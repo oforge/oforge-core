@@ -199,8 +199,8 @@ class RegistrationController extends AbstractController {
          */
         if (!$user) {
             Oforge()->View()->Flash()->addMessage('warning', I18N::translate('registration_user_already_exists', [
-                'en' => 'Registration failed.',
-                'de' => 'Registrierung fehlgeschlagen.'
+                'en' => 'There already exists an account with this mail',
+                'de' => 'Es existiert ein Account mit dieser E-Mail.'
             ]));
 
             return $response->withRedirect($uri, 302);
