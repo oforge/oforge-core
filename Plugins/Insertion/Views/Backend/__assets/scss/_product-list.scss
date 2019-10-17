@@ -202,11 +202,11 @@
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    color: $background;
+    color: #aaa;
     .icon {
-        fill: $background;
+        fill: #aaa;
     }
     .counter {
-        margin-left: $size-medium
+        margin-left: $size-medium;
     }
 }
