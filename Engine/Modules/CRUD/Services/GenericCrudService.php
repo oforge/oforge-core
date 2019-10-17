@@ -39,18 +39,20 @@ class GenericCrudService extends AbstractDatabaseAccess {
      * Get list of entities (data by toArray). If $params not empty, find entities by $params.
      *
      * @param string $class
-     * @param array $criteria
+     * @param array|callable $criteria
      * @param array|null $orderBy
      * @param int|null $offset
      * @param int|null $limit
      *
      * @return AbstractModel[]
      */
-    public function list(string $class, array $criteria = [], array $orderBy = null, ?int $offset = null, ?int $limit = null) : array {
+    public function list(string $class, $criteria = [], array $orderBy = null, ?int $offset = null, ?int $limit = null) : array {
         $repository   = $this->getRepository($class);
         $queryBuilder = $builder = $repository->createQueryBuilder('e');
         $parameters   = [];
-        if (!empty($criteria)) {
+        if (is_callable($criteria)) {
+            $criteria($queryBuilder);
+        } elseif (!empty($criteria)) {
             $wheres = [];
             foreach ($criteria as $propertyName => $propertyCriteria) {
                 $prefixPropertyName     = 'e.' . $propertyName;
