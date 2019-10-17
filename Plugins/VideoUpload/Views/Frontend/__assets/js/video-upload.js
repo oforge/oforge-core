@@ -78,12 +78,12 @@ if (typeof Oforge !== 'undefined') {
                                         let progressBar = document.getElementById('upload-progress');
                                         progressBar.value = data.loaded / data.total * 100;
                                     },
-
                                     onComplete: function (data) {
                                         fillHiddenIdInput(data);
                                         videoId = data;
                                         fileUrl = this.api_url + '/' + data;
                                         enableDeleteButton();
+                                        allowEmbed(this.api_url, data, this.token);
                                         fetchVideoThumbnail(this.api_url, data, this.token);
                                         displayMessage(self.selectors.messageSuccess);
                                         displayProcessingStatus();
@@ -158,6 +158,26 @@ if (typeof Oforge !== 'undefined') {
                             displayErrorMessage(data);
                         }
                     });
+                });
+            }
+
+            function allowEmbed(url, id, token){
+                var embedUrl = url + '/videos/' + id;
+                $.ajax({
+                    method: 'PATCH',
+                    url: embedUrl,
+                    data: {
+                        'privacy.embed' : 'public'
+                    },
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
+                    success: function (data) {
+                        console.log(data);
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
                 });
             }
 
