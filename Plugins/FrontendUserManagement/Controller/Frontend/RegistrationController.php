@@ -191,7 +191,6 @@ class RegistrationController extends AbstractController {
         $passwordService = Oforge()->Services()->get('password');
         $password        = $passwordService->hash($password);
         $user            = $registrationService->register($email, $password);
-        $userDetailService->save(['userId' => $user['id'], 'nickname' => $nickname]);
 
         /**
          * Registration failed
@@ -199,13 +198,16 @@ class RegistrationController extends AbstractController {
          * TODO: respond to the registration process with a nice information?
          */
         if (!$user) {
-            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('registration_failed', [
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('registration_user_already_exists', [
                 'en' => 'Registration failed.',
                 'de' => 'Registrierung fehlgeschlagen.'
             ]));
 
             return $response->withRedirect($uri, 302);
+
         }
+
+        $userDetailService->save(['userId' => $user['id'], 'nickname' => $nickname]);
 
         /**
          * create activation link
