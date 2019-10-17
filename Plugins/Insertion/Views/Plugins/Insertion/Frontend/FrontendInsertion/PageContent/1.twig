@@ -1,11 +1,11 @@
 {% block page_content %}
 
-<div class="form-controls form-controls--step-1">
-    {% set hasContent = false %}
-    {% for attributeGroup in attributes %}
-        {% if attributeGroup.items|length > 0 and attributeGroup.name == 'main' %}
-            {% for attribute in attributeGroup.items %}
-                {% set content = content('html_' ~ type.name ~ '_' ~ attribute.attributeKey.name ~ '_' ~ meta.language.iso) %}
+    <div class="form-controls form-controls--step-1">
+        {% set hasContent = false %}
+        {% for attributeGroup in attributes %}
+            {% if attributeGroup.items|length > 0 and attributeGroup.name == 'main' %}
+                {% for attribute in attributeGroup.items %}
+                    {% set content = content('html_' ~ type.name ~ '_' ~ attribute.attributeKey.name ~ '_' ~ meta.language.iso) %}
 
                     {% if content %}
                         {% set hasContent = true %}
@@ -36,7 +36,6 @@
                    required>
         </div>
     </div>
-
     <div class="form-controls">
         {% block image__upload %}
             <div class="form__control">
