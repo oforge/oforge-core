@@ -176,6 +176,12 @@ class InsertionFormsService extends AbstractDatabaseAccess {
             'images_interactions' => $pageData["images_interactions"],
         ];
 
+        /*
+        if (isset($pageData["vimeo_video_id"])) {
+            array_push($data["media"], ["name" => $image["name"], "content" => $media, "main" => $image["main"]]);
+        }
+        */
+
         if (isset($pageData["images"]) && sizeof($pageData["images"]) > 0) {
             foreach ($pageData["images"] as $image) {
                 $media = $this->repository("media")->findOneBy(["id" => $image["id"]]);
