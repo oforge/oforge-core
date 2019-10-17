@@ -5,7 +5,7 @@
                 {{ i18n('image_upload_title') }} <span class="limitations">{{ i18n('image_upload_limitations') }}</span>
             </span>
             {% block modal__view %}
-                {# Only laod selector if content is available, otherwise we will produce js tpye error (see modal-view.js) #}
+                {# Only load selector if content is available, otherwise we will produce js type error (see modal-view.js) #}
                 {% set content_320 = content('insertion_create_image_tipps_320') %}
                 {% set content_640 = content('insertion_create_image_tipps_640') %}
 
