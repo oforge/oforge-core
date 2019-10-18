@@ -167,7 +167,16 @@ if (typeof Oforge !== 'undefined') {
                     method: 'PATCH',
                     url: embedUrl,
                     data: {
-                        'privacy.embed' : 'public'
+                        'privacy.embed' : 'public',
+                        'embed.title.name' : 'hide',
+                        'embed.color' : '#708e2b',
+                        'embed.buttons.like' : false,
+                        'embed.buttons.share' : false,
+                        'embed.buttons.watchlater' : false,
+                        'embed.buttons.embed' : false,
+                        'embed.logos.vimeo' : false,
+                        'embed.title.owner' : 'hide',
+                        'embed.title.portrait' : 'hide'
                     },
                     headers: {
                         'Authorization': 'Bearer ' + token
