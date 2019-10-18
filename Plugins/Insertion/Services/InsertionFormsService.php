@@ -176,11 +176,16 @@ class InsertionFormsService extends AbstractDatabaseAccess {
             'images_interactions' => $pageData["images_interactions"],
         ];
 
-        /*
-        if (isset($pageData["vimeo_video_id"])) {
-            array_push($data["media"], ["name" => $image["name"], "content" => $media, "main" => $image["main"]]);
+        if (isset($pageData["insertion"]["vimeo_video_id"])) {
+            /** @var MediaService $mediaService */
+            $videoMedia = new Media();
+            $videoMedia->setName($pageData["insertion_title"]);
+            $videoMedia->setType('video/vimeo');
+            $videoMedia->setPath($pageData["insertion"]["vimeo_video_id"]);
+            $this->entityManager()->create($videoMedia, true);
+
+            array_push($data["media"], ["name" => $pageData["insertion_title"], "content" => $videoMedia, "main" => 0]);
         }
-        */
 
         if (isset($pageData["images"]) && sizeof($pageData["images"]) > 0) {
             foreach ($pageData["images"] as $image) {

@@ -28,12 +28,19 @@
                     <progress class="progress" value="0" max="100" id="upload-progress"></progress>
                 </div>
             </li>
+            {% set vimeo_video_id = "" %}
+            {% for image in data['images'] %}
+                {% if image.type == 'video/vimeo' %}
+                    {% set vimeo_video_id = media(image.path) %}
+                {% endif %}
+            {% endfor %}
             <input type="file"
                    hidden
                    name="upload__video"
                    data-file-input-video
                    accept="video/mp4">
-            <input type="text" hidden name="insertion[vimeo_video_id]" value="{{ data.insertion.vimeo_video_id }}" data-upload-video-id>
+            <input type="text" hidden name="insertion[vimeo_video_id]" value="{{ vimeo_video_id }}"
+                   data-upload-video-id>
         </ul>
     </div>
     <div class="upload--video upload__messages">

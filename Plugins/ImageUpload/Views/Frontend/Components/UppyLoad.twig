@@ -53,6 +53,7 @@
                         </div>
                     </li>
                     {% for image in data['images'] %}
+                        {% if 'image' in image.type %}
                         <li class="upload__item"
                             data-upload-id="{{ image.id }}">
                             <img class="upload__image"
@@ -66,6 +67,7 @@
                             <div class="upload__choose-main {% if image.main %}upload__choose-main--is-main{% endif %}"
                                  data-upload-choose-main="{{ image.id }}"></div>
                         </li>
+                        {% endif %}
                     {% endfor %}
                 </ul>
             </div>
