@@ -35,7 +35,7 @@ if (typeof Oforge !== 'undefined') {
                     method: 'GET',
                     url: url,
                     data: {
-                        height: '500px'
+                        height: 500,
                     },
                     success: function (data) {
                         appendVideoPlayer(data.html)
@@ -105,47 +105,6 @@ if (typeof Oforge !== 'undefined') {
                 videoElement.forEach(function (element) {
                     element.innerHTML = html;
                 });
-
-                if (isMobile) {
-                    placeVideoInNavSlider();
-                } else placeVideoInForSlider();
-
-                $(window).on("resize", function () {
-                    isMobile = checkMobileState();
-                    if (isMobile) {
-                        placeVideoInNavSlider();
-                    } else placeVideoInForSlider();
-                });
-            }
-
-            function checkMobileState() {
-                let width = document.documentElement.clientWidth;
-                return width < mobileBreakpoint;
-            }
-
-            function placeVideoInForSlider() {
-                $(self.selectors.navSlider).find(self.selectors.videoId).each(function(){
-                    $(this).hide();
-                });
-                $(self.selectors.forSlider).find(self.selectors.videoThumbnail).each(function(){
-                    $(this).show();
-                });
-            }
-
-            function placeVideoInNavSlider() {
-                $(self.selectors.forSlider).find(self.selectors.videoId).each(function(){
-                    $(this).show();
-                });
-                $(self.selectors.navSlider).find(self.selectors.videoThumbnail).each(function(){
-                    $(this).hide();
-                });
-            }
-
-            function swapNodes(a, b) {
-                let aparent = a.parentNode;
-                let asibling = a.nextSibling === b ? a : a.nextSibling;
-                b.parentNode.insertBefore(a, b);
-                aparent.insertBefore(b, asibling);
             }
         }
     });
