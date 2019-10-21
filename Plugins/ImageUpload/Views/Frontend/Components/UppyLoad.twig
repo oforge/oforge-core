@@ -2,7 +2,7 @@
     {% if uppyUploadURL %}
         {% block upload_text_area %}
             <span class="form__label form__label--title">
-                {{ i18n('image_upload_title') }} <span class="limitations">{{ i18n('image_upload_limitations') }}</span>
+                {{ i18n('image_upload_title') }}{% if required %}<span class="required">*</span>{% endif %} <span class="limitations">{{ i18n('image_upload_limitations') }}</span>
             </span>
             {% block modal__view %}
                 {# Only laod selector if content is available, otherwise we will produce js tpye error (see modal-view.js) #}
@@ -18,7 +18,6 @@
                         <div class="modal-view__close"
                              data-modal-close="1">✕</div>
                         <div class="modal-view__content">
-
                             <picture class="lazy">
                                 <source class="lazy" data-srcset="{{ media(content_640['url']) }}" media="(min-width: 640px)" />
                                 <img class="lazy" data-src="{{ media(content_320['url']) }}" alt="{{ i18n('image_upload_tips') }}" />
@@ -51,6 +50,7 @@
                                 <use xlink:href="#camera"></use>
                             </svg>
                         </div>
+                        {% if required %}<input class="upload__file_required" type="file" required>{% endif %}
                     </li>
                     {% for image in data['images'] %}
                         <li class="upload__item"
@@ -71,7 +71,7 @@
             </div>
         {% endblock uploaded_images %}
         {% block drop_zone %}
-            <div id="drag-drop-area" data-url="{{ uppyUploadURL }}"></div>
+            <div id="drag-drop-area" data-url="{{ uppyUploadURL }}" data-required="{{ required }}"></div>
         {% endblock drop_zone %}
 
     {% else %}
