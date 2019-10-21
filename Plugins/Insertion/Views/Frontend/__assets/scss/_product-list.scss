@@ -104,7 +104,7 @@
     }
 }
 
-@media screen and (min-width:400px) {
+@media screen and (min-width: 400px) {
     .product {
         &__image {
             width: 200px;
@@ -115,14 +115,13 @@
             width: 200px;
             height: 200px;
         }
-    }
 
-    &__attributes {
-        &.product__attributes--main {
-            width: calc(100% - 200px);
+        &__attributes {
+            &.product__attributes--main {
+                width: calc(100% - 200px);
+            }
         }
     }
-
 }
 
 @media screen and (min-width: 480px) {
@@ -209,6 +208,16 @@
     }
     .counter {
         margin-left: $size-medium
+    }
+}
+
+@media screen and (min-width: $content-max) {
+    .controller-frontend_account_insertions {
+        #insertion-container {
+            .product__attributes.product__attributes .product__attribute {
+                width: 50%;
+            }
+        }
     }
 }
 
