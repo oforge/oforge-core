@@ -72,6 +72,8 @@ class GenericCrudService extends AbstractDatabaseAccess {
                     case CrudFilterComparator::NOT_EQUALS:
                     case CrudFilterComparator::LESS:
                     case CrudFilterComparator::LESS_EQUALS:
+                    case CrudFilterComparator::IN:
+                    case CrudFilterComparator::NOT_IN:
                         $parameters[$propertyName] = $propertyCriteria['value'];
 
                         $functionName = $propertyCriteria['comparator'];

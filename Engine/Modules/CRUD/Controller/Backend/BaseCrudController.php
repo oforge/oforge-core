@@ -603,14 +603,7 @@ class BaseCrudController extends SecureBackendController {
      * @return Response
      */
     protected function redirect(Response $response, string $crudAction, array $urlParams = [], array $queryParams = []) {
-        $routeName  = Oforge()->View()->get('meta')['route']['name'];
-        $actionKeys = ['view', 'create', 'delete', 'update'];
-        foreach ($actionKeys as $actionKey) {
-            if (StringHelper::endsWith($routeName, '_' . $actionKey)) {
-                $routeName = substr($routeName, 0, -(strlen($actionKey) + 1));
-                break;
-            }
-        }
+        $routeName  = Oforge()->View()->get('meta')['route']['parentName'];
         if ($crudAction !== 'index') {
             $routeName .= '_' . $crudAction;
         }

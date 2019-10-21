@@ -100,11 +100,12 @@ class TemplateRenderService {
             if ($this->hasTemplate($templatePath)) {
                 return $this->renderTemplate($request, $response, $templatePath, $data);
             } elseif (isset($fileName) && isset($data['crud'])) {
-                $templatePath = '/Backend/CRUD/' . ucfirst($fileName) . '.twig';
-                if ($this->hasTemplate($templatePath)) {
-                    $data['meta']['template']['path'] = $templatePath;
+                $data['crud']['templatePath']     = ltrim(str_replace('\\', '/', dirname($templatePath)), '/');
+                $fallbackTemplatePath    = '/Backend/CRUD/' . ucfirst($fileName) . '.twig';
+                if ($this->hasTemplate($fallbackTemplatePath)) {
+                    $data['meta']['template']['path'] = $fallbackTemplatePath;
 
-                    return $this->renderTemplate($request, $response, $templatePath, $data);
+                    return $this->renderTemplate($request, $response, $fallbackTemplatePath, $data);
                 }
             }
         }
