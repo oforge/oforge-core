@@ -10,6 +10,7 @@ if (typeof Oforge !== 'undefined') {
         init: function () {
             var self = this;
             var url = document.querySelector(self.selectors.dropZone).dataset.url;
+            var required = document.querySelector(self.selectors.dropZone).dataset.required;
 
             var uploadItem = document.querySelector('[data-upload]');
             var uploadImageList = uploadItem.querySelector('[data-upload-images]');
@@ -67,8 +68,16 @@ if (typeof Oforge !== 'undefined') {
 
                 if (itemList > 0) {
                     placeholderItem.classList.add('hidden');
+                    if(required) {
+                        placeholderItem.querySelector(".upload__file_required").removeAttribute("required");
+                    }
                 } else {
                     placeholderItem.classList.remove('hidden');
+                    if(required) {
+                        placeholderItem.querySelector(".upload__file_required").setAttribute("required", "");
+
+
+                    }
                 }
             }
 
