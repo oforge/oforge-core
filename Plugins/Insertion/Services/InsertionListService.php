@@ -54,8 +54,7 @@ class InsertionListService extends AbstractDatabaseAccess
      * @Cache(slot="insertion", duration="T15M")
      */
 
-    public function search($typeId, $params): ?array
-    {
+    public function search($typeId, $params): ?array {
         $page = isset($params["page"]) ? $params["page"] : 1;
         $pageSize = isset($params["pageSize"]) ? $params["pageSize"] : 10;
 
@@ -94,6 +93,12 @@ class InsertionListService extends AbstractDatabaseAccess
 
         /** @var InsertionType $type */
         $typeAttributes = $this->repository("type")->find($typeId)->getAttributes();
+        $typeAttributesResult = [];
+        if (isset($typeAttributes)) {
+            foreach($typeAttributes as $typeAttribute) {
+                $typeAttributesResult[] = $typeAttribute->getId();
+            }
+        }
         $keys = [];
         /**
          * @var $typeAttribute InsertionTypeAttribute
@@ -182,223 +187,6 @@ class InsertionListService extends AbstractDatabaseAccess
             ];
         }
 
-        if (sizeof($keys) > 0) {
-            $attributeCount = 0;
-
-            /** @var AttributeKey $attributeKey */
-            foreach ($keys as $attributeKey) {
-                $name = $attributeKey->getName();
-                $name = str_replace(" ", "_", $name);
-
-                if (isset($params[$name])) {
-                    $value = $params[$name];
-                    $result['filter'][$attributeKey->getName()] = is_array($value) ? array_unique($value) : $value;
-
-                    if (is_array($value)) { //should always be a multi selection or a range component
-                        $sqlQuery .= " left join oforge_insertion_insertion_attribute_value v$attributeCount on v$attributeCount.insertion_id = i.id and v$attributeCount.attribute_key = :v"
-                            . $attributeCount . "key";
-                        $args["v" . $attributeCount . "key"] = $attributeKey->getId();
-
-                        switch ($attributeKey->getFilterType()) {
-                            case AttributeType::RANGE:
-                                $min = null;
-                                $max = null;
-
-                                $sqlQueryWhere .= " and v$attributeCount.attribute_key = :v" . $attributeCount . "key";
-
-                                if (isset($value['min'])) {
-                                    $sqlQueryWhere .= " and v$attributeCount.insertion_attribute_value >= :v" . $attributeCount
-                                        . "value";
-                                    $min = $value['min'];
-                                    $args["v" . $attributeCount . "value"] = $min;
-                                }
-                                if (isset($value['max'])) {
-                                    $sqlQueryWhere .= " and v$attributeCount.insertion_attribute_value <= :v" . $attributeCount
-                                        . "value2";
-                                    $max = $value['max'];
-                                    $args["v" . $attributeCount . "value2"] = $max;
-                                }
-
-                                if (isset($value['min']) && isset($value['max']) && $min > $max) {
-                                    $t = $min;
-                                    $min = $max;
-                                    $max = $t;
-                                    $args["v" . $attributeCount . "value"] = $min;
-                                    $args["v" . $attributeCount . "value2"] = $max;
-                                }
-
-                                break;
-                            case AttributeType::DATEYEAR:
-                                $dateQuery = " and YEAR(CURDATE()) - YEAR(v$attributeCount.insertion_attribute_value) - IF(STR_TO_DATE(CONCAT(YEAR(CURDATE()), '-', MONTH(v$attributeCount.insertion_attribute_value), '-', DAY(v$attributeCount.insertion_attribute_value)) ,'%Y-%c-%e') > CURDATE(), 1, 0)";
-                                $sqlQueryWhere .= " and v$attributeCount.attribute_key = :v" . $attributeCount . "key";
-
-                                if (isset($value['min'])) {
-                                    $sqlQueryWhere .= $dateQuery . " >= :v" . $attributeCount . "value";
-                                    $min = $value['min'];
-                                    $args["v" . $attributeCount . "value"] = $min;
-                                }
-                                if (isset($value['max'])) {
-                                    $sqlQueryWhere .= $dateQuery . " <= :v" . $attributeCount . "value2";
-                                    $max = $value['max'];
-                                    $args["v" . $attributeCount . "value2"] = $max;
-                                }
-
-                                if (isset($value['min']) && isset($value['max']) && $min > $max) {
-                                    $t = $min;
-                                    $min = $max;
-                                    $max = $t;
-                                    $args["v" . $attributeCount . "value"] = $min;
-                                    $args["v" . $attributeCount . "value2"] = $max;
-                                }
-
-                                break;
-                            case AttributeType::DATEMONTH:
-                                $min = null;
-                                $max = null;
-
-                                $dateQuery = " and DATEDIFF(CURDATE(), v$attributeCount.insertion_attribute_value) / 30";
-                                $sqlQueryWhere .= " and v$attributeCount.attribute_key = :v" . $attributeCount . "key";
-
-                                if (isset($value['min'])) {
-                                    $sqlQueryWhere .= $dateQuery . " >= :v" . $attributeCount . "value";
-                                    $min = $value['min'];
-                                    $args["v" . $attributeCount . "value"] = $min;
-                                }
-                                if (isset($value['max'])) {
-                                    $sqlQueryWhere .= $dateQuery . " <= :v" . $attributeCount . "value2";
-                                    $max = $value['max'];
-                                    $args["v" . $attributeCount . "value2"] = $max;
-                                }
-
-                                if (isset($value['min']) && isset($value['max']) && $min > $max) {
-                                    $t = $min;
-                                    $min = $max;
-                                    $max = $t;
-                                    $args["v" . $attributeCount . "value"] = $min;
-                                    $args["v" . $attributeCount . "value2"] = $max;
-                                }
-
-                                break;
-                            case AttributeType::PEDIGREE:
-                                //TODO: Refactoring necessary
-                                /** @var AttributeKey $subAttributeKeys */
-                                $subAttributeValues = $attributeKey->getValues();
-                                $pedigreeAttributeCount = $attributeCount;
-
-                                if (sizeof($subAttributeValues) > 0) {
-                                    $sqlQueryWhere .= " and ";
-
-                                    if (isset($value['search_ancestor_1'])) {
-                                        $sqlQueryWhere .= "(";
-                                        $args["v" . $pedigreeAttributeCount . "value1"] = $value['search_ancestor_1'];
-                                        $first = true;
-                                        /** @var AttributeValue $subAttributeValue */
-                                        foreach ($subAttributeValues as $subAttributeValue) {
-                                            $attributeCount++;
-
-                                            $subAttributeKeysId = $subAttributeValue->getSubAttributeKey()->getId();
-
-                                            if (!$first) {
-                                                $sqlQueryWhere .= " or ";
-                                            }
-
-                                            $first = false;
-
-                                            $sqlQueryWhere .= " v$attributeCount.attribute_key  = :v" . $attributeCount . "key and (";
-                                            $sqlQueryWhere .= "v$attributeCount.insertion_attribute_value = :v" . $pedigreeAttributeCount . "value1";
-                                            $sqlQueryWhere .= ")";
-
-                                            $sqlQuery .= " left join oforge_insertion_insertion_attribute_value v$attributeCount on v$attributeCount.insertion_id = i.id and v$attributeCount.attribute_key = :v"
-                                                . $attributeCount . "key";
-                                            $args["v" . $attributeCount . "key"] = "$subAttributeKeysId";
-                                        }
-
-                                        $sqlQueryWhere .= ")";
-                                    }
-
-                                    if (isset($value['search_ancestor_1']) && isset($value['search_ancestor_2'])) {
-                                        $sqlQueryWhere .= " and ";
-                                    }
-
-                                    if (isset($value['search_ancestor_2'])) {
-                                        $sqlQueryWhere .= " (";
-                                        $args["v" . $pedigreeAttributeCount . "value2"] = $value['search_ancestor_2'];
-                                        $first = true;
-                                        /** @var AttributeValue $subAttributeValue */
-                                        foreach ($subAttributeValues as $subAttributeValue) {
-                                            $attributeCount++;
-
-                                            $subAttributeKeysId = $subAttributeValue->getSubAttributeKey()->getId();
-
-                                            if (!$first) {
-                                                $sqlQueryWhere .= " or ";
-                                            }
-                                            $first = false;
-
-                                            $sqlQueryWhere .= " v$attributeCount.attribute_key  = :v" . $attributeCount . "key and (";
-                                            $sqlQueryWhere .= "v$attributeCount.insertion_attribute_value = :v" . $pedigreeAttributeCount . "value2)";
-
-                                            $sqlQuery .= " left join oforge_insertion_insertion_attribute_value v$attributeCount on v$attributeCount.insertion_id = i.id and v$attributeCount.attribute_key = :v"
-                                                . $attributeCount . "key";
-                                            $args["v" . $attributeCount . "key"] = "$subAttributeKeysId";
-                                        }
-                                        $sqlQueryWhere .= ")";
-                                    }
-                                }
-
-                                break;
-
-                            default: //multi
-
-                                $sqlQueryWhere .= " and v$attributeCount.attribute_key = :v" . $attributeCount . "key and (";
-
-                                foreach ($value as $key => $v) {
-                                    if ($key > 0) {
-                                        $sqlQueryWhere .= " or ";
-                                    }
-
-                                    $sqlQueryWhere .= "v$attributeCount.insertion_attribute_value = :v" . $attributeCount
-                                        . "value" . $key;
-                                    $args["v" . $attributeCount . "value" . $key] = $v;
-                                }
-
-                                $sqlQueryWhere .= ")";
-                        }
-
-                        $attributeCount++;
-                    } else {
-                        switch ($attributeKey->getFilterType()) {
-                            case AttributeType::TEXT:
-                                $sqlQuery .= " left join oforge_insertion_insertion_attribute_value v$attributeCount on v$attributeCount . insertion_id = i . id and v$attributeCount
-                                                                                                                                                              . attribute_key = :v"
-                                    . $attributeCount . "key";
-
-                                $sqlQueryWhere .= " and v$attributeCount . attribute_key = :v" . $attributeCount
-                                    . "key and v$attributeCount . insertion_attribute_value like :v" . $attributeCount
-                                    . "value";
-                                $args["v" . $attributeCount . "key"] = $attributeKey->getId();
-                                $args["v" . $attributeCount . "value"] = "%" . $value . "%";
-
-                                $attributeCount++;
-                                break;
-                            default:
-                                $sqlQuery .= " left join oforge_insertion_insertion_attribute_value v$attributeCount on v$attributeCount . insertion_id = i . id and v$attributeCount
-                                                                                                                                                              . attribute_key = :v"
-                                    . $attributeCount . "key and v$attributeCount . insertion_attribute_value = :v" . $attributeCount . "value";
-
-                                $sqlQueryWhere .= " and v$attributeCount . attribute_key = :v" . $attributeCount
-                                    . "key and v$attributeCount . insertion_attribute_value = :v" . $attributeCount
-                                    . "value";
-                                $args["v" . $attributeCount . "key"] = $attributeKey->getId();
-                                $args["v" . $attributeCount . "value"] = $value;
-
-                                $attributeCount++;
-                        }
-                    }
-                }
-            }
-        }
-
         if (isset($params["after_date"])) {
             $params['after_date'] = date_format($params["after_date"], 'Y-m-d h:i:s');
             $sqlQueryWhere .= " and DATEDIFF(i.created_at, :ad) > 0";
@@ -409,6 +197,8 @@ class InsertionListService extends AbstractDatabaseAccess
 
         $sqlResult = $this->entityManager()->getEntityManager()->getConnection()->executeQuery($sqlQuery . $sqlQueryWhere . $sqlQueryOrderBy, $args);
         $ids = $sqlResult->fetchAll();
+
+        $this->filter($ids, $params);
 
         $result["query"]["count"] = sizeof($ids);
         $result["query"]["pageSize"] = $pageSize;
@@ -448,6 +238,9 @@ class InsertionListService extends AbstractDatabaseAccess
         }
 
         $items = $this->repository()->findBy(["id" => $findIds], [$order => $orderDir]);
+
+        // TODO: filter items programmatically
+
 
         $result["values"] = $valueMap;
 
@@ -501,6 +294,18 @@ class InsertionListService extends AbstractDatabaseAccess
 
         return $result;
     }
+
+    // TODO: get all insertions, check if params match the insertion attribute key values, if true push, if false ignore
+    private function filter($ids, $params) {
+        $result = [];
+
+        foreach ($ids as $id) {
+            foreach($params as $param) {
+
+            }
+        }
+    }
+
 
     public function getUserInsertions($user, $page = 1, $count = 10): ?array
     {
