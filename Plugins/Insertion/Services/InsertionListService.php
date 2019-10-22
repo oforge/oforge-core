@@ -172,14 +172,132 @@ class InsertionListService extends AbstractDatabaseAccess {
         $sqlResult = $this->entityManager()->getEntityManager()->getConnection()->executeQuery($sqlQuery . $sqlQueryWhere . $sqlQueryOrderBy, $args);
         $ids       = $sqlResult->fetchAll();
 
-        // TODO: Check what happens after filtering...
-        $items = $this->filter($ids, $params, $typeId);
+        /** ******************************************************************************************************** */
+        /** ******************************************************************************************************** */
+        /** ******************************************************************************************************** */
+
+
+        $exclude        = ['country', 'zip', 'zip_range', 'order'];
+        $idsOnly        = [];
+        $items         = [];
+
+
+        foreach ($ids as $id) {
+            $idsOnly[] = $id['id'];
+        }
+
+        foreach ($exclude as $e) {
+            unset($params[$e]);
+        }
+        $pkeys = array_keys($params);
+
+        $insertions = $this->repository()->findBy(['id' => $idsOnly], [$order => $orderDir]);
+
+        $getOut = false;
+        $matches = 0;
+
+        if (sizeof($params) > 0) {
+            /** @var Insertion $insertion */
+            foreach ($insertions as $insertion) {
+                $getOut = false;
+                /** @var InsertionAttributeValue $insertionAttributeValue */
+
+                // TODO: this doesnt work for multiple attribute values like breed = 2 and breed = 3 (not filter type!)
+                $intersection = [];
+                foreach ($insertion->getValues() as $insertionAttributeValue) {
+                    $intersection[] = str_replace(' ', '_', $insertionAttributeValue->getAttributeKey()->getName());
+                }
+                $intersectionSize = array_intersect($intersection, $pkeys);
+                if (sizeof(array_intersect($intersection, $pkeys)) === sizeof($pkeys)) {
+                    foreach ($insertion->getValues() as $insertionAttributeValue) {
+                        if ($getOut === true) {
+                            $matches = 0;
+                            break 1;
+                        }
+
+                        $keyName    = str_replace(' ', '_', $insertionAttributeValue->getAttributeKey()->getName());
+                        $filterName = $insertionAttributeValue->getAttributeKey()->getName();
+                        $value      = $insertionAttributeValue->getValue();
+
+
+                        $filterType = $insertionAttributeValue->getAttributeKey()->getFilterType();
+
+                        if (in_array($keyName, $pkeys)) {
+                            $result['filter'][$filterName] = is_array($params[$keyName]) ? array_unique($params[$keyName]) : $params[$keyName];
+                            switch ($filterType) {
+                                case AttributeType::RANGE:
+                                    if ($this->isBetweenMinMax($params[$keyName], $value)) {
+                                        $matches++;
+                                    } else {
+                                        $matches = 0;
+                                        $getOut  = true;
+                                    }
+                                    break;
+                                case AttributeType::DATEYEAR:
+                                    $now         = date_create(date('Y-m-d'));
+                                    $dateToCheck = date_create($value);
+                                    if ($dateToCheck) {
+                                        $interval = date_diff($dateToCheck, $now);
+                                        if ($this->isBetweenMinMax($params[$keyName], $interval->format('%y'))) {
+                                            $matches++;
+                                        } else {
+                                            $matches = 0;
+                                            $getOut  = true;
+                                        }
+                                    }
+                                    break;
+
+                                case AttributeType::DATEMONTH:
+                                    $now         = date_create(date('Y-m-d'));
+                                    $dateToCheck = date_create($value);
+                                    if ($dateToCheck) {
+                                        $interval = date_diff($dateToCheck, $now);
+                                        if ($this->isBetweenMinMax($params[$keyName], $interval->format('%m'))) {
+                                            $matches++;
+                                        } else {
+                                            $matches = 0;
+                                            $getOut  = true;
+                                        }
+                                    }
+                                    break;
+                                case AttributeType::PEDIGREE:
+                                case AttributeType::MULTI:
+                                    if (in_array($value, $params[$keyName])) {
+                                        $matches++;
+                                    } else {
+                                        $matches = 0;
+                                        $getOut  = true;
+                                    }
+                                    break;
+                                default:
+                                    if (is_array($params[$keyName]) && in_array($value, $params[$keyName])) {
+                                        $matches++;
+                                    } elseif ($params[$keyName] === $value) {
+                                        $matches++;
+                                    } else {
+                                        $matches = 0;
+                                        $getOut  = true;
+                                    }
+                                    break;
+                            }
+                        }
+                    }
+                }
+
+                if ($matches > 0) {
+                    $items[] = $insertion;
+                    $matches = 0;
+                }
+            }
+        } else {
+            $items = $insertions;
+        }
 
         $result["query"]["count"]     = sizeof($items);
         $result["query"]["pageSize"]  = $pageSize;
         $result["query"]["page"]      = $page;
-        $result["query"]["pageCount"] = ceil((1.0) * sizeof($ids) / $pageSize);
-        $result["query"]["items"]     = $items;
+        $result["query"]["pageCount"] = ceil((1.0) * sizeof($items) / $pageSize);
+        $result["query"]["items"]     = [];
 
         /**
          * @var $type InsertionType
@@ -213,10 +331,6 @@ class InsertionListService extends AbstractDatabaseAccess {
             }
         }
 
-        $items = $this->repository()->findBy(["id" => $findIds], [$order => $orderDir]);
-
-        // TODO: filter items programmatically
-
         $result["values"] = $valueMap;
 
         foreach ($items as $item) {
@@ -243,7 +357,7 @@ class InsertionListService extends AbstractDatabaseAccess {
             }
 
             foreach ($item->getValues() as $value) {
-                $data["values"][] = $value->toArray(0);;
+                $data["values"][] = $value->toArray(0);
             }
 
             /**
@@ -270,121 +384,6 @@ class InsertionListService extends AbstractDatabaseAccess {
         return $result;
     }
 
-
-    /** ****************************************************************************************************************************** */
-    /** ****************************************************************************************************************************** */
-    /** ****************************************************************************************************************************** */
-    /** ****************************************************************************************************************************** */
-
-    // TODO: get all insertions, check if params match the insertion attribute key values, if true push, if false ignore
-    private function filter($ids, $params, $typeId) {
-        $exclude        = ['country', 'zip', 'zip_range', 'order'];
-        $idsOnly        = [];
-        $pkeys          = array_keys($params);
-        $sqlQuery       = "select v.insertion_id, v.attribute_key, v.insertion_attribute_value from oforge_insertion_insertion_attribute_value as v";
-        $filters        = [];
-        $typeAttributes = $this->repository("type")->find($typeId)->getAttributes();
-        $args           = [];
-        $result         = [];
-
-        foreach ($ids as $id) {
-            $idsOnly[] = $id['id'];
-        }
-
-        foreach ($exclude as $e) {
-            unset($params[$e]);
-        }
-        $pkeys = array_keys($params);
-
-        $insertions = $this->repository()->findBy(['id' => $idsOnly]);
-
-        $getOut = false;
-        $matches = 0;
-
-        if (sizeof($params) > 0) {
-            /** @var Insertion $insertion */
-            foreach ($insertions as $insertion) {
-                $getOut = false;
-                /** @var InsertionAttributeValue $insertionAttributeValue */
-                foreach ($insertion->getValues() as $insertionAttributeValue) {
-                    if ($getOut === true) {
-                        $matches = 0;
-                        break 1;
-                    }
-
-                    $keyName    = $insertionAttributeValue->getAttributeKey()->getName();
-                    $value      = $insertionAttributeValue->getValue();
-
-                    $filterType = $insertionAttributeValue->getAttributeKey()->getFilterType();
-
-                    if (in_array($keyName, $pkeys)) {
-                        switch ($filterType) {
-                            case AttributeType::RANGE:
-                                if ($this->isBetweenMinMax($params[$keyName], $value)) {
-                                    $matches++;
-                                } else {
-                                    $matches = 0;
-                                    $getOut = true;
-                                }
-                                break;
-                            case AttributeType::DATEYEAR:
-                                $now = date_create(date('Y-m-d'));
-                                $dateToCheck = date_create($value);
-                                if ($dateToCheck) {
-                                    $interval = date_diff($dateToCheck, $now);
-                                    if ($this->isBetweenMinMax($params[$keyName], $interval->format('%y'))) {
-                                        $matches++;
-                                    } else {
-                                        $matches = 0;
-                                        $getOut = true;
-                                    }
-                                }
-                                break;
-
-                            case AttributeType::DATEMONTH:
-                                $now = date_create(date('Y-m-d'));
-                                $dateToCheck = date_create($value);
-                                if ($dateToCheck) {
-                                    $interval = date_diff($dateToCheck, $now);
-                                    if ($this->isBetweenMinMax($params[$keyName], $interval->format('%m'))) {
-                                        $matches++;
-                                    } else {
-                                        $matches = 0;
-                                        $getOut = true;
-                                    }
-                                }
-                                break;
-                                break;
-                            case AttributeType::PEDIGREE:
-                            case AttributeType::MULTI:
-                                if (in_array($value, $params[$keyName])) {
-                                    $matches++;
-                                } else {
-                                    $matches = 0;
-                                    $getOut = true;
-                                }
-                                break;
-                            default:
-                                if ($params[$keyName] === $value) {
-                                    $matches++;
-                                } else {
-                                    $matches = 0;
-                                    $getOut = true;
-                                }
-                                break;
-                        }
-                    }
-                }
-
-                if ($matches > 0) {
-                    $result[] = $insertion;
-                    $matches = 0;
-                }
-            }
-        }
-
-        return $result;
-    }
 
     private function isBetweenMinMax($param, $value) {
         $min = null;
@@ -419,12 +418,14 @@ class InsertionListService extends AbstractDatabaseAccess {
     public function saveSearchRadius($params) {
         $name    = "insertion_search_radius";
         $current = [];
+            if (isset($_COOKIE[$name])) {
+                // returns null if it cannot be decoded. See https://php.net/manual/en/function.json-decode.php
+                $current = json_decode($_COOKIE[$name], true);
+                if ($current === null) {
+                    $current = [];
+                }
+            }
 
-        try {
-            // returns null if it cannot be decoded. See https://php.net/manual/en/function.json-decode.php
-            $current = json_decode($_COOKIE[$name], true);
-        } catch (Exception $e) {
-        }
         /**
          * filter by distance
          */
