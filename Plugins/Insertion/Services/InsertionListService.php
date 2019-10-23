@@ -2,6 +2,7 @@
 
 namespace Insertion\Services;
 
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Query\ResultSetMapping;
@@ -56,16 +57,18 @@ class InsertionListService extends AbstractDatabaseAccess {
      */
 
     public function search($typeId, $params) : ?array {
-        $page     = isset($params["page"]) ? $params["page"] : 1;
-        $pageSize = isset($params["pageSize"]) ? $params["pageSize"] : 10;
+        $page        = isset($params["page"]) ? $params["page"] : 1;
+        $pageSize    = isset($params["pageSize"]) ? $params["pageSize"] : 10;
+        $order       = 'id';
+        $orderNative = 'id';
+        $orderDir    = 'asc';
+        $result      = ["filter" => [], "query" => [], 'order' => $params["order"]];
+        $args        = [];
+        $items       = [];
 
         if (!isset($params['order'])) {
             $params['order'] = 'date_desc';
         }
-
-        $order       = 'id';
-        $orderNative = 'id';
-        $orderDir    = 'asc';
 
         if (isset($params['order'])) {
             switch ($params['order']) {
@@ -91,10 +94,6 @@ class InsertionListService extends AbstractDatabaseAccess {
                     break;
             }
         }
-
-        $result = ["filter" => [], "query" => [], 'order' => $params["order"]];
-
-        $args = [];
 
         $sqlQuery = "select i.id from oforge_insertion i";
 
@@ -167,59 +166,246 @@ class InsertionListService extends AbstractDatabaseAccess {
             $args["ad"]           = $params["after_date"];
         }
 
-        $sqlQueryOrderBy = " ORDER BY " . $orderNative . " " . $orderDir;
+        //$sqlQueryOrderBy = " ORDER BY " . $orderNative . " " . $orderDir;
 
-        $sqlResult = $this->entityManager()->getEntityManager()->getConnection()->executeQuery($sqlQuery . $sqlQueryWhere . $sqlQueryOrderBy, $args);
+        $sqlResult = $this->entityManager()->getEntityManager()->getConnection()->executeQuery($sqlQuery . $sqlQueryWhere, $args);
         $ids       = $sqlResult->fetchAll();
 
-        /** ******************************************************************************************************** */
-        /** ******************************************************************************************************** */
-        /** ******************************************************************************************************** */
-
-
-        $exclude        = ['country', 'zip', 'zip_range', 'order'];
-        $idsOnly        = [];
-        $items         = [];
-
-
+        $realIds   = [];
         foreach ($ids as $id) {
-            $idsOnly[] = $id['id'];
+            $realIds[] = $id['id'];
         }
+
+        $insertions = $this->repository()->findBy(['id' => $realIds]);
+        $exclude    = ['country', 'zip', 'zip_range', 'order'];
 
         foreach ($exclude as $e) {
             unset($params[$e]);
         }
+
         $pkeys = array_keys($params);
 
-        $insertions = $this->repository()->findBy(['id' => $idsOnly], [$order => $orderDir]);
+        /** @var AttributeKey[] $attributeKeys */
+        $attributeKeys = $this->repository('key')->findAll();
 
+        $keys = [];
+        foreach ($attributeKeys as $attributeKey) {
+            $filterName = str_replace(' ', '_', $attributeKey->getName());
+            if (in_array($filterName, $pkeys)) {
+                $keys[$attributeKey->getId()]['name'] = $attributeKey->getName();
+                $keys[$attributeKey->getId()]['filterName'] = $filterName;
+                $keys[$attributeKey->getId()]['filterType'] = $attributeKey->getFilterType();
+                $keys[$attributeKey->getId()]['values'] = $params[$filterName];
+            }
+        }
+
+        $attributeValueSql = "select v.insertion_id, v.attribute_key, v.insertion_attribute_value from oforge_insertion_insertion_attribute_value as v";
+        $attributeValueSqlWhere = " where v.insertion_id in (:ids) and v.attribute_key in (:key_ids)";
+
+        $args = ['ids' => $realIds, 'key_ids' => array_keys($keys)];
+        $attributeValueQuery = $this->entityManager()
+                                ->getEntityManager()
+                                ->getConnection()
+                                ->executeQuery($attributeValueSql . $attributeValueSqlWhere, $args, ['ids' => Connection::PARAM_INT_ARRAY, 'key_ids' => Connection::PARAM_INT_ARRAY]);
+
+        $attributeValues = $attributeValueQuery->fetchAll();
+        $av = [];
+        foreach($attributeValues as $attributeValue) {
+            $av[$attributeValue['insertion_id']][] = ['key' => $attributeValue['attribute_key'], 'value' => $attributeValue['insertion_attribute_value']];
+        }
+        $attributeValues = $av;
+
+        $result['items'] = [];
+
+        $matches = 0;
         $getOut = false;
+
+        foreach ($keys as $key => $value) {
+            foreach ($attributeValues as $attributeValue) {
+                if ($attributeValue['attribute_key'] == $key) {
+                    $v = $attributeValue['insertion_attribute_value'];
+
+                    $result['filter'][$value['filterName']] = is_array($value['values']) ? array_unique($value['values']) : $value['values'];
+                    switch ($value['filterType']) {
+                        case AttributeType::RANGE:
+                            if ($this->isBetweenMinMax($value['values'], $v)) {
+                                if ($matches > 0) {
+                                    $result['items'][] = $attributeValue['insertion_attribute_value'];
+                                }
+                            } else {
+                                $matches = 0;
+                                $getOut  = true;
+                            }
+                            break;
+                        case AttributeType::DATEYEAR:
+                            $now         = date_create(date('Y-m-d'));
+                            $dateToCheck = date_create($v);
+                            if ($dateToCheck) {
+                                $interval = date_diff($dateToCheck, $now);
+                                if ($this->isBetweenMinMax($value['values'], $interval->format('%y'))) {
+                                    $matches++;
+                                } else {
+                                    $matches = 0;
+                                    $getOut  = true;
+                                }
+                            }
+                            break;
+
+                        case AttributeType::DATEMONTH:
+                            $now         = date_create(date('Y-m-d'));
+                            $dateToCheck = date_create($v);
+                            if ($dateToCheck) {
+                                $interval = date_diff($dateToCheck, $now);
+                                if ($this->isBetweenMinMax($value['values'], $interval->format('%m'))) {
+                                    $matches++;
+                                } else {
+                                    $matches = 0;
+                                    $getOut  = true;
+                                }
+                            }
+                            break;
+                        case AttributeType::PEDIGREE:
+                        case AttributeType::MULTI:
+                            if (in_array($v, $value['values'])) {
+                                $matches++;
+                            } else {
+                                $matches = 0;
+                                $getOut  = true;
+                            }
+                            break;
+                        default:
+                            if (is_array($value['values']) && in_array($v, $value['values'])) {
+                                $matches++;
+                            } elseif ($value['values'] == $v) {
+                                $matches++;
+                            } else {
+                                $matches = 0;
+                                $getOut  = true;
+                            }
+                            break;
+                    }
+                }
+            }
+        }
+        $items = $result['items'];
+
+        /** ************************************************* */
+        /** ************************************************* */
+        /** ************************************************* */
+
+        $result["query"]["count"]     = sizeof($items);
+        $result["query"]["pageSize"]  = $pageSize;
+        $result["query"]["page"]      = $page;
+        $result["query"]["pageCount"] = ceil((1.0) * sizeof($items) / $pageSize);
+        //$result["query"]["items"]     = [];
+
+        /**
+         * @var $type InsertionType
+         */
+        $type = $this->repository("type")->findOneBy(["id" => $typeId]);
+
+        $attributes = $type->getAttributes();
+
+        $valueMap     = [];
+        $attributeMap = [];
+
+        /**
+         * @var $attribute InsertionTypeAttribute
+         */
+        foreach ($attributes as $attribute) {
+            $attributeMap[$attribute->getAttributeKey()->getId()] = [
+                "name" => $attribute->getAttributeKey()->getName(),
+                "top"  => $attribute->isTop(),
+            ];
+
+            foreach ($attribute->getAttributeKey()->getValues() as $value) {
+                $valueMap += $this->getValueMap($value);
+            }
+        }
+
+        $findIds = [];
+
+        for ($i = ($page - 1) * $pageSize; $i < $page * $pageSize; $i++) {
+            if (sizeof($ids) > $i) {
+                $findIds[] = $ids[$i]["id"];
+            }
+        }
+
+        $result["values"] = $valueMap;
+
+        $insertions = $this->repository()->findBy(['id' => $items]);
+
+        foreach ($insertions as $item) {
+            $data = [
+                "id"        => $item->getId(),
+                "contact"   => $item->getContact() != null ? $item->getContact()->toArray(0) : [],
+                "content"   => [],
+                "media"     => [],
+                "values"    => [],
+                "topvalues" => [],
+                "price"     => $item->getPrice(),
+                "minPrice"  => $item->getMinPrice(),
+                "priceType" => $item->getPriceType(),
+                "tax"       => $item->isTax(),
+                "createdAt" => $item->getCreatedAt(),
+            ];
+
+            foreach ($item->getContent() as $content) {
+                $data["content"][] = $content->toArray(0);
+            }
+
+            foreach ($item->getMedia() as $media) {
+                $data["media"][] = $media->toArray(0);
+            }
+
+            foreach ($item->getValues() as $value) {
+                $data["values"][] = $value->toArray(0);
+            }
+
+            /**
+             * @var $attribute InsertionTypeAttribute
+             */
+            foreach ($attributes as $attribute) {
+                if ($attribute->isTop()) {
+                    foreach ($data["values"] as $value) {
+                        if ($value["attributeKey"] == $attribute->getAttributeKey()->getId()) {
+                            $data["topvalues"][] = [
+                                "name"         => $attribute->getAttributeKey()->getName(),
+                                "type"         => $attribute->getAttributeKey()->getType(),
+                                "attributeKey" => $attribute->getAttributeKey()->getId(),
+                                "value"        => $value["value"],
+                            ];
+                        }
+                    }
+                }
+            }
+
+            $result["query"]["items"][] = $data;
+        }
+
+        return $result;
+    }
+
+    private function asdasd() {
+
+
+
+        $getOut  = false;
         $matches = 0;
 
-        if (sizeof($params) > 0) {
+        if (sizeof($pkeys) > 0) {
             /** @var Insertion $insertion */
             foreach ($insertions as $insertion) {
                 $getOut = false;
                 /** @var InsertionAttributeValue $insertionAttributeValue */
 
-                // TODO: this doesnt work for multiple attribute values like breed = 2 and breed = 3 (not filter type!)
-                $intersection = [];
-                foreach ($insertion->getValues() as $insertionAttributeValue) {
-                    $intersection[] = str_replace(' ', '_', $insertionAttributeValue->getAttributeKey()->getName());
-                }
-                $intersectionSize = array_intersect($intersection, $pkeys);
-                if (sizeof(array_intersect($intersection, $pkeys)) === sizeof($pkeys)) {
-                    foreach ($insertion->getValues() as $insertionAttributeValue) {
-                        if ($getOut === true) {
-                            $matches = 0;
-                            break 1;
-                        }
+                foreach ($pkeys as $pkey) {
 
+
+                    foreach ($insertion->getValues() as $insertionAttributeValue) {
                         $keyName    = str_replace(' ', '_', $insertionAttributeValue->getAttributeKey()->getName());
                         $filterName = $insertionAttributeValue->getAttributeKey()->getName();
                         $value      = $insertionAttributeValue->getValue();
-
-
                         $filterType = $insertionAttributeValue->getAttributeKey()->getFilterType();
 
                         if (in_array($keyName, $pkeys)) {
@@ -292,98 +478,7 @@ class InsertionListService extends AbstractDatabaseAccess {
         } else {
             $items = $insertions;
         }
-
-        $result["query"]["count"]     = sizeof($items);
-        $result["query"]["pageSize"]  = $pageSize;
-        $result["query"]["page"]      = $page;
-        $result["query"]["pageCount"] = ceil((1.0) * sizeof($items) / $pageSize);
-        $result["query"]["items"]     = [];
-
-        /**
-         * @var $type InsertionType
-         */
-        $type = $this->repository("type")->findOneBy(["id" => $typeId]);
-
-        $attributes = $type->getAttributes();
-
-        $valueMap     = [];
-        $attributeMap = [];
-
-        /**
-         * @var $attribute InsertionTypeAttribute
-         */
-        foreach ($attributes as $attribute) {
-            $attributeMap[$attribute->getAttributeKey()->getId()] = [
-                "name" => $attribute->getAttributeKey()->getName(),
-                "top"  => $attribute->isTop(),
-            ];
-
-            foreach ($attribute->getAttributeKey()->getValues() as $value) {
-                $valueMap += $this->getValueMap($value);
-            }
-        }
-
-        $findIds = [];
-
-        for ($i = ($page - 1) * $pageSize; $i < $page * $pageSize; $i++) {
-            if (sizeof($ids) > $i) {
-                $findIds[] = $ids[$i]["id"];
-            }
-        }
-
-        $result["values"] = $valueMap;
-
-        foreach ($items as $item) {
-            $data = [
-                "id"        => $item->getId(),
-                "contact"   => $item->getContact() != null ? $item->getContact()->toArray(0) : [],
-                "content"   => [],
-                "media"     => [],
-                "values"    => [],
-                "topvalues" => [],
-                "price"     => $item->getPrice(),
-                "minPrice"  => $item->getMinPrice(),
-                "priceType" => $item->getPriceType(),
-                "tax"       => $item->isTax(),
-                "createdAt" => $item->getCreatedAt(),
-            ];
-
-            foreach ($item->getContent() as $content) {
-                $data["content"][] = $content->toArray(0);
-            }
-
-            foreach ($item->getMedia() as $media) {
-                $data["media"][] = $media->toArray(0);
-            }
-
-            foreach ($item->getValues() as $value) {
-                $data["values"][] = $value->toArray(0);
-            }
-
-            /**
-             * @var $attribute InsertionTypeAttribute
-             */
-            foreach ($attributes as $attribute) {
-                if ($attribute->isTop()) {
-                    foreach ($data["values"] as $value) {
-                        if ($value["attributeKey"] == $attribute->getAttributeKey()->getId()) {
-                            $data["topvalues"][] = [
-                                "name"         => $attribute->getAttributeKey()->getName(),
-                                "type"         => $attribute->getAttributeKey()->getType(),
-                                "attributeKey" => $attribute->getAttributeKey()->getId(),
-                                "value"        => $value["value"],
-                            ];
-                        }
-                    }
-                }
-            }
-
-            $result["query"]["items"][] = $data;
-        }
-
-        return $result;
     }
-
 
     private function isBetweenMinMax($param, $value) {
         $min = null;
@@ -397,10 +492,11 @@ class InsertionListService extends AbstractDatabaseAccess {
         if ($min > 0 && $max > 0 && $min > $max) {
             [$min, $max] = [$max, $min];
         }
-        if (($min === null || $min <= $value) &&
-            ($max === null || $value <= $max)) {
+        if (($min === null || $min <= $value)
+            && ($max === null || $value <= $max)) {
             return true;
         }
+
         return false;
     }
 
@@ -418,13 +514,13 @@ class InsertionListService extends AbstractDatabaseAccess {
     public function saveSearchRadius($params) {
         $name    = "insertion_search_radius";
         $current = [];
-            if (isset($_COOKIE[$name])) {
-                // returns null if it cannot be decoded. See https://php.net/manual/en/function.json-decode.php
-                $current = json_decode($_COOKIE[$name], true);
-                if ($current === null) {
-                    $current = [];
-                }
+        if (isset($_COOKIE[$name])) {
+            // returns null if it cannot be decoded. See https://php.net/manual/en/function.json-decode.php
+            $current = json_decode($_COOKIE[$name], true);
+            if ($current === null) {
+                $current = [];
             }
+        }
 
         /**
          * filter by distance
