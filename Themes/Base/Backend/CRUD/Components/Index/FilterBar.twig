@@ -12,7 +12,7 @@
                     {% else %}
                         {% set crudFilterTitle = crudPropertyName|ucfirst %}
                     {% endif %}
-                    {% include 'Backend/CRUD/Components/Index/FilterType/' ~ crudFilterConfig.type|ucfirst ~ '.twig' ignore missing %}
+                    {% include CRUD_path('Components/Index/FilterType/' ~ crudFilterConfig.type|ucfirst ~ '.twig') ignore missing %}
                 {% endfor %}
                 <button class="btn btn-default" type="submit">
                     {{ i18n('backend_crud_btn_filter_submit', {en: 'Filter', de: 'Filtern'}) }}

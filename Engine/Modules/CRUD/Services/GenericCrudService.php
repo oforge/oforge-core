@@ -39,18 +39,20 @@ class GenericCrudService extends AbstractDatabaseAccess {
      * Get list of entities (data by toArray). If $params not empty, find entities by $params.
      *
      * @param string $class
-     * @param array $criteria
+     * @param array|callable $criteria
      * @param array|null $orderBy
      * @param int|null $offset
      * @param int|null $limit
      *
      * @return AbstractModel[]
      */
-    public function list(string $class, array $criteria = [], array $orderBy = null, ?int $offset = null, ?int $limit = null) : array {
+    public function list(string $class, $criteria = [], array $orderBy = null, ?int $offset = null, ?int $limit = null) : array {
         $repository   = $this->getRepository($class);
         $queryBuilder = $builder = $repository->createQueryBuilder('e');
         $parameters   = [];
-        if (!empty($criteria)) {
+        if (is_callable($criteria)) {
+            $criteria($queryBuilder);
+        } elseif (!empty($criteria)) {
             $wheres = [];
             foreach ($criteria as $propertyName => $propertyCriteria) {
                 $prefixPropertyName     = 'e.' . $propertyName;
@@ -70,6 +72,8 @@ class GenericCrudService extends AbstractDatabaseAccess {
                     case CrudFilterComparator::NOT_EQUALS:
                     case CrudFilterComparator::LESS:
                     case CrudFilterComparator::LESS_EQUALS:
+                    case CrudFilterComparator::IN:
+                    case CrudFilterComparator::NOT_IN:
                         $parameters[$propertyName] = $propertyCriteria['value'];
 
                         $functionName = $propertyCriteria['comparator'];
@@ -235,9 +239,10 @@ class GenericCrudService extends AbstractDatabaseAccess {
         if (!isset($entity)) {
             throw new NotFoundException("Entity with id '$id' not found!");
         }
+        $entityData = $entity->toArray(0);
         $this->entityManager()->remove($entity);
         $repository->clear();
-        Oforge()->Events()->trigger(Event::create($class . '::deleted', $entity->toArray(0)));
+        Oforge()->Events()->trigger(Event::create($class . '::deleted', $entityData));
     }
 
     /**

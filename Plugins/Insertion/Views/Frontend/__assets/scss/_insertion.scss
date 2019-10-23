@@ -6,7 +6,7 @@
         position: relative;
         padding-bottom: 3rem;
 
-/** Insertion Panel */
+        /** Insertion Panel */
         .panel--product {
             .button.button--primary {
                 position: static;
@@ -47,6 +47,8 @@
         &__title-link {
 
             .product__title {
+                max-height: 6rem;
+                overflow: hidden;
                 margin-bottom: $size-large;
                 order: 2;
                 width: 100%;
