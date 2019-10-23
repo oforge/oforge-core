@@ -39,7 +39,7 @@
     <div class="form-controls">
         {% block image__upload %}
             <div class="form__control">
-                {% include 'Frontend/Components/UppyLoad.twig' with {uppyUploadURL: '/image-upload'} %}
+                {% include 'Frontend/Components/UppyLoad.twig' with {uppyUploadURL: '/image-upload', required: type.imageRequired} %}
             </div>
         {% endblock image__upload %}
         {% block video__upload %}

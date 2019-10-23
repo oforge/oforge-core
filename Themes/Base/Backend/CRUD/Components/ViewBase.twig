@@ -18,6 +18,6 @@
 
 {% block pagecontent %}
     <section class="content">
-        {% include 'Backend/CRUD/Components/Form.twig' with { item: crud.item } %}
+        {% include CRUD_path('Components/Form.twig') with { item: crud.item } %}
     </section>
 {% endblock %}
