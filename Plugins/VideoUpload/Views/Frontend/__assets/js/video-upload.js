@@ -11,6 +11,7 @@ if (typeof Oforge !== 'undefined') {
             deleteButton: '#video-delete',
             videoFileInput: '[data-file-input-video]',
             vimeoVideoIdInput: '[data-upload-video-id]',
+            videoContentId: '[data-upload-video-content-id]',
             form: '.form--submit--loading',
             formSubmitButton: '.form__input--submit--loading',
             uploadMessages: '.upload__messages',
@@ -35,10 +36,10 @@ if (typeof Oforge !== 'undefined') {
             var vimeoBaseUrl = "https://api.vimeo.com";
             var videoId;
 
-            requestCredentials().then(function(data) {
+            requestCredentials().then(function (data) {
                 credentials = data;
 
-                if(vimeoVideoIdInput.value.length > 0) {
+                if (vimeoVideoIdInput.value.length > 0) {
                     videoId = vimeoVideoIdInput.value;
                     enableDeleteButton();
                     displayPlaceholderImage();
@@ -149,10 +150,7 @@ if (typeof Oforge !== 'undefined') {
                             'Authorization': 'Bearer ' + credentials.vimeo_access_token
                         },
                         success: function (data) {
-                            displayMessage(self.selectors.messageDeletingSuccess);
-                            videoId = null;
-                            fillHiddenIdInput("");
-                            reset();
+                            deleteVideoFromDatabase();
                         },
                         error: function (data) {
                             displayErrorMessage(data);
@@ -161,28 +159,52 @@ if (typeof Oforge !== 'undefined') {
                 });
             }
 
-            function allowEmbed(url, id, token){
+            function deleteVideoFromDatabase() {
+                let videoContentId = document.querySelector(self.selectors.videoContentId).value;
+                if (videoContentId) {
+                    let getUrl = window.location;
+                    let baseUrl = getUrl.protocol + "//" + getUrl.host + "/";
+                    let url = baseUrl + 'account/insertions/video/' + videoContentId;
+                    $.ajax({
+                        method: 'DELETE',
+                        url: url,
+                        success: function () {
+                            displayMessage(self.selectors.messageDeletingSuccess);
+                            videoId = null;
+                            fillHiddenIdInput("");
+                            reset();
+                        },
+                        error: function (data) {
+                            displayErrorMessage(data);
+                        }
+                    })
+                } else {
+                    displayMessage(self.selectors.messageDeletingSuccess);
+                    videoId = null;
+                    reset();
+                }
+            }
+
+            function allowEmbed(url, id, token) {
                 var embedUrl = url + '/videos/' + id;
                 $.ajax({
                     method: 'PATCH',
                     url: embedUrl,
                     data: {
-                        'privacy.embed' : 'public',
-                        'embed.title.name' : 'hide',
-                        'embed.color' : '#708e2b',
-                        'embed.buttons.like' : false,
-                        'embed.buttons.share' : false,
-                        'embed.buttons.watchlater' : false,
-                        'embed.buttons.embed' : false,
-                        'embed.logos.vimeo' : false,
-                        'embed.title.owner' : 'hide',
-                        'embed.title.portrait' : 'hide'
+                        'privacy.embed': 'public',
+                        'embed.title.name': 'hide',
+                        'embed.color': '#708e2b',
+                        'embed.buttons.like': false,
+                        'embed.buttons.share': false,
+                        'embed.buttons.watchlater': false,
+                        'embed.buttons.embed': false,
+                        'embed.logos.vimeo': false,
+                        'embed.title.owner': 'hide',
+                        'embed.title.portrait': 'hide',
+
                     },
                     headers: {
                         'Authorization': 'Bearer ' + token
-                    },
-                    success: function (data) {
-                        console.log(data);
                     },
                     error: function (error) {
                         console.log(error);
@@ -190,8 +212,8 @@ if (typeof Oforge !== 'undefined') {
                 });
             }
 
-            function requestCredentials(){
-                return new Promise(function (resolve,reject) {
+            function requestCredentials() {
+                return new Promise(function (resolve, reject) {
                     $.ajax({
                         method: 'GET',
                         url: '/vimeo-api/credentials',
@@ -241,8 +263,8 @@ if (typeof Oforge !== 'undefined') {
                             }, 1000);
                         }
                     },
-                    error: function(xhr, ajaxOptions, thrownError) {
-                        switch(xhr.status){
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        switch (xhr.status) {
                             case 404:
                                 reset();
                                 fillHiddenIdInput("");
@@ -255,7 +277,7 @@ if (typeof Oforge !== 'undefined') {
 
             }
 
-            function fillHiddenIdInput(data){
+            function fillHiddenIdInput(data) {
                 let input = document.querySelector(self.selectors.vimeoVideoIdInput);
                 $(input).val(data);
             }
