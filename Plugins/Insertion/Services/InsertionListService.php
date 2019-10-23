@@ -171,13 +171,12 @@ class InsertionListService extends AbstractDatabaseAccess {
         $sqlResult = $this->entityManager()->getEntityManager()->getConnection()->executeQuery($sqlQuery . $sqlQueryWhere, $args);
         $ids       = $sqlResult->fetchAll();
 
-        $realIds   = [];
+        $realIds = [];
         foreach ($ids as $id) {
             $realIds[] = $id['id'];
         }
 
-        $insertions = $this->repository()->findBy(['id' => $realIds]);
-        $exclude    = ['country', 'zip', 'zip_range', 'order'];
+        $exclude = ['price', 'country', 'zip', 'zip_range', 'order'];
 
         foreach ($exclude as $e) {
             unset($params[$e]);
@@ -192,105 +191,89 @@ class InsertionListService extends AbstractDatabaseAccess {
         foreach ($attributeKeys as $attributeKey) {
             $filterName = str_replace(' ', '_', $attributeKey->getName());
             if (in_array($filterName, $pkeys)) {
-                $keys[$attributeKey->getId()]['name'] = $attributeKey->getName();
+                $keys[$attributeKey->getId()]['name']       = $attributeKey->getName();
                 $keys[$attributeKey->getId()]['filterName'] = $filterName;
                 $keys[$attributeKey->getId()]['filterType'] = $attributeKey->getFilterType();
-                $keys[$attributeKey->getId()]['values'] = $params[$filterName];
+                $keys[$attributeKey->getId()]['values']     = $params[$filterName];
             }
         }
 
-        $attributeValueSql = "select v.insertion_id, v.attribute_key, v.insertion_attribute_value from oforge_insertion_insertion_attribute_value as v";
+        $attributeValueSql      = "select v.insertion_id, v.attribute_key, v.insertion_attribute_value from oforge_insertion_insertion_attribute_value as v";
         $attributeValueSqlWhere = " where v.insertion_id in (:ids) and v.attribute_key in (:key_ids)";
 
-        $args = ['ids' => $realIds, 'key_ids' => array_keys($keys)];
-        $attributeValueQuery = $this->entityManager()
-                                ->getEntityManager()
-                                ->getConnection()
-                                ->executeQuery($attributeValueSql . $attributeValueSqlWhere, $args, ['ids' => Connection::PARAM_INT_ARRAY, 'key_ids' => Connection::PARAM_INT_ARRAY]);
+        $args                = ['ids' => $realIds, 'key_ids' => array_keys($keys)];
+        $attributeValueQuery = $this->entityManager()->getEntityManager()->getConnection()->executeQuery($attributeValueSql . $attributeValueSqlWhere, $args,
+            ['ids' => Connection::PARAM_INT_ARRAY, 'key_ids' => Connection::PARAM_INT_ARRAY]);
+        $attributeValues     = $attributeValueQuery->fetchAll();
+        $av                  = [];
 
-        $attributeValues = $attributeValueQuery->fetchAll();
-        $av = [];
-        foreach($attributeValues as $attributeValue) {
-            $av[$attributeValue['insertion_id']][] = ['key' => $attributeValue['attribute_key'], 'value' => $attributeValue['insertion_attribute_value']];
+        foreach ($attributeValues as $attributeValue) {
+            $av[$attributeValue['insertion_id']][$attributeValue['attribute_key']][] = $attributeValue['insertion_attribute_value'];
         }
-        $attributeValues = $av;
 
         $result['items'] = [];
 
         $matches = 0;
-        $getOut = false;
+        $getOut  = false;
+        // keys[ id [ name, filterName, filterType, values[] ], ... ]
+        // avs[ ins_id [ key_id [ values[] ], ...], ...]
 
-        foreach ($keys as $key => $value) {
-            foreach ($attributeValues as $attributeValue) {
-                if ($attributeValue['attribute_key'] == $key) {
-                    $v = $attributeValue['insertion_attribute_value'];
+        foreach ($av as $insertionId => $attributeKeys) {
+            foreach ($keys as $key => $value) {
+                
+                $result['filter'][$value['name']] = is_array($value['values']) ? array_unique($value['values']) : $value['values'];
 
-                    $result['filter'][$value['filterName']] = is_array($value['values']) ? array_unique($value['values']) : $value['values'];
-                    switch ($value['filterType']) {
-                        case AttributeType::RANGE:
-                            if ($this->isBetweenMinMax($value['values'], $v)) {
-                                if ($matches > 0) {
-                                    $result['items'][] = $attributeValue['insertion_attribute_value'];
-                                }
+                // $values = sizeof($attributeKeys[$key]) > 1 ? $attributeKeys[$key] : $attributeKeys[$key][0];
+                $values = $attributeKeys[$key];
+                switch ($value['filterType']) {
+                    case AttributeType::RANGE:
+                        if ($this->isBetweenMinMax($value['values'], $values[0])) {
+                        } else {
+                            continue 3;
+                        }
+                        break;
+                    case AttributeType::DATEYEAR:
+                        $now         = date_create(date('Y-m-d'));
+                        $dateToCheck = date_create($values[0]);
+                        if ($dateToCheck) {
+                            $interval = date_diff($dateToCheck, $now);
+                            if ($this->isBetweenMinMax($value['values'], $interval->format('%y'))) {
                             } else {
-                                $matches = 0;
-                                $getOut  = true;
+                                continue 3;
                             }
-                            break;
-                        case AttributeType::DATEYEAR:
-                            $now         = date_create(date('Y-m-d'));
-                            $dateToCheck = date_create($v);
-                            if ($dateToCheck) {
-                                $interval = date_diff($dateToCheck, $now);
-                                if ($this->isBetweenMinMax($value['values'], $interval->format('%y'))) {
-                                    $matches++;
-                                } else {
-                                    $matches = 0;
-                                    $getOut  = true;
-                                }
-                            }
-                            break;
-
-                        case AttributeType::DATEMONTH:
-                            $now         = date_create(date('Y-m-d'));
-                            $dateToCheck = date_create($v);
-                            if ($dateToCheck) {
-                                $interval = date_diff($dateToCheck, $now);
-                                if ($this->isBetweenMinMax($value['values'], $interval->format('%m'))) {
-                                    $matches++;
-                                } else {
-                                    $matches = 0;
-                                    $getOut  = true;
-                                }
-                            }
-                            break;
-                        case AttributeType::PEDIGREE:
-                        case AttributeType::MULTI:
-                            if (in_array($v, $value['values'])) {
-                                $matches++;
+                        }
+                        break;
+                    case AttributeType::DATEMONTH:
+                        $now         = date_create(date('Y-m-d'));
+                        $dateToCheck = date_create($values[0]);
+                        if ($dateToCheck) {
+                            $interval = date_diff($dateToCheck, $now);
+                            if ($this->isBetweenMinMax($value['values'], $interval->format('%m'))) {
                             } else {
-                                $matches = 0;
-                                $getOut  = true;
+                                continue 3;
                             }
-                            break;
-                        default:
-                            if (is_array($value['values']) && in_array($v, $value['values'])) {
-                                $matches++;
-                            } elseif ($value['values'] == $v) {
-                                $matches++;
-                            } else {
-                                $matches = 0;
-                                $getOut  = true;
-                            }
-                            break;
-                    }
+                        }
+                        break;
+                    case AttributeType::PEDIGREE:
+                    case AttributeType::MULTI:
+                        if (empty(array_intersect($values, $value['values']))) {
+                            continue 3;
+                        }
+                        break;
+                    default:
+                        if (is_array($value['values']) && !empty(array_intersect($values, $value['values']))) {
+                        } elseif (in_array($value['values'], $values)) {
+                        } else {
+                            continue 3;
+                        }
+                        break;
                 }
             }
+            $result['items'][] = $insertionId;
         }
         $items = $result['items'];
 
-        /** ************************************************* */
-        /** ************************************************* */
+        /** ************************************************* */ /** ************************************************* */
         /** ************************************************* */
 
         $result["query"]["count"]     = sizeof($items);
@@ -387,9 +370,6 @@ class InsertionListService extends AbstractDatabaseAccess {
     }
 
     private function asdasd() {
-
-
-
         $getOut  = false;
         $matches = 0;
 
@@ -400,8 +380,6 @@ class InsertionListService extends AbstractDatabaseAccess {
                 /** @var InsertionAttributeValue $insertionAttributeValue */
 
                 foreach ($pkeys as $pkey) {
-
-
                     foreach ($insertion->getValues() as $insertionAttributeValue) {
                         $keyName    = str_replace(' ', '_', $insertionAttributeValue->getAttributeKey()->getName());
                         $filterName = $insertionAttributeValue->getAttributeKey()->getName();
