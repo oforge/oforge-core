@@ -62,6 +62,11 @@
                                     <input type="checkbox" id="insertionTypeQuickSearch" name="insertionTypeQuickSearch"
                                            value="true" {% if content.insertionType.quickSearch %}checked{% endif %}>
                                 </div>
+                                <div>
+                                    <label for="insertionTypeImageRequired">{{ i18n("insertion_type_image_required", "Image required") }}</label>
+                                    <input type="checkbox" id="insertionTypeImageRequired" name="insertionTypeImageRequired"
+                                           value="true" {% if content.insertionType.imageRequired %}checked{% endif %}>
+                                </div>
                             </div>
 
                             <div data-editable-table class="table-editable">
