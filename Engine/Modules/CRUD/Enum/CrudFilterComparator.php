@@ -16,6 +16,6 @@ class CrudFilterComparator {
     public const NOT_EQUALS     = 'neq';
     public const LESS           = 'lt';
     public const LESS_EQUALS    = 'lte';
-    // public const IN             = 'in';
-    // public const NOT_IN         = 'notIn';
+    public const IN             = 'in';
+    public const NOT_IN         = 'notIn';
 }

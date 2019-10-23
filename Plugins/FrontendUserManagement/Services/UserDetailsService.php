@@ -42,7 +42,7 @@ class UserDetailsService extends AbstractDatabaseAccess {
             return true;
 
         } catch (Exception $ex) {
-            Oforge()->Logger()->get()->addError('Could not persist / flush userDetails', ['msg' => $ex->getMessage()]);
+            Oforge()->Logger()->get()->addError('Could not persist / flush userDetails', ['msg' => $ex->getMessage(), 'stack' => $ex->getTraceAsString()]);
         }
 
         return false;
