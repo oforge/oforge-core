@@ -176,15 +176,22 @@ class InsertionFormsService extends AbstractDatabaseAccess {
             'images_interactions' => $pageData["images_interactions"],
         ];
 
-        if (isset($pageData["insertion"]["vimeo_video_id"])) {
+        if (isset($pageData["insertion"]["vimeo_video_id"]) && $pageData["insertion"]["vimeo_video_id"] !== "" ) {
             /** @var MediaService $mediaService */
-            $videoMedia = new Media();
-            $videoMedia->setName($pageData["insertion_title"]);
-            $videoMedia->setType('video/vimeo');
-            $videoMedia->setPath($pageData["insertion"]["vimeo_video_id"]);
-            $this->entityManager()->create($videoMedia, true);
-
+            $videoMedia = $this->repository("media")->findOneBy(["path" => $pageData["insertion"]["vimeo_video_id"]]);
+            if(!$videoMedia) {
+                $videoMedia = new Media();
+                $videoMedia->setName($pageData["insertion_title"]);
+                $videoMedia->setType('video/vimeo');
+                $videoMedia->setPath($pageData["insertion"]["vimeo_video_id"]);
+                $this->entityManager()->create($videoMedia, true);
+            }
             array_push($data["media"], ["name" => $pageData["insertion_title"], "content" => $videoMedia, "main" => 0]);
+
+        } elseif (isset($pageData["insertion"]["video_content_id"])) {
+            /** @var InsertionUpdaterService $insertionUpdaterService */
+            $insertionUpdaterService = Oforge()->Services()->get('insertion.updater');
+            $insertionUpdaterService->deleteInsertionMediaByContentId($pageData["insertion"]["video_content_id"]);
         }
 
         if (isset($pageData["images"]) && sizeof($pageData["images"]) > 0) {
