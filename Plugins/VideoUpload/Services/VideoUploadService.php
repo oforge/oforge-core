@@ -15,26 +15,6 @@ class VideoUploadService extends AbstractDatabaseAccess
         ]);
     }
 
-    /**
-     * @param int $insertionId
-     * @param string $key
-     * @throws ORMException
-     */
-    public function updateOrCreateVideoKey($insertionId, $key)
-    {
-        $repository = $this->repository('videoKey');
-        $videoKey = $repository->findOneBy(['insertionId' => $insertionId]);
-        if ($videoKey === null) {
-            $videoKey = new VideoKey();
-            $videoKey->setVideoKey($key);
-            $videoKey->setInsertionId($insertionId);
-            $this->entityManager()->create($videoKey);
-        } else {
-            $videoKey->setVideoKey($key);
-            $this->entityManager()->update($videoKey);
-        }
-    }
-
     public function getVideoKey($insertionId) {
         $repository = $this->repository('videoKey');
         $videoKey = $repository->findOneBy(['insertionId' => $insertionId]);
