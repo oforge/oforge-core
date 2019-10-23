@@ -27,7 +27,7 @@ if (typeof Oforge !== 'undefined') {
             var videoTypes = [
                 'video/mp4',
             ];
-            var maxFileUploadSize = 100 * 1000 * 1000; // 100MB
+            var maxFileUploadSize = 300 * 1000 * 1000; // 100MB
             var maxFileCount = 1;
             var videoUploadButton = document.querySelector(self.selectors.uploadButton);
             var videoFileInput = document.querySelector(self.selectors.videoFileInput);
