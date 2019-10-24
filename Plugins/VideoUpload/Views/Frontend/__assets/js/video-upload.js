@@ -88,7 +88,6 @@ if (typeof Oforge !== 'undefined') {
                                         fetchVideoThumbnail(this.api_url, data, this.token);
                                         displayMessage(self.selectors.messageSuccess);
                                         displayProcessingStatus();
-                                        enableSubmitButton();
                                     },
                                     onError: function (data) {
                                         displayErrorMessage(data);
@@ -123,9 +122,7 @@ if (typeof Oforge !== 'undefined') {
                 let form = $(self.selectors.form);
                 let submitButton = form.find(self.selectors.formSubmitButton);
                 if (submitButton.length > 0) {
-                    submitButton.attr("disabled", true);
-                    submitButton.children(".default-text").hide();
-                    submitButton.children(".submit-text").show();
+                    $(submitButton).trigger('disableSubmit');
                 }
             }
 
@@ -133,15 +130,15 @@ if (typeof Oforge !== 'undefined') {
                 let form = $(self.selectors.form);
                 let submitButton = form.find(self.selectors.formSubmitButton);
                 if (submitButton.length > 0) {
-                    submitButton.attr("disabled", false);
-                    submitButton.children(".default-text").show();
-                    submitButton.children(".submit-text").hide();
+                    $(submitButton).trigger('enableSubmit');
                 }
             }
 
             function enableDeleteButton() {
                 $(self.selectors.deleteButton).removeClass('hidden').on("click", function () {
-                    $(this).prop('disabled', true);
+                    let deleteButton = $(this);
+                    deleteButton.off("click");
+                    disableSubmitButton();
                     displayMessage(self.selectors.messageDeleting);
                     $.ajax({
                         method: 'DELETE',
@@ -153,6 +150,7 @@ if (typeof Oforge !== 'undefined') {
                             deleteVideoFromDatabase();
                         },
                         error: function (data) {
+                            enableSubmitButton();
                             displayErrorMessage(data);
                         }
                     });
@@ -176,9 +174,13 @@ if (typeof Oforge !== 'undefined') {
                         },
                         error: function (data) {
                             displayErrorMessage(data);
+                        },
+                        complete: function () {
+                            enableSubmitButton();
                         }
                     })
                 } else {
+                    enableSubmitButton();
                     displayMessage(self.selectors.messageDeletingSuccess);
                     videoId = null;
                     reset();
@@ -206,8 +208,12 @@ if (typeof Oforge !== 'undefined') {
                     headers: {
                         'Authorization': 'Bearer ' + token
                     },
+                    success: function() {
+                        enableSubmitButton();
+                    },
                     error: function (error) {
                         console.log(error);
+                        enableSubmitButton();
                     }
                 });
             }
