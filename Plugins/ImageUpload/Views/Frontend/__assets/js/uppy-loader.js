@@ -5,7 +5,9 @@ if (typeof Oforge !== 'undefined') {
         selectors: {
             dropZone: '#drag-drop-area',
             uploader: '[data-upload]',
-            uploadButton: '[data-upload-button]'
+            uploadButton: '[data-upload-button]',
+            form: 'form',
+            submit: 'button[type=submit]',
         },
         init: function () {
             var self = this;
@@ -37,29 +39,29 @@ if (typeof Oforge !== 'undefined') {
             });
 
             checkPlaceholderItem();
-
             uppy.on('upload', function (file) {
-                // TODO: waiting for kevin
-                console.log("upload started");
+                disableSubmitButton();
             });
 
             uppy.on('upload-retry', function (file) {
-                // TODO: waiting for kevin
+                disableSubmitButton();
             });
 
             uppy.on('upload-error', function (file, response) {
-                // TODO: waiting for kevin
+                enableSubmitButton();
             });
 
             uppy.on('upload-success', function (file, response) {
-                // TODO: waiting for kevin
-                console.log(response);
                 if (response.status >= 200 && response.status < 300) {
                     var res = response.body.imageData;
                     uploadItemElement = createImageListItem(res.id, res.path, uploadImageList);
                     createHiddenImageInput(uploadImageList, res);
                     checkPlaceholderItem();
                 }
+            });
+
+            uppy.on('complete', function (result) {
+                enableSubmitButton();
             });
 
             function checkPlaceholderItem() {
@@ -202,6 +204,20 @@ if (typeof Oforge !== 'undefined') {
                 input.setAttribute('value', mediaObject.id);
 
                 uploadImageList.appendChild(input);
+            }
+
+            function disableSubmitButton() {
+                let submitButton = document.querySelector(self.selectors.form + ' ' + self.selectors.submit);
+                if (submitButton) {
+                    $(submitButton).trigger('disableSubmit');
+                }
+            }
+
+            function enableSubmitButton() {
+                let submitButton = document.querySelector(self.selectors.form + ' ' + self.selectors.submit);
+                if (submitButton) {
+                    $(submitButton).trigger('enableSubmit');
+                }
             }
 
             document.addEventListener('click', function (evt) {

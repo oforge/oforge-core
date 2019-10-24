@@ -119,6 +119,7 @@ class Bootstrap extends AbstractBootstrap {
             \FrontendUserManagement\Bootstrap::class,
             \Messenger\Bootstrap::class,
             \Helpdesk\Bootstrap::class,
+            \VideoUpload\Bootstrap::class,
         ];
 
         $this->commands = [
