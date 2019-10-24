@@ -5,26 +5,16 @@ namespace Insertion\Services;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
-use Doctrine\ORM\Query\ResultSetMapping;
-use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\Tools\Pagination\Paginator;
-use Exception;
 use Insertion\Enum\AttributeType;
 use Insertion\Models\AttributeKey;
-use Insertion\Models\AttributeValue;
 use Insertion\Models\Insertion;
 use Insertion\Models\InsertionAttributeValue;
-use Insertion\Models\InsertionContent;
 use Insertion\Models\InsertionType;
 use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Models\InsertionTypeGroup;
-use Insertion\Models\InsertionZipCoordinates;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Annotation\Cache\Cache;
-use Oforge\Engine\Modules\Core\Annotation\Cache\CacheInvalidation;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
-use Oforge\Engine\Modules\Core\Helper\Statics;
-use function DI\value;
 
 /**
  * Class InsertionListService
@@ -55,20 +45,20 @@ class InsertionListService extends AbstractDatabaseAccess {
      * @throws ServiceNotFoundException
      * @Cache(slot="insertion", duration="T15M")
      */
-
     public function search($typeId, $params) : ?array {
         $page        = isset($params["page"]) ? $params["page"] : 1;
         $pageSize    = isset($params["pageSize"]) ? $params["pageSize"] : 10;
         $order       = 'id';
         $orderNative = 'id';
         $orderDir    = 'asc';
-        $result      = ["filter" => [], "query" => [], 'order' => $params["order"]];
         $args        = [];
         $items       = [];
 
+        /** set default order */
         if (!isset($params['order'])) {
             $params['order'] = 'date_desc';
         }
+        $result      = ["filter" => [], "query" => [], 'order' => $params["order"]];
 
         if (isset($params['order'])) {
             switch ($params['order']) {
@@ -96,15 +86,9 @@ class InsertionListService extends AbstractDatabaseAccess {
         }
 
         $sqlQuery = "select i.id from oforge_insertion i";
-
         $sqlQueryWhere = " where i.active = 1 and i.moderation = 1 and i.insertion_type_id = :type";
-
         $args["type"] = intval($typeId);
 
-        // filter order
-        // - price
-        // - distance
-        // - attributes
         /**
          * filter by price
          */
@@ -118,14 +102,12 @@ class InsertionListService extends AbstractDatabaseAccess {
                 $args["min"]                      = $min;
                 $result['filter']['price']['min'] = $min;
             }
-
             if (isset($params["price"]['max'])) {
                 $sqlQueryWhere                    .= " and (i.price <= :max OR (i.min_price IS NOT NULL AND i.min_price <= :max))";
                 $max                              = $params["price"]['max'];
                 $args["max"]                      = $max;
                 $result['filter']['price']['max'] = $max;
             }
-
             if (isset($params["price"]['min']) && isset($params["price"]['max']) && $min > $max) {
                 [$min, $max] = [$max, $min];
                 $args["min"]                      = $min;
@@ -140,14 +122,12 @@ class InsertionListService extends AbstractDatabaseAccess {
          */
         if (isset($params["zip"]) && isset($params["zip_range"]) && !empty($params["zip"]) && $params["zip_range"]) {
             $country = $params['country'] ? : "germany";
-
             $coordinates = Oforge()->Services()->get("insertion.zip")->get($params["zip"], $country);
+
             if ($coordinates != null) {
                 $sqlQuery .= " left join oforge_insertion_contact contact on contact.insertion_id = i.id";
                 $sqlQuery .= " left join oforge_insertion_zip_coordinates zip on zip.country = contact.country and zip.zip = contact.zip";
-
                 $sqlQueryWhere .= " and ST_Distance_Sphere(POINT(zip.lng, zip.lat), POINT(:lng,:lat)) / 1000 <= :zip";
-
                 $args["lng"] = $coordinates->getLng();
                 $args["lat"] = $coordinates->getLat();
                 $args["zip"] = $params["zip_range"];
@@ -166,64 +146,80 @@ class InsertionListService extends AbstractDatabaseAccess {
             $args["ad"]           = $params["after_date"];
         }
 
-        //$sqlQueryOrderBy = " ORDER BY " . $orderNative . " " . $orderDir;
-
+        /**
+         * Fetch all ids from previous filter
+         */
         $sqlResult = $this->entityManager()->getEntityManager()->getConnection()->executeQuery($sqlQuery . $sqlQueryWhere, $args);
-        $ids       = $sqlResult->fetchAll();
+        $ids       = array_column($sqlResult->fetchAll(), 'id');
 
-        $realIds = [];
-        foreach ($ids as $id) {
-            $realIds[] = $id['id'];
-        }
-
+        /**
+         * remove filtered parameters
+         */
         $exclude = ['price', 'country', 'zip', 'zip_range', 'order'];
-
         foreach ($exclude as $e) {
             unset($params[$e]);
         }
-
         $pkeys = array_keys($params);
+
+        /**
+         * We need the pedigree
+         */
+        $pedigreeList = [];
+        if (isset($params['Pedigree'])) {
+            $pedigreeList = $this->getPedigreeList();
+        }
+
 
         /** @var AttributeKey[] $attributeKeys */
         $attributeKeys = $this->repository('key')->findAll();
-
         $keys = [];
+        /**
+         * Build an attributeKey map for matching with values
+         */
         foreach ($attributeKeys as $attributeKey) {
             $filterName = str_replace(' ', '_', $attributeKey->getName());
+
             if (in_array($filterName, $pkeys)) {
-                $keys[$attributeKey->getId()]['name']       = $attributeKey->getName();
-                $keys[$attributeKey->getId()]['filterName'] = $filterName;
-                $keys[$attributeKey->getId()]['filterType'] = $attributeKey->getFilterType();
-                $keys[$attributeKey->getId()]['values']     = $params[$filterName];
+                if (lcfirst($filterName) === 'pedigree') {
+                    $keys += $this->addPedigreeToKeys($pedigreeList, $attributeKeys, $params[$filterName]);
+                } else {
+                    $keys[$attributeKey->getId()]['name']       = $attributeKey->getName();
+                    $keys[$attributeKey->getId()]['filterName'] = $filterName;
+                    $keys[$attributeKey->getId()]['filterType'] = $attributeKey->getFilterType();
+                    $keys[$attributeKey->getId()]['values']     = $params[$filterName];
+                }
             }
         }
 
+        /**
+         * Fetch all InsertionAttributeValues that match with the AttributeKeys from the params
+         */
         $attributeValueSql      = "select v.insertion_id, v.attribute_key, v.insertion_attribute_value from oforge_insertion_insertion_attribute_value as v";
-        $attributeValueSqlWhere = " where v.insertion_id in (:ids) and v.attribute_key in (:key_ids)";
-
-        $args                = ['ids' => $realIds, 'key_ids' => array_keys($keys)];
+        $attributeValueSqlWhere = " where v.insertion_id in (:ids) and v.attribute_key in (:key_ids) and v.insertion_attribute_value not like ''";
+        $args                = ['ids' => $ids, 'key_ids' => array_keys($keys)];
         $attributeValueQuery = $this->entityManager()->getEntityManager()->getConnection()->executeQuery($attributeValueSql . $attributeValueSqlWhere, $args,
             ['ids' => Connection::PARAM_INT_ARRAY, 'key_ids' => Connection::PARAM_INT_ARRAY]);
         $attributeValues     = $attributeValueQuery->fetchAll();
-        $av                  = [];
 
+        /**
+         * Rearrange for matching
+         */
+        $av                  = [];
         foreach ($attributeValues as $attributeValue) {
             $av[$attributeValue['insertion_id']][$attributeValue['attribute_key']][] = $attributeValue['insertion_attribute_value'];
         }
 
         $result['items'] = [];
-
-        $matches = 0;
-        $getOut  = false;
-        // keys[ id [ name, filterName, filterType, values[] ], ... ]
-        // avs[ ins_id [ key_id [ values[] ], ...], ...]
-
+        /**
+         * keys[ id [ name, filterName, filterType, values[] ], ... ]
+         * av[ ins_id [ key_id [ values[] ], ...], ...]
+         * The keys match, so we don't have to check them
+         * We only check the filter type and compare the values
+         */
         foreach ($av as $insertionId => $attributeKeys) {
+            $checkedPedigree = false;
             foreach ($keys as $key => $value) {
-                
                 $result['filter'][$value['name']] = is_array($value['values']) ? array_unique($value['values']) : $value['values'];
-
-                // $values = sizeof($attributeKeys[$key]) > 1 ? $attributeKeys[$key] : $attributeKeys[$key][0];
                 $values = $attributeKeys[$key];
                 switch ($value['filterType']) {
                     case AttributeType::RANGE:
@@ -255,6 +251,21 @@ class InsertionListService extends AbstractDatabaseAccess {
                         }
                         break;
                     case AttributeType::PEDIGREE:
+                        if (!$checkedPedigree) {
+
+                            foreach ($value['values'] as $i => $v) {
+                                $j = $i+1;
+                                $result['filter'][$value['name']]["search_ancestor_${j}"] = $v;
+                            }
+                            $checkedPedigree = true;
+                            // hole values
+                            // prüfe
+                            // weiter
+                            if (!$this->validatePedigree($insertionId, $value['values'])) {
+                                continue 3;
+                            }
+                        }
+                        break;
                     case AttributeType::MULTI:
                         if (empty(array_intersect($values, $value['values']))) {
                             continue 3;
@@ -271,16 +282,19 @@ class InsertionListService extends AbstractDatabaseAccess {
             }
             $result['items'][] = $insertionId;
         }
+        /**
+         * If no filter is set, use the ids
+         */
         $items = $result['items'];
-
-        /** ************************************************* */ /** ************************************************* */
-        /** ************************************************* */
+        if (sizeof($items) === 0) {
+            $items = $ids;
+        }
 
         $result["query"]["count"]     = sizeof($items);
         $result["query"]["pageSize"]  = $pageSize;
         $result["query"]["page"]      = $page;
         $result["query"]["pageCount"] = ceil((1.0) * sizeof($items) / $pageSize);
-        //$result["query"]["items"]     = [];
+        $result["query"]["items"]     = [];
 
         /**
          * @var $type InsertionType
@@ -288,35 +302,18 @@ class InsertionListService extends AbstractDatabaseAccess {
         $type = $this->repository("type")->findOneBy(["id" => $typeId]);
 
         $attributes = $type->getAttributes();
-
         $valueMap     = [];
-        $attributeMap = [];
-
         /**
          * @var $attribute InsertionTypeAttribute
          */
         foreach ($attributes as $attribute) {
-            $attributeMap[$attribute->getAttributeKey()->getId()] = [
-                "name" => $attribute->getAttributeKey()->getName(),
-                "top"  => $attribute->isTop(),
-            ];
-
             foreach ($attribute->getAttributeKey()->getValues() as $value) {
                 $valueMap += $this->getValueMap($value);
             }
         }
 
-        $findIds = [];
-
-        for ($i = ($page - 1) * $pageSize; $i < $page * $pageSize; $i++) {
-            if (sizeof($ids) > $i) {
-                $findIds[] = $ids[$i]["id"];
-            }
-        }
-
         $result["values"] = $valueMap;
-
-        $insertions = $this->repository()->findBy(['id' => $items]);
+        $insertions = $this->repository()->findBy(['id' => $items], [$order => $orderDir], $pageSize, $pageSize * ($page - 1));
 
         foreach ($insertions as $item) {
             $data = [
@@ -362,100 +359,9 @@ class InsertionListService extends AbstractDatabaseAccess {
                     }
                 }
             }
-
             $result["query"]["items"][] = $data;
         }
-
         return $result;
-    }
-
-    private function asdasd() {
-        $getOut  = false;
-        $matches = 0;
-
-        if (sizeof($pkeys) > 0) {
-            /** @var Insertion $insertion */
-            foreach ($insertions as $insertion) {
-                $getOut = false;
-                /** @var InsertionAttributeValue $insertionAttributeValue */
-
-                foreach ($pkeys as $pkey) {
-                    foreach ($insertion->getValues() as $insertionAttributeValue) {
-                        $keyName    = str_replace(' ', '_', $insertionAttributeValue->getAttributeKey()->getName());
-                        $filterName = $insertionAttributeValue->getAttributeKey()->getName();
-                        $value      = $insertionAttributeValue->getValue();
-                        $filterType = $insertionAttributeValue->getAttributeKey()->getFilterType();
-
-                        if (in_array($keyName, $pkeys)) {
-                            $result['filter'][$filterName] = is_array($params[$keyName]) ? array_unique($params[$keyName]) : $params[$keyName];
-                            switch ($filterType) {
-                                case AttributeType::RANGE:
-                                    if ($this->isBetweenMinMax($params[$keyName], $value)) {
-                                        $matches++;
-                                    } else {
-                                        $matches = 0;
-                                        $getOut  = true;
-                                    }
-                                    break;
-                                case AttributeType::DATEYEAR:
-                                    $now         = date_create(date('Y-m-d'));
-                                    $dateToCheck = date_create($value);
-                                    if ($dateToCheck) {
-                                        $interval = date_diff($dateToCheck, $now);
-                                        if ($this->isBetweenMinMax($params[$keyName], $interval->format('%y'))) {
-                                            $matches++;
-                                        } else {
-                                            $matches = 0;
-                                            $getOut  = true;
-                                        }
-                                    }
-                                    break;
-
-                                case AttributeType::DATEMONTH:
-                                    $now         = date_create(date('Y-m-d'));
-                                    $dateToCheck = date_create($value);
-                                    if ($dateToCheck) {
-                                        $interval = date_diff($dateToCheck, $now);
-                                        if ($this->isBetweenMinMax($params[$keyName], $interval->format('%m'))) {
-                                            $matches++;
-                                        } else {
-                                            $matches = 0;
-                                            $getOut  = true;
-                                        }
-                                    }
-                                    break;
-                                case AttributeType::PEDIGREE:
-                                case AttributeType::MULTI:
-                                    if (in_array($value, $params[$keyName])) {
-                                        $matches++;
-                                    } else {
-                                        $matches = 0;
-                                        $getOut  = true;
-                                    }
-                                    break;
-                                default:
-                                    if (is_array($params[$keyName]) && in_array($value, $params[$keyName])) {
-                                        $matches++;
-                                    } elseif ($params[$keyName] === $value) {
-                                        $matches++;
-                                    } else {
-                                        $matches = 0;
-                                        $getOut  = true;
-                                    }
-                                    break;
-                            }
-                        }
-                    }
-                }
-
-                if ($matches > 0) {
-                    $items[] = $insertion;
-                    $matches = 0;
-                }
-            }
-        } else {
-            $items = $insertions;
-        }
     }
 
     private function isBetweenMinMax($param, $value) {
@@ -540,5 +446,51 @@ class InsertionListService extends AbstractDatabaseAccess {
         }
 
         return $temp;
+    }
+
+    private function getPedigreeList() {
+        /** @var AttributeKey $pedigree */
+        $result = [];
+        $pedigree = $this->repository('key')->findOneBy(['name' => 'pedigree']);
+        $id = $pedigree->getId();
+        $sql = 'select v.attribute_value_sub_attribute_key_id as id from oforge_insertion_attribute_value as v where v.attribute_key_id = :id';
+        $args = ['id' => $id];
+        $result = array_column($this->entityManager()->getEntityManager()->getConnection()->executeQuery($sql, $args)->fetchAll(), 'id');
+        return $result;
+    }
+
+    private function addPedigreeToKeys($list, $attributeKeys, $values) {
+        /*
+        $keys[$attributeKey->getId()]['name']       = $attributeKey->getName();
+        $keys[$attributeKey->getId()]['filterName'] = $filterName;
+        $keys[$attributeKey->getId()]['filterType'] = $attributeKey->getFilterType();
+        $keys[$attributeKey->getId()]['values']     = $params[$filterName];
+        */
+        $keys = [];
+        $realValues = [];
+        foreach ($values as $key => $value) {
+            $realValues[] = $value;
+        }
+        foreach ($list as $item) {
+            /** @var AttributeKey[] $attributeKeys */
+            $keys[$item]['name'] = 'Pedigree';
+            $keys[$item]['filterName'] = 'Pedigree';
+            $keys[$item]['filterType'] = AttributeType::PEDIGREE;
+            $keys[$item]['values'] = $realValues;
+        }
+        return $keys;
+    }
+
+    private function validatePedigree($insertionId, $values) {
+        $sql = "select count(v.id) as ids from oforge_insertion_insertion_attribute_value as v";
+        $where = " where v.insertion_id = :ins_id";
+        $where .= " and v.insertion_attribute_value in (:values)";
+
+        $args = ['ins_id' => $insertionId, 'values' => $values];
+        $result = $this->entityManager()
+             ->getEntityManager()
+             ->getConnection()
+             ->executeQuery($sql . $where, $args, ['values' => Connection::PARAM_STR_ARRAY])->fetch();
+        return ($result['ids'] > 0 && $result['ids'] == sizeof($values));
     }
 }
