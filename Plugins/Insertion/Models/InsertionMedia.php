@@ -71,9 +71,9 @@ class InsertionMedia extends AbstractModel {
     }
 
     /**
-     * @param Insertion $insertion
+     * @param Insertion|null $insertion
      */
-    public function setInsertion(Insertion $insertion) : void {
+    public function setInsertion($insertion) : void {
         $this->insertion = $insertion;
     }
 
