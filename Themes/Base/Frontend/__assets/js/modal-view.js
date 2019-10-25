@@ -39,6 +39,9 @@
                     if (evt.target.matches(self.selector)) {
                         openModalView(evt.target.dataset.modalView);
                     }
+                    if (evt.target.matches('.modal-view')) {
+                        closeModalView(evt.target.dataset.modalContent);
+                    }
                     if (evt.target.matches(self.selectors.closeButton)) {
                         closeModalView(evt.target.dataset.modalClose)
                     }

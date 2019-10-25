@@ -42,10 +42,6 @@
     {% set content_640 = content('game_640') %}
     {% set game_page   = content('game_page') %}
 
-    <pre>{{ o_dump(content_320) }}</pre>
-    <pre>{{ o_dump(content_640) }}</pre>
-    <pre>{{ o_dump(game_page) }}</pre>
-
     {% if content_320 and content_640 and game_page['text'] == meta.route.url.path %}
     <div data-modal-view="1"
          data-auto-open="">
