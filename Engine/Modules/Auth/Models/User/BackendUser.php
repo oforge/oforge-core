@@ -19,7 +19,8 @@ class BackendUser extends BaseUser {
     /**
      * TODO: This values should not be constants. What if we want to add a new role?
      */
-    public const ROLE_PUBLIC        = -1;
+    public const ROLE_PUBLIC        = -2;
+    public const ROLE_LOGGED_IN     = -1;
     public const ROLE_SYSTEM        = 0;
     public const ROLE_ADMINISTRATOR = 1;
     public const ROLE_MODERATOR     = 2;

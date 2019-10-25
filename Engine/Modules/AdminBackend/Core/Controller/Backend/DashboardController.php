@@ -25,6 +25,17 @@ use Slim\Http\Response;
  */
 class DashboardController extends SecureBackendController {
 
+    public function initPermissions() {
+        $this->ensurePermissions([
+            'indexAction',
+            'widgetsAction',
+        ], BackendUser::ROLE_LOGGED_IN);
+        $this->ensurePermissions([
+            'buildAction',
+            'testAction',
+        ], BackendUser::ROLE_ADMINISTRATOR);
+    }
+
     /**
      * @param Request $request
      * @param Response $response
@@ -138,20 +149,6 @@ class DashboardController extends SecureBackendController {
             'path'     => 'backend_dashboard_fontAwesome',
             'position' => 'sidebar',
         ]);
-    }
-
-    /**
-     * @throws ServiceNotFoundException
-     */
-    public function initPermissions() {
-        $this->ensurePermissions([
-            'indexAction',
-            'widgetsAction',
-        ], BackendUser::ROLE_MODERATOR);
-        $this->ensurePermissions([
-            'buildAction',
-            'testAction',
-        ], BackendUser::ROLE_ADMINISTRATOR);
     }
 
 }
