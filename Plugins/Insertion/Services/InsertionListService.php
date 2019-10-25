@@ -367,8 +367,6 @@ class InsertionListService extends AbstractDatabaseAccess {
                 }
             }
 
-
-
             $result["query"]["items"][] = $data;
         }
         return $result;
