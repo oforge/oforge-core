@@ -204,7 +204,7 @@ class UserManagementController extends BaseCrudController {
             ]),
         ];
         $roles = Oforge()->Events()->trigger(Event::create(__METHOD__, [], $roles));
-        unset($roles[BackendUser::ROLE_SYSTEM], $roles[BackendUser::ROLE_PUBLIC]);
+        unset($roles[BackendUser::ROLE_SYSTEM], $roles[BackendUser::ROLE_PUBLIC], $roles[BackendUser::ROLE_LOGGED_IN]);
 
         return $roles;
     }

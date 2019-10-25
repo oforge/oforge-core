@@ -38,7 +38,7 @@ class ProfileController extends SecureBackendController {
             'loginDataAction',
             'detailsAction',
             'dashboardWidgetsAction',
-        ], BackendUser::ROLE_MODERATOR);
+        ], BackendUser::ROLE_LOGGED_IN);
     }
 
     /**

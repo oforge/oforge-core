@@ -22,10 +22,12 @@ class BackendSecureMiddleware extends SecureMiddleware {
     public static function checkUserPermission(?array $user, ?array $permission) {
         return $permission !== null#
                && ($permission['role'] === BackendUser::ROLE_PUBLIC
-                   || (#
-                       $user !== null && isset($user['role']) && isset($user['type'])
-                       && $user['type'] === $permission['type']
-                       && $user['role'] <= $permission['role']#
+                   || ($user !== null && isset($user['role']) && isset($user['type'])#
+                       && $user['type'] === $permission['type']#
+                       && ($permission['role'] === BackendUser::ROLE_LOGGED_IN#
+                           ||#
+                           $user['role'] <= $permission['role']#
+                       )#
                    )#
                );
     }
