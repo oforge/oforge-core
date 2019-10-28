@@ -101,6 +101,6 @@ class ElementsController extends SecureBackendController {
         $this->ensurePermissions([
             'indexAction',
             'updateAction',
-        ], BackendUser::ROLE_MODERATOR);
+        ], BackendUser::ROLE_LOGGED_IN);
     }
 }
