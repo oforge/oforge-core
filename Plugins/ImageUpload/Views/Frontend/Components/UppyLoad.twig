@@ -22,7 +22,7 @@
                             <svg class="icon icon--secondary">
                                 <use xlink:href="#camera"></use>
                             </svg>
-                            {{ i18n('new_photo') }}
+                            {{ i18n('new_photo',  {'en': 'Photo', 'de' : 'Foto'}) }}
                         </div>
                         {% if required %}<input class="upload__file_required" type="file" required>{% endif %}
                     </li>
@@ -36,7 +36,7 @@
                                  data-upload-image="{{ image.id }}" />
                             <div class="upload__delete"
                                  data-upload-delete="{{ image.id }}">
-                                {{ i18n('delete') }}
+                                {{ i18n('delete', {'en': 'Delete', 'de' : 'Löschen'}) }}
                             </div>
                             <div class="upload__choose-main {% if image.main %}upload__choose-main--is-main{% endif %}"
                                  data-upload-choose-main="{{ image.id }}"></div>
