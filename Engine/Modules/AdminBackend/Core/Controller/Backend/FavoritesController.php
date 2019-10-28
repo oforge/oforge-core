@@ -20,6 +20,10 @@ use Slim\Http\Response;
  */
 class FavoritesController extends SecureBackendController {
 
+    public function initPermissions() {
+        $this->ensurePermission('toggleAction', BackendUser::ROLE_LOGGED_IN);
+    }
+
     /**
      * @param Request $request
      * @param Response $response
@@ -44,10 +48,6 @@ class FavoritesController extends SecureBackendController {
                 Oforge()->Logger()->logException($exception);
             }
         }
-    }
-
-    public function initPermissions() {
-        $this->ensurePermission('toggleAction', BackendUser::ROLE_MODERATOR);
     }
 
 }
