@@ -20,6 +20,10 @@ use Slim\Http\Response;
  */
 class LogoutController extends SecureBackendController {
 
+    public function initPermissions() {
+        $this->ensurePermission('indexAction', BackendUser::ROLE_LOGGED_IN);
+    }
+
     /**
      * @param Request $request
      * @param Response $response
@@ -34,10 +38,6 @@ class LogoutController extends SecureBackendController {
         $sessionManager->sessionDestroy();
 
         return RouteHelper::redirect($response, 'backend_login');
-    }
-
-    public function initPermissions() {
-        $this->ensurePermission('indexAction', BackendUser::ROLE_MODERATOR);
     }
 
 }

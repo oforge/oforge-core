@@ -22,6 +22,16 @@ use Slim\Http\Response;
  */
 class AjaxController extends SecureBackendController {
 
+    public function initPermissions() {
+        $this->ensurePermissions([
+            'indexAction',
+            'demoAction',
+            'uploadAction',
+            'searchAction',
+            'deleteAction',
+        ], BackendUser::ROLE_LOGGED_IN);
+    }
+
     /**
      * @param Request $request
      * @param Response $response
@@ -90,19 +100,6 @@ class AjaxController extends SecureBackendController {
      * @EndpointAction(path="/delete/{id}")
      */
     public function deleteAction(Request $request, Response $response) {
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function initPermissions() {
-        $this->ensurePermissions([
-            'indexAction',
-            'demoAction',
-            'uploadAction',
-            'searchAction',
-            'deleteAction',
-        ], BackendUser::ROLE_MODERATOR);
     }
 
 }

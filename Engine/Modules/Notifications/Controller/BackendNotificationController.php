@@ -22,6 +22,10 @@ use Slim\Http\Response;
  */
 class BackendNotificationController extends SecureBackendController {
 
+    public function initPermissions() {
+        $this->ensurePermission('indexAction', BackendUser::ROLE_LOGGED_IN);
+    }
+
     /**
      * @param Request $request
      * @param Response $response
@@ -50,13 +54,6 @@ class BackendNotificationController extends SecureBackendController {
         $response = $response->withStatus(404);
 
         return $response;
-    }
-
-    /**
-     * @throws ServiceNotFoundException
-     */
-    public function initPermissions() {
-        $this->ensurePermission('indexAction', BackendUser::ROLE_MODERATOR);
     }
 
 }
