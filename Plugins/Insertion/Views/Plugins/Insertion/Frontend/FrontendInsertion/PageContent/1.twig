@@ -37,6 +37,33 @@
         </div>
     </div>
     <div class="form-controls">
+        <div class="form__control">
+            <h3 class="form__label form__label--title">{{ i18n('images_and_videos', 'Fotos und Videos') }}</h3>
+            {% block modal__view %}
+                {# Only load selector if content is available, otherwise we will produce js type error (see modal-view.js) #}
+                {% set content_320 = content('insertion_create_image_tipps_320') %}
+                {% set content_640 = content('insertion_create_image_tipps_640') %}
+
+                {% if content_320 and content_640 %}
+                    <a class="link link--insertion-create"
+                       data-modal-view="1">{{ i18n('image_upload_tips', 'Tipps für das Hochladen von Fotos') }}</a>
+
+                    <div data-modal-content="1"
+                         class="modal-view">
+                        <div class="modal-view__close"
+                             data-modal-close="1">✕</div>
+                        <div class="modal-view__content">
+                            <picture class="lazy">
+                                <source class="lazy" data-srcset="{{ media(content_640['url']) }}" media="(min-width: 640px)" />
+                                <img class="lazy" data-src="{{ media(content_320['url']) }}" alt="{{ i18n('image_upload_tips') }}" />
+                            </picture>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endblock modal__view %}
+        </div>
+    </div>
+    <div class="form-controls form-controls--row">
         {% block image__upload %}
             <div class="form__control">
                 {% include 'Frontend/Components/UppyLoad.twig' with {uppyUploadURL: '/image-upload', required: type.imageRequired} %}
