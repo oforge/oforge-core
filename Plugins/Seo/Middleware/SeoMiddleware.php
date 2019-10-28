@@ -4,10 +4,13 @@ namespace Seo\Middleware;
 
 use Seo\Models\SeoUrl;
 use Seo\Services\SeoService;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 class SeoMiddleware {
-    public function __invoke($request, $response, $next) {
+    public function __invoke(Request $request,Response $response, $next) {
         $uri  = $request->getUri();
+        $params = $request->getQueryParams();
         $path = $uri->getPath();
 
         /**
