@@ -347,18 +347,26 @@ class InsertionListService extends AbstractDatabaseAccess {
              */
             foreach ($attributes as $attribute) {
                 if ($attribute->isTop()) {
+                    $valueList = [];
                     foreach ($data["values"] as $value) {
                         if ($value["attributeKey"] == $attribute->getAttributeKey()->getId()) {
-                            $data["topvalues"][] = [
-                                "name"         => $attribute->getAttributeKey()->getName(),
-                                "type"         => $attribute->getAttributeKey()->getType(),
-                                "attributeKey" => $attribute->getAttributeKey()->getId(),
-                                "value"        => $value["value"],
-                            ];
+                            $valueList[] = $value['value'];
                         }
                     }
+
+                    if(sizeof($valueList) === 1) {
+                        $valueList = $valueList[0];
+                    }
+
+                    $data["topvalues"][] = [
+                        "name" => $attribute->getAttributeKey()->getName(),
+                        "type" => $attribute->getAttributeKey()->getType(),
+                        "attributeKey" => $attribute->getAttributeKey()->getId(),
+                        "value" => $valueList
+                    ];
                 }
             }
+
             $result["query"]["items"][] = $data;
         }
         return $result;
