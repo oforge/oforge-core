@@ -28,6 +28,7 @@
     padding-top: 4rem;
     width: 100%;
 
+    /*
     &:before {
         content: ' ';
         position: absolute;
@@ -46,6 +47,16 @@
         width: 4rem;
         height: 2px;
         background: $color-secondary;
+    }
+    */
+
+    .icon {
+        transition: opacity 200ms, transform 200ms ease-in-out;
+        position: absolute;
+        top: 3rem;
+        width: 4rem;
+        height: 4rem;
+
     }
 }
 .form--insertion .form__label.form__label--title.label--upload-image {
