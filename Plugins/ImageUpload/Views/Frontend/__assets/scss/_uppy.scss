@@ -1986,7 +1986,7 @@ svg.UppyIcon.retry {
     background-color: #fafafa;
     max-width: 100%;
     max-height: 100%;
-    min-height: 450px;
+    min-height: 160px;
     outline: none;
     border: 1px solid #eaeaea;
     border-radius: 5px
@@ -1999,7 +1999,7 @@ svg.UppyIcon.retry {
 @media only screen and (min-width: 820px) {
     .uppy-Dashboard-inner {
         width: 750px;
-        height: 550px
+        /* height: 550px */
     }
 }
 
@@ -2079,8 +2079,8 @@ svg.UppyIcon.retry {
     justify-content: center;
     -ms-flex-align: center;
     align-items: center;
-    -ms-flex-direction: column;
-    flex-direction: column;
+    -ms-flex-direction: row;
+    flex-direction: row;
     height: 100%;
     position: relative;
     text-align: center;
