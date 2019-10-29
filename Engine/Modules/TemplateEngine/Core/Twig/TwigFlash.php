@@ -21,9 +21,10 @@ class TwigFlash {
      * @param string $type
      * @param string $message
      * @param bool $dismissible
+     * @param string $cssClasses
      */
-    public function addMessage(string $type, string $message, $dismissible = true) {
-        $this->addMessageArray(['type' => $type, 'message' => $message, 'dismissible' => $dismissible]);
+    public function addMessage(string $type, string $message, bool $dismissible = true, string $cssClasses = '') {
+        $this->addMessageArray(['type' => $type, 'message' => $message, 'dismissible' => $dismissible, 'cssClasses' => $cssClasses]);
     }
 
     /**

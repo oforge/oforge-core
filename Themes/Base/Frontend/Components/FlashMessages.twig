@@ -3,7 +3,7 @@
         {# the homepage presents an edge case regarding the positioning of the flash message-box #}
         <div class="content {% if meta.template.path == '/Frontend/Page/Index.twig' %}content--flash{% endif %}">
             {% for flashMessage in flashMessages %}
-                <div class="flash flash--{{ flashMessage.type }}">
+                <div class="flash flash--{{ flashMessage.type }} {{ flashMessage.cssClasses }}">
                     <svg class="icon icon--{{ flashMessage.type }}">
                         <use xlink:href="#{{ flashMessage.type }}"></use>
                     </svg>
