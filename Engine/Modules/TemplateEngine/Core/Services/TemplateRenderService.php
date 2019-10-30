@@ -10,6 +10,7 @@ namespace Oforge\Engine\Modules\TemplateEngine\Core\Services;
 
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Oforge\Engine\Modules\Core\Exceptions\DependencyNotResolvedException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\Template\TemplateNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
@@ -122,6 +123,7 @@ class TemplateRenderService {
      * @throws ServiceNotFoundException
      * @throws Twig_Error_Loader
      * @throws TemplateNotFoundException
+     * @throws DependencyNotResolvedException
      */
     public function View() {
         if (!$this->view) {
