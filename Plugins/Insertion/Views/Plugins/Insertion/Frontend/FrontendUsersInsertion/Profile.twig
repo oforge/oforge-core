@@ -46,21 +46,41 @@
                                         </svg>
                                     </a>
                                 {% endif %}
+
                             </div>
                             <div class="profile-pic">
                                 {% set label = true %}
                                 {% include 'Plugins/FrontendUserManagement/Frontend/Components/AccountUser.twig' with { label : label } %}
                             </div>
                             <div class="info__description">
+
                                 {{ i18n('account_insertions_profile_info') }}
+
                             </div>
 
                             <div class="profile--edit">
                                 <div class="description--edit">
+
+                                    <div class="media--edit">
+                                        <h2 class="form__title">{{ i18n('account_remove_media') }}</h2>
+                                        <div>
+                                            <input type="checkbox" name="delete_profile_img" value="test_1">
+                                            <label
+                                                for="delete_profile_img">{{ i18n('account_remove_profile_img') }}</label>
+                                        </div>
+                                        <div>
+                                            <input type="checkbox" name="delete_background_img" value="test">
+                                            <label
+                                                for="delete_background_img">{{ i18n('account_remove_background_img') }}</label>
+                                        </div>
+                                    </div>
                                     <h2 class="form__title">{{ i18n('account_profile_text') }}</h2>
                                     <textarea name="description"
                                               class="form__input">{{ profile.description }}</textarea>
+
                                 </div>
+
+
                                 <div class="impress--edit">
                                     <h2 class="form__title">{{ i18n('insertion_profile_contact') }}</h2>
                                     <input class="form__input" type="text" name="imprint_name"
@@ -83,10 +103,10 @@
                                             {{ i18n('facebook_base_url', 'https://www.facebook.com/') }}
                                         </label>
                                         <input
-                                                class="input__facebook" type="text"
-                                                name="imprint_facebook"
-                                                placeholder="{{ i18n('facebook_page_placeholder') }}"
-                                                value="{{ profile.imprintFacebook }}" />
+                                            class="input__facebook" type="text"
+                                            name="imprint_facebook"
+                                            placeholder="{{ i18n('facebook_page_placeholder') }}"
+                                            value="{{ profile.imprintFacebook }}" />
                                     </div>
                                     <input class="form__input" type="text" name="imprint_website"
                                            placeholder="{{ i18n('imprint_website') }}"
