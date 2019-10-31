@@ -34,6 +34,17 @@
                                     <input name="description" type="text" class="form-control" id="insertion_type_description"
                                            value="{{ content.insertionType.description }}">
                                 </div>
+                                <div class="form-group">
+                                    <label for="min_price">{{ i18n("insertion_type_min_price", "Minimum Price") }}</label>
+                                    <input name="minPrice" type="text" class="form-control" id="min_price" pattern="[0-9]{0,8}"
+                                           value="{{ content.insertionType.minPrice }}"
+                                           placeholder="€">
+                                    <label for="max_price">{{ i18n("insertion_type_max_price", "Maximum Price") }}</label>
+                                    <input name="maxPrice" type="text" class="form-control" id="max_price" pattern="[0-9]{0,8}"
+                                           value="{{ content.insertionType.maxPrice }}"
+                                           placeholder="€">
+
+                                </div>
 
                                 <div class="form-group">
                                     {% include 'Backend/Components/Image.twig' with {
