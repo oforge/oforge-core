@@ -2,11 +2,13 @@
 
 namespace FrontendUserManagement\Services;
 
+use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
 use Exception;
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Models\UserDetail;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Media\Services\MediaService;
 
 /**
@@ -61,6 +63,19 @@ class UserDetailsService extends AbstractDatabaseAccess {
         return $detail;
     }
 
+    public function deleteImage(User $user) {
+
+
+    }
+
+    /**
+     * @param User $user
+     * @param $file
+     *
+     * @return User
+     * @throws ORMException
+     * @throws ServiceNotFoundException
+     */
     public function updateImage(User $user, $file) {
         /** @var MediaService $mediaService */
         $mediaService = Oforge()->Services()->get('media');
@@ -93,6 +108,11 @@ class UserDetailsService extends AbstractDatabaseAccess {
         return $user;
     }
 
+    /**
+     * @return string
+     * @throws ORMException
+     * @throws DBALException
+     */
     public function generateNickname() {
         do {
             $query     = "SELECT n.value FROM frontend_user_nickname_generator as n WHERE sort_order = 1 ORDER BY RAND() LIMIT 1";

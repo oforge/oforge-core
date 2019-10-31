@@ -86,6 +86,14 @@ class InsertionProfileService extends AbstractDatabaseAccess {
                 }
             }
         }
+        if (!$create) {
+            if (isset($params['delete_background_img'] )) {
+                $result->setBackground(null);
+            }
+            if (isset($params['delete_profile_img'])) {
+                $result->getUser()->getDetail()->setImage(null);
+            }
+        }
 
         $imprintWebsite = $params["imprint_website"];
         $disallowed = array('http://', 'https://');
@@ -109,7 +117,6 @@ class InsertionProfileService extends AbstractDatabaseAccess {
             "imprintCompanyTaxId"  => $params["imprint_company_tax"],
             "imprintCompanyNumber" => $params["imprint_company_number"],
         ]);
-
 
         if ($create) {
             $this->entityManager()->create($result);

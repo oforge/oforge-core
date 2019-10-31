@@ -55,6 +55,7 @@ use Oforge\Engine\Modules\AdminBackend\Core\Enums\DashboardWidgetPosition;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\DashboardWidgetsService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
+use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\TemplateEngine\Core\Services\TemplateRenderService;
 
 class Bootstrap extends AbstractBootstrap {
@@ -192,6 +193,8 @@ class Bootstrap extends AbstractBootstrap {
                'position' => DashboardWidgetPosition::TOP,
                'cssClass' => 'bg-green',
         ]);
+
+
     }
 
     public function uninstall() {
@@ -285,6 +288,20 @@ class Bootstrap extends AbstractBootstrap {
             'path'     => 'frontend_account_insertions_searchBookmarks',
             'position' => 'sidebar',
         ]);
+
+        I18N::translate('account_remove_media', [
+            'en' => 'Remove images',
+            'de' => 'Bilder entfernen'
+        ]);
+        I18N::translate('account_remove_profile_img', [
+            'en' => 'Remove profile image',
+            'de' => 'Profilbild enternen'
+        ]);
+        I18N::translate('account_remove_title_img', [
+            'en' => 'Remove title image',
+            'de' => 'Titelbild entfernen'
+        ]);
+
         /** @var DashboardWidgetsService $dashboardWidgetsService */
         $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
         $dashboardWidgetsService->activate('plugin_insertion_count');
