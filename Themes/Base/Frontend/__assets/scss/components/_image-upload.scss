@@ -51,3 +51,10 @@
 .form--insertion .form__label.form__label--title.label--upload-image {
     margin-bottom: .6rem;
 }
+
+.upload__file_required {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    float: left;
+}
