@@ -1,51 +1,78 @@
 {% block page_content %}
 
-<div class="form-controls form-controls--step-1">
-    {% set hasContent = false %}
-    {% for attributeGroup in attributes %}
-        {% if attributeGroup.items|length > 0 and attributeGroup.name == 'main' %}
-            {% for attribute in attributeGroup.items %}
-                {% set content = content('html_' ~ type.name ~ '_' ~ attribute.attributeKey.name ~ '_' ~ meta.language.iso) %}
+    <div class="form-controls form-controls--step-1">
+        {% set hasContent = false %}
+        {% for attributeGroup in attributes %}
+            {% if attributeGroup.items|length > 0 and attributeGroup.name == 'main' %}
+                {% for attribute in attributeGroup.items %}
+                    {% set content = content('html_' ~ type.name ~ '_' ~ attribute.attributeKey.name ~ '_' ~ meta.language.iso) %}
 
-                {% if content %}
-                    {% set hasContent = true %}
-                {% endif %}
+                    {% if content %}
+                        {% set hasContent = true %}
+                    {% endif %}
 
-                <div class="form__control form__control--s {{ hasContent ? 'form__control--s-left' : '' }}">
-                    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': attribute.required, 'label_class': 'form__label--title' } %}
-                </div>
+                    <div class="form__control form__control--s {{ hasContent ? 'form__control--s-left' : '' }}">
+                        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': attribute.required, 'label_class': 'form__label--title' } %}
+                    </div>
 
-                {% if content %}
-                    {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
-                {% endif %}
-            {% endfor %}
-        {% endif %}
-    {% endfor %}
+                    {% if content %}
+                        {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
 
-    <div class="form__control form__control--s {{ hasContent ? 'form__control--s-left' : '' }}">
-        <label for="insertion_title"
-               class="form__label form__label--title">{{ i18n('insertion_title') }}<span class="required">*</span></label>
-        <input name="insertion_title"
-               value="{{ data['insertion_title'] }}"
-               type="text"
-               class="form__input form-control"
-               placeholder="{{ i18n('insertion_title_placeholder') }}"
-               data-required
-               maxlength="180"
-               required>
-    </div>
-</div>
-
-<div class="form-controls">
-        {% block image__upload %}
-        <div class="form__control">
-            {% include 'Plugins/Insertion/Frontend/Components/Content/ImageUpload.twig' %}
+        <div class="form__control form__control--s {{ hasContent ? 'form__control--s-left' : '' }}">
+            <label for="insertion_title"
+                   class="form__label form__label--title">{{ i18n('insertion_title') }}<span
+                    class="required">*</span></label>
+            <input name="insertion_title"
+                   value="{{ data['insertion_title'] }}"
+                   type="text"
+                   class="form__input form-control"
+                   placeholder="{{ i18n('insertion_title_placeholder') }}"
+                   data-required
+                   maxlength="180"
+                   required>
         </div>
+    </div>
+    <div class="form-controls">
+        <div class="form__control">
+            <h3 class="form__label form__label--title">{{ i18n('images_and_videos', 'Fotos und Videos') }}</h3>
+            {% block modal__view %}
+                {# Only load selector if content is available, otherwise we will produce js type error (see modal-view.js) #}
+                {% set content_320 = content('insertion_create_image_tipps_320') %}
+                {% set content_640 = content('insertion_create_image_tipps_640') %}
+
+                {% if content_320 and content_640 %}
+                    <a class="link link--insertion-create"
+                       data-modal-view="1">{{ i18n('image_upload_tips', 'Tipps für das Hochladen von Fotos') }}</a>
+
+                    <div data-modal-content="1"
+                         class="modal-view">
+                        <div class="modal-view__close"
+                             data-modal-close="1">✕</div>
+                        <div class="modal-view__content">
+                            <picture class="lazy">
+                                <source class="lazy" data-srcset="{{ media(content_640['url']) }}" media="(min-width: 640px)" />
+                                <img class="lazy" data-src="{{ media(content_320['url']) }}" alt="{{ i18n('image_upload_tips') }}" />
+                            </picture>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endblock modal__view %}
+        </div>
+    </div>
+    <div class="form-controls form-controls--row">
+        {% block image__upload %}
+            <div class="form__control">
+                {% include 'Frontend/Components/UppyLoad.twig' with {uppyUploadURL: '/image-upload', required: type.imageRequired} %}
+            </div>
         {% endblock image__upload %}
         {% block video__upload %}
-        <div class="form__control">
-            {% include 'Plugins/Insertion/Frontend/Components/Content/VideoUpload.twig' %}
-        </div>
+            <div class="form__control">
+                {% include 'Plugins/Insertion/Frontend/Components/Content/VideoUpload.twig' %}
+            </div>
         {% endblock video__upload %}
     </div>
 

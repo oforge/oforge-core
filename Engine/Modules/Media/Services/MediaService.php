@@ -35,7 +35,6 @@ class MediaService extends AbstractDatabaseAccess {
     public function add($file, $prefix = null) : ?Media {
         if (isset($file['error']) && $file['error'] == 0 && isset($file['size']) && $file['size'] > 0) {
             $filename = preg_replace("/\s+/", "_", (basename($file['name'])));
-      // why??
             //      $filename         = md5(basename($file['name']) . '_' . microtime()) . '.' . pathinfo($file['name'],PATHINFO_EXTENSION);
             if ($prefix !== null) {
                 $filename = strtolower($prefix . '_' . $filename);

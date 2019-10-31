@@ -1,10 +1,10 @@
 {% if crud.hasEditors and crudProperty.name != 'id' and crudProperty.crud.index == 'editable' %}
     <td class="crud-datatype-{{ crudProperty.type }} crud-property-{{ crudProperty.name }}">
-        {% include 'Backend/CRUD/Components/Editor.twig' %}
+        {% include CRUD_path('Components/Editor.twig') %}
     </td>
 {% else %}
     {% set crudColumnAlignment = (crudProperty.renderer.alignment ? crudProperty.renderer.alignment : (crudProperty.type in ['int', 'float', 'currency'] ? 'right' : 'left')) %}
     <td class="crud-datatype-{{ crudProperty.type }} crud-property-{{ crudProperty.name }} text-{{ crudColumnAlignment }}">
-        {% include 'Backend/CRUD/Components/Renderer.twig' %}
+        {% include CRUD_path('Components/Renderer.twig') %}
     </td>
 {% endif %}
