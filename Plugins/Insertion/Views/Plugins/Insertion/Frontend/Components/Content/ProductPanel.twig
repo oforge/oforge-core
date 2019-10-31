@@ -61,7 +61,7 @@
                 {% block product__meta %}
                     <div class="product__meta">
                         <div class="product__pricing">
-                            <span class="product__label">{{ i18n('price') }}</span>
+                            <span class="product__label">{{ i18n('price_' ~ type.name, i18n('price')) }}</span>
                             {% if item.priceType is same as("on_demand")  %}
                                 <span class="product__value">{{ i18n('price_on_demand') }}</span>
                             {% else %}
