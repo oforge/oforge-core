@@ -7,7 +7,11 @@
             <div class="preview">
                 {% if data.images %}
                 <div class="preview__images">
-                    <img src="{{ media(data.images[0].path, 300) }}" alt="{{ data.images[0].name }}" class="preview__image">
+                    {% for image in data.images %}
+                        {% if image.main == true %}
+                            <img src="{{ media(image.path, 300) }}" alt="{{ image.name }}" class="preview__image">
+                        {% endif %}
+                    {% endfor %}
                 </div>
                 {% endif %}
                 <div class="preview__content">
@@ -15,10 +19,10 @@
                     <ul class="preview__summary-list">
                         <li class="preview__item">
                             <span class="preview__key">{{ i18n('price') }}</span>
-                            {% if data.price-type is same as("on_demand")  %}
-                                <span class="preview__value">{{ i18n('price_on_demand') }}</span>
+                            {% if data.price_type == "on_demand"  %}
+                                <span class="preview__value">{{ i18n('price_on_demand') }}({{ i18n('price_hidden', 'Preis nicht sichtbar') }})</span>
                             {% else %}
-                                <span class="preview__value">{% if data.price-type is same as("negotiable") %}{{ i18n('price_negotiable') }}{% endif %} {{ data.price|number_format(0, ',', '.') }} €</span>
+                                <span class="preview__value">{% if data.price_type == "negotiable" %}{{ i18n('price_negotiable') }}{% endif %} {{ data.price|number_format(0, ',', '.') }} €</span>
                             {% endif %}
                         </li>
                         <li class="preview__item">

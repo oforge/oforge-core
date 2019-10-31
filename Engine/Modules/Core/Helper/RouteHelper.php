@@ -96,10 +96,13 @@ class RouteHelper {
         return $urlService->getUrl($name);
     }
 
+    public static function getQueryParams() {
+
+    }
+
     private static function init() {
         if (!isset(self::$router)) {
             self::$router = Oforge()->App()->getContainer()->get('router');
         }
     }
-
 }

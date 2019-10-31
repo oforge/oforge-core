@@ -39,9 +39,9 @@
                                 {% endif %}
                             </label>
                             {% if crud.context =='delete' or crudProperty.name == 'id' or crudProperty.crud[crud.context] == 'readonly' %}
-                                {% include 'Backend/CRUD/Components/Renderer.twig' %}
+                                {% include CRUD_path('Components/Renderer.twig') %}
                             {% else %}
-                                {% include 'Backend/CRUD/Components/Editor.twig' %}
+                                {% include CRUD_path('Components/Editor.twig') %}
                             {% endif %}
                         </div>
                     {% endfor %}

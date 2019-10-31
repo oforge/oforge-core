@@ -10,6 +10,7 @@ namespace Oforge\Engine\Modules\TemplateEngine\Core\Services;
 
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Oforge\Engine\Modules\Core\Exceptions\DependencyNotResolvedException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\Template\TemplateNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
@@ -100,11 +101,12 @@ class TemplateRenderService {
             if ($this->hasTemplate($templatePath)) {
                 return $this->renderTemplate($request, $response, $templatePath, $data);
             } elseif (isset($fileName) && isset($data['crud'])) {
-                $templatePath = '/Backend/CRUD/' . ucfirst($fileName) . '.twig';
-                if ($this->hasTemplate($templatePath)) {
-                    $data['meta']['template']['path'] = $templatePath;
+                $data['crud']['templatePath']     = ltrim(str_replace('\\', '/', dirname($templatePath)), '/');
+                $fallbackTemplatePath    = '/Backend/CRUD/' . ucfirst($fileName) . '.twig';
+                if ($this->hasTemplate($fallbackTemplatePath)) {
+                    $data['meta']['template']['path'] = $fallbackTemplatePath;
 
-                    return $this->renderTemplate($request, $response, $templatePath, $data);
+                    return $this->renderTemplate($request, $response, $fallbackTemplatePath, $data);
                 }
             }
         }
@@ -121,6 +123,7 @@ class TemplateRenderService {
      * @throws ServiceNotFoundException
      * @throws Twig_Error_Loader
      * @throws TemplateNotFoundException
+     * @throws DependencyNotResolvedException
      */
     public function View() {
         if (!$this->view) {

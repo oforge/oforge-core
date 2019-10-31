@@ -59,6 +59,12 @@ class InsertionType extends AbstractModel {
      */
     private $quickSearch;
 
+    /**
+     * @var boolean
+     * @ORM\Column(name="insertion_type_image_required", type="boolean", nullable=false)
+     */
+    private $imageRequired = false;
+
     public function __construct() {
         $this->attributes = new ArrayCollection();
     }
@@ -173,6 +179,24 @@ class InsertionType extends AbstractModel {
     public function setDescription(?string $description) : InsertionType {
         $this->description = $description;
 
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isImageRequired(): bool
+    {
+        return $this->imageRequired;
+    }
+
+    /**
+     * @param bool $imageRequired
+     * @return InsertionType
+     */
+    public function setImageRequired(bool $imageRequired): InsertionType
+    {
+        $this->imageRequired = $imageRequired;
         return $this;
     }
 }

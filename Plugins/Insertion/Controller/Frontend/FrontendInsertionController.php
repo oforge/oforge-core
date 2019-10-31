@@ -25,6 +25,7 @@ use Insertion\Services\InsertionUpdaterService;
 use Messenger\Models\Conversation;
 use Messenger\Services\FrontendMessengerService;
 use Monolog\Logger;
+use Oforge\Engine\Modules\APIRaven\Services\APIRavenService;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
@@ -38,7 +39,6 @@ use ReflectionException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
-
 /**
  * Class MessengerController
  *
@@ -379,6 +379,7 @@ class FrontendInsertionController extends SecureFrontendController
 
         $result['search'] = $listService->search($type->getId(), array_merge($request->getQueryParams(), $radius));
 
+
         Oforge()->View()->assign($result);
     }
 
@@ -539,7 +540,6 @@ class FrontendInsertionController extends SecureFrontendController
                 }
             }
         }
-
         Oforge()->View()->assign([
             "top_values" => $topValues,
             "attributes" => $typeAttributes,

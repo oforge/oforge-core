@@ -126,7 +126,7 @@ if (typeof Oforge !== 'undefined') {
             $target.on("submit", function (event) {
                 $submitButton = $target.find(".form__input--submit--loading")
                 if ($submitButton.length > 0) {
-                    $submitButton.attr("disabled", "disabled");
+                    $submitButton.attr("disabled", true);
                     $submitButton.children(".default-text").hide();
                     $submitButton.children(".submit-text").show();
                 }
