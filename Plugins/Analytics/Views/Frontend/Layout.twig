@@ -10,7 +10,7 @@
         <script>
             var cookie_consent = localStorage.getItem('cookie_consent');
 
-            if (cookie_consent === "accepted") {
+            var initGtag = function () {
                 <!-- Google Tag Manager -->
                 (function (w, d, s, l, i) {
                     w[l] = w[l] || [];
@@ -25,6 +25,12 @@
                     f.parentNode.insertBefore(j, f);
                 })(window, document, 'script', 'dataLayer', '{{ analyticsKey }}');
                 <!-- End Google Tag Manager -->
+            };
+
+            if (cookie_consent === "accepted") {
+                initGtag();
+            } else {
+                document.addEventListener('cookie-accepted', function () { initGtag(); }, false);
             }
         </script>
     {% endif %}
