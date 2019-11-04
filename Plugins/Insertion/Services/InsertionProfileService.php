@@ -3,6 +3,7 @@
 namespace Insertion\Services;
 
 use FrontendUserManagement\Models\User;
+use FrontendUserManagement\Services\UserDetailsService;
 use Insertion\Models\InsertionProfile;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Media\Services\MediaService;
@@ -86,12 +87,19 @@ class InsertionProfileService extends AbstractDatabaseAccess {
                 }
             }
         }
+        // reset images from insertion profile
         if (!$create) {
             if (isset($params['delete_background_img'] )) {
                 $result->setBackground(null);
             }
             if (isset($params['delete_profile_img'])) {
                 $result->getUser()->getDetail()->setImage(null);
+                // reset image in user details
+                /** @var UserDetailsService $userDetailService */
+                $userDetailService = Oforge()->Services()->get('frontend.user.management.user.details');
+                $userDetail = $userDetailService->get($user->getId());
+                $userDetail->setImage(null);
+                $this->entityManager()->update($userDetail);
             }
         }
 
