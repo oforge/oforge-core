@@ -43,7 +43,6 @@ class InsertionListService extends AbstractDatabaseAccess {
      * @throws DBALException
      * @throws ORMException
      * @throws ServiceNotFoundException
-     * @Cache(slot="insertion", duration="T15M")
      */
     public function search($typeId, $params) : ?array {
         $page        = isset($params["page"]) ? $params["page"] : 1;
