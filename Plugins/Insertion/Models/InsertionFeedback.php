@@ -4,6 +4,7 @@ namespace Insertion\Models;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use FrontendUserManagement\Models\User;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Oforge\Engine\Modules\I18n\Models\Language;
 
@@ -20,6 +21,13 @@ class InsertionFeedback extends AbstractModel {
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
+
+    /**
+     * @var User
+     * @ORM\ManyToOne(targetEntity="FrontendUserManagement\Models\User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    private $user;
 
     /**
      * @var integer
@@ -41,6 +49,24 @@ class InsertionFeedback extends AbstractModel {
     }
 
     /**
+     * @param User|null $user
+     *
+     * @return InsertionFeedback
+     */
+    public function setUser(?User $user) : InsertionFeedback {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return User|null
+     */
+    public function getUser() :?User {
+        return $this->user;
+    }
+
+    /**
      * @return int
      */
     public function getRating() : int {
@@ -49,9 +75,12 @@ class InsertionFeedback extends AbstractModel {
 
     /**
      * @param int $rating
+     * @return InsertionFeedback
      */
-    public function setRating(int $rating) : void {
+    public function setRating(int $rating) : InsertionFeedback {
         $this->rating = $rating;
+
+        return $this;
     }
 
     /**
@@ -63,13 +92,12 @@ class InsertionFeedback extends AbstractModel {
 
     /**
      * @param string $text
+     * @return InsertionFeedback
      */
-    public function setText(string $text) : void {
+    public function setText(string $text) : InsertionFeedback {
         $this->text = $text;
+
+        return $this;
     }
-
 }
-
-
-
 
