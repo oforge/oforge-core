@@ -168,19 +168,19 @@ class BackendFrontendUserManagementController extends BaseCrudController {
 
     /** @var array $indexFilter */
     protected $indexFilter = [
-        'contactEmail' => [
+        'email'    => [
             'type'              => CrudFilterType::TEXT,
             'label'             => ['key' => 'plugin_frontend_user_management_filter_email', 'default' => 'Search in email'],
             'compare'           => CrudFilterComparator::LIKE,
             'customFilterQuery' => 'customIndexFilterQuery',
         ],
-        'lastName'     => [
+        'lastName' => [
             'type'              => CrudFilterType::TEXT,
             'label'             => ['key' => 'plugin_frontend_user_management_filter_last_name', 'default' => 'Search in last name'],
             'compare'           => CrudFilterComparator::LIKE,
             'customFilterQuery' => 'customIndexFilterQuery',
         ],
-        'nickName'     => [
+        'nickName' => [
             'type'              => CrudFilterType::TEXT,
             'label'             => ['key' => 'plugin_frontend_user_management_filter_nickname', 'default' => 'Search in nickname'],
             'compare'           => CrudFilterComparator::LIKE,
@@ -206,12 +206,19 @@ class BackendFrontendUserManagementController extends BaseCrudController {
      */
     protected function customIndexFilterQuery(QueryBuilder $queryBuilder, array $queryValues) {
         $and  = $queryBuilder->expr()->andX();
-        $keys = ['contactEmail', 'lastName', 'nickName'];
+        $keys = ['lastName', 'nickName'];
         foreach ($keys as $key) {
             if (isset($queryValues[$key])) {
                 $and->add($queryBuilder->expr()->like('d.' . $key, ':' . $key));
                 $queryBuilder->setParameter($key, '%' . $queryValues[$key] . '%');
             }
+        }
+        if (isset($queryValues['email'])) {
+            $or = $queryBuilder->expr()->orX();
+            $or->add($queryBuilder->expr()->like('e.email', ':email'));
+            $or->add($queryBuilder->expr()->like('d.contactEmail', ':email'));
+            $and->add($or);
+            $queryBuilder->setParameter('email', '%' . $queryValues['email'] . '%');
         }
         if (!empty($and->getParts())) {
             $queryBuilder->leftJoin('e.detail', 'd');
