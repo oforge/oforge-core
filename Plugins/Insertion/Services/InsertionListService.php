@@ -176,17 +176,19 @@ class InsertionListService extends AbstractDatabaseAccess {
         /**
          * Build an attributeKey map for matching with values
          */
-        foreach ($attributeKeys as $attributeKey) {
-            $filterName = str_replace(' ', '_', $attributeKey->getName());
+        if (sizeof($pkeys) > 0) {
+            foreach ($attributeKeys as $attributeKey) {
+                $filterName = str_replace(' ', '_', $attributeKey->getName());
 
-            if (in_array($filterName, $pkeys)) {
-                if (lcfirst($filterName) === 'pedigree') {
-                    $keys += $this->addPedigreeToKeys($pedigreeList, $attributeKeys, $params[$filterName]);
-                } else {
-                    $keys[$attributeKey->getId()]['name']       = $attributeKey->getName();
-                    $keys[$attributeKey->getId()]['filterName'] = $filterName;
-                    $keys[$attributeKey->getId()]['filterType'] = $attributeKey->getFilterType();
-                    $keys[$attributeKey->getId()]['values']     = $params[$filterName];
+                if (in_array($filterName, $pkeys)) {
+                    if (lcfirst($filterName) === 'pedigree') {
+                        $keys += $this->addPedigreeToKeys($pedigreeList, $attributeKeys, $params[$filterName]);
+                    } else {
+                        $keys[$attributeKey->getId()]['name']       = $attributeKey->getName();
+                        $keys[$attributeKey->getId()]['filterName'] = $filterName;
+                        $keys[$attributeKey->getId()]['filterType'] = $attributeKey->getFilterType();
+                        $keys[$attributeKey->getId()]['values']     = $params[$filterName];
+                    }
                 }
             }
         }
@@ -286,7 +288,7 @@ class InsertionListService extends AbstractDatabaseAccess {
          * If no filter is set, use the ids
          */
         $items = $result['items'];
-        if (sizeof($items) === 0) {
+        if (sizeof($pkeys) < 1) {
             $items = $ids;
         }
 
@@ -496,9 +498,9 @@ class InsertionListService extends AbstractDatabaseAccess {
 
         $args = ['ins_id' => $insertionId, 'values' => $values];
         $result = $this->entityManager()
-             ->getEntityManager()
-             ->getConnection()
-             ->executeQuery($sql . $where, $args, ['values' => Connection::PARAM_STR_ARRAY])->fetch();
+                       ->getEntityManager()
+                       ->getConnection()
+                       ->executeQuery($sql . $where, $args, ['values' => Connection::PARAM_STR_ARRAY])->fetch();
         return ($result['ids'] > 0 && $result['ids'] == sizeof($values));
     }
 }
