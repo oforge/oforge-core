@@ -13,5 +13,10 @@
            value="{{ data['insertion'][attribute.id] }}"
            class="form__input form-control"
            placeholder="{{ i18n(attribute.name) }}"
-           {% if required %}required{% endif %}/>
+           {% if required %}required{% endif %}
+           {% if attribute.restrictions|length > 0 %}
+               pattern="{{ attribute.restrictions }}"
+               title="{{ i18n(attribute.name ~ '_restriction_message', i18n(attribute.name)) }}"
+           {% endif %}
+    />
 </div>

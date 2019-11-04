@@ -112,7 +112,7 @@
                         <option value="" {% if not data['price_type'] %} selected {% endif %}
                                 disabled>{{ i18n('price_type') }}</option>
                         <option value="fixed" {% if data['price_type'] is same as('fixed') %} selected {% endif %}
-                                data-placeholder="{{ i18n('price') }}">{{ i18n('price_fixed') }}</option>
+                                data-placeholder="{{ i18n('price') }}">{{ i18n('prilastce_fixed') }}</option>
                         <option
                             value="negotiable" {% if data['price_type'] is same as('negotiable') %} selected {% endif %}
                             data-placeholder="{{ i18n('price') }}">{{ i18n('price_negotiable') }}</option>
@@ -129,8 +129,8 @@
                            class="form__input form__input--inside-label">
                         <input type="number"
                                id="price_min"
-                               min="0"
-                               max="2000000"
+                               min="{% if type.minPrice %}{{ type.minPrice }}{% else %}0{% endif %}"
+                               max="{% if type.maxPrice %}{{ type.maxPrice }}{% else %}2000000{% endif %}"
                                value="{{ data['price_min'] }}"
                                class="form__input"
                                placeholder="{{ i18n('from') }}"/>
@@ -148,8 +148,8 @@
                         <input type="number"
                                name="price"
                                id="price"
-                               min="0"
-                               max="2000000"
+                               min="{% if type.minPrice %}{{ type.minPrice }}{% else %}0{% endif %}"
+                               max="{% if type.maxPrice %}{{ type.maxPrice }}{% else %}2000000{% endif %}"
                                value="{{ data['price'] }}"
                                class="form__input"
                                placeholder="{{ i18n('price') }}"
