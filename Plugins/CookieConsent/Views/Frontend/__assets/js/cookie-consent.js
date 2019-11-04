@@ -23,7 +23,8 @@
                         accept_btn.addEventListener('click', function() {
                             localStorage.setItem('cookie_consent', 'accepted');
                             fadeOut(container);
-
+                            let event = new Event('cookie-accepted');
+                            document.dispatchEvent(event);
                         });
                         decline_btn.addEventListener('click', function() {
                             localStorage.setItem('cookie_consent', 'declined');
