@@ -122,7 +122,10 @@ class InsertionListService extends AbstractDatabaseAccess {
          */
         if (isset($params["zip"]) && isset($params["zip_range"]) && !empty($params["zip"]) && $params["zip_range"]) {
             $country = $params['country'] ? : "germany";
-            $coordinates = Oforge()->Services()->get("insertion.zip")->get($params["zip"], $country);
+
+            /** @var InsertionZipService $insertionZipService */
+            $insertionZipService = Oforge()->Services()->get("insertion.zip");
+            $coordinates = $insertionZipService->get($params["zip"], $country);
 
             if ($coordinates != null) {
                 $sqlQuery .= " left join oforge_insertion_contact contact on contact.insertion_id = i.id";
