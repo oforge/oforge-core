@@ -2,6 +2,7 @@
 
 namespace Seo\Middleware;
 
+use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Seo\Models\SeoUrl;
 use Seo\Services\SeoService;
 use Slim\Http\Request;
@@ -14,18 +15,23 @@ class SeoMiddleware {
         $path = $uri->getPath();
 
         /**
-         * @var $service SeoService
+         * @var SeoService $service
          */
         $service = Oforge()->Services()->get("seo");
         /**
-         * @var $seoObject SeoUrl
+         * @var SeoUrl $seoObject
          */
         $seoObject = $service->get($path);
 
         if ($seoObject != null) {
-            $newUri = $uri->withPath($seoObject->getSource());
-
+            $queryParams = RouteHelper::parseUrlWithQueryParams($seoObject->getSource());
+            $newUri = $uri->withPath($queryParams['url']);
             $request = $request->withUri($newUri);
+            if (!empty($params)) {
+                //$request = $request->withQueryParams($params);
+            } elseif(!empty($queryParams['query_params'])) {
+                $request = $request->withQueryParams($queryParams['query_params']);
+            }
         }
 
         return $next($request, $response);
