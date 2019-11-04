@@ -36,9 +36,13 @@
                                         {% for type in content.types %}
                                             <option value="{{ type }}"
                                                     {% if type == 'multi' %}data-additional-input="max-options"
-                                                    data-additional-input-name="inputTypeRestrictions"
-                                                    data-additional-input-value="{{ content.attribute.restrictions }}"{% endif %}
-                                                    data-additional-input-label="{{ i18n('backend_multi_select_max_options', 'Max Options Possible:') }}"
+                                                        data-additional-input-name="inputTypeRestrictions"
+                                                        data-additional-input-value="{{ content.attribute.restrictions }}"
+                                                        data-additional-input-label="{{ i18n('backend_multi_select_max_options', 'Max Options Possible:') }}"
+                                                    {% elseif type == 'text' %} data-additional-input="regular-expression"
+                                                        data-additional-input-name="inputTypeRestrictions"
+                                                        data-additional-input-value="{{ content.attribute.restrictions }}"
+                                                        data-additional-input-label="{{ i18n('backend_text_regular_expression', 'Regular Expression:') }}"{% endif %}
                                                 {% if select_compare(content.attribute.type, type) %}selected{% endif %}>
                                                 {{ type }}
                                             </option>

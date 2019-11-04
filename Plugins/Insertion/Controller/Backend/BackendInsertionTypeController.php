@@ -94,6 +94,8 @@ class BackendInsertionTypeController extends SecureBackendController {
                     'parent'        => $parent,
                     'quickSearch'   => $body['insertionTypeQuickSearch'],
                     'imageRequired' => $body['insertionTypeImageRequired'],
+                    'minPrice'      => $body['minPrice'],
+                    'maxPrice'      => $body['maxPrice'],
                     'description'   => $body['description'],
                     'image'         => $body['image'],
                 ];
