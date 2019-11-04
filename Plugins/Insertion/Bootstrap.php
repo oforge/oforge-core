@@ -151,9 +151,6 @@ class Bootstrap extends AbstractBootstrap {
 
         $seoUrlService = new InsertionUrlService($urlService);
         Oforge()->Services()->set("url", $seoUrlService);
-
-        //what is this??
-        new QueryCacheProfile(0, "asd");
     }
 
     public function install() {
