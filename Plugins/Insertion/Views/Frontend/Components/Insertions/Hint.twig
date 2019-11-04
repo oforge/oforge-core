@@ -1,1 +1,18 @@
-<span class="hint">i<span class="hint--content"><span class="hint">i</span>{{ hint }}</span></span>
+{% if hintContent %}
+    <span class="hint">i<span class="hint--content">
+                                                       <span
+                class="hint">i</span><a class="link link--insertion-create" data-modal-view="1">{{ hint }}</a></span></span>
+    <div data-modal-content="1"
+         class="modal-view">
+        <div class="modal-view__close"
+             data-modal-close="1">✕
+        </div>
+        <div class="modal-view__content">
+            <picture class="lazy">
+                <img class="lazy" data-src="{{ media(content['url']) }}" alt=""/>
+            </picture>
+        </div>
+    </div>
+{% else %}
+    <span class="hint">i<span class="hint--content"><span class="hint">i</span>{{ hint }}</span></span>
+{% endif %}
