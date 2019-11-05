@@ -1,8 +1,18 @@
 {% extends "@parent/Frontend/Layout.twig" %}
 
-{% block title %}{% set title = search.query.count ~ ' ' ~ i18n('insertion_' ~ type.name ~ '_count') %}{{ title|length > 35 ? title|slice(0, 35) : title }}{{ i18n('title_separator', {en: ' | ', de: ' | '}) }}{{ config('system_project_name') }}{% endblock title %}
+{% set description = '' %}
+{% if (seo is defined and seo.content != null) %}
+    {% set description = seo.content.metaDescription %}
+    {% set title = seo.content.metaTitle %}
+{% else %}
+    {% set title = search.query.count ~ ' ' ~ i18n('insertion_' ~ type.name ~ '_count') %}
+    {% if type.description is defined %}
+        {% set description = i18n(type.description) %}
+    {% endif %}
+{% endif %}
 
-{% block description %}{% if type.description is not empty %}{{ i18n(type.description) }}{% endif %}{% endblock description %}
+{% block title %}{{ title|length > 35 ? title|slice(0, 35) : title }}{{ i18n('title_separator', {en: ' | ', de: ' | '}) }}{{ config('system_project_name') }}{% endblock title %}
+{% block description %}{{ description }}{% endblock description %}
 
 {% block content %}
     {% include '@parent/Frontend/Components/MobileNavBar.twig' with { back_link : 'insertions_listAll', nav_title: i18n('insertion', 'FrontendInsertion')} %}

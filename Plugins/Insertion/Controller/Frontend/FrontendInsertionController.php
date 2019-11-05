@@ -19,13 +19,12 @@ use Insertion\Services\InsertionFeedbackService;
 use Insertion\Services\InsertionFormsService;
 use Insertion\Services\InsertionListService;
 use Insertion\Services\InsertionProfileService;
+use Insertion\Services\InsertionSeoService;
 use Insertion\Services\InsertionService;
 use Insertion\Services\InsertionTypeService;
 use Insertion\Services\InsertionUpdaterService;
 use Messenger\Models\Conversation;
 use Messenger\Services\FrontendMessengerService;
-use Monolog\Logger;
-use Oforge\Engine\Modules\APIRaven\Services\APIRavenService;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
@@ -33,7 +32,6 @@ use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\Mailer\Services\MailService;
-use Oforge\Engine\Modules\Media\Services\MediaService;
 use Oforge\Engine\Modules\TemplateEngine\Extensions\Services\UrlService;
 use ReflectionException;
 use Slim\Http\Request;
@@ -383,6 +381,17 @@ class FrontendInsertionController extends SecureFrontendController
 
 
         Oforge()->View()->assign($result);
+        if (Oforge()->View()->has('seo')) {
+            $seo = Oforge()->View()->get('seo');
+            if (isset($seo['url_id']) && isset($seo['url_name'])) {
+                /** @var InsertionSeoService $insertionSeoService */
+                $insertionSeoService = Oforge()->Services()->get('insertion.seo');
+                $seoContents = $insertionSeoService->getContentForUrl($seo['url_id']);
+                Oforge()->View()->assign(['seo' => [
+                    'content' => $seoContents
+                ]]);
+            }
+        }
     }
 
     /**

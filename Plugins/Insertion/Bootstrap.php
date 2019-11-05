@@ -2,10 +2,10 @@
 
 namespace Insertion;
 
-use Doctrine\DBAL\Cache\QueryCacheProfile;
 use FrontendUserManagement\Services\AccountNavigationService;
 use Insertion\Controller\Backend\BackendInsertionFeedbackController;
-use Insertion\Services\InsertionProfileProgressService;
+use Insertion\Controller\Backend\BackendInsertionSeoContentController;
+use Insertion\Models\InsertionSeoContent;
 use Insertion\Commands\ReminderCommand;
 use Insertion\Commands\SearchBookmarkCommand;
 use Insertion\Controller\Backend\BackendAttributeController;
@@ -44,6 +44,7 @@ use Insertion\Services\InsertionListService;
 use Insertion\Services\InsertionMockService;
 use Insertion\Services\InsertionProfileService;
 use Insertion\Services\InsertionSearchBookmarkService;
+use Insertion\Services\InsertionSeoService;
 use Insertion\Services\InsertionService;
 use Insertion\Services\InsertionSliderService;
 use Insertion\Services\InsertionTypeService;
@@ -71,6 +72,7 @@ class Bootstrap extends AbstractBootstrap {
             BackendInsertionTypeController::class,
             BackendInsertionTypeGroupController::class,
             BackendInsertionFeedbackController::class,
+            BackendInsertionSeoContentController::class,
         ];
 
         $this->middlewares = [
@@ -95,6 +97,7 @@ class Bootstrap extends AbstractBootstrap {
             'insertion.profile'         => InsertionProfileService::class,
             'insertion.slider'          => InsertionSliderService::class,
             'insertion.zip'             => InsertionZipService::class,
+            'insertion.seo'             => InsertionSeoService::class,
         ];
 
         $this->models = [
@@ -113,6 +116,7 @@ class Bootstrap extends AbstractBootstrap {
             InsertionUserSearchBookmark::class,
             InsertionProfile::class,
             InsertionZipCoordinates::class,
+            InsertionSeoContent::class,
         ];
 
         $this->dependencies = [
@@ -120,6 +124,7 @@ class Bootstrap extends AbstractBootstrap {
             \Messenger\Bootstrap::class,
             \Helpdesk\Bootstrap::class,
             \VideoUpload\Bootstrap::class,
+            \Seo\Bootstrap::class,
         ];
 
         $this->commands = [
@@ -249,6 +254,14 @@ class Bootstrap extends AbstractBootstrap {
             'parent'   => 'backend_insertion',
             'icon'     => 'fa fa-bar-chart',
             'path'     => 'backend_insertions',
+            'position' => 'sidebar',
+        ]);
+        $backendNavigationService->add([
+            'name'     => 'backend_insertions_seo_content',
+            'order'    => 5,
+            'parent'   => 'backend_insertion',
+            'icon'     => 'fa fa-code',
+            'path'     => 'backend_insertions_seo_content',
             'position' => 'sidebar',
         ]);
 
