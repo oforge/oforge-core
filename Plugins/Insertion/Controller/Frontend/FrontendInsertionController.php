@@ -53,6 +53,7 @@ class FrontendInsertionController extends SecureFrontendController
         $this->ensurePermissions([
             'accountListAction',
             'reportAction',
+            'feedbackAction'
         ], User::class);
     }
 
@@ -290,6 +291,7 @@ class FrontendInsertionController extends SecureFrontendController
      *
      * @return Response
      * @throws ServiceNotFoundException
+     * @throws ORMException
      * @EndpointAction(path="/feedback")
      */
     public function feedbackAction(Request $request, Response $response)
