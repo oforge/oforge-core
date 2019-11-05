@@ -18,11 +18,24 @@
     </div>
 
     {% block seo_content %}
-        {% set content = content('seo_content_type_' ~ type.name ~ '_' ~  meta.language.iso) %}
-        {% if content %}
-            <div class="panel panel--seo">
-                {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
-            </div>
+
+        {% if (seo is defined and seo.content != null and seo.content.contentElements != null) %}
+            {% set seoContents = seo.content.contentElements %}
+            {% for seoContent in seoContents %}
+                {% set content = content(seoContent) %}
+                {% if (content) %}
+                    <div class="panel panel--seo">
+                        {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            {% set content = content('seo_content_type_' ~ type.name ~ '_' ~  meta.language.iso) %}
+            {% if content %}
+                <div class="panel panel--seo">
+                    {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
+                </div>
+            {% endif %}
         {% endif %}
     {% endblock seo_content %}
 

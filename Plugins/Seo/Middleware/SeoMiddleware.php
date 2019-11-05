@@ -40,6 +40,10 @@ class SeoMiddleware {
         if ($seoObject != null) {
             $queryParams = RouteHelper::parseUrlWithQueryParams($seoObject->getSource());
             $newUri = $uri->withPath($queryParams['url']);
+            Oforge()->View()->assign(['seo' => [
+                'url_id' => $seoObject->getId(),
+                'url_name' => str_replace('/', '', $path),
+            ]]);
             $request = $request->withUri($newUri);
             if (!empty($params)) {
                 /**
@@ -52,7 +56,6 @@ class SeoMiddleware {
                 $request = $request->withQueryParams($queryParams['query_params']);
             }
         }
-
         return $next($request, $response);
     }
 }
