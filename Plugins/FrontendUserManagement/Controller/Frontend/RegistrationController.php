@@ -330,7 +330,7 @@ class RegistrationController extends AbstractController {
                 ->addMessage('success', I18N::translate('registration_success_logined', [
                     'en' => 'Your account was activated successfully. You are now logged in.',
                     'de' => 'Dein Account wurde erfolgreich aktiviert. Du bist nun angemeldet. '
-                ]), true, ".registration--successful");
+                ]), true, "registration--successful");
 
         Oforge()->View()->Flash()->setData("new_registration", ['newRegistration' => true]);
 
