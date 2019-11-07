@@ -52,6 +52,8 @@ class InsertionListService extends AbstractDatabaseAccess {
         $orderDir    = 'asc';
         $args        = [];
         $items       = [];
+        $exclude = ['price', 'country', 'zip', 'zip_range', 'order', 'page', 'pageSize', 'after_date'];
+
 
         /** set default order */
         if (!isset($params['order'])) {
@@ -157,7 +159,6 @@ class InsertionListService extends AbstractDatabaseAccess {
         /**
          * remove filtered parameters
          */
-        $exclude = ['price', 'country', 'zip', 'zip_range', 'order'];
         foreach ($exclude as $e) {
             unset($params[$e]);
         }
