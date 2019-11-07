@@ -21,6 +21,9 @@
             <link rel="stylesheet" href="{{ url(assets.css ) }}">
         {% endif %}
     {% endblock master__styles %}
+
+    {% block head__scripts %}
+    {% endblock head__scripts %}
 </head>
 <body
     class="{% block body_class %}controller-{{ meta.route.parentName|lower }} module-{{ meta.route.context|lower }} action-{{ meta.route.name|lower }} {{ meta.body_class|lower }} {% endblock body_class %}">
