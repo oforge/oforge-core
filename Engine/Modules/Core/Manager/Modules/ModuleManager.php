@@ -198,7 +198,7 @@ class ModuleManager {
             $middlewares = $instance->getMiddlewares();
             /** @var MiddlewareService $middlewareService */
             $middlewareService = Oforge()->Services()->get("middleware");
-            $middlewareService->register($middlewares, true);
+            $middlewareService->install($middlewares, true);
 
             /**
              * @var $entry Module
