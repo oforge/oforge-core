@@ -13,7 +13,6 @@ use Insertion\Models\InsertionType;
 use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Models\InsertionTypeGroup;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
-use Oforge\Engine\Modules\Core\Annotation\Cache\Cache;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 
 /**
@@ -43,7 +42,6 @@ class InsertionListService extends AbstractDatabaseAccess {
      * @throws DBALException
      * @throws ORMException
      * @throws ServiceNotFoundException
-     * @Cache(slot="insertion", duration="T15M")
      */
     public function search($typeId, $params) : ?array {
         $page        = isset($params["page"]) ? $params["page"] : 1;
@@ -53,6 +51,8 @@ class InsertionListService extends AbstractDatabaseAccess {
         $orderDir    = 'asc';
         $args        = [];
         $items       = [];
+        $exclude = ['price', 'country', 'zip', 'zip_range', 'order', 'page', 'pageSize', 'after_date'];
+
 
         /** set default order */
         if (!isset($params['order'])) {
@@ -158,7 +158,6 @@ class InsertionListService extends AbstractDatabaseAccess {
         /**
          * remove filtered parameters
          */
-        $exclude = ['price', 'country', 'zip', 'zip_range', 'order'];
         foreach ($exclude as $e) {
             unset($params[$e]);
         }
