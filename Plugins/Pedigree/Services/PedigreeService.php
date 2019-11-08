@@ -38,11 +38,8 @@ class PedigreeService extends AbstractDatabaseAccess
      * @return array
      * @throws ORMException
      */
-    public function getAllAncestors($limit, $offset){
+    public function getAllAncestors($limit = null, $offset = null){
         return $this->repository('ancestor')->findBy([], ['name' => 'asc'], $limit, $offset);
-    }
-    public function addAncestors($names) {
-
     }
 
     /**
