@@ -66,7 +66,7 @@ class MiddlewareService extends AbstractDatabaseAccess {
         $this->iterateMiddlewareConfigs($middlewareConfigs, function ($pathname, $middlewareConfig) use ($result, $active) {
             if ($this->isValid($middlewareConfig)) {
                 /** @var Middleware $middleware */
-                $middleware = $this->repository()->findOneBy(['class' => $middlewareConfig['class']]);
+                $middleware = $this->repository()->findOneBy(['name' => $pathname, 'class' => $middlewareConfig['class']]);
                 if ($middleware === null) {
                     $element = Middleware::create([
                         'name'     => $pathname,
