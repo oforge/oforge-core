@@ -207,10 +207,10 @@ use any input types that you want to be autofilled
                     if (cache[url]) {
                         autofill(autofillInput, cache[url]);
                     } else if (processing[url] === true) {
-                        if(!requestAttempts[url]) {
+                        if (!requestAttempts[url]) {
                             requestAttempts[url] = defaults.maxRequestAttempts;
                         }
-                        if(requestAttempts[url]-- > 0) {
+                        if (requestAttempts[url]-- > 0) {
                             setTimeout(function () {
                                 getAutofillData(endpoint, attributeKeys, autofillInput);
                             }, defaults.requestWaitingTime);
@@ -256,7 +256,11 @@ use any input types that you want to be autofilled
                     if (autofillInput.getAttribute('id') === null) {
                         assignRandomId(autofillInput);
                     }
-                    let attributeKeys = JSON.parse(autofillInput.dataset.autofillAttributeKeys);
+
+                    let attributeKeys = [];
+                    if (autofillInput.dataset.autofillAttributeKeys) {
+                        attributeKeys = JSON.parse(autofillInput.dataset.autofillAttributeKeys);
+                    }
                     getAutofillData(autofillInput.dataset.autofillEndpoint, attributeKeys, autofillInput);
                 });
             }
