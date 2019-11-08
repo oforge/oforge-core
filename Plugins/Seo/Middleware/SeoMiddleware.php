@@ -8,6 +8,7 @@ use Seo\Models\SeoUrl;
 use Seo\Services\SeoService;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Slim\Http\Uri;
 
 class SeoMiddleware {
     /**
@@ -47,11 +48,20 @@ class SeoMiddleware {
             $request = $request->withUri($newUri);
             if (!empty($params)) {
                 /**
-                 * The request still has the query params. We only need to change the path to the original endpoint
-                 * That happens in these lines:
-                 * $newUri = $uri->withPath($queryParams['url']);
-                 * $request = $request->withUri($newUri);
+                 * We cannot add QueryParams if the uri has a query.
+                 * So we create a new uri here.
                  */
+                $uriWithoutParams = new Uri($newUri->getScheme(), $newUri->getHost());
+                $uriWithoutParams = $uriWithoutParams
+                    ->withPath($newUri->getPath())
+                    ->withFragment($newUri->getFragment())
+                    ->withPort($newUri->getPort())
+                    ->withUserInfo($newUri->getUserInfo());
+                $merge = array_merge($queryParams['query_params'], $params);
+
+                $request = $request->withUri($uriWithoutParams);
+                $request = $request->withQueryParams($merge);
+
             } elseif(!empty($queryParams['query_params'])) {
                 $request = $request->withQueryParams($queryParams['query_params']);
             }
