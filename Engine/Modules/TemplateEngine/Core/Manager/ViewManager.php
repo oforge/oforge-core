@@ -90,4 +90,12 @@ class ViewManager extends AbstractViewManager {
         return isset($this->viewData[$key]) && !empty($this->viewData[$key]);
     }
 
+    /**
+     * @param string $key
+     * @return ViewManager
+     */
+    public function delete(string $key) {
+        unset($this->viewData[$key]);
+        return $this;
+    }
 }

@@ -318,6 +318,7 @@ class InsertionListService extends AbstractDatabaseAccess {
         }
 
         $result["values"] = $valueMap;
+        /** @var Insertion[] $insertions */
         $insertions = $this->repository()->findBy(['id' => $items], [$order => $orderDir], $pageSize, $pageSize * ($page - 1));
 
         foreach ($insertions as $item) {
@@ -332,6 +333,7 @@ class InsertionListService extends AbstractDatabaseAccess {
                 "minPrice"  => $item->getMinPrice(),
                 "priceType" => $item->getPriceType(),
                 "tax"       => $item->isTax(),
+                "user"      => $item->getUser()->getId(),
                 "createdAt" => $item->getCreatedAt(),
             ];
 
