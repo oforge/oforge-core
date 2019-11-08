@@ -3,7 +3,6 @@
 namespace Pedigree\Controller\Frontend;
 
 use Doctrine\ORM\ORMException;
-use FrontendUserManagement\Abstracts\SecureFrontendController;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Pedigree\Models\Ancestor;
 use Pedigree\Services\PedigreeService;

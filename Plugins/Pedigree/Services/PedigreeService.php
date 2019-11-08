@@ -2,6 +2,8 @@
 
 namespace Pedigree\Services;
 
+use Insertion\Models\AttributeKey;
+use Insertion\Models\AttributeValue;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Pedigree\Models\Ancestor;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
@@ -15,6 +17,7 @@ class PedigreeService extends AbstractDatabaseAccess
     {
         parent::__construct([
             'ancestor' => Ancestor::class,
+            'attributeKey' => AttributeKey::class,
         ]);
     }
 
@@ -42,6 +45,26 @@ class PedigreeService extends AbstractDatabaseAccess
         return $this->repository('ancestor')->findBy([], ['name' => 'asc'], $limit, $offset);
     }
 
+    public function getAncestorsFromInsertion(Array $insertion) {
+        /** @var AttributeKey $pedigreeAttributeKey */
+        $pedigreeAttributeKey = $this->repository('attributeKey')->findOneBy(['name' => 'Pedigree']);
+
+        /** @var AttributeValue[] $ancestorAttributeValues */
+        $ancestorAttributeValues = $pedigreeAttributeKey->getValues();
+        $ancestors = [];
+
+        foreach ($ancestorAttributeValues as $ancestorAttributeValue) {
+            /** @var AttributeKey $subAttributeKey */
+            $subAttributeKey = $ancestorAttributeValue->getSubAttributeKey();
+
+            if($insertion[$subAttributeKey->getId()]) {
+                $ancestors[] = $insertion[$subAttributeKey->getId()];
+            }
+        }
+
+        return $ancestors;
+    }
+
     /**
      * @param int $id
      * @throws ORMException
@@ -62,6 +85,17 @@ class PedigreeService extends AbstractDatabaseAccess
         } else {
             Oforge()->View()->Flash()->addMessage('warning',
                 I18N::translate('backend_insertion_add_name_already_exists','Name Already Exists', 'en'));
+        }
+    }
+
+    public function addAncestors(Array $names) {
+        foreach ($names as $name) {
+            $ancestor = $this->repository('ancestor')->findBy(['name' => $name]);
+            if($ancestor == null) {
+                $ancestor = new Ancestor();
+                $ancestor->setName($name);
+                $this->entityManager()->create($ancestor);
+            }
         }
     }
 }

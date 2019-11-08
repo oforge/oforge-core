@@ -2,10 +2,11 @@
 
 namespace Pedigree;
 
-use Insertion\Services\AttributeService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Pedigree\Controller\Backend\BackendPedigreeController;
+use Pedigree\Controller\Frontend\PedigreeController;
+use Pedigree\Middleware\AncestorNamesMiddleware;
 use Pedigree\Models\Ancestor;
 use Pedigree\Services\PedigreeService;
 
@@ -21,6 +22,7 @@ class Bootstrap extends AbstractBootstrap
     {
         $this->endpoints = [
             BackendPedigreeController::class,
+            PedigreeController::class
         ];
 
         $this->models = [
@@ -33,6 +35,17 @@ class Bootstrap extends AbstractBootstrap
 
         $this->dependencies = [
           \Insertion\Bootstrap::class
+        ];
+
+        $this->middlewares = [
+            'insertions_processSteps' => [
+                'class' => AncestorNamesMiddleware::class,
+                'position' => 1,
+            ],
+            'insertions_edit' => [
+                'class' => AncestorNamesMiddleware::class,
+                'position' => 1,
+            ],
         ];
     }
 

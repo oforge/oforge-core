@@ -4,10 +4,12 @@
 namespace Pedigree\Models;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\UniqueConstraint;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 
+
 /**
- * @ORM\Table(name="oforge_insertion_ancestor")
+ * @ORM\Table(name="oforge_insertion_ancestor", uniqueConstraints={@UniqueConstraint(name="Ancestor", columns={"name"})})
  * @ORM\Entity
  */
 class Ancestor extends AbstractModel
