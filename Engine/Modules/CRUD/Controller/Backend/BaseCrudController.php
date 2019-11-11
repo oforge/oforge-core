@@ -297,7 +297,7 @@ class BaseCrudController extends SecureBackendController {
      * @EndpointAction()
      */
     public function createAction(Request $request, Response $response) {
-        $postData = $request->getParams();
+        $postData = $request->getParsedBody();
         if ($request->isPost() && !empty($postData)) {
             try {
                 $data = $postData['data'];
