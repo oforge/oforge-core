@@ -39,7 +39,7 @@ class ProductPlacementController extends BaseCrudController {
         ],# source
         [
             'name'  => 'tags',
-            'type'  => CrudDataTypes::CUSTOM,
+            'type'  => CrudDataTypes::SELECT,
             'label' => [
                 'key'     => 'plugin_product_placement_property_tags',
                 'default' => [
@@ -49,10 +49,11 @@ class ProductPlacementController extends BaseCrudController {
             ],
             'crud'  => [
                 'index'  => 'readonly',
-                'create' => 'readonly',
+                'create' => 'editable',
+                'update' => 'editable',
             ],
-            'renderer' => [
-                'custom' => 'Plugins/ProductPlacement/Backend/ProductPlacement/CRUD/RenderTags.twig',
+            'editor' => [
+                'multiple' => true,
             ],
             'list' => 'getTags',
         ],#tags
@@ -63,5 +64,6 @@ class ProductPlacementController extends BaseCrudController {
         $productPlacementService = Oforge()->Services()->get('product.placement');
         $tags = $productPlacementService->getAllTags();
         Oforge()->View()->assign(['tags' => $tags]);
+        return $tags;
     }
 }

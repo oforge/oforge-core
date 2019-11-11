@@ -3,14 +3,17 @@ html {
 }
 
 .product-placement {
-    position: absolute;
-    top: 152px;
-    width: 200px;
-
-    &.before {
+    position: relative;
+    margin-bottom: $size-medium;
+    &.layout-before, &.layout-after {
+        position: absolute;
+        top: 152px;
+        width: 200px;
+    }
+    &.layout-before {
         left: calc(50% - 860px);
     }
-    &.after {
+    &.layout-after {
         left: calc(50% + 660px)
     }
 }
