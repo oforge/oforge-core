@@ -1,0 +1,76 @@
+{% extends "Backend/Master/Index.twig" %}
+
+{% block pagecontent %}
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">{{ i18n("backend_insertion_pedigree_title", "Edit Pedigree Auto Suggestions") }}</h3>
+                <div class="box-tools pull-right">
+                    <div class="btn-group pull-right">
+                    </div>
+                </div>
+            </div>
+            <div class="box-body">
+                <div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <form action="{{ url("backend_insertion_pedigree_add")}}" method="post">
+                                <div class="form-group form--pedigree-name">
+                                    <label
+                                        for="pedigreeName">{{ i18n('backend_insertion_pedigree_add', { 'en' : 'Add pedigree auto suggestion', 'de' : 'Abstammungs-Vorschlag hinzufügen'}) }}</label>
+                                    <div class="name-input">
+                                        <input name="name" type="text" id="pedigreeName" class="form-control" required>
+                                        <button class="btn btn-primary" type="submit" title="{{ i18n('backend_insertion_add', { 'en' : 'Add', 'de' : 'Hinzufügen'}) }}">
+                                            <i class="glyphicon glyphicon-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="pedigree pedigree--names">
+                                {% set previousLetter, nextLetter = content.names[0].name|first|upper, '' %}
+                                <h3>{{ previousLetter }}</h3>
+                                {% for name in content.names %}
+                                    {% set nextLetter = name.name|first|upper %}
+                                    {% if nextLetter != previousLetter %}
+                                        {% set previousLetter = nextLetter %}
+                                        <h3>{{ nextLetter }}</h3>
+                                    {% endif %}
+                                    <span class="pedigree__name">
+                                        {{ name.name }}
+                                           <form
+                                               action="{{ url("backend_insertion_pedigree_delete") ~ "?id=" ~ name.id }}"
+                                               method="post">
+                                            <button type="submit"
+                                                    title="{{ i18n('backend_insertion_delete_pedigree_name', 'Delete') }}">
+                                                <span class="table-remove glyphicon glyphicon-remove"></span>
+                                            </button>
+                                           </form>
+                                    </span>
+                                {% endfor %}
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-7">
+                            <div class="dataTables_paginate paging_simple_numbers" id="example1_paginate">
+                                <ul class="pagination">
+                                    {% for i in range(1, pageCount) %}
+                                        <li class="paginate_button {% if currentPage == i %}active{% endif %}">
+                                            <a href="{{ url('backend_insertion_pedigree') ~ "?page=" ~ i }}"
+                                               aria-controls="" data-dt-idx="{{ i }}" tabindex="0">
+                                                {{ i }}
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+{% endblock %}
