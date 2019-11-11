@@ -6,6 +6,7 @@ use Doctrine\DBAL\Schema\View;
 use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Abstracts\SecureFrontendController;
 use FrontendUserManagement\Models\User;
+use FrontendUserManagement\Services\FrontendUserService;
 use FrontendUserManagement\Services\UserService;
 use Messenger\Models\Conversation;
 use Messenger\Services\FrontendMessengerService;
@@ -108,7 +109,10 @@ class MessengerController extends SecureFrontendController {
             }
 
             Oforge()->View()->assign(['activeConversation' => $activeConversation]);
-
+            if(isset($_SESSION['message'])) {
+                Oforge()->View()->assign(['lastMessage' => $_SESSION['message']]);
+                unset($_SESSION['message']);
+            }
         } else {
             if (sizeof($conversationList) > 0) {
                 /** @var Router $router */
@@ -121,6 +125,11 @@ class MessengerController extends SecureFrontendController {
     }
 
     public function initPermissions() {
+        /** @var FrontendUserService $frontendUserService */
+        $frontendUserService = Oforge()->Services()->get('frontend.user');
+        if(!$frontendUserService->isLoggedIn() && isset($_REQUEST["message"])) {
+            $_SESSION["message"] = $_REQUEST["message"];
+        }
         $this->ensurePermission('indexAction');
     }
 }
