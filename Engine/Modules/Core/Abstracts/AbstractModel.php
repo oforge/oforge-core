@@ -3,8 +3,7 @@
 namespace Oforge\Engine\Modules\Core\Abstracts;
 
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\ORMException;
-use ReflectionException;
+use ReflectionClass;
 use ReflectionMethod;
 
 /**
@@ -44,13 +43,12 @@ abstract class AbstractModel {
             }
 
             if (isset($name)) {
-                $r = new ReflectionMethod(static::class, $method);
+                $reflectionMethod = new ReflectionMethod(static::class, $method);
+                $type             = $reflectionMethod->getReturnType();
 
-                $type = $r->getReturnType();
-
-                $methodDefinition = ["name" => $name];
+                $methodDefinition = ['name' => $name];
                 if (isset($type)) {
-                    $methodDefinition["type"] = "" . $type;
+                    $methodDefinition['type'] = '' . $type;
                 }
                 array_push($data, $methodDefinition);
             }
@@ -67,41 +65,48 @@ abstract class AbstractModel {
      * @param array $fillable
      *
      * @return $this
-     * @throws ORMException
-     * @throws ReflectionException
      */
     public function fromArray(array $array = [], array $fillable = []) {
+        /** @var ReflectionClass $reflectionClass */
+        $hasFillable = !empty($fillable);
+        $fillable    = array_fill_keys($fillable, 1);
         foreach ($array as $key => $value) {
-            if (count($fillable) && !in_array($key, $fillable)) {
+            if ($hasFillable && !isset($fillable[$key])) {
                 continue;
             }
-            $keys   = explode("_", $key);
-            $method = "set";
-
-            foreach ($keys as $keyPart) {
-                $method .= ucfirst($keyPart);
+            if (strpos($key, '_') !== false) {
+                $key = implode('', array_map('ucfirst', explode('_', $key)));
+                if ($hasFillable && !isset($fillable[$key])) {
+                    continue;
+                }
             }
-
+            if ($hasFillable && !isset($fillable[$key])) {
+                continue;
+            }
+            $method = 'set' . $key;
             if (method_exists($this, $method)) {
                 $reflectionMethod = new ReflectionMethod(static::class, $method);
                 $params           = $reflectionMethod->getParameters();
-
-                if (count($params) === 1) {
-                    $classObject = $params[0]->getClass();
-                    if (isset($classObject)) {
-                        $className = $classObject->getName();
-                        if (isset($className)) {
-                            $value = Oforge()->DB()->getForgeEntityManager()->getRepository($className)->find($value);
-                        }
-                    } else {
-                        switch ("" . $params[0]->getType()) {
-                            case "int":
-                                $value = intval($value);
+                if (!empty($params)) {
+                    if (!$params[0]->allowsNull() && $value !== null) {
+                        $reflectionClass = $params[0]->getClass();
+                        if ($reflectionClass === null) {
+                            switch ('' . $params[0]->getType()) {
+                                case 'int':
+                                    $value = intval($value);
+                                    break;
+                            }
+                        } else {
+                            $className = $reflectionClass->getName();
+                            if ($className !== null) {
+                                if (is_subclass_of($className, AbstractModel::class)) {
+                                    $value = Oforge()->DB()->getForgeEntityManager()->getRepository($className)->find($value);
+                                }
+                            }
                         }
                     }
+                    $this->$method($value);
                 }
-
-                $this->$method($value);
             }
         }
 
@@ -164,7 +169,7 @@ abstract class AbstractModel {
         $result = [];
 
         if (!is_array($result)) {
-            $cache[get_class($result) . "::::" . $this->getId()] = true;
+            $cache[get_class($result) . '::::' . $this->getId()] = true;
         }
 
         foreach (get_class_methods($this) as $classMethod) {
@@ -229,8 +234,8 @@ abstract class AbstractModel {
         } elseif (is_subclass_of($result, AbstractModel::class)) {
             /** @var AbstractModel $result */
             if (method_exists($result, 'getId')) {
-                if ($maxDepth > 0 && !isset($cache[get_class($result) . "::::" . $result->getId()])) {
-                    $cache[get_class($result) . "::::" . $result->getId()] = true;
+                if ($maxDepth > 0 && !isset($cache[get_class($result) . '::::' . $result->getId()])) {
+                    $cache[get_class($result) . '::::' . $result->getId()] = true;
 
                     return $result->toCleanedArray($maxDepth - 1, $cache);
                 } else {
