@@ -20,8 +20,8 @@ class ProductPlacementController extends BaseCrudController {
     /** @var array $modelProperties */
     protected $modelProperties = [
         [
-            'name'   => 'source',
-            'type'   => CrudDataTypes::STRING,
+            'name'  => 'source',
+            'type'  => CrudDataTypes::STRING,
             'label' => [
                 'key'     => 'plugin_product_placement_property_source',
                 'default' => [
@@ -29,7 +29,7 @@ class ProductPlacementController extends BaseCrudController {
                     'de' => 'Quelle',
                 ],
             ],
-            'crud'   => [
+            'crud'  => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
                 'create' => 'editable',
@@ -38,32 +38,31 @@ class ProductPlacementController extends BaseCrudController {
             ],
         ],# source
         [
-            'name'  => 'tags',
-            'type'  => CrudDataTypes::SELECT,
-            'label' => [
+            'name'     => 'tags',
+            'type'     => CrudDataTypes::SELECT,
+            'label'    => [
                 'key'     => 'plugin_product_placement_property_tags',
                 'default' => [
                     'en' => 'Tags',
                     'de' => 'Tags',
                 ],
             ],
-            'crud'  => [
+            'crud'     => [
                 'index'  => 'readonly',
                 'create' => 'editable',
                 'update' => 'editable',
             ],
-            'editor' => [
-                'multiple' => true,
-            ],
-            'list' => 'getTags',
+            'list'     => 'getTags',
+            'multiple' => true,
         ],#tags
     ];
 
     protected function getTags() {
         /** @var ProductPlacementService $productPlacementService */
         $productPlacementService = Oforge()->Services()->get('product.placement');
-        $tags = $productPlacementService->getAllTags();
+        $tags                    = $productPlacementService->getAllTags();
         Oforge()->View()->assign(['tags' => $tags]);
+
         return $tags;
     }
 }

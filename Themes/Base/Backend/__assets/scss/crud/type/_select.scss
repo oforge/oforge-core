@@ -1,0 +1,19 @@
+.crud-datatype-select {
+    .select2-container {
+        display: block;
+        font-size: 14px;
+        line-height: 1.428571429;
+
+        .select2-selection {
+            height: 34px;
+        }
+        .select2-dropdown {
+            width: 100%!important;
+            top: -4px;
+        }
+
+        &--default .select2-selection--single .select2-selection__arrow {
+            top: 4px;
+        }
+    }
+}
