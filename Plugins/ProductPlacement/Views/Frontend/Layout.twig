@@ -18,7 +18,9 @@
 
         {% if (content_after and content_after|length > 0) %}
             <div class="product-placement {{ context }} layout-after">
-                {{ content_after.source|raw }}
+                {% for content in content_after %}
+                    {{ content.source|raw }}
+                {% endfor %}
             </div>
         {% endif %}
     {% endblock content_after %}
