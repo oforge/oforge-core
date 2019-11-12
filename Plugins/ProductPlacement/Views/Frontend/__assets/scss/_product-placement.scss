@@ -16,6 +16,11 @@ html {
     &.layout-after {
         left: calc(50% + 660px)
     }
+    &.blog {
+        &.layout-before, &.layout-after {
+            top: 626px;
+        }
+    }
 }
 
 .home .product-placement {
