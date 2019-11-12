@@ -379,7 +379,6 @@ class FrontendInsertionController extends SecureFrontendController
 
         $result['search'] = $listService->search($type->getId(), array_merge($request->getQueryParams(), $radius));
 
-
         Oforge()->View()->assign($result);
         if (Oforge()->View()->has('seo')) {
             $seo = Oforge()->View()->get('seo');
@@ -387,9 +386,13 @@ class FrontendInsertionController extends SecureFrontendController
                 /** @var InsertionSeoService $insertionSeoService */
                 $insertionSeoService = Oforge()->Services()->get('insertion.seo');
                 $seoContents = $insertionSeoService->getContentForUrl($seo['url_id']);
-                Oforge()->View()->assign(['seo' => [
-                    'content' => $seoContents
-                ]]);
+                if (!empty($seoContents)) {
+                    Oforge()->View()->assign([
+                        'seo' => [
+                            'content' => $seoContents
+                        ]
+                    ]);
+                }
             }
         }
     }
