@@ -12,156 +12,13 @@ use ReflectionMethod;
  *
  * @package Oforge\Engine\Modules\Core\Abstracts
  */
-abstract class AbstractModel {
-
-    /**
-     * Fluent interface for constructor so methods can be called after construction.
-     *
-     * @param array $array
-     * @param array $fillable optional property whitelist for mass-assignment
-     *
-     * @return static
-     */
-    public static function create(array $array = [], array $fillable = []) {
-        $object = new static();
-        $object->fromArray($array, $fillable);
-
-        return $object;
-    }
-
-    /** @deprecated */
-    public static function definition() {
-        $methods = get_class_methods(static::class);
-        $data    = [];
-        foreach ($methods as $method) {
-            $name = null;
-
-            if (substr($method, 0, 3) === 'get') {
-                $name = lcfirst(substr($method, 3));
-            } elseif (substr($method, 0, 2) === 'is') {
-                $name = lcfirst(substr($method, 2));
-            }
-
-            if (isset($name)) {
-                $reflectionMethod = new ReflectionMethod(static::class, $method);
-                $type             = $reflectionMethod->getReturnType();
-
-                $methodDefinition = ['name' => $name];
-                if (isset($type)) {
-                    $methodDefinition['type'] = '' . $type;
-                }
-                array_push($data, $methodDefinition);
-            }
-        }
-
-        return $data;
-    }
-
-    /**
-     * Method for mass-assignment.
-     * Will call (existing) setter method for every key. Supports both key formats "testKey" and "test_key".
-     *
-     * @param array $array
-     * @param array $fillable
-     *
-     * @return $this
-     */
-    public function fromArray(array $array = [], array $fillable = []) {
-        /** @var ReflectionClass $reflectionClass */
-        $hasFillable = !empty($fillable);
-        $fillable    = array_fill_keys($fillable, 1);
-        foreach ($array as $key => $value) {
-            if ($hasFillable && !isset($fillable[$key])) {
-                continue;
-            }
-            if (strpos($key, '_') !== false) {
-                $key = implode('', array_map('ucfirst', explode('_', $key)));
-                if ($hasFillable && !isset($fillable[$key])) {
-                    continue;
-                }
-            }
-            if ($hasFillable && !isset($fillable[$key])) {
-                continue;
-            }
-            $method = 'set' . $key;
-            if (method_exists($this, $method)) {
-                $reflectionMethod = new ReflectionMethod(static::class, $method);
-                $params           = $reflectionMethod->getParameters();
-                if (!empty($params)) {
-                    if (!$params[0]->allowsNull() && $value !== null) {
-                        $reflectionClass = $params[0]->getClass();
-                        if ($reflectionClass === null) {
-                            switch ('' . $params[0]->getType()) {
-                                case 'int':
-                                    $value = intval($value);
-                                    break;
-                            }
-                        } else {
-                            $className = $reflectionClass->getName();
-                            if ($className !== null) {
-                                if (is_subclass_of($className, AbstractModel::class)) {
-                                    $value = Oforge()->DB()->getForgeEntityManager()->getRepository($className)->find($value);
-                                }
-                            }
-                        }
-                    }
-                    $this->$method($value);
-                }
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * Convert this object to array.<br>
-     * With the second parameter, properties can be excluded form convert.<br>
-     * Example:<br>
-     *      ['prop1', 'prop2', 'prop3' => ['sub31', 'sub32'], 'prop4' => ['*', '!sub41'] ]
-     * <ul>
-     *   <li>Excludes <i>prop1</i> and <i>prop2</i> of this object object.</li>
-     *   <li>Excludes sub properties <i>sub31</i> and <i>sub32</i> of this object property <i>prop3</i>.</li>
-     *   <li>Excludes all properties except <i>sub41</i> of current this object <i>prop4</i>.</li>
-     * </ul>
-     *
-     * @param int $maxDepth
-     * @param array $excludeProperties
-     *
-     * @return array
-     */
-    public function toArray($maxDepth = 2, $excludeProperties = []) : array {
-        foreach ($excludeProperties as $key => $value) {
-            if (is_numeric($key) && is_string($value)) {
-                // unset($excludeProperties[$key]);
-                $excludeProperties[$value] = $key;
-            }
-        }
-        $result = [];
-        foreach (get_class_methods($this) as $classMethod) {
-            foreach (['get', 'is'] as $prefix) {
-                $length = strlen($prefix);
-                if (substr($classMethod, 0, $length) === $prefix) {
-                    $propertyName = lcfirst(substr($classMethod, $length));
-                    if (isset($excludeProperties[$propertyName])) {
-                        if (is_array($excludeProperties[$propertyName])) {
-                            $result[$propertyName] = $this->assignArray($this->$classMethod(), $maxDepth, $excludeProperties[$propertyName]);
-                        }
-                    } elseif (!isset($excludeProperties['*']) || isset($excludeProperties['!' . $propertyName])) {
-                        $result[$propertyName] = $this->assignArray($this->$classMethod(), $maxDepth, []);
-                    }
-
-                    break;
-                }
-            }
-        }
-
-        return $result;
-    }
+abstract class AbstractModel extends AbstractClassPropertyAccess {
 
     /**
      * Convert this object to array.
      *
      * @param int $maxDepth
+     * @param array $cache
      *
      * @return array
      */
@@ -192,39 +49,7 @@ abstract class AbstractModel {
      *
      * @param mixed $result
      * @param int $maxDepth
-     * @param array $excludeProperties
-     *
-     * @return mixed
-     */
-    private function assignArray($result, int $maxDepth, array $excludeProperties) {
-        if (is_scalar($result)) {
-            return $result;
-        } elseif (is_subclass_of($result, AbstractModel::class)) {
-            /** @var AbstractModel $result */
-            if ($maxDepth > 0) {
-                return $result->toArray($maxDepth - 1, $excludeProperties);
-            } elseif (method_exists($result, 'getId')) {
-                return $result->getId();
-            }
-
-            return null;
-        } elseif (is_array($result) || is_subclass_of($result, Collection::class)) {
-            $subResult = [];
-            foreach ($result as $key => $item) {
-                $subResult[$key] = $this->assignArray($item, $maxDepth - 1, $excludeProperties);
-            }
-
-            return $subResult;
-        }
-
-        return $result;
-    }
-
-    /**
-     * Convert non scalar values to array.
-     *
-     * @param mixed $result
-     * @param int $maxDepth
+     * @param array $cache
      *
      * @return mixed
      */
