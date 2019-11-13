@@ -73,12 +73,12 @@ abstract class AbstractClassPropertyAccess {
                         } else {
                             $className = $reflectionClass->getName();
                             if ($className !== null) {
-                                if (is_subclass_of($className, AbstractClassPropertyAccess::class)) {
+                                if (is_subclass_of($className, AbstractModel::class)) {
+                                    $value = Oforge()->DB()->getForgeEntityManager()->getRepository($className)->find($value);
+                                } elseif (is_subclass_of($className, AbstractClassPropertyAccess::class)) {
                                     if (is_array($value)) {
                                         $value = $this->$getMethodName()->fromArray($value);
                                     }
-                                } elseif (is_subclass_of($className, AbstractModel::class)) {
-                                    $value = Oforge()->DB()->getForgeEntityManager()->getRepository($className)->find($value);
                                 }
                             }
                         }
