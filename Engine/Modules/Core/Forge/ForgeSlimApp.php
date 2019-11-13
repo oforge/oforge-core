@@ -91,9 +91,11 @@ TAG;
     private function parseLogs(array $log) {
         $message = '';
         foreach ($log as $key => $value) {
+            if (is_array($value)) {
+                $value = $this->parseLogs($value);
+            }
             $message .= $key . ' => ' . $value . "\n";
         }
-
         return $message;
     }
 
