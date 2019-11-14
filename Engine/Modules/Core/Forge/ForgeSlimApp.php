@@ -119,6 +119,9 @@ TAG;
 
         $mailer->addStringAttachment($this->parseLogs($_SERVER), 'server.log');
         $mailer->addStringAttachment($this->parseLogs($_SESSION), 'session.log');
+        $mailer->addStringAttachment($this->parseLogs($_REQUEST), 'request.log');
+        $mailer->addStringAttachment($this->parseLogs($_POST), 'request.log');
+        $mailer->addStringAttachment($this->parseLogs($_FILES), 'files.log');
         $mailer->addStringAttachment($html, 'error.html');
 
         $mailer->Subject = 'oforge error 500';
