@@ -10,6 +10,7 @@ use FrontendUserManagement\Abstracts\SecureFrontendController;
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\FrontendUserService;
 use Helpdesk\Services\HelpdeskTicketService;
+use Insertion\Models\AttributeKey;
 use Insertion\Models\Insertion;
 use Insertion\Models\InsertionType;
 use Insertion\Models\InsertionTypeAttribute;
@@ -603,6 +604,7 @@ class FrontendInsertionController extends SecureFrontendController
             return $response->withRedirect('/401', 301);
         }
 
+        /** @var InsertionType $type */
         $type = $insertion->getInsertionType();
         $typeAttributes = $insertionTypeService->getInsertionTypeAttributeTree($insertion->getInsertionType()->getId());
         $result['attributes'] = $typeAttributes;
@@ -612,6 +614,7 @@ class FrontendInsertionController extends SecureFrontendController
          * @var $attribute InsertionTypeAttribute
          */
         foreach ($type->getAttributes() as $attribute) {
+            /** @var AttributeKey $key */
             $key = $attribute->getAttributeKey();
             $result['keys'][$key->getName()] = $key->toArray(0);
         }
