@@ -112,7 +112,7 @@
                         <option value="" {% if not data['price_type'] %} selected {% endif %}
                                 disabled>{{ i18n('price_type') }}</option>
                         <option value="fixed" {% if data['price_type'] is same as('fixed') %} selected {% endif %}
-                                data-placeholder="{{ i18n('price') }}">{{ i18n('prilastce_fixed') }}</option>
+                                data-placeholder="{{ i18n('price') }}">{{ i18n('price_fixed') }}</option>
                         <option
                             value="negotiable" {% if data['price_type'] is same as('negotiable') %} selected {% endif %}
                             data-placeholder="{{ i18n('price') }}">{{ i18n('price_negotiable') }}</option>

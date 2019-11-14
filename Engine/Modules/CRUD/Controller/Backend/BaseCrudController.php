@@ -62,6 +62,7 @@ class BaseCrudController extends SecureBackendController {
      *              'list' => 'functionName' | [
      *                  'value' => 'i18n-translated-text', # Simple select
      *              ],
+     *              'multiple' => false,   // If type = select. (Optional)
      *              'editor' => [       // Configuration for field editor.
      *                  'hint'          => ''i18n-translated-text'| ['key' => 'label_id', 'default' => 'ID'],     // Hint text (in index colum header and under editor field).(Optional)
      *                  'default'       => '',      // Default value. (Optional)
@@ -73,7 +74,6 @@ class BaseCrudController extends SecureBackendController {
      *                  'min'           => '...',   // If type = int|float|currency. (Optional)
      *                  'max"           => ...,     // If type = string|text. (Optional)
      *                  'step"          => ...,     // If type = string|text. (Optional)
-     *                  'multiple'      => false,   // If type = select. (Optional)
      *                  'size'          => ...,     // If type = select. (Optional)
      *              ],
      *              'renderer' => [ // Configuration for renderer
@@ -297,7 +297,7 @@ class BaseCrudController extends SecureBackendController {
      * @EndpointAction()
      */
     public function createAction(Request $request, Response $response) {
-        $postData = $request->getParams();
+        $postData = $request->getParsedBody();
         if ($request->isPost() && !empty($postData)) {
             try {
                 $data = $postData['data'];

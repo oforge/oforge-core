@@ -26,6 +26,20 @@ class SecureMiddleware {
     protected $invalidRedirectPathName = '';
 
     /**
+     * @param array|null $user
+     * @param array|null $permission
+     *
+     * @return bool
+     */
+    public static function checkUserPermission(?array $user, ?array $permission) {
+        return ($user !== null && $permission !== null
+                && isset($user['role'])
+                && isset($user['type'])
+                && $user['type'] === $permission['type']
+                && $user['role'] <= $permission['role']);
+    }
+
+    /**
      * Middleware call before the controller call
      *
      * @param Request $request
@@ -61,7 +75,11 @@ class SecureMiddleware {
             //nothing to do. proceed
         } else {
             Oforge()->View()->assign(['stopNext' => true]);
-            $_SESSION['login_redirect_url'] = $request->getUri()->getPath();
+            $referrer = $request->getUri()->getPath();
+            if (!empty($request->getUri()->getQuery())) {
+                $referrer .= '?' . $request->getUri()->getQuery();
+            }
+            $_SESSION['login_redirect_url'] = $referrer;
             $this->createPermissionDeniedFlashMessage();
             if (!empty($this->invalidRedirectPathName)) {
                 return RouteHelper::redirect($response, $this->invalidRedirectPathName);
@@ -81,20 +99,6 @@ class SecureMiddleware {
             'en' => 'You are not logged in or do not have permission for this page. Log in with another user.',
             'de' => 'Du bist nicht eingeloggt oder hast keine Berechtigung für diese Seite. Logge dich mit einem anderem User ein.',
         ]));
-    }
-
-    /**
-     * @param array|null $user
-     * @param array|null $permission
-     *
-     * @return bool
-     */
-    public static function checkUserPermission(?array $user, ?array $permission) {
-        return ($user !== null && $permission !== null
-                && isset($user['role'])
-                && isset($user['type'])
-                && $user['type'] === $permission['type']
-                && $user['role'] <= $permission['role']);
     }
 
 }

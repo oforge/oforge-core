@@ -10,6 +10,7 @@ use FrontendUserManagement\Abstracts\SecureFrontendController;
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\FrontendUserService;
 use Helpdesk\Services\HelpdeskTicketService;
+use Insertion\Models\AttributeKey;
 use Insertion\Models\Insertion;
 use Insertion\Models\InsertionType;
 use Insertion\Models\InsertionTypeAttribute;
@@ -51,8 +52,9 @@ class FrontendInsertionController extends SecureFrontendController
         $this->ensurePermissions([
             'accountListAction',
             'reportAction',
-            'feedbackAction'
-        ], User::class);
+            'feedbackAction',
+            'contactAction',
+        ]);
     }
 
     /**
@@ -362,7 +364,6 @@ class FrontendInsertionController extends SecureFrontendController
         $result['keys'] = [];
         $result['typeId'] = $args['type'];
         $result['type'] = $type->toArray(0);
-
         /**
          * @var $attribute InsertionTypeAttribute
          */
@@ -412,9 +413,13 @@ class FrontendInsertionController extends SecureFrontendController
                 /** @var InsertionSeoService $insertionSeoService */
                 $insertionSeoService = Oforge()->Services()->get('insertion.seo');
                 $seoContents = $insertionSeoService->getContentForUrl($seo['url_id']);
-                Oforge()->View()->assign(['seo' => [
-                    'content' => $seoContents
-                ]]);
+                if (!empty($seoContents)) {
+                    Oforge()->View()->assign([
+                        'seo' => [
+                            'content' => $seoContents
+                        ]
+                    ]);
+                }
             }
         }
     }
@@ -627,6 +632,7 @@ class FrontendInsertionController extends SecureFrontendController
             return $response->withRedirect('/401', 301);
         }
 
+        /** @var InsertionType $type */
         $type = $insertion->getInsertionType();
         $typeAttributes = $insertionTypeService->getInsertionTypeAttributeTree($insertion->getInsertionType()->getId());
         $result['attributes'] = $typeAttributes;
@@ -636,6 +642,7 @@ class FrontendInsertionController extends SecureFrontendController
          * @var $attribute InsertionTypeAttribute
          */
         foreach ($type->getAttributes() as $attribute) {
+            /** @var AttributeKey $key */
             $key = $attribute->getAttributeKey();
             $result['keys'][$key->getName()] = $key->toArray(0);
         }

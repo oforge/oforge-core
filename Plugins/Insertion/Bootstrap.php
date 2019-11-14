@@ -2,6 +2,7 @@
 
 namespace Insertion;
 
+use FrontendUserManagement\Middleware\FrontendSecureMiddleware;
 use FrontendUserManagement\Services\AccountNavigationService;
 use Insertion\Controller\Backend\BackendInsertionFeedbackController;
 use Insertion\Controller\Backend\BackendInsertionSeoContentController;
@@ -137,6 +138,17 @@ class Bootstrap extends AbstractBootstrap {
             Reminder14DaysCronjob::class,
             Reminder30DaysCronjob::class,
             SearchBookmarkCronjob::class,
+        ];
+
+        $this->middlewares = [
+            'insertions_feedback' => [
+                'class'    => FrontendSecureMiddleware::class,
+                'position' => 1,
+            ],
+            'insertions_contact' => [
+                'class'    => FrontendSecureMiddleware::class,
+                'position' => 1,
+            ],
         ];
     }
 

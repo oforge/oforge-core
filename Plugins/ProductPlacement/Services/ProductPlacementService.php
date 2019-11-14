@@ -35,6 +35,8 @@ class ProductPlacementService extends AbstractDatabaseAccess {
                             break;
                         }
                     }
+                } else {
+                    $found = false;
                 }
 
                 if ($found) {
@@ -73,7 +75,9 @@ class ProductPlacementService extends AbstractDatabaseAccess {
         /** @var ProductPlacementTag[] $tags */
         $tags = $this->repository('tags')->findAll();
         foreach ($tags as $tag) {
-            array_push($result, $tag->toArray());
+            //$result[$tag->getId()] = ['id' => $tag->getId(), 'name' => $tag->getName()];
+            $result[$tag->getId()] = $tag->getName();
+            // array_push($result, $tag->toArray());
         }
 
         return $result;
