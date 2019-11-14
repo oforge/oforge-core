@@ -13,7 +13,6 @@ use Insertion\Models\InsertionType;
 use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Models\InsertionTypeGroup;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
-use Oforge\Engine\Modules\Core\Annotation\Cache\Cache;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 
 /**
