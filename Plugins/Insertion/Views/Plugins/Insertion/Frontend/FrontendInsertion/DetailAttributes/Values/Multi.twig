@@ -1,0 +1,19 @@
+{% set attributeKey = getInsertionAttribute(attribute.attributeKey != null ? attribute.attributeKey : attribute.id) %}
+
+{% if value is not empty %}
+    <span class="sub-value--multi">
+        {% if value is iterable %}
+            {% for v in value %}
+                <span class="sub-value">{{ i18n(getInsertionValue(v).value) }}</span>
+            {% endfor %}
+        {% else %}
+            <span class="sub-value">{{ i18n(getInsertionValue(value).value) }}</span>
+        {% endif %}
+    </span>
+    {% for subAttribute in attribute.values %}
+        {% if subAttribute.subAttributeKey != null %}
+            {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes/Values/' ~ all_attributes[subAttribute.subAttributeKey].type|capitalize ~'.twig'  with {'attribute': all_attributes[subAttribute.subAttributeKey], 'value': insertion_values[subAttribute.subAttributeKey] } %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
