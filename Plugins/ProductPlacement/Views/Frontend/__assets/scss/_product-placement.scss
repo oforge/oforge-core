@@ -7,9 +7,7 @@
     position: relative;
     margin-bottom: $size-medium;
     &.layout-before, &.layout-after {
-        position: absolute;
-        top: 152px;
-        width: 200px;
+        display: none;
     }
     &.layout-before {
         left: calc(50% - 860px);
@@ -35,4 +33,12 @@
 }
 .action-insertions_detail .header__image ~ .product-placement {
     top: 52rem;
+}
+
+@media screen and (min-width: $content-max) {
+    .product-placement {
+        &.layout-before, &.layout-after {
+            display: block;
+        }
+    }
 }
