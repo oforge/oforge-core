@@ -107,8 +107,10 @@ class MailService {
                     $conversationLink = 'https://';
                 }
 
-                $conversationLink .= $_SERVER['HTTP_HOST'];
-                $templateData['baseUrl'] = $conversationLink;
+                if (isset($_SERVER['HTTP_HOST'])) {
+                    $conversationLink .= $_SERVER['HTTP_HOST'];
+                    $templateData['baseUrl'] = $conversationLink;
+                }
 
                 /** Render HTML */
                 $renderedTemplate = $this->renderMail($options,$templateData);

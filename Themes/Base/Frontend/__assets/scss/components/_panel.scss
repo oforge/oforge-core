@@ -15,6 +15,13 @@
             margin-top: $size-large * 2;
         }
     }
+    &.panel--narrow {
+        width: 100%;
+        min-height: 3.2rem;
+        padding: $size-small;
+        text-align: center;
+        margin: $size-large auto 0;
+    }
 }
 
 @media screen and (min-width: 480px) {
