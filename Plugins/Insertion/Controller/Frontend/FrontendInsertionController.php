@@ -52,8 +52,9 @@ class FrontendInsertionController extends SecureFrontendController
         $this->ensurePermissions([
             'accountListAction',
             'reportAction',
-            'feedbackAction'
-        ], User::class);
+            'feedbackAction',
+            'contactAction',
+        ]);
     }
 
     /**
