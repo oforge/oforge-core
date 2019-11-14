@@ -1,5 +1,11 @@
 <div class="form__control">
     <label class="form__label">{{ i18n(attribute.name) }}{% if required %}<span class="required">*</span>{% endif %}
+        {% if i18nExists('attribute_hint_' ~ attribute.id ) %}
+            {% set content = content('attribute_hint_' ~ attribute.name ~ '_' ~ meta.language.iso) %}
+            {% include 'Frontend/Components/Insertions/Hint.twig' with {
+                hint: i18n('attribute_hint_' ~ attribute.id),
+                hintContent: content} %}
+        {% endif %}
     </label>
     <label for="insertion[{{ attribute.id }}"
            class="form__input form__input--inside-label">
@@ -10,7 +16,7 @@
                class="form__input"
                placeholder="{{ i18n(attribute.name) }}"
                {% if required %}required{% endif %}
-            {%  block input__attributes %}
+            {% block input__attributes %}
             {% endblock input__attributes %}
         />
 
