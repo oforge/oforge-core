@@ -362,6 +362,7 @@ class FrontendInsertionController extends SecureFrontendController
         $result['keys'] = [];
         $result['typeId'] = $args['type'];
         $result['type'] = $type->toArray(0);
+
         /**
          * @var $attribute InsertionTypeAttribute
          */
@@ -378,6 +379,30 @@ class FrontendInsertionController extends SecureFrontendController
         $radius = $listService->saveSearchRadius($request->getQueryParams());
 
         $result['search'] = $listService->search($type->getId(), array_merge($request->getQueryParams(), $radius));
+
+
+        /** @var InsertionService $insertion */
+        $insertionService = Oforge()->Services()->get('insertion');
+
+        foreach ($result['search']['query']['items'] as &$insertionItem ) {
+            /** @var Insertion $insertion */
+            $insertion = $insertionService->getInsertionById($insertionItem['id']);
+
+            $insertionValues = [];
+            foreach ($insertion->getValues() as $value) {
+                if (isset($insertionValues[$value->getAttributeKey()->getId()])) {
+                    if (is_array($insertionValues[$value->getAttributeKey()->getId()])) {
+                        $insertionValues[$value->getAttributeKey()->getId()][] = $value->getValue();
+                    } else {
+                        $insertionValues[$value->getAttributeKey()->getId()] = [$insertionValues[$value->getAttributeKey()->getId()], $value->getValue()];
+                    }
+                } else {
+                    $insertionValues[$value->getAttributeKey()->getId()] = $value->getValue();
+                }
+            }
+            $insertionItem['insertion_values'] = $insertionValues;
+        }
+
 
 
         Oforge()->View()->assign($result);
@@ -569,6 +594,8 @@ class FrontendInsertionController extends SecureFrontendController
      *
      * @return Response
      * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ReflectionException
      * @throws ServiceNotFoundException
      * @EndpointAction(path="/edit/{id}")
      */
