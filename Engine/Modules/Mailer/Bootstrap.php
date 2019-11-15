@@ -88,10 +88,36 @@ class Bootstrap extends AbstractBootstrap {
             'en' => 'Sender Prefix for No-Reply Mails',
             'de' => 'Absender Präfix für No-Reply Mails',
         ]);
+        I18N::translate('config_mailer_redirect_outgoing_mail',[
+            'en' => 'redirect outgoing mail',
+            'de' => 'Ausgehende Mails Umleiten',
+        ]);
+        I18N::translate('config_mailer_from_no_reply',[
+            'en' => 'recipient for outgoing mail',
+            'de' => 'Empfänger für Umleitungen',
+        ]);
 
         /** @var ConfigService $configService */
         $configService = Oforge()->Services()->get('config');
 
+        $configService->add([
+            'name'     => 'redirect_outgoing_mail',
+            'type'     => ConfigType::BOOLEAN,
+            'group'    => 'mailer',
+            'default'  => false,
+            'label'    => 'config_redirect_outgoing_mail',
+            'required' => true,
+            'order'    => 0,
+        ]);
+        $configService->add([
+            'name'     => 'redirect_recipient',
+            'type'     => ConfigType::STRING,
+            'group'    => 'mailer',
+            'default'  => '',
+            'label'    => 'config_redirect_recipient',
+            'required' => false,
+            'order'    => 1,
+        ]);
         $configService->add([
             'name'     => 'mailer_host',
             'type'     => ConfigType::STRING,
@@ -99,7 +125,7 @@ class Bootstrap extends AbstractBootstrap {
             'default'  => '',
             'label'    => 'config_mailer_host',
             'required' => true,
-            'order'    => 0,
+            'order'    => 2,
         ]);
         $configService->add([
             'name'     => 'mailer_port',
@@ -108,7 +134,7 @@ class Bootstrap extends AbstractBootstrap {
             'default'  => 25,
             'label'    => 'config_mailer_port',
             'required' => true,
-            'order'    => 1,
+            'order'    => 3,
         ]);
         $configService->add([
             'name'     => 'mailer_smtp_username',
@@ -117,7 +143,7 @@ class Bootstrap extends AbstractBootstrap {
             'default'  => '',
             'label'    => 'config_mailer_smtp_username',
             'required' => true,
-            'order'    => 2,
+            'order'    => 4,
         ]);
         $configService->add([
             'name'     => 'mailer_smtp_password',
@@ -126,7 +152,7 @@ class Bootstrap extends AbstractBootstrap {
             'default'  => '',
             'label'    => 'config_mailer_smtp_password',
             'required' => true,
-            'order'    => 3,
+            'order'    => 5,
         ]);
         $configService->add([
             'name'     => 'mailer_smtp_secure',
@@ -135,7 +161,7 @@ class Bootstrap extends AbstractBootstrap {
             'default'  => 'tls',
             'label'    => 'config_mailer_smtp_secure',
             'required' => true,
-            'order'    => 4,
+            'order'    => 6,
         ]);
         $configService->add([
             'name'     => 'mailer_smtp_auth',
@@ -144,7 +170,7 @@ class Bootstrap extends AbstractBootstrap {
             'default'  => true,
             'label'    => 'config_mailer_smtp_auth',
             'required' => true,
-            'order'    => 5,
+            'order'    => 7,
         ]);
         $configService->add([
             'name'     => 'mailer_smtp_debug',
@@ -153,7 +179,7 @@ class Bootstrap extends AbstractBootstrap {
             'default'  => 2,
             'label'    => 'config_mailer_smtp_debug',
             'required' => true,
-            'order'    => 6,
+            'order'    => 8,
         ]);
         $configService->add([
             'name'     => 'mailer_exceptions',
@@ -162,7 +188,7 @@ class Bootstrap extends AbstractBootstrap {
             'default'  => true,
             'label'    => 'config_mailer_exceptions',
             'required' => true,
-            'order'    => 7,
+            'order'    => 8,
         ]);
         $configService->add([
             'name'     => 'mailer_from_name',
@@ -171,7 +197,7 @@ class Bootstrap extends AbstractBootstrap {
             'default'  => '',
             'label'    => 'config_mailer_from_name',
             'required' => false,
-            'order'    => 8
+            'order'    => 9
         ]);
         $configService->add([
             'name'     => 'mailer_from_host',
@@ -180,7 +206,7 @@ class Bootstrap extends AbstractBootstrap {
             'default'  => '',
             'label'    => 'config_mailer_from_host',
             'required' => true,
-            'order'    => 9,
+            'order'    => 10,
         ]);
         $configService->add([
             'name'     => 'mailer_from_info',
@@ -189,7 +215,7 @@ class Bootstrap extends AbstractBootstrap {
             'default'  => 'info',
             'label'    => 'config_mailer_from_info',
             'required' => false,
-            'order'    => 10,
+            'order'    => 11,
         ]);
         $configService->add([
             'name'     => 'mailer_from_no_reply',
@@ -198,7 +224,7 @@ class Bootstrap extends AbstractBootstrap {
             'default'  => 'no-reply',
             'label'    => 'config_mailer_from_no_reply',
             'required' => false,
-            'order'    => 11,
+            'order'    => 12,
         ]);
     }
 }
