@@ -81,6 +81,7 @@
             &.product__attributes--main {
                 .product__attribute {
                     width: 100%;
+
                     .product__value {
                         white-space: nowrap;
                         overflow: hidden;
@@ -107,6 +108,7 @@
             line-height: 3rem;
             width: 100%;
         }
+
         .edit, .disable, .activate, .delete {
             display: none;
         }
@@ -114,6 +116,7 @@
         .edit {
             order: 0;
         }
+
         .disable {
             order: 2;
         }
@@ -260,6 +263,7 @@
     .product__actions {
         display: none;
     }
+
     .product__actions__mobile {
         display: flex;
         justify-content: space-between;
@@ -267,6 +271,7 @@
         padding: $size-large;
         order: 3;
     }
+
     .is--deleted {
 
         .open, .product__title-link, .product__image {
@@ -324,5 +329,62 @@
         .product__actions {
             display: flex;
         }
+    }
+}
+
+.action-insertions_contact {
+    form {
+        margin-top: $size-large;
+    }
+
+    .product__title-link-mobile {
+        display: block;
+        margin: 0;
+        padding-top: $size-large;
+    }
+
+    .product__content {
+        .product__title-link {
+            display: none;
+        }
+    }
+
+    .panel__contact-information {
+        border-top: 2px solid #708e2b;
+        margin-top: $size-large;
+        padding-top: $size-large;
+        display: flex;
+        flex-direction: column;
+        .contact__flex-container {
+            width:50%;
+            display: flex;
+            flex-direction: column;
+            span {
+                width:100%;
+                margin: $size-medium 0;
+            }
+        }
+    }
+
+    @media (min-width: $screen-medium) {
+
+        .panel__contact-information {
+            flex-direction: row;
+        }
+
+        .product__title-link-mobile {
+            display: none;
+        }
+
+        .product__content {
+            .product__title-link {
+                display: flex;
+            }
+        }
+
+        .contact__information-title {
+            margin-top: 4 * $size-large;
+        }
+
     }
 }
