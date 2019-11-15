@@ -2,6 +2,7 @@
 
 namespace Insertion\Services;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Insertion\Models\AttributeKey;
@@ -156,7 +157,36 @@ class AttributeService extends AbstractDatabaseAccess
         $queryBuilder = $this->entityManager()->createQueryBuilder();
         $result = $queryBuilder->select($queryBuilder->expr()->count('a.id'))->from(AttributeKey::class, 'a');
 
-        return $result->getQuery()->getSingleScalarResult();
+        return $result->getQuery()->getSingleScalarResult($id);
+    }
+
+    /**
+     * @param AttributeKey $attributeKey
+     * @param AttributeValue $attributeValues
+     * @throws ORMException
+     * @return array $attributeValues
+     */
+    public function getAllValuesBetterThan($attributeKey, $attributeValues){
+        /** @var AttributeValue[] $allValues */
+        $allValues = $attributeKey->getValues();
+        $higherValues = [];
+
+        $lowestValue = 0;
+        foreach ($attributeValues as $attributeValue) {
+            /** @var AttributeValue $attributeValue */
+            $attributeValue = $this->repository('attributeValue')->findOneBy(['id' => $attributeValue]);
+
+            if($attributeValue->getHierarchyOrder() > $lowestValue) {
+                $lowestValue = $attributeValue->getHierarchyOrder();
+            }
+        }
+        foreach ($allValues as $singleValue) {
+            if($singleValue->getHierarchyOrder() > $lowestValue) {
+                $higherValues[] = $singleValue->getId();
+            }
+        }
+
+        return $higherValues;
     }
 
     /**
