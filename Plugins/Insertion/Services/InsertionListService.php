@@ -207,8 +207,6 @@ class InsertionListService extends AbstractDatabaseAccess
                             }
                             $keys[$attributeKey->getId()]['values'] = array_merge_recursive($higherValues, $keys[$attributeKey->getId()]['values']);
                             $keys[$attributeKey->getId()]['filterType'] = AttributeType::MULTI;
-                            print_r($keys[$attributeKey->getId()]['values']);
-
                         }
                     }
                 }
