@@ -119,4 +119,24 @@ class MediaService extends AbstractDatabaseAccess {
         return $result;
 
     }
+
+    /**
+     * Read the images folder and delete all thumbnail files.
+     * @throws ORMException
+     */
+    public function deleteThumbnails() {
+        $path = glob(ROOT_PATH . Statics::IMAGES_DIR . '/*/*/*.*[jpg|jpeg|png|gif|svg]*');
+        /** @var Media[] $medias */
+        $medias = $this->repository()->findAll();
+        foreach ($medias as $media) {
+            $searchIndex = array_search(ROOT_PATH . $media->getPath(), $path);
+            if ($searchIndex !== false) {
+                unset($path[$searchIndex]);
+            }
+        }
+        foreach ($path as $file) {
+            unlink($file);
+        }
+        print_r(sizeof($path));
+    }
 }
