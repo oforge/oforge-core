@@ -7,6 +7,7 @@ use FrontendUserManagement\Services\UserService;
 use Insertion\Models\Insertion;
 use Insertion\Services\InsertionService;
 use InvalidArgumentException;
+use Monolog\Logger;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
@@ -76,9 +77,22 @@ class MailService {
                 $mail->CharSet    = 'UTF-8';
 
                 /** Add Recipients ({to,cc,bcc}Addresses) */
-                foreach ($options["to"] as $key => $value) {
-                    $mail->addAddress($key, $value);
+                $redirect = $configService->get('redirect_outgoing_mail');
+                if ($redirect == true) {
+                    $recipient = $configService->get('redirect_recipient');
+                    if (isset($recipient) && !empty($recipient)) {
+                        $mail->addAddress($recipient, 'dev');
+
+                    } else {
+                        Oforge()->Logger()->get('mailer')->error('Could not redirect message, recipient not set in mailer backend options!');
+                    }
+
+                } else {
+                    foreach ($options["to"] as $key => $value) {
+                        $mail->addAddress($key, $value);
+                    }
                 }
+
                 if (isset($options['cc'])) {
                     foreach ($options["cc"] as $key => $value) {
                         $mail->addCC($key, $value);
@@ -123,7 +137,11 @@ class MailService {
 
                 $mail->send();
 
-                Oforge()->Logger()->get("mailer")->info("Message has been sent",[$options, $templateData]);
+                if ($redirect == true) {
+                    Oforge()->Logger()->get("mailer")->info("Message has been redirected",[$mail->getToAddresses(), $options, $templateData]);
+                } else {
+                    Oforge()->Logger()->get("mailer")->info("Message has been sent",[$options, $templateData]);
+                }
 
                 return true;
 
