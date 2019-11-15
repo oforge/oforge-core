@@ -85,6 +85,8 @@ class MediaService extends AbstractDatabaseAccess {
     }
 
     /**
+     * Find media by full path including the filename
+     *
      * @param string $path
      *
      * @return Media|null
@@ -99,6 +101,16 @@ class MediaService extends AbstractDatabaseAccess {
         return $result;
     }
 
+    /**
+     * Search for medias
+     *
+     * @param string $query
+     * @param int $page
+     * @param int $pageSize
+     *
+     * @return array
+     * @throws ORMException
+     */
     public function search(string $query, int $page = 1, int $pageSize = 15) : array {
         $queryBuilder = $this->repository()->createQueryBuilder('m')->where('m.name LIKE :name')->orderBy("m.id", "desc")
                              ->setParameter('name', '%' . $query . '%');
