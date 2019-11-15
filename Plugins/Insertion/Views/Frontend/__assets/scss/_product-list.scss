@@ -85,6 +85,11 @@
 
     &__value {
         font-size: $font-size-4;
+
+        .sub-value {
+            display: block;
+            font-size: $font-size-5;
+        }
     }
 
     &__meta {
