@@ -13,7 +13,6 @@ use Insertion\Models\InsertionType;
 use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Models\InsertionTypeGroup;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
-use Oforge\Engine\Modules\Core\Annotation\Cache\Cache;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 
 /**
@@ -349,34 +348,47 @@ class InsertionListService extends AbstractDatabaseAccess {
                 $data["values"][] = $value->toArray(0);
             }
 
-            /**
-             * @var $attribute InsertionTypeAttribute
-             */
-            foreach ($attributes as $attribute) {
-                if ($attribute->isTop()) {
-                    $valueList = [];
-                    foreach ($data["values"] as $value) {
-                        if ($value["attributeKey"] == $attribute->getAttributeKey()->getId()) {
-                            $valueList[] = $value['value'];
-                        }
-                    }
-
-                    if(sizeof($valueList) === 1) {
-                        $valueList = $valueList[0];
-                    }
-
-                    $data["topvalues"][] = [
-                        "name" => $attribute->getAttributeKey()->getName(),
-                        "type" => $attribute->getAttributeKey()->getType(),
-                        "attributeKey" => $attribute->getAttributeKey()->getId(),
-                        "value" => $valueList
-                    ];
-                }
-            }
+            $data = $this->getInsertionTopValues($data, $attributes);
 
             $result["query"]["items"][] = $data;
         }
         return $result;
+    }
+
+    /**
+     * Get the top values of an insertion type
+     *
+     * @param $insertionData
+     * @param $attributes
+     *
+     * @return mixed
+     */
+    public function getInsertionTopValues($insertionData, $attributes) {
+        /**
+         * @var $attribute InsertionTypeAttribute
+         */
+        foreach ($attributes as $attribute) {
+            if ($attribute->isTop()) {
+                $valueList = [];
+                foreach ($insertionData["values"] as $value) {
+                    if ($value["attributeKey"] == $attribute->getAttributeKey()->getId()) {
+                        $valueList[] = $value['value'];
+                    }
+                }
+
+                if(sizeof($valueList) === 1) {
+                    $valueList = $valueList[0];
+                }
+
+                $insertionData["topvalues"][] = [
+                    "name" => $attribute->getAttributeKey()->getName(),
+                    "type" => $attribute->getAttributeKey()->getType(),
+                    "attributeKey" => $attribute->getAttributeKey()->getId(),
+                    "value" => $valueList
+                ];
+            }
+        }
+        return $insertionData;
     }
 
     private function isBetweenMinMax($param, $value) {

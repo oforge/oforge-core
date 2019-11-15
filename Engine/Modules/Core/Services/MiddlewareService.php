@@ -87,7 +87,7 @@ class MiddlewareService extends AbstractDatabaseAccess {
     public function uninstall(array $middlewareConfigs) {
         $this->iterateMiddlewareConfigs($middlewareConfigs, function ($pathname, $middlewareConfig) {
             /** @var Middleware $middleware */
-            $middleware = $this->repository()->findOneBy(['class' => $middlewareConfig['class']]);
+            $middleware = $this->repository()->findOneBy(['name' => $pathname, 'class' => $middlewareConfig['class']]);
             if ($middleware !== null) {
                 $this->entityManager()->remove($middleware);
             }
@@ -156,7 +156,7 @@ class MiddlewareService extends AbstractDatabaseAccess {
      */
     private function updateActive(array $middlewareConfigs, bool $active) {
         $this->iterateMiddlewareConfigs($middlewareConfigs, function ($pathname, $middlewareConfig) use ($active) {
-            $middleware = $this->repository()->findOneBy(['class' => $middlewareConfig['class']]);
+            $middleware = $this->repository()->findOneBy(['name' => $pathname, 'class' => $middlewareConfig['class']]);
             if ($middleware !== null) {
                 $middleware->setActive($active);
                 $this->entityManager()->update($middleware);
