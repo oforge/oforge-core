@@ -48,15 +48,16 @@ class AttributeService extends AbstractDatabaseAccess
      * @param $value
      * @param AttributeKey $attributeKey
      * @param null $subAttributeKey
-     *
+     * @param int $hierarchyOrder
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function createNewAttributeValue($value, $attributeKey, $subAttributeKey = null)
+    public function createNewAttributeValue($value, $attributeKey, $hierarchyOrder = 0, $subAttributeKey = null)
     {
         $attributeValue = new AttributeValue();
         $attributeValue->setAttributeKey($attributeKey);
         $attributeValue->setValue($value);
+        $attributeValue->setHierarchyOrder($hierarchyOrder);
         $attributeValue->setSubAttributeKey($subAttributeKey);
 
         $this->entityManager()->create($attributeValue);
@@ -104,16 +105,18 @@ class AttributeService extends AbstractDatabaseAccess
     /**
      * @param $id
      * @param $value
+     * @param int $hierarchyOrder
      * @param null $subAttributeKey
      *
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function updateAttributeValue($id, $value, $subAttributeKey = null)
+    public function updateAttributeValue($id, $value, $hierarchyOrder = 0, $subAttributeKey = null)
     {
         /** @var AttributeValue $attributeValue */
         $attributeValue = $this->repository('attributeValue')->find($id);
         $attributeValue->setValue($value);
+        $attributeValue->setHierarchyOrder($hierarchyOrder);
         $attributeValue->setSubAttributeKey($subAttributeKey);
 
         $this->entityManager()->update($attributeValue);
