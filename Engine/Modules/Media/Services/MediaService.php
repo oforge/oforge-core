@@ -149,6 +149,5 @@ class MediaService extends AbstractDatabaseAccess {
         foreach ($path as $file) {
             unlink($file);
         }
-        print_r(sizeof($path));
     }
 }
