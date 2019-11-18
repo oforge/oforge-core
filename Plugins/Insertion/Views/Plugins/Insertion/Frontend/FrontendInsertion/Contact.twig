@@ -18,14 +18,21 @@
                 insertion.contact.city is defined or
                 insertion.contact.phone is defined or
                 insertion.contact.email %}
-                <div class="panel__contact-information">
-                    <div class="contact__flex-container">
-                        <span>{{ insertion.contact.name }}</span>
-                        <span>{{ insertion.contact.zip }} {{ insertion.contact.city }}</span>
+                <div class="panel__contact-information flex">
+                    <div class="contact__contact_flex_container flex">
+                        <div class="contact__flex-container">
+                            <span>{{ insertion.contact.name }}</span>
+                            <span>{{ insertion.contact.zip }} {{ insertion.contact.city }}</span>
+                        </div>
+                        <div class="contact__flex-container">
+                            <span>{{ insertion.contact.phone }}</span>
+                            <span>{{ insertion.contact.email }}</span>
+                        </div>
                     </div>
-                    <div class="contact__flex-container">
-                        <span>{{ insertion.contact.phone }}</span>
-                        <span>{{ insertion.contact.email }}</span>
+                    <div class="contact__img-flex-container flex">
+                        <div class="user__picture img-profile flex"
+                             {% if insertion.user.detail.image %}style="background-image: url('{{ media(insertion.user.detail.image, 300) }}');"{% endif %}>
+                        </div>
                     </div>
                 </div>
             {% endif %}
