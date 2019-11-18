@@ -51,6 +51,7 @@ use Insertion\Services\InsertionSliderService;
 use Insertion\Services\InsertionTypeService;
 use Insertion\Services\InsertionUpdaterService;
 use Insertion\Services\InsertionUrlService;
+use Insertion\Services\InsertionValidationService;
 use Insertion\Services\InsertionZipService;
 use Insertion\Twig\InsertionExtensions;
 use Oforge\Engine\Modules\AdminBackend\Core\Enums\DashboardWidgetPosition;
@@ -78,7 +79,7 @@ class Bootstrap extends AbstractBootstrap {
 
         $this->middlewares = [
             'frontend_account_dashboard' => [
-                'class' => InsertionProfileProgressMiddleware::class,
+                'class'    => InsertionProfileProgressMiddleware::class,
                 'position' => 1,
             ],
         ];
@@ -99,6 +100,7 @@ class Bootstrap extends AbstractBootstrap {
             'insertion.slider'          => InsertionSliderService::class,
             'insertion.zip'             => InsertionZipService::class,
             'insertion.seo'             => InsertionSeoService::class,
+            'insertion.validation'      => InsertionValidationService::class,
         ];
 
         $this->models = [
@@ -145,7 +147,7 @@ class Bootstrap extends AbstractBootstrap {
                 'class'    => FrontendSecureMiddleware::class,
                 'position' => 1,
             ],
-            'insertions_contact' => [
+            'insertions_contact'  => [
                 'class'    => FrontendSecureMiddleware::class,
                 'position' => 1,
             ],
@@ -196,15 +198,15 @@ class Bootstrap extends AbstractBootstrap {
             'cssClass' => 'bg-maroon',
         ]);
         $dashboardWidgetsService->install([
-           'name'      => 'plugin_insertion_feedback',
-           'template'  => 'InsertionFeedback',
-           'handler'   => Widgets\InsertionFeedbackWidget::class,
-           'label'     => [
-               'en' => 'Insertion Feedback',
-               'de' => 'Inserate Feedback',
-               ],
-               'position' => DashboardWidgetPosition::TOP,
-               'cssClass' => 'bg-green',
+            'name'     => 'plugin_insertion_feedback',
+            'template' => 'InsertionFeedback',
+            'handler'  => Widgets\InsertionFeedbackWidget::class,
+            'label'    => [
+                'en' => 'Insertion Feedback',
+                'de' => 'Inserate Feedback',
+            ],
+            'position' => DashboardWidgetPosition::TOP,
+            'cssClass' => 'bg-green',
         ]);
     }
 
