@@ -1,21 +1,22 @@
 {% block product_panel %}
 
-        <div class="{% block panel__classes %}panel panel--product product{% endblock panel__classes %}">
+    <div class="{% block panel__classes %}panel panel--product product{% endblock panel__classes %}">
 
-    {% block product__image %}
+    {% block product_preview %}
         <a href="{{ url("insertions_detail", {id: item.id}) }}" class="product__image">
-            {% if item.media is defined and item.media|length > 0 and item.media[0].content is defined %}
-
-                <img src="{{ media(item.media[0].content, 600) }}" alt="{{ item.content[0].name }}"
-                     class="image">
-            {% else %}
-                <svg class="icon icon--placeholder">
-                    <use xlink:href="#placeholder-insertion"></use>
-                </svg>
-            {% endif %}
+            {% block product_image %}
+                {% if item.media is defined and item.media|length > 0 and item.media[0].content is defined %}
+                    <img src="{{ media(item.media[0].content, 600) }}" alt="{{ item.content[0].name }}"
+                         class="image">
+                {% else %}
+                    <svg class="icon icon--placeholder">
+                        <use xlink:href="#placeholder-insertion"></use>
+                    </svg>
+                {% endif %}
+            {% endblock product_image %}
             {% block product_badges %}{% endblock product_badges %}
         </a>
-    {% endblock product__image %}
+    {% endblock product_preview %}
 
     <div class="product__attributes product__attributes--main">
         {% block attributes__main %}
