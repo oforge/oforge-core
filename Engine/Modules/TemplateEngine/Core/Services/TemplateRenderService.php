@@ -97,12 +97,14 @@ class TemplateRenderService {
             if (!isset($data['meta']['template']['layout'])) {
                 $data['meta']['template']['layout'] = 'Default';
             }
-
+            if (isset($data['crud'])) {
+                $data['crud']['templatePath'] = ltrim(str_replace('\\', '/', dirname($templatePath)), '/');
+            }
             if ($this->hasTemplate($templatePath)) {
                 return $this->renderTemplate($request, $response, $templatePath, $data);
-            } elseif (isset($fileName) && isset($data['crud'])) {
-                $data['crud']['templatePath']     = ltrim(str_replace('\\', '/', dirname($templatePath)), '/');
-                $fallbackTemplatePath    = '/Backend/CRUD/' . ucfirst($fileName) . '.twig';
+            }
+            if (isset($fileName)) {
+                $fallbackTemplatePath = '/Backend/CRUD/' . ucfirst($fileName) . '.twig';
                 if ($this->hasTemplate($fallbackTemplatePath)) {
                     $data['meta']['template']['path'] = $fallbackTemplatePath;
 

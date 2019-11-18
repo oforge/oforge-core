@@ -22,6 +22,7 @@ use Oforge\Engine\Modules\Core\Models\Plugin\Plugin;
 use Oforge\Engine\Modules\Core\Services\PluginStateService;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
+use Oforge\Engine\Modules\CRUD\Enum\CrudGroupByOrder;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\TemplateEngine\Core\Exceptions\InvalidScssVariableException;
 use Oforge\Engine\Modules\TemplateEngine\Core\Services\TemplateManagementService;
@@ -91,6 +92,10 @@ class PluginController extends BaseCrudController {
                 'custom' => 'Backend/Plugin/Components/Index/ActionColumn.twig',
             ],
         ],
+    ];
+    /** @var array $indexOrderBy */
+    protected $indexOrderBy = [
+        'name' => CrudGroupByOrder::ASC,
     ];
     /** @var array $crudActions */
     protected $crudActions = [

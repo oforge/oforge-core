@@ -35,7 +35,7 @@ class AccessExtension extends Twig_Extension implements Twig_ExtensionInterface 
                 'is_safe'       => ['html'],
                 'needs_context' => true,
             ]),
-        ]; 
+        ];
     }
 
     /** @inheritDoc */

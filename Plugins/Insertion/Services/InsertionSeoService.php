@@ -24,6 +24,7 @@ class InsertionSeoService extends AbstractDatabaseAccess
     public function getContentForUrl(int $id) {
         /** @var InsertionSeoContent $seoContent */
         $seoContent = $this->repository()->findOneBy(['seoTargetUrl' => $id]);
+        $seoContentArray = [];
         if (isset($seoContent)) {
             $scontentElements = explode(',', $seoContent->getContentElements());
             $seoContentArray = $seoContent->toArray();
