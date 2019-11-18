@@ -57,9 +57,9 @@ class ProductPlacement extends AbstractModel {
     }
 
     /**
-     * @return array
+     * @return null|array
      */
-    public function getTags() : array {
+    public function getTags() : ?array {
         return $this->tags;
     }
 

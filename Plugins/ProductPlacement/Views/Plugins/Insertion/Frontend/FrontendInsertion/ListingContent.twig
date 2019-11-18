@@ -1,0 +1,13 @@
+{% extends '@parent/Plugins/Insertion/Frontend/FrontendInsertion/ListingContent.twig' %}
+{% block insertions %}
+    {% set context = meta.route.context|lower %}
+    {% set content = product_placements(1, ['horizontal', 'insertion', 'list']) %}
+    {% if (content and content|length > 0) %}
+        <div class="product-placement {{ context }}">
+            {% for content_item in content %}
+                {{ content_item.source|raw }}
+            {% endfor %}
+        </div>
+    {% endif %}
+    {{ parent() }}
+{% endblock insertions %}

@@ -29,6 +29,9 @@ class Bootstrap extends AbstractBootstrap {
         $this->services = [
             'product.placement' => ProductPlacementService::class,
         ];
+        $this->dependencies = [
+            \Insertion\Bootstrap::class,
+        ];
     }
 
     public function activate() {

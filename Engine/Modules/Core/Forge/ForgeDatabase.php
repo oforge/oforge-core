@@ -104,7 +104,12 @@ class ForgeDatabase {
         // $this->configuration->setMetadataCacheImpl($filesystemCache);
         $this->configuration->setQueryCacheImpl($filesystemCache);
         // proxy classes: true in dev | false in production
-        // $this->configuration->setAutoGenerateProxyClasses(false);
+
+        if(!$isDevMode) {
+            $this->configuration->setAutoGenerateProxyClasses(false);
+        }
+
+        $this->configuration->setProxyDir(ROOT_PATH . Statics::PROXY_CACHE_DIR);
 
         $this->configuration->addCustomStringFunction('ST_Distance_Sphere', ST_Distance_Sphere::class);
         $this->configuration->addCustomStringFunction('POINT', POINT::class);

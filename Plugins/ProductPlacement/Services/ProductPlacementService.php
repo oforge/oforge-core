@@ -27,11 +27,16 @@ class ProductPlacementService extends AbstractDatabaseAccess {
             $tagIds = $this->findOrCreateTags($tags);
             foreach ($productPlacements as $productPlacement) {
                 $found = true;
-                foreach ($productPlacement->getTags() as $tag) {
-                    if (!in_array($tag, $tagIds)) {
-                        $found = false;
-                        break;
+                $foundTags = $productPlacement->getTags();
+                if (isset($foundTags)) {
+                    foreach ($foundTags as $tag) {
+                        if (!in_array($tag, $tagIds)) {
+                            $found = false;
+                            break;
+                        }
                     }
+                } else {
+                    $found = false;
                 }
 
                 if ($found) {
@@ -40,7 +45,6 @@ class ProductPlacementService extends AbstractDatabaseAccess {
             }
         }
         shuffle($result);
-
         return array_slice($result, 0, $amount);
     }
 
@@ -71,7 +75,9 @@ class ProductPlacementService extends AbstractDatabaseAccess {
         /** @var ProductPlacementTag[] $tags */
         $tags = $this->repository('tags')->findAll();
         foreach ($tags as $tag) {
-            array_push($result, $tag->toArray());
+            //$result[$tag->getId()] = ['id' => $tag->getId(), 'name' => $tag->getName()];
+            $result[$tag->getId()] = $tag->getName();
+            // array_push($result, $tag->toArray());
         }
 
         return $result;

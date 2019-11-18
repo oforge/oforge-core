@@ -77,10 +77,12 @@ class PageTreeService extends AbstractDatabaseAccess {
             $paths        = [];
             if (!empty($pathEntities)) {
                 foreach ($pathEntities as $pathEntity) {
-                    $path             = [];
-                    $path["id"]       = $pathEntity->getId();
-                    $path["language"] = $this->getLanguageArray($pathEntity->getLanguage());
-                    $path["path"]     = $pathEntity->getPath();
+                    $path                = [];
+                    $path["id"]          = $pathEntity->getId();
+                    $path["language"]    = $this->getLanguageArray($pathEntity->getLanguage());
+                    $path["path"]        = $pathEntity->getPath();
+                    $path["title"]       = $pathEntity->getTitle();
+                    $path["description"] = $pathEntity->getDescription();
 
                     $paths[$path["language"]["id"]] = $path;
                 }
@@ -135,25 +137,18 @@ class PageTreeService extends AbstractDatabaseAccess {
         foreach ($pages as $page) {
             foreach ($page["paths"] as $path) {
                 $pageMerge[] = [
-                    "id"       => $page["id"],
-                    "name"     => $page["name"],
-                    "path"     => $path["path"],
-                    "language" => $path["language"]["iso"],
-                    "parent"   => $page["parent"],
+                    "id"          => $page["id"],
+                    "name"        => $page["name"],
+                    "path"        => $path["path"],
+                    "title"       => $path["title"],
+                    "description" => $path["description"],
+                    "language"    => $path["language"]["iso"],
+                    "parent"      => $page["parent"],
                 ];
             }
         }
 
         $result = $this->buildSitemapTree(0, $pageMerge, $language);
-
-        foreach ($pages as $page) {
-            $jsTreePages[] = [
-                "id"     => $page["id"],
-                "icon"   => "jstree-file",
-                "parent" => $page["parent"] ? $page["parent"] : "#",
-                "text"   => $page["name"],
-            ];
-        }
 
         return $result;
     }

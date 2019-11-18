@@ -7,11 +7,13 @@
         {% block product_list__sort %}
             {% include 'Plugins/Insertion/Frontend/Components/Content/Sort.twig' %}
         {% endblock product_list__sort %}
-        <div class="product-list">
-            {% for item in search.query.items %}
-                {% include 'Plugins/Insertion/Frontend/Components/Content/ProductPanel.twig' with {item: item } %}
-            {% endfor %}
-        </div>
+        {% block product_list_items %}
+            <div class="product-list">
+                {% for item in search.query.items %}
+                    {% include 'Plugins/Insertion/Frontend/Components/Content/ProductPanel.twig' with {item: item } %}
+                {% endfor %}
+            </div>
+        {% endblock product_list_items %}
         {% block product_pagination %}
             {% include 'Plugins/Insertion/Frontend/Components/Content/ProductPagination.twig' %}
         {% endblock product_pagination %}
