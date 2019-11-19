@@ -729,10 +729,11 @@ class BaseCrudController extends SecureBackendController {
 
     /** Handles uploaded media files (find by defined modelProperties).
      *
-     * @param array $postData
+     * @param array|null $postData
+     * @param string $crudAction
      */
-    protected function handleFileUploads(array &$postData, string $crudAction) {
-        if (empty($this->modelProperties) || !isset($_FILES['data'])) {
+    protected function handleFileUploads(?array &$postData, string $crudAction) {
+        if (empty($postData) || empty($this->modelProperties) || !isset($_FILES['data'])) {
             return;
         }
         $isSingle  = $crudAction !== 'index';
