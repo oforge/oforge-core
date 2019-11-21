@@ -550,7 +550,7 @@ class FrontendInsertionController extends SecureFrontendController
             }
         }
 
-        Oforge()->View()->assign(["insertion" => $insertion->toArray(3, ['user' => ['*', 'id']])]);
+        Oforge()->View()->assign(["insertion" => $insertion->toArray(3, ['user' => ['*', '!id']])]);
 
         /**
          * @var $service InsertionProfileService
