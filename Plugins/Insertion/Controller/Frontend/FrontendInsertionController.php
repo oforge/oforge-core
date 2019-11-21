@@ -24,6 +24,7 @@ use Insertion\Services\InsertionSeoService;
 use Insertion\Services\InsertionService;
 use Insertion\Services\InsertionTypeService;
 use Insertion\Services\InsertionUpdaterService;
+use Insertion\Services\InsertionValidationService;
 use Messenger\Models\Conversation;
 use Messenger\Services\FrontendMessengerService;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
@@ -168,6 +169,19 @@ class FrontendInsertionController extends SecureFrontendController
         $result['data'] = $data;
 
         Oforge()->View()->assign($result);
+
+        /** @var InsertionValidationService $insertionValidationService */
+        $insertionValidationService = Oforge()->Services()->get('insertion.validation');
+        $redirectUrl = '/insertions/create/' . $typeId . '/1';
+
+        if ($page > 1 && !$insertionValidationService->titleExists()) {
+            Oforge()->View()->Flash()->addMessage('error', I18N::translate('fill_title', [
+                'de' => 'Bitte befülle den Titel',
+                'en' => 'Please fill in the title',
+            ]));
+            $response = $response->withRedirect($redirectUrl, 303);
+            return $response;
+        }
     }
 
     /**

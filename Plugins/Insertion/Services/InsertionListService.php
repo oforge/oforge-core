@@ -9,6 +9,7 @@ use Insertion\Enum\AttributeType;
 use Insertion\Models\AttributeKey;
 use Insertion\Models\Insertion;
 use Insertion\Models\InsertionAttributeValue;
+use Insertion\Models\InsertionMedia;
 use Insertion\Models\InsertionType;
 use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Models\InsertionTypeGroup;
@@ -340,8 +341,10 @@ class InsertionListService extends AbstractDatabaseAccess {
                 $data["content"][] = $content->toArray(0);
             }
 
-            foreach ($item->getMedia() as $media) {
+            /** @var InsertionMedia $media */
+            foreach ($item->getMedia() as $key => $media) {
                 $data["media"][] = $media->toArray(0);
+                $data["media"][$key]['type'] = $media->getContent()->getType();
             }
 
             foreach ($item->getValues() as $value) {
@@ -384,7 +387,7 @@ class InsertionListService extends AbstractDatabaseAccess {
                     "name" => $attribute->getAttributeKey()->getName(),
                     "type" => $attribute->getAttributeKey()->getType(),
                     "attributeKey" => $attribute->getAttributeKey()->getId(),
-                    "value" => $valueList
+                    "value" => $valueList,
                 ];
             }
         }

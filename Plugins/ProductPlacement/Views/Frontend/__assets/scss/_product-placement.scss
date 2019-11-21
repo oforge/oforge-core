@@ -34,8 +34,11 @@
 .top-banner + .wrap.home .product-placement {
     top: 958px;
 }
-.action-insertions_detail .header__image ~ .product-placement {
-    top: 52rem;
+.action-insertions_detail,
+.action-insertions_profile {
+    .header__image ~ .product-placement {
+        top: 61.6rem;
+    }
 }
 
 @media screen and (min-width: $content-max) {

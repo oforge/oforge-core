@@ -43,6 +43,7 @@ abstract class AbstractClassPropertyAccess {
             if ($hasWhitelist && !isset($whitelist[$propertyName])) {
                 continue;
             }
+            $propertyName = ucfirst( $propertyName );
             if (strpos($propertyName, '_') !== false) {
                 $propertyName = implode('', array_map('ucfirst', explode('_', $propertyName)));
                 if ($hasWhitelist && !isset($whitelist[$propertyName])) {
@@ -58,7 +59,7 @@ abstract class AbstractClassPropertyAccess {
                 $reflectionMethod = new ReflectionMethod(static::class, $setMethodName);
                 $parameters       = $reflectionMethod->getParameters();
                 if (!empty($parameters)) {
-                    if (!$parameters[0]->allowsNull() && $value !== null) {
+                    if ($value !== null) {
                         $reflectionClass = $parameters[0]->getClass();
                         if ($reflectionClass === null) {
                             $parameterType = '' . $parameters[0]->getType();
@@ -77,7 +78,13 @@ abstract class AbstractClassPropertyAccess {
                                     $value = Oforge()->DB()->getForgeEntityManager()->getRepository($className)->find($value);
                                 } elseif (is_subclass_of($className, AbstractClassPropertyAccess::class)) {
                                     if (is_array($value)) {
-                                        $value = $this->$getMethodName()->fromArray($value);
+                                        $valueArray = $value;
+                                        $value = $this->$getMethodName();
+                                        if ($value === null) {
+                                            $value = new $className();
+                                        }
+                                        /** @var AbstractClassPropertyAccess $value */
+                                        $value->fromArray($valueArray);
                                     }
                                 }
                             }
@@ -89,7 +96,11 @@ abstract class AbstractClassPropertyAccess {
                 $reflectionMethod = new ReflectionMethod(static::class, $getMethodName);
                 $methodType       = "" . $reflectionMethod->getReturnType();
                 if (class_exists($methodType) && is_subclass_of($methodType, AbstractClassPropertyAccess::class)) {
-                    $this->$getMethodName()->fromArray($value);
+                    /** @var AbstractClassPropertyAccess $object */
+                    $object = $this->$getMethodName();
+                    if ($object !== null) {
+                        $object->fromArray($value);
+                    }
                 }
             }
         }
