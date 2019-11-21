@@ -2,21 +2,51 @@
 
 {% block content %}
     <div class="content content--insertion flex">
-            <div class="panel panel--support">
-                <h3 class="title">{{ i18n('insertion_contact_title') }}</h3>
+        <div class="panel panel--support">
+            <h3 class="title">{{ i18n('insertion_contact_title') }}</h3>
 
-                {% include 'Plugins/Insertion/Frontend/Components/Content/ProductPanel.twig' with {item: insertion } %}
-                    <form method="POST">
-                        <div class="form__control">
-                            <label class="form__label" for="message">{{ i18n('your_message') }}</label><!-- snippify -->
+            {% block product__title_mobile %}
+                <a class="product__title-link-mobile" href="{{ url("insertions_detail", {id: insertion.id}) }}"><h3
+                        class="product__title">{{ insertion.content[0].title }}</h3></a>
+            {% endblock %}
 
-                            <textarea class="form__input form__input--textarea" id="message" name="message"></textarea>
+            {% include 'Plugins/Insertion/Frontend/Components/Content/ProductPanel.twig' with {item: insertion } %}
+            <h4 class="contact__information-title">{{ i18n('insertion_contact_information', 'Kontaktdaten') }}</h4>
+
+            {% if insertion.contact.name is defined or
+                insertion.contact.zip is defined or
+                insertion.contact.city is defined or
+                insertion.contact.phone is defined or
+                insertion.contact.email %}
+                <div class="panel__contact-information flex">
+                    <div class="contact__contact_flex_container flex">
+                        <div class="contact__flex-container">
+                            <span>{{ insertion.contact.name }}</span>
+                            <span>{{ insertion.contact.zip }} {{ insertion.contact.city }}</span>
                         </div>
-                        <div class="form__control">
-                            <input type="submit" class="button button--primary" value="{{ i18n('send') }}">
+                        <div class="contact__flex-container">
+                            <span>{{ insertion.contact.phone }}</span>
+                            <span>{{ insertion.contact.email }}</span>
                         </div>
-                    </form>
-            </div>
+                    </div>
+                    <div class="contact__img-flex-container flex">
+                        <div class="user__picture img-profile flex"
+                             {% if insertion.user.detail.image %}style="background-image: url('{{ media(insertion.user.detail.image, 300) }}');"{% endif %}>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            <form method="POST">
+                <div class="form__control">
+                    <label class="form__label" for="message">{{ i18n('your_message') }}</label><!-- snippify -->
+
+                    <textarea class="form__input form__input--textarea" id="message" name="message"></textarea>
+                </div>
+                <div class="form__control">
+                    <input type="submit" class="button button--primary" value="{{ i18n('send') }}">
+                </div>
+            </form>
         </div>
+    </div>
 
 {% endblock content %}
