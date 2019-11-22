@@ -174,10 +174,13 @@ class InsertionListService extends AbstractDatabaseAccess
             $pedigreeList = $this->getPedigreeList();
         }
 
+        /** @var AttributeService $attributeService */
+        $attributeService = $attributeService = Oforge()->Services()->get('insertion.attribute');
 
         /** @var AttributeKey[] $attributeKeys */
         $attributeKeys = $this->repository('key')->findAll();
         $keys = [];
+        $hierarchicalKeys = [];
         /**
          * Build an attributeKey map for matching with values
          */
@@ -195,18 +198,17 @@ class InsertionListService extends AbstractDatabaseAccess
                         $keys[$attributeKey->getId()]['filterType'] = $filterType;
                         $keys[$attributeKey->getId()]['values'] = $params[$filterName];
 
+                        if ($params['insertion'][$attributeKey->getId() . '_sort_hierarchical']) {
+                            if (in_array($filterType, [AttributeType::SINGLE, AttributeType::MULTI])) {
+                                /** @var int[] $higherValues */
+                                $higherValues = $attributeService->getAllValuesBetterThan($attributeKey, $params[$filterName]);
+                                foreach ($higherValues as &$higherValue) {
+                                    $higherValue = strval($higherValue);
+                                }
 
-                        if (in_array($filterType, [AttributeType::SINGLE, AttributeType::MULTI])) {
-                            /** @var AttributeService $attributeService */
-
-                            $attributeService = $attributeService = Oforge()->Services()->get('insertion.attribute');
-                            /** @var int[] $higherValues */
-                            $higherValues = $attributeService->getAllValuesBetterThan($attributeKey, $params[$filterName]);
-                            foreach ($higherValues as &$higherValue){
-                                $higherValue = strval($higherValue);
+                                $hierarchicalKeys[$attributeKey->getId()]['values'] = array_merge_recursive($higherValues, $keys[$attributeKey->getId()]['values']);
+                                $keys[$attributeKey->getId()]['filterType'] = AttributeType::MULTI;
                             }
-                            $keys[$attributeKey->getId()]['values'] = array_merge_recursive($higherValues, $keys[$attributeKey->getId()]['values']);
-                            $keys[$attributeKey->getId()]['filterType'] = AttributeType::MULTI;
                         }
                     }
                 }
@@ -242,6 +244,11 @@ class InsertionListService extends AbstractDatabaseAccess
             $checkedPedigree = false;
             foreach ($keys as $key => $value) {
                 $result['filter'][$value['name']] = is_array($value['values']) ? array_unique($value['values']) : $value['values'];
+
+                if ($hierarchicalKeys[$key]) {
+                    $value['values'] = array_merge($hierarchicalKeys[$key]['values'], $value['values']);
+                }
+
                 $values = $attributeKeys[$key];
                 switch ($value['filterType']) {
                     case AttributeType::RANGE:
