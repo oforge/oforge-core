@@ -82,17 +82,22 @@ class BackendAttributeController extends SecureBackendController {
             $body           = $request->getParsedBody();
             $body['values'] = json_decode($body['values'], true);
             $sortable = isset($body['sortable']) && $body['sortable'] === 'on';
+            $isHierarchical = false;
+            foreach ($body['values'] as $value) {
+                if($value['hierarchy_order'] !== 0) {
+                    $isHierarchical = true;
+                }
+            }
 
             if (isset($request->getQueryParams()['id'])) {
                 /** @var AttributeKey $attributeKey */
-                $attributeKey = $attributeService->updateAttributeKey($attributeKeyId, $body['name'], $body['type'], $body['filterType'], $body['inputTypeRestrictions'], $sortable);
+                $attributeKey = $attributeService->updateAttributeKey($attributeKeyId, $body['name'], $body['type'], $body['filterType'], $body['inputTypeRestrictions'], $sortable, $isHierarchical);
                 /** @var AttributeValue[] $attributeValues */
                 $attributeValues = $attributeKey->getValues();
                 $idList          = [];
                 foreach ($attributeValues as $value) {
                     $idList[] = $value->getId();
                 }
-
                 foreach ($body['values'] as $value) {
                     if (isset($value['id'])) {
                         if ($value['sub_attribute'] === 0) {

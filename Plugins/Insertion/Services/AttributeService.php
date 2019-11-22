@@ -84,11 +84,12 @@ class AttributeService extends AbstractDatabaseAccess
      * @param $filterType
      * @param bool $sortable
      * @param $inputTypeRestrictions
+     * @param bool $hierarchical
      *
      * @return AttributeKey
      * @throws ORMException
      */
-    public function updateAttributeKey($id, $name, $type, $filterType, $inputTypeRestrictions = "", $sortable = false)
+    public function updateAttributeKey($id, $name, $type, $filterType, $inputTypeRestrictions = "", $sortable = false, $hierarchical = false)
     {
         /** @var AttributeKey $attributeKey */
         $attributeKey = $this->repository('attributeKey')->find($id);
@@ -97,7 +98,7 @@ class AttributeService extends AbstractDatabaseAccess
         $attributeKey->setFilterType($filterType);
         $attributeKey->setRestrictions($inputTypeRestrictions != null ? $inputTypeRestrictions : "");
         $attributeKey->setSortable($sortable);
-
+        $attributeKey->setHierarchical($hierarchical);
         $this->entityManager()->update($attributeKey);
 
         return $attributeKey;
