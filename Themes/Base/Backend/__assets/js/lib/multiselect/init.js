@@ -1,13 +1,12 @@
 (function ($) {
     $('.oforge-listbox').each(function (index, element) {
-        var config = {};
-        if (element.dataset.sort) {
-            config.keepRenderingSort = true;
-        }
-        if (element.dataset.search) {
+        var config = {
+            keepRenderingSort: !!element.dataset.sorted
+        };
+        if (element.dataset.searchable) {
             config.search = {
-                left: '<input type="text" class="form-control" placeholder="' + element.dataset.search + '" />',
-                right: '<input type="text" class="form-control" placeholder="' + element.dataset.search + '" />'
+                left: '#' + element.id + '_leftSearch',
+                right: '#' + element.id + '_rightSearch',
             };
         }
         if (element.dataset.search_min) {
