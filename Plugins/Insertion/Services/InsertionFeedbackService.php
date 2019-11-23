@@ -29,6 +29,10 @@ class InsertionFeedbackService extends AbstractDatabaseAccess {
                 $userService  = Oforge()->Services()->get('frontend.user.management.user');
                 $user         = $userService->getUserById($_POST["feedback_user"]);
                 $data["user"] = $user;
+                /** User didn't submit a rating */
+                if ($data["rating"] == null) {
+                    $data["rating"] = -1;
+                }
             }
             $feedback = InsertionFeedback::create($data);
             $this->entityManager()->create($feedback);
