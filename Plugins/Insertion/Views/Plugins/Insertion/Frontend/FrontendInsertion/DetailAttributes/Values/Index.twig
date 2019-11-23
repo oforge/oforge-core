@@ -6,7 +6,6 @@
             {% if insertion_values %}
                 {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes/Values/' ~ all_attributes[subAttribute.subAttributeKey].type|capitalize ~'.twig'  with {'attribute': all_attributes[subAttribute.subAttributeKey], 'value': insertion_values[subAttribute.subAttributeKey] } %}
             {% elseif item.insertion_values %}
-                {{ o_dump(all_attributes[subAttribute.subAttributeKey]) }}
                 {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes/Values/' ~ all_attributes[subAttribute.subAttributeKey].type|capitalize ~'.twig'  with {'attribute': all_attributes[subAttribute.subAttributeKey], 'value': item.insertion_values[subAttribute.subAttributeKey] } %}
             {% endif %}
         {% endif %}
