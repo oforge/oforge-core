@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Query\AST\Functions\DateDiffFunction;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\SchemaValidator;
 use Doctrine\ORM\Tools\Setup;
@@ -113,7 +114,7 @@ class ForgeDatabase {
 
         $this->configuration->addCustomStringFunction('ST_Distance_Sphere', ST_Distance_Sphere::class);
         $this->configuration->addCustomStringFunction('POINT', POINT::class);
-
+        $this->configuration->addCustomStringFunction('DATEDIFF', DateDiffFunction::class);
     }
 
     /**
