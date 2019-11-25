@@ -68,6 +68,12 @@ class AttributeKey extends AbstractModel {
      */
     private $sortable = false;
 
+    /**
+     * @var boolean
+     * @ORM\Column(name="hierarchical", type="boolean", nullable=false)
+     */
+    private $hierarchical = false;
+
     public function __construct() {
         $this->values = new ArrayCollection();
     }
@@ -195,11 +201,27 @@ class AttributeKey extends AbstractModel {
 
     /**
      * @param bool $sortable
-     *
      * @return AttributeKey
      */
     public function setSortable(bool $sortable) : AttributeKey {
         $this->sortable = $sortable;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHierarchical() : bool {
+        return $this->hierarchical;
+    }
+
+    /**
+     * @param bool $hierarchical
+     * @return AttributeKey
+     */
+    public function setHierarchical(bool $hierarchical) : AttributeKey {
+        $this->hierarchical = $hierarchical;
 
         return $this;
     }

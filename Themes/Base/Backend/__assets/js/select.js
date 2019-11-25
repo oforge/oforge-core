@@ -47,8 +47,12 @@
                     input.setAttribute('name', check.closest(self.selector).dataset.select);
                     input.setAttribute('data-select-input', check.dataset.valueId);
                     input.setAttribute('value', check.dataset.valueId);
-                    check.closest(self.selector).appendChild(input);
-                    updateRequiredInput(check);
+
+                    let existingInputs = check.closest(self.selector).querySelectorAll('[data-select-input="' + check.dataset.valueId + '"]');
+                    if(existingInputs.length < 1) {
+                        check.closest(self.selector).appendChild(input);
+                        updateRequiredInput(check);
+                    }
                 }
 
                 function hasSubSelect(selectItem) {
