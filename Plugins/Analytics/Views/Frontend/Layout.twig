@@ -6,39 +6,34 @@
 
     {% set analyticsKey = config('analytics_tracking_id') %}
     {% if analyticsKey is not empty %}
-    {# check if user has agreed and then start tracking #}
-    <script>
-        let cookie_consent = localStorage.getItem('cookie_consent');
-        if (cookie_consent === "accepted") {
-            let body = document.querySelector('body');
-            let script = document.createElement('script');
-
-            script.type = 'text/javascript';
-            script.async = true;
-            script.src = 'https://www.googletagmanager.com/gtag/js?id={{ analyticsKey }}';
-
-            body.appendChild(script);
-
-            window.dataLayer = window.dataLayer || [];
-            function gtag() {
-                dataLayer.push(arguments);
-            }
-            gtag('js', new Date());
-            gtag('config', '{{ analyticsKey }}', {'anonymize_ip': true});
-        }
-    </script>
-    {% endif %}
-
-    {% if newRegistration %}
+        {# check if user has agreed and then start tracking #}
         <script>
-            let cookie_consent = localStorage.getItem('cookie_consent');
+            var cookie_consent = localStorage.getItem('cookie_consent');
+
+            var initGtag = function () {
+                <!-- Google Tag Manager -->
+                (function (w, d, s, l, i) {
+                    w[l] = w[l] || [];
+                    w[l].push({
+                        'gtm.start':
+                            new Date().getTime(), event: 'gtm.js'
+                    });
+                    var f = d.getElementsByTagName(s)[0],
+                        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+                    j.async = true;
+                    j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+                    f.parentNode.insertBefore(j, f);
+                })(window, document, 'script', 'dataLayer', '{{ analyticsKey }}');
+                <!-- End Google Tag Manager -->
+            };
+
             if (cookie_consent === "accepted") {
-                gtag('event', 'conversion', {'send_to': 'AW-725011354/--t7CM_V6acBEJqX29kC'});
-                console.log('conversion tracking');
+                initGtag();
+            } else {
+                document.addEventListener('cookie-accepted', function () { initGtag(); }, false);
             }
         </script>
     {% endif %}
-
 
 {% endblock master__footer_scripts %}
 

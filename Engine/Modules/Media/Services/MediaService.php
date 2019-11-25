@@ -34,8 +34,7 @@ class MediaService extends AbstractDatabaseAccess {
      */
     public function add($file, $prefix = null) : ?Media {
         if (isset($file['error']) && $file['error'] == 0 && isset($file['size']) && $file['size'] > 0) {
-            $filename = urlencode(basename($file['name']));
-      // why??
+            $filename = preg_replace("/\s+/", "_", (basename($file['name'])));
             //      $filename         = md5(basename($file['name']) . '_' . microtime()) . '.' . pathinfo($file['name'],PATHINFO_EXTENSION);
             if ($prefix !== null) {
                 $filename = strtolower($prefix . '_' . $filename);
@@ -53,7 +52,7 @@ class MediaService extends AbstractDatabaseAccess {
 
                 $media = Media::create([
                     'type' => $file['type'],
-                    'name' => $filename,
+                    'name' => urlencode($filename),
                     'path' => str_replace('\\', '/', $relativeFilePath),
                 ]);
 
@@ -86,6 +85,8 @@ class MediaService extends AbstractDatabaseAccess {
     }
 
     /**
+     * Find media by full path including the filename
+     *
      * @param string $path
      *
      * @return Media|null
@@ -100,6 +101,16 @@ class MediaService extends AbstractDatabaseAccess {
         return $result;
     }
 
+    /**
+     * Search for medias
+     *
+     * @param string $query
+     * @param int $page
+     * @param int $pageSize
+     *
+     * @return array
+     * @throws ORMException
+     */
     public function search(string $query, int $page = 1, int $pageSize = 15) : array {
         $queryBuilder = $this->repository()->createQueryBuilder('m')->where('m.name LIKE :name')->orderBy("m.id", "desc")
                              ->setParameter('name', '%' . $query . '%');
@@ -119,5 +130,24 @@ class MediaService extends AbstractDatabaseAccess {
 
         return $result;
 
+    }
+
+    /**
+     * Read the images folder and delete all thumbnail files.
+     * @throws ORMException
+     */
+    public function deleteThumbnails() {
+        $path = glob(ROOT_PATH . Statics::IMAGES_DIR . '/*/*/*.*[jpg|jpeg|png|gif|svg]*');
+        /** @var Media[] $medias */
+        $medias = $this->repository()->findAll();
+        foreach ($medias as $media) {
+            $searchIndex = array_search(ROOT_PATH . $media->getPath(), $path);
+            if ($searchIndex !== false) {
+                unset($path[$searchIndex]);
+            }
+        }
+        foreach ($path as $file) {
+            unlink($file);
+        }
     }
 }

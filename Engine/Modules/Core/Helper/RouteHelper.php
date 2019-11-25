@@ -2,6 +2,7 @@
 
 namespace Oforge\Engine\Modules\Core\Helper;
 
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\TemplateEngine\Extensions\Services\UrlService;
 use Slim\Http\Response;
 use Slim\Router;
@@ -88,6 +89,7 @@ class RouteHelper {
      * @param array $queryParams
      *
      * @return mixed|string
+     * @throws ServiceNotFoundException
      */
     public static function getUrl(string $name, array $namedParams = [], array $queryParams = []) {
         /** @var UrlService $urlService */
@@ -96,10 +98,23 @@ class RouteHelper {
         return $urlService->getUrl($name);
     }
 
+    /**
+     * Parse an url to an array of two keys ['url'] and ['query_params'] in a slim readable format
+     *
+     * @param $url
+     *
+     * @return array an array with two keys ['url'] and ['query_params']
+     */
+    public static function parseUrlWithQueryParams(string $url): array {
+        $queryParams = ['url' => '', 'query_params' => []];
+        $queryParams['url'] = parse_url($url, PHP_URL_PATH);
+        parse_str(parse_url($url, PHP_URL_QUERY), $queryParams['query_params']);
+        return $queryParams;
+    }
+
     private static function init() {
         if (!isset(self::$router)) {
             self::$router = Oforge()->App()->getContainer()->get('router');
         }
     }
-
 }

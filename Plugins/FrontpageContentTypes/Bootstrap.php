@@ -9,6 +9,7 @@ use FrontpageContentTypes\ContentTypes\IconTileText;
 use FrontpageContentTypes\ContentTypes\ImageTileLarge;
 use FrontpageContentTypes\ContentTypes\ImageTileMedium;
 use FrontpageContentTypes\ContentTypes\ImageTileSmall;
+use FrontpageContentTypes\ContentTypes\NewsletterTile;
 use FrontpageContentTypes\ContentTypes\TextIconPrefix;
 use FrontpageContentTypes\ContentTypes\Banner;
 use Oforge\Engine\Modules\CMS\Services\ContentTypeGroupManagementService;
@@ -146,6 +147,18 @@ class Bootstrap extends AbstractBootstrap {
             'label'     => [
                 'en' => 'Banner',
                 'de' => 'Banner',
+            ],
+        ]);
+
+        $contentTypeManagementService->add([
+            'name'      => 'newslettertile',
+            'path'      => 'NewsletterTile',
+            'icon'      => '/Themes/Base/ContentTypes/__assets/img/imagetile.png',
+            'group'     => $ctgOtherID,
+            'classPath' => NewsletterTile::class,
+            'label'     => [
+                'en' => 'Newsletter Tile',
+                'de' => 'Newsletter Kachel',
             ],
         ]);
     }

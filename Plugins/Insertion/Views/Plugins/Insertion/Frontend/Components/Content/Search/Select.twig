@@ -1,16 +1,18 @@
-<div class="form__control form__control--new-select form__control--{{ attribute.filterType }} {{ isSubAttribute ? 'form__control--is-sub' : '' }}">
-    {% if (omitLabel is not defined) %}<label class="form__label">{{ i18n(attribute.name) }}</label>{% endif %}
+<div
+    class="form__control form__control--new-select form__control--{{ attribute.filterType }} {{ isSubAttribute ? 'form__control--is-sub' : '' }}">
+    {% if (omitLabel is not defined) %}<label
+        class="form__label">{{ i18n(attribute.name) }}</label>{% endif %}
     <div class="select {{ isSubAttribute ? 'select--is-sub' : '' }}"
          data-select-type="{{ attribute.filterType }}"
          data-placeholder="{{ i18n(attribute.name) }}"
          data-select="{{ attribute.name }}[]"
-         {{ attribute.sortable ? 'data-sortable=""' : '' }}>
+        {{ attribute.sortable ? 'data-sortable=""' : '' }}>
         <p class="select__text" data-select-text=""></p>
         {% if not isSubAttribute %}
-        <input type="text"
-               class="select__filter"
-               data-select-filter=""
-               placeholder="{{ i18n('search') }}">
+            <input type="text"
+                   class="select__filter"
+                   data-select-filter=""
+                   placeholder="{{ i18n('search') }}">
         {% endif %}
         <ul class="select__list"
             data-select-list=""
@@ -25,10 +27,21 @@
                         <div class="sub-attribute-container" data-sub-select="">
                             <em class="sub-attribute-container__text">{{ i18n('please_choose') }}</em>
                             {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ all_attributes[value.subAttributeKey].filterType|capitalize  ~ '.twig'  with {'attribute': all_attributes[value.subAttributeKey], hidden: true, required: false, isSubAttribute: true, omitLabel: true} %}
+
                         </div>
                     {% endif %}
                 </li>
             {% endfor %}
         </ul>
+        {% if attribute.hierarchical %}
+            <div class="form__control form__control--row-end form__control__boolean form__control--checkbox ">
+                <label for="{{ attribute.name }}_sort_hierarchical"
+                       class="form__label form__label--checkbox">{{ i18n(attribute.name ~ "_sort_hierarchical") }}</label>
+                <input type="checkbox"
+                       class="form__input form__input--checkbox"
+                       name="insertion[{{ attribute.id }}_sort_hierarchical]"
+                       id="{{ attribute.name }}_sort_hierarchical">
+            </div>
+        {% endif %}
     </div>
 </div>

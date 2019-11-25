@@ -24,11 +24,12 @@ use Oforge\Engine\Modules\Media\Services\MediaService;
 class InsertionUpdaterService extends AbstractDatabaseAccess {
     public function __construct() {
         parent::__construct([
-            'default'  => Insertion::class,
-            'key'      => AttributeKey::class,
-            'type'     => InsertionType::class,
-            'language' => Language::class,
-            'media'    => Media::class,
+            'default'           => Insertion::class,
+            'key'               => AttributeKey::class,
+            'type'              => InsertionType::class,
+            'language'          => Language::class,
+            'media'             => Media::class,
+            'insertionMedia'    => InsertionMedia::class
         ]);
     }
 
@@ -223,6 +224,21 @@ class InsertionUpdaterService extends AbstractDatabaseAccess {
         $this->entityManager()->update($insertion, false);
 
         $this->entityManager()->flush();
+    }
+
+    public function deleteInsertionMediaByContentId($contentId) {
+        /** @var InsertionMedia $insertionMedia */
+        $insertionMedia = $this->repository('insertionMedia')->findOneBy(['content' => $contentId]);
+        if ($insertionMedia !== null) {
+            /** @var Insertion $insertion */
+            $insertion = $this->repository()->find($insertionMedia->getInsertion());
+            if (insertion !== null) {
+                $insertion->removeMedia($insertionMedia);
+                $this->entityManager()->remove($insertionMedia, false);
+                $this->entityManager()->update($insertion, false);
+                $this->entityManager()->flush();
+            }
+        }
     }
 
     /**

@@ -4,10 +4,8 @@
         'Backend/CRUD/Components/Renderer/FallbackCustom.twig',
     ] %}
 {% else %}
-    {% set crudRendererTemplate = [
-        'Backend/CRUD/Components/Renderer/' ~ crudProperty.type|ucfirst ~'.twig',
-        'Backend/CRUD/Components/Renderer/FallbackRaw.twig',
-    ] %}
+    {% set crudRendererTemplate = CRUD_path('Components/Renderer/' ~ crudProperty.type|ucfirst ~ '.twig')|
+        merge(['Backend/CRUD/Components/Renderer/FallbackRaw.twig']) %}
 {% endif %}
 <div>
     {% include crudRendererTemplate %}

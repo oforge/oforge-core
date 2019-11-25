@@ -1,9 +1,25 @@
 {% extends '@parent/Frontend/Layout.twig' %}
+    {% set context = meta.route.context|lower %}
 
     {% block content_before %}
-        <div class="product-placement before">BEFORE</div>
+        {% set content_before = product_placements(1, ['vertical', 'small', 'insertion', 'list', 'before']) %}
+        {% if (content_before and content_before|length > 0) %}
+        <div class="product-placement {{ context }} layout-before">
+            {% for content in content_before %}
+                {{ content.source|raw }}
+            {% endfor %}
+        </div>
+        {% endif %}
     {% endblock content_before %}
 
     {% block content_after %}
-        <div class="product-placement after">AFTER</div>
+        {% set content_after = product_placements(1, ['vertical', 'small', 'insertion', 'list', 'after']) %}
+
+        {% if (content_after and content_after|length > 0) %}
+            <div class="product-placement {{ context }} layout-after">
+                {% for content in content_after %}
+                    {{ content.source|raw }}
+                {% endfor %}
+            </div>
+        {% endif %}
     {% endblock content_after %}

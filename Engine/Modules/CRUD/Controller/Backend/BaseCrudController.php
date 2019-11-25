@@ -4,6 +4,7 @@ namespace Oforge\Engine\Modules\CRUD\Controller\Backend;
 
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\QueryBuilder;
 use Exception;
 use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
@@ -61,8 +62,9 @@ class BaseCrudController extends SecureBackendController {
      *              'list' => 'functionName' | [
      *                  'value' => 'i18n-translated-text', # Simple select
      *              ],
+     *              'multiple' => false,   // If type = select. (Optional)
      *              'editor' => [       // Configuration for field editor.
-     *                  'hint'          => ''i18n-translated-text'| ['key' => 'label_id', 'default' => 'ID'],     // Hint text (in index colum header and under editor field).(Optional)
+     *                  'hint'          => 'i18n-translated-text'| ['key' => 'label_id', 'default' => 'ID'],     // Hint text (in index colum header and under editor field).(Optional)
      *                  'default'       => '',      // Default value. (Optional)
      *                  'custom'        => '...'    // If type = custom. Twig path for include.
      *                  'required'      => false,   // (Optional)
@@ -72,7 +74,6 @@ class BaseCrudController extends SecureBackendController {
      *                  'min'           => '...',   // If type = int|float|currency. (Optional)
      *                  'max"           => ...,     // If type = string|text. (Optional)
      *                  'step"          => ...,     // If type = string|text. (Optional)
-     *                  'multiple'      => false,   // If type = select. (Optional)
      *                  'size'          => ...,     // If type = select. (Optional)
      *              ],
      *              'renderer' => [ // Configuration for renderer
@@ -122,10 +123,15 @@ class BaseCrudController extends SecureBackendController {
      * Configuration of the filters on the index view.
      *      protected $indexFilter = [
      *          'propertyName' => [
-     *              'type'      => CrudFilterType::...,
-     *              'label'     => 'Text' | ['key' => 'i18nLabel', 'default' => 'DefaultText'],
-     *              'compare'   => CrudFilterComparator::#Default = equals
-     *              'list'      => ''# Required list for type=select, array or protected function name.
+     *              'type'              => CrudFilterType::...,
+     *              'label'             => 'Text' | ['key' => 'i18nLabel', 'default' => 'DefaultText'],
+     *              'compare'           => CrudFilterComparator::...,    #Default = equals
+     *              'list'              => '',   # Required list for type=select, array or protected function name.
+     *              'customFilterQuery' => callable|'<ThisClassMethodName>', #Callable or method name (of this object).
+     *                  # Parameters (\Doctrine\ORM\QueryBuilder $queryBuilder, array $queryValues),
+     *                  # the queryValues parameter contains only existing and not empty query values.
+     *                  # If this key is contained in one of the filters configs, the filtering must be written completely (also for all other properties).
+     *                  # Only the first filter callable will be used, all others are ignored.
      *          ],
      *      ];
      *
@@ -291,7 +297,7 @@ class BaseCrudController extends SecureBackendController {
      * @EndpointAction()
      */
     public function createAction(Request $request, Response $response) {
-        $postData = $request->getParams();
+        $postData = $request->getParsedBody();
         if ($request->isPost() && !empty($postData)) {
             try {
                 $data = $postData['data'];
@@ -597,14 +603,7 @@ class BaseCrudController extends SecureBackendController {
      * @return Response
      */
     protected function redirect(Response $response, string $crudAction, array $urlParams = [], array $queryParams = []) {
-        $routeName  = Oforge()->View()->get('meta')['route']['name'];
-        $actionKeys = ['view', 'create', 'delete', 'update'];
-        foreach ($actionKeys as $actionKey) {
-            if (StringHelper::endsWith($routeName, '_' . $actionKey)) {
-                $routeName = substr($routeName, 0, -(strlen($actionKey) + 1));
-                break;
-            }
-        }
+        $routeName  = Oforge()->View()->get('meta')['route']['parentName'];
         if ($crudAction !== 'index') {
             $routeName .= '_' . $crudAction;
         }
@@ -617,20 +616,35 @@ class BaseCrudController extends SecureBackendController {
      *
      * @param array $queryParams
      *
-     * @return array
+     * @return array|callable
      */
-    protected function evaluateIndexFilter(array $queryParams) : array {
+    protected function evaluateIndexFilter(array $queryParams) {
         $queryKeys               = $this->indexReservedQueryKeys;
         $queryKeyPage            = $queryKeys['page'];
         $queryKeyEntitiesPerPage = $queryKeys['entitiesPerPage'];
         unset($queryParams[$queryKeyPage], $queryParams[$queryKeyEntitiesPerPage]);
 
-        $filters = [];
+        $customFilterCallable    = null;
+        $customFilterQueryValues = [];
+        $filters                 = [];
 
         if (!empty($this->indexFilter)) {
             foreach ($this->indexFilter as $propertyName => $filterConfig) {
+                $propertyNameValue = null;
                 if (isset($queryParams[$propertyName]) && $queryParams[$propertyName] !== '') {
-                    $propertyNameValue = $queryParams[$propertyName];
+                    $propertyNameValue                      = $queryParams[$propertyName];
+                    $customFilterQueryValues[$propertyName] = $propertyNameValue;
+                }
+                if (isset($filterConfig['customFilterQuery']) && $customFilterCallable === null) {
+                    if (isset($filterConfig['customFilterQuery'])) {
+                        $callable = $filterConfig['customFilterQuery'];
+                        if (is_callable($callable)) {
+                            $customFilterCallable = $callable;
+                        } elseif (is_string($callable) && method_exists($this, $callable)) {
+                            $customFilterCallable = [$this, $callable];
+                        }
+                    }
+                } elseif ($propertyNameValue !== null) {
                     switch ($filterConfig['type']) {
                         case CrudFilterType::SELECT:
                             $comparator = CrudFilterComparator::EQUALS;
@@ -660,6 +674,12 @@ class BaseCrudController extends SecureBackendController {
                         'value'      => $propertyNameValue,
                     ];
                 }
+            }
+
+            if ($customFilterCallable !== null) {
+                $filters = function (QueryBuilder $queryBuilder) use ($customFilterCallable, $customFilterQueryValues) {
+                    $customFilterCallable($queryBuilder, $customFilterQueryValues);
+                };
             }
         }
 
@@ -709,10 +729,11 @@ class BaseCrudController extends SecureBackendController {
 
     /** Handles uploaded media files (find by defined modelProperties).
      *
-     * @param array $postData
+     * @param array|null $postData
+     * @param string $crudAction
      */
-    protected function handleFileUploads(array &$postData, string $crudAction) {
-        if (empty($this->modelProperties) || !isset($_FILES['data'])) {
+    protected function handleFileUploads(?array &$postData, string $crudAction) {
+        if (empty($postData) || empty($this->modelProperties) || !isset($_FILES['data'])) {
             return;
         }
         $isSingle  = $crudAction !== 'index';

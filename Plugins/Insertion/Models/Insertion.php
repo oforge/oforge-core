@@ -228,6 +228,14 @@ class Insertion extends AbstractModel
     }
 
     /**
+     * @param InsertionMedia $media
+     */
+    public function removeMedia($media) {
+        $this->media->remove($media);
+        $media->setInsertion(null);
+    }
+
+    /**
      * @return InsertionContent[]
      */
     public function getContent(): ?object

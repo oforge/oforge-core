@@ -5,6 +5,8 @@ namespace Oforge\Engine\Modules\CRUD;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\CRUD\Services\GenericCrudService;
+use Oforge\Engine\Modules\CRUD\Twig\CrudExtension;
+use Oforge\Engine\Modules\TemplateEngine\Core\Services\TemplateRenderService;
 
 // use Oforge\Engine\Modules\CRUD\Controller\Backend\CRUD\Test\ReadController;
 // use Oforge\Engine\Modules\CRUD\Controller\Backend\CRUD\Test\WriteController;
@@ -58,6 +60,13 @@ class Bootstrap extends AbstractBootstrap {
         //     'path'     => 'backend_crudtest_write',
         //     'position' => 'sidebar',
         // ]);
+    }
+
+    public function load() {
+        /** @var TemplateRenderService $templateRenderer */
+        $templateRenderer = Oforge()->Services()->get('template.render');
+
+        $templateRenderer->View()->addExtension(new CrudExtension());
     }
 
 }
