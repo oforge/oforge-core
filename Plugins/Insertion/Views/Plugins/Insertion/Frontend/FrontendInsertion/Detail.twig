@@ -4,12 +4,12 @@
 
 {% block description %}{% set description = insertion.content[0].description %}{{ description|length > 255 ? description|slice(0, 220) : description }}{{ i18n('title_separator', {en: ' | ', de: ' | '}) }}{{ config('system_project_name') }}{% endblock description %}
 
-{% block layout__header %}
+{% block layout__header_image %}
     {% if profile.background.id is not empty %}
         {% set headerimage = profile.background.id %}
     {% endif %}
     {{ parent() }}
-{% endblock layout__header %}
+{% endblock layout__header_image %}
 
 {% block content %}
     <div data-insertionid="{{ insertion.id }}"
