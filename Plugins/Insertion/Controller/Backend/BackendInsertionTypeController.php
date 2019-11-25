@@ -14,6 +14,8 @@ use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
+use Oforge\Engine\Modules\Media\Models\Media;
+use Oforge\Engine\Modules\Media\Services\MediaService;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
@@ -83,18 +85,33 @@ class BackendInsertionTypeController extends SecureBackendController {
             $body                             = $request->getParsedBody();
             $body['values']                   = json_decode($body['values'], true);
             $body['insertionTypeQuickSearch'] = $body['insertionTypeQuickSearch'] ? true : false;
+            $body['insertionTypeImageRequired'] = $body['insertionTypeImageRequired'] ? true : false;
 
             /** @var InsertionType $parent */
             $parent = $insertionTypeService->getInsertionTypeById($body['parent']);
             if (isset($request->getQueryParams()['id'])) {
                 /** @var InsertionType $insertionType */
-                $data          = [
-                    'name'        => $body['name'],
-                    'parent'      => $parent,
-                    'quickSearch' => $body['insertionTypeQuickSearch'],
-                    'description' => $body['description'],
-                    'image'       => $body['image'],
+
+                $image = null;
+                if (isset($body['image'])) {
+                    $image = $body['image'];
+                }
+                /** @var MediaService $mediaService */
+                $mediaService = Oforge()->Services()->get('media');
+                $image = $mediaService->getById($image);
+
+                $data = [
+                    'name'          => $body['name'],
+                    'parent'        => $parent,
+                    'quickSearch'   => $body['insertionTypeQuickSearch'],
+                    'imageRequired' => $body['insertionTypeImageRequired'],
+                    'minPrice'      => $body['minPrice'],
+                    'maxPrice'      => $body['maxPrice'],
+                    'description'   => $body['description'],
                 ];
+                if (isset($image)) {
+                    $data['image'] = $image;
+                }
                 $insertionType = $insertionTypeService->updateInsertionType($insertionTypeId, $data);
                 /** @var InsertionTypeAttribute[] $insertionTypeAttributes */
                 $insertionTypeAttributes = $insertionType->getAttributes();

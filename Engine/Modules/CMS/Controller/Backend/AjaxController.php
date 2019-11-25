@@ -43,7 +43,7 @@ class AjaxController extends SecureBackendController {
     }
 
     public function initPermissions() {
-        $this->ensurePermission('orderAction', BackendUser::ROLE_MODERATOR);
+        $this->ensurePermission('orderAction', BackendUser::ROLE_LOGGED_IN);
     }
 
 }

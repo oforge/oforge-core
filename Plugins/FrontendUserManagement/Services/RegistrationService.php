@@ -2,6 +2,7 @@
 
 namespace FrontendUserManagement\Services;
 
+use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Models\UserAddress;
 use FrontendUserManagement\Models\UserDetail;
@@ -19,8 +20,7 @@ class RegistrationService extends AbstractDatabaseAccess {
      * @param string $password
      *
      * @return array|null
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
      */
     public function register(string $email, string $password) {
         $user = null;
@@ -46,7 +46,7 @@ class RegistrationService extends AbstractDatabaseAccess {
     /**
      * @param array $user
      *
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function unregister(array $user) {
@@ -58,7 +58,7 @@ class RegistrationService extends AbstractDatabaseAccess {
      * @param array $user
      *
      * @return string
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      */
     public function generateActivationLink(array $user) :string {
         /** @var Router $router */
@@ -78,12 +78,12 @@ class RegistrationService extends AbstractDatabaseAccess {
      * @param string $guid
      *
      * @return mixed
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      */
     public function activate(string $guid) {
         /** @var User $user */
         $user = $this->repository()->findOneBy(['guid' => $guid]);
-        if ($user) {
+        if (isset($user)) {
             $user->setActive(true);
             $this->entityManager()->update($user);
 
@@ -98,22 +98,27 @@ class RegistrationService extends AbstractDatabaseAccess {
     /**
      * @param string $email
      *
-     * @return object|null
-     * @throws \Doctrine\ORM\ORMException
+     * @return bool
+     * @throws ORMException
      */
     public function userExists(string $email) {
-        return $this->repository()->findOneBy(['email' => $email]);
+        return $this->repository()->findOneBy(['email' => $email]) !== null;
     }
+
 
     /**
      * @param string $guid
      *
      * @return bool
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      */
     public function userIsActive(string $guid) {
         /** @var User $user */
         $user = $this->repository()->findOneBy(['guid' => $guid]);
-        return $user->isActive();
+        if (isset($user)) {
+            return $user->isActive();
+        }
+
+        return false;
     }
 }

@@ -107,6 +107,26 @@ class FrontendUsersInsertionController extends SecureFrontendController {
      * @param $args
      *
      * @return Response
+     *
+     * @throws ServiceNotFoundException
+     * @EndpointAction(path="/video/{id}")
+     */
+    public function deleteVideoAction(Request $request, Response $response, $args){
+        if($request->isDelete()) {
+            $videoId = $args['id'];
+            /** @var InsertionUpdaterService $updaterService */
+            $updaterService = Oforge()->Services()->get('insertion.updater');
+            $updaterService->deleteInsertionMediaByContentId($videoId);
+        }
+        return $response;
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param $args
+     *
+     * @return Response
      * @throws ORMException
      * @throws ServiceNotFoundException
      * @EndpointAction(path="/activate/{id}")
@@ -497,6 +517,7 @@ class FrontendUsersInsertionController extends SecureFrontendController {
             'disableAction',
             'pageAction',
             'deleteAction',
+            'deleteVideoAction',
             'activateAction',
             'deleteAction',
             'indexAction',

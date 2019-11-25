@@ -67,6 +67,7 @@
                                           maxlength="250"
                                           placeholder="({{ i18n('optional') }}, {{ i18n('250_character_limit') }})"></textarea>
                             </div>
+                            <input type="hidden" name="feedback_user" value="{{ current_user.id }}">
 
                             <div class="form__control">
                                 <input type="hidden" name="token" value="{{ token() }}">

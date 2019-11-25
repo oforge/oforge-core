@@ -47,4 +47,30 @@
         height: 2px;
         background: $color-secondary;
     }
+
+    .icon {
+        transition: opacity 200ms, transform 200ms ease-in-out;
+        position: absolute;
+        top: 3rem;
+        width: 4rem;
+        height: 4rem;
+
+    }
+}
+
+.upload--image {
+    .upload__image.upload__image--new {
+        &:before, &:after {
+            display: none;
+        }
+    }
+}
+
+.form--insertion .form__label.form__label--title.label--upload-image {
+    margin-bottom: .6rem;
+}
+
+.upload__file_required {
+    position: absolute;
+    z-index: -1;
 }

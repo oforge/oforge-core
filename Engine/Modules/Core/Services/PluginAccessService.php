@@ -4,6 +4,7 @@ namespace Oforge\Engine\Modules\Core\Services;
 
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
+use Oforge\Engine\Modules\Core\Exceptions\DependencyNotResolvedException;
 use Oforge\Engine\Modules\Core\Models\Plugin\Plugin;
 use function PHPSTORM_META\map;
 
@@ -16,6 +17,7 @@ class PluginAccessService extends AbstractDatabaseAccess {
     /**
      * @return array|object[]
      * @throws ORMException
+     * @throws DependencyNotResolvedException
      */
     public function getActive() {
         //find all plugins order by "order"
@@ -67,7 +69,8 @@ class PluginAccessService extends AbstractDatabaseAccess {
             }
 
             if(!$success) {
-                echo "TODO THROW EXCEPTION";
+                echo ('Dependency for ' . $dependency . ' could not be resolved.');
+                throw new DependencyNotResolvedException($dependency);
             }
         }
 

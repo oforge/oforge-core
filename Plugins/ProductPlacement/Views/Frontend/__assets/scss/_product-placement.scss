@@ -1,22 +1,50 @@
-html {
+.wrap {
+    position: relative;
     overflow-x: hidden;
 }
 
 .product-placement {
-    position: absolute;
-    width: 200px;
-    height: 600px;
-    background: lime;
-    top: 152px;
-
-    &.before {
+    position: relative;
+    margin-bottom: $size-medium;
+    &.layout-before, &.layout-after {
+        display: none;
+        position: absolute;
+        width: 200px;
+        top: 152px;
+    }
+    &.layout-before {
         left: calc(50% - 860px);
     }
-    &.after {
+    &.layout-after {
         left: calc(50% + 660px)
+    }
+    &.blog {
+        &.layout-before, &.layout-after {
+            top: 626px;
+        }
     }
 }
 
 .home .product-placement {
     top: 956px;
+}
+.top-banner + .wrap .product-placement {
+    top: 203px;
+}
+.top-banner + .wrap.home .product-placement {
+    top: 958px;
+}
+.action-insertions_detail,
+.action-insertions_profile {
+    .header__image ~ .product-placement {
+        top: 61.6rem;
+    }
+}
+
+@media screen and (min-width: $content-max) {
+    .product-placement {
+        &.layout-before, &.layout-after {
+            display: block;
+        }
+    }
 }

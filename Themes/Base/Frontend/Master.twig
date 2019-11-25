@@ -21,8 +21,10 @@
             <link rel="stylesheet" href="{{ url(assets.css ) }}">
         {% endif %}
     {% endblock master__styles %}
+
+    {% block head__scripts %}
+    {% endblock head__scripts %}
 </head>
-<div id="scroll_to_top"></div>
 <body
     class="{% block body_class %}controller-{{ meta.route.parentName|lower }} module-{{ meta.route.context|lower }} action-{{ meta.route.name|lower }} {{ meta.body_class|lower }} {% endblock body_class %}">
 
@@ -37,6 +39,29 @@
     {% include 'Frontend/Components/Scripts.twig' %}
 {% endblock master__footer_scripts %}
 
+{% block game %}
+    {% set content_320 = content('game_320') %}
+    {% set content_640 = content('game_640') %}
+    {% set game_page   = content('game_page') %}
+
+    {% if content_320 and content_640 and game_page['text'] == meta.route.url.path %}
+    <div data-modal-view="1"
+         data-auto-open="">
+        <div data-modal-content="1"
+             class="modal-view">
+            <div class="modal-view__close"
+                 data-modal-close="1">✕</div>
+            <div class="modal-view__content">
+                <picture class="lazy">
+                    <source class="lazy" data-srcset="{{ media(content_640['url']) }}" media="(min-width: 640px)" />
+                    <img class="lazy" data-src="{{ media(content_320['url']) }}" alt="{{ i18n('image_upload_tips') }}" />
+                </picture>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+{% endblock game %}
 
 {% block svg_icons %}
     {% include 'Frontend/Components/SVG.twig' %}
@@ -71,6 +96,6 @@
 
 {% block cookie__consent %}
 {% endblock cookie__consent %}
-
+<div id="scroll_to_top"></div>
 </body>
 </html>

@@ -169,7 +169,7 @@ class PagePath extends AbstractModel
      *
      * @return PagePath
      */
-    public function setTitle(string $title) : PagePath {
+    public function setTitle(?string $title) : PagePath {
         $this->title = $title;
         return $this;
     }

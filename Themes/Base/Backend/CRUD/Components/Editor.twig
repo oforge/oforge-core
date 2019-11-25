@@ -4,10 +4,8 @@
         'Backend/CRUD/Components/Editor/FallbackCustom.twig',
     ] %}
 {% else %}
-    {% set crudEditorTemplate = [
-        'Backend/CRUD/Components/Editor/' ~ crudProperty.type|ucfirst ~'.twig',
-        'Backend/CRUD/Components/Editor/String.twig',
-    ] %}
+    {% set crudEditorTemplate = CRUD_path('Components/Editor/' ~ crudProperty.type|ucfirst ~ '.twig')|
+        merge(['Backend/CRUD/Components/Editor/String.twig']) %}
 {% endif %}
 <div>
     {% include crudEditorTemplate %}

@@ -2,10 +2,11 @@
 
 namespace Insertion;
 
-use Doctrine\DBAL\Cache\QueryCacheProfile;
+use FrontendUserManagement\Middleware\FrontendSecureMiddleware;
 use FrontendUserManagement\Services\AccountNavigationService;
 use Insertion\Controller\Backend\BackendInsertionFeedbackController;
-use Insertion\Services\InsertionProfileProgressService;
+use Insertion\Controller\Backend\BackendInsertionSeoContentController;
+use Insertion\Models\InsertionSeoContent;
 use Insertion\Commands\ReminderCommand;
 use Insertion\Commands\SearchBookmarkCommand;
 use Insertion\Controller\Backend\BackendAttributeController;
@@ -18,6 +19,7 @@ use Insertion\Cronjobs\Reminder14DaysCronjob;
 use Insertion\Cronjobs\Reminder30DaysCronjob;
 use Insertion\Cronjobs\Reminder3DaysCronjob;
 use Insertion\Cronjobs\SearchBookmarkCronjob;
+use Insertion\Middleware\InsertionProfileProgressMiddleware;
 use Insertion\Middleware\InsertionDetailMiddleware;
 use Insertion\Models\AttributeKey;
 use Insertion\Models\AttributeValue;
@@ -43,11 +45,13 @@ use Insertion\Services\InsertionListService;
 use Insertion\Services\InsertionMockService;
 use Insertion\Services\InsertionProfileService;
 use Insertion\Services\InsertionSearchBookmarkService;
+use Insertion\Services\InsertionSeoService;
 use Insertion\Services\InsertionService;
 use Insertion\Services\InsertionSliderService;
 use Insertion\Services\InsertionTypeService;
 use Insertion\Services\InsertionUpdaterService;
 use Insertion\Services\InsertionUrlService;
+use Insertion\Services\InsertionValidationService;
 use Insertion\Services\InsertionZipService;
 use Insertion\Twig\InsertionExtensions;
 use Oforge\Engine\Modules\AdminBackend\Core\Enums\DashboardWidgetPosition;
@@ -70,6 +74,14 @@ class Bootstrap extends AbstractBootstrap {
             BackendInsertionTypeController::class,
             BackendInsertionTypeGroupController::class,
             BackendInsertionFeedbackController::class,
+            BackendInsertionSeoContentController::class,
+        ];
+
+        $this->middlewares = [
+            'frontend_account_dashboard' => [
+                'class'    => InsertionProfileProgressMiddleware::class,
+                'position' => 1,
+            ],
         ];
 
         $this->services = [
@@ -87,7 +99,8 @@ class Bootstrap extends AbstractBootstrap {
             'insertion.profile'         => InsertionProfileService::class,
             'insertion.slider'          => InsertionSliderService::class,
             'insertion.zip'             => InsertionZipService::class,
-            'insertion.profile.progress'=> InsertionProfileProgressService::class,
+            'insertion.seo'             => InsertionSeoService::class,
+            'insertion.validation'      => InsertionValidationService::class,
         ];
 
         $this->models = [
@@ -106,12 +119,15 @@ class Bootstrap extends AbstractBootstrap {
             InsertionUserSearchBookmark::class,
             InsertionProfile::class,
             InsertionZipCoordinates::class,
+            InsertionSeoContent::class,
         ];
 
         $this->dependencies = [
             \FrontendUserManagement\Bootstrap::class,
             \Messenger\Bootstrap::class,
             \Helpdesk\Bootstrap::class,
+            \VideoUpload\Bootstrap::class,
+            \Seo\Bootstrap::class,
         ];
 
         $this->commands = [
@@ -124,6 +140,17 @@ class Bootstrap extends AbstractBootstrap {
             Reminder14DaysCronjob::class,
             Reminder30DaysCronjob::class,
             SearchBookmarkCronjob::class,
+        ];
+
+        $this->middlewares = [
+            'insertions_feedback' => [
+                'class'    => FrontendSecureMiddleware::class,
+                'position' => 1,
+            ],
+            'insertions_contact'  => [
+                'class'    => FrontendSecureMiddleware::class,
+                'position' => 1,
+            ],
         ];
     }
 
@@ -143,9 +170,6 @@ class Bootstrap extends AbstractBootstrap {
 
         $seoUrlService = new InsertionUrlService($urlService);
         Oforge()->Services()->set("url", $seoUrlService);
-
-        //what is this??
-        new QueryCacheProfile(0, "asd");
     }
 
     public function install() {
@@ -174,15 +198,15 @@ class Bootstrap extends AbstractBootstrap {
             'cssClass' => 'bg-maroon',
         ]);
         $dashboardWidgetsService->install([
-           'name'      => 'plugin_insertion_feedback',
-           'template'  => 'InsertionFeedback',
-           'handler'   => Widgets\InsertionFeedbackWidget::class,
-           'label'     => [
-               'en' => 'Insertion Feedback',
-               'de' => 'Inserate Feedback',
-               ],
-               'position' => DashboardWidgetPosition::TOP,
-               'cssClass' => 'bg-green',
+            'name'     => 'plugin_insertion_feedback',
+            'template' => 'InsertionFeedback',
+            'handler'  => Widgets\InsertionFeedbackWidget::class,
+            'label'    => [
+                'en' => 'Insertion Feedback',
+                'de' => 'Inserate Feedback',
+            ],
+            'position' => DashboardWidgetPosition::TOP,
+            'cssClass' => 'bg-green',
         ]);
     }
 
@@ -244,6 +268,14 @@ class Bootstrap extends AbstractBootstrap {
             'parent'   => 'backend_insertion',
             'icon'     => 'fa fa-bar-chart',
             'path'     => 'backend_insertions',
+            'position' => 'sidebar',
+        ]);
+        $backendNavigationService->add([
+            'name'     => 'backend_insertions_seo_content',
+            'order'    => 5,
+            'parent'   => 'backend_insertion',
+            'icon'     => 'fa fa-code',
+            'path'     => 'backend_insertions_seo_content',
             'position' => 'sidebar',
         ]);
 

@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Oforge\Engine\Modules\Media\Models\Media;
+use phpDocumentor\Reflection\Types\Integer;
 
 /**
  * @ORM\Table(name="oforge_insertion_type")
@@ -58,6 +59,24 @@ class InsertionType extends AbstractModel {
      * @ORM\Column(name="insertion_type_quick_search", type="boolean", nullable=false)
      */
     private $quickSearch;
+
+    /**
+     * @var boolean
+     * @ORM\Column(name="insertion_type_image_required", type="boolean", nullable=false)
+     */
+    private $imageRequired = false;
+
+    /**
+     * @var int
+     * @ORM\Column(name="insertion_type_min_price", type="integer", nullable=false)
+     */
+    private $minPrice = 0;
+
+    /**
+     * @var int
+     * @ORM\Column(name="insertion_type_max_price", type="integer", nullable=false)
+     */
+    private $maxPrice = 2000000;
 
     public function __construct() {
         $this->attributes = new ArrayCollection();
@@ -173,6 +192,58 @@ class InsertionType extends AbstractModel {
     public function setDescription(?string $description) : InsertionType {
         $this->description = $description;
 
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isImageRequired(): bool
+    {
+        return $this->imageRequired;
+    }
+
+    /**
+     * @param bool $imageRequired
+     * @return InsertionType
+     */
+    public function setImageRequired(bool $imageRequired): InsertionType
+    {
+        $this->imageRequired = $imageRequired;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMinPrice(): int {
+        return $this->minPrice;
+    }
+
+
+    /**
+     * @param int $minPrice
+     * @return InsertionType
+     */
+    public function setMinPrice(int $minPrice): InsertionType {
+        $this->minPrice = $minPrice;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMaxPrice(): int {
+        return $this->maxPrice;
+    }
+
+
+    /**
+     * @param int $maxPrice
+     * @return InsertionType
+     */
+    public function setMaxPrice(int $maxPrice): InsertionType {
+        $this->maxPrice = $maxPrice;
         return $this;
     }
 }
