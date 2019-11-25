@@ -22,8 +22,10 @@
         {{ attribute.sortable ? 'data-sortable=""' : '' }}>
         <p class="select__text" data-select-text=""></p>
         {% if data['insertion'][attribute.id] is not empty %}
+            {#
             <input type="hidden" name="insertion[{{ attribute.id }}]{{ attribute.type == 'multi' ? '[]' : '' }}"
                    value=""/>
+                      #}
         {% endif %}
 
         {% if not isSubAttribute %}

@@ -5,7 +5,8 @@ if (typeof Oforge !== 'undefined') {
         init: function () {
             var self = this;
             var classNames = {
-                additionalInputLabel: 'additional-input__label'
+                additionalInputLabel: 'additional-input__label',
+                additionalInputClass: 'additional-input'
             };
             var selectors = {
                 attributeType: 'attributeType',
@@ -23,22 +24,27 @@ if (typeof Oforge !== 'undefined') {
                 inputLabel.innerHTML = option.dataset.additionalInputLabel;
                 inputLabel.classList.add(classNames.additionalInputLabel);
                 additionalInput.setAttribute('name', option.dataset.additionalInputName);
+                additionalInput.classList.add(classNames.additionalInputClass);
                 additionalInput.value = option.dataset.additionalInputValue;
+                removeAdditionalInput(option);
                 option.closest(selectors.select).parentNode.appendChild(inputLabel);
                 option.closest(selectors.select).parentNode.appendChild(additionalInput);
                 return additionalInput;
             }
 
             function removeAdditionalInput(option) {
-                let formGroup = option.closest(selectors.select).parentElement;
-                let additionalInput = $(formGroup).find("input[name = '" + option.dataset.additionalInputName + "']");
-                let inputLabel = $(formGroup).find(selectors.additionalInputLabel);
-                option.setAttribute('data-additional-input-value', $(additionalInput).val());
+                    let formGroup = option.closest(selectors.select).parentElement;
+                    let additionalInput = $(formGroup).find("." + classNames.additionalInputClass);
+                    let inputLabel = $(formGroup).find(selectors.additionalInputLabel);
+                    option.setAttribute('data-additional-input-value', $(additionalInput).val());
 
-                $(inputLabel).remove();
-                $(additionalInput).remove();
+                    $(inputLabel).remove();
+                    $(additionalInput).remove();
             }
 
+            /** @TODO: For Some Reason the Select2 events revert changes after the event handler has been executed
+             *  Doesn't need immediate Attention.
+             **/
             document.getElementsByTagName('select').forEach(function (select) {
                 select.getElementsByTagName('option').forEach(function (option) {
                     if (option.dataset.additionalInput) {
