@@ -58,8 +58,9 @@ class ImageUploadController extends SecureFrontendController
             } catch (ORMException $e) {
                 return $response->withStatus(500);
             }
-            Oforge()->View()->assign(['imageData' => $imageData]);
-            return $response->withJson(json_encode(['imageData' => $imageData]), 200);
+            Oforge()->View()->assign(['json' => ['imageData' => $imageData]]);
+            //return $response->withJson(['imageData' => $imageData], 200);
+            return $response->withStatus(200);
         }
         return $response->withStatus(400);
     }

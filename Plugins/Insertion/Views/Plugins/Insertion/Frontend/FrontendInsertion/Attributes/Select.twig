@@ -1,11 +1,19 @@
 <div
     class="form__control form__control--new-select form__control--{{ attribute.filterType }} {{ isSubAttribute ? 'form__control--is-sub' : '' }}">
-    {% if omitLabel is not defined or not isSubAttribute %}<label
-        class="form__label">{{ i18n(attribute.name) }}{% if required %}<span class="required">*</span>{% endif %}
+    {% if omitLabel is not defined or not isSubAttribute %}
+        <label
+            class="form__label">{{ i18n(attribute.name) }}{% if required %}<span class="required">*</span>{% endif %}
 
-        {% if attribute.restrictions|length > 0 %}<span
-            class="select__max-options">{{ i18n('multi_select_max_options', {de: 'Maximal {maxOptions} möglich', en: 'only {maxOptions} options possible'})|replace({'{maxOptions}': attribute.restrictions}) }}</span>{% endif %}
-        </label>{% endif %}
+            {% if attribute.restrictions|length > 0 %}<span
+                class="select__max-options">{{ i18n('multi_select_max_options', {de: 'Maximal {maxOptions} möglich', en: 'only {maxOptions} options possible'})|replace({'{maxOptions}': attribute.restrictions}) }}</span>{% endif %}
+            {% if i18nExists('attribute_hint_' ~ attribute.id ) %}
+                {% set content = content('attribute_hint_' ~ attribute.name ~ '_' ~ meta.language.iso) %}
+                {% include 'Frontend/Components/Insertions/Hint.twig' with {
+                    hint: i18n('attribute_hint_' ~ attribute.id),
+                    hintContent: content} %}
+            {% endif %}
+        </label>
+    {% endif %}
     <div class="select {{ isSubAttribute ? 'select--is-sub' : '' }}"
          data-select-type="{{ attribute.type }}"
          data-placeholder="{{ i18n(attribute.name) }}"
@@ -14,8 +22,10 @@
         {{ attribute.sortable ? 'data-sortable=""' : '' }}>
         <p class="select__text" data-select-text=""></p>
         {% if data['insertion'][attribute.id] is not empty %}
+            {#
             <input type="hidden" name="insertion[{{ attribute.id }}]{{ attribute.type == 'multi' ? '[]' : '' }}"
                    value=""/>
+                      #}
         {% endif %}
 
         {% if not isSubAttribute %}

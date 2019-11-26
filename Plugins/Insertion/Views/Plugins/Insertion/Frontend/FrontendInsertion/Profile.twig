@@ -1,9 +1,9 @@
 {% extends "@parent/Frontend/Layout.twig" %}
 
-{% block layout__header %}
+{% block layout__header_image %}
     {% set headerimage = profile.background.id %}
     {{ parent() }}
-{% endblock layout__header %}
+{% endblock layout__header_image %}
 
 {% block content %}
     <div class="content content--insertion content--supplier flex">

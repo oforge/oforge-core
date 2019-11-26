@@ -9,6 +9,10 @@
             {% include 'Frontend/Components/Header/Header.twig' %}
         {% endblock layout__header %}
 
+        {% block layout__header_image %}
+            {% include 'Frontend/Components/Header/HeaderImage.twig' %}
+        {% endblock layout__header_image %}
+
         {% block flash_messages %}
             {% include '@parent/Frontend/Components/FlashMessages.twig' %}
         {% endblock flash_messages %}

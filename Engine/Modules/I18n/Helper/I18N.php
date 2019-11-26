@@ -120,7 +120,7 @@ class I18N {
      * @return string
      * @throws ServiceNotFoundException
      */
-    protected static function getCurrentLanguage($context) : string {
+    public static function getCurrentLanguage($context) : string {
         if (!isset(self::$languageService)) {
             /**@var LanguageService $languageService */
             self::$languageService = Oforge()->Services()->get('i18n.language');

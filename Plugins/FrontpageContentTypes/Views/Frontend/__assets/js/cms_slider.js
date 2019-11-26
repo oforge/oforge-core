@@ -14,11 +14,9 @@ if (typeof Oforge !== 'undefined') {
         init: function () {
             $(this.target).slick({
                 slidesToShow: 1,
-                arrows: true,
+                arrows: false,
                 autoplay: true,
-                autoplaySpeed: 7000,
-                prevArrow: this.prevArrow,
-                nextArrow: this.nextArrow,
+                autoplaySpeed: 4500,
                 lazyLoad: 'progressive',
                 responsive: [
                     {
@@ -26,7 +24,7 @@ if (typeof Oforge !== 'undefined') {
                         settings: {
                             arrows: false,
                             slidesToShow: 1,
-                            autoplaySpeed: 5000
+                            autoplaySpeed: 4500
                         }
                     },
                     {
@@ -34,7 +32,7 @@ if (typeof Oforge !== 'undefined') {
                         settings: {
                             arrows: false,
                             slidesToShow: 1,
-                            autoplaySpeed: 5000
+                            autoplaySpeed: 4500
                         }
                     }
                 ]
@@ -42,8 +40,3 @@ if (typeof Oforge !== 'undefined') {
         }
     });
 }
-
-
-$(document).ready(function () {
-
-});

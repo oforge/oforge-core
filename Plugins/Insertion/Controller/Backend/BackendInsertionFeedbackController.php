@@ -47,6 +47,18 @@ class BackendInsertionFeedbackController extends BaseCrudController {
                 'delete' => 'readonly',
                 'view'   => 'readonly',
             ]
+        ],
+        [
+            'name' => 'user',
+            'type' => CrudDataTypes::CUSTOM,
+            'crud' => [
+                'index'  => 'readonly',
+                'delete' => 'readonly',
+                'view'   => 'readonly'
+            ],
+            'renderer' => [
+                'custom' => 'Plugins/Insertion/Backend/BackendFeedback/Components/UserColumn.twig'
+            ]
         ]
     ];
     protected $indexFilter = [

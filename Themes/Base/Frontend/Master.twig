@@ -21,8 +21,10 @@
             <link rel="stylesheet" href="{{ url(assets.css ) }}">
         {% endif %}
     {% endblock master__styles %}
+
+    {% block head__scripts %}
+    {% endblock head__scripts %}
 </head>
-<div id="scroll_to_top"></div>
 <body
     class="{% block body_class %}controller-{{ meta.route.parentName|lower }} module-{{ meta.route.context|lower }} action-{{ meta.route.name|lower }} {{ meta.body_class|lower }} {% endblock body_class %}">
 
@@ -94,6 +96,6 @@
 
 {% block cookie__consent %}
 {% endblock cookie__consent %}
-
+<div id="scroll_to_top"></div>
 </body>
 </html>
