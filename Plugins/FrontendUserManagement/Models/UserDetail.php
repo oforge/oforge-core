@@ -180,11 +180,11 @@ class UserDetail extends AbstractModel {
     }
 
     /**
-     * @param Media|null $image
+     * @param Media $image
      *
      * @return UserDetail
      */
-    public function setImage(?Media $image) : UserDetail {
+    public function setImage(Media $image) : UserDetail {
         $this->image = $image;
 
         return $this;

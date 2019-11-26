@@ -193,11 +193,11 @@ class InsertionProfile extends AbstractModel
     }
 
     /**
-     * @param Media|null $background
+     * @param Media $background
      *
      * @return InsertionProfile
      */
-    public function setBackground(?Media $background): InsertionProfile
+    public function setBackground(Media $background): InsertionProfile
     {
         $this->background = $background;
 
