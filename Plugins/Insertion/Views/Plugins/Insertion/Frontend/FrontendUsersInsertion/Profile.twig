@@ -13,6 +13,15 @@
                         <form action="{{ url('frontend_account_insertions_profile') }}" method="post"
                               enctype="multipart/form-data">
                             <h1 class="account__title">{{ i18n('my_profile') }}</h1>
+                            {% if profile.background is not null %}
+                            <a id="reset_profile_background" title="{{ i18n('reset_profile_background') }}" href="{{ url('frontend_account_insertions_resetProfileBackground') }}">
+                                <div class="flex flex--center">
+                                    <svg class="icon icon--primary">
+                                        <use xlink:href="#close"></use>
+                                    </svg>
+                                </div>
+                            </a>
+                            {% endif %}
                             <label class="center__label" for="input__background">
                                 <div class="background img-background flex flex--column-center"
                                      {% if profile.background %}style="background-image: url('{{ media(profile.background.id) }}')"{% endif %}>
@@ -32,7 +41,6 @@
                                            accept="image/*">
                                 </div>
                                 <div class="flex flex--row">
-
                                     <input id="input__profile" data-update="img-profile" type="file" name="profile"
                                            accept="image/*">
                                 </div>
@@ -48,6 +56,15 @@
                                 {% endif %}
                             </div>
                             <div class="profile-pic">
+                                {% if user.detail.image is not null %}
+                                <a id="reset_profile_image" title="{{ i18n('reset_profile_image') }}"  href="{{ url('frontend_account_insertions_resetProfileImage') }}">
+                                    <div class="flex flex--center">
+                                        <svg class="icon icon--primary">
+                                            <use xlink:href="#close"></use>
+                                        </svg>
+                                    </div>
+                                </a>
+                                {% endif %}
                                 {% set label = true %}
                                 {% include 'Plugins/FrontendUserManagement/Frontend/Components/AccountUser.twig' with { label : label } %}
                             </div>
