@@ -99,7 +99,6 @@ class LoggerManager {
      *
      * @return Logger
      * @throws LoggerAlreadyExistException If Logger with name already exist.
-     * @throws Exception
      */
     public function initLogger(string $name, array $config = []) {
         if (isset($this->logger[$name])) {

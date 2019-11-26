@@ -37,6 +37,12 @@ class AttributeValue extends AbstractModel {
     private $subAttributeKey;
 
     /**
+     * @var int
+     * @ORM\Column(name="hierarchy_order", type="integer", nullable=false)
+     */
+    private $hierarchyOrder = 0;
+
+    /**
      * @return int
      */
     public function getId() : int {
@@ -94,6 +100,23 @@ class AttributeValue extends AbstractModel {
     public function setSubAttributeKey($subAttributeKey) {
         $this->subAttributeKey = $subAttributeKey;
 
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getHierarchyOrder() : int {
+        return $this->hierarchyOrder;
+    }
+
+    /**
+     * @param int $hierarchyOrder
+     *
+     * @return AttributeValue
+     */
+    public function setHierarchyOrder(int $hierarchyOrder) : AttributeValue {
+        $this->hierarchyOrder = $hierarchyOrder;
         return $this;
     }
 }

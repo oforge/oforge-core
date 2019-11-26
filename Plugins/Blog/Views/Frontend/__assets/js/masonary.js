@@ -2,12 +2,16 @@ if (typeof Oforge !== 'undefined') {
     Oforge.register({
         name: 'masonry',
         selector: '[data-masonry]',
+        selectors: {
+            addMoreButton: '[data-addmore="true"]'
+        },
         init: function () {
             var self = this;
             this.$target = $(this.target);
             this.$window = $(window);
+            var imageCount = self.$target.find("img").length;
 
-            this.$target.find("img").on("load", function () {
+            this.$target.on("load", "img", function () {
                 self.updateMasonry();
             });
 
@@ -19,7 +23,24 @@ if (typeof Oforge !== 'undefined') {
                 self.updateMasonry();
             });
 
-            this.updateMasonry()
+            /** After the update button has been pressed the Masonry is being updated every 500ms for a total time of 30s, if the number of images changes */
+            $(this.selectors.addMoreButton).on("click", function () {
+                let updateInterval = setInterval(function () {
+                    let newImageCount = self.$target.find("img").length;
+                    if (newImageCount > imageCount) {
+                        imageCount = newImageCount;
+                        self.updateMasonry();
+                        clearInterval(updateInterval);
+                    }
+                }, 500);
+
+                setTimeout(function () {
+                    clearInterval(updateInterval);
+                }, 30000);
+            });
+
+            self.updateMasonry();
+
         },
         updateMasonry: function () {
             var self = this;
