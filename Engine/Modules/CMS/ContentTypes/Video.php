@@ -4,8 +4,14 @@ namespace Oforge\Engine\Modules\CMS\ContentTypes;
 
 use Oforge\Engine\Modules\CMS\Abstracts\AbstractContentType;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
+use Oforge\Engine\Modules\Media\Services\MediaService;
 
-class VideoYoutube extends AbstractContentType {
+/**
+ * Class Video
+ *
+ * @package Oforge\Engine\Modules\CMS\ContentTypes
+ */
+class Video extends AbstractContentType {
 
     /** @inheritDoc */
     public function isContainer() : bool {
@@ -14,19 +20,31 @@ class VideoYoutube extends AbstractContentType {
 
     /** @inheritDoc */
     public function getEditData() {
-        $data            = [];
-        $data['id']      = $this->getContentId();
-        $data['type']    = $this->getId();
-        $data['name']    = $this->getContentName();
-        $data['css']     = $this->getContentCssClass();
-        $data['videoID'] = $this->getContentData();
+        $data         = [];
+        $data['id']   = $this->getContentId();
+        $data['type'] = $this->getId();
+        $data['name'] = $this->getContentName();
+        $data['css']  = $this->getContentCssClass();
+        $data['data'] = $this->getContentData();
 
         return $data;
     }
 
     /** @inheritDoc */
     public function setEditData($data) {
-        $this->setContentData(ArrayHelper::get($data, 'videoID', ''));
+        $data = ArrayHelper::get($data, 'data', []);
+
+        if (isset($_FILES['upload'])) {
+            /** @var MediaService $mediaService */
+            $mediaService = Oforge()->Services()->get('media');
+            $media        = $mediaService->add($_FILES['upload']);
+            if (isset($media)) {
+                $data['mediaID'] = $media->getId();
+                $data['path']    = $media->getPath();
+            }
+        }
+
+        $this->setContentData($data);
 
         return $this;
     }
@@ -39,7 +57,7 @@ class VideoYoutube extends AbstractContentType {
         $data['typeId']      = $this->getId();
         $data['isContainer'] = $this->isContainer();
         $data['css']         = $this->getContentCssClass();
-        $data['videoID']     = $this->getContentData();
+        $data['data']        = $this->getContentData();
 
         return $data;
     }
@@ -58,4 +76,5 @@ class VideoYoutube extends AbstractContentType {
     public function getChildData() {
         return false;
     }
+
 }
