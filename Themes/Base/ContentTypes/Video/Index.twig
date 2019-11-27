@@ -1,13 +1,13 @@
 {% block video %}
     <div class="cms-video-container {{ data.css }}">
         {% if data.data.path %}
-            <video loop="" muted="" autoplay="" class="video">
-                <source {{ attr({
-                    controls: data.data.controls,
-                    autoplay: data.data.autoplay,
-                    loop: data.data.loop,
-                    mute: data.data.mute,
-                }) }} src="{{ data.data.path }}" type="video/mp4">
+            <video {{ attr({
+                controls: data.data.controls,
+                autoplay: data.data.autoplay,
+                loop: data.data.loop,
+                muted: data.data.muted,
+            }) }} class="video">
+                <source src="{{ data.data.path }}" type="video/mp4">
             </video>
         {% else %}
             {#            TODO Fallback, if no video uploaded? #}
