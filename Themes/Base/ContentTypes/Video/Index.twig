@@ -1,5 +1,5 @@
 {% block video %}
-    <div class="cms-video-container">
+    <div class="cms-video-container {{ data.css }}">
         {% if data.data.path %}
             <video loop="" muted="" autoplay="" class="video">
                 <source {{ attr({
