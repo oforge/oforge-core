@@ -1,12 +1,8 @@
 {% block video %}
     <div class="cms-video-container {{ data.css }}">
         {% if data.data.path %}
-            <video {{ attr({
-                controls: data.data.controls,
-                autoplay: data.data.autoplay,
-                loop: data.data.loop,
-                muted: data.data.muted,
-            }) }} class="video">
+            <video {% if data.data.autoplay %}autoplay{% endif %} {% if data.data.controls %}controls{% endif %}
+                {% if data.data.loop %}loop{% endif %} {% if data.data.muted %}muted{% endif %} class="video">
                 <source src="{{ data.data.path }}" type="video/mp4">
             </video>
         {% else %}
