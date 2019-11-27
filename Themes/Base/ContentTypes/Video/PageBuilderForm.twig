@@ -33,14 +33,14 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="current--{{ data.id }}">{{ i18n('cms_contentype_video_label_mute', {
+        <label for="current--{{ data.id }}">{{ i18n('cms_contentype_video_label_muted', {
                 en: 'Mute',
                 de: 'Stumm schalten',
             }) }}</label>
         <div>
             {% include 'Backend/Components/Form/Switch.twig' with {
-                id: 'video-mute',
-                name: 'data[mute]',
+                id: 'video-muted',
+                name: 'data[muted]',
                 checked:  data.data.mute|default(false),
             } only %}
         </div>
