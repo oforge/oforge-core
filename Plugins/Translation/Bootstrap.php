@@ -5,6 +5,7 @@ namespace Translation;
 
 
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
+use Translation\Controller\Frontend\TranslationController;
 use Translation\Services\TranslationService;
 
 /**
@@ -17,6 +18,7 @@ class Bootstrap extends AbstractBootstrap
     public function __construct()
     {
         $this->endpoints = [
+            TranslationController::class
         ];
 
         $this->models = [
