@@ -12,7 +12,7 @@ class TranslationService extends AbstractDatabaseAccess
     /** @var APIRavenService */
     protected $apiraven;
 
-    protected $apiKey = 'AIzaSyArJKPvNAuVOA3e1zlI6ILYop2zhcGxtrk';
+    protected $apiKey = '';
 
     protected $googleApplicationCredentials = 'Oforge\Plugins/Translation/Keys/All Your Horses-a15cb4159d39.json';
 
