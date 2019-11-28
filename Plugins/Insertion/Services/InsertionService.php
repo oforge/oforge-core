@@ -24,6 +24,7 @@ class InsertionService extends AbstractDatabaseAccess
             'default' => Insertion::class,
             'insertionAttributeValue' => InsertionAttributeValue::class,
             'language' => Language::class,
+            'content' => InsertionContent::class
         ]);
     }
 
@@ -175,7 +176,8 @@ class InsertionService extends AbstractDatabaseAccess
      * @param $id
      * @throws ORMException
      */
-    public function countUpInsertionViews($id) {
+    public function countUpInsertionViews($id)
+    {
         /** @var Insertion $insertion */
         $insertion = $this->repository()->find($id);
         $insertion = $insertion->countUpViews();
@@ -197,5 +199,54 @@ class InsertionService extends AbstractDatabaseAccess
             ->orderBy('i.createdAt', 'DESC')
             ->setMaxResults(1);
         return $queryBuilder->getQuery()->getOneOrNullResult();
+    }
+
+    /**
+     * @param string|int $id
+     * @param string $language
+     * @return object|null
+     * @throws ORMException
+     */
+    public function getInsertionContentByLanguage($id, $language)
+    {
+        /** @var Language $language */
+        $language = $this->repository('language')->findOneBy(['iso' => $language]);
+        if (!isset($language)) {
+            return null;
+        }
+        /** @var InsertionContent $insertion */
+        $insertionContent = $this->repository('content')->findOneBy(['insertion' => $id, 'language' => $language->getId()]);
+        return $insertionContent;
+    }
+
+
+    /**
+     * @param array $args
+     * @return Insertion
+     * @throws ORMException
+     */
+    public function addTranslatedInsertionContent($args = [])
+    {
+        /** @var Insertion $insertion */
+        $insertion = $this->repository()->find($args['id']);
+
+        /** @var InsertionContent[] $existingContent */
+        $existingContent = $insertion->getContent();
+        $content = new InsertionContent();
+        $insertion->setContent([$content]);
+
+        //$content->setName($name);
+        $content->setDescription($args['description']);
+        $content->setTitle($args['title']);
+        $content->setInsertion($insertion);
+
+        /** @var Language $language */
+        $language = $this->repository("language")->findOneBy(["iso" => $args['language']]);
+        $content->setLanguage($language);
+
+        $this->entityManager()->create($content, false);
+        $this->entityManager()->update($insertion);
+
+        return $insertion;
     }
 }
