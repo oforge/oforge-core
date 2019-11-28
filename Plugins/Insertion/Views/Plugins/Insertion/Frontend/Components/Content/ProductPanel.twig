@@ -2,53 +2,54 @@
 
     <div class="{% block panel__classes %}panel panel--product product{% endblock panel__classes %}">
 
-    {% block product_preview %}
-        <a href="{{ url("insertions_detail", {id: item.id}) }}" class="product__image">
-            {% block product_image %}
-                {% if item.media is defined and item.media|length > 0 and item.media[0].content is defined %}
-                    <img src="{{ media(item.media[0].content, 600) }}" alt="{{ item.content[0].name }}"
-                         class="image">
-                {% else %}
-                    <svg class="icon icon--placeholder">
-                        <use xlink:href="#placeholder-insertion"></use>
-                    </svg>
-                {% endif %}
-            {% endblock product_image %}
-            {% block product_badges %}{% endblock product_badges %}
-        </a>
-    {% endblock product_preview %}
+        {% block product_preview %}
+            <a href="{{ url("insertions_detail", {id: item.id}) }}" class="product__image">
+                {% block product_image %}
+                    {% if item.media is defined and item.media|length > 0 and item.media[0].content is defined %}
+                        <img src="{{ media(item.media[0].content, 600) }}" alt="{{ item.content[0].name }}"
+                             class="image">
+                    {% else %}
+                        <svg class="icon icon--placeholder">
+                            <use xlink:href="#placeholder-insertion"></use>
+                        </svg>
+                    {% endif %}
+                    {% block product_badges %}{% endblock product_badges %}
+                {% endblock product_image %}
+            </a>
+        {% endblock product_preview %}
 
-    <div class="product__attributes product__attributes--main">
-        {% block attributes__main %}
-            {% for topvalue in item.topvalues|slice(0,3) %}
-                {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
-            {% endfor %}
+        <div class="product__attributes product__attributes--main">
+            {% block attributes__main %}
+                {% for topvalue in item.topvalues|slice(0,3) %}
+                    {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
+                {% endfor %}
 
-        {% endblock attributes__main %}
-    </div>
+            {% endblock attributes__main %}
+        </div>
 
-    {% block product__content %}
-        <div class="product__content">
-            {% block content__title %}
-                <a class="product__title-link" href="{{ url("insertions_detail", {id: item.id}) }}"><h3
-                        class="product__title">{{ item.content[0].title }}</h3></a>
-            {% endblock content__title %}
+        {% block product__content %}
+            <div class="product__content">
+                {% block content__title %}
+                    <a class="product__title-link" href="{{ url("insertions_detail", {id: item.id}) }}">
+                        <h3 class="product__title">{{ item.content[0].title }}</h3>
+                    </a>
+                {% endblock content__title %}
 
-            {% block attributes__top %}
-                <div class="product__attributes product__attributes--top">
-                    {% for topvalue in item.topvalues|slice(0,3) %}
-                        {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
-                    {% endfor %}
-                </div>
-            {% endblock attributes__top %}
+                {% block attributes__top %}
+                    <div class="product__attributes product__attributes--top">
+                        {% for topvalue in item.topvalues|slice(0,3) %}
+                            {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
+                        {% endfor %}
+                    </div>
+                {% endblock attributes__top %}
 
-            {% block attributes__bottom %}
-                <div class="product__attributes product__attributes--bottom">
-                    {% for topvalue in item.topvalues|slice(3) %}
-                        {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
-                    {% endfor %}
-                </div>
-            {% endblock attributes__bottom %}
+                {% block attributes__bottom %}
+                    <div class="product__attributes product__attributes--bottom">
+                        {% for topvalue in item.topvalues|slice(3) %}
+                            {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
+                        {% endfor %}
+                    </div>
+                {% endblock attributes__bottom %}
 
                 {% block product__meta %}
                     <div class="product__meta">
