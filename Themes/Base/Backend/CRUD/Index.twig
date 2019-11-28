@@ -8,15 +8,17 @@
                     <div class="box-body">
                         <div class="row">
                             <div class="col-xs-12">
-                                <p class="btn-group" role="group">
-                                    {% block crud_actions_group %}
-                                        <a href="{{ url(meta.route.name  ~ '_create') }}"
-                                           title="{{ i18n('backend_crud_btn_create', {en: 'create', de: 'erstellen'}) }}"
-                                           class="btn btn-primary {% if not crud.actions.create %}disabled{% endif %}">
-                                            <i class="fa fa-plus"></i>
-                                        </a>
-                                    {% endblock crud_actions_group %}
-                                </p>
+                                {% block crud_actions_row %}
+                                    <p class="btn-group" role="group">
+                                        {% block crud_actions_group_items %}
+                                            <a href="{{ url(meta.route.name  ~ '_create') }}"
+                                               title="{{ i18n('backend_crud_btn_create', {en: 'create', de: 'erstellen'}) }}"
+                                               class="btn btn-primary {% if not crud.actions.create %}disabled{% endif %}">
+                                                <i class="fa fa-plus"></i>
+                                            </a>
+                                        {% endblock crud_actions_group_items %}
+                                    </p>
+                                {% endblock crud_actions_row %}
                             </div>
                         </div>
                         {% include CRUD_path('Components/Index/FilterBar.twig') with {
@@ -43,6 +45,7 @@
                                 route: meta.route
                             } only %}
                             {% if crud.hasEditors %}
+                            <p></p>
                             <div class="row">
                                 <div class="col-xs-12">
                                     <div class="form-group">
