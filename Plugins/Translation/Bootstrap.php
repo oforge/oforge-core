@@ -5,6 +5,7 @@ namespace Translation;
 
 
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
+use Oforge\Engine\Modules\I18n\Models\Language;
 use Translation\Controller\Frontend\TranslationController;
 use Translation\Services\TranslationService;
 
@@ -22,6 +23,7 @@ class Bootstrap extends AbstractBootstrap
         ];
 
         $this->models = [
+            Language::class,
         ];
 
         $this->services = [

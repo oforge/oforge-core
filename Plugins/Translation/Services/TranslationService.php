@@ -3,61 +3,49 @@
 
 namespace Translation\Services;
 
-
-use Oforge\Engine\Modules\APIRaven\Services\APIRavenService;
+use Doctrine\ORM\ORMException;
+use Exception;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
+use Google\Cloud\Translate\V2\TranslateClient;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\I18n\Models\Language;
+use Oforge\Engine\Modules\I18n\Services\LanguageService;
 
 class TranslationService extends AbstractDatabaseAccess
 {
-    /** @var APIRavenService */
-    protected $apiraven;
-
-    protected $apiKey = '';
-
-    protected $googleApplicationCredentials = 'Oforge\Plugins/Translation/Keys/All Your Horses-a15cb4159d39.json';
-
-    protected $googleTranslationApi = "https://translation.googleapis.com/language/translate/";
 
     public function __construct()
     {
-        $this->apiraven = Oforge()->Services()->get('apiraven');
     }
 
-    public function autoTranslate(string $stringToTranslate, array $languages)
+    /**
+     * @param string $stringToTranslate
+     * @param array $targetLanguages
+     * @return array
+     * @throws ORMException
+     * @throws ServiceNotFoundException
+     */
+    public function translate(string $stringToTranslate, $targetLanguages = [])
     {
-        $sourceLanguage = "";
+        $targetLanguages = empty($targetLanguages) ? $this->fetchAvailableLanguages() : $targetLanguages;
 
-        $this->translateFrom($sourceLanguage, $stringToTranslate, $this->fetchAvailableLanguages());
-    }
-
-    public function translateFrom(string $sourceLanguage, string $stringToTranslate, array $languages)
-    {
-        $this->apiraven->setApi($this->googleTranslationApi, ' ', $this->apiKey);
+        $translate = new TranslateClient(['key' => 'API_KEY']);
         $result = [];
-        foreach ($languages as $language) {
-            $data = [
-                'q' => $stringToTranslate,
-                'source' => $sourceLanguage,
-                'target' => $language,
-                'format' => 'text/html'
-            ];
-            $result[$language] = $this->apiraven->post('v2', $data);
+        foreach ($targetLanguages as $targetLanguage) {
+            $result[$targetLanguage] = $translate->translate($stringToTranslate, ['target' => $targetLanguage]);
         }
         return $result;
     }
 
-    /**
-     * @return array $availableLanguages
-     */
-    public function fetchAvailableLanguages()
-    {
-        $availableLanguages = [];
+    public function fetchAvailableLanguages(){
+        /** @var LanguageService $languageService */
+        $languageService = Oforge()->Services()->get('i18n.language');
 
+        /** @var Language[] $availableLanguages */
+        $availableLanguages = $languageService->list();
+        foreach ($availableLanguages as &$language){
+            $language = $language->getIso();
+        }
         return $availableLanguages;
-    }
-
-    public function storeTranslations()
-    {
-
     }
 }
