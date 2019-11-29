@@ -24,6 +24,12 @@ class PDFGeneratorService {
     private $templateName = "";
     private $templatePath = "";
 
+    /**
+     * PDFGeneratorService constructor.
+     *
+     * @throws MpdfException
+     * @throws ServiceNotFoundException
+     */
     public function __construct() {
         $this->mpdf = new Mpdf();
         $this->templateManagementService = Oforge()->Services()->get("template.management");
@@ -32,7 +38,13 @@ class PDFGeneratorService {
     }
 
     /**
-     * @param $PDFTemplate
+     *  $options = [
+     *      template = "",
+     *      filename = "",
+     *      path = "",
+     * ]
+     *
+     * @param array $options
      * @param array $templateData
      *
      * @return string
@@ -42,9 +54,7 @@ class PDFGeneratorService {
      * @throws Twig_Error_Runtime
      * @throws Twig_Error_SyntaxAlias
      */
-    public function generatePDF($PDFTemplate, $templateData = []) {
-        $this->templatePath = Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . Statics::DEFAULT_THEME . DIRECTORY_SEPARATOR . 'PDFTemplates';
-
+    public function generatePDF($options, $templateData = []) {
         $twig = new CustomTwig($this->templatePath);
         $twig->addExtension(new AccessExtensionAlias());
         $twig->addExtension(new AccessExtension());
@@ -53,12 +63,13 @@ class PDFGeneratorService {
         $twig->addExtension(new TwigOforgeDebugExtension());
 
         /** @var string $html */
-        $html = $twig->fetch($template = $PDFTemplate, $data = $templateData);
+        $html = $twig->fetch($template = $options['template'], $data = $templateData);
 
         /** @var InlineCssService $inlineCssService */
         $inlineCssService = Oforge()->Services()->get('inline.css');
 
         $this->mpdf->WriteHTML($inlineCssService->renderInlineCss($html));
-        return $this->mpdf->Output('test.pdf', '');
+
+        return $this->mpdf->Output($options['filename'], $options['path']);
     }
 }
