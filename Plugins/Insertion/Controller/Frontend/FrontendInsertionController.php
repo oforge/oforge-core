@@ -33,6 +33,8 @@ use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
+use Oforge\Engine\Modules\I18n\Models\Language;
+use Oforge\Engine\Modules\I18n\Services\LanguageService;
 use Oforge\Engine\Modules\Mailer\Services\MailService;
 use Oforge\Engine\Modules\TemplateEngine\Extensions\Services\UrlService;
 use ReflectionException;
@@ -595,12 +597,19 @@ class FrontendInsertionController extends SecureFrontendController
                 }
             }
         }
+
+        /** @var LanguageService $languageService */
+        $languageService = Oforge()->Services()->get('i18n.language');
+
+        /** @var Language[] $availableLanguages */
+        $availableLanguages = $languageService->list(['active' => true]);
         Oforge()->View()->assign([
             "top_values" => $topValues,
             "attributes" => $typeAttributes,
             "all_attributes" => $insertionTypeService->getInsertionTypeAttributeMap(),
             "insertion_values" => $insertionValues,
             'animations' => Oforge()->View()->Flash()->getData('animations'),
+            "languages" => $availableLanguages
         ]);
         Oforge()->View()->Flash()->clearData('animations');
 

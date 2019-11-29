@@ -48,6 +48,8 @@ class TranslationController extends SecureFrontendController
     /**
      * @param Request $request
      * @param Response $response
+     * @param $args
+     * @return Response
      * @throws ServiceNotFoundException
      * @throws ORMException
      * @EndpointAction(path="/insertion/{id}", name="insertion")
@@ -60,38 +62,13 @@ class TranslationController extends SecureFrontendController
         /** @var Insertion $insertion */
         $insertion = $insertionService->getInsertionById($args['id']);
 
-        if (isset($insertion)) {
-            /** @var InsertionContent[] $insertionContent */
-            $insertionContent = $insertion->getContent();
-
+        if (isset($insertion) || $insertion != null) {
             /** @var TranslationService $translationService */
             $translationService = Oforge()->Services()->get('translation');
-
-            $translations = [];
-
-            /** @var string[] $languages */
-            $languages = $translationService->fetchAvailableLanguages();
-
-            foreach ($languages as $language) {
-                /** @var InsertionContent $localisedInsertionContent */
-                $localisedInsertionContent = $insertionService->getInsertionContentByLanguage($args['id'], $language);
-
-                if (isset($localisedInsertionContent)) {
-                    $translations[$language] = ['title' => $localisedInsertionContent->getTitle(), 'description' => $localisedInsertionContent->getDescription()];
-                } else {
-                    $title = $translationService->translate($insertionContent[0]->getTitle(), [$language]);
-                    $description = $translationService->translate($insertionContent[0]->getDescription(), [$language]);
-                    $translations[] = ['title' => $title, 'description' => $description];
-                    $insertionService->addTranslatedInsertionContent([
-                        'id'            => $args['id'],
-                        'description'   => $description[$language]['text'],
-                        'language'      => $language,
-                        'title'         => $title[$language]['text']
-                        ]);
-                }
-
-            }
+            $translations = $translationService->translateInsertion($insertion);
             Oforge()->View()->assign(['json' => $translations]);
+        } else {
+            return $response->withRedirect('/404', 301);
         }
     }
 }
