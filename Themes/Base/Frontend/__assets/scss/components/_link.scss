@@ -4,6 +4,8 @@
     text-decoration: underline;
     &:hover, &:active {
         color: inherit;
+        text-decoration: underline;
+        text-decoration-color: $color-secondary;
     }
 
     &.link--primary {
@@ -12,6 +14,9 @@
 
     &.link--secondary {
         color: $color-secondary;
+        &:hover, &:active {
+            text-decoration-color: $color-primary;
+        }
     }
 
     &.link--light {
