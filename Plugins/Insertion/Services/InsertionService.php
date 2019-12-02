@@ -215,8 +215,7 @@ class InsertionService extends AbstractDatabaseAccess
             return null;
         }
         /** @var InsertionContent $insertion */
-        $insertionContent = $this->repository('content')->findOneBy(['insertion' => $id, 'language' => $language->getId()]);
-        return $insertionContent;
+        return $insertionContent = $this->repository('content')->findOneBy(['insertion' => $id, 'language' => $language->getId()]);
     }
 
 

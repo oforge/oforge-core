@@ -1,6 +1,7 @@
 .language-switch {
-    border-radius: $size-large;
+    border-radius: $size-medium;
     overflow: hidden;
+
     .btn {
         display: block;
         width: 100%;
@@ -21,6 +22,47 @@
     .language--current {
         background: $color-secondary;
         color: $color-light;
-    }
+        display: flex;
+        flex-direction: row;
+        align-items: baseline;
+        justify-content: space-around;
 
+        .icon {
+            fill: $color-light;
+            width: 1rem;
+            height: 1rem;
+            transform: rotate(90deg);
+        }
+    }
+}
+
+
+.user-generated {
+    display: none;
+
+    &.language--current {
+        display: block;
+    }
+}
+
+@media screen and (min-width: $screen-large) {
+    .description__head {
+        position: relative;
+
+        .language-switch {
+            position: absolute;
+            top: 0;
+            right: 0;
+            min-width: 100px;
+
+            .btn {
+                padding: $size-medium;
+            }
+
+            .language--option:hover {
+                z-index: 10;
+                background: $color-light;
+            }
+        }
+    }
 }
