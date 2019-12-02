@@ -64,11 +64,11 @@ class TranslationService extends AbstractDatabaseAccess
             $localisedInsertionContent = $insertionService->getInsertionContentByLanguage($insertion->getId(), $language);
 
             if (isset($localisedInsertionContent)) {
-                $translations[$language] = ['title' => $localisedInsertionContent->getTitle(), 'description' => $localisedInsertionContent->getDescription()];
+                $translations[$language] = ['insertion-title' => $localisedInsertionContent->getTitle(), 'insertion-description' => $localisedInsertionContent->getDescription()];
             } else {
                 $title = $this->translate($insertionContent[0]->getTitle(), [$language]);
                 $description = $this->translate($insertionContent[0]->getDescription(), [$language]);
-                $translations[$language] = ['title' => $title[$language], 'description' => $description[$language]];
+                $translations[$language] = ['insertion-title' => $title[$language], 'insertion-description' => $description[$language]];
                 $insertionService->addTranslatedInsertionContent([
                     'id'            => $insertion->getId(),
                     'description'   => $description[$language],

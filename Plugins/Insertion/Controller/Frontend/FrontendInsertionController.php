@@ -603,6 +603,9 @@ class FrontendInsertionController extends SecureFrontendController
 
         /** @var Language[] $availableLanguages */
         $availableLanguages = $languageService->list(['active' => true]);
+        foreach ($availableLanguages as &$language) {
+            $language = $language->getIso();
+        }
         Oforge()->View()->assign([
             "top_values" => $topValues,
             "attributes" => $typeAttributes,
