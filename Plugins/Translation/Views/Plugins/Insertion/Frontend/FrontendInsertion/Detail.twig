@@ -1,0 +1,42 @@
+{% extends "@parent/Plugins/Insertion/Frontend/FrontendInsertion/Detail.twig" %}
+
+{% block insertion_detail__description %}
+    <div class="panel panel--product-description ">
+        <div class="description__head">
+            <h3 class="panel__header">{{ i18n('insertion_detail_description_title_' ~ insertion.insertionType.name, i18n('insertion_detail_description_title')) }}</h3>
+            <div class="description__language-switch language-switch language-switch--collapsed"
+                 data-selected-language="{{ insertion.content[0].language.iso }}">
+                <button class="btn btn-primary language-switch__language language--current"
+                        data-language="{{ insertion.content[0].language.iso }}">{{ i18n('language_name_' ~ insertion.content[0].language.iso) }}</button>
+                <div class="language-switch__content">
+                    {% for language in languages %}
+                        {% if language.id != insertion.content[0].language.id %}
+                            <button class="btn btn-primary-light language-switch__language language--option"
+                                    data-language="{{ language.iso }}">{{ i18n('language_name_' ~ language.iso) }}</button>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="has--bottom-separator"></div>
+        </div>
+
+        {% block detail_description__language_tab_navigation %}
+            <div class="description__body">
+                {% for content in insertion.content %}
+                <div
+                    class="body__language language--option{% if content.language.default == true %} option--default{% endif %}">
+                    {{ content.description|nl2br }}
+                </div>
+                t
+                {% endfor %}t
+            </div>
+        {% endblock detail_description__language_tab_navigation %}
+        <div class="description__view-counter">
+            <svg class="icon icon--small">
+                <use xlink:href="#preview"></use>
+            </svg>
+            t
+            <span class="counter">{{ "%04d"|format(insertion.views) }}</span>
+        </div>
+    </div>
+{% endblock insertion_detail__description %}
