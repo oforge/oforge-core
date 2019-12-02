@@ -1,0 +1,26 @@
+.language-switch {
+    border-radius: $size-large;
+    overflow: hidden;
+    .btn {
+        display: block;
+        width: 100%;
+    }
+
+    &--collapsed {
+        .language-switch__content {
+            display: none;
+        }
+    }
+
+    &--expanded {
+        .language-switch__content {
+            display: block;
+        }
+    }
+
+    .language--current {
+        background: $color-secondary;
+        color: $color-light;
+    }
+
+}
