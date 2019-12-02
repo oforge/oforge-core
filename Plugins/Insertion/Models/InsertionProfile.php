@@ -204,6 +204,10 @@ class InsertionProfile extends AbstractModel
         return $this;
     }
 
+    public function resetBackground() {
+        $this->background = null;
+    }
+
     /**
      * @return string
      */

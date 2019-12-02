@@ -10,10 +10,10 @@ use Slim\Http\Response;
  *
  * @package Oforge\Engine\Modules\Core\Abstracts
  */
-class AbstractController {
+abstract class AbstractController {
 
     /**
-     * Prepare json response with json header, statuc code 200 and content data.
+     * Prepare json response with json header, status code 200 and content data.
      *
      * @param Request $request
      * @param Response $response
