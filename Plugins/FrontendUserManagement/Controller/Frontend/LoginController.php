@@ -3,7 +3,6 @@
 namespace FrontendUserManagement\Controller\Frontend;
 
 use FrontendUserManagement\Services\FrontendUserLoginService;
-use Insertion\Services\InsertionProfileProgressService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
@@ -183,5 +182,4 @@ class LoginController extends AbstractController {
 
         return $response->withRedirect($uri, 302);
     }
-
 }
