@@ -1,6 +1,8 @@
 .language-switch {
     border-radius: $size-medium;
     overflow: hidden;
+    display: inline-block;
+    min-width: 200px;
 
     .btn {
         display: block;
@@ -53,7 +55,7 @@
             position: absolute;
             top: 0;
             right: 0;
-            min-width: 100px;
+
 
             .btn {
                 padding: $size-medium;
