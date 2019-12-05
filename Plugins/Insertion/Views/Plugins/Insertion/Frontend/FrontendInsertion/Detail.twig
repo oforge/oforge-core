@@ -68,21 +68,23 @@
                 {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes.twig' %}
             {% endblock insertion_detail__attributes %}
 
-            <div class="panel panel--product-description ">
-                <div class="description__head">
-                    <h3 class="panel__header has--bottom-separator">{{ i18n('insertion_detail_description_title_' ~ insertion.insertionType.name, i18n('insertion_detail_description_title')) }}</h3>
-                    <div class="language-switch"></div>
+            {% block insertion_detail__description %}
+                <div class="panel panel--product-description ">
+                    <div class="description__head">
+                        <h3 class="panel__header has--bottom-separator">{{ i18n('insertion_detail_description_title_' ~ insertion.insertionType.name, i18n('insertion_detail_description_title')) }}</h3>
+                        <div class="language-switch"></div>
+                    </div>
+                    <div class="description__body">
+                        {{ insertion.content[0].description|nl2br }}
+                    </div>
+                    <div class="description__view-counter">
+                        <svg class="icon icon--small">
+                            <use xlink:href="#preview"></use>
+                        </svg>
+                        <span class="counter">{{ "%04d"|format(insertion.views) }}</span>
+                    </div>
                 </div>
-                <div class="description__body">
-                    {{ insertion.content[0].description|nl2br }}
-                </div>
-                <div class="description__view-counter">
-                    <svg class="icon icon--small">
-                        <use xlink:href="#preview"></use>
-                    </svg>
-                    <span class="counter">{{ "%04d"|format(insertion.views) }}</span>
-                </div>
-            </div>
+            {% endblock insertion_detail__description %}
 
             {% block insertion_detail__extended_content %}
             {% endblock insertion_detail__extended_content %}
