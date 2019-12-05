@@ -230,11 +230,9 @@ class InsertionService extends AbstractDatabaseAccess
         $insertion = $this->repository()->find($args['id']);
 
         /** @var InsertionContent[] $existingContent */
-        $existingContent = $insertion->getContent();
         $content = new InsertionContent();
         $insertion->setContent([$content]);
 
-        //$content->setName($name);
         $content->setDescription($args['description']);
         $content->setTitle($args['title']);
         $content->setInsertion($insertion);
