@@ -637,6 +637,7 @@ class FrontendInsertionController extends SecureFrontendController
          * @var $service InsertionService
          */
         $service = Oforge()->Services()->get('insertion');
+        /** @var Insertion $insertion */
         $insertion = $service->getInsertionById(intval($id));
 
         /**
@@ -661,6 +662,7 @@ class FrontendInsertionController extends SecureFrontendController
         /** @var InsertionType $type */
         $type = $insertion->getInsertionType();
         $typeAttributes = $insertionTypeService->getInsertionTypeAttributeTree($insertion->getInsertionType()->getId());
+        $result['type'] = $type->toArray();
         $result['attributes'] = $typeAttributes;
         $result['keys'] = [];
         $result['all_attributes'] = $insertionTypeService->getInsertionTypeAttributeMap();
