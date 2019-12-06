@@ -46,12 +46,12 @@
 
                 {% if content_320 and content_640 %}
                     <a class="link link--insertion-create"
-                       data-modal-view="1">{{ i18n('image_upload_tips', 'Tipps für das Hochladen von Fotos') }}</a>
+                       data-modal-view="{{ content_320['url'] }}">{{ i18n('image_upload_tips', 'Tipps für das Hochladen von Fotos') }}</a>
 
-                    <div data-modal-content="1"
+                    <div data-modal-content="{{ content_320['url'] }}"
                          class="modal-view">
                         <div class="modal-view__close"
-                             data-modal-close="1">✕</div>
+                             data-modal-close="{{ content_320['url'] }}">✕</div>
                         <div class="modal-view__content">
                             <picture class="lazy">
                                 <source class="lazy" data-srcset="{{ media(content_640['url']) }}" media="(min-width: 640px)" />
