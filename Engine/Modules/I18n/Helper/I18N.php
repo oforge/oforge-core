@@ -43,6 +43,8 @@ class I18N {
                 $result = null;
                 if (isset($defaultValue[$language])) {
                     $result = self::$i18nService->get($key, $language, $defaultValue[$language]);
+                } else {
+                    $result = self::$i18nService->get($key, $language, null);
                 }
                 foreach ($defaultValue as $languageIso => $languageDefaultValue) {
                     if ($language === $languageIso) {
