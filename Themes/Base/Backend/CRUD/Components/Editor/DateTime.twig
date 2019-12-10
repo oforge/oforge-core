@@ -1,6 +1,6 @@
 <div class="form-group">
     {% set crudDateTimePickerType = crudFieldType|default('datetime') %}
-    {% set crudDateTimePickerValue = item[crudProperty.name]|default(crudProperty.editor.default)|default('') %}
+    {% set crudDateTimePickerValue = item[crudProperty.name]|default(crudProperty.editor.default)|default(null) %}
     {% if crudDateTimePickerType == 'data' %}
         {% set crudDateTimePickerValue = crudDateTimePickerValue|formatDate %}
     {% elseif crudDateTimePickerType == 'datetime' %}
@@ -20,7 +20,10 @@
                 <span class="fa fa-clock-o"></span>
             {% endif %}
         </span>
-        <input id="{{ crudFieldID }}" type="text" class="form-control" data-target="#{{ crudDateTimePickerID }}"
-               value="{{ crudDateTimePickerValue }}" />
+        <input
+            {% if crudProperty.crud[crud.context] == 'editable' %}name="data[{% if crud.context == 'index' %}{{ item.id }}][{% endif %}{{ crudProperty.name }}]{% if crudProperty.multiple %}[]{% endif %}"{% endif %}
+            id="{{ crudDateTimePickerID }}" type="text" class="form-control"
+            value="{{ crudDateTimePickerValue }}" />
     </div>
 </div>
+{{ o_dump() }}
