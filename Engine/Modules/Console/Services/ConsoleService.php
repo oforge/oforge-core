@@ -75,7 +75,7 @@ class ConsoleService {
      */
     public function removeOutputLoggerHandler(HandlerInterface $handler) : void {
         $handlers = $this->outputLogger->getHandlers();
-        $handlers = array_diff($handlers, [$handler]);
+        // $handlers = array_diff($handlers, [$handler]);
         $handlers = array_reverse($handlers);
         $this->outputLogger->setHandlers($handlers);
     }
@@ -130,7 +130,7 @@ class ConsoleService {
      */
     public function runCommand(string $command, string $args = '') : void {
         $firstRun = false;
-        if (is_null($this->getOpt)) {
+        if (!isset($this->getOpt)) {
             $this->init();
             $firstRun = true;
         }
@@ -168,7 +168,10 @@ class ConsoleService {
      * Init ConsoleService.
      * Collect and create commands from modules and plugin.
      */
-    protected function init() {
+    public function init() {
+        if (isset($this->getOpt)) {
+            return;
+        }
         $this->outputLogger    = new Logger('console');
         $this->loggerFormatter = new ConsoleFormatter(self::LOG_FORMAT_NO_TIME);
         try {
