@@ -297,6 +297,7 @@ class CronjobService extends AbstractDatabaseAccess {
             try {
                 /** @var ConsoleService $consoleService */
                 $consoleService = Oforge()->Services()->get('console');
+                $consoleService->init();
                 $filePath       = $this->getLogFilePath($cronjob->getId());
                 $maxFiles       = $configService->get(CronjobStatics::SETTING_LOGFILE_DAYS);
                 $level          = $cronjob->getLogfileLevel();
