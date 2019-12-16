@@ -75,8 +75,10 @@ class ConsoleService {
      */
     public function removeOutputLoggerHandler(HandlerInterface $handler) : void {
         $handlers = $this->outputLogger->getHandlers();
-        // $handlers = array_diff($handlers, [$handler]);
-        $handlers = array_reverse($handlers);
+        $key = array_search($handler, $handlers);
+        if ($key !== false) {
+            unset($handlers[$key]);
+        }
         $this->outputLogger->setHandlers($handlers);
     }
 
