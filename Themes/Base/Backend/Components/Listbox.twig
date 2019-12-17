@@ -1,0 +1,85 @@
+{% with { listbox: {
+    id: id,
+    name: name|default({left: '', right: ''}),
+    items: items|default({left: [], right: []}),
+    title: title|default({left: '', right: ''}),
+    sorted: sorted is defined ? sorted : false,
+    searchable: searchable is defined ? searchable : true,
+    searchPlaceholder: searchPlaceholder|default(i18n('oforge_listbox_search_placeholder', {
+        en: 'Search...',
+        de: 'Suche...',
+    })),
+}} only %}
+    {% spaceless %}
+        {% set nameLeft = listbox.name.left %}
+        {% if not (nameLeft ends with '[]') %}
+            {% set nameLeft = nameLeft ~ '[]' %}
+        {% endif %}
+        {% set nameRight = listbox.name.right %}
+        {% if not (nameRight ends with '[]') %}
+            {% set nameRight = nameRight ~ '[]' %}
+        {% endif %}
+    {% endspaceless %}
+    <div class="row oforge-listbox-container">
+        <div class="col-xs-5">
+            {% if listbox.title.left and listbox.title.right %}
+                <h5 class="oforge-listbox-title">
+                    <label for="{{ listbox.id }}">{{ listbox.title.left }}</label>
+                </h5>
+            {% endif %}
+            {% if listbox.searchable %}
+                <input id="{{ listbox.id }}_leftSearch" type="text" class="form-control oforge-listbox-search"
+                       placeholder="{{ listbox.searchPlaceholder }}" title="{{ listbox.searchPlaceholder }}" />
+            {% endif %}
+            <select name="{{ nameLeft }}" multiple id="{{ listbox.id }}"
+                    class="oforge-listbox form-control" {{ attr({
+                'data-sorted': listbox.sorted ? '1' : 0,
+                'data-searchable': listbox.searchable ? '1' : 0,
+            }) }}>
+                {% for item in listbox.items.left|default([]) %}
+                    <option value="{{ item.id }}">{{ item.label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-xs-2 oforge-listbox-button-column">
+            <div class="oforge-listbox-button-wrapper">
+                <button id="{{ listbox.id }}_leftAll" title="{{ i18n('oforge_listbox_button_right_all', {
+                    en: 'All to the left', de: 'Alle nach links'
+                }) }}" type="button" class="btn btn-default oforge-listbox-button-left-all">
+                    <i class="glyphicon glyphicon-backward"></i>
+                </button>
+                <button id="{{ listbox.id }}_leftSelected" title="{{ i18n('oforge_listbox_button_right_all', {
+                    en: 'Selected to the left', de: 'Ausgewählte nach links'
+                }) }}" type="button" class="btn btn-default oforge-listbox-button-left">
+                    <i class="glyphicon glyphicon-chevron-left"></i>
+                </button>
+                <button id="{{ listbox.id }}_rightSelected" title="{{ i18n('oforge_listbox_button_right_all', {
+                    en: 'Selected to the right', de: 'Ausgewählte nach rechts'
+                }) }}" type="button" class="btn btn-default oforge-listbox-button-right">
+                    <i class="glyphicon glyphicon-chevron-right"></i>
+                </button>
+                <button id="{{ listbox.id }}_rightAll" title="{{ i18n('oforge_listbox_button_right_all', {
+                    en: 'All to the right', de: 'Alle nach rechts'
+                }) }}" type="button" class="btn btn-default oforge-listbox-button-right-all">
+                    <i class="glyphicon glyphicon-forward"></i>
+                </button>
+            </div>
+        </div>
+        <div class="col-xs-5">
+            {% if listbox.title.left and listbox.title.right %}
+                <h5 class="oforge-listbox-title">
+                    <label for="{{ listbox.id }}_to">{{ listbox.title.right }}</label>
+                </h5>
+            {% endif %}
+            {% if listbox.searchable %}
+                <input id="{{ listbox.id }}_rightSearch" type="text" class="form-control oforge-listbox-search"
+                       placeholder="{{ listbox.searchPlaceholder }}" title="{{ listbox.searchPlaceholder }}" />
+            {% endif %}
+            <select name="{{ nameRight }}" id="{{ listbox.id }}_to" class="form-control oforge-listbox-to" multiple>
+                {% for item in listbox.items.right|default([]) %}
+                    <option value="{{ item.id }}">{{ item.label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+{% endwith %}

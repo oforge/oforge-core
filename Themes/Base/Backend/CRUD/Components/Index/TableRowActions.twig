@@ -1,7 +1,7 @@
 {% set crudTableRowActionTemplates = crudTableRowActionTemplates|default([
-    [crud.templatePath ~ '/Components/Index/RowAction/View.twig', 'Backend/CRUD/Components/Index/RowAction/View.twig'],
-    [crud.templatePath ~ '/Components/Index/RowAction/Update.twig', 'Backend/CRUD/Components/Index/RowAction/Update.twig'],
-    [crud.templatePath ~ '/Components/Index/RowAction/Delete.twig', 'Backend/CRUD/Components/Index/RowAction/Delete.twig'],
+    CRUD_path('Components/Index/RowAction/View.twig'),
+    CRUD_path('Components/Index/RowAction/Update.twig'),
+    CRUD_path('Components/Index/RowAction/Delete.twig')
 ]) %}
 <td class="table_row_actions text-center">
     <div class="btn-group pull-right">

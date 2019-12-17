@@ -37,8 +37,12 @@
                                             <option value="{{ type }}"
                                                     {% if type == 'multi' %}data-additional-input="max-options"
                                                     data-additional-input-name="inputTypeRestrictions"
-                                                    data-additional-input-value="{{ content.attribute.restrictions }}"{% endif %}
+                                                    data-additional-input-value="{{ content.attribute.restrictions }}"
                                                     data-additional-input-label="{{ i18n('backend_multi_select_max_options', 'Max Options Possible:') }}"
+                                                {% elseif type == 'text' %} data-additional-input="regular-expression"
+                                                data-additional-input-name="inputTypeRestrictions"
+                                                data-additional-input-value="{{ content.attribute.restrictions }}"
+                                                data-additional-input-label="{{ i18n('backend_text_regular_expression', 'Regular Expression:') }}"{% endif %}
                                                 {% if select_compare(content.attribute.type, type) %}selected{% endif %}>
                                                 {{ type }}
                                             </option>
@@ -75,6 +79,7 @@
                                     <tr>
                                         <th>{{ i18n("value", "Value") }}</th>
                                         <th>{{ i18n("sub_attribute", "Sub Attribute") }}</th>
+                                        <th>{{ i18n("hierarchy_order", {"en" : "Filter Sort Hierarchy", "de" : "Filter Hierarchy"}) }}</th>
                                         <th><i class="fa fa-user-times"></i> {{ i18n("delete") }}</th>
                                     </tr>
                                     </thead>
@@ -91,6 +96,10 @@
                                                     <option value="{{ attribute.id }}">{{ attribute.name }}</option>
                                                 {% endfor %}
                                             </select>
+                                        </td>
+                                        <td data-type="number"
+                                            data-label="hierarchy_order">
+                                            <input type="number" value="0">
                                         </td>
                                         <td>
                                             <span class="table-remove glyphicon glyphicon-remove"
@@ -116,6 +125,9 @@
                                                     {% endfor %}
                                                 </select>
                                             </td>
+                                            <td data-type="number"
+                                                data-label="hierarchy_order">
+                                                <input type="number" value="{{ value.hierarchyOrder }}"></td>
                                             <td>
                                             <span class="table-remove glyphicon glyphicon-remove"
                                                   data-table-remove></span>

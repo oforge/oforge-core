@@ -2,22 +2,24 @@
     {% set context = meta.route.context|lower %}
 
     {% block content_before %}
-        {% set content_before = product_placements(2, ['vertical', 'small', 'insertion', 'detail']) %}
+        {% set content_before = product_placements(1, ['vertical', 'small', 'insertion', 'list', 'before']) %}
         {% if (content_before and content_before|length > 0) %}
-            {{ o_dump(content_before) }}
-        <div class="product-placement {{ context }} before">
+        <div class="product-placement {{ context }} layout-before">
             {% for content in content_before %}
-                <span>{{ content.source }}</span> <span>{{ content.tag }}</span>
-
+                {{ content.source|raw }}
             {% endfor %}
         </div>
         {% endif %}
     {% endblock content_before %}
 
     {% block content_after %}
-        {% if (content_after) %}
-        <div class="product-placement {{ context }} after">
-            {{ content_after.text|raw }}
-        </div>
+        {% set content_after = product_placements(1, ['vertical', 'small', 'insertion', 'list', 'after']) %}
+
+        {% if (content_after and content_after|length > 0) %}
+            <div class="product-placement {{ context }} layout-after">
+                {% for content in content_after %}
+                    {{ content.source|raw }}
+                {% endfor %}
+            </div>
         {% endif %}
     {% endblock content_after %}

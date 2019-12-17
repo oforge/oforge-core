@@ -10,6 +10,7 @@ use Oforge\Engine\Modules\Core\Middleware\SessionMiddleware;
 use Oforge\Engine\Modules\Core\Models\Endpoint\Endpoint;
 use Oforge\Engine\Modules\Core\Models\Endpoint\EndpointMethod;
 use Oforge\Engine\Modules\Core\Models\Plugin\Middleware;
+use Oforge\Engine\Modules\Core\Services\EndpointService;
 use Oforge\Engine\Modules\Core\Services\MiddlewareService;
 use Psr\Container\ContainerInterface;
 use Slim\Interfaces\RouteInterface;
@@ -45,9 +46,10 @@ class SlimRouteManager {
         $container = $forgeSlimApp->getContainer();
         /** @var MiddlewareService $middlewareService */
         $middlewareService = Oforge()->Services()->get('middleware');
-        /** @var string[] $activeMiddlewareNames */
-        $activeMiddlewareNames = $middlewareService->getAllDistinctActiveNames();
-        $endpointService       = Oforge()->Services()->get('endpoint');
+        /** @var EndpointService $endpointService */
+        $endpointService = Oforge()->Services()->get('endpoint');
+        /** @var Middleware[] $activeMiddlewares */
+        $activeMiddlewares = $middlewareService->getActiveMiddlewares();
         /** @var Endpoint[] $endpoints */
         $endpoints = $endpointService->getActiveEndpoints();
 
@@ -70,21 +72,9 @@ class SlimRouteManager {
                 $endpoint->getPath(), $className . ':' . $classMethod#
             )->setName($endpoint->getName());
 
-            /** @var Middleware[] $activeMiddlewares */
-            $activeMiddlewares = [];
-            //$activeMiddlewares = $middlewareService->getActive( $endpoint->getName() );
-            //$slimRoute->add( new MiddlewarePluginManager( $activeMiddlewares ) );
-            foreach ($activeMiddlewareNames as $middlewareName) {
-                $pattern = "/^" . $middlewareName . "/";
+            $endpointMiddlewares = $middlewareService->filterActiveMiddlewaresForEndpoint($activeMiddlewares, $endpoint);
+            $slimRoute->add(new MiddlewarePluginManager($endpointMiddlewares));
 
-                if (preg_match($pattern, $endpoint->getName())) {
-                    $activeMiddlewares = $middlewareService->getActive($middlewareName);
-                    $slimRoute->add(new MiddlewarePluginManager($activeMiddlewares));
-                }
-            }
-
-            $activeMiddlewares = $middlewareService->getActive('*');
-            $slimRoute->add(new MiddlewarePluginManager($activeMiddlewares));
             $slimRoute->add(new RenderMiddleware());
             $slimRoute->add(new RouteMiddleware($endpoint));
             $slimRoute->add(new DebugModeMiddleware());

@@ -27,4 +27,19 @@ class SeoService extends AbstractDatabaseAccess {
         $split = explode("?", $sourceUrl);
         return $this->repository()->findOneBy(["source" => $split[0]]);
     }
+
+    /**
+     * Get an array of SeoUrls with id as key
+     *
+     * @throws ORMException
+     */
+    public function getAllSeoUrls() {
+        /** @var SeoUrl[] $seoUrls */
+        $seoUrls = $this->repository()->findAll();
+        $result = [];
+        foreach($seoUrls as $seoUrl) {
+            $result[$seoUrl->getId()] = $seoUrl->getTarget();
+        }
+        return $result;
+    }
 }

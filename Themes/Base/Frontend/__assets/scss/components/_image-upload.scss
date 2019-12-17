@@ -72,7 +72,5 @@
 
 .upload__file_required {
     position: absolute;
-    opacity: 0;
-    width: 0;
-    float: left;
+    z-index: -1;
 }

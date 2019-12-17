@@ -19,7 +19,8 @@
         "marcj/topsort": "^1.1",
         "pelago/emogrifier": "^2.1.0",
         "ext-fileinfo": "*",
-        "vimeo/vimeo-api": "^3.0"
+        "vimeo/vimeo-api": "^3.0",
+        "google/cloud-translate": "*"
     },
     "repositories": [
         {

@@ -86,4 +86,10 @@ abstract class AbstractViewManager {
      */
     public abstract function has(string $key) : bool;
 
+    /**
+     * Delete a specific key
+     * @return mixed
+     */
+    public abstract function delete(string $key);
+
 }

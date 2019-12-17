@@ -41,12 +41,14 @@ class BackendExtension extends Twig_Extension implements Twig_ExtensionInterface
     public function get_backend_notifications() {
         /** @var $authService AuthService */
         $authService = Oforge()->Services()->get('auth');
-        $user        = $authService->decode($_SESSION['auth']);
-        if (isset($user) && isset($user['id'])) {
-            /** @var BackendNotificationService $notificationService */
-            $notificationService = Oforge()->Services()->get('backend.notifications');
+        if (isset($_SESSION['auth'])) {
+            $user = $authService->decode($_SESSION['auth']);
+            if (isset($user) && isset($user['id'])) {
+                /** @var BackendNotificationService $notificationService */
+                $notificationService = Oforge()->Services()->get('backend.notifications');
 
-            return $notificationService->getNotifications($user['id'], AbstractNotificationService::UNSEEN);
+                return $notificationService->getNotifications($user['id'], AbstractNotificationService::UNSEEN);
+            }
         }
 
         return [];
@@ -157,20 +159,22 @@ class BackendExtension extends Twig_Extension implements Twig_ExtensionInterface
     public function get_favorites(...$vars) {
         /** @var $authService AuthService */
         $authService = Oforge()->Services()->get('auth');
-        $user        = $authService->decode($_SESSION['auth']);
-        if (isset($user) && isset($user['id'])) {
-            /** @var UserFavoritesService $favoritesService */
-            $favoritesService = Oforge()->Services()->get('backend.favorites');
+        if (isset($_SESSION['auth'])) {
+            $user        = $authService->decode($_SESSION['auth']);
+            if (isset($user) && isset($user['id'])) {
+                /** @var UserFavoritesService $favoritesService */
+                $favoritesService = Oforge()->Services()->get('backend.favorites');
 
-            $instances = $favoritesService->getAll($user['id']);
+                $instances = $favoritesService->getAll($user['id']);
 
-            $result = [];
+                $result = [];
 
-            foreach ($instances as $instance) {
-                array_push($result, $instance->toArray());
+                foreach ($instances as $instance) {
+                    array_push($result, $instance->toArray());
+                }
+
+                return $result;
             }
-
-            return $result;
         }
 
         return [];

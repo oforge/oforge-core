@@ -7,22 +7,37 @@
         {% block product_list__sort %}
             {% include 'Plugins/Insertion/Frontend/Components/Content/Sort.twig' %}
         {% endblock product_list__sort %}
-        <div class="product-list">
-            {% for item in search.query.items %}
-                {% include 'Plugins/Insertion/Frontend/Components/Content/ProductPanel.twig' with {item: item } %}
-            {% endfor %}
-        </div>
+        {% block product_list_items %}
+            <div class="product-list">
+                {% for item in search.query.items %}
+                    {% include 'Plugins/Insertion/Frontend/Components/Content/ProductPanel.twig' with {item: item } %}
+                {% endfor %}
+            </div>
+        {% endblock product_list_items %}
         {% block product_pagination %}
             {% include 'Plugins/Insertion/Frontend/Components/Content/ProductPagination.twig' %}
         {% endblock product_pagination %}
     </div>
 
     {% block seo_content %}
-        {% set content = content('seo_content_type_' ~ type.name ~ '_' ~  meta.language.iso) %}
-        {% if content %}
-            <div class="panel panel--seo">
-                {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
-            </div>
+
+        {% if (seo is defined and seo.content != null and seo.content.contentElements != null) %}
+            {% set seoContents = seo.content.contentElements %}
+            {% for seoContent in seoContents %}
+                {% set content = content(seoContent) %}
+                {% if (content) %}
+                    <div class="panel panel--seo">
+                        {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            {% set content = content('seo_content_type_' ~ type.name ~ '_' ~  meta.language.iso) %}
+            {% if content %}
+                <div class="panel panel--seo">
+                    {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
+                </div>
+            {% endif %}
         {% endif %}
     {% endblock seo_content %}
 

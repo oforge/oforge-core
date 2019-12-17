@@ -61,53 +61,53 @@ class Bootstrap extends AbstractBootstrap {
          * @var GenericCrudService $crud
          * @var HelpdeskTicketService $helpdeskTicketService
          */
-        $crud                  = Oforge()->Services()->get('crud');
-        $helpdeskTicketService = Oforge()->Services()->get('helpdesk.ticket');
-        try {
-            /**
-             * @var IssueTypeGroup $supportGroup
-             * @var IssueTypeGroup $reportGroup
-             */
-            $supportGroup = $crud->create(IssueTypeGroup::class, ['issueTypeGroupName' => 'support']);
-            $reportGroup  = $crud->create(IssueTypeGroup::class, ['issueTypeGroupName' => 'report']);
-            $helpdeskTicketService->createIssueType('support_issue_type_1', $supportGroup);
-            $helpdeskTicketService->createIssueType('support_issue_type_2', $supportGroup);
-            $helpdeskTicketService->createIssueType('report_issue_type_1', $reportGroup);
-            $helpdeskTicketService->createIssueType('report_issue_type_2', $reportGroup);
-            $helpdeskTicketService->createNewTicket(1, 1, 'but the horse ain\'t one',
-                'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.');
-            $helpdeskTicketService->createNewTicket(1, 1, 'but the horse ain\'t two',
-                'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.');
-        } catch (ConfigElementAlreadyExistException $exception) {
-            // ignore
-        } catch (Exception $exception) {
-            throw $exception;
-        }
-
-        /** @var DashboardWidgetsService $dashboardWidgetsService */
-        $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
-        $dashboardWidgetsService->install([
-            'name'     => 'plugin_helpdesk_open_tickets',
-            'template' => 'HelpdeskOpenTickets',
-            'handler'  => HelpdeskOpenTicketsWidgetHandler::class,
-            'label'    => [
-                'en' => 'Open helpdesk tickets',
-                'de' => 'Offene Helpdesk-Tickets',
-            ],
-            'position' => DashboardWidgetPosition::TOP,
-            'cssClass' => 'bg-red',
-        ]);
-        $dashboardWidgetsService->install([
-            'name'     => 'plugin_helpdesk_last_tickets',
-            'template' => 'HelpdeskLastTickets',
-            'handler'  => HelpdeskLastTicketsWidgetHandler::class,
-            'label'    => [
-                'en' => 'Last helpdesk tickets',
-                'de' => 'Letzte Helpdesk-Tickets',
-            ],
-            'position' => DashboardWidgetPosition::LEFT,
-            'cssClass' => 'box-success',
-        ]);
+        // $crud                  = Oforge()->Services()->get('crud');
+        // $helpdeskTicketService = Oforge()->Services()->get('helpdesk.ticket');
+        // try {
+        //     /**
+        //      * @var IssueTypeGroup $supportGroup
+        //      * @var IssueTypeGroup $reportGroup
+        //      */
+        //     $supportGroup = $crud->create(IssueTypeGroup::class, ['issueTypeGroupName' => 'support']);
+        //     $reportGroup  = $crud->create(IssueTypeGroup::class, ['issueTypeGroupName' => 'report']);
+        //     $helpdeskTicketService->createIssueType('support_issue_type_1', $supportGroup);
+        //     $helpdeskTicketService->createIssueType('support_issue_type_2', $supportGroup);
+        //     $helpdeskTicketService->createIssueType('report_issue_type_1', $reportGroup);
+        //     $helpdeskTicketService->createIssueType('report_issue_type_2', $reportGroup);
+        //     $helpdeskTicketService->createNewTicket(1, 1, 'but the horse ain\'t one',
+        //         'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.');
+        //     $helpdeskTicketService->createNewTicket(1, 1, 'but the horse ain\'t two',
+        //         'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.');
+        // } catch (ConfigElementAlreadyExistException $exception) {
+        //     // ignore
+        // } catch (Exception $exception) {
+        //     throw $exception;
+        // }
+        //
+        // /** @var DashboardWidgetsService $dashboardWidgetsService */
+        // $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
+        // $dashboardWidgetsService->install([
+        //     'name'     => 'plugin_helpdesk_open_tickets',
+        //     'template' => 'HelpdeskOpenTickets',
+        //     'handler'  => HelpdeskOpenTicketsWidgetHandler::class,
+        //     'label'    => [
+        //         'en' => 'Open helpdesk tickets',
+        //         'de' => 'Offene Helpdesk-Tickets',
+        //     ],
+        //     'position' => DashboardWidgetPosition::TOP,
+        //     'cssClass' => 'bg-red',
+        // ]);
+        // $dashboardWidgetsService->install([
+        //     'name'     => 'plugin_helpdesk_last_tickets',
+        //     'template' => 'HelpdeskLastTickets',
+        //     'handler'  => HelpdeskLastTicketsWidgetHandler::class,
+        //     'label'    => [
+        //         'en' => 'Last helpdesk tickets',
+        //         'de' => 'Letzte Helpdesk-Tickets',
+        //     ],
+        //     'position' => DashboardWidgetPosition::LEFT,
+        //     'cssClass' => 'box-success',
+        // ]);
     }
 
     /** @inheritDoc */

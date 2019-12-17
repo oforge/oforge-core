@@ -15,7 +15,7 @@
                         </div>
                         #}
                         {% if insertion.media is defined and insertion.media|length > 0 and insertion.media[0].content is defined and 'image' in insertion.media[0].content.type %}
-                            <img src="{{ media(insertion.media[0].content.id, 300) }}"
+                            <img data-lazy="{{ media(insertion.media[0].content.id, 300) }}"
                                  alt="{{ insertion.content[0].name }}"
                                  class="image">
                         {% else %}
