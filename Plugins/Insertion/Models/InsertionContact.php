@@ -60,7 +60,7 @@ class InsertionContact extends AbstractModel {
      * @var string|null
      * @ORM\Column(name="country", type="string", nullable=true)
      */
-    private $country;
+    private $country = 'germany';
 
     /**
      * @var boolean
