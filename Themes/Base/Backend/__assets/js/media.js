@@ -86,7 +86,7 @@ if (typeof Oforge !== 'undefined') {
                 }
                 if (self.__options.target != null) {
                     var $input = $(self.__options.target);
-                    $input.val($input.data('current'));
+                    $input.val($input.data('current')).trigger('change');
                 }
                 self.__modalElement.modal('hide');
                 self.__modalElement.remove();
@@ -102,7 +102,7 @@ if (typeof Oforge !== 'undefined') {
                     $preview.attr('src', $preview.data('placeholder'));
                 }
                 if (self.__options.target != null) {
-                    $(self.__options.target).val('');
+                    $(self.__options.target).val('').trigger('change');
                 }
                 self.__modalElement.modal('hide');
                 self.__modalElement.remove();
@@ -117,7 +117,7 @@ if (typeof Oforge !== 'undefined') {
                     $(self.__options.preview).attr("src", target.data("media-path"));
                 }
                 if (self.__options.target != null) {
-                    $(self.__options.target).val(target.data("media-id"));
+                    $(self.__options.target).val(target.data("media-id")).trigger('change');
                 } else if (self.__options.callback != null) {
                     self.__options.callback({
                         id: target.data("media-id"),

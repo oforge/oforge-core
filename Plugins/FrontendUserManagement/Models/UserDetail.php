@@ -190,4 +190,8 @@ class UserDetail extends AbstractModel {
         return $this;
     }
 
+    public function resetImage() {
+        $this->image = null;
+    }
+
 }

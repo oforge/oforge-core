@@ -1,32 +1,40 @@
 {% with %}
+    {% set itemValues = item[crudProperty.name] %}
     {% if crudProperty.list is not defined %}
         <div class="alert alert-danger" role="alert">
             Missing select list configuration for "{{ crudProperty.name }}"
         </div>
     {% elseif crudProperty.list is empty %}
-        {{ item[crudProperty.name] }}
-    {% elseif crudProperty.list|first.options is defined %}
-        {% set found = false %}
-        {% for group in crudProperty.list %}
-            {% if group.options[item[crudProperty.name]] is defined %}
-                {% set found = true %}
-                {{ group.options[item[crudProperty.name]] }}
+        {{ crudProperty.multiple ? itemValues|join(', ') : itemValues }}
+    {% else %}
+        {% set output = [] %}
+        {% if not crudProperty.multiple %}
+            {% set itemValues = [itemValues] %}
+        {% endif %}
+        {% for itemValue in itemValues %}
+            {% if crudProperty.list|first.options is defined %}
+                {% set found = false %}
+                {% for group in crudProperty.list %}
+                    {% if group.options[itemValue] is defined %}
+                        {% set found = true %}
+                        {% set output = output|merge([group.options[itemValue]|escape]) %}
+                    {% endif %}
+                {% endfor %}
+                {% if not found %}
+                    {% set output = output|merge(['<span><i class="fa fa-exclamation-triangle" title="'
+                        ~ i18n('backend_crud_missing_select_value', {en: 'Value not in select list', de: 'Wert nicht in Select-Liste'})
+                        ~ '"></i>' ~ itemValue|escape ~ '</span>'
+                    ]) %}
+                {% endif %}
+            {% elseif crudProperty.list[itemValue] is not defined %}
+                {% set output = output|merge(['<span><i class="fa fa-exclamation-triangle" title="'
+                    ~ i18n('backend_crud_missing_select_value', {en: 'Value not in select list', de: 'Wert nicht in Select-Liste'})
+                    ~ '"></i>' ~ itemValue|escape ~ '</span>'
+                ]) %}
+            {% else %}
+                {% set output = output|merge([crudProperty.list[itemValue]|escape]) %}
             {% endif %}
         {% endfor %}
-        {% if not found %}
-            <div>
-                <i class="fa fa-exclamation-triangle"
-                   title="{{ i18n('backend_crud_missing_select_value', {en: 'Value not in select list', de: 'Wert nicht in Select-Liste'}) }}"></i>
-                {{ item[crudProperty.name] }}
-            </div>
-        {% endif %}
-    {% elseif crudProperty.list[item[crudProperty.name]] is not defined %}
-        <div>
-            <i class="fa fa-exclamation-triangle"
-               title="{{ i18n('backend_crud_missing_select_value', {en: 'Value not in select list', de: 'Value not in select list'}) }}"></i>
-            {{ item[crudProperty.name] }}
-        </div>
-    {% else %}
-        {{ crudProperty.list[item[crudProperty.name]] }}
+        <div>{{ output|join(', ')|raw }}</div>
     {% endif %}
 {% endwith %}

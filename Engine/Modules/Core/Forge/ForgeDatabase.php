@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Query\AST\Functions\DateDiffFunction;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\SchemaValidator;
 use Doctrine\ORM\Tools\Setup;
@@ -104,11 +105,16 @@ class ForgeDatabase {
         // $this->configuration->setMetadataCacheImpl($filesystemCache);
         $this->configuration->setQueryCacheImpl($filesystemCache);
         // proxy classes: true in dev | false in production
-        // $this->configuration->setAutoGenerateProxyClasses(false);
+
+        if(!$isDevMode) {
+            $this->configuration->setAutoGenerateProxyClasses(false);
+        }
+
+        $this->configuration->setProxyDir(ROOT_PATH . Statics::PROXY_CACHE_DIR);
 
         $this->configuration->addCustomStringFunction('ST_Distance_Sphere', ST_Distance_Sphere::class);
         $this->configuration->addCustomStringFunction('POINT', POINT::class);
-
+        $this->configuration->addCustomStringFunction('DATEDIFF', DateDiffFunction::class);
     }
 
     /**

@@ -1,0 +1,16 @@
+{% if crudProperty.multiple %}
+    {% if crud.context == 'create' %}
+        {% set selected = value in meta.route.query[crudProperty.name]|default(crudProperty.editor.default)|default('') %}
+    {% else %}
+        {% set selected = value in item[crudProperty.name]|default('') %}
+    {% endif %}
+{% else %}
+    {% if crud.context == 'create' %}
+        {% set selected = select_compare(meta.route.query[crudProperty.name]|default(crudProperty.editor.default)|default(''), value) %}
+    {% else %}
+        {% set selected = select_compare(item[crudProperty.name]|default(''), value) %}
+    {% endif %}
+{% endif %}
+<option {% if selected %}selected{% endif %} value="{{ value }}">
+    {{ label }}
+</option>

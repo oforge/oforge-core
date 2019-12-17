@@ -1,24 +1,30 @@
 {% block product_images %}
     {% if not insertion.media|length < 1 %}
+        {% set break = false %}
         <div class="product-images {% if insertion.media|length == 1 %}single-image{% endif %}">
             <div class="product-view__image">
                 <div class="slider slider--detail-main">
-                    {% for item in insertion.media %}
+                    {% for item in insertion.media if not break %}
                         {% if item.content.type == 'video/vimeo' %}
                             <div class="slide video" data-vimeo-video-id="{{ item.content.path }}"></div>
+                            {% set break = true %}
                         {% endif %}
                     {% endfor %}
                     {% for item in insertion.media %}
                         {% if item.content.type != 'video/vimeo' %}
                             <div class="slide thumbnail">
                                 {% if item is defined and item.content|length > 0 and item.content.path is defined %}
-                                    <img src="{{ media(item.content.path, 400) }}" alt="{{ item.content.name }}"
-                                         class="thumbnail__image">
+                                    <picture class="lazy">
+                                        <source class="lazy" data-srcset="{{ media(item.content.path, 700) }}" media="(min-width: 640px)" />
+                                        <img class="thumbnail__image lazy" data-src="{{ media(item.content.path, 400) }}" alt="{{ item.content.name }}" />
+                                    </picture>
                                 {% endif %}
                             </div>
                         {% endif %}
                     {% endfor %}
                 </div>
+                {% block detail_image_badges %}
+                {% endblock detail_image_badges %}
             </div>
             <div class="thumbnails thumbnails--product">
                 <div class="slider slider--detail-nav">

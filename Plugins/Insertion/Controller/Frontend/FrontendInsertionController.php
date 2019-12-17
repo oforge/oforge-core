@@ -10,6 +10,7 @@ use FrontendUserManagement\Abstracts\SecureFrontendController;
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\FrontendUserService;
 use Helpdesk\Services\HelpdeskTicketService;
+use Insertion\Models\AttributeKey;
 use Insertion\Models\Insertion;
 use Insertion\Models\InsertionType;
 use Insertion\Models\InsertionTypeAttribute;
@@ -19,21 +20,22 @@ use Insertion\Services\InsertionFeedbackService;
 use Insertion\Services\InsertionFormsService;
 use Insertion\Services\InsertionListService;
 use Insertion\Services\InsertionProfileService;
+use Insertion\Services\InsertionSeoService;
 use Insertion\Services\InsertionService;
 use Insertion\Services\InsertionTypeService;
 use Insertion\Services\InsertionUpdaterService;
+use Insertion\Services\InsertionValidationService;
 use Messenger\Models\Conversation;
 use Messenger\Services\FrontendMessengerService;
-use Monolog\Logger;
-use Oforge\Engine\Modules\APIRaven\Services\APIRavenService;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
+use Oforge\Engine\Modules\I18n\Models\Language;
+use Oforge\Engine\Modules\I18n\Services\LanguageService;
 use Oforge\Engine\Modules\Mailer\Services\MailService;
-use Oforge\Engine\Modules\Media\Services\MediaService;
 use Oforge\Engine\Modules\TemplateEngine\Extensions\Services\UrlService;
 use ReflectionException;
 use Slim\Http\Request;
@@ -53,7 +55,9 @@ class FrontendInsertionController extends SecureFrontendController
         $this->ensurePermissions([
             'accountListAction',
             'reportAction',
-        ], User::class);
+            'feedbackAction',
+            'contactAction',
+        ]);
     }
 
     /**
@@ -167,6 +171,19 @@ class FrontendInsertionController extends SecureFrontendController
         $result['data'] = $data;
 
         Oforge()->View()->assign($result);
+
+        /** @var InsertionValidationService $insertionValidationService */
+        $insertionValidationService = Oforge()->Services()->get('insertion.validation');
+        $redirectUrl = '/insertions/create/' . $typeId . '/1';
+
+        if ($page > 1 && !$insertionValidationService->titleExists()) {
+            Oforge()->View()->Flash()->addMessage('error', I18N::translate('fill_title', [
+                'de' => 'Bitte befülle den Titel',
+                'en' => 'Please fill in the title',
+            ]));
+            $response = $response->withRedirect($redirectUrl, 303);
+            return $response;
+        }
     }
 
     /**
@@ -229,12 +246,12 @@ class FrontendInsertionController extends SecureFrontendController
             $mailService = Oforge()->Services()->get('mail');
 
             if ($request->isPost()) {
-                Oforge()->Logger()->get('create')->info("process data ", $_POST);
+                Oforge()->Logger()->get('create')->info('process data ', $_POST);
 
                 $data = $formsService->processPostData($typeId);
                 try {
                     $processData = $formsService->parsePageData($data);
-                    Oforge()->Logger()->get('create')->info("processed data ", $data);
+                    Oforge()->Logger()->get('create')->info('processed data ', $data);
 
                     $insertionId = $createService->create($typeId, $user, $processData);
 
@@ -290,6 +307,7 @@ class FrontendInsertionController extends SecureFrontendController
      *
      * @return Response
      * @throws ServiceNotFoundException
+     * @throws ORMException
      * @EndpointAction(path="/feedback")
      */
     public function feedbackAction(Request $request, Response $response)
@@ -358,7 +376,7 @@ class FrontendInsertionController extends SecureFrontendController
 
         $typeAttributes = $service->getInsertionTypeAttributeTree($type->getId());
         $result['attributes'] = $typeAttributes;
-        $result["all_attributes"] = $service->getInsertionTypeAttributeMap();
+        $result['all_attributes'] = $service->getInsertionTypeAttributeMap();
         $result['keys'] = [];
         $result['typeId'] = $args['type'];
         $result['type'] = $type->toArray(0);
@@ -380,7 +398,46 @@ class FrontendInsertionController extends SecureFrontendController
         $result['search'] = $listService->search($type->getId(), array_merge($request->getQueryParams(), $radius));
 
 
+        /** @var InsertionService $insertion */
+        $insertionService = Oforge()->Services()->get('insertion');
+
+        foreach ($result['search']['query']['items'] as &$insertionItem ) {
+            /** @var Insertion $insertion */
+            $insertion = $insertionService->getInsertionById($insertionItem['id']);
+
+            $insertionValues = [];
+            foreach ($insertion->getValues() as $value) {
+                if (isset($insertionValues[$value->getAttributeKey()->getId()])) {
+                    if (is_array($insertionValues[$value->getAttributeKey()->getId()])) {
+                        $insertionValues[$value->getAttributeKey()->getId()][] = $value->getValue();
+                    } else {
+                        $insertionValues[$value->getAttributeKey()->getId()] = [$insertionValues[$value->getAttributeKey()->getId()], $value->getValue()];
+                    }
+                } else {
+                    $insertionValues[$value->getAttributeKey()->getId()] = $value->getValue();
+                }
+            }
+            $insertionItem['insertion_values'] = $insertionValues;
+        }
+
+
+
         Oforge()->View()->assign($result);
+        if (Oforge()->View()->has('seo')) {
+            $seo = Oforge()->View()->get('seo');
+            if (isset($seo['url_id']) && isset($seo['url_name'])) {
+                /** @var InsertionSeoService $insertionSeoService */
+                $insertionSeoService = Oforge()->Services()->get('insertion.seo');
+                $seoContents = $insertionSeoService->getContentForUrl($seo['url_id']);
+                if (!empty($seoContents)) {
+                    Oforge()->View()->assign([
+                        'seo' => [
+                            'content' => $seoContents
+                        ]
+                    ]);
+                }
+            }
+        }
     }
 
     /**
@@ -495,7 +552,7 @@ class FrontendInsertionController extends SecureFrontendController
             }
         }
 
-        Oforge()->View()->assign(["insertion" => $insertion->toArray(3, ['user' => ['*', 'id']])]);
+        Oforge()->View()->assign(['insertion' => $insertion->toArray(3, ['user' => ['*', '!id']])]);
 
         /**
          * @var $service InsertionProfileService
@@ -504,11 +561,11 @@ class FrontendInsertionController extends SecureFrontendController
 
         $profile = $service->get($insertion->getUser()->getId());
         if (isset($profile)) {
-            Oforge()->View()->assign(["profile" => $profile->toArray()]);
+            Oforge()->View()->assign(['rofile' => $profile->toArray()]);
         }
 
         /** @var $insertionTypeService InsertionTypeService */
-        $insertionTypeService = Oforge()->Services()->get("insertion.type");
+        $insertionTypeService = Oforge()->Services()->get('insertion.type');
 
         $typeAttributes = $insertionTypeService->getInsertionTypeAttributeTree($insertion->getInsertionType()->getId());
         $insertionValues = [];
@@ -530,22 +587,32 @@ class FrontendInsertionController extends SecureFrontendController
                 if ($attribute['top'] == 'true') {
                     if (isset($insertionValues[$attribute['attributeKey']['id']])) {
                         $topValues[] = [
-                            "name" => $attribute['attributeKey']['name'],
-                            "type" => $attribute['attributeKey']['type'],
-                            "filterType" => $attribute['attributeKey']['filterType'],
-                            "attributeKey" => $attribute['attributeKey']['id'],
-                            "value" => $insertionValues[$attribute['attributeKey']['id']],
+                            'name' => $attribute['attributeKey']['name'],
+                            'type' => $attribute['attributeKey']['type'],
+                            'filterType' => $attribute['attributeKey']['filterType'],
+                            'attributeKey' => $attribute['attributeKey']['id'],
+                            'value' => $insertionValues[$attribute['attributeKey']['id']],
                         ];
                     }
                 }
             }
         }
+
+        /** @var LanguageService $languageService */
+        $languageService = Oforge()->Services()->get('i18n.language');
+
+        /** @var Language[] $availableLanguages */
+        $availableLanguages = $languageService->list(['active' => true]);
+        foreach ($availableLanguages as &$language) {
+            $language = $language->getIso();
+        }
         Oforge()->View()->assign([
-            "top_values" => $topValues,
-            "attributes" => $typeAttributes,
-            "all_attributes" => $insertionTypeService->getInsertionTypeAttributeMap(),
-            "insertion_values" => $insertionValues,
+            'top_values' => $topValues,
+            'attributes' => $typeAttributes,
+            'all_attributes' => $insertionTypeService->getInsertionTypeAttributeMap(),
+            'insertion_values' => $insertionValues,
             'animations' => Oforge()->View()->Flash()->getData('animations'),
+            'languages' => $availableLanguages
         ]);
         Oforge()->View()->Flash()->clearData('animations');
 
@@ -558,6 +625,8 @@ class FrontendInsertionController extends SecureFrontendController
      *
      * @return Response
      * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ReflectionException
      * @throws ServiceNotFoundException
      * @EndpointAction(path="/edit/{id}")
      */
@@ -568,6 +637,7 @@ class FrontendInsertionController extends SecureFrontendController
          * @var $service InsertionService
          */
         $service = Oforge()->Services()->get('insertion');
+        /** @var Insertion $insertion */
         $insertion = $service->getInsertionById(intval($id));
 
         /**
@@ -589,8 +659,10 @@ class FrontendInsertionController extends SecureFrontendController
             return $response->withRedirect('/401', 301);
         }
 
+        /** @var InsertionType $type */
         $type = $insertion->getInsertionType();
         $typeAttributes = $insertionTypeService->getInsertionTypeAttributeTree($insertion->getInsertionType()->getId());
+        $result['type'] = $type->toArray();
         $result['attributes'] = $typeAttributes;
         $result['keys'] = [];
         $result['all_attributes'] = $insertionTypeService->getInsertionTypeAttributeMap();
@@ -598,6 +670,7 @@ class FrontendInsertionController extends SecureFrontendController
          * @var $attribute InsertionTypeAttribute
          */
         foreach ($type->getAttributes() as $attribute) {
+            /** @var AttributeKey $key */
             $key = $attribute->getAttributeKey();
             $result['keys'][$key->getName()] = $key->toArray(0);
         }
@@ -732,13 +805,13 @@ class FrontendInsertionController extends SecureFrontendController
          */
         foreach ($insertion->getInsertionType()->getAttributes() as $attribute) {
             if ($attribute->isTop()) {
-                foreach ($data["values"] as $value) {
-                    if ($value["attributeKey"] == $attribute->getAttributeKey()->getId()) {
-                        $data["topvalues"][] = [
-                            "name" => $attribute->getAttributeKey()->getName(),
-                            "type" => $attribute->getAttributeKey()->getType(),
-                            "attributeKey" => $attribute->getAttributeKey()->getId(),
-                            "value" => $value["value"],
+                foreach ($data['values'] as $value) {
+                    if ($value['attributeKey'] == $attribute->getAttributeKey()->getId()) {
+                        $data['topvalues'][] = [
+                            'name' => $attribute->getAttributeKey()->getName(),
+                            'type' => $attribute->getAttributeKey()->getType(),
+                            'attributeKey' => $attribute->getAttributeKey()->getId(),
+                            'value' => $value['value'],
                         ];
                     }
                 }
@@ -804,19 +877,19 @@ class FrontendInsertionController extends SecureFrontendController
         }
 
         $data = $insertion->toArray(2);
-        $data["topvalues"] = [];
+        $data['topvalues'] = [];
         /**
          * @var $attribute InsertionTypeAttribute
          */
         foreach ($insertion->getInsertionType()->getAttributes() as $attribute) {
             if ($attribute->isTop()) {
-                foreach ($data["values"] as $value) {
-                    if ($value["attributeKey"] == $attribute->getAttributeKey()->getId()) {
-                        $data["topvalues"][] = [
-                            "name" => $attribute->getAttributeKey()->getName(),
-                            "type" => $attribute->getAttributeKey()->getType(),
-                            "attributeKey" => $attribute->getAttributeKey()->getId(),
-                            "value" => $value["value"],
+                foreach ($data['values'] as $value) {
+                    if ($value['attributeKey'] == $attribute->getAttributeKey()->getId()) {
+                        $data['topvalues'][] = [
+                            'name' => $attribute->getAttributeKey()->getName(),
+                            'type' => $attribute->getAttributeKey()->getType(),
+                            'attributeKey' => $attribute->getAttributeKey()->getId(),
+                            'value' => $value['value'],
                         ];
                     }
                 }
@@ -871,8 +944,8 @@ class FrontendInsertionController extends SecureFrontendController
 
         if (!isset($insertion)) {
             Oforge()->View()->Flash()->addMessage('error', I18N::translate('insertion_not_exist', [
-                'en' => "The provided ID does not belong to an insertion.",
-                'de' => "Zu der gegebenen ID existiert kein Inserat.",
+                'en' => 'The provided ID does not belong to an insertion.',
+                'de' => 'Zu der gegebenen ID existiert kein Inserat.',
             ]));
 
             return $response->withRedirect('/');
@@ -901,7 +974,7 @@ class FrontendInsertionController extends SecureFrontendController
      */
     public function trackViewAction(Request $request, Response $response) {
         if($request->isPost()) {
-            $id = $request->getParsedBody()["id"];
+            $id = $request->getParsedBody()['id'];
             /** @var InsertionService $insertionService */
             $insertionService = Oforge()->Services()->get('insertion');
             $insertionService->countUpInsertionViews($id);
