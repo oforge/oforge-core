@@ -3,7 +3,7 @@
 
     {% block form_content %}
         <form class="form form--insertion form--submit--loading"
-              action="{% if page == pagecount %}
+              action="{% block form_content_action %}{% if page == pagecount %}
                     {{ url('insertions_processSteps', { type : type.id}) }}
                   {% else %}
                   {# If the insertion type has no 'feature-attributes' then skip the next step #}
@@ -11,7 +11,7 @@
                     {{ url('insertions_createSteps', { type : type.id, page: page + 2}) }}
                     {% else %}
                     {{ url('insertions_createSteps', { type : type.id, page: page + 1}) }}
-                  {% endif %}{% endif %}"
+                  {% endif %}{% endif %}{% endblock form_content_action %}"
               method="post"
               enctype="multipart/form-data">
 
@@ -25,8 +25,8 @@
                     <button type="submit"
                             class="form__input form__input--submit button form__input--submit--loading">
                         <span class="default-text">
-                        {% if page == pagecount %}{{ i18n('insertion_create') }}{% else %}{{ i18n('save_and_next_step') }}{% endif %}
-                            </span>
+                            {% if page == pagecount %}{{ i18n('insertion_create') }}{% else %}{{ i18n('save_and_next_step') }}{% endif %}
+                        </span>
                         <span class="submit-text">
                             {{ i18n('insertion_post_processing') }}
                         </span>
