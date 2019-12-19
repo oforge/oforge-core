@@ -1,0 +1,7 @@
+{
+    "name": "oforge/pdf-generator",
+    "description": "Simple TWIG -> HTML -> PDF Generator",
+    "require": {
+        "mpdf/mpdf": "^8.0"
+    }
+}
