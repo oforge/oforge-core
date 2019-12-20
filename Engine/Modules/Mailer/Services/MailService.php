@@ -390,5 +390,4 @@ class MailService {
         ];
         $this->send($mailerOptions, $templateData);
     }
-
 }
