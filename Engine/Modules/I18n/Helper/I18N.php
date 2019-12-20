@@ -33,28 +33,8 @@ class I18N {
                 /** @var InternationalizationService $service */
                 self::$i18nService = Oforge()->Services()->get('i18n');
             }
-            if (!isset($language)) {
+            if ($language === null) {
                 $language = self::getCurrentLanguage([]);
-            }
-            if (is_array($defaultValue)) {
-                if (empty($defaultValue)) {
-                    return $key;
-                }
-                $result = null;
-                if (isset($defaultValue[$language])) {
-                    $result = self::$i18nService->get($key, $language, $defaultValue[$language]);
-                }
-                foreach ($defaultValue as $languageIso => $languageDefaultValue) {
-                    if ($language === $languageIso) {
-                        continue;
-                    }
-                    $tmpResult = self::$i18nService->get($key, $languageIso, $defaultValue[$languageIso]);
-                    if ($result === null) {
-                        $result = $tmpResult;
-                    }
-                }
-
-                return $result;
             }
 
             return self::$i18nService->get($key, $language, $defaultValue);
@@ -106,7 +86,7 @@ class I18N {
 
             return self::$i18nService->exists($key, $language);
         } catch (Exception $exception) {
-            Oforge()->Logger()->get()->error($exception->getMessage(), $exception->getTrace());
+            Oforge()->Logger()->logException($exception);
         }
 
         return false;
@@ -115,12 +95,12 @@ class I18N {
     /**
      * Init current language for internationalization.
      *
-     * @param mixed $context
+     * @param array $context
      *
      * @return string
      * @throws ServiceNotFoundException
      */
-    public static function getCurrentLanguage($context) : string {
+    public static function getCurrentLanguage(array $context = []) : string {
         if (!isset(self::$languageService)) {
             /**@var LanguageService $languageService */
             self::$languageService = Oforge()->Services()->get('i18n.language');

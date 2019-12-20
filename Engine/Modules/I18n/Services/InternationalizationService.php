@@ -14,6 +14,8 @@ use Oforge\Engine\Modules\I18n\Models\Snippet;
  * @package Oforge\Engine\Modules\I18n\Services
  */
 class InternationalizationService extends AbstractDatabaseAccess {
+    /** @var string[] $currentActiveLanguages */
+    private $currentActiveLanguages;
     /** @var array $cache */
     private $cache;
 
@@ -24,30 +26,49 @@ class InternationalizationService extends AbstractDatabaseAccess {
     /**
      * @param string $key
      * @param string $language
-     * @param string|null $defaultValue
+     * @param string|array|null $defaultValue
      *
      * @return string
-     * @throws ORMException
      */
-    public function get(string $key, string $language, ?string $defaultValue = null) : string {
-        if (!isset($this->cache[$language][$key])) {
-            /** @var Snippet $snippet */
-            $snippet = $this->repository()->findOneBy([
-                'name'  => $key,
-                'scope' => $language,
-            ]);
-            if (!isset($snippet)) {
-                $snippet = Snippet::create([
-                    'name'  => $key,
-                    'scope' => $language,
-                    'value' => isset($defaultValue) ? $defaultValue : $key,
-                ]);
-                $this->entityManager()->create($snippet);
+    public function get(string $key, string $language, $defaultValue = null) : string {
+        if (!isset($this->currentActiveLanguages)) {
+            /** @var LanguageService $languageService */
+            $languageService              = Oforge()->Services()->get('i18n.language');
+            $this->currentActiveLanguages = array_keys($languageService->getFilterDataLanguages(true));
+        }
+        if ($defaultValue === null) {
+            $defaultValue = array_fill_keys($this->currentActiveLanguages, $key);
+        } elseif (is_string($defaultValue)) {
+            $defaultValue = array_fill_keys($this->currentActiveLanguages, $defaultValue);
+        }
+        if (!isset($defaultValue[$language])) {
+            $defaultValue[$language] = $key;
+        }
+        foreach ($defaultValue as $languageISO => $value) {
+            if (!isset($this->cache[$languageISO][$key])) {
+                try {
+                    /** @var Snippet $snippet */
+                    $snippet = $this->repository()->findOneBy([
+                        'name'  => $key,
+                        'scope' => $languageISO,
+                    ]);
+                    if (!isset($snippet)) {
+                        $snippet = Snippet::create([
+                            'name'  => $key,
+                            'scope' => $languageISO,
+                            'value' => $value,
+                        ]);
+                        $this->entityManager()->create($snippet);
+                    }
+                    if (!isset($this->cache[$languageISO])) {
+                        $this->cache[$languageISO] = [];
+                    }
+                    $this->cache[$languageISO][$key] = $snippet->getValue();
+                } catch (ORMException $exception) {
+                    Oforge()->Logger()->logException($exception);
+                    $this->cache[$languageISO][$key] = $key;
+                }
             }
-            if (!isset($this->cache[$language])) {
-                $this->cache[$language] = [];
-            }
-            $this->cache[$language][$key] = $snippet->getValue();
         }
 
         return $this->cache[$language][$key];
