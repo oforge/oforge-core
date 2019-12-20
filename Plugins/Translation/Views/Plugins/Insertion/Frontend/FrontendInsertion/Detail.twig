@@ -1,0 +1,60 @@
+{% extends "@parent/Plugins/Insertion/Frontend/FrontendInsertion/Detail.twig" %}
+
+ {% block insertion_detail__heading %}
+     <div class="product-view--heading">
+         <h3 class="title title--3 title--product user-generated auto-translatable language--current"
+             data-language="{{ insertion.content[0].language.iso }}"
+             data-content-identifier="insertion-title">{{ insertion.content[0].title }}</h3>
+         {% for content in insertion.content[1:] %}
+             <h3 class="title title--3 title--product user-generated auto-translatable"
+                 data-language="{{content.language.iso }}"
+                 data-content-identifier="insertion-title">{{ content.title }}</h3>
+         {% endfor %}
+         <span
+             class="title title--3 product-view__price">{{ i18n('price_' ~ insertion.insertionType.name, i18n('price')) }}
+             {% if insertion.priceType is same as("on_demand") %}
+                 <span class="attribute-value">{{ i18n('price_on_demand') }}</span>
+             {% else %}
+                 <span
+                     class="price-value">{% if insertion.priceType is same as("negotiable") %}{{ i18n('price_negotiable') }}{% endif %} {{ insertion.price|number_format(0, ',', '.') }}€</span>
+                 {% if insertion.tax %}
+                     <span class="product-view__tax">,{{ i18n('vat_identifiable') }}</span>
+                 {% endif %}
+             {% endif %}
+         </span>
+     </div>
+ {% endblock insertion_detail__heading %}
+
+{% block insertion_detail__description %}
+    <div class="panel panel--product-description ">
+        <div class="description__head">
+            <h3 class="panel__header">{{ i18n('insertion_detail_description_title_' ~ insertion.insertionType.name, i18n('insertion_detail_description_title')) }}</h3>
+            {% block description__language_switch %}
+                {% include 'Plugins/Language/Frontend/Components/LanguageSwitch.twig' %}
+            {% endblock description__language_switch %}
+            <div class="has--bottom-separator"></div>
+        </div>
+
+        {% block detail_description__language_tab_navigation %}
+            <div class="description__body">
+                <div class="body__language user-generated auto-translatable language--current"
+                     data-language="{{ insertion.content[0].language.iso }}"
+                     data-content-identifier="insertion-description">
+                    {{ insertion.content[0].description|nl2br }}
+                </div>
+                {% for content in insertion.content[1:] %}
+                    <div class="body__language user-generated auto-translatable"
+                         data-language="{{ content.language.iso }}" data-content-identifier="insertion-description">
+                        {{ content.description|nl2br }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endblock detail_description__language_tab_navigation %}
+        <div class="description__view-counter">
+            <svg class="icon icon--small">
+                <use xlink:href="#preview"></use>
+            </svg>
+            <span class="counter">{{ "%04d"|format(insertion.views) }}</span>
+        </div>
+    </div>
+{% endblock insertion_detail__description %}
