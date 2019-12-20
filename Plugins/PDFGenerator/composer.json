@@ -1,0 +1,12 @@
+{
+    "name": "oforge/pdfgenerator",
+    "type": "oforge-plugin",
+    "description": "Oforge PDF Generator",
+    "keywords": ["oforge", "plugin", "pdf"],
+    "license": "MIT",
+    "require": {
+        "php": ">=7.2",
+        "composer/installers": "~1.0",
+        "mpdf/mpdf": "^8.0"
+    }
+}
