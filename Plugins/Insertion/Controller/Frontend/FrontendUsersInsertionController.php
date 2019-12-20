@@ -6,10 +6,12 @@ use Doctrine\ORM\ORMException;
 use FastRoute\Route;
 use FrontendUserManagement\Abstracts\SecureFrontendController;
 use FrontendUserManagement\Models\User;
+use FrontendUserManagement\Models\UserDetail;
 use FrontendUserManagement\Services\FrontendUserService;
 use FrontendUserManagement\Services\UserDetailsService;
 use FrontendUserManagement\Services\UserService;
 use Insertion\Models\Insertion;
+use Insertion\Models\InsertionProfile;
 use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Models\InsertionUserSearchBookmark;
 use Insertion\Services\InsertionBookmarkService;
@@ -119,6 +121,68 @@ class FrontendUsersInsertionController extends SecureFrontendController {
             $updaterService->deleteInsertionMediaByContentId($videoId);
         }
         return $response;
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     *
+     * @return Response
+     * @throws ORMException
+     * @throws ServiceNotFoundException
+     * @EndpointAction()
+     */
+    public function resetProfileImageAction(Request $request, Response $response) {
+
+        /** @var UserDetailsService $userDetailService */
+        $userDetailService = Oforge()->Services()->get('frontend.user.management.user.details');
+
+        $userId = Oforge()->View()->get('current_user')['id'];
+
+        if(isset($userId)) {
+            $userDetail = $userDetailService->get($userId);
+            if(isset($userDetail)) {
+                $userDetail->resetImage();
+                $userDetailService->entityManager()->update($userDetail);
+            }
+        }
+
+        /** @var Router $router */
+        $router = Oforge()->App()->getContainer()->get('router');
+        $url    = $router->pathFor('frontend_account_insertions_profile');
+
+        return $response->withRedirect($url, 302);
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     *
+     * @return Response
+     * @throws ORMException
+     * @throws ServiceNotFoundException
+     * @EndpointAction()
+     */
+    public function resetProfileBackgroundAction(Request $request, Response $response) {
+
+       /** @var InsertionProfileService $insertionProfileService */
+        $insertionProfileService = Oforge()->Services()->get('insertion.profile');
+
+        $userId = Oforge()->View()->get('current_user')['id'];
+
+        if(isset($userId)) {
+            $insertionProfile = $insertionProfileService->get($userId);
+            if(isset($insertionProfile)) {
+                $insertionProfile->resetBackground();
+                $insertionProfileService->entityManager()->update($insertionProfile);
+            }
+        }
+
+        /** @var Router $router */
+        $router = Oforge()->App()->getContainer()->get('router');
+        $url    = $router->pathFor('frontend_account_insertions_profile');
+
+        return $response->withRedirect($url, 302);
     }
 
     /**
@@ -474,12 +538,12 @@ class FrontendUsersInsertionController extends SecureFrontendController {
 
         $user = $userService->getUser();
         /**
-         * @var $service InsertionProfileService
+         * @var $insertionProfileService InsertionProfileService
          */
-        $service = Oforge()->Services()->get("insertion.profile");
+        $insertionProfileService = Oforge()->Services()->get("insertion.profile");
 
-        if ($request->isPost() && $user != null) {
-            $service->update($user, $_POST);
+        if ($request->isPost() && $user !== null) {
+            $insertionProfileService->update($user, $_POST);
 
             if (isset($_FILES["profile"])) {
                 /**
@@ -503,9 +567,11 @@ class FrontendUsersInsertionController extends SecureFrontendController {
             $_SESSION['auth'] = $jwt;
         }
 
-        $result = $service->get($user->getId());
+        $result = $insertionProfileService->get($user->getId());
 
-        Oforge()->View()->assign(["profile" => $result != null ? $result->toArray() : null, "user" => $user->toArray()]);
+        $user = $user->toArray(1, ['password']);
+
+        Oforge()->View()->assign(["profile" => $result != null ? $result->toArray() : null, "user" => $user]);
     }
 
     public function initPermissions() {
@@ -526,6 +592,8 @@ class FrontendUsersInsertionController extends SecureFrontendController {
             'profileAction',
             'removeBookmarkAction',
             'removeSearchBookmarkAction',
+            'resetProfileImageAction',
+            'resetProfileBackgroundAction'
         ]);
     }
 

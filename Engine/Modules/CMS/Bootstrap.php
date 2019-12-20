@@ -17,6 +17,7 @@ use Oforge\Engine\Modules\CMS\ContentTypes\NavigationEntry;
 use Oforge\Engine\Modules\CMS\ContentTypes\RichText;
 use Oforge\Engine\Modules\CMS\ContentTypes\Row;
 use Oforge\Engine\Modules\CMS\ContentTypes\Text;
+use Oforge\Engine\Modules\CMS\ContentTypes\Video;
 use Oforge\Engine\Modules\CMS\ContentTypes\VideoYoutube;
 use Oforge\Engine\Modules\CMS\Controller\Backend\AjaxController;
 use Oforge\Engine\Modules\CMS\Controller\Backend\ElementsController;
@@ -229,6 +230,18 @@ class Bootstrap extends AbstractBootstrap {
             'label'     => [
                 'en' => 'Gallery',
                 'de' => 'Gallerie',
+            ],
+        ]);
+        $contentTypeManagementService->add([
+            'name'        => 'video',
+            'path'        => 'Video',
+            'icon'        => '/Themes/Base/ContentTypes/__assets/img/video.svg',
+            'description' => 'Video',
+            'group'       => $ctgMediaID,
+            'classPath'   => Video::class,
+            'label'       => [
+                'en' => 'Video',
+                'de' => 'Video',
             ],
         ]);
         $contentTypeManagementService->add([

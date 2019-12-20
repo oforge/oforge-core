@@ -21,68 +21,78 @@
                 {% include 'Frontend/Components/FlashMessages.twig' with {'flashMessages' : flashMessage} %}
                 {% endblock insertion_detail__flash_message %}
             {% endif %}
-            <div class="panel panel--product-view">
 
-                {% block insertion_detail__breadcrumb %}
-                    {% include 'Plugins/Insertion/Frontend/Components/Breadcrumb.twig' %}
-                {% endblock insertion_detail__breadcrumb %}
+            {% block product_view %}
+                <div class="panel panel--product-view">
 
-                {% block insertion_detail__heading %}
-                    <div class="product-view--heading">
-                        <h3 class="title title--3 title--product">{{ insertion.content[0].title }}</h3>
+                    {% block insertion_detail__breadcrumb %}
+                        {% include 'Plugins/Insertion/Frontend/Components/Breadcrumb.twig' %}
+                    {% endblock insertion_detail__breadcrumb %}
+
+                    {% block insertion_detail__heading %}
+                        <div class="product-view--heading">
+                            <h3 class="title title--3 title--product">{{ insertion.content[0].title }}</h3>
+                            <span
+                                class="title title--3 product-view__price">{{ i18n('price_' ~ insertion.insertionType.name, i18n('price')) }}
+                                {% if insertion.priceType is same as("on_demand")  %}
+                                    <span class="attribute-value">{{ i18n('price_on_demand') }}</span>
+                                {% else %}
+                                    <span class="price-value">{% if insertion.priceType is same as("negotiable") %}{{ i18n('price_negotiable') }}{% endif %} {{ insertion.price|number_format(0, ',', '.') }} €</span>{% if insertion.tax %}<span class="product-view__tax">, {{ i18n('vat_identifiable') }}</span>{% endif %}
+                                {% endif %}
+                            </span>
+                        </div>
+                    {% endblock insertion_detail__heading %}
+
+                    {% block insertion_detail__images %}
+                        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/ProductImages.twig' %}
+                    {% endblock insertion_detail__images %}
+                </div>
+            {% endblock product_view %}
+
+            {% block product_extended_info %}
+            {% endblock product_extended_info %}
+
+            {% block product_top_attributes %}
+                <div class="panel panel--top-attributes">
+                    <div class="top-attributes">
+                        {% for attribute in top_values %}
+                            {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes/' ~ attribute.type|capitalize  ~ '.twig'  with {'attribute': attribute, 'value' : insertion_values[attribute.attributeKey]} %}
+                        {% endfor %}
+
+                        <div class="product__attribute">
                         <span
-                            class="title title--3 product-view__price">{{ i18n('price_' ~ insertion.insertionType.name, i18n('price')) }}
+                            class="attribute-label">{{ i18n('price_' ~ insertion.insertionType.name, i18n('price')) }}</span>
                             {% if insertion.priceType is same as("on_demand")  %}
                                 <span class="attribute-value">{{ i18n('price_on_demand') }}</span>
                             {% else %}
-                                <span class="price-value">{% if insertion.priceType is same as("negotiable") %}{{ i18n('price_negotiable') }}{% endif %} {{ insertion.price|number_format(0, ',', '.') }} €</span>{% if insertion.tax %}<span class="product-view__tax">, {{ i18n('vat_identifiable') }}</span>{% endif %}
+                                <span class="attribute-value">{% if insertion.priceType is same as("negotiable") %}{{ i18n('price_negotiable') }}{% endif %} {{ insertion.price|number_format(0, ',', '.') }} €</span>
                             {% endif %}
-                        </span>
-                    </div>
-                {% endblock insertion_detail__heading %}
-
-                {% block insertion_detail__images %}
-                    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/ProductImages.twig' %}
-                {% endblock insertion_detail__images %}
-            </div>
-
-            <div class="panel panel--top-attributes">
-                <div class="top-attributes">
-                    {% for attribute in top_values %}
-                        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes/' ~ attribute.type|capitalize  ~ '.twig'  with {'attribute': attribute, 'value' : insertion_values[attribute.attributeKey]} %}
-                    {% endfor %}
-
-                    <div class="product__attribute">
-                    <span
-                        class="attribute-label">{{ i18n('price_' ~ insertion.insertionType.name, i18n('price')) }}</span>
-                        {% if insertion.priceType is same as("on_demand")  %}
-                            <span class="attribute-value">{{ i18n('price_on_demand') }}</span>
-                        {% else %}
-                            <span class="attribute-value">{% if insertion.priceType is same as("negotiable") %}{{ i18n('price_negotiable') }}{% endif %} {{ insertion.price|number_format(0, ',', '.') }} €</span>
-                        {% endif %}
+                        </div>
                     </div>
                 </div>
-            </div>
+            {% endblock product_top_attributes %}
 
             {% block insertion_detail__attributes %}
                 {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes.twig' %}
             {% endblock insertion_detail__attributes %}
 
-            <div class="panel panel--product-description ">
-                <div class="description__head">
-                    <h3 class="panel__header has--bottom-separator">{{ i18n('insertion_detail_description_title_' ~ insertion.insertionType.name, i18n('insertion_detail_description_title')) }}</h3>
-                    <div class="language-switch"></div>
+            {% block insertion_detail__description %}
+                <div class="panel panel--product-description ">
+                    <div class="description__head">
+                        <h3 class="panel__header has--bottom-separator">{{ i18n('insertion_detail_description_title_' ~ insertion.insertionType.name, i18n('insertion_detail_description_title')) }}</h3>
+                        <div class="language-switch"></div>
+                    </div>
+                    <div class="description__body">
+                        {{ insertion.content[0].description|nl2br }}
+                    </div>
+                    <div class="description__view-counter">
+                        <svg class="icon icon--small">
+                            <use xlink:href="#preview"></use>
+                        </svg>
+                        <span class="counter">{{ "%04d"|format(insertion.views) }}</span>
+                    </div>
                 </div>
-                <div class="description__body">
-                    {{ insertion.content[0].description|nl2br }}
-                </div>
-                <div class="description__view-counter">
-                    <svg class="icon icon--small">
-                        <use xlink:href="#preview"></use>
-                    </svg>
-                    <span class="counter">{{ "%04d"|format(insertion.views) }}</span>
-                </div>
-            </div>
+            {% endblock insertion_detail__description %}
 
             {% block insertion_detail__extended_content %}
             {% endblock insertion_detail__extended_content %}

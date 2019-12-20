@@ -25,10 +25,16 @@
             border-radius: 5px;
             opacity: .6;
         }
+
         &:hover {
             cursor: pointer;
         }
+        .user__picture .icon {
+            width: 4rem;
+            height: 4rem;
+        }
     }
+
 
     .profile-pic {
         width: 30%;
@@ -76,6 +82,7 @@
                 margin: $size-medium 0;
             }
         }
+
         .info__business {
             margin-top: $size-medium;
             font-size: 1rem;
@@ -95,9 +102,9 @@
         }
 
 
-
         .upload__label {
             display: flex;
+
             &:hover {
                 cursor: pointer;
             }
@@ -114,12 +121,34 @@
     .profile-link {
         display: flex;
         justify-content: flex-end;
+
         a {
             display: flex;
         }
+
         .icon {
             margin-left: $size-large;
         }
+    }
+
+    #reset_profile_image, #reset_profile_background {
+        position: absolute;
+        padding: $size-small;
+        background: $color-primary;
+        border-radius: 5px;
+        opacity: .6;
+        .icon {
+            fill: #fff;
+        }
+
+        &:hover {
+            transform: scale(1.2);
+            opacity: 1;
+        }
+    }
+
+    #reset_profile_image {
+        top: -10px;
     }
 
     .info__description {
@@ -127,6 +156,10 @@
     }
 
     @media screen and(min-width: $screen-medium) {
+        .center__label .user__picture .icon {
+            width: 6rem;
+            height: 6rem;
+        }
         .panel--account {
             padding: 3rem;
         }
@@ -175,6 +208,7 @@
         }
     }
 }
+
 .action-frontend_account_insertions_searchbookmarks {
     .panel--account h1 {
         font-size: 25px;

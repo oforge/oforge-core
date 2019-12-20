@@ -297,10 +297,11 @@ class CronjobService extends AbstractDatabaseAccess {
             try {
                 /** @var ConsoleService $consoleService */
                 $consoleService = Oforge()->Services()->get('console');
+                $consoleService->init();
                 $filePath       = $this->getLogFilePath($cronjob->getId());
-                $maxFiles       = $configService->get(CronjobStatics::SETTING_LOGFILE_DAYS);
+                $logFileLifeTime       = $configService->get(CronjobStatics::SETTING_LOGFILE_DAYS);
                 $level          = $cronjob->getLogfileLevel();
-                $fileHandler    = new RotatingFileHandler($filePath, $maxFiles, $level);
+                $fileHandler    = new RotatingFileHandler($filePath, $logFileLifeTime, $level);
                 $consoleService->addOutputLoggerHandler($fileHandler);
                 try {
                     $command     = $cronjob->getCommand();
@@ -308,6 +309,7 @@ class CronjobService extends AbstractDatabaseAccess {
                     $consoleService->runCommand($command, $commandArgs);
                     $success = true;
                 } catch (Exception $exception) {
+                    Oforge()->Logger()->logException($exception);
                 }
                 $consoleService->removeOutputLoggerHandler($fileHandler);
             } catch (ServiceNotFoundException $exception) {

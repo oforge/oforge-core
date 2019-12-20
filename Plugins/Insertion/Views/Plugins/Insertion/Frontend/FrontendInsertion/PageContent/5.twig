@@ -78,6 +78,9 @@
         </div>
     {% endblock summary %}
 
+    {% block payment %}
+    {% endblock payment %}
+
     {% if not user_logged_in %}
         {% block registration %}
             <h2>{{ i18n('registration_login') }}</h2>
