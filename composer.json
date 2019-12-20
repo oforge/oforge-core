@@ -19,7 +19,9 @@
         "marcj/topsort": "^1.1",
         "pelago/emogrifier": "^2.1.0",
         "ext-fileinfo": "*",
-        "vimeo/vimeo-api": "^3.0"
+        "vimeo/vimeo-api": "^3.0",
+        "paypal/rest-api-sdk-php": "^1.14",
+        "mpdf/mpdf": "^8.0"
     },
     "repositories": [
         {
