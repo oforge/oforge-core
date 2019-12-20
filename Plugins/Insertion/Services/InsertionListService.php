@@ -134,10 +134,10 @@ class InsertionListService extends AbstractDatabaseAccess
             if ($coordinates != null) {
                 $sqlQuery .= " left join oforge_insertion_contact contact on contact.insertion_id = i.id";
                 $sqlQuery .= " left join oforge_insertion_zip_coordinates zip on zip.country = contact.country and zip.zip = contact.zip";
-                $sqlQueryWhere .= " and ST_Distance_Sphere(POINT(zip.lng, zip.lat), POINT(:lng,:lat)) / 1000 <= :zip";
+                $sqlQueryWhere .= " and ST_Distance_Sphere(POINT(zip.lng, zip.lat), POINT(:lng, :lat)) / 1000 <= :zip_range";
                 $args["lng"] = $coordinates->getLng();
                 $args["lat"] = $coordinates->getLat();
-                $args["zip"] = $params["zip_range"];
+                $args["zip_range"] = $params["zip_range"];
             }
 
             $result['filter']['radius'] = [
