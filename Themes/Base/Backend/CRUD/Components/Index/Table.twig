@@ -4,8 +4,10 @@
     </thead>
     <tbody>
     {% for item in crud.items %}
+        {% set crudItemIndex = loop.index %}
         <tr>
             {% for crudProperty in crud.properties if crudProperty.crud[crud.context] and crudProperty.crud[crud.context]|default('off') != 'off' %}
+                {% set crudFieldID = ['form', crud.context, crud.model|lower, crudProperty.name, crudItemIndex]|join('_') %}
                 {% include CRUD_path('Components/Index/TableCell.twig') %}
             {% endfor %}
             {% if crud.hasRowActions %}

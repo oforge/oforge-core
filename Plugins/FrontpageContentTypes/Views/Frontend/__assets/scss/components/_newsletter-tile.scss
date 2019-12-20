@@ -56,6 +56,7 @@
 
             &--submit .button .success-text {
                 display: none;
+
                 .icon {
                     fill: $color-light;
                     height: 100%;
@@ -75,6 +76,7 @@
             p {
                 display: inline;
             }
+
             a {
                 color: inherit;
             }
@@ -101,6 +103,15 @@
             margin-left: 2%;
         }
     }
+
+    [class*="image-tile"] + .newsletter-tile {
+        max-height: 500px;
+        height: 500px;
+
+        &:after {
+            content: none;
+        }
+    }
 }
 
 @media screen and (min-width: $screen-large) {
@@ -110,10 +121,15 @@
         margin-left: 2%;
     }
 
-    .newsletter-tile  {
+    .newsletter-tile {
         width: 32%;
+
         &:first-child {
             width: 32%;
         }
+    }
+
+    [class*="image-tile"] + .newsletter-tile {
+        width: 33%;
     }
 }

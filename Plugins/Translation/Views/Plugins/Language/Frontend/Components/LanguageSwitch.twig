@@ -1,0 +1,22 @@
+{% block language_switch %}
+    <div class="language-switch language-switch--collapsed"
+         data-selected-language="{{ insertion.content[0].language.iso }}"
+         data-number-available-languages="{{ languages|length }}">
+        <button class="btn btn-primary language-switch__language language--current"
+                data-language="{{ insertion.content[0].language.iso }}"><span
+                class="language__label">{{ i18n('language_name_' ~ insertion.content[0].language.iso) }}</span>
+            <svg class="icon icon--secondary">
+                <use xlink:href="#slider"></use>
+            </svg>
+        </button>
+        <div class="language-switch__content">
+            {% for language in languages[1:] %}
+                <button class="btn btn-primary-light language-switch__language language--option"
+                        title="{{ i18n('translate_automatically', {'en' : 'Translate automatically', 'de' : 'Automatisch übersetzen'}) }}"
+                        data-language="{{ language }}"><span
+                        class="language__label">{{ i18n('language_name_' ~ language) }}</span>
+                </button>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock language_switch %}

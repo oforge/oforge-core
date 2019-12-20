@@ -20,7 +20,8 @@ if (typeof Oforge !== 'undefined') {
             messageProcessing: '.upload__processing-message',
             messageSuccess: '.upload__success-message',
             messageDeleting: '.upload__deleting-message',
-            messageDeletingSuccess: '.upload__delete-success-message'
+            messageDeletingSuccess: '.upload__delete-success-message',
+            messageWrongFileType: '.upload__wrong-file-type',
         },
         init: function () {
             var self = this;
@@ -58,44 +59,42 @@ if (typeof Oforge !== 'undefined') {
 
                     if (input.files.length <= maxFileCount) {
                         input.files.forEach(function (file) {
-                            if (videoTypes.indexOf(file.type) > -1) {
-                                fileSize += file.size;
-                                if (checkFileSize(fileSize) === false) {
-                                    input.value = "";
-                                    return false;
-                                }
-
-                                disableSubmitButton();
-                                displayPlaceholderImage();
-                                displayMessage(self.selectors.messageUploading);
-                                $("#upload-progress").val(0).parent().removeClass('hidden').show();
-
-                                var uploader = new VimeoUpload({
-                                    file: input.files[0],
-                                    token: credentials.vimeo_access_token,
-                                    name: file.name,
-                                    description: 'Default description',
-                                    onProgress: function (data) {
-                                        let progressBar = document.getElementById('upload-progress');
-                                        progressBar.value = data.loaded / data.total * 100;
-                                    },
-                                    onComplete: function (data) {
-                                        fillHiddenIdInput(data);
-                                        videoId = data;
-                                        fileUrl = this.api_url + '/' + data;
-                                        enableDeleteButton();
-                                        allowEmbed(this.api_url, data, this.token);
-                                        fetchVideoThumbnail(this.api_url, data, this.token);
-                                        displayMessage(self.selectors.messageSuccess);
-                                        displayProcessingStatus();
-                                    },
-                                    onError: function (data) {
-                                        displayErrorMessage(data);
-                                        enableSubmitButton();
-                                    }
-                                });
-                                uploader.upload();
+                            fileSize += file.size;
+                            if (checkFileSize(fileSize) === false) {
+                                input.value = "";
+                                return false;
                             }
+
+                            disableSubmitButton();
+                            displayPlaceholderImage();
+                            displayMessage(self.selectors.messageUploading);
+                            $("#upload-progress").val(0).parent().removeClass('hidden').show();
+
+                            var uploader = new VimeoUpload({
+                                file: input.files[0],
+                                token: credentials.vimeo_access_token,
+                                name: file.name,
+                                description: 'Default description',
+                                onProgress: function (data) {
+                                    let progressBar = document.getElementById('upload-progress');
+                                    progressBar.value = data.loaded / data.total * 100;
+                                },
+                                onComplete: function (data) {
+                                    fillHiddenIdInput(data);
+                                    videoId = data;
+                                    fileUrl = this.api_url + '/' + data;
+                                    enableDeleteButton();
+                                    allowEmbed(this.api_url, data, this.token);
+                                    fetchVideoThumbnail(this.api_url, data, this.token);
+                                    displayMessage(self.selectors.messageSuccess);
+                                    displayProcessingStatus();
+                                },
+                                onError: function (data) {
+                                    displayErrorMessage(data);
+                                    enableSubmitButton();
+                                }
+                            });
+                            uploader.upload();
                         });
                     }
 
@@ -208,7 +207,7 @@ if (typeof Oforge !== 'undefined') {
                     headers: {
                         'Authorization': 'Bearer ' + token
                     },
-                    success: function() {
+                    success: function () {
                         enableSubmitButton();
                     },
                     error: function (error) {

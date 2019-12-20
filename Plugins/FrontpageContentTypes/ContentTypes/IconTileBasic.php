@@ -59,7 +59,7 @@ class IconTileBasic extends AbstractContentType {
         ];
 
         if (isset($_FILES["icon"])) {
-            /** @var MediaService $configService */
+            /** @var MediaService $mediaService */
             $mediaService = Oforge()->Services()->get('media');
             $media        = $mediaService->add($_FILES["icon"]);
             if (isset($media)) {

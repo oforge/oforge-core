@@ -45,12 +45,12 @@
     {% set game_page   = content('game_page') %}
 
     {% if content_320 and content_640 and game_page['text'] == meta.route.url.path %}
-    <div data-modal-view="1"
+    <div data-modal-view="{{ meta.route.url.path }}"
          data-auto-open="">
-        <div data-modal-content="1"
+        <div data-modal-content="{{ meta.route.url.path }}"
              class="modal-view">
             <div class="modal-view__close"
-                 data-modal-close="1">✕</div>
+                 data-modal-close="{{ meta.route.url.path }}">✕</div>
             <div class="modal-view__content">
                 <picture class="lazy">
                     <source class="lazy" data-srcset="{{ media(content_640['url']) }}" media="(min-width: 640px)" />

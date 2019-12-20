@@ -15,11 +15,11 @@ class VideoYoutube extends AbstractContentType {
     /** @inheritDoc */
     public function getEditData() {
         $data            = [];
-        $data["id"]      = $this->getContentId();
-        $data["type"]    = $this->getId();
-        $data["name"]    = $this->getContentName();
-        $data["css"]     = $this->getContentCssClass();
-        $data["videoID"] = $this->getContentData();
+        $data['id']      = $this->getContentId();
+        $data['type']    = $this->getId();
+        $data['name']    = $this->getContentName();
+        $data['css']     = $this->getContentCssClass();
+        $data['videoID'] = $this->getContentData();
 
         return $data;
     }
@@ -34,12 +34,12 @@ class VideoYoutube extends AbstractContentType {
     /** @inheritDoc */
     public function getRenderData() {
         $data                = [];
-        $data["form"]        = "ContentTypes/" . $this->getPath() . "/PageBuilderForm.twig";
-        $data["type"]        = "ContentTypes/" . $this->getPath() . "/PageBuilderPreview.twig";
-        $data["typeId"]      = $this->getId();
-        $data["isContainer"] = $this->isContainer();
-        $data["css"]         = $this->getContentCssClass();
-        $data["videoID"]     = $this->getContentData();
+        $data['form']        = 'ContentTypes/' . $this->getPath() . '/PageBuilderForm.twig';
+        $data['type']        = 'ContentTypes/' . $this->getPath() . '/PageBuilderPreview.twig';
+        $data['typeId']      = $this->getId();
+        $data['isContainer'] = $this->isContainer();
+        $data['css']         = $this->getContentCssClass();
+        $data['videoID']     = $this->getContentData();
 
         return $data;
     }

@@ -110,7 +110,6 @@ class InsertionProfileService extends AbstractDatabaseAccess {
             "imprintCompanyNumber" => $params["imprint_company_number"],
         ]);
 
-
         if ($create) {
             $this->entityManager()->create($result);
         } else {

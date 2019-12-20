@@ -3,6 +3,7 @@
 namespace Oforge\Engine\Modules\AdminBackend\Cronjob\Controller\Backend;
 
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
@@ -11,6 +12,7 @@ use Oforge\Engine\Modules\Cronjob\Models\AbstractCronjob;
 use Oforge\Engine\Modules\Cronjob\Services\CronjobService;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
+use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -55,7 +57,7 @@ class CronjobController extends BaseCrudController {
         ],
         [
             'name'  => 'lastExecutionTime',
-            'type'  => CrudDataTypes::STRING,
+            'type'  => CrudDataTypes::DATETIME,
             'label' => [
                 'key'     => 'module_cronjob_property_last_execution',
                 'default' => [
@@ -69,7 +71,7 @@ class CronjobController extends BaseCrudController {
         ],
         [
             'name'  => 'nextExecutionTime',
-            'type'  => CrudDataTypes::STRING,
+            'type'  => CrudDataTypes::DATETIME,
             'label' => [
                 'key'     => 'module_cronjob_property_next_execution',
                 'default' => [
@@ -78,7 +80,22 @@ class CronjobController extends BaseCrudController {
                 ],
             ],
             'crud'  => [
-                'index' => 'readonly',
+                'index'  => 'editable',
+                ''
+            ],
+        ],
+        [
+            'name'  => 'active',
+            'type'  => CrudDataTypes::BOOL,
+            'label' => [
+                'key'     => 'module_cronjob_property_active',
+                'default' => [
+                    'en' => 'active',
+                    'de' => 'aktiv',
+                ],
+            ],
+            'crud'  => [
+                'index' => 'editable',
             ],
         ],
         [
@@ -141,8 +158,28 @@ class CronjobController extends BaseCrudController {
     public function runAction(Request $request, Response $response, array $args) {
         /** @var CronjobService $cronjobService */
         $cronjobService = Oforge()->Services()->get('cronjob');
-        $cronjobService->run($args['name']);
+        if ($cronjobService->run($args['name'])) {
+            Oforge()->View()->Flash()->addMessage('success', I18N::translate('cronjob_success', [
+              'en' => 'Cronjob execution successful.',
+              'de' => 'Cronjob erfolgreich ausgeführt.',
+            ]));
+        } else {
+            Oforge()->View()->Flash()->addMessage('error', I18N::translate('cronjob_error', [
+                'en' => 'Cronjob execution has caused an error, please check the logs for details.',
+                'de' => 'Cronjob Ausführung führte zu einem Fehler, Details stehen in den Logs.',
+            ]));
+        }
 
         return RouteHelper::redirect($response, 'backend_cronjob', [], $request->getQueryParams());
+    }
+
+    protected function convertData(array $data, string $crudAction) : array {
+        if (isset($data['nextExecutionTime'])) {
+            try {
+                $data['nextExecutionTime'] = new \DateTimeImmutable($data['nextExecutionTime']);
+            } catch (\Exception $e) {
+            }
+        }
+        return $data;
     }
 }
