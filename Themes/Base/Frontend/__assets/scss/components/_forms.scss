@@ -37,6 +37,9 @@
                 min-width: 100%;
             }
         }
+        .form__control--auto {
+            flex: auto;
+        }
 
         .form__control--is-sub {
             margin-top: 0;
