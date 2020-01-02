@@ -204,6 +204,15 @@
     -webkit-appearance: none;
     -moz-appearance: none;
 
+    &.form__input--auto {
+        width: auto;
+        display: inline-flex;
+
+        &.form__input--select select {
+            padding-right: 2rem;
+        }
+    }
+
     &[type='number'] {
         text-align: right;
         /* direction: rtl; */
