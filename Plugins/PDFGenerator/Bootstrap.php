@@ -11,9 +11,5 @@ class Bootstrap extends AbstractBootstrap {
         $this->services = [
             "pdf" => PDFGeneratorService::class,
         ];
-
-        $this->endpoints = [
-            PDFTestController::class
-        ];
     }
 }
