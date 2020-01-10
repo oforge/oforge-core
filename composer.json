@@ -8,7 +8,7 @@
         "ext-xml": "*",
         "slim/slim": "^3.0",
         "monolog/monolog": "^1.23",
-        "twig/twig": "dev-environment-inheritance",
+        "twig/twig": "dev-environment-inheritance as 2.x-dev",
         "php-di/slim-bridge": "^2.0",
         "doctrine/orm":"^2.0",
         "phpmailer/phpmailer": "~6.0",
@@ -21,8 +21,8 @@
         "ext-fileinfo": "*",
         "vimeo/vimeo-api": "^3.0",
         "paypal/rest-api-sdk-php": "^1.14",
-        "mpdf/mpdf": "^8.0",
-        "google/cloud-translate": "*"
+        "google/cloud-translate": "*",
+        "wikimedia/composer-merge-plugin": "*"
     },
     "repositories": [
         {
@@ -37,6 +37,16 @@
             "": "Plugins"
         },
         "files": ["Engine/Modules/Core/BlackSmith.php"]
+    },
+    "extra": {
+        "merge-plugin": {
+            "include": [
+                "Plugins/*/composer.json"
+            ],
+            "recurse": true,
+            "replace": false,
+            "merge-dev": false
+        }
     },
     "require-dev": {
         "phpunit/phpunit": "8",
