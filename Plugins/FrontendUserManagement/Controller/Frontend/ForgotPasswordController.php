@@ -10,7 +10,9 @@ namespace FrontendUserManagement\Controller\Frontend;
 
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\PasswordResetService;
+use FrontendUserManagement\Services\RegistrationService;
 use Interop\Container\Exception\ContainerException;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Auth\Services\PasswordService;
@@ -108,11 +110,15 @@ class ForgotPasswordController extends AbstractController {
         }
         $passwordResetLink = $passwordResetService->createPasswordResetLink($email);
 
-        /** @var  $registrationService */
+        /** @var  RegistrationService $registrationService */
         $registrationService = Oforge()->Services()->get('frontend.user.management.registration');
-        $userDetail          = $registrationService->userExists($email)->getDetail();
-        $userNickName        = $userDetail->getNickName();
 
+        // If emailExists == true then the user exists
+        /** @var User $user */
+        $user = $registrationService->getUser($email);
+
+        $userDetail          = $user->getDetail();
+        $userNickName        = $userDetail->getNickName();
 
         $mailService = Oforge()->Services()->get('mail');
 
@@ -140,7 +146,6 @@ class ForgotPasswordController extends AbstractController {
 
             return $response->withRedirect($uri, 302);
         }
-
 
         $uri = $router->pathFor('frontend_login');
         Oforge()->View()->Flash()
