@@ -1,6 +1,7 @@
 User-agent: *
 Disallow: /backend
 Disallow: /account
+Disallow: /insertions/find_by_id
 
 # www.robotstxt.org/
 # www.google.com/support/webmasters/bin/answer.py?hl=en&answer=156449
