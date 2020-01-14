@@ -3,19 +3,11 @@
         class="sidebar sidebar--insertion {% if profile %}has-provider-image{% endif %}">
 
         {% block sidebar__panel_provider %}
-            {% if profile %}
+            {% if profile is defined %}
                 <div class="panel panel--provider">
                     <h3 class="provider_title">{{ i18n('insertion_detail_provider_headline') }}</h3>
                     <div class="provider_image-container">
 
-                        {#
-                    {% if profile.user.detail.image is not empty %}
-                        <img src="{{ media(profile.user.detail.image, 500) }}" class="provider_image"
-                             alt="{{ profile.imprintName }}">
-                    {% elseif %}
-
-                    {% endif %}
-                    #}
                         <div class="user__picture"
                              {% if profile.user.detail.image is not empty %}style="background-image: url('{{ media(profile.user.detail.image, 300) }}');"{% endif %}></div>
 
