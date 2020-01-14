@@ -52,7 +52,7 @@ TAG;
                  * Send error report via mail
                  */
                 if (Oforge()->Settings()->get('error_mail_report')['active']) {
-                    $this->sendReportMail($html);
+                    $this->sendReportMail($html, $exception);
                 }
 
                 if (Oforge()->Settings()->isDevelopmentMode()) {
@@ -101,10 +101,11 @@ TAG;
 
     /**
      * @param $html
+     * @param Exception|Error $exception
      *
      * @throws \PHPMailer\PHPMailer\Exception
      */
-    private function sendReportMail(string &$html) {
+    private function sendReportMail(string &$html, $exception) {
         $mailer_settings = Oforge()->Settings()->get('error_mail_report')['mailer_settings'];
 
         /** @var PHPMailer $mailer */
@@ -127,7 +128,7 @@ TAG;
         $mailer->Subject = 'oforge error 500';
         $mailer->setFrom($mailer_settings['smtp_from'], 'Oforge');
         $mailer->addAddress($mailer_settings['receiver_address'], 'Dev');
-        $mailer->Body = 'error error error';
+        $mailer->Body = 'Error: ' . $exception->getMessage();
 
         try {
             $mailer->send();
