@@ -91,7 +91,12 @@
     &__price {
         font-weight: bold;
     }
+    &__info {
+        text-align: justify;
+        font-size: $font-size-5;
+    }
 }
+
 
 @media screen and (min-width: $screen-medium) {
     .preview {
