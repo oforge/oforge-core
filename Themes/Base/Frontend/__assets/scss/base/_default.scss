@@ -37,6 +37,9 @@ a {
         text-decoration: none;
     }
 }
+s {
+    color: $background-full;
+}
 
 .module-frontendusermanagement,
 [class*="controller-frontend_account"] {
