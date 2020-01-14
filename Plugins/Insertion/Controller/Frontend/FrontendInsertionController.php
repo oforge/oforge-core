@@ -561,7 +561,7 @@ class FrontendInsertionController extends SecureFrontendController
 
         $profile = $service->get($insertion->getUser()->getId());
         if (isset($profile)) {
-            Oforge()->View()->assign(['rofile' => $profile->toArray()]);
+            Oforge()->View()->assign(['profile' => $profile->toArray()]);
         }
 
         /** @var $insertionTypeService InsertionTypeService */
