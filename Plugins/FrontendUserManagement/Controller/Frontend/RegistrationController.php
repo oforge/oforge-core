@@ -207,6 +207,9 @@ class RegistrationController extends AbstractController {
 
         }
 
+        $_SESSION['registration_success'] = true;
+        $_SESSION['user_id'] = $user['id'];
+
         $userDetailService->save(['userId' => $user['id'], 'nickname' => $nickname]);
 
         /**
