@@ -87,9 +87,9 @@ class PDFGeneratorService {
         $twig->addExtension(new TwigOforgeDebugExtension());
 
         /** @var string $html */
-        $html = $twig->fetch($template = $options['template'], $data = $templateData);
-        $header = isset($options['template_header']) ? $twig->fetch($template = $options['template_header'], $data = $templateData) : null;
-        $footer = isset($options['template_footer']) ? $twig->fetch($template = $options['template_footer'], $data = $templateData) : null;
+        $html = $twig->fetch($options['template'], $templateData);
+        $header = isset($options['template_header']) ? $twig->fetch($options['template_header'], $templateData) : null;
+        $footer = isset($options['template_footer']) ? $twig->fetch($options['template_footer'], $templateData) : null;
 
         if ($header) {
             $this->mpdf->SetHTMLHeader($header);
@@ -103,6 +103,6 @@ class PDFGeneratorService {
 
         $this->mpdf->WriteHTML($inlineCssService->renderInlineCss($html));
 
-        return $this->mpdf->Output($options['filename'], $options['path']);
+        return $this->mpdf->Output($options['path'] .  $options['filename'], 'F');
     }
 }
