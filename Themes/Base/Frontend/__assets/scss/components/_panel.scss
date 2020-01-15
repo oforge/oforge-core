@@ -22,6 +22,12 @@
         text-align: center;
         margin: $size-large auto 0;
     }
+    &.panel--pad-s {
+        padding: $size-medium;
+    }
+    &.panel--pad-m {
+        padding: $size-large;
+    }
     &.panel--no-gap {
         margin: 0;
 
