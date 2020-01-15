@@ -3,6 +3,8 @@
 namespace PDFGenerator\Services;
 
 use Mpdf\Mpdf;
+use Mpdf\Config\ConfigVariables;
+use Mpdf\Config\FontVariables;
 use Mpdf\MpdfException;
 use Oforge\Engine\Modules\CMS\Twig\AccessExtension as AccessExtensionAlias;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
@@ -31,10 +33,7 @@ class PDFGeneratorService {
      * @throws ServiceNotFoundException
      */
     public function __construct() {
-        $this->mpdf = new Mpdf();
-        $this->templateManagementService = Oforge()->Services()->get("template.management");
-        $this->templateName = $this->templateManagementService->getActiveTemplate()->getName();
-        $this->templatePath = Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . $this->templateName . DIRECTORY_SEPARATOR . 'PDFTemplates';
+
     }
 
     /**
@@ -55,6 +54,31 @@ class PDFGeneratorService {
      * @throws Twig_Error_SyntaxAlias
      */
     public function generatePDF($options, $templateData = []) {
+        $config = [];
+        $defaultConfig = (new ConfigVariables())->getDefaults();
+        $fontDirs = $defaultConfig['fontDir'];
+        $defaultFontConfig = (new FontVariables())->getDefaults();
+        $fontData = $defaultFontConfig['fontdata'];
+
+        if (isset($options['fontDirs'])) {
+            $fontDirs = array_merge($fontDirs, $options['fontDirs']);
+        }
+        if (isset($options['fontData'])) {
+            $fontData = array_merge($fontDirs, $options['fontData']);
+        }
+
+        $config['fontDir'] = $fontDirs;
+        $config['fontdata'] = $fontData;
+
+        if (isset($options['default_font'])) {
+            $config['default_font'] = $options['default_font'];
+        }
+
+        $this->mpdf = new Mpdf($config);
+        $this->templateManagementService = Oforge()->Services()->get("template.management");
+        $this->templateName = $this->templateManagementService->getActiveTemplate()->getName();
+        $this->templatePath = Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . $this->templateName . DIRECTORY_SEPARATOR . 'PDFTemplates';
+
         $twig = new CustomTwig($this->templatePath);
         $twig->addExtension(new AccessExtensionAlias());
         $twig->addExtension(new AccessExtension());
@@ -64,6 +88,15 @@ class PDFGeneratorService {
 
         /** @var string $html */
         $html = $twig->fetch($template = $options['template'], $data = $templateData);
+        $header = isset($options['template_header']) ? $twig->fetch($template = $options['template_header'], $data = $templateData) : null;
+        $footer = isset($options['template_footer']) ? $twig->fetch($template = $options['template_footer'], $data = $templateData) : null;
+
+        if ($header) {
+            $this->mpdf->SetHTMLHeader($header);
+        }
+        if ($footer) {
+            $this->mpdf->SetHTMLFooter($footer);
+        }
 
         /** @var InlineCssService $inlineCssService */
         $inlineCssService = Oforge()->Services()->get('inline.css');
