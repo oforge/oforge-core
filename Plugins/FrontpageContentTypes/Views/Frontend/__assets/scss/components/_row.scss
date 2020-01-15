@@ -14,4 +14,7 @@
         display: table;
         clear: both;
     }
+    &.flex::after {
+        content: none;
+    }
 }
