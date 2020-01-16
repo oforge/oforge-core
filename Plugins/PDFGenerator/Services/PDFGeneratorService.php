@@ -43,6 +43,29 @@ class PDFGeneratorService {
      *      path = "",
      * ]
      *
+     * $templateData = [
+     * id,
+     * state,
+     * recurrentPayment,
+     * nextPayDate,
+     * createdAt,
+     * items => [
+     *     id,
+     *     itemId,
+     *     title,
+     *     itemType,
+     *     price,
+     *     order,
+     * ],
+     * paymentMethod,
+     * callbackURI,
+     * user,
+     * detail => [],
+     * address => [],
+     * email,
+     * paymentId
+     * ]
+     *
      * @param array $options
      * @param array $templateData
      *
