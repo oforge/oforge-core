@@ -78,6 +78,7 @@ class PDFGeneratorService {
      */
     public function generatePDF($options, $templateData = []) {
         $config = [];
+
         $defaultConfig = (new ConfigVariables())->getDefaults();
         $fontDirs = $defaultConfig['fontDir'];
         $defaultFontConfig = (new FontVariables())->getDefaults();
