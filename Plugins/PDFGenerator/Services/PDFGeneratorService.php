@@ -15,6 +15,7 @@ use Oforge\Engine\Modules\TemplateEngine\Core\Twig\CustomTwig;
 use Oforge\Engine\Modules\TemplateEngine\Core\Twig\TwigOforgeDebugExtension;
 use Oforge\Engine\Modules\TemplateEngine\Extensions\Twig\AccessExtension;
 use Oforge\Engine\Modules\TemplateEngine\Extensions\Twig\SlimExtension;
+use Twig_Extensions_Extension_Intl;
 use Twig_Error_Loader;
 use Twig_Error_Runtime;
 use Twig_Error_Syntax as Twig_Error_SyntaxAlias;
@@ -109,6 +110,8 @@ class PDFGeneratorService {
         $twig->addExtension(new MediaExtension());
         $twig->addExtension(new SlimExtension());
         $twig->addExtension(new TwigOforgeDebugExtension());
+        $twig->addExtension(new Twig_Extensions_Extension_Intl());
+
 
         /** @var string $html */
         $html = $twig->fetch($options['template'], $templateData);
