@@ -15,13 +15,34 @@
                 var self = this;
                 const triggers = document.querySelectorAll(self.selector);
                 triggers.forEach(function (trigger) {
-                    trigger.addEventListener('change', function () {
-                        let items = document.getElementsByClassName(trigger.dataset.update);
-                        items.forEach(function (item) {
-                            item.style.backgroundImage = "url('" + URL.createObjectURL(trigger.files[0]) + "')";
-                        })
+                    trigger.addEventListener('change', function (e) {
+                        if (checkFileSize(e.target)) {
+                            let items = document.getElementsByClassName(trigger.dataset.update);
+                            items.forEach(function (item) {
+                                item.style.backgroundImage = "url('" + URL.createObjectURL(trigger.files[0]) + "')";
+                            });
+                        }
                     })
                 });
+
+                function checkFileSize(target) {
+                    if (target.matches('[data-file-size]')) {
+                        var files = target.files;
+                        var fileSize = 0;
+                        var errorMessage = document.querySelector('.error--file-size');
+                        files.forEach(function (file) {
+                            fileSize += ((file.size/1024)/1024); // MB
+                            if (fileSize > 12) {
+                                target.value = "";
+                                errorMessage.classList.remove('text-is-hidden');
+                                setTimeout(function () {
+                                    errorMessage.classList.add('text-is-hidden')
+                                }, 5000);
+                                return false;
+                            }
+                        });
+                    }
+                }
             }
         });
     } else {
