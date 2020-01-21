@@ -123,7 +123,6 @@ class ProfileController extends SecureBackendController {
     public function detailsAction(Request $request, Response $response) {
         $postData = $request->getParsedBody();
         if ($request->isPost()) {
-            //TODO
             return RouteHelper::redirect($response);
         }
     }
