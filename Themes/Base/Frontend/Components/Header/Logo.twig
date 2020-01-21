@@ -2,8 +2,7 @@
 {% block logo %}
     {% set logo = content('logo') %}
     <div class="logo">
-{#        TODO replace href="/" with url('...'), frontend_home|frontend? #}
-        <a href="{{ url('/') }}" class="logo__link">
+        <a href="{{ url('frontend_page') }}" class="logo__link">
 
             {% if logo.url is defined %}
                 <img class="logo__img" src="{{ media( logo.url, 300) }}" alt="{{ i18n('logo') }}" />

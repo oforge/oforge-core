@@ -88,7 +88,6 @@ class Bootstrap extends AbstractBootstrap {
 
         /** @var ConfigService $configService */
         $configService = Oforge()->Services()->get('config');
-        // TODO uncomment after configservice refactoring
         $configService->add([
             'name'     => CronjobStatics::SETTING_LOGFILE_DAYS,
             'label'    => CronjobStatics::SETTING_LOGFILE_DAYS,

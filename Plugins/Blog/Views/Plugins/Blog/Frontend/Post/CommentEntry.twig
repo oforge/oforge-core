@@ -9,7 +9,6 @@
         {{ blogPostComment.created|formatDatetime }}
     </div>
     <div class="blog-post-comment-author-image">
-        {#TODO ALEX blog category user.detail.image #}
         {% if blogPostComment.author.detail.image %}
             <img src="{{ media(blogPostComment.author.detail.image) }}"/>
         {% else %}
@@ -22,7 +21,6 @@
         {% elseif blogPostComment.author.detail.firstName or blogPostComment.author.detail.lastName %}
             {{ blogPostComment.author.detail.firstName }} {{ blogPostComment.author.detail.lastName }}
         {% else %}
-{#            TODO FALLBACK, email??? #}
         {% endif %}
 
     </div>

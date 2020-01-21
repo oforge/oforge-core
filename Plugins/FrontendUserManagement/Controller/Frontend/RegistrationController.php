@@ -195,7 +195,6 @@ class RegistrationController extends AbstractController {
         /**
          * Registration failed
          * Maybe someone tried to register with an email address that is already in use
-         * TODO: respond to the registration process with a nice information?
          */
         if (!$user) {
             Oforge()->View()->Flash()->addMessage('warning', I18N::translate('registration_user_already_exists', [
