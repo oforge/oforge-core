@@ -245,7 +245,7 @@ class FrontendInsertionController extends SecureFrontendController
              */
             $mailService = Oforge()->Services()->get('mail');
 
-            if ($request->isPost()) {
+            if ($request->isPost() || $request->isGet() && $_GET['success'] === 'true') {
                 Oforge()->Logger()->get('create')->info('process data ', $_POST);
 
                 $data = $formsService->processPostData($typeId);
