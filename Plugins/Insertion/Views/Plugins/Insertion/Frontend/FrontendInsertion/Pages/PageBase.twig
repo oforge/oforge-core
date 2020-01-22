@@ -3,7 +3,7 @@
 
     {% block form_content %}
         <form class="form form--insertion form--submit--loading"
-              action="{% block form_content_action %}{% if page == pagecount %}
+              action="{% block form_content_action %}{% spaceless %}{% if page == pagecount %}
                     {{ url('insertions_processSteps', { type : type.id}) }}
                   {% else %}
                   {# If the insertion type has no 'feature-attributes' then skip the next step #}
@@ -11,7 +11,7 @@
                     {{ url('insertions_createSteps', { type : type.id, page: page + 2}) }}
                     {% else %}
                     {{ url('insertions_createSteps', { type : type.id, page: page + 1}) }}
-                  {% endif %}{% endif %}{% endblock form_content_action %}"
+                  {% endif %}{% endif %}{% endspaceless %}{% endblock form_content_action %}"
               method="post">
 
             {% block page_content %}
