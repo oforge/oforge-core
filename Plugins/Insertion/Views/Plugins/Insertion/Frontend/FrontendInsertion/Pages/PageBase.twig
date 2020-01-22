@@ -12,8 +12,7 @@
                     {% else %}
                     {{ url('insertions_createSteps', { type : type.id, page: page + 1}) }}
                   {% endif %}{% endif %}{% endblock form_content_action %}"
-              method="post"
-              enctype="multipart/form-data">
+              method="post">
 
             {% block page_content %}
             {% endblock page_content %}
