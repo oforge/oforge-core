@@ -65,12 +65,14 @@
             </svg>
         </a>
 
-        <a class="button button--primary highlight">
-            <span>{{ i18n('highlight') }}</span>
-            <svg class="icon icon--light">
-                <use xlink:href="#professional_plus_abo"></use>
-            </svg>
-        </a>
+        {% block user_insertion_highlight %}
+            <a class="button button--primary highlight">
+                <span>{{ i18n('highlight') }}</span>
+                <svg class="icon icon--light">
+                    <use xlink:href="#professional_plus_abo"></use>
+                </svg>
+            </a>
+        {% endblock %}
 
         {% if insertion.active %}
             <a class="button button--primary disable"
