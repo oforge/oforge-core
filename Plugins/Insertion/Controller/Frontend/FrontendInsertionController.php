@@ -261,6 +261,7 @@ class FrontendInsertionController extends SecureFrontendController
                      * @var $insertion Insertion
                      */
                     $insertion = $insertionService->getInsertionById(intval($insertionId));
+                    Oforge()->View()->assign(['last_insertion' => $insertion]);
 
                     if (isset($insertion)) {
                         try {
