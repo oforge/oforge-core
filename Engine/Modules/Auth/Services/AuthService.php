@@ -17,7 +17,6 @@ use Firebase\JWT\JWT;
  * @package Oforge\Engine\Modules\Auth\Services
  */
 class AuthService {
-
     /**
      * Create a JSON Web Token
      *
@@ -26,10 +25,11 @@ class AuthService {
      * @return string
      */
     public function createJWT(array $userData) : string {
+        if (isset($userData['password'])) {
+            unset($userData['password']);
+        }
         $salt = Oforge()->Settings()->get("jwt_salt");
-        $jwt  = JWT::encode($userData, $salt, 'HS512');
-
-        return $jwt;
+        return JWT::encode($userData, $salt, 'HS512');
     }
 
     /**
