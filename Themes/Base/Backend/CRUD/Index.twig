@@ -27,7 +27,7 @@
                         } %}
                         {% if crud.hasEditors %}
                         <form action="{{ url(meta.route.name, {}, meta.route.query|default({})) }}" method="post"
-                              enctype="multipart/form-data">
+                              >
                             {% endif %}
                             {#{% include CRUD_path('Components/Index/PaginationRow.twig') with {#}
                             {#    pagination: crud.pagination,#}

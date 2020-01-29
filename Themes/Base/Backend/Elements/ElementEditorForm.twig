@@ -1,6 +1,6 @@
 {% block cms_page_builder_form %}
     <form id="cms_page_builder_form" action={{ url('backend_content_elements') }} method="post"
-          enctype="multipart/form-data">
+          >
         <input name="cms_form" type="hidden" value="cms_page_builder_form">
         <input id="cms_page_selected_element" name="cms_page_selected_element" type="hidden"
                value="{{ post.cms_page_selected_element }}">
@@ -15,7 +15,7 @@
 
     <form data-async="true" data-replace="#messageContainer"
           action={{ url('backend_content_elements_update') }} method="post"
-          enctype="multipart/form-data">
+          >
         <input name="cms_form" type="hidden" value="cms_page_builder_form">
         <input id="cms_page_selected_element" name="cms_page_selected_element" type="hidden"
                value="{{ post.cms_page_selected_element }}">

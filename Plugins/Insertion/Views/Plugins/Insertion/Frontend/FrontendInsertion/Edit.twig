@@ -8,7 +8,7 @@
             <form class="form form--insertion form--submit--loading"
                   action="{{ url('insertions_edit', { id : data.id}) }}"
                   method="post"
-                  enctype="multipart/form-data">
+                  >
 
                 {% block page_content %}
                     {% include 'Plugins/Insertion/Frontend/FrontendInsertion/PageContent/1.twig' %}
