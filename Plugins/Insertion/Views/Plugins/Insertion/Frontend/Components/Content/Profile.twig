@@ -2,7 +2,7 @@
     {% block account__content %}
         <div class="account__content flex">
             <form action="{{ url('frontend_account_insertions_profile') }}" method="post"
-                  >
+                  enctype="multipart/form-data">
                 <h1 class="account__title">{{ i18n('my_profile') }}</h1>
                 <h2 class="title title--3 text text-error error--file-size text-is-hidden">{{ i18n('filesize_exceeded', { en: 'Maximum upload filesize of 12MB exceeded!', de: 'Die maximale Uploadgröße von 12MB wurde überschritten!'}) }}</h2>
                 {% if profile.background is not null %}
