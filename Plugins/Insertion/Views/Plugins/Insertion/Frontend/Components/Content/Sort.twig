@@ -20,7 +20,7 @@
         <form method="post"
               class="form form--sort"
               action="{{ url('frontend_account_insertions_toggleSearchBookmark') }}"
-              enctype="multipart/form-data">
+              >
             <input type="hidden" name="filter" value="{{ search.filter|json_encode() }}" />
             <input type="hidden" name="type_id" value="{{ typeId }}" />
             <input type="submit"
