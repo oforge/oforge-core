@@ -2,6 +2,7 @@
 
 namespace PDFGenerator\Services;
 
+use FrontendUserManagement\Models\User;
 use Mpdf\Mpdf;
 use Mpdf\Config\ConfigVariables;
 use Mpdf\Config\FontVariables;
@@ -29,21 +30,15 @@ class PDFGeneratorService {
 
     /**
      * PDFGeneratorService constructor.
-     *
-     * @throws MpdfException
-     * @throws ServiceNotFoundException
      */
     public function __construct() {
-
     }
-
     /**
      *  $options = [
      *      template = "",
      *      filename = "",
      *      path = "",
      * ]
-     *
      * $templateData = [
      * id,
      * state,
@@ -75,7 +70,8 @@ class PDFGeneratorService {
      * @throws ServiceNotFoundException
      * @throws Twig_Error_Loader
      * @throws Twig_Error_Runtime
-     * @throws Twig_Error_SyntaxAlias
+     * @throws Twig_Error_SyntaxAlias*@throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\ORMException
      */
     public function generatePDF($options, $templateData = []) {
         $config = [];
@@ -129,7 +125,6 @@ class PDFGeneratorService {
         $inlineCssService = Oforge()->Services()->get('inline.css');
 
         $this->mpdf->WriteHTML($inlineCssService->renderInlineCss($html));
-
         return $this->mpdf->Output($options['path'] .  $options['filename'], 'F');
     }
 }
