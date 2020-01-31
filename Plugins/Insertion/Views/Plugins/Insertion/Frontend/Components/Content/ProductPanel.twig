@@ -37,7 +37,6 @@
 
                 {% block attributes__top %}
                     <div class="product__attributes product__attributes--top">
-                        {{ o_dump(item) }}
                         {% for topvalue in item.topvalues|slice(0,3) %}
                             {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
                         {% endfor %}
