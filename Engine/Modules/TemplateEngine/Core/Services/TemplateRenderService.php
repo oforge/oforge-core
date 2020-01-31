@@ -103,7 +103,8 @@ class TemplateRenderService {
             if ($this->hasTemplate($templatePath)) {
                 return $this->renderTemplate($request, $response, $templatePath, $data);
             }
-            if (isset($fileName)) {
+            // TODO: Remove this because we don't have this here.
+            if (isset($fileName) && isset($data['crud'])) {
                 $fallbackTemplatePath = '/Backend/CRUD/' . ucfirst($fileName) . '.twig';
                 if ($this->hasTemplate($fallbackTemplatePath)) {
                     $data['meta']['template']['path'] = $fallbackTemplatePath;
