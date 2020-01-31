@@ -113,7 +113,12 @@ class TemplateRenderService {
             }
         }
 
+        if ($data["omitRendering"] == true) {
+            return $response;
+        }
+
         return $this->renderJson($request, $response, $data);
+
     }
 
     /**
