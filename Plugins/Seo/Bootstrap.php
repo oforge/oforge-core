@@ -10,7 +10,6 @@ use Seo\Middleware\SeoMiddleware;
 use Seo\Models\SeoUrl;
 use Seo\Services\SeoService;
 use Seo\Services\SeoUrlService;
-use Seo\Twig\SeoExtension;
 
 /**
  * Class Bootstrap
