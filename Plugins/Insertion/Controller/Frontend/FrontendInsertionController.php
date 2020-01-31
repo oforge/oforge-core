@@ -701,6 +701,7 @@ class FrontendInsertionController extends SecureFrontendController
         $result['insertion'] = $insertion->toArray(1);
 
         Oforge()->View()->assign($result);
+        Oforge()->View()->Flash()->addMessage('success', I18N::translate('insertion_edit_success', ['en' => 'Insertion successfully updated', 'de' => 'Das Inserat wurde erfolgreich bearbeitet']));
     }
 
     /**
