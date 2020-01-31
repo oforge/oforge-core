@@ -412,6 +412,10 @@ class FrontendUsersInsertionController extends SecureFrontendController {
                 $params = json_decode($filterData, true);
             }
 
+            if($params == null) {
+                $params = [];
+            }
+
             $bookmarkService->toggle($insertionType, $user, $params);
         }
 
