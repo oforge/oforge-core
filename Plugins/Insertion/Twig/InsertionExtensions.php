@@ -190,7 +190,8 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
                     /** @var InsertionSearchBookmarkService $bookmarkService */
                     $bookmarkService = Oforge()->Services()->get("insertion.search.bookmark");
 
-                    return $bookmarkService->hasBookmark($vars[0], $user['id'], $vars[1]);
+                    $filter = isset($vars[1]) ? $vars[1]: [];
+                    return $bookmarkService->hasBookmark($vars[0], $user['id'], $filter);
                 }
             }
         }
