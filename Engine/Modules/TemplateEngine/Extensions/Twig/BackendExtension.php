@@ -134,17 +134,21 @@ class BackendExtension extends Twig_Extension implements Twig_ExtensionInterface
      * @param mixed ...$vars
      *
      * @return bool
+     * @throws ORMException
      * @throws ServiceNotFoundException
      */
     public function is_favorite(...$vars) {
         /** @var $authService AuthService */
         $authService = Oforge()->Services()->get('auth');
-        $user        = $authService->decode($_SESSION['auth']);
-        if (isset($user) && isset($user['id']) && sizeof($vars) == 1) {
-            /** @var UserFavoritesService $favoritesService */
-            $favoritesService = Oforge()->Services()->get('backend.favorites');
+        if (isset($_SESSION['auth'])) {
+            $user = $authService->decode($_SESSION['auth']);
 
-            return $favoritesService->isFavorite($user['id'], $vars[0]);
+            if (isset($user) && isset($user['id']) && sizeof($vars) == 1) {
+                /** @var UserFavoritesService $favoritesService */
+                $favoritesService = Oforge()->Services()->get('backend.favorites');
+
+                return $favoritesService->isFavorite($user['id'], $vars[0]);
+            }
         }
 
         return false;
@@ -154,6 +158,7 @@ class BackendExtension extends Twig_Extension implements Twig_ExtensionInterface
      * @param mixed ...$vars
      *
      * @return array
+     * @throws ORMException
      * @throws ServiceNotFoundException
      */
     public function get_favorites(...$vars) {
