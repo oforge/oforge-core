@@ -114,7 +114,7 @@ class TemplateRenderService {
             }
         }
 
-        if ($data["omitRendering"] == true) {
+        if (isset($data["omitRendering"]) && $data["omitRendering"] == true) {
             return $response;
         }
 
