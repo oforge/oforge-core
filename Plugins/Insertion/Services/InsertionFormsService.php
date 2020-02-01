@@ -94,7 +94,7 @@ class InsertionFormsService extends AbstractDatabaseAccess {
         $mainIndex = 0;
 
         foreach ($_SESSION['insertion' . $sessionKey]["images"] as $index => $image) {
-            if ($_SESSION['insertion' . $sessionKey]["images"][$index]["main"] == true) {
+            if (isset($_SESSION['insertion' . $sessionKey]["images"][$index]["main"]) && $_SESSION['insertion' . $sessionKey]["images"][$index]["main"] == true) {
                 $mainIndex = -1;
             }
         }
@@ -133,7 +133,10 @@ class InsertionFormsService extends AbstractDatabaseAccess {
             }
         }
 
-        $_SESSION['insertion' . $sessionKey]["images_interactions"] = $_POST['images_interactions'];
+        $_SESSION['insertion' . $sessionKey]["images_interactions"] = [];
+        if (isset($_POST['images_interactions'])) {
+            $_SESSION['insertion' . $sessionKey]["images_interactions"] = $_POST['images_interactions'];
+        }
 
         return $_SESSION['insertion' . $sessionKey];
     }
