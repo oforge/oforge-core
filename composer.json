@@ -21,7 +21,6 @@
         "ext-fileinfo": "*",
         "vimeo/vimeo-api": "^3.0",
         "google/cloud-translate": "*",
-        "mpdf/mpdf": "^7.1",
         "wikimedia/composer-merge-plugin": "*"
     },
     "repositories": [
