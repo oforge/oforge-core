@@ -73,7 +73,7 @@ class UserDetailsController extends SecureFrontendController {
         /**
          * no valid form data found
          */
-        if (!$token || !$nickName ) {
+        if (!$token || !$nickName) {
             Oforge()->View()->Flash()->addMessage('warning', I18N::translate('form_invalid_data', 'Invalid form data.'));
 
             return $response->withRedirect($uri, 302);
@@ -126,6 +126,10 @@ class UserDetailsController extends SecureFrontendController {
         $userAddressService = Oforge()->Services()->get('frontend.user.management.user.address');
         $body               = $request->getParsedBody();
         $token              = $body['token'];
+        $title              = $body['user_address_title'];
+        $firstName          = $body['user_address_first_name'];
+        $lastName           = $body['user_address_last_name'];
+        $company            = $body['user_address_company'];
         $streetName         = $body['user_address_street_name'];
         $streetNumber       = $body['user_address_street_number'];
         $postCode           = $body['user_address_post_code'];
@@ -159,6 +163,10 @@ class UserDetailsController extends SecureFrontendController {
         }
 
         $userAddress = [
+            'firstName'    => $firstName,
+            'lastName'     => $lastName,
+            'title'        => $title,
+            'company'      => $company,
             'streetName'   => $streetName,
             'streetNumber' => $streetNumber,
             'postCode'     => $postCode,
