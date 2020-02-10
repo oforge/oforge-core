@@ -8,15 +8,26 @@
 
 namespace Oforge\Engine\Modules\Auth\Services;
 
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\ORMException;
 use Exception;
 use Firebase\JWT\JWT;
+use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
+use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 
 /**
  * Class AuthService
  *
  * @package Oforge\Engine\Modules\Auth\Services
  */
-class AuthService {
+class AuthService extends AbstractDatabaseAccess {
+    public function __construct() {
+        parent::__construct([
+            'default' =>  BackendUser::class,
+        ]);
+    }
+
     /**
      * Create a JSON Web Token
      *
@@ -93,5 +104,35 @@ class AuthService {
         }
 
         return null;
+    }
+
+    /**
+     * create initial user
+     *
+     * @throws ORMException
+     * @throws Exception
+     */
+    public function createAdmin(string $email, string $name) {
+
+        if ($this->repository()->matching(
+            Criteria::create()->where(Criteria::expr()->eq('email', $email))
+        )->count() > 0) {
+            return "That user already exists";
+        }
+
+        /** @var PasswordService $passwordService */
+        $passwordService = new PasswordService();
+        $password = $passwordService->generatePassword();
+        $dbPassword = $passwordService->hash($password);
+
+        $backendUser = new BackendUser();
+        $backendUser->setName($name);
+        $backendUser->setRole(0);
+        $backendUser->setId(1)
+            ->setEmail($email)
+            ->setPassword($dbPassword)
+            ->setActive(true);
+        $this->entityManager()->create($backendUser);
+        return "Initial user created. Email: " . $email . " Password: " . $password;
     }
 }
