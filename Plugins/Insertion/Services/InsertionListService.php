@@ -246,7 +246,7 @@ class InsertionListService extends AbstractDatabaseAccess
             foreach ($keys as $key => $value) {
                 $result['filter'][$value['name']] = is_array($value['values']) ? array_unique($value['values']) : $value['values'];
 
-                if ($hierarchicalKeys[$key]) {
+                if (isset($hierarchicalKeys[$key])) {
                     $value['values'] = array_merge($hierarchicalKeys[$key]['values'], $value['values']);
                 }
 
