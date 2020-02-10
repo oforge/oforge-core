@@ -7,6 +7,52 @@
 
             <h2 class="form__title">{{ i18n('billing_address', 'Billing Address') }}</h2>
 
+
+
+            <div class="form__control">
+                <div class="form__input form__input--auto form__input--select">
+                    <select id="user_address_title"
+                            class="form__input form__input--no-input"
+                            name="user_address_title"
+                            required="required">
+                        <option selected="selected"
+                                disabled="disabled" value="">{{ i18n('title', {en: 'Title', de: 'Anrede'}) }}*</option>
+                        <option value="mr" {% if userAddress is defined and userAddress.title == 'mr' %} selected="selected" {% endif %}>{{ i18n('mr', {en: 'Mr', de: 'Herr'}) }}</option>
+                        <option value="mrs" {% if userAddress is defined and userAddress.title == 'mrs' %} selected="selected" {% endif %}>{{ i18n('mrs', {en: 'Mrs', de: 'Frau'}) }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form__control form__control--half-medium">
+                {% block user_address_label_first_name %}
+                {% endblock user_address_label_first_name %}
+                <input id="user_address_first_name"
+                       name="user_address_first_name"
+                       type="text"
+                       class="form__input form__input"
+                       placeholder="{{ i18n('first_name') }}"
+                       {% if (userAddress) %}value="{{ userAddress.firstName }}"{% endif %}>
+
+                {% block user_address_label_last_name %}
+                {% endblock user_address_label_last_name %}
+                <input id="user_address_last_name"
+                       name="user_address_last_name"
+                       type="text"
+                       class="form__input form__input"
+                       placeholder="{{ i18n('last_name') }}"
+                       {% if (userAddress) %}value="{{ userAddress.lastName }}"{% endif %}>
+            </div>
+
+            <div class="form__control">
+                {% block user_address_label_company %}
+                {% endblock user_address_label_company %}
+                <input id="user_address_company"
+                       name="user_address_company"
+                       type="text"
+                       class="form__input form__input"
+                       placeholder="{{ i18n('company') }}"
+                       {% if (userAddress) %}value="{{ userAddress.company }}"{% endif %}>
+            </div>
             <div class="form__control form__control--half-medium">
                 {% block user_address_label_street_name %}
                 {% endblock user_address_label_street_name %}

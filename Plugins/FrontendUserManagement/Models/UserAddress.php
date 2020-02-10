@@ -20,6 +20,25 @@ class UserAddress extends AbstractModel {
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
+
+    /**
+     * @var string|null $title
+     * @ORM\Column(name="title", type="string", nullable=true)
+     */
+    private $title;
+
+    /**
+     * @var string|null $firstname
+     * @ORM\Column(name="first_name", type="string", nullable=true)
+     */
+    private $firstname;
+
+    /**
+     * @var string|null $lastname
+     * @ORM\Column(name="last_name", type="string", nullable=true)
+     */
+    private $lastname;
+
     /**
      * @var string|null $streetName
      * @ORM\Column(name="street_name", type="string", nullable=true)
@@ -45,6 +64,13 @@ class UserAddress extends AbstractModel {
      * @ORM\Column(name="country", type="string", nullable=true)
      */
     private $country = "Germany";
+
+    /**
+     * @var string|null $company
+     * @ORM\Column(name="company", type="string", nullable=true)
+     */
+    private $company;
+
     /**
      * @var bool $isBillingAddress
      * @ORM\Column(name="is_billing_address", type="boolean", nullable=false)
@@ -190,4 +216,77 @@ class UserAddress extends AbstractModel {
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
+    public function getCompany() : ?string {
+        return $this->company;
+    }
+
+    /**
+     * @param string|null $company
+     *
+     * @return UserAddress
+     */
+    public function setCompany(?string $company) : UserAddress {
+        $this->company = $company;
+
+        return $this;
+    }
+
+
+    /**
+     * @return string|null
+     */
+    public function getTitle() : ?string {
+        return $this->title;
+    }
+
+    /**
+     * @param string|null $title
+     *
+     * @return UserAddress
+     */
+    public function setTitle(?string $title) : UserAddress {
+        $this->title = $title;
+
+        return $this;
+    }
+
+
+    /**
+     * @return string|null
+     */
+    public function getFirstname() : ?string {
+        return $this->firstname;
+    }
+
+    /**
+     * @param string|null $firstname
+     *
+     * @return UserAddress
+     */
+    public function setFirstname(?string $firstname) : UserAddress {
+        $this->firstname = $firstname;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getLastname() : ?string {
+        return $this->lastname;
+    }
+
+    /**
+     * @param string|null $lastname
+     *
+     * @return UserAddress
+     */
+    public function setLastname(?string $lastname) : UserAddress {
+        $this->lastname = $lastname;
+
+        return $this;
+    }
 }
