@@ -43,14 +43,15 @@ class PasswordService {
      * @throws Exception
      */
     public function generatePassword($length = 12) {
-        $chars =  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.
-                  '0123456789-=~!@#$%^&*()_+,./<>?;:[]{}\|';
-        $str = '';
-        $max = strlen($chars) - 1;
+        $chars = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789-=~@#$%^&*()_+,./<>?;:[]{}';
+        $str   = '';
+        $max   = strlen($chars) - 1;
 
-        for ($i=0; $i < $length; $i++)
+        for ($i = 0; $i < $length; $i++) {
             $str .= $chars[random_int(0, $max)];
+        }
 
         return $str;
     }
+
 }
