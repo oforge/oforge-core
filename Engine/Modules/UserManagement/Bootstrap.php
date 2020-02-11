@@ -19,6 +19,7 @@ use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\UserManagement\Controller\Backend\ProfileController;
 use Oforge\Engine\Modules\UserManagement\Controller\Backend\UserManagementController;
 use Oforge\Engine\Modules\UserManagement\Services\BackendUsersCrudService;
+use Oforge\Engine\Modules\UserManagement\Services\BackendUserService;
 
 /**
  * Class Bootstrap
@@ -39,6 +40,7 @@ class Bootstrap extends AbstractBootstrap {
         ];
 
         $this->services = [
+            'backend.user'       => BackendUserService::class,
             'backend.users.crud' => BackendUsersCrudService::class,
         ];
     }
