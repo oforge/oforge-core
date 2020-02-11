@@ -6,6 +6,7 @@ use Error;
 use Exception;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\TemplateEngine\Core\Services\TemplateManagementService;
+use PHPMailer\PHPMailer\PHPMailer;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App as SlimApp;
@@ -13,7 +14,6 @@ use Slim\Exception\InvalidMethodException;
 use Slim\Http\Cookies;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use PHPMailer\PHPMailer\PHPMailer;
 
 /**
  * Class App
@@ -66,10 +66,11 @@ TAG;
 
                     $activeTheme500 = Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . $activeTheme . DIRECTORY_SEPARATOR . "500.html";
                     if (file_exists($activeTheme500)) {
-                        return $response->withRedirect(DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . $activeTheme . DIRECTORY_SEPARATOR . "500.html", 307);
+                        return $response->withRedirect(DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . $activeTheme . DIRECTORY_SEPARATOR
+                                                       . "500.html", 307);
                     } else {
-                        return $response->withRedirect(DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . Statics::DEFAULT_THEME . DIRECTORY_SEPARATOR . "500.html",
-                            307);
+                        return $response->withRedirect(DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . Statics::DEFAULT_THEME
+                                                       . DIRECTORY_SEPARATOR . "500.html", 307);
                     }
                 }
             };
@@ -81,70 +82,6 @@ TAG;
         $container['cookie'] = function ($container) {
             return new Cookies();
         };
-    }
-
-    /**
-     * @param array $log
-     *
-     * @return string
-     */
-    private function parseLogs(array $log) {
-        $message = '';
-        foreach ($log as $key => $value) {
-            if (is_array($value)) {
-                $value = $this->parseLogs($value);
-            }
-            $message .= $key . ' => ' . $value . "\n";
-        }
-        return $message;
-    }
-
-    /**
-     * @param $html
-     * @param Exception|Error $exception
-     *
-     * @throws \PHPMailer\PHPMailer\Exception
-     */
-    private function sendReportMail(string &$html, $exception) {
-        $mailer_settings = Oforge()->Settings()->get('error_mail_report')['mailer_settings'];
-
-        /** @var PHPMailer $mailer */
-        $mailer = new PHPMailer(true); // throw exceptions on errors
-        $mailer->isSMTP();
-        $mailer->SMTPAuth  = true;
-        $mailer->Host      = $mailer_settings['smtp_host'];
-        $mailer->Username  = $mailer_settings['smtp_user'];
-        $mailer->Password  = $mailer_settings['smtp_pw'];
-        $mailer->Port      = $mailer_settings['smtp_port'];
-        $mailer->SMTPDebug = 4;
-
-        $mailer->addStringAttachment($html, 'error.html');
-        $mailer->addStringAttachment($this->parseLogs($_SERVER), 'server.log');
-        $mailer->addStringAttachment($this->parseLogs($_SESSION), 'session.log');
-        $mailer->addStringAttachment($this->parseLogs($_REQUEST), 'request.log');
-        $mailer->addStringAttachment($this->parseLogs($_POST), 'request.log');
-        $mailer->addStringAttachment($this->parseLogs($_FILES), 'files.log');
-
-        $mailer->Subject = 'oforge error 500';
-        $mailer->setFrom($mailer_settings['smtp_from'], 'Oforge');
-        $mailer->addAddress($mailer_settings['receiver_address'], 'Dev');
-        $mailer->Body = 'Error: ' . $exception->getMessage();
-
-        try {
-            $mailer->send();
-
-        } catch (Exception $e) {
-            // append mailer error to html output
-            if (Oforge()->Settings()->isDevelopmentMode()) {
-                $html .= <<<Tag
-<h1>Could not send mail report:</h1>
-<dl>
-    <dt>$e</dt>
-</dl>
-Tag;
-            }
-
-        }
     }
 
     /**
@@ -314,6 +251,73 @@ Tag;
         }
 
         return $response;
+    }
+
+    /**
+     * @param array $data
+     * @param string $keyPrefix
+     *
+     * @return string
+     */
+    private function createLog(array $data, string $keyPrefix = '') {
+        $message = '';
+        foreach ($data as $key => $value) {
+            if (is_array($value)) {
+                $message .= $this->createLog($value, ltrim($keyPrefix . '.' . $key, '.'));
+            } else {
+                $message .= (empty($keyPrefix) ? '' : ($keyPrefix . '.')) . $key . ' => ' . $value . "\n";;
+            }
+        }
+
+        return $message;
+    }
+
+    /**
+     * @param $html
+     * @param Exception|Error $exception
+     *
+     * @throws \PHPMailer\PHPMailer\Exception
+     */
+    private function sendReportMail(string &$html, $exception) {
+        $mailer_settings = Oforge()->Settings()->get('error_mail_report')['mailer_settings'];
+
+        /** @var PHPMailer $mailer */
+        $mailer = new PHPMailer(true); // throw exceptions on errors
+        $mailer->isSMTP();
+        $mailer->SMTPAuth  = true;
+        $mailer->Host      = $mailer_settings['smtp_host'];
+        $mailer->Username  = $mailer_settings['smtp_user'];
+        $mailer->Password  = $mailer_settings['smtp_pw'];
+        $mailer->Port      = $mailer_settings['smtp_port'];
+        $mailer->SMTPDebug = 4;
+
+        $mailer->addStringAttachment($html, 'error.html');
+        $mailer->addStringAttachment($this->createLog($_SERVER), 'server.log');
+        $mailer->addStringAttachment($this->createLog($_SESSION), 'session.log');
+        $mailer->addStringAttachment($this->createLog($_REQUEST), 'request.log');
+        $mailer->addStringAttachment($this->createLog($_POST), 'request.log');
+        $mailer->addStringAttachment($this->createLog($_FILES), 'files.log');
+
+        $mailer->Subject = 'oforge error 500';
+        $mailer->setFrom($mailer_settings['smtp_from'], 'Oforge');
+        $mailer->addAddress($mailer_settings['receiver_address'], 'Dev');
+        $mailer->Body = 'Error: ' . $exception->getMessage();
+
+        try {
+            $mailer->send();
+
+        } catch (Exception $e) {
+            // append mailer error to html output
+            if (Oforge()->Settings()->isDevelopmentMode()) {
+                $html .= <<<Tag
+<h1>Could not send mail report:</h1>
+<dl>
+    <dt>$e</dt>
+</dl>
+Tag;
+            }
+
+        }
     }
 
 }
