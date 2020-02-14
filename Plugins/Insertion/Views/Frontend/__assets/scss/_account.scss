@@ -220,4 +220,14 @@
     }
 }
 
+// accentuate "my insertions" navigation point
+
+.account__sidebar {
+    a[href="/account/insertions"] {
+        background: $color-secondary;
+        padding-left: 4px;
+    }
+}
+
+
 
