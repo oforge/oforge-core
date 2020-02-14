@@ -18,3 +18,9 @@
         content: none;
     }
 }
+@media screen and (min-width: $screen-medium) {
+    .half--centered {
+        width: 50%;
+        margin: 0 auto;
+    }
+}
