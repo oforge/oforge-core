@@ -488,7 +488,7 @@
 }
 
 .uppy-StatusBar.is-complete .uppy-StatusBar-progress {
-    background-color: #1bb240
+    background-color: $color-secondary;
 }
 
 .uppy-StatusBar.is-error .uppy-StatusBar-progress {
@@ -496,7 +496,7 @@
 }
 
 .uppy-StatusBar.is-complete .uppy-StatusBar-statusIndicator {
-    color: #1bb240
+    color: $color-secondary;
 }
 
 .uppy-StatusBar.is-error .uppy-StatusBar-statusIndicator {
@@ -533,7 +533,7 @@
 }
 
 .uppy-StatusBar.is-postprocessing .uppy-StatusBar-progress, .uppy-StatusBar.is-preprocessing .uppy-StatusBar-progress {
-    background-color: #f6a623
+    background-color: $color-secondary;
 }
 
 .uppy-StatusBar.is-waiting .uppy-StatusBar-progress {
@@ -709,7 +709,7 @@
     width: 100%;
     padding: 15px 10px;
     color: #fff;
-    background-color: #1bb240;
+    background-color: $color-secondary;
     line-height: 1
 }
 
@@ -779,7 +779,7 @@
 }
 
 .uppy-StatusBar.is-postprocessing .uppy-StatusBar-spinner, .uppy-StatusBar.is-preprocessing .uppy-StatusBar-spinner {
-    fill: #f6a623
+    fill: $color-secondary;
 }
 
 @keyframes uppy-StatusBar-spinnerAnimation {
@@ -1480,8 +1480,8 @@ svg.UppyIcon.retry {
 }
 
 .uppy-DashboardItem.is-complete .progress {
-    stroke: #1bb240;
-    fill: #1bb240;
+    stroke: $color-secondary;
+    fill: $color-secondary;
     opacity: 1
 }
 
@@ -2654,7 +2654,7 @@ a.uppy-Dashboard-poweredBy {
     position: absolute;
     top: -12px;
     right: -12px;
-    background-color: #1bb240;
+    background-color: $color-secondary;
     color: #fff;
     border-radius: 50%;
     width: 16px;
@@ -2971,4 +2971,7 @@ a.uppy-Dashboard-poweredBy {
     height: 75px;
     color: #bbb;
     margin-bottom: 30px
+}
+.upload__item.upload__item--placeholder {
+    cursor: pointer;
 }
