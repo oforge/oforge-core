@@ -81,17 +81,19 @@ class TwigOforgeDebugExtension extends Twig_Extension {
                     $vars[$key] = $value;
                 }
             }
+            o_print($vars);
+        } else {
+            if (is_array($vars)) {
+                array_walk_recursive($vars, function (&$item) {
+                    if ($item === null) {
+                        $item = 'null';
+                    } elseif (is_bool($item)) {
+                        $item = $item ? 'true' : 'false';
+                    }
+                });
+            }
+            o_print(...$vars);
         }
-        if (is_array($vars)) {
-            array_walk_recursive($vars, function (&$item) {
-                if ($item === null) {
-                    $item = 'null';
-                } elseif (is_bool($item)) {
-                    $item = $item ? 'true' : 'false';
-                }
-            });
-        }
-        o_print($vars);
     }
 
     /**

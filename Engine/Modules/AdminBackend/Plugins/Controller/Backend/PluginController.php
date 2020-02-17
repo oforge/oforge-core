@@ -571,8 +571,7 @@ class PluginController extends BaseCrudController {
      */
     protected function appendTwigFlashDetailMessage(TwigFlash $twigFlash, string $message, string $subMessage, array $preContentLines) {
         $preContent = implode("\n", $preContentLines);
-        $message    = "<details><summary>$message</summary><div><p>$subMessage:</p><pre>$preContent</pre></div></details>";
-        $twigFlash->addMessage('error', $message);
+        $twigFlash->addDetailMessage('error', $message, $subMessage, $preContent);
     }
 
     /** @inheritDoc */

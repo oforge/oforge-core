@@ -22,6 +22,8 @@ class TemplateManagementService extends AbstractDatabaseAccess {
 
     public function __construct() {
         parent::__construct(["default" => Template::class]);
+        // $this->getActiveTemplate();
+        // Oforge()->View()->assign(['meta.theme' => 'TTT' ]);
     }
 
     /**

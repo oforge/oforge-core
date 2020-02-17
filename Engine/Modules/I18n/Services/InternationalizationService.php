@@ -24,13 +24,40 @@ class InternationalizationService extends AbstractDatabaseAccess {
     /**
      * @param string $key
      * @param string $language
-     * @param string|null $defaultValue
+     * @param string|array|null $defaultValue
      *
      * @return string
      * @throws ORMException
      */
-    public function get(string $key, string $language, ?string $defaultValue = null) : string {
+    public function get(string $key, string $language, $defaultValue = null) : string {
         if (!isset($this->cache[$language][$key])) {
+            /** @var LanguageService $languageService */
+            $languageService = Oforge()->Services()->get('i18n.language');
+            $languageIsos       = array_keys($languageService->getFilterDataLanguages(true));
+
+            // if (is_array($defaultValue)) {
+            //     if (empty($defaultValue)) {
+            //         return $key;
+            //     }
+            //     $result = null;
+            //     if (isset($defaultValue[$language])) {
+            //         $result = self::$i18nService->get($key, $language, $defaultValue[$language]);
+            //     } else {
+            //         $result = self::$i18nService->get($key, $language, null);
+            //     }
+            //     foreach ($defaultValue as $languageIso => $languageDefaultValue) {
+            //         if ($language === $languageIso) {
+            //             continue;
+            //         }
+            //         $tmpResult = self::$i18nService->get($key, $languageIso, $defaultValue[$languageIso]);
+            //         if ($result === null) {
+            //             $result = $tmpResult;
+            //         }
+            //     }
+            //
+            //     return $result;
+            // }
+
             /** @var Snippet $snippet */
             $snippet = $this->repository()->findOneBy([
                 'name'  => $key,

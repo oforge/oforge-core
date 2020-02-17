@@ -33,9 +33,15 @@ class EndpointAction {
     /**
      * Optional asset scope for this action, overrides EndpointClass#assetScope.
      *
-     * @var string|null $assetScope
+     * @var string|string[]|null $assetBundles
      */
-    private $assetScope;
+    private $assetBundles;
+    /**
+     * Mode of how assetsBundles are created for endpoint. AssetBundlesMode::OVERRIDE (default) or AssetBundlesMode::MERGE or AssetBundlesMode::NONE.
+     *
+     * @var string|null $assetBundles
+     */
+    private $assetBundlesMode = null;
     /**
      * Route order for this action, overrides Endpoint#order.
      *
@@ -53,12 +59,14 @@ class EndpointAction {
      * @param array $config
      */
     public function __construct(array $config) {
-        $this->assetScope = $config['assetScope'] ?? null;
-        $this->method     = $config['method'] ?? EndpointMethod::ANY;
-        $this->name       = $config['name'] ?? '';
-        $this->order      = $config['order'] ?? null;
-        $this->path       = $config['path'] ?? '';
-        $this->create     = $config['create'] ?? true;
+        $this->assetBundles     = $config['assetScope'] ?? $config['assetBundles'] ?? null;//TODO remove assetScore after asset refactoring
+        $this->assetBundlesMode = $config['assetBundlesMode'] ?? null;
+
+        $this->method = $config['method'] ?? EndpointMethod::ANY;
+        $this->name   = $config['name'] ?? '';
+        $this->order  = $config['order'] ?? null;
+        $this->path   = $config['path'] ?? '';
+        $this->create = $config['create'] ?? true;
     }
 
     /**
@@ -83,10 +91,17 @@ class EndpointAction {
     }
 
     /**
+     * @return string|string[]|null
+     */
+    public function getAssetBundles() {
+        return $this->assetBundles;
+    }
+
+    /**
      * @return string|null
      */
-    public function getAssetScope() : ?string {
-        return $this->assetScope;
+    public function getAssetBundlesMode() : ?string {
+        return $this->assetBundlesMode;
     }
 
     /**

@@ -102,6 +102,17 @@ class ArrayHelper {
     }
 
     /**
+     * Extract all data by key with original value.
+     * @param array $inputArray
+     * @param array $keys
+     *
+     * @return array
+     */
+    public static function extractByKey(array $inputArray, array $keys) {
+        return array_intersect_key($inputArray, array_flip($keys));
+    }
+
+    /**
      * @param array $array1
      * @param array $array2
      * @param bool $overrideNumericIndices
@@ -165,16 +176,18 @@ class ArrayHelper {
      * Set value in array by key in dot notation (e.g. meta.rout.name).
      *
      * @param array $array
-     * @param string $key
+     * @param string|string[] $keyOrKeyPath
      * @param mixed $value
      *
      * @return array
      */
-    public static function dotSet(array $array, string $key, $value) {
-        if (strpos($key, '.') !== false) {
+    public static function dotSet(array $array, $keyOrKeyPath, $value) {
+        if (is_string($keyOrKeyPath) && strpos($keyOrKeyPath, '.') !== false) {
+            $keyOrKeyPath = explode('.', $keyOrKeyPath);
+        }
+        if (is_array($keyOrKeyPath)) {
             $tmp  = &$array;
-            $keys = explode('.', $key);
-            foreach ($keys as $key) {
+            foreach ($keyOrKeyPath as $key) {
                 if (!isset($tmp[$key])) {
                     $tmp[$key] = [];
                 } elseif (!is_array($tmp[$key])) {
@@ -183,6 +196,8 @@ class ArrayHelper {
                 $tmp = &$tmp[$key];
             }
             $tmp = $value;
+        } else {
+            $array[$keyOrKeyPath] = $value;
         }
 
         return $array;

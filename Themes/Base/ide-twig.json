@@ -1,0 +1,11 @@
+{
+    "namespaces": [
+        {
+            "path": ""
+        },
+        {
+            "namespace": "parent",
+            "path": "."
+        }
+    ]
+}

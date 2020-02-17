@@ -1,9 +1,7 @@
 {% extends 'Backend/Master/Index.twig' %}
 
 {% block pagecontent %}
-    {% set meta = mergeRecursive(meta|default({}), dotToNested({
-        'route.query.language1': meta.route.query.language1|default(meta.language.iso),
-    })) %}
+    {{ dotSet('meta.route.query.language1', meta.route.query.language1|default(meta.language.iso)) }}
     <section class="content">
         <div class="row">
             <div class="col-xs-12">

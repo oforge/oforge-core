@@ -59,10 +59,10 @@ class Endpoint extends AbstractModel {
      */
     private $httpMethod = EndpointMethod::ANY;
     /**
-     * @var string
-     * @ORM\Column(name="asset_scope", type="string", nullable=true, options={"default":"frontend"})
+     * @var string[]
+     * @ORM\Column(name="asset_bundles", type="simple_array", nullable=true)
      */
-    private $assetScope = 'frontend';
+    private $assetBundles = ['Frontend'];
 
     /**
      * @var int
@@ -225,19 +225,19 @@ class Endpoint extends AbstractModel {
     }
 
     /**
-     * @return string
+     * @return string[]
      */
-    public function getAssetScope() {
-        return $this->assetScope;
+    public function getAssetBundles() {
+        return $this->assetBundles;
     }
 
     /**
-     * @param string $assetScope
+     * @param string[] $assetBundles
      *
      * @return Endpoint
      */
-    public function setAssetScope(string $assetScope) : Endpoint {
-        $this->assetScope = $assetScope;
+    public function setAssetBundles($assetBundles) : Endpoint {
+        $this->assetBundles = $assetBundles;
 
         return $this;
     }

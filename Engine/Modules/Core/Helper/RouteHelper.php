@@ -36,7 +36,7 @@ class RouteHelper {
      */
     public static function redirect(Response $response, ?string $routeName = null, array $urlParams = [], array $queryParams = []) : Response {
         self::init();
-        if (is_null($routeName)) {
+        if ($routeName === null) {
             $routeName = Oforge()->View()->get('meta.route.name');
         }
         $uri = self::$router->pathFor($routeName, $urlParams, $queryParams);

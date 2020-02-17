@@ -4,4 +4,4 @@
     if no layout is defined. This helps template developers to easily extend the base theme.
     You just have to extend '@parent/Frontend/Layout.twig' and define the layout in the admin backend.
 #}
-{% extends 'Frontend/Layouts/' ~ meta.template.layout|default('Default') ~ '.twig' %}
+{% extends 'Frontend/Layouts/' ~ meta.template.layout|default('Default')|ucfirst ~ '.twig' %}

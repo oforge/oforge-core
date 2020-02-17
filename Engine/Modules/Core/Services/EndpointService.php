@@ -9,6 +9,7 @@ use Doctrine\Common\Annotations\Reader;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\AssetBundlesMode;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Helper\Statics;
@@ -225,7 +226,7 @@ class EndpointService extends AbstractDatabaseAccess {
             $reflectionClass = new ReflectionClass($class);
             /** @var EndpointClass $classAnnotation */
             $classAnnotation = $reader->getClassAnnotation($reflectionClass, EndpointClass::class);
-            if (is_null($classAnnotation)) {
+            if ($classAnnotation === null) {
                 Oforge()->Logger()->get()
                         ->addWarning("An endpoint was defined but the corresponding controller '$class' has no configurated annotation 'EndpointClass'.");
 
@@ -234,7 +235,7 @@ class EndpointService extends AbstractDatabaseAccess {
             $classAnnotation->checkRequired($class);
 
             $classMethods = get_class_methods($class);
-            if (is_null($classMethods)) {
+            if ($classMethods === null) {
                 Oforge()->Logger()->get()->addWarning("Get class methods failed for '$class'. Maybe some namespace, class or method was defined wrong.");
                 $classMethods = [];
             }
@@ -281,12 +282,16 @@ class EndpointService extends AbstractDatabaseAccess {
         EndpointClass $classAnnotation,
         ?EndpointAction $methodAnnotation
     ) : array {
+        /** @var string|string[]|null $assetBundles */
         $parentName = $classAnnotation->getName();
         $name       = $parentName . '_';
         $path       = $classAnnotation->getPath();
         $order      = null;
-        $assetScope = null;
         $httpMethod = EndpointMethod::ANY;
+
+        $assetBundlesMode   = $classAnnotation->getAssetBundlesMode();
+        $classAssetBundles  = $classAnnotation->getAssetBundles();
+        $methodAssetBundles = null;
 
         $context = explode('\\', $class)[StringHelper::startsWith($class, 'Oforge\Engine\Modules') ? 3 : 0];
 
@@ -294,11 +299,12 @@ class EndpointService extends AbstractDatabaseAccess {
         if ($isMethodActionPrefix) {
             $actionName = explode('Action', $actionName)[0];
         }
-        $isIndexAction = $actionName === 'index';
+        $isIndexAction = ($actionName === 'index');
 
         if (isset($methodAnnotation)) {
-            $order      = $methodAnnotation->getOrder();
-            $assetScope = $methodAnnotation->getAssetScope();
+            $order              = $methodAnnotation->getOrder();
+            $methodAssetBundles = $methodAnnotation->getAssetBundles();
+            $assetBundlesMode   = $methodAnnotation->getAssetBundlesMode() ?? $assetBundlesMode;
             if (EndpointMethod::isValid($methodAnnotation->getMethod())) {
                 $httpMethod = $methodAnnotation->getMethod();
             }
@@ -314,10 +320,52 @@ class EndpointService extends AbstractDatabaseAccess {
             $name .= $actionName;
         }
 
-        $name       = trim($name, '_');
-        $path       = StringHelper::leading($path, '/');
-        $order      = $order ?? $classAnnotation->getOrder() ?? Statics::DEFAULT_ORDER;
-        $assetScope = $assetScope ?? $classAnnotation->getAssetScope() ?? 'Frontend';
+        $name  = trim($name, '_');
+        $path  = StringHelper::leading($path, '/');
+        $order = $order ?? $classAnnotation->getOrder() ?? Statics::DEFAULT_ORDER;
+
+        $assetBundlesMode = $assetBundlesMode ?? AssetBundlesMode::OVERRIDE;
+        $assetBundles     = (function () use ($assetBundlesMode, $classAssetBundles, $methodAssetBundles) {
+            /**
+             * @param string|string[]|null $values
+             *
+             * @return string[]
+             */
+            $convert = function ($values) {
+                if ($values === null) {
+                    return [];
+                }
+                if (is_string($values)) {
+                    $values = explode(',', $values);
+                }
+                foreach ($values as $index => $assetBundle) {
+                    $values[$index] = ucfirst(trim($assetBundle));
+                }
+
+                return $values;
+            };
+            switch ($assetBundlesMode) {
+                case AssetBundlesMode::MERGE:
+                    return array_unique(array_merge($convert($classAssetBundles), $convert($methodAssetBundles)));
+                case AssetBundlesMode::NONE:
+                    return [];
+                case AssetBundlesMode::OVERRIDE:
+                default:
+                    $assetBundles = $convert($methodAssetBundles);
+                    if (empty($assetBundles)) {
+                        $assetBundles = $convert($classAssetBundles);
+                    }
+
+                    return $assetBundles;
+            }
+        })();
+
+        if (is_string($assetBundles)) {
+            $assetBundles = explode(',', $assetBundles);
+        }
+        foreach ($assetBundles as $index => $assetBundle) {
+            $assetBundles[$index] = ucfirst(trim($assetBundle));
+        }
 
         return [
             'name'             => $name,
@@ -326,7 +374,7 @@ class EndpointService extends AbstractDatabaseAccess {
             'context'          => $context,
             'controllerClass'  => $class,
             'controllerMethod' => $classMethod,
-            'assetScope'       => $assetScope,
+            'assetBundles'     => $assetBundles,
             'httpMethod'       => $httpMethod,
             'order'            => $order,
             // 'controllerAction' => $actionName ?? '-',

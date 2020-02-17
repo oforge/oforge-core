@@ -27,7 +27,7 @@ class BackendExtension extends Twig_Extension implements Twig_ExtensionInterface
             new Twig_Function('backend_topbar_navigation', [$this, 'getTopbarNavigation']),
             new Twig_Function('backend_breadcrumbs', [$this, 'get_breadcrumbs']),
             new Twig_Function('backend_breadcrumbs_map', [$this, 'get_breadcrumbs_map']),
-            new Twig_Function('backend_notifications', [$this, 'get_backend_notifications']),
+            new Twig_Function('backend_notifications', [$this, 'getBackendNotifications']),
             new Twig_Function('backend_favorites', [$this, 'get_favorites']),
             new Twig_Function('backend_dashboard_widgets', [$this, 'getDashboardWidgets']),
             new Twig_Function('isFavorite', [$this, 'is_favorite']),
@@ -38,15 +38,17 @@ class BackendExtension extends Twig_Extension implements Twig_ExtensionInterface
      * @return array|object[]
      * @throws ServiceNotFoundException
      */
-    public function get_backend_notifications() {
-        /** @var $authService AuthService */
-        $authService = Oforge()->Services()->get('auth');
-        $user        = $authService->decode($_SESSION['auth']);
-        if (isset($user) && isset($user['id'])) {
-            /** @var BackendNotificationService $notificationService */
-            $notificationService = Oforge()->Services()->get('backend.notifications');
+    public function getBackendNotifications() {
+        if (isset($_SESSION['auth'])) {
+            /** @var AuthService $authService */
+            $authService = Oforge()->Services()->get('auth');
+            $user        = $authService->decode($_SESSION['auth']);
+            if (isset($user) && isset($user['id'])) {
+                /** @var BackendNotificationService $notificationService */
+                $notificationService = Oforge()->Services()->get('backend.notifications');
 
-            return $notificationService->getNotifications($user['id'], AbstractNotificationService::UNSEEN);
+                return $notificationService->getNotifications($user['id'], AbstractNotificationService::UNSEEN);
+            }
         }
 
         return [];
@@ -189,6 +191,7 @@ class BackendExtension extends Twig_Extension implements Twig_ExtensionInterface
         $user = Oforge()->View()->get('user');
         if ($user != null) {
             $userID = ArrayHelper::get($user, 'id');
+
             return $dashboardWidgetsService->getUserWidgets($userID, $forDashboard);
         }
 

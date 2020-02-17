@@ -43,9 +43,8 @@ abstract class AbstractDatabaseAccess {
      * @param string $name
      *
      * @return EntityRepository
-     * @throws ORMException
      */
-    public function repository($name = 'default') : EntityRepository {
+    public function repository(string $name = 'default') : EntityRepository {
         if (!isset($this->repositories[$name])) {
             $this->repositories[$name] = $this->entityManager()->getRepository($this->models[$name]);
         }
@@ -60,7 +59,7 @@ abstract class AbstractDatabaseAccess {
      *
      * @return EntityRepository
      */
-    protected function getRepository(string $class) : EntityRepository {
+    public function getRepository(string $class) : EntityRepository {
         return $this->entityManager()->getRepository($class);
     }
 

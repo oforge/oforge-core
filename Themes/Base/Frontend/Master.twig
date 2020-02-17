@@ -1,6 +1,4 @@
-{#
-    This is the top (Master) template file, that defines the basic structure of a theme.
-#}
+{# This is the top (Master) template file, that defines the basic structure of a theme. #}
 <!doctype html>
 <html lang="{{ meta.language.iso }}">
 <head>
@@ -8,8 +6,8 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{% block title %}{% if meta.title is defined %}{{ meta.title }}{% else %}{{ config('system_project_name') }}{% endif %}{% endblock title %}</title>
-    <meta name="description" content="{% block description %}{{ meta.description }}{% endblock description %}" />
+    <title>{% block title %}{% if meta.page.title is defined %}{{ meta.page.title }}{% else %}{{ config('system_project_name') }}{% endif %}{% endblock title %}</title>
+    <meta name="description" content="{% block description %}{{ meta.page.description }}{% endblock description %}" />
     {#<base href="{{ meta.route.baseUrl }}" />#}
     <link rel="shortcut icon" href="{{ url('/var/public/__assets/Frontend/img/favicon.ico') }}">
 
@@ -25,8 +23,9 @@
     {% block head__scripts %}
     {% endblock head__scripts %}
 </head>
-<body
-    class="{% block body_class %}controller-{{ meta.route.parentName|lower }} module-{{ meta.route.context|lower }} action-{{ meta.route.name|lower }} {{ meta.body_class|lower }} {% endblock body_class %}">
+<body {% if meta.route.page.css.id %}id="{{ meta.route.page.css.id }}"{% endif %}
+    {% if meta.route.page.css.style %}style="{{ meta.route.page.css.style }}"{% endif %}
+      class="{% block body_class %}controller-{{ meta.route.parentName|lower }} module-{{ meta.route.context|lower }} action-{{ meta.route.name|lower }}{% endblock body_class %} {{ meta.route.page.css.class|default(null) }}">
 
 {% if debug.console %}
     {{ o_dump() }}
@@ -39,29 +38,30 @@
     {% include 'Frontend/Components/Scripts.twig' %}
 {% endblock master__footer_scripts %}
 
-{% block game %}
-    {% set content_320 = content('game_320') %}
-    {% set content_640 = content('game_640') %}
-    {% set game_page   = content('game_page') %}
+{#{% block game %}#}
+{#    {% set content_320 = cms_content('game_320') %}#}
+{#    {% set content_640 = cms_content('game_640') %}#}
+{#    {% set game_page   = cms_content('game_page') %}#}
 
-    {% if content_320 and content_640 and game_page['text'] == meta.route.url.path %}
-    <div data-modal-view="1"
-         data-auto-open="">
-        <div data-modal-content="1"
-             class="modal-view">
-            <div class="modal-view__close"
-                 data-modal-close="1">✕</div>
-            <div class="modal-view__content">
-                <picture class="lazy">
-                    <source class="lazy" data-srcset="{{ media(content_640['url']) }}" media="(min-width: 640px)" />
-                    <img class="lazy" data-src="{{ media(content_320['url']) }}" alt="{{ i18n('image_upload_tips') }}" />
-                </picture>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-
-{% endblock game %}
+{#    {% if content_320 and content_640 and game_page['text'] == meta.route.url.path %}#}
+{#        <div data-modal-view="1"#}
+{#             data-auto-open="">#}
+{#            <div data-modal-content="1"#}
+{#                 class="modal-view">#}
+{#                <div class="modal-view__close"#}
+{#                     data-modal-close="1">✕#}
+{#                </div>#}
+{#                <div class="modal-view__content">#}
+{#                    <picture class="lazy">#}
+{#                        <source class="lazy" data-srcset="{{ media(content_640['url']) }}" media="(min-width: 640px)" />#}
+{#                        <img class="lazy" data-src="{{ media(content_320['url']) }}"#}
+{#                             alt="{{ i18n('image_upload_tips') }}" />#}
+{#                    </picture>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    {% endif %}#}
+{#{% endblock game %}#}
 
 {% block svg_icons %}
     {% include 'Frontend/Components/SVG.twig' %}
@@ -96,6 +96,10 @@
 
 {% block cookie__consent %}
 {% endblock cookie__consent %}
+
+{% if meta.backend.logged|default(false) %}
+    {% include 'Frontend/Components/BackendPopup.twig' %}
+{% endif %}
 <div id="scroll_to_top"></div>
 </body>
 </html>

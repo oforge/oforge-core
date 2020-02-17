@@ -2,12 +2,11 @@
 {% block content %}
     <div class="500 content">
         <div class="panel">
-            {% set content = content('server_error_' ~ meta.language.iso) %}
-            {% if content %}
-                <div class="content">
-                    {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
-                </div>
-            {% endif %}
+            {% block content_body %}
+                {% block content_body_default_message %}
+                    {#            TODO default 500 message #}
+                {% endblock content_body_default_message %}
+            {% endblock content_body %}
         </div>
     </div>
 {% endblock content %}

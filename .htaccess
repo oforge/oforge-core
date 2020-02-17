@@ -2,6 +2,10 @@ Header set Access-Control-Allow-Origin "*"
 Header set Access-Control-Allow-Methods "GET,PUT,POST,DELETE"
 Header set Access-Control-Allow-Headers "Content-Type, Authorization"
 
+#<If "%{HTTP_COOKIE} =~ /XDEBUG_SESSION=PHPSTORM/ || %{QUERY_STRING} =~ /XDEBUG_SESSION_START=PHPSTORM/">
+#    php_flag   xdebug.remote_enable on
+#</If>
+
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

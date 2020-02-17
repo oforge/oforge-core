@@ -89,6 +89,7 @@ class TemplateRenderService {
                     }
                     $index++;
                 }
+                $templatePath = ltrim($templatePath, DIRECTORY_SEPARATOR);
                 $templatePath .= DIRECTORY_SEPARATOR . $controllerName . DIRECTORY_SEPARATOR . ucfirst($fileName) . '.twig';
 
                 $data = ArrayHelper::dotSet($data, 'meta.template.path', $templatePath);
@@ -103,7 +104,7 @@ class TemplateRenderService {
             if ($this->hasTemplate($templatePath)) {
                 return $this->renderTemplate($request, $response, $templatePath, $data);
             }
-            if (isset($fileName)) {
+            if (isset($fileName) && isset($data['crud'])) {
                 $fallbackTemplatePath = '/Backend/CRUD/' . ucfirst($fileName) . '.twig';
                 if ($this->hasTemplate($fallbackTemplatePath)) {
                     $data['meta']['template']['path'] = $fallbackTemplatePath;
@@ -132,7 +133,7 @@ class TemplateRenderService {
             /** @var TemplateManagementService $templateManagementService */
             $templateManagementService = Oforge()->Services()->get('template.management');
             $activeTemplate            = $templateManagementService->getActiveTemplate();
-            $templatePath              = DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . $activeTemplate->getName();
+            $templatePath              = Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . $activeTemplate->getName();
             $debug                     = Oforge()->Settings()->isDevelopmentMode();
             $defaultThemePath          = ROOT_PATH . DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . Statics::DEFAULT_THEME;
 
