@@ -48,7 +48,7 @@ class InsertionListService extends AbstractDatabaseAccess {
         $page = isset($params["page"]) ? $params["page"] : 1;
 
         $page = intval($page);
-        if ($page < 0) {
+        if ($page < 1) {
             $page = 1;
         }
 
