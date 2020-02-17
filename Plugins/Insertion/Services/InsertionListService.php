@@ -49,10 +49,16 @@ class InsertionListService extends AbstractDatabaseAccess {
 
         $page = intval($page);
         if ($page < 0) {
-            $page = 0;
+            $page = 1;
         }
 
         $pageSize    = isset($params["pageSize"]) ? $params["pageSize"] : 10;
+
+        $pageSize = intval($pageSize);
+        if ($pageSize < 1) {
+            $page = 10;
+        }
+
         $order       = 'id';
         $orderNative = 'id';
         $orderDir    = 'asc';
