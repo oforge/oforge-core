@@ -49,7 +49,12 @@ class ImageCompressService extends AbstractDatabaseAccess {
             $fileExtension = $this->getFileExtension($media);
 
             if (!empty($fileExtension)) {
-                $cacheUrl = substr($media->getPath(), 0, -strlen($fileExtension) - 1) . '_' . $width . '.' . $fileExtension;
+                if ($blur) {
+                    $cacheUrl = substr($media->getPath(), 0, -strlen($fileExtension) - 1) . '_' . $width . '.' .  '_blur' . '.' . $fileExtension;
+
+                } else {
+                    $cacheUrl = substr($media->getPath(), 0, -strlen($fileExtension) - 1) . '_' . $width . '.' . $fileExtension;
+                }
                 //File is already compressed and stored
                 if (file_exists(ROOT_PATH . $cacheUrl)) {
                     return $cacheUrl;
@@ -134,6 +139,7 @@ class ImageCompressService extends AbstractDatabaseAccess {
                 $imagick->scaleImage($width, (int) (1.0 * $width / $widthCurrent * $heightCurrent));
                 if ($blur) {
                     $imagick->blurImage(5,3);
+                    $imagick->setImageOpacity(.5);
                 }
                 $imagick->writeImage(ROOT_PATH . $cacheUrl);
             }
