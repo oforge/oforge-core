@@ -139,7 +139,7 @@ class ImageCompressService extends AbstractDatabaseAccess {
                 $imagick->scaleImage($width, (int) (1.0 * $width / $widthCurrent * $heightCurrent));
                 if ($blur) {
                     $imagick->blurImage(5,3);
-                    $imagick->setImageOpacity(.5);
+                    $imagick->setImageOpacity(.2);
                 }
                 $imagick->writeImage(ROOT_PATH . $cacheUrl);
             }
