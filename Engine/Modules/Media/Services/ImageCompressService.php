@@ -50,7 +50,7 @@ class ImageCompressService extends AbstractDatabaseAccess {
 
             if (!empty($fileExtension)) {
                 if ($blur) {
-                    $cacheUrl = substr($media->getPath(), 0, -strlen($fileExtension) - 1) . '_' . $width . '.' .  '_blur' . '.' . $fileExtension;
+                    $cacheUrl = substr($media->getPath(), 0, -strlen($fileExtension) - 1) . '_' . $width . '_blur' . '.' .  $fileExtension;
 
                 } else {
                     $cacheUrl = substr($media->getPath(), 0, -strlen($fileExtension) - 1) . '_' . $width . '.' . $fileExtension;
@@ -139,7 +139,6 @@ class ImageCompressService extends AbstractDatabaseAccess {
                 $imagick->scaleImage($width, (int) (1.0 * $width / $widthCurrent * $heightCurrent));
                 if ($blur) {
                     $imagick->blurImage(5,3);
-                    $imagick->setImageOpacity(.2);
                 }
                 $imagick->writeImage(ROOT_PATH . $cacheUrl);
             }
