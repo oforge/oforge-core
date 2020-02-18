@@ -24,12 +24,13 @@ class ImageCompressService extends AbstractDatabaseAccess {
     /**
      * @param string|null $path
      * @param int $width
+     * @param bool $blur
      *
      * @return string|null
-     * @throws ServiceNotFoundException
      * @throws ORMException
+     * @throws ServiceNotFoundException
      */
-    public function getPath(?string $path, int $width = 0) : ?string {
+    public function getPath(?string $path, int $width = 0, bool $blur = false) : ?string {
         if (!isset($path)) {
             return null;
         }
@@ -55,7 +56,7 @@ class ImageCompressService extends AbstractDatabaseAccess {
                 }
                 //File should be compressed
                 if (extension_loaded('imagick')) {
-                    $this->scale($media, $width, $cacheUrl);
+                    $this->scale($media, $width, $cacheUrl, $blur);
                     $this->compress($cacheUrl);
 
                     if (file_exists(ROOT_PATH . $cacheUrl)) {
@@ -124,13 +125,16 @@ class ImageCompressService extends AbstractDatabaseAccess {
         }
     }
 
-    public function scale(Media $media, int $width, string $cacheUrl) {
+    public function scale(Media $media, int $width, string $cacheUrl, bool $blur) {
         try {
             if (extension_loaded('imagick')) {
                 $imagick       = new Imagick(ROOT_PATH . $media->getPath());
                 $widthCurrent  = $imagick->getImageWidth();
                 $heightCurrent = $imagick->getImageHeight();
                 $imagick->scaleImage($width, (int) (1.0 * $width / $widthCurrent * $heightCurrent));
+                if ($blur) {
+                    $imagick->blurImage(5,3);
+                }
                 $imagick->writeImage(ROOT_PATH . $cacheUrl);
             }
         } catch (ImagickException $e) {
