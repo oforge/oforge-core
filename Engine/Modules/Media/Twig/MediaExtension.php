@@ -44,19 +44,20 @@ class MediaExtension extends Twig_Extension implements Twig_ExtensionInterface {
         if ($varLength > 0) {
             /** @var ImageCompressService $configService */
             $configService = Oforge()->Services()->get('image.compress');
-            if ($varLength == 2) {
+
+            if ($varLength == 3) {
                 if (is_array($vars[0])) {
                     if (isset($vars[0]["id"])) {
-                        $result = $configService->getPath($vars[0]["id"], $vars[1]);
+                        $result = $configService->getPath($vars[0]["id"], $vars[1], isset($vars[2]) ? $vars[2] : false);
                     } elseif (isset($vars[0]["path"])) {
-                        $result = $configService->getPath($vars[0]["path"], $vars[1]);
+                        $result = $configService->getPath($vars[0]["path"], $vars[1], isset($vars[2]) ? $vars[2] : false);
                     }
                 } else {
-                    $result = $configService->getPath($vars[0], $vars[1]);
+                    $result = $configService->getPath($vars[0], $vars[1], isset($vars[2]) ? $vars[2] : false);
                 }
 
             } else {
-                $result = $configService->getPath($vars[0]);
+                $result = $configService->getPath($vars[0], isset($vars[1]) ? $vars[1] : false);
             }
         }
 
