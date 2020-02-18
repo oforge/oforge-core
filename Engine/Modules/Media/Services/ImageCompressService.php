@@ -24,13 +24,12 @@ class ImageCompressService extends AbstractDatabaseAccess {
     /**
      * @param string|null $path
      * @param int $width
-     * @param bool $blur
      *
      * @return string|null
      * @throws ORMException
      * @throws ServiceNotFoundException
      */
-    public function getPath(?string $path, int $width = 0, bool $blur = false) : ?string {
+    public function getPath(?string $path, int $width = 0) : ?string {
         if (!isset($path)) {
             return null;
         }
@@ -49,19 +48,14 @@ class ImageCompressService extends AbstractDatabaseAccess {
             $fileExtension = $this->getFileExtension($media);
 
             if (!empty($fileExtension)) {
-                if ($blur) {
-                    $cacheUrl = substr($media->getPath(), 0, -strlen($fileExtension) - 1) . '_' . $width . '_blur' . '.' .  $fileExtension;
-
-                } else {
-                    $cacheUrl = substr($media->getPath(), 0, -strlen($fileExtension) - 1) . '_' . $width . '.' . $fileExtension;
-                }
+                $cacheUrl = substr($media->getPath(), 0, -strlen($fileExtension) - 1) . '_' . $width . '.' . $fileExtension;
                 //File is already compressed and stored
                 if (file_exists(ROOT_PATH . $cacheUrl)) {
                     return $cacheUrl;
                 }
                 //File should be compressed
                 if (extension_loaded('imagick')) {
-                    $this->scale($media, $width, $cacheUrl, $blur);
+                    $this->scale($media, $width, $cacheUrl);
                     $this->compress($cacheUrl);
 
                     if (file_exists(ROOT_PATH . $cacheUrl)) {
@@ -112,14 +106,12 @@ class ImageCompressService extends AbstractDatabaseAccess {
                     $imagick->setInterlaceScheme(Imagick::INTERLACE_JPEG);
                     $imagick->setColorspace(Imagick::COLORSPACE_SRGB);
 
-
                 } elseif ($image_types[2] === IMAGETYPE_GIF) {
                     $imagick->setImageFormat('gif');
                 } elseif ($image_types[2] === IMAGETYPE_PNG) {
                     $imagick->stripImage();
                     $imagick->setImageDepth(8);
-                }
-                else {
+                } else {
                     // not supported file type
                 }
 
@@ -130,16 +122,13 @@ class ImageCompressService extends AbstractDatabaseAccess {
         }
     }
 
-    public function scale(Media $media, int $width, string $cacheUrl, bool $blur) {
+    public function scale(Media $media, int $width, string $cacheUrl) {
         try {
             if (extension_loaded('imagick')) {
                 $imagick       = new Imagick(ROOT_PATH . $media->getPath());
                 $widthCurrent  = $imagick->getImageWidth();
                 $heightCurrent = $imagick->getImageHeight();
                 $imagick->scaleImage($width, (int) (1.0 * $width / $widthCurrent * $heightCurrent));
-                if ($blur) {
-                    $imagick->blurImage(5,3);
-                }
                 $imagick->writeImage(ROOT_PATH . $cacheUrl);
             }
         } catch (ImagickException $e) {
