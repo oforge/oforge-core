@@ -7,8 +7,8 @@
                     {{ url('insertions_processSteps', { type : type.id}) }}
                   {% else %}
                   {# If the insertion type has no 'feature-attributes' then skip the next step #}
-                  {% if attributes[2].items|length == 0 %}
-                    {{ url('insertions_createSteps', { type : type.id, page: page + 2}) }}
+                  {% if attributes[2].items|length == 0 and page == 1%}
+                    {{ url('insertions_createSteps', { type : type.id, page: 3}) }}
                     {% else %}
                     {{ url('insertions_createSteps', { type : type.id, page: page + 1}) }}
                   {% endif %}{% endif %}{% endspaceless %}{% endblock form_content_action %}"
