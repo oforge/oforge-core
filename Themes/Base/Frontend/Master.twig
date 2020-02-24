@@ -40,26 +40,26 @@
 {% endblock master__footer_scripts %}
 
 {% block game %}
-    {% set content_320 = content('game_320') %}
-    {% set content_640 = content('game_640') %}
-    {% set game_page   = content('game_page') %}
+{#    {% set content_320 = content('game_320') %}#}
+{#    {% set content_640 = content('game_640') %}#}
+{#    {% set game_page   = content('game_page') %}#}
 
-    {% if content_320 and content_640 and game_page['text'] == meta.route.url.path %}
-    <div data-modal-view="{{ meta.route.url.path }}"
-         data-auto-open="">
-        <div data-modal-content="{{ meta.route.url.path }}"
-             class="modal-view">
-            <div class="modal-view__close"
-                 data-modal-close="{{ meta.route.url.path }}">✕</div>
-            <div class="modal-view__content">
-                <picture class="lazy">
-                    <source class="lazy" data-srcset="{{ media(content_640['url']) }}" media="(min-width: 640px)" />
-                    <img class="lazy" data-src="{{ media(content_320['url']) }}" alt="{{ i18n('image_upload_tips') }}" />
-                </picture>
-            </div>
-        </div>
-    </div>
-    {% endif %}
+{#    {% if content_320 and content_640 and game_page['text'] == meta.route.url.path %}#}
+{#    <div data-modal-view="{{ meta.route.url.path }}"#}
+{#         data-auto-open="">#}
+{#        <div data-modal-content="{{ meta.route.url.path }}"#}
+{#             class="modal-view">#}
+{#            <div class="modal-view__close"#}
+{#                 data-modal-close="{{ meta.route.url.path }}">✕</div>#}
+{#            <div class="modal-view__content">#}
+{#                <picture class="lazy">#}
+{#                    <source class="lazy" data-srcset="{{ media(content_640['url']) }}" media="(min-width: 640px)" />#}
+{#                    <img class="lazy" data-src="{{ media(content_320['url']) }}" alt="{{ i18n('image_upload_tips') }}" />#}
+{#                </picture>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#    {% endif %}#}
 
 {% endblock game %}
 
