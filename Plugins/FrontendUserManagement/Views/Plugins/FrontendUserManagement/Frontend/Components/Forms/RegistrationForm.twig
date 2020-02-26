@@ -78,6 +78,18 @@
                            class="form__label form__label--checkbox space-left sub">{{ i18n('accept_privacy_notice') }}</label>
                 </div>
             {% endblock registration_privacy_notice %}
+            {% block registration_agb_notice %}
+                <div class="form__control flex flex--row flex--center">
+                    <input id="frontend_registration_privacy_notice_accepted"
+                           name="frontend_registration_agb_accepted"
+                           type="checkbox"
+                           class="form__input form__input--checkbox"
+                           required
+                           data-required>
+                    <label for="frontend_registration_privacy_notice_accepted"
+                           class="form__label form__label--checkbox space-left sub">{{ i18n('accept_agb_notice') }}</label>
+                </div>
+            {% endblock registration_agb_notice %}
             <div class="form__control">
                 <input type="hidden" name="token" value="{{ token() }}">
                 {% if meta.route.referrer %}
