@@ -14,6 +14,7 @@
     }
     &.layout-before {
         left: calc(50% - 860px);
+        text-align: right;
     }
     &.layout-after {
         left: calc(50% + 660px)
