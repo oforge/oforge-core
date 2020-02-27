@@ -120,8 +120,8 @@ class FrontendInsertionController extends SecureFrontendController
      */
     public function createStepsAction(Request $request, Response $response, $args)
     {
-        $page = $args['page'];
-        $typeId = $args['type'];
+        $page = intval($args['page']);
+        $typeId = intval($args['type']);
 
         $result = [
             'page' => $page,
