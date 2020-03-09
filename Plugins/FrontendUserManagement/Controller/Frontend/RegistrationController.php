@@ -114,7 +114,7 @@ class RegistrationController extends AbstractController {
         if (!$request->isPost()) {
             Oforge()->View()->Flash()->addMessage('warning', I18N::translate('invalid_direct_page_call', [
                 'en' => 'Direct page call is not allowed.',
-                'de' => 'Unbefugter Seitenaufruf.'
+                'de' => 'Unbefugter Seitenaufruf.',
             ]));
 
             return $response->withRedirect($uri, 302);
@@ -126,6 +126,7 @@ class RegistrationController extends AbstractController {
         $passwordConfirm       = $body['frontend_registration_password_confirm'];
         $privacyNoticeAccepted = $body['frontend_registration_privacy_notice_accepted'];
         $referrer              = ArrayHelper::get($body, 'frontend_registration_referrer');
+        $forceReferrer         = ArrayHelper::get($body, 'frontend_registration_referrer_force');
 
         if (!isset($body['frontend_registration_nickname']) || empty($body['frontend_registration_nickname'])) {
             $nickname = $userDetailService->generateNickname();
@@ -135,6 +136,10 @@ class RegistrationController extends AbstractController {
 
         if (isset($referrer)) {
             $uri = $referrer;
+
+            if ($forceReferrer) {
+                $_SESSION['force_referrer'] = $uri;
+            }
         }
 
         /**
@@ -169,7 +174,7 @@ class RegistrationController extends AbstractController {
         if (!$email || !$password || !$passwordConfirm || !$privacyNoticeAccepted) {
             Oforge()->View()->Flash()->addMessage('warning', I18N::translate('form_invalid_data', [
                 'en' => 'Invalid form data.',
-                'de' => 'Ungültiges Formular.'
+                'de' => 'Ungültiges Formular.',
             ]));
 
             return $response->withRedirect($uri, 302);
@@ -199,7 +204,7 @@ class RegistrationController extends AbstractController {
         if (!$user) {
             Oforge()->View()->Flash()->addMessage('warning', I18N::translate('registration_user_already_exists', [
                 'en' => 'There already exists an account with this mail',
-                'de' => 'Es existiert ein Account mit dieser E-Mail.'
+                'de' => 'Es existiert ein Account mit dieser E-Mail.',
             ]));
 
             return $response->withRedirect($uri, 302);
@@ -207,7 +212,7 @@ class RegistrationController extends AbstractController {
         }
 
         $_SESSION['registration_success'] = true;
-        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['user_id']              = $user['id'];
 
         $userDetailService->save(['userId' => $user['id'], 'nickname' => $nickname]);
 
@@ -239,8 +244,8 @@ class RegistrationController extends AbstractController {
          */
         if (!$mailService->send($mailOptions, $templateData)) {
             Oforge()->View()->Flash()->addMessage('error', I18N::translate('registration_mail_error', [
-            'en' => 'Your registration mail could not be sent',
-            'de' => 'Registrierungs-Mail konnte nicht gesendet werden.'
+                'en' => 'Your registration mail could not be sent',
+                'de' => 'Registrierungs-Mail konnte nicht gesendet werden.',
 
             ]));
             $registrationService->unregister($user);
@@ -259,7 +264,6 @@ class RegistrationController extends AbstractController {
 
         return $response->withRedirect($uri, 302);
     }
-
 
     /**
      * @param Request $request
@@ -328,14 +332,12 @@ class RegistrationController extends AbstractController {
         $_SESSION['auth'] = $jwt;
 
         $uri = $router->pathFor('frontend_account_dashboard');
-        Oforge()->View()->Flash()
-                ->addMessage('success', I18N::translate('registration_success_logined', [
-                    'en' => 'Your account was activated successfully. You are now logged in.',
-                    'de' => 'Dein Account wurde erfolgreich aktiviert. Du bist nun angemeldet. '
-                ]), true, "registration--successful");
+        Oforge()->View()->Flash()->addMessage('success', I18N::translate('registration_success_logined', [
+                'en' => 'Your account was activated successfully. You are now logged in.',
+                'de' => 'Dein Account wurde erfolgreich aktiviert. Du bist nun angemeldet. ',
+            ]), true, "registration--successful");
 
         Oforge()->View()->Flash()->setData("new_registration", ['newRegistration' => true]);
-
 
         /**
          * Send Welcome Mail (requires RegistrationGiftCertificate.twig)
@@ -348,10 +350,15 @@ class RegistrationController extends AbstractController {
             'to'       => [$user['email'] => $user['email']],
             'from'     => 'info',
             'subject'  => I18N::translate('mailer_subject_registration_gift_cert'),
-            'template' => 'RegistrationGiftCertificate.twig'
+            'template' => 'RegistrationGiftCertificate.twig',
         ];
 
         $mailService->send($options);
+
+        if(isset($_SESSION['force_referrer'])) {
+            $uri = $_SESSION['force_referrer'];
+            unset($_SESSION['force_referrer']);
+        }
 
         return $response->withRedirect($uri, 302);
     }
