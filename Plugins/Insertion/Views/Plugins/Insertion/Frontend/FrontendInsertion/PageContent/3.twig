@@ -11,7 +11,7 @@
                     {% if i18nExists('attribute_hint_description' ) %}
                         {% set content = content('attribute_hint_description_' ~ type.name ~ '_' ~ meta.language.iso) %}
                         {% include 'Frontend/Components/Insertions/Hint.twig' with {
-                            hint: i18n('attribute_hint_description',
+                            hint: i18n('attribute_hint_description'),
                             hintContent: content} %}
                     {% endif %}
                     <textarea name="insertion_description"
