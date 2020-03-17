@@ -8,6 +8,12 @@
                 <div class="form__control ">
                     {% set label = i18n('insertion_description_' ~ type.name, '' ) is empty ? i18n('description') :  i18n('insertion_description_' ~ type.name) %}
                     <h3 class="form__sub-title">{{ label }}</h3>
+                    {% if i18nExists('attribute_hint_description' ) %}
+                        {% set content = content('attribute_hint_' ~ attribute.name ~ '_' ~ meta.language.iso) %}
+                        {% include 'Frontend/Components/Insertions/Hint.twig' with {
+                            hint: i18n('attribute_hint_' ~ attribute.id),
+                            hintContent: content} %}
+                    {% endif %}
                     <textarea name="insertion_description"
                               class="form__input form__input--textarea form__input--textarea-description form-control"
                               placeholder="{{ i18n('description') }}">{{ data.insertion_description }}</textarea>
