@@ -4,7 +4,7 @@
             <span class="form__label form__label--title">
                 {{ i18n('image_upload_title') }}{% if required %}<span class="required">*</span>{% endif %} <span class="limitations">{{ i18n('image_upload_limitations') }}</span>
             </span>
-            <span class="form__label form__label--title">
+            <span class="form__label form__label--title" style="font-size: 1.4rem">
                 {% if i18nExists('attribute_hint_image_upload' ) %}
                     {% set content = content('attribute_hint_description_' ~ type.name ~ '_' ~ meta.language.iso) %}
                     {% include 'Frontend/Components/Insertions/Hint.twig' with {
