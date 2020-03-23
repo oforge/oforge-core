@@ -21,14 +21,16 @@ namespace PHPSTORM_META {
         expectedArguments(\Oforge\Engine\Modules\TemplateEngine\Core\Twig\TwigFlash::addExceptionMessage(), 0, argumentsSet('oforge_flash_message_types'));
 
         override(\Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap::getConfiguration(0), map([
-            'backendNavigations' => '',
-            'settingGroups' => '',
-            'twigExtensions' => '',
+            'backendDashboardWidgets' => '',
+            'backendNavigations'      => '',
+            'settingGroups'           => '',
+            'twigExtensions'          => '',
         ]));
         override(\Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap::setConfiguration(0), map([
-            'backendNavigations' => '',
-            'settingGroups' => '',
-            'twigExtensions' => '',
+            'backendDashboardWidgets' => '',
+            'backendNavigations'      => '',
+            'settingGroups'           => '',
+            'twigExtensions'          => '',
         ]));
     }
 
