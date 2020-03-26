@@ -324,7 +324,7 @@ class InsertionListService extends AbstractDatabaseAccess {
          * If no filter is set, use the ids
          */
         $items = $result['items'];
-        if (sizeof($pkeys) < 1) {
+        if (sizeof($keys) < 1) {
             $items = $ids;
         }
 
