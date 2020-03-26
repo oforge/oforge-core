@@ -18,6 +18,24 @@ if (typeof Oforge !== 'undefined') {
         return url;
     };
 
+    Oforge.removeArrayQueryString = function (key, value, url) {
+        if (!url) url = window.location.href;
+
+        key = encodeURIComponent(key.trim()).replace(/%20/g, '\\+');
+
+        var re = new RegExp("([?&])" + key + "(\%5B[0-9]?\%5D)?=" + value + "?(&|#|$)(.*)", "g"),
+            hash;
+
+        if (re.test(url)) {
+            if (typeof value !== 'undefined' && value !== null) {
+                return url.replace(re, '$1$4');
+            }
+        }
+
+        return url;
+    };
+
+
     Oforge.updateQueryString = function (key, value, url, removeEmpty) {
         key = encodeURIComponent(key.trim()).replace(/%20/g, '\\+');
 
