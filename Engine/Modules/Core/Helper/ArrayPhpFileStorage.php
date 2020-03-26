@@ -24,7 +24,7 @@ class ArrayPhpFileStorage {
      * @return array
      */
     public static function load(string $filepath) : array {
-        if (file_exists($filepath)) {
+        if (file_exists($filepath) && is_readable($filepath)) {
             return include($filepath);
         }
 
