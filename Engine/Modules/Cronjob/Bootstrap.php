@@ -88,16 +88,15 @@ class Bootstrap extends AbstractBootstrap {
 
         /** @var ConfigService $configService */
         $configService = Oforge()->Services()->get('config');
-        // TODO uncomment after configservice refactoring
-        // $configService->add([
-        //     'name'     => CronjobSettings::LOGFILE_DAYS,
-        //     'label'    => CronjobSettings::LOGFILE_DAYS,
-        //     'type'     => 'number',
-        //     'value'    => 14,
-        //     'required' => true,
-        //     'default'  => 14,
-        //     'group'    => 'system'
-        // ]);
+        $configService->add([
+            'name'     => CronjobStatics::SETTING_LOGFILE_DAYS,
+            'label'    => CronjobStatics::SETTING_LOGFILE_DAYS,
+            'type'     => 'integer',
+            'value'    => 14,
+            'required' => true,
+            'default'  => 14,
+            'group'    => 'system'
+        ]);
     }
 
 }

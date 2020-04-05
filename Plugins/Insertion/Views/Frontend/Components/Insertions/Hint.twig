@@ -1,11 +1,11 @@
 {% if hintContent %}
     <span class="hint">i<span class="hint--content">
                                                        <span
-                class="hint">i</span><a class="link link--insertion-create" data-modal-view="1">{{ hint }}</a></span></span>
-    <div data-modal-content="1"
+                class="hint">i</span><a class="link link--insertion-create" data-modal-view="{{ content['url'] }}">{{ hint }}</a></span></span>
+    <div data-modal-content="{{ content['url'] }}"
          class="modal-view">
         <div class="modal-view__close"
-             data-modal-close="1">✕
+             data-modal-close="{{ content['url'] }}">✕
         </div>
         <div class="modal-view__content">
             <picture class="lazy">
@@ -14,5 +14,5 @@
         </div>
     </div>
 {% else %}
-    <span class="hint">i<span class="hint--content"><span class="hint">i</span>{{ hint }}</span></span>
+    <span class="hint">i<span class="hint--content"><span class="hint">i</span>{{ hint | raw }}</span></span>
 {% endif %}

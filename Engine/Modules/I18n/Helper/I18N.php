@@ -36,27 +36,6 @@ class I18N {
             if ($language === null) {
                 $language = self::getCurrentLanguage([]);
             }
-            //TODO remove later
-            if (is_array($defaultValue)) {
-                if (empty($defaultValue)) {
-                    return $key;
-                }
-                $result = null;
-                if (isset($defaultValue[$language])) {
-                    $result = self::$i18nService->get($key, $language, $defaultValue[$language]);
-                }
-                foreach ($defaultValue as $languageIso => $languageDefaultValue) {
-                    if ($language === $languageIso) {
-                        continue;
-                    }
-                    $tmpResult = self::$i18nService->get($key, $languageIso, $defaultValue[$languageIso]);
-                    if ($result === null) {
-                        $result = $tmpResult;
-                    }
-                }
-
-                return $result;
-            }
 
             return self::$i18nService->get($key, $language, $defaultValue);
         } catch (Exception $exception) {

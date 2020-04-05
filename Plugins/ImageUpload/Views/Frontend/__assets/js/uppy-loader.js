@@ -242,6 +242,10 @@ if (typeof Oforge !== 'undefined') {
                     elementToChooseMain.classList.add('upload__choose-main--is-main');
                 }
             });
+
+            $('.upload__item.upload__item--placeholder').on('click', function (e) {
+               $('.uppy-u-reset.uppy-Dashboard-browse').click();
+            });
         }
     });
 } else {

@@ -175,12 +175,14 @@ class MailService {
                 if (is_array($options[$key])) {
                     foreach ($options[$key] as $email => $name) {
                         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                            throw new InvalidArgumentException("$email is not a valid email.");
+                            Oforge()->Logger()->logException(new InvalidArgumentException("$email is not a valid email."));
+                            return false;
                         }
                     }
                 } else {
                     // Argument is not an Array
-                    throw new InvalidArgumentException("Expected array for $key but get " . gettype($options[$key]));
+                    Oforge()->Logger()->logException(new InvalidArgumentException("Expected array for $key but get " . gettype($options[$key])));
+                    return false;
                 }
             }
         }
@@ -388,5 +390,4 @@ class MailService {
         ];
         $this->send($mailerOptions, $templateData);
     }
-
 }

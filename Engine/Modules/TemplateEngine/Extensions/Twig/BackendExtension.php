@@ -42,7 +42,7 @@ class BackendExtension extends Twig_Extension implements Twig_ExtensionInterface
         if (isset($_SESSION['auth'])) {
             /** @var AuthService $authService */
             $authService = Oforge()->Services()->get('auth');
-            $user        = $authService->decode($_SESSION['auth']);
+            $user = $authService->decode($_SESSION['auth']);
             if (isset($user) && isset($user['id'])) {
                 /** @var BackendNotificationService $notificationService */
                 $notificationService = Oforge()->Services()->get('backend.notifications');
@@ -139,12 +139,14 @@ class BackendExtension extends Twig_Extension implements Twig_ExtensionInterface
     public function is_favorite(...$vars) {
         /** @var $authService AuthService */
         $authService = Oforge()->Services()->get('auth');
-        $user        = $authService->decode($_SESSION['auth']);
-        if (isset($user) && isset($user['id']) && sizeof($vars) == 1) {
-            /** @var UserFavoritesService $favoritesService */
-            $favoritesService = Oforge()->Services()->get('backend.favorites');
+        if (isset($_SESSION['auth'])) {
+            $user = $authService->decode($_SESSION['auth']);
+            if (isset($user) && isset($user['id']) && sizeof($vars) == 1) {
+                /** @var UserFavoritesService $favoritesService */
+                $favoritesService = Oforge()->Services()->get('backend.favorites');
 
-            return $favoritesService->isFavorite($user['id'], $vars[0]);
+                return $favoritesService->isFavorite($user['id'], $vars[0]);
+            }
         }
 
         return false;
@@ -157,22 +159,24 @@ class BackendExtension extends Twig_Extension implements Twig_ExtensionInterface
      * @throws ServiceNotFoundException
      */
     public function get_favorites(...$vars) {
-        /** @var $authService AuthService */
-        $authService = Oforge()->Services()->get('auth');
-        $user        = $authService->decode($_SESSION['auth']);
-        if (isset($user) && isset($user['id'])) {
-            /** @var UserFavoritesService $favoritesService */
-            $favoritesService = Oforge()->Services()->get('backend.favorites');
+        if (isset($_SESSION['auth'])) {
+            /** @var $authService AuthService */
+            $authService = Oforge()->Services()->get('auth');
+            $user        = $authService->decode($_SESSION['auth']);
+            if (isset($user) && isset($user['id'])) {
+                /** @var UserFavoritesService $favoritesService */
+                $favoritesService = Oforge()->Services()->get('backend.favorites');
 
-            $instances = $favoritesService->getAll($user['id']);
+                $instances = $favoritesService->getAll($user['id']);
 
-            $result = [];
+                $result = [];
 
-            foreach ($instances as $instance) {
-                array_push($result, $instance->toArray());
+                foreach ($instances as $instance) {
+                    array_push($result, $instance->toArray());
+                }
+
+                return $result;
             }
-
-            return $result;
         }
 
         return [];

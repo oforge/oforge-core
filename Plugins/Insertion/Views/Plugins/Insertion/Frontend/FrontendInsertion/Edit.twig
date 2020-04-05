@@ -5,10 +5,9 @@
             <a class="button button--primary back__button"
                href="{{ url('frontend_account_insertions') }}">{{ i18n('back') }}
             </a>
-            <form class="form form--insertion"
+            <form class="form form--insertion form--submit--loading"
                   action="{{ url('insertions_edit', { id : data.id}) }}"
-                  method="post"
-                  enctype="multipart/form-data">
+                  method="post">
 
                 {% block page_content %}
                     {% include 'Plugins/Insertion/Frontend/FrontendInsertion/PageContent/1.twig' %}
@@ -20,8 +19,14 @@
                     <div class="form__control">
                         <input type="hidden" name="token" value="{{ token() }}">
                         <input type="hidden" name="current_page" value="{{ page }}">
-                        <input type="submit" value="{{ i18n('insertion_update') }}"
-                               class="form__input form__input--submit button">
+                        <button type="submit" class="form__input form__input--submit form__input--submit--loading button">
+                            <span class="default-text">
+                                {{ i18n('insertion_update') }}
+                            </span>
+                            <span class="submit-text">
+                                {{ i18n('insertion_post_processing') }}
+                            </span>
+                        </button>
                     </div>
                 </div>
             </form>

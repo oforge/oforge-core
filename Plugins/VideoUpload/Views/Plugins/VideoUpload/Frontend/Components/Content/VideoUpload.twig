@@ -35,7 +35,7 @@
                    hidden
                    name="upload__video"
                    data-file-input-video
-                   accept="video/mp4">
+                   accept="video/mp4, video/m4v, video/*">
             <input type="text" hidden name="insertion[vimeo_video_id]" value="{{ vimeo_video_id ? vimeo_video_id : data.insertion.vimeo_video_id }}"
                    data-upload-video-id>
             <input type="text" hidden name="insertion[video_content_id]" value="{{ vimeo_video_content_id }}"
@@ -63,6 +63,9 @@
         </div>
         <div class="upload--video upload--message upload__delete-success-message hidden">
             <p class="description description--upload">{{ i18n('vimeo_upload_delete_success_message', {'en' : 'Successfully deleted.'}) }}</p>
+        </div>
+        <div class="upload--video upload--message upload__wrong-file-type hidden">
+            <p class="description description--upload">{{ i18n('vimeo_upload_wrong_file_type', {'en' : 'It looks like your file type is not supported. Please try a different file.'}) }}</p>
         </div>
     </div>
 {% endblock video_upload %}

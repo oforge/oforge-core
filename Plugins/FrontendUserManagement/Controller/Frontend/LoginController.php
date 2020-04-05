@@ -3,7 +3,6 @@
 namespace FrontendUserManagement\Controller\Frontend;
 
 use FrontendUserManagement\Services\FrontendUserLoginService;
-use Insertion\Services\InsertionProfileProgressService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
@@ -53,12 +52,6 @@ class LoginController extends AbstractController {
      * @EndpointAction()
      */
     public function processAction(Request $request, Response $response) {
-        if (empty($_SESSION)) {
-            // TODO: do something not so stupid like this.
-            print_r('No session :/');
-            die();
-        }
-
         /**
          * @var FrontendUserLoginService $loginService
          * @var Router $router
@@ -73,6 +66,11 @@ class LoginController extends AbstractController {
         }
 
         $uri = $router->pathFor($redirectUrlName);
+
+        if (empty($_SESSION)) {
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('session_expired', 'Your session has expired.'));
+            return $response->withRedirect($uri, 302);
+        }
 
         /**
          * disallow direct processAction call. Only post action is allowed
@@ -178,10 +176,8 @@ class LoginController extends AbstractController {
         }
         Oforge()->View()->Flash()->addMessage('success', I18N::translate('login_success', 'You have successfully logged in!'));
 
-        // TODO: set cookie consent in local storage
         Oforge()->View()->assign(['cookie_consent' => true]);
 
         return $response->withRedirect($uri, 302);
     }
-
 }

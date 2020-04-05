@@ -91,7 +91,6 @@ class FrontendHelpdeskController extends SecureFrontendController {
         /** @var HelpdeskTicketService $helpdeskTicketService */
         $helpdeskTicketService = Oforge()->Services()->get('helpdesk.ticket');
         $helpdeskTicketService->createNewTicket($user['id'], $issueType, $issueTitle, $issueMessage);
-        // TODO path for account messages
         Oforge()->View()->Flash()->addMessage('success', I18N::translate('ticket_created', 'You have successfully created a new ticket'));
 
         return $response->withRedirect($uri, 302);

@@ -1,8 +1,7 @@
 {# block header__logo #}
 {% block logo %}
     <div class="logo">
-        {#        TODO replace href="/" with url('...'), frontend_home|frontend? #}
-        <a href="{{ url('/') }}" class="logo__link">
+        <a href="{{ url('frontend_page') }}" class="logo__link">
             {% block logo_content %}
                 {% include 'Frontend/Components/Header/LogoClaim.twig' with {link: false} %}
             {% endblock logo_content %}

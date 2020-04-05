@@ -412,6 +412,10 @@ class FrontendUsersInsertionController extends SecureFrontendController {
                 $params = json_decode($filterData, true);
             }
 
+            if($params == null) {
+                $params = [];
+            }
+
             $bookmarkService->toggle($insertionType, $user, $params);
         }
 
@@ -538,12 +542,12 @@ class FrontendUsersInsertionController extends SecureFrontendController {
 
         $user = $userService->getUser();
         /**
-         * @var $service InsertionProfileService
+         * @var $insertionProfileService InsertionProfileService
          */
-        $service = Oforge()->Services()->get("insertion.profile");
+        $insertionProfileService = Oforge()->Services()->get("insertion.profile");
 
-        if ($request->isPost() && $user != null) {
-            $service->update($user, $_POST);
+        if ($request->isPost() && $user !== null) {
+            $insertionProfileService->update($user, $_POST);
 
             if (isset($_FILES["profile"])) {
                 /**
@@ -567,9 +571,11 @@ class FrontendUsersInsertionController extends SecureFrontendController {
             $_SESSION['auth'] = $jwt;
         }
 
-        $result = $service->get($user->getId());
+        $result = $insertionProfileService->get($user->getId());
 
-        Oforge()->View()->assign(["profile" => $result != null ? $result->toArray() : null, "user" => $user->toArray()]);
+        $user = $user->toArray(1, ['password']);
+
+        Oforge()->View()->assign(["profile" => $result != null ? $result->toArray() : null, "user" => $user]);
     }
 
     public function initPermissions() {

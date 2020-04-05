@@ -66,7 +66,9 @@ class MediaService extends AbstractDatabaseAccess {
     }
 
     public function delete($id) {
-        //TODO
+        /*
+        TODO: we should be able to delete medias. Possible solution: create a reference table <media_id, full_class_name_and_function of usage>, count usage amount. if this table is empty then usage amount is 0 and file is deletable.
+        */
     }
 
     /**

@@ -148,13 +148,4 @@ class InsertionSliderService extends AbstractDatabaseAccess {
 
         return $data;
     }
-
-    public function getPremiumInsertions() {
-        /**
-         * TODO:
-         * Implement getPremiumInsertions()
-         */
-
-        return null;
-    }
 }

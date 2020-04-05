@@ -3,19 +3,11 @@
         class="sidebar sidebar--insertion {% if profile %}has-provider-image{% endif %}">
 
         {% block sidebar__panel_provider %}
-            {% if profile %}
+            {% if profile is defined %}
                 <div class="panel panel--provider">
                     <h3 class="provider_title">{{ i18n('insertion_detail_provider_headline') }}</h3>
                     <div class="provider_image-container">
 
-                        {#
-                    {% if profile.user.detail.image is not empty %}
-                        <img src="{{ media(profile.user.detail.image, 500) }}" class="provider_image"
-                             alt="{{ profile.imprintName }}">
-                    {% elseif %}
-
-                    {% endif %}
-                    #}
                         <div class="user__picture"
                              {% if profile.user.detail.image is not empty %}style="background-image: url('{{ media(profile.user.detail.image, 300) }}');"{% endif %}></div>
 
@@ -49,7 +41,10 @@
                         class="contact__phone">{{ i18n ('insertion_detail_telephone', 'Tel.:') }} {{ contact.phone }}</div>
                 {% endif %}
             {% else %}
-                <div class="contact__name">{{ i18n('insertion_login_to_see_contact_data', 'Bitte melde Dich an, um die Kontaktdaten einsehen zu können') }}</div>
+                <div class="contact__name">
+                    <a href="{{ url('frontend_login_registration') }}"
+                       class="link">{{ i18n('insertion_login_to_see_contact_data', {de: 'Bitte melde Dich an, um die Kontaktdaten einsehen zu können', en: 'Please log in to see the contact data.'}) }}</a>
+                </div>
             {% endif %}
                 <a href="{{ url("insertions_contact", {id: insertion.id}) }}"
                    class="button button--secondary">{{ i18n('insertion_detail_contact_advertiser', 'Anbieter Kontaktieren') }}</a>
@@ -57,6 +52,9 @@
                    class="button button--secondary">{% if hasBookmark(insertion.id) %} {{ i18n('insertion_detail_contact_remove_from_wishlist', 'Aus meinem Stall entfernen') }} {% else %}{{ i18n('insertion_detail_contact_add_to_wishlist', 'In meinen Stall stellen') }}{% endif %}</a>
             </div>
         {% endblock sidebar__panel_contact %}
+
+        {% block sidebar_extended_info %}
+        {% endblock sidebar_extended_info %}
 
         {% block sidebar__panel_map %}
             <div class="panel panel--map map">

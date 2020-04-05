@@ -12,7 +12,15 @@
             </div>
 
             {% for attributeGroup in attributes %}
-                {% if attributeGroup.items|length > 0 and attributeGroup.name != 'main' %}
+                {% set attributeGroupItemCount = 0 %}
+
+                {% for attributeGroupItem in attributeGroup.items %}
+                    {% if attributeGroupItem.attributeKey.filterType != 'text' %}
+                        {% set attributeGroupItemCount = attributeGroupItemCount + 1 %}
+                    {% endif %}
+                {% endfor %}
+
+                {% if attributeGroupItemCount > 0 %}
                     <div class="form-controls form-controls--row form-controls--with-separator">
                         {% for attribute in attributeGroup.items %}
                             {% include 'Plugins/Insertion/Frontend/Components/Content/Search/' ~ attribute.attributeKey.filterType|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey } %}
@@ -20,6 +28,7 @@
                     </div>
                 {% endif %}
             {% endfor %}
+
 
 
             <div class="form-controls form-controls--row form-controls--with-separator">

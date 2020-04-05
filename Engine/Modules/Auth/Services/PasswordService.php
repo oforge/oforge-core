@@ -2,6 +2,8 @@
 
 namespace Oforge\Engine\Modules\Auth\Services;
 
+use Exception;
+
 /**
  * Class PasswordService
  *
@@ -30,6 +32,26 @@ class PasswordService {
      */
     public function validate(string $password, string $hash) {
         return password_verify($password, $hash);
+    }
+
+    /**
+     * Create a password
+     *
+     * @param int $length
+     *
+     * @return string
+     * @throws Exception
+     */
+    public function generatePassword($length = 12) {
+        $chars = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789-=~@#$%^&*()_+,./<>?;:[]{}';
+        $str   = '';
+        $max   = strlen($chars) - 1;
+
+        for ($i = 0; $i < $length; $i++) {
+            $str .= $chars[random_int(0, $max)];
+        }
+
+        return $str;
     }
 
 }

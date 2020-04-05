@@ -26,8 +26,8 @@ class ImageCompressService extends AbstractDatabaseAccess {
      * @param int $width
      *
      * @return string|null
-     * @throws ServiceNotFoundException
      * @throws ORMException
+     * @throws ServiceNotFoundException
      */
     public function getPath(?string $path, int $width = 0) : ?string {
         if (!isset($path)) {
@@ -97,23 +97,21 @@ class ImageCompressService extends AbstractDatabaseAccess {
                     $imagick->setImageFormat('jpeg');
                     $imagick->setImageCompressionQuality(40);
                     $imagick->setSamplingFactors(['2x2', '1x1', '1x1']);
-                    $profiles = $imagick->getImageProfiles("icc", true);
-                    $imagick->stripImage();
-                    if (!empty($profiles)) {
-                        $imagick->profileImage('icc', $profiles['icc']);
-                    }
+                    //$profiles = $imagick->getImageProfiles("icc", true);
+                    // $imagick->stripImage();
+                    // if (!empty($profiles)) {
+                    //     $imagick->profileImage('icc', $profiles['icc']);
+                    // }
 
                     $imagick->setInterlaceScheme(Imagick::INTERLACE_JPEG);
                     $imagick->setColorspace(Imagick::COLORSPACE_SRGB);
 
-
                 } elseif ($image_types[2] === IMAGETYPE_GIF) {
                     $imagick->setImageFormat('gif');
                 } elseif ($image_types[2] === IMAGETYPE_PNG) {
-                    $imagick->stripImage();
+                    // $imagick->stripImage();
                     $imagick->setImageDepth(8);
-                }
-                else {
+                } else {
                     // not supported file type
                 }
 

@@ -22,6 +22,45 @@
         text-align: center;
         margin: $size-large auto 0;
     }
+    &.panel--pad-s {
+        padding: $size-medium;
+    }
+    &.panel--pad-m {
+        padding: $size-large;
+    }
+    &.panel--no-gap {
+        margin: 0;
+
+        &-top {
+            margin-top: 0;
+        }
+        &-bottom {
+            margin-bottom: 0;
+        }
+        &-left {
+            margin-left: 0;
+        }
+        &-right {
+            margin-right: 0;
+        }
+    }
+
+    &.panel--no-pad {
+        padding: 0;
+
+        &-top {
+            padding-top: 0;
+        }
+        &-bottom {
+            padding-bottom: 0;
+        }
+        &-left {
+            padding-left: 0;
+        }
+        &-right {
+            padding-right: 0;
+        }
+    }
 }
 
 @media screen and (min-width: 480px) {

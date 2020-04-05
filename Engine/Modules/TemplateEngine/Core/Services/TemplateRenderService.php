@@ -104,6 +104,7 @@ class TemplateRenderService {
             if ($this->hasTemplate($templatePath)) {
                 return $this->renderTemplate($request, $response, $templatePath, $data);
             }
+            // TODO: Remove this because we don't have this here.
             if (isset($fileName) && isset($data['crud'])) {
                 $fallbackTemplatePath = '/Backend/CRUD/' . ucfirst($fileName) . '.twig';
                 if ($this->hasTemplate($fallbackTemplatePath)) {
@@ -112,6 +113,10 @@ class TemplateRenderService {
                     return $this->renderTemplate($request, $response, $fallbackTemplatePath, $data);
                 }
             }
+        }
+
+        if (isset($data["omitRendering"]) && $data["omitRendering"] == true) {
+            return $response;
         }
 
         return $this->renderJson($request, $response, $data);

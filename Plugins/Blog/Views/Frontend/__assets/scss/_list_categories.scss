@@ -5,11 +5,15 @@
         align-items: center;
         justify-content: center;
         flex-wrap: wrap;
+
+        .slick-slide {
+        }
     }
 
     &__category {
         padding: $size-small;
-        width: 10rem;
+        /* !important declaration is needed because otherwise the width would be overwritten inline by slick JavaScript. */
+        width: 10rem !important;
         height: 10rem;
         transition: width .2s ease, height .2s ease, padding .2s ease;
 
@@ -38,12 +42,14 @@
         height: 100%;
         text-align: center;
         font-size: $font-size-5;
+
         span {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             width: 90%;
         }
+
         .icon {
             width: 4rem;
             height: 4rem;
@@ -63,7 +69,7 @@
     .blog {
         &__category {
             padding: $size-medium;
-            width: 12rem;
+            width: 12rem !important;
             height: 12rem;
         }
 
@@ -82,7 +88,7 @@
     .blog {
         &__category {
             padding: $size-large;
-            width: 16rem;
+            width: 16rem !important;
             height: 16rem;
         }
     }

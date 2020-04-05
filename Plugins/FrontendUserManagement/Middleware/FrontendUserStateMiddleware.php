@@ -18,12 +18,13 @@ class FrontendUserStateMiddleware {
             }
             if (!Oforge()->View()->has('current_user')) {
                 $user = $userService->getUser();
-                if ($user != null) {
-                    Oforge()->View()->assign(['current_user' => $user->toArray(1, ['password'])]);
+                if ($user !== null) {
+                    $user = $user->toArray(1, ['password']);
+                    Oforge()->View()->assign(['current_user' => $user]);
                 }
             }
         } catch (ServiceNotFoundException $exception) {
+            Oforge()->Logger()->logException($exception);
         }
     }
-
 }

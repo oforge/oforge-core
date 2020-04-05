@@ -197,25 +197,6 @@
                 }
             }
 
-            .badge {
-                width: 100px;
-                height: 35px;
-                text-align: center;
-                z-index: 9999;
-                transform: rotate(-45deg);
-                position: absolute;
-                top: -2px;
-                left: -30px;
-                border: 2px solid $color-light;
-
-
-                .icon {
-                    fill: $color-light;
-                    position: relative;
-                    left: 30px;
-                }
-            }
-
             &:after, &:before {
                 content: "";
                 display: table;

@@ -14,6 +14,8 @@ use Oforge\Engine\Modules\I18n\Models\Snippet;
  * @package Oforge\Engine\Modules\I18n\Services
  */
 class InternationalizationService extends AbstractDatabaseAccess {
+    /** @var string[] $currentActiveLanguages */
+    private $currentActiveLanguages;
     /** @var array $cache */
     private $cache;
 
@@ -27,54 +29,46 @@ class InternationalizationService extends AbstractDatabaseAccess {
      * @param string|array|null $defaultValue
      *
      * @return string
-     * @throws ORMException
      */
     public function get(string $key, string $language, $defaultValue = null) : string {
-        if (!isset($this->cache[$language][$key])) {
+        if (!isset($this->currentActiveLanguages)) {
             /** @var LanguageService $languageService */
-            $languageService = Oforge()->Services()->get('i18n.language');
-            $languageIsos       = array_keys($languageService->getFilterDataLanguages(true));
-
-            // if (is_array($defaultValue)) {
-            //     if (empty($defaultValue)) {
-            //         return $key;
-            //     }
-            //     $result = null;
-            //     if (isset($defaultValue[$language])) {
-            //         $result = self::$i18nService->get($key, $language, $defaultValue[$language]);
-            //     } else {
-            //         $result = self::$i18nService->get($key, $language, null);
-            //     }
-            //     foreach ($defaultValue as $languageIso => $languageDefaultValue) {
-            //         if ($language === $languageIso) {
-            //             continue;
-            //         }
-            //         $tmpResult = self::$i18nService->get($key, $languageIso, $defaultValue[$languageIso]);
-            //         if ($result === null) {
-            //             $result = $tmpResult;
-            //         }
-            //     }
-            //
-            //     return $result;
-            // }
-
-            /** @var Snippet $snippet */
-            $snippet = $this->repository()->findOneBy([
-                'name'  => $key,
-                'scope' => $language,
-            ]);
-            if (!isset($snippet)) {
-                $snippet = Snippet::create([
-                    'name'  => $key,
-                    'scope' => $language,
-                    'value' => isset($defaultValue) ? $defaultValue : $key,
-                ]);
-                $this->entityManager()->create($snippet);
+            $languageService              = Oforge()->Services()->get('i18n.language');
+            $this->currentActiveLanguages = array_keys($languageService->getFilterDataLanguages(true));
+        }
+        if ($defaultValue === null) {
+            $defaultValue = array_fill_keys($this->currentActiveLanguages, $key);
+        } elseif (is_string($defaultValue)) {
+            $defaultValue = array_fill_keys($this->currentActiveLanguages, $defaultValue);
+        }
+        if (!isset($defaultValue[$language])) {
+            $defaultValue[$language] = $key;
+        }
+        foreach ($defaultValue as $languageISO => $value) {
+            if (!isset($this->cache[$languageISO][$key])) {
+                try {
+                    /** @var Snippet $snippet */
+                    $snippet = $this->repository()->findOneBy([
+                        'name'  => $key,
+                        'scope' => $languageISO,
+                    ]);
+                    if (!isset($snippet)) {
+                        $snippet = Snippet::create([
+                            'name'  => $key,
+                            'scope' => $languageISO,
+                            'value' => $value,
+                        ]);
+                        $this->entityManager()->create($snippet);
+                    }
+                    if (!isset($this->cache[$languageISO])) {
+                        $this->cache[$languageISO] = [];
+                    }
+                    $this->cache[$languageISO][$key] = $snippet->getValue();
+                } catch (ORMException $exception) {
+                    Oforge()->Logger()->logException($exception);
+                    $this->cache[$languageISO][$key] = $key;
+                }
             }
-            if (!isset($this->cache[$language])) {
-                $this->cache[$language] = [];
-            }
-            $this->cache[$language][$key] = $snippet->getValue();
         }
 
         return $this->cache[$language][$key];
