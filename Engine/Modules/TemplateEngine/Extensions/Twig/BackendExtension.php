@@ -42,7 +42,7 @@ class BackendExtension extends Twig_Extension implements Twig_ExtensionInterface
         if (isset($_SESSION['auth'])) {
             /** @var AuthService $authService */
             $authService = Oforge()->Services()->get('auth');
-            $user = $authService->decode($_SESSION['auth']);
+            $user        = $authService->decode($_SESSION['auth']);
             if (isset($user) && isset($user['id'])) {
                 /** @var BackendNotificationService $notificationService */
                 $notificationService = Oforge()->Services()->get('backend.notifications');
@@ -56,7 +56,6 @@ class BackendExtension extends Twig_Extension implements Twig_ExtensionInterface
 
     /**
      * @return array
-     * @throws ORMException
      * @throws ServiceNotFoundException
      */
     public function getSidebarNavigation() {
@@ -69,7 +68,6 @@ class BackendExtension extends Twig_Extension implements Twig_ExtensionInterface
     /**
      * @return array
      * @throws ServiceNotFoundException
-     * @throws ORMException
      */
     public function getTopbarNavigation() {
         /** @var BackendNavigationService $backendNavigationService */
@@ -93,6 +91,7 @@ class BackendExtension extends Twig_Extension implements Twig_ExtensionInterface
      *
      * @return array
      * @throws ServiceNotFoundException
+     * @throws ORMException
      */
     public function get_breadcrumbs(...$vars) {
         /** @var BackendNavigationService $backendNavigationService */
@@ -110,6 +109,7 @@ class BackendExtension extends Twig_Extension implements Twig_ExtensionInterface
      *
      * @return array
      * @throws ServiceNotFoundException
+     * @throws ORMException
      */
     public function get_breadcrumbs_map(...$vars) {
         /** @var BackendNavigationService $backendNavigationService */
@@ -135,6 +135,7 @@ class BackendExtension extends Twig_Extension implements Twig_ExtensionInterface
      *
      * @return bool
      * @throws ServiceNotFoundException
+     * @throws ORMException
      */
     public function is_favorite(...$vars) {
         /** @var $authService AuthService */
@@ -157,6 +158,7 @@ class BackendExtension extends Twig_Extension implements Twig_ExtensionInterface
      *
      * @return array
      * @throws ServiceNotFoundException
+     * @throws ORMException
      */
     public function get_favorites(...$vars) {
         if (isset($_SESSION['auth'])) {
