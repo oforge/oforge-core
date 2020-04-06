@@ -146,7 +146,7 @@ class InsertionFormsService extends AbstractDatabaseAccess {
     }
 
     public function getProcessedData($sessionKey) {
-        return $_SESSION['insertion' . $sessionKey];
+        return isset($_SESSION['insertion' . $sessionKey]) ? $_SESSION['insertion' . $sessionKey] : [];
     }
 
     public function setProcessedData($sessionKey, $data) {

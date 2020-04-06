@@ -152,4 +152,30 @@ class MediaService extends AbstractDatabaseAccess {
             unlink($file);
         }
     }
+
+    public function rotate(Media $media, int $angle) {
+        /** @var ImageRotateService $imageRotateService */
+        $imageRotateService = Oforge()->Services()->get('image.rotate');
+
+        $imageRotateService->rotate($media, $angle);
+    }
+
+    public function download($photoURL, $filename, $type) {
+        $relativeFilePath = Statics::IMAGES_DIR . DIRECTORY_SEPARATOR . substr(md5(rand()), 0, 2) . DIRECTORY_SEPARATOR . substr(md5(rand()), 0, 2)
+                            . DIRECTORY_SEPARATOR . $filename;
+
+        FileSystemHelper::mkdir(dirname(ROOT_PATH . $relativeFilePath));
+
+        file_put_contents(ROOT_PATH.$relativeFilePath, file_get_contents($photoURL));
+
+        $media = Media::create([
+            'type' => $type,
+            'name' => urlencode($filename),
+            'path' => str_replace('\\', '/', $relativeFilePath),
+        ]);
+
+        $this->entityManager()->create($media);
+
+        return $media;
+    }
 }
