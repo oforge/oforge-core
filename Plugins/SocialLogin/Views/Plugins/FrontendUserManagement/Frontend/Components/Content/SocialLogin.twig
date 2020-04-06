@@ -1,7 +1,4 @@
-{% extends '@parent/Plugins/FrontendUserManagement/Frontend/Components/Content/LoginRegistration.twig' %}
-
-{% block login_registration__forms %}
-    {{ parent() }}
+{% block social_login %}
     <h3 class="form__title social-login__title">{{ i18n('social_media_login_headline' ) }}</h3>
     {% set socialTypes = ['facebook', 'google', 'twitter'] %}
     <div class="social-login">
@@ -29,5 +26,5 @@
             </a>
         {% endfor %}
     </div>
-{% endblock login_registration__forms %}
+{% endblock social_login %}
 
