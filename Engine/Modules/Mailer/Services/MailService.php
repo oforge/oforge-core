@@ -213,7 +213,7 @@ class MailService {
         }
 
         $twig = new CustomTwig($templatePath, ['cache' =>  ROOT_PATH . DIRECTORY_SEPARATOR . Statics::CACHE_DIR . '/mailer']);
-        $twig->addExtension(new \Oforge\Engine\Modules\CMS\Twig\AccessExtension());
+        // $twig->addExtension(new \Oforge\Engine\Modules\CMS\Twig\AccessExtension()); // TODO OLD CMS reference
         $twig->addExtension(new AccessExtension());
         $twig->addExtension(new MediaExtension());
         $twig->addExtension(new SlimExtension());
