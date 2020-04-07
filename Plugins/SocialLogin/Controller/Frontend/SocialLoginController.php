@@ -58,7 +58,7 @@ class SocialLoginController {
             $body = $request->getParsedBody();
             $jwt  = null;
 
-            if (isset($_SERVER['HTTP_REFERER']) && StringHelper::startsWith($_SERVER['HTTP_REFERER'], $host)) {
+            if (isset($_SERVER['HTTP_REFERER']) && StringHelper::startsWith($_SERVER['HTTP_REFERER'], $host) && !(StringHelper::contains('login') || StringHelper::contains('register'))) {
                 $referrer                       = $_SERVER['HTTP_REFERER'];
                 $uri                            = $referrer;
                 $_SESSION['login_redirect_url'] = $uri;
