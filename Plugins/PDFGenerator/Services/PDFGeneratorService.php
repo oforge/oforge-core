@@ -7,7 +7,7 @@ use Mpdf\Mpdf;
 use Mpdf\Config\ConfigVariables;
 use Mpdf\Config\FontVariables;
 use Mpdf\MpdfException;
-use Oforge\Engine\Modules\CMS\Twig\AccessExtension as AccessExtensionAlias;
+// use Oforge\Engine\Modules\CMS\Twig\AccessExtension as AccessExtensionAlias;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\Mailer\Services\InlineCssService;
@@ -101,7 +101,7 @@ class PDFGeneratorService {
         $this->templatePath = Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . $this->templateName . DIRECTORY_SEPARATOR . 'PDFTemplates';
 
         $twig = new CustomTwig($this->templatePath);
-        $twig->addExtension(new AccessExtensionAlias());
+        // $twig->addExtension(new AccessExtensionAlias()); // TODO OLD CMS reference with TwigExtension file
         $twig->addExtension(new AccessExtension());
         $twig->addExtension(new MediaExtension());
         $twig->addExtension(new SlimExtension());
