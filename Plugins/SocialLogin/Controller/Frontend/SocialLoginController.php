@@ -134,5 +134,4 @@ class SocialLoginController {
 
         return $response->withRedirect($uri, 302);
     }
-
 }

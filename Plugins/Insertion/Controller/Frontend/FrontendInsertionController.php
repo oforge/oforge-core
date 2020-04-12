@@ -632,6 +632,7 @@ class FrontendInsertionController extends SecureFrontendController {
      * @EndpointAction(path="/edit/{id}")
      */
     public function editAction(Request $request, Response $response, $args) {
+
         $id = $args['id'];
         /**
          * @var $service InsertionService
@@ -687,7 +688,7 @@ class FrontendInsertionController extends SecureFrontendController {
         $formsService = Oforge()->Services()->get('insertion.forms');
 
         if ($request->isPost()) {
-            $data = $formsService->processPostData('insertion' . $insertion->getId());
+            $data = $formsService->processPostData('insertion' . $insertion->getId(), sizeof($insertion->getMedia()) > 0);
             $data = $formsService->parsePageData($data);
 
             $updateService->update($insertion, $data);

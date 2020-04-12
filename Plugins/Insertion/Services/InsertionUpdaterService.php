@@ -24,12 +24,12 @@ use Oforge\Engine\Modules\Media\Services\MediaService;
 class InsertionUpdaterService extends AbstractDatabaseAccess {
     public function __construct() {
         parent::__construct([
-            'default'           => Insertion::class,
-            'key'               => AttributeKey::class,
-            'type'              => InsertionType::class,
-            'language'          => Language::class,
-            'media'             => Media::class,
-            'insertionMedia'    => InsertionMedia::class
+            'default'        => Insertion::class,
+            'key'            => AttributeKey::class,
+            'type'           => InsertionType::class,
+            'language'       => Language::class,
+            'media'          => Media::class,
+            'insertionMedia' => InsertionMedia::class,
         ]);
     }
 
@@ -52,10 +52,10 @@ class InsertionUpdaterService extends AbstractDatabaseAccess {
             $result["insertion_" . $key] = $value;
         }
 
-        $result["price"] = $insertion->getPrice();
-        $result["price_min"] = $insertion->getMinPrice();
+        $result["price"]      = $insertion->getPrice();
+        $result["price_min"]  = $insertion->getMinPrice();
         $result["price_type"] = $insertion->getPriceType();
-        $result["tax"]   = $insertion->isTax();
+        $result["tax"]        = $insertion->isTax();
 
         $result["images"] = [];
         if ($insertion->getMedia() != null) {
@@ -203,15 +203,33 @@ class InsertionUpdaterService extends AbstractDatabaseAccess {
         }
 
         $medias = $insertion->getMedia();
+
+        $index         = 0;
+        $originalIndex = 0;
+
         foreach ($medias as $media) {
+            if ($media->isMain()) {
+                $originalIndex = $media->getId();
+            }
             $media->setMain(false);
+            $index++;
         }
 
         if (isset($data["images_interactions"])) {
+            $set = false;
             foreach ($medias as $media) {
                 if (isset($data["images_interactions"][$media->getContent()->getId()])
                     && $data["images_interactions"][$media->getContent()->getId()] == "main") {
                     $media->setMain(true);
+                    $set = true;
+                }
+            }
+
+            if (!$set) {
+                foreach ($medias as $media) {
+                    if ($media->getId() == $originalIndex) {
+                        $media->setMain(true);
+                    }
                 }
             }
         } elseif (sizeof($medias) > 0) {

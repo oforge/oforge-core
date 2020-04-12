@@ -301,7 +301,7 @@ class BackendInsertionController extends BaseCrudController {
             $sessionKey = SessionHelper::generateGuid();
             $formsService->setProcessedData($sessionKey, $result['data']);
 
-            $data = $formsService->processPostData($sessionKey);
+            $data = $formsService->processPostData($sessionKey, sizeof($insertion->getMedia()) > 0);
             $data = $formsService->parsePageData($data);
 
             $updateService->update($insertion, $data);
