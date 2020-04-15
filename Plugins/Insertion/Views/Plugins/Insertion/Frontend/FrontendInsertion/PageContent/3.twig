@@ -184,7 +184,7 @@
             {# price attributes #}
             {% for attributeGroup in attributes %}
                 {% if attributeGroup.items|length > 0 and attributeGroup.name == 'price' %}
-                    <div class="form-controls">
+                    <div class="attribute-group">
                         {% for attribute in attributeGroup.items %}
                             {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': attribute.required } %}
                         {% endfor %}
