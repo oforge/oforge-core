@@ -20,29 +20,26 @@
                               class="form__input form__input--textarea form__input--textarea-description form-control"
                               placeholder="{{ i18n('description') }}">{{ data.insertion_description }}</textarea>
                 </div>
-
+            </div>
+            <div class="form__control--row-half">
                 {# contact attributes #}
                 {% for attributeGroup in attributes %}
                     {% if attributeGroup.items|length > 0 and attributeGroup.name == 'contact' %}
-                        <div class="attribute-group">
-                            <h2>{{ i18n('attribute_group_' ~ attributeGroup.name) }}</h2>
-                            <div>
-                                {% for attribute in attributeGroup.items %}
-                                    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': attribute.required } %}
-                                {% endfor %}
-                            </div>
+                        <div>
+                            {% for attribute in attributeGroup.items %}
+                                {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': attribute.required } %}
+                            {% endfor %}
                         </div>
                     {% endif %}
                 {% endfor %}
-            </div>
-            <div class="form__control--row-half">
+
                 <div class="form__control">
                     <h3 class="form__sub-title">{{ i18n('contact_partner') }}</h3>
                     <input type="text"
                            name="contact_name"
                            class="form__input form-control"
                            value="{% if data['contact_name'] %}{{ data['contact_name'] }}{% elseif lastContact.name %}{{ lastContact.name }}{% endif %}"
-                           placeholder="{{ i18n('name') }}"/>
+                           placeholder="{{ i18n('name') }}" />
                 </div>
                 <div class="form__control">
                     <h3 class="form__sub-title">{{ i18n('contact_data') }}</h3>
@@ -50,7 +47,7 @@
                            name="contact_email"
                            class="form__input form-control"
                            value="{% if data['contact_email'] %}{{ data['contact_email'] }}{% elseif lastContact.email %}{{ lastContact.email }}{% endif %}"
-                           placeholder="{{ i18n('email') }}"/>
+                           placeholder="{{ i18n('email') }}" />
                 </div>
                 <div class="form__control">
                     <input type="tel"
@@ -67,14 +64,14 @@
                                required
                                class="form__input form-control"
                                value="{% if data['contact_zip'] %}{{ data['contact_zip'] }}{% elseif lastContact.zip %}{{ lastContact.zip }}{% endif %}"
-                               placeholder="{{ i18n('zip') }}"/>
+                               placeholder="{{ i18n('zip') }}" />
                     </div>
                     <div class="column column--two-third">
                         <input type="text"
                                name="contact_city"
                                class="form__input form-control"
                                value="{% if data['contact_city'] %}{{ data['contact_city'] }}{% elseif lastContact.city %}{{ lastContact.city }}{% endif %}"
-                               placeholder="{{ i18n('city') }}"/>
+                               placeholder="{{ i18n('city') }}" />
                     </div>
                 </div>
 
@@ -89,20 +86,23 @@
                             {% set country = null %}
                         {% endif %}
                         <select class="form__input form__input--no-input" name="contact_country">
-                            <option value="germany" {% if country is null or country is same as('germany') %}selected="selected"{% endif %}>{{ i18n('germany') }}</option>
+                            <option value="germany"
+                                    {% if country is null or country is same as('germany') %}selected="selected"{% endif %}>{{ i18n('germany') }}</option>
                             <option value="austria" {% if country is same as('austria') %}selected="selected"{% endif %}>{{ i18n('austria') }}</option>
-                            <option value="switzerland" {% if country is same as('switzerland') %}selected="selected"{% endif %}>{{ i18n('switzerland') }}</option>
-                            <option value="netherlands" {% if country is same as('netherlands') %}selected="selected"{% endif %}>{{ i18n('netherlands') }}</option>
+                            <option value="switzerland"
+                                    {% if country is same as('switzerland') %}selected="selected"{% endif %}>{{ i18n('switzerland') }}</option>
+                            <option value="netherlands"
+                                    {% if country is same as('netherlands') %}selected="selected"{% endif %}>{{ i18n('netherlands') }}</option>
                         </select>
                     </div>
                 </div>
                 <div class="form__control">
                     <label class="form__label form__label--checkbox">
-                        <input type="hidden" value="off" name="contact_visible"/>
+                        <input type="hidden" value="off" name="contact_visible" />
                         <input type="checkbox"
                                name="contact_visible"
                                {% if data['contact_visible'] == 'on' %}checked="checked" {% elseif lastContact.visible %}checked="checked"{% endif %}
-                               class="form__input form__input--checkbox form__input--checkbox-small"/>
+                               class="form__input form__input--checkbox form__input--checkbox-small" />
                         {{ i18n('contact_data_visible', 'My contact data should be visible for registered users only.') }}
                     </label>
                 </div>
@@ -141,7 +141,7 @@
                                max="{% if type.maxPrice %}{{ type.maxPrice }}{% else %}2000000{% endif %}"
                                value="{{ data['price_min'] }}"
                                class="form__input"
-                               placeholder="{{ i18n('from') }}"/>
+                               placeholder="{{ i18n('from') }}" />
                         {% if i18nExists('unit_price') %}
                             <span class="input__unit">
                         {{ i18n('unit_price') }}
@@ -161,7 +161,7 @@
                                value="{{ data['price'] }}"
                                class="form__input"
                                placeholder="{{ i18n('price') }}"
-                               required/>
+                               required />
                         {% if i18nExists('unit_price') %}
                             <span class="input__unit">
                         {{ i18n('unit_price') }}
@@ -172,7 +172,7 @@
 
                 <div class="form__control form__control--checkbox">
                     <label for="tax" class="form__label form__label--checkbox"> {{ i18n('tax') }}</label>
-                    <input type="hidden" name="tax" value="off"/>
+                    <input type="hidden" name="tax" value="off" />
                     <input type="checkbox"
                            class="form__input form__input--checkbox"
                            name="tax"
@@ -182,6 +182,17 @@
                         {% endif %}>
                 </div>
             </div>
+
+            {# price attributes #}
+            {% for attributeGroup in attributes %}
+                {% if attributeGroup.items|length > 0 and attributeGroup.name == 'price' %}
+                    <div class="form-controls">
+                        {% for attribute in attributeGroup.items %}
+                            {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': attribute.required } %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endfor %}
         </div>
     </div>
 
