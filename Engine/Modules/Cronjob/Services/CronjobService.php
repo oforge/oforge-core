@@ -306,6 +306,7 @@ class CronjobService extends AbstractDatabaseAccess {
                 try {
                     $command     = $cronjob->getCommand();
                     $commandArgs = $cronjob->getCommandArgs();
+
                     $consoleService->runCommand($command, $commandArgs);
                     $success = true;
                 } catch (Exception $exception) {

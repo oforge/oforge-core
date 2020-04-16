@@ -139,6 +139,7 @@ class ConsoleService {
         $getOpt = $this->getOpt;
         try {
             try {
+
                 $getOpt->process(trim($command . ' ' . $args));
             } catch (ArgumentException\Missing $exception) {
                 // catch missing exceptions if help is requested
