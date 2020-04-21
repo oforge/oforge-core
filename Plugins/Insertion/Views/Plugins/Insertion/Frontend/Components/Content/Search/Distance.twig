@@ -13,6 +13,8 @@
                             value="switzerland">{{ i18n('switzerland') }}</option>
                     <option {% if search.filter.radius.country == 'netherlands' %}selected="selected"{% endif %}
                             value="netherlands">{{ i18n('netherlands') }}</option>
+                    <option {% if search.filter.radius.country == 'spain' %}selected="selected"{% endif %}
+                            value="netherlands">{{ i18n('spain', {en: 'Spain', de: 'Spanien'}) }}</option>
                 </select>
             </div>
         </div>

@@ -91,6 +91,8 @@
                                     {% if country is same as('switzerland') %}selected="selected"{% endif %}>{{ i18n('switzerland') }}</option>
                             <option value="netherlands"
                                     {% if country is same as('netherlands') %}selected="selected"{% endif %}>{{ i18n('netherlands') }}</option>
+                            <option value="spain"
+                                    {% if country is same as('spain', {en: 'Spain', de: 'Spanien'}) %}selected="selected"{% endif %}>{{ i18n('spain') }}</option>
                         </select>
                     </div>
                 </div>
