@@ -142,7 +142,7 @@
                                id="price_min"
                                min="{% if type.minPrice %}{{ type.minPrice }}{% else %}0{% endif %}"
                                max="{% if type.maxPrice %}{{ type.maxPrice }}{% else %}2000000{% endif %}"
-                               value="{{ data['price_min'] }}123"
+                               value="{{ data['price_min'] }}"
                                class="form__input"
                                placeholder="{{ i18n('from') }}" />
                         {% if i18nExists('unit_price') %}
