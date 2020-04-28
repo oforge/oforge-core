@@ -15,7 +15,7 @@ if (typeof Oforge !== 'undefined') {
             });
 
             function changeHandler() {
-                if (selectionElement.value === 'on_demand') {
+                if (selectionElement.value === 'on_demand' || selectionElement.value === 'price_range') {
                     minField.required = true;
                     minField.setAttribute('name', 'price_min');
                     maxField.placeholder = getSelectedOption(selectionElement).getAttribute('data-placeholder');
