@@ -35,8 +35,6 @@
                     {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ value.subAttributeKey.type|capitalize  ~ '.twig'  with {'attribute': all_attributes[value.subAttributeKey.id], hidden: true, required: false, isSubAttribute: true} %}
                 {% endfor %}
             </div>
-
-            <script src="https://test.allyourhorses.de/Plugins/Insertion/Views/Frontend/__assets/js/toggler.js"  async="async"></script>
         {% endif %}
     {% endblock container_attributes %}
 </div>
