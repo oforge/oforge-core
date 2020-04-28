@@ -1,26 +1,45 @@
-<div class="form__control form__control--checkbox form__control__boolean">
-    {% if i18nExists('attribute_hint_' ~ attribute.id ) %}
-        {% set content = content(type.name ~ '_' ~ attribute.attributeKey.name ~ '_' ~ meta.language.iso) %}
+<div class="form__container">
+    <div class="form__control  form__control--checkbox form__control__boolean">
+        {% if i18nExists('attribute_hint_' ~ attribute.id ) %}
+            {% set content = content(type.name ~ '_' ~ attribute.attributeKey.name ~ '_' ~ meta.language.iso) %}
 
-        {% include 'Frontend/Components/Insertions/Hint.twig' with {
-            hint: i18n('attribute_hint_' ~ attribute.id),
-            content: content
-        } %}
-    {% endif %}
-    <label for="{{ attribute.name }}"
-           class="form__label form__label--checkbox">{{ i18n(attribute.name) }}{% if required %}<span
+            {% include 'Frontend/Components/Insertions/Hint.twig' with {
+                hint: i18n('attribute_hint_' ~ attribute.id),
+                content: content
+            } %}
+        {% endif %}
+        <label for="{{ attribute.name }}"
+               class="form__label form__label--checkbox">{{ i18n(attribute.name) }}{% if required %}<span
                 class="required">*</span>{% endif %}</label>
 
-    {% if data['insertion'][attribute.id] == 'on' %}
-        <input type="hidden" name="insertion[{{ attribute.id }}]" value="off" />
-    {% endif %}
+        {% if data['insertion'][attribute.id] == 'on' %}
+            <input type="hidden" name="insertion[{{ attribute.id }}]" value="off" />
+        {% endif %}
 
-    <input type="checkbox"
-           class="form__input form__input--checkbox"
-           name="insertion[{{ attribute.id }}]"
-           id="{{ attribute.name }}"
+        {% set values = getInsertionValues(attribute.id) %}
+
+        <input type="checkbox"
+               class="form__input form__input--checkbox"
+               name="insertion[{{ attribute.id }}]"
+               data-toggle-selector="insertion_{{ attribute.id }}"
+               id="{{ attribute.name }}"
             {% if data['insertion'][attribute.id] == 'on' %}
                 checked="checked"
             {% endif %}
             {% if required %}required{% endif %}>
+    </div>
+    {% block container_attributes %}
+        {% if values.values|length  > 0 %}
+            <div data-name="insertion_{{ attribute.id }}" class="toggler attribute-container {% if data['insertion'][attribute.id] != 'on' %}hide{% endif %}">
+                {% for value in values.values %}
+                    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ value.subAttributeKey.type|capitalize  ~ '.twig'  with {'attribute': all_attributes[value.subAttributeKey.id], hidden: true, required: false, isSubAttribute: true} %}
+                {% endfor %}
+            </div>
+
+            <script src="https://test.allyourhorses.de/Plugins/Insertion/Views/Frontend/__assets/js/toggler.js"  async="async"></script>
+        {% endif %}
+    {% endblock container_attributes %}
 </div>
+
+
+

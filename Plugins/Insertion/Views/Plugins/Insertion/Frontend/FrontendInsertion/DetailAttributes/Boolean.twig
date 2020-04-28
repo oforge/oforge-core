@@ -7,4 +7,11 @@
         </svg>
     </span>
     </div>
+
+    {% set attributeValues = getInsertionValues(attribute.id) %}
+    {% block container_attributes %}
+            {% for attributeValue in attributeValues.values %}
+                {% include 'Plugins/Insertion/Frontend/FrontendInsertion/DetailAttributes/' ~ attributeValue.subAttributeKey.type|capitalize  ~ '.twig'  with {'attribute': all_attributes[attributeValue.subAttributeKey.id], value: insertion_values[attributeValue.subAttributeKey.id], hidden: true, required: false, isSubAttribute: true} %}
+            {% endfor %}
+    {% endblock container_attributes %}
 {% endif %}
