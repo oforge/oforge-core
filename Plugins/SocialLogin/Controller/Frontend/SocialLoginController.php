@@ -2,16 +2,14 @@
 
 namespace SocialLogin\Controller\Frontend;
 
-use FrontendUserManagement\Services\FrontendUserLoginService;
-use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
+use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Helper\StringHelper;
 use Oforge\Engine\Modules\Core\Services\RedirectService;
 use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
-use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Slim\Router;
 use SocialLogin\Services\LoginConnectService;
 use SocialLogin\Services\UserLoginService;
@@ -46,22 +44,21 @@ class SocialLoginController {
         }
 
         $uri  = $router->pathFor($redirectUrlName);
-        $host = ($_SERVER["HTTPS"] == 'on' ? 'https://' : 'http://') . $_SERVER["HTTP_HOST"];
-        if (isset($_GET["type"])) {
-            $type = $_GET["type"];
+        $host = ($_SERVER['HTTPS'] == 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'];
+        if (isset($_GET['type'])) {
+            $type = $_GET['type'];
 
-            /**
-             * @var $service LoginConnectService
-             */
-            $service = Oforge()->Services()->get("sociallogin");
+            /**  @var LoginConnectService $service */
+            $service = Oforge()->Services()->get('sociallogin');
 
             $body = $request->getParsedBody();
             $jwt  = null;
 
             if (isset($_SERVER['HTTP_REFERER']) && StringHelper::startsWith($_SERVER['HTTP_REFERER'], $host)
                 && !(StringHelper::contains($_SERVER['HTTP_REFERER'], 'login') || StringHelper::contains($_SERVER['HTTP_REFERER'], 'register'))) {
-                $referrer                       = $_SERVER['HTTP_REFERER'];
-                $uri                            = $referrer;
+                $referrer = $_SERVER['HTTP_REFERER'];
+                $uri      = $referrer;
+
                 $_SESSION['login_redirect_url'] = $uri;
             }
 
@@ -70,14 +67,12 @@ class SocialLoginController {
             if ($service->connect($type, $redirectUri)) {
                 $profile = $service->getAdapter($type);
 
-                /**
-                 * @var $loginService UserLoginService
-                 */
-                $loginService = Oforge()->Services()->get("sociallogin.login");
+                /** @var UserLoginService $loginService */
+                $loginService = Oforge()->Services()->get('sociallogin.login');
                 $userProfile  = null;
                 $jwt          = null;
 
-                $index = isset($_GET["retry"]) ? intval($_GET["retry"]) : 0;
+                $index = isset($_GET['retry']) ? intval($_GET['retry']) : 0;
 
                 try {
                     $index++;
@@ -85,14 +80,14 @@ class SocialLoginController {
                     $jwt         = $loginService->loginOrRegister($userProfile, $type);
                 } catch (\Exception $e) {
                     if ($index < 10) {
-                        return $response->withRedirect($redirectUri . "&retry=" . $index, 302);
+                        return $response->withRedirect($redirectUri . '&retry=' . $index, 302);
                     }
                 }
 
                 /**
                  * Check credentials ($jwt is null if the login credentials are incorrect)
                  */
-                if (!isset($jwt)) {
+                if ($jwt === null) {
                     Oforge()->View()->Flash()->addMessage('warning', I18N::translate('login_social_account_not_compatible', [
                         'en' => 'Your account does not meet the requirements to use this function.',
                         'de' => 'Ihr Account erfüllt nicht die Voraussetzungen, um diese Funktion zu nutzen.',
@@ -119,7 +114,10 @@ class SocialLoginController {
                 if (!isset($referrer)) {
                     $uri = $router->pathFor('frontend_account_dashboard');
                 }
-                Oforge()->View()->Flash()->addMessage('success', I18N::translate('login_success', 'You have successfully logged in!'));
+                Oforge()->View()->Flash()->addMessage('success', I18N::translate('login_success', [
+                    'en' => 'You have successfully logged in!',
+                    'de' => 'Sie haben sich erfolgreich angemeldet!',
+                ]));
 
                 Oforge()->View()->assign(['cookie_consent' => true]);
 
@@ -134,4 +132,5 @@ class SocialLoginController {
 
         return $response->withRedirect($uri, 302);
     }
+
 }

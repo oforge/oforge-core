@@ -26,28 +26,20 @@ class Bootstrap extends AbstractBootstrap {
 
         $this->models = [
             SocialLogin::class,
-            LoginProvider::class
+            LoginProvider::class,
         ];
 
         $this->services = [
             'sociallogin.providers' => LoginProviderService::class,
-            'sociallogin.login' => UserLoginService::class,
-            'sociallogin' => LoginConnectService::class,
+            'sociallogin.login'     => UserLoginService::class,
+            'sociallogin'           => LoginConnectService::class,
         ];
 
         $this->dependencies = [
             \FrontendUserManagement\Bootstrap::class,
         ];
-    }
 
-    protected $order = 0;
-
-    public function load() {
-
-    }
-
-    public function activate() {
-
+        $this->order = 0;
     }
 
 }

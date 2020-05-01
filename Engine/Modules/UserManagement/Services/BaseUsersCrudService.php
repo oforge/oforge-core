@@ -8,9 +8,10 @@
 
 namespace Oforge\Engine\Modules\UserManagement\Services;
 
+use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Exception;
-use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
+use Oforge\Engine\Modules\Auth\Enums\InvalidPasswordFormatException;
 use Oforge\Engine\Modules\Auth\Services\PasswordService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
@@ -47,26 +48,25 @@ class BaseUsersCrudService {
     /**
      * @param $userData
      *
-     * @return null
+     * @return bool
+     * @throws InvalidPasswordFormatException
      */
-    public function create($userData) {
-        if (isset($userData["password"]) && strlen($userData["password"]) > 5) {
-            $userData["password"] = $this->passwordService->hash($userData["password"]);
+    public function create($userData) : bool {
+        if (isset($userData['password'])) {
+            $userData['password'] = $this->passwordService->validateFormat($userData['password'])->hash($userData['password']);
             try {
                 $this->crudService->create($this->userModel, $userData);
-            } catch (Exception $e) {
-                $msg = $e->getPrevious();
+
+                return true;
+            } catch (Exception $exception) {
+                $msg = $exception->getPrevious();
                 if (isset($msg)) {
                     $msg = $msg->getMessage();
                 } else {
-                    $msg = $e->getMessage();
+                    $msg = $exception->getMessage();
                 }
-                Oforge()->Logger()->get()->addWarning("Error trying to create a new user. ", ["e" => $msg]);
-
-                return false;
+                Oforge()->Logger()->get()->addWarning('Error trying to create a new user. ', ['exception' => $msg]);
             }
-
-            return true;
         }
 
         return false;
@@ -77,10 +77,13 @@ class BaseUsersCrudService {
      *
      * @return bool
      * @throws NotFoundException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws InvalidPasswordFormatException
      */
     public function update($userData) {
-        if (key_exists("password", $userData)) {
-            $userData["password"] = $this->passwordService->hash($userData["password"]);
+        if (isset($userData['password'])) {
+            $userData['password'] = $this->passwordService->validateFormat($userData["password"])->hash($userData["password"]);
         }
         $this->crudService->update($this->userModel, $userData);
 
@@ -112,10 +115,11 @@ class BaseUsersCrudService {
      */
     public function list(array $params) {
         $entities = $this->crudService->list($this->userModel, $params);
-        $entities = array_map(function($entity) {
+        $entities = array_map(function ($entity) {
             /** @var AbstractModel $entity */
             return $entity->toArray();
         }, $entities);
+
         return $entities;
     }
 

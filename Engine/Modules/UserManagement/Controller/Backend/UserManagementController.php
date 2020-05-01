@@ -268,10 +268,7 @@ class UserManagementController extends BaseCrudController {
         return false;
     }
 
-    /**
-     * @inheritDoc
-     * @throws Exception
-     */
+    /** @inheritDoc */
     protected function convertData(array $data, string $crudAction) : array {
         if (empty($data['password'])) {
             if ($crudAction === 'create') {
@@ -285,7 +282,7 @@ class UserManagementController extends BaseCrudController {
         } else {
             /** @var PasswordService $passwordService */
             $passwordService  = Oforge()->Services()->get('password');
-            $data['password'] = $passwordService->hash($data['password']);
+            $data['password'] = $passwordService->validateFormat($data['password'])->hash($data['password']);
         }
 
         return $data;

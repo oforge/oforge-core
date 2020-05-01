@@ -254,7 +254,7 @@ class BaseCrudController extends SecureBackendController {
                 $entities[$index] = $entity;
             }
         }
-        list($properties, $hasEditors) = $this->filterPropertiesFor('index');
+        [$properties, $hasEditors] = $this->filterPropertiesFor('index');
         $hasRowActions = false;
         if (isset($this->crudActions)) {
             $actionKeys = ['view', 'update', 'delete'];
@@ -326,7 +326,7 @@ class BaseCrudController extends SecureBackendController {
             $entity   = ArrayHelper::mergeRecursive($entity, $postData);
             Oforge()->View()->Flash()->clearData($this->moduleModelName);
         }
-        list($properties, $hasEditors) = $this->filterPropertiesFor('create');
+        [$properties, $hasEditors] = $this->filterPropertiesFor('create');
         Oforge()->View()->assign([
             'crud' => [
                 'context'    => 'create',
@@ -351,7 +351,7 @@ class BaseCrudController extends SecureBackendController {
     public function viewAction(Request $request, Response $response, array $args) {
         $entity = $this->crudService->getById($this->model, $args['id']);
         $entity = $this->prepareItemDataArray($entity, 'view');
-        list($properties, $hasEditors) = $this->filterPropertiesFor('view');
+        [$properties, $hasEditors] = $this->filterPropertiesFor('view');
         Oforge()->View()->assign([
             'crud' => [
                 'context'    => 'view',
@@ -402,7 +402,7 @@ class BaseCrudController extends SecureBackendController {
             $entity   = ArrayHelper::mergeRecursive($entity, $postData);
             Oforge()->View()->Flash()->clearData($this->moduleModelName);
         }
-        list($properties, $hasEditors) = $this->filterPropertiesFor('update');
+        [$properties, $hasEditors] = $this->filterPropertiesFor('update');
         Oforge()->View()->assign([
             'crud' => [
                 'context'    => 'update',
@@ -434,7 +434,7 @@ class BaseCrudController extends SecureBackendController {
         }
         $entity = $this->crudService->getById($this->model, $args['id']);
         $entity = $this->prepareItemDataArray($entity, 'delete');
-        list($properties, $hasEditors) = $this->filterPropertiesFor('delete');
+        [$properties, $hasEditors] = $this->filterPropertiesFor('delete');
         Oforge()->View()->assign([
             'crud' => [
                 'context'    => 'delete',
@@ -483,6 +483,7 @@ class BaseCrudController extends SecureBackendController {
      * @param string $crudAction
      *
      * @return array
+     * @throws Exception
      */
     protected function convertData(array $data, string $crudAction) : array {
         return $data;
@@ -533,11 +534,11 @@ class BaseCrudController extends SecureBackendController {
     protected function handleIndexUpdate(array $postData) {
         $list = $postData['data'];
         $this->handleFileUploads($list, 'index');
-        foreach ($list as $entityID => $data) {
-            $list[$entityID] = $this->convertData($data, 'update');
-        }
-        $postData['data'] = $list;
         try {
+            foreach ($list as $entityID => $data) {
+                $list[$entityID] = $this->convertData($data, 'update');
+            }
+            $postData['data'] = $list;
             $this->crudService->update($this->model, $postData);
             Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_bulk_update_success', [
                 'en' => 'Entities successfully bulk updated.',
@@ -603,7 +604,7 @@ class BaseCrudController extends SecureBackendController {
      * @return Response
      */
     protected function redirect(Response $response, string $crudAction, array $urlParams = [], array $queryParams = []) {
-        $routeName  = Oforge()->View()->get('meta')['route']['parentName'];
+        $routeName = Oforge()->View()->get('meta')['route']['parentName'];
         if ($crudAction !== 'index') {
             $routeName .= '_' . $crudAction;
         }
