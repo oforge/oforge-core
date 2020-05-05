@@ -32,7 +32,7 @@ class InsertionAttributeValue extends AbstractModel {
 
     /**
      * @var string
-     * @ORM\Column(name="insertion_attribute_value", type="string", nullable=true)
+     * @ORM\Column(name="insertion_attribute_value", type="text", nullable=true)
      */
     private $value;
 
