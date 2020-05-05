@@ -1,7 +1,7 @@
 {% if value is not empty %}
     <div class="product__attribute">
         <span class="product__label">{{ i18n(attribute.name) }}</span>
-        <span class="product__value"
+        <span class="product__value product__value__richtext"
               title="{% if value is not empty %}{{ value }}{% else %}{{ i18n('not_available') }}{% endif %}">{% if value is not empty %}{{ value|nl2br }}{% else %}{{ i18n('not_available') }}{% endif %}</span>
     </div>
 {% endif %}
