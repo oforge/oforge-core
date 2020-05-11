@@ -15,8 +15,10 @@ use Oforge\Engine\Modules\Core\Services\ConfigService;
  *
  * @package Analytics
  */
-class Bootstrap extends AbstractBootstrap {
-    public function __construct() {
+class Bootstrap extends AbstractBootstrap
+{
+    public function __construct()
+    {
         $this->endpoints   = [
             Controller\Backend\AnalyticsController::class,
         ];
@@ -28,7 +30,8 @@ class Bootstrap extends AbstractBootstrap {
     }
 
     /** @inheritDoc */
-    public function install() {
+    public function install()
+    {
         /** @var ConfigService $configService */
         $configService = Oforge()->Services()->get('config');
 
@@ -68,14 +71,16 @@ class Bootstrap extends AbstractBootstrap {
     }
 
     /** @inheritDoc */
-    public function uninstall() {
+    public function uninstall()
+    {
         /**  @var DashboardWidgetsService $dashboardWidgetsService */
         $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
         $dashboardWidgetsService->uninstall('plugin_analytics');
     }
 
     /** @inheritDoc */
-    public function activate() {
+    public function activate()
+    {
         /** @var BackendNavigationService $backendNavigationService */
         $backendNavigationService = Oforge()->Services()->get('backend.navigation');
         $backendNavigationService->add(BackendNavigationService::CONFIG_ADMIN);
@@ -93,10 +98,10 @@ class Bootstrap extends AbstractBootstrap {
     }
 
     /** @inheritDoc */
-    public function deactivate() {
+    public function deactivate()
+    {
         /**  @var DashboardWidgetsService $dashboardWidgetsService */
         $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
         $dashboardWidgetsService->deactivate('plugin_analytics');
     }
-
 }

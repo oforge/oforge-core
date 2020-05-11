@@ -22,9 +22,11 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
  *
  * @package FrontendUserManagement
  */
-class Bootstrap extends AbstractBootstrap {
+class Bootstrap extends AbstractBootstrap
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->endpoints = [
             Controller\Frontend\LoginController::class,
             Controller\Frontend\LoginRegistrationController::class,
@@ -55,7 +57,9 @@ class Bootstrap extends AbstractBootstrap {
             UserAddress::class,
             NickNameValue::class,
         ];
-
+        $this->dependencies = [
+            \FrontendUserManagement\Bootstrap::class
+        ];
         $this->services = [
             'frontend.user.management.password.reset'     => Services\PasswordResetService::class,
             'frontend.user.management.login'              => Services\FrontendUserLoginService::class,
@@ -70,7 +74,8 @@ class Bootstrap extends AbstractBootstrap {
     }
 
     /** @inheritDoc */
-    public function install() {
+    public function install()
+    {
         /** @var DashboardWidgetsService $dashboardWidgetsService */
         $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
         $dashboardWidgetsService->install([
@@ -87,14 +92,16 @@ class Bootstrap extends AbstractBootstrap {
     }
 
     /** @inheritDoc */
-    public function uninstall() {
+    public function uninstall()
+    {
         /** @var DashboardWidgetsService $dashboardWidgetsService */
         $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
         $dashboardWidgetsService->uninstall('plugin_frontend_user_registrations');
     }
 
     /** @inheritDoc */
-    public function activate() {
+    public function activate()
+    {
         /** @var AccountNavigationService $accountNavigationService */
         $accountNavigationService = Oforge()->Services()->get('frontend.user.management.account.navigation');
 
@@ -159,10 +166,10 @@ class Bootstrap extends AbstractBootstrap {
     }
 
     /** @inheritDoc */
-    public function deactivate() {
+    public function deactivate()
+    {
         /** @var DashboardWidgetsService $dashboardWidgetsService */
         $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
         $dashboardWidgetsService->deactivate("plugin_frontend_user_registrations");
     }
-
 }

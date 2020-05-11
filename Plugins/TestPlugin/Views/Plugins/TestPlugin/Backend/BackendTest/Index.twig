@@ -1,0 +1,54 @@
+{% extends "Backend/Master/Index.twig" %}
+{% block pagecontent %}
+    <style>
+        img {
+            width: 25px;
+            height: 25x;
+            margin-right: 5px;
+            border-radius: 75%;
+        }
+    </style>
+    
+    <div class="col-xs-12">
+        Das ist ein test   
+        {{o_dump}}  
+    </div>
+    <div class="col-xs-12">
+        <table id="example" class="display" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Avatar</th>
+                    <th>Vorname</th>
+                    <th>Nachname</th>
+                    <th>Telefonnummer</th>
+                    <th>Email</th>
+                    <th>Zuordnung</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in daten %}
+                    <tr>
+                        <td><img src="https://api.adorable.io/avatars/{{ data.avatar }}"></td>
+                        <td>{{ data.vorname }}</td>
+                        <td>{{ data.nachname }}</td>
+                        <td>{{ data.telefonnummer }}</td>
+                        <td>{{ data.email }}</td>
+                        <td>{{ data.zuordnung }}</td>
+                    </tr>
+                {% else %}
+                <h1>Keine Datei gefunden</h1>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                <th>Avatar</th>
+                    <th>Vorname</th>
+                    <th>Nachname</th>
+                    <th>Telefonnummer</th>
+                    <th>Email</th>
+                    <th>Zuordnung</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+{% endblock %}
