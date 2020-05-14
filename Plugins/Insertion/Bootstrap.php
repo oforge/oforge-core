@@ -4,13 +4,12 @@ namespace Insertion;
 
 use FrontendUserManagement\Middleware\FrontendSecureMiddleware;
 use FrontendUserManagement\Services\AccountNavigationService;
-use Insertion\Controller\Backend\BackendInsertionFeedbackController;
-use Insertion\Controller\Backend\BackendInsertionSeoContentController;
-use Insertion\Models\InsertionSeoContent;
 use Insertion\Commands\ReminderCommand;
 use Insertion\Commands\SearchBookmarkCommand;
 use Insertion\Controller\Backend\BackendAttributeController;
 use Insertion\Controller\Backend\BackendInsertionController;
+use Insertion\Controller\Backend\BackendInsertionFeedbackController;
+use Insertion\Controller\Backend\BackendInsertionSeoContentController;
 use Insertion\Controller\Backend\BackendInsertionTypeController;
 use Insertion\Controller\Backend\BackendInsertionTypeGroupController;
 use Insertion\Controller\Frontend\FrontendInsertionController;
@@ -19,8 +18,8 @@ use Insertion\Cronjobs\Reminder14DaysCronjob;
 use Insertion\Cronjobs\Reminder30DaysCronjob;
 use Insertion\Cronjobs\Reminder3DaysCronjob;
 use Insertion\Cronjobs\SearchBookmarkCronjob;
-use Insertion\Middleware\InsertionProfileProgressMiddleware;
 use Insertion\Middleware\InsertionDetailMiddleware;
+use Insertion\Middleware\InsertionProfileProgressMiddleware;
 use Insertion\Models\AttributeKey;
 use Insertion\Models\AttributeValue;
 use Insertion\Models\Insertion;
@@ -30,6 +29,7 @@ use Insertion\Models\InsertionContent;
 use Insertion\Models\InsertionFeedback;
 use Insertion\Models\InsertionMedia;
 use Insertion\Models\InsertionProfile;
+use Insertion\Models\InsertionSeoContent;
 use Insertion\Models\InsertionType;
 use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Models\InsertionTypeGroup;
@@ -210,12 +210,15 @@ class Bootstrap extends AbstractBootstrap {
         ]);
     }
 
-    public function uninstall() {
-        /** @var DashboardWidgetsService $dashboardWidgetsService */
-        $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
-        $dashboardWidgetsService->uninstall('plugin_insertion_count');
-        $dashboardWidgetsService->uninstall('plugin_insertion_moderation');
-        $dashboardWidgetsService->uninstall('plugin_insertion_feedback');
+    /** @inheritDoc */
+    public function uninstall(bool $keepData) {
+        if (!$keepData) {
+            /** @var DashboardWidgetsService $dashboardWidgetsService */
+            $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
+            $dashboardWidgetsService->uninstall('plugin_insertion_count');
+            $dashboardWidgetsService->uninstall('plugin_insertion_moderation');
+            $dashboardWidgetsService->uninstall('plugin_insertion_feedback');
+        }
     }
 
     public function deactivate() {

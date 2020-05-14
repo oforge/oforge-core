@@ -52,8 +52,12 @@ abstract class AbstractBootstrap {
     public function update() {
     }
 
-    /** @throws Exception */
-    public function uninstall() {
+    /**
+     * @param bool $keepData
+     *
+     * @throws Exception
+     */
+    public function uninstall(bool $keepData) {
     }
 
     /** @throws Exception */

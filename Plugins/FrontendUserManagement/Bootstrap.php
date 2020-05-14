@@ -87,10 +87,12 @@ class Bootstrap extends AbstractBootstrap {
     }
 
     /** @inheritDoc */
-    public function uninstall() {
-        /** @var DashboardWidgetsService $dashboardWidgetsService */
-        $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
-        $dashboardWidgetsService->uninstall('plugin_frontend_user_registrations');
+    public function uninstall(bool $keepData) {
+        if (!$keepData) {
+            /** @var DashboardWidgetsService $dashboardWidgetsService */
+            $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
+            $dashboardWidgetsService->uninstall('plugin_frontend_user_registrations');
+        }
     }
 
     /** @inheritDoc */
