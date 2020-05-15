@@ -18,8 +18,12 @@ use ReflectionException;
  * @package Oforge\Engine\Modules\I18n\Services
  */
 class LanguageService extends AbstractDatabaseAccess {
-    /** @var array $currentLanguageIso */
+    /** @var array $currentLanguage */
     private $currentLanguage;
+    /** @var array<int, array> $activeLanguages */
+    private $activeLanguages;
+    /** @var string[] $activeLanguageIsos */
+    private $activeLanguageIsos;
 
     public function __construct() {
         parent::__construct(Language::class);
@@ -27,12 +31,13 @@ class LanguageService extends AbstractDatabaseAccess {
 
     /**
      * @param array $criteria
+     * @param array $orderBy
      *
-     * @return array
+     * @return Language[]
      * @throws ORMException
      */
-    public function list(array $criteria = []) {
-        return $this->repository()->findBy($criteria);
+    public function list(array $criteria = [], array $orderBy = ['name' => 'ASC']) {
+        return $this->repository()->findBy($criteria, $orderBy);
     }
 
     /**
@@ -55,7 +60,19 @@ class LanguageService extends AbstractDatabaseAccess {
      * @throws ORMException
      */
     public function getActiveLanguages() {
-        return $this->repository()->findBy(['active' => true], ['name' => 'ASC']);
+        return $this->list(['active' => true]);
+    }
+
+    /**
+     * Get ISOs of active languages.
+     *
+     * @return string[]
+     * @throws ORMException
+     */
+    public function getActiveLanguageIsos() {
+        $this->initActiveLanguagesData();
+
+        return $this->activeLanguageIsos;
     }
 
     /**
@@ -198,6 +215,22 @@ class LanguageService extends AbstractDatabaseAccess {
             throw new NotFoundException("Language with id '$id' not found!");
         }
         $this->entityManager()->remove($language);
+    }
+
+    /**
+     * @throws ORMException
+     */
+    protected function initActiveLanguagesData() {
+        if (!isset($this->activeLanguages)) {
+            $this->activeLanguages    = [];
+            $this->activeLanguageIsos = [];
+
+            $languages = $this->getActiveLanguages();
+            foreach ($languages as $language) {
+                $this->activeLanguages[]    = $language->toArray();
+                $this->activeLanguageIsos[] = $language->getIso();
+            }
+        }
     }
 
     /**
