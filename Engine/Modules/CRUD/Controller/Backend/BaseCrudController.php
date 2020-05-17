@@ -49,7 +49,7 @@ class BaseCrudController extends SecureBackendController {
      *                  'update'    => 'off|readonly|editable',
      *                  'delete'    => 'off|readonly|editable',
      *              ],
-     *              // Select with optgroups, key will be ignored in renderer
+     *              // Select with optgroups for type=select
      *              'list' => 'functionName' | [
      *                  'key'   => [
      *                      'label'     => 'i18n-translated-text',
@@ -58,7 +58,7 @@ class BaseCrudController extends SecureBackendController {
      *                      ]
      *                  ],
      *              ],
-     *              // Simple select
+     *              // Simple select for type=select or optional as datalist for type=string
      *              'list' => 'functionName' | [
      *                  'value' => 'i18n-translated-text', # Simple select
      *              ],
@@ -126,7 +126,7 @@ class BaseCrudController extends SecureBackendController {
      *              'type'              => CrudFilterType::...,
      *              'label'             => 'Text' | ['key' => 'i18nLabel', 'default' => 'DefaultText'],
      *              'compare'           => CrudFilterComparator::...,    #Default = equals
-     *              'list'              => '',   # Required list for type=select, array or protected function name.
+     *              'list'              => '',   # Required list for type=select or optional datalist for type=text, array or protected function name.
      *              'customFilterQuery' => callable|'<ThisClassMethodName>', #Callable or method name (of this object).
      *                  # Parameters (\Doctrine\ORM\QueryBuilder $queryBuilder, array $queryValues),
      *                  # the queryValues parameter contains only existing and not empty query values.
@@ -254,7 +254,7 @@ class BaseCrudController extends SecureBackendController {
                 $entities[$index] = $entity;
             }
         }
-        list($properties, $hasEditors) = $this->filterPropertiesFor('index');
+        [$properties, $hasEditors] = $this->filterPropertiesFor('index');
         $hasRowActions = false;
         if (isset($this->crudActions)) {
             $actionKeys = ['view', 'update', 'delete'];
@@ -326,7 +326,7 @@ class BaseCrudController extends SecureBackendController {
             $entity   = ArrayHelper::mergeRecursive($entity, $postData);
             Oforge()->View()->Flash()->clearData($this->moduleModelName);
         }
-        list($properties, $hasEditors) = $this->filterPropertiesFor('create');
+        [$properties, $hasEditors] = $this->filterPropertiesFor('create');
         Oforge()->View()->assign([
             'crud' => [
                 'context'    => 'create',
@@ -351,7 +351,7 @@ class BaseCrudController extends SecureBackendController {
     public function viewAction(Request $request, Response $response, array $args) {
         $entity = $this->crudService->getById($this->model, $args['id']);
         $entity = $this->prepareItemDataArray($entity, 'view');
-        list($properties, $hasEditors) = $this->filterPropertiesFor('view');
+        [$properties, $hasEditors] = $this->filterPropertiesFor('view');
         Oforge()->View()->assign([
             'crud' => [
                 'context'    => 'view',
@@ -402,7 +402,7 @@ class BaseCrudController extends SecureBackendController {
             $entity   = ArrayHelper::mergeRecursive($entity, $postData);
             Oforge()->View()->Flash()->clearData($this->moduleModelName);
         }
-        list($properties, $hasEditors) = $this->filterPropertiesFor('update');
+        [$properties, $hasEditors] = $this->filterPropertiesFor('update');
         Oforge()->View()->assign([
             'crud' => [
                 'context'    => 'update',
@@ -434,7 +434,7 @@ class BaseCrudController extends SecureBackendController {
         }
         $entity = $this->crudService->getById($this->model, $args['id']);
         $entity = $this->prepareItemDataArray($entity, 'delete');
-        list($properties, $hasEditors) = $this->filterPropertiesFor('delete');
+        [$properties, $hasEditors] = $this->filterPropertiesFor('delete');
         Oforge()->View()->assign([
             'crud' => [
                 'context'    => 'delete',
