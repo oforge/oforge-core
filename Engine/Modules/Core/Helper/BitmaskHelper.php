@@ -18,13 +18,17 @@ class BitmaskHelper {
     /**
      * Add flag.
      *
-     * @param int $flags
-     * @param int $flag
+     * @param int $currentFlags
+     * @param int ...$flags
      *
      * @return bool
      */
-    public static function add(int $flags, int $flag) : bool {
-        return $flags | $flag;
+    public static function add(int $currentFlags, int...$flags) : bool {
+        foreach ($flags as $flag) {
+            $currentFlags = $currentFlags | $flag;
+        }
+
+        return $currentFlags;
     }
 
     /**
