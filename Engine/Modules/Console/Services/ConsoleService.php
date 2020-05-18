@@ -17,7 +17,7 @@ use Oforge\Engine\Modules\Console\Lib\ConsoleRenderer;
 use Oforge\Engine\Modules\Console\Lib\Input;
 use Oforge\Engine\Modules\Console\Lib\Monolog\Formatter\ConsoleFormatter;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
-use Oforge\Engine\Modules\Core\Helper\BinaryHelper;
+use Oforge\Engine\Modules\Core\Helper\BitmaskHelper;
 use Oforge\Engine\Modules\Core\Models\Module\Module;
 use Oforge\Engine\Modules\Core\Models\Plugin\Plugin;
 
@@ -104,7 +104,7 @@ class ConsoleService {
             $this->init();
         }
 
-        if (BinaryHelper::is($type, AbstractCommand::TYPE_HIDDEN)) {
+        if (BitmaskHelper::is($type, AbstractCommand::TYPE_HIDDEN)) {
             $type = AbstractCommand::TYPE_DEFAULT;
         }
         $commands = $this->getOpt->getCommands();
@@ -114,7 +114,7 @@ class ConsoleService {
                     /**
                      * @var AbstractCommand $command
                      */
-                    return (BinaryHelper::is($command->getType(), $type));
+                    return (BitmaskHelper::is($command->getType(), $type));
                 }
 
                 return true;
