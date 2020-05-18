@@ -3,11 +3,11 @@
 namespace Oforge\Engine\Modules\Core\Helper;
 
 /**
- * BinaryHelper
+ * BitmaskHelper
  *
  * @package Oforge\Engine\Modules\Core\Helper
  */
-class BinaryHelper {
+class BitmaskHelper {
 
     /**
      * Prevent instance.
