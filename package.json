@@ -8,10 +8,12 @@
         "docker:compose:down": "cd docker && docker-compose -p oforgemysql down",
         "docker": "npm run docker:compose:down && npm run docker:compose && npm run docker:compose:up",
         "cssprefix": "npx postcss ./var/public/__assets/Frontend/css/*.css --use autoprefixer --replace --no-map",
-        "svgsprite": "npx svg-sprite --ss ./node_scripts/dest --sscss ./node_scripts/src/svg/*.svg"
+        "svgsprite": "npx svg-sprite --ss ./node_scripts/dest --sscss ./node_scripts/src/svg/*.svg",
+        "linkPlugin": "node ./devtools/linkPlugin.js"
     },
     "devDependencies": {
         "autoprefixer": "*",
+        "lnk": "^1.1.0",
         "postcss-cli": "*",
         "svg-sprite": "*"
     }
