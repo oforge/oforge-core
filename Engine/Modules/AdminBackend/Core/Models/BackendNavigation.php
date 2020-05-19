@@ -23,8 +23,8 @@ class BackendNavigation extends AbstractModel {
      */
     private $name = null;
     /**
-     * @var string|null $parent
-     * @ORM\Column(name="parent", type="string", nullable=true, options={"default":"0"})
+     * @var string $parent
+     * @ORM\Column(name="parent", type="string", nullable=false, options={"default":"0"})
      */
     private $parent = '0';
     /**
@@ -32,6 +32,16 @@ class BackendNavigation extends AbstractModel {
      * @ORM\Column(name="path", type="string", nullable=true, options={"default":null})
      */
     private $path = null;
+    /**
+     * @var array $pathNamedParams
+     * @ORM\Column(name="path_named_params", type="array", nullable=false)
+     */
+    private $pathNamedParams = [];
+    /**
+     * @var array $pathQueryParams
+     * @ORM\Column(name="path_query_params", type="array", nullable=false)
+     */
+    private $pathQueryParams = [];
     /**
      * @var string|null $icon
      * @ORM\Column(name="icon", type="string", nullable=true, options={"default":null})
@@ -84,9 +94,9 @@ class BackendNavigation extends AbstractModel {
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getParent() : ?string {
+    public function getParent() : string {
         return $this->parent;
     }
 
@@ -96,7 +106,7 @@ class BackendNavigation extends AbstractModel {
      * @return BackendNavigation
      */
     public function setParent(?string $parent) : BackendNavigation {
-        $this->parent = $parent;
+        $this->parent = ($parent === null ? '0' : $parent);
 
         return $this;
     }
@@ -115,6 +125,42 @@ class BackendNavigation extends AbstractModel {
      */
     public function setPath(?string $path) : BackendNavigation {
         $this->path = $path;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPathNamedParams() : array {
+        return $this->pathNamedParams;
+    }
+
+    /**
+     * @param array $pathNamedParams
+     *
+     * @return BackendNavigation
+     */
+    public function setPathNamedParams(array $pathNamedParams) : BackendNavigation {
+        $this->pathNamedParams = $pathNamedParams;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPathQueryParams() : array {
+        return $this->pathQueryParams;
+    }
+
+    /**
+     * @param array $pathQueryParams
+     *
+     * @return BackendNavigation
+     */
+    public function setPathQueryParams(array $pathQueryParams) : BackendNavigation {
+        $this->pathQueryParams = $pathQueryParams;
 
         return $this;
     }
