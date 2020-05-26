@@ -8,6 +8,7 @@ use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\FrontendUserService;
 use FrontendUserManagement\Services\UserService;
+use FrontendUserPageBuilder\Services\FrontendUserPageBuilderService;
 use Insertion\Models\Insertion;
 use Insertion\Services\AttributeService;
 use Insertion\Services\InsertionBookmarkService;
@@ -51,6 +52,9 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
             new Twig_Function('getQuickSearch', [$this, 'getQuickSearch']),
             new Twig_Function('getChatPartnerInformation', [$this, 'getChatPartnerInformation']),
             new Twig_Function('numberToRomanNumeral', [$this, 'numberToRomanNumeral']),
+            new Twig_Function('cms_content', [$this, 'cms_content']),
+            new Twig_Function('content', [$this, 'cms_content']),
+            new Twig_Function('getUserPages', [$this, 'getUserPages'])
         ];
     }
 
@@ -210,6 +214,18 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
         $insertions             = $insertionSliderService->getRandomInsertions(10);
 
         return ['insertions' => $insertions];
+    }
+
+    public function getUserPages() {
+        /** @var FrontendUserPageBuilderService $userPageService */
+        $userPageService = Oforge()->Services()->get("frontend.user.pagebuilder");
+        $userPages            = $userPageService->getAllUserPages();
+
+        return ['userPages' => $userPages];
+    }
+
+    public function cms_content(){
+        return null;
     }
 
     /**

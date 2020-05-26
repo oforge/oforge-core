@@ -1,0 +1,33 @@
+{% extends "Plugins/Insertion/Frontend/Components/Content/Profile.twig" %}
+
+{% block account_description_edit %}
+    {% set userpages = getUserPages() %}
+    <div class="cms-pages-edit description--edit">
+        <h2 class="form__title">{{ i18n('account_profile_page_list', {en: 'Your Pages'}) }}</h2>
+        <div class="page-list">
+            <div class="page-list__entry page-list__new-item">
+                <span class="page-control--edit">
+                            <svg class="icon icon--secondary"><use xlink:href="#create"></use></svg>
+                </span>
+            </div>
+            {% for page in userpages['userPages'] %}
+                <div class="page-list__entry">
+                    <span class="entry__name">{{ page.name }}</span>
+                    <div class="entry__controls">
+                        <a href="{{ url('frontend_user_page_builder_builder', {'context' : page.id}) }}">
+                            <span class="page-control--edit">
+                                <svg class="icon icon--secondary"><use xlink:href="#edit"></use></svg>
+                            </span>
+                        </a>
+                        <span class="page-control--delete">
+                            <svg class="icon icon--secondary"><use xlink:href="#delete"></use></svg>
+                        </span>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="no-desktop">
+            {{ i18n('cms_pages_edit_on_mobile_not_available', {'en' : 'Editing your profile page is currently not possible on mobile devices.'}) }}
+        </div>
+    </div>
+{% endblock account_description_edit %}

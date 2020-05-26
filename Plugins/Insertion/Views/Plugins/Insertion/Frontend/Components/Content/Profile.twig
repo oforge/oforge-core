@@ -71,13 +71,16 @@
                 <div class="info__description">
                     {{ i18n('account_insertions_profile_info') }}
                 </div>
-
+                {% block account_profile_edit %}
                 <div class="profile--edit">
+                    {% block account_description_edit %}
                     <div class="description--edit">
                         <h2 class="form__title">{{ i18n('account_profile_text') }}</h2>
                         <textarea name="description"
                                   class="form__input">{{ profile.description }}</textarea>
                     </div>
+                    {% endblock account_description_edit %}
+                    {% block account_imprint_edit %}
                     <div class="impress--edit">
                         <h2 class="form__title">{{ i18n('insertion_profile_contact') }}</h2>
                         <input class="form__input" type="text" name="imprint_name"
@@ -118,11 +121,13 @@
                                placeholder="{{ i18n('imprint_company_tax') }}"
                                value="{{ profile.imprintCompanyTaxId }}" />
                     </div>
+                    {% endblock account_imprint_edit %}
                     <div class="submit">
                         <input type="submit" class="form__input form__input--submit button"
                                value="{{ i18n('save') }}" />
                     </div>
                 </div>
+                {% endblock account_profile_edit %}
             </form>
         </div>
     {% endblock account__content %}
