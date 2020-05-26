@@ -5,6 +5,7 @@
         "ext-curl": "*",
         "ext-mbstring": "*",
         "ext-openssl": "*",
+        "ext-json": "*",
         "ext-xml": "*",
         "slim/slim": "^3.0",
         "monolog/monolog": "^1.23",
