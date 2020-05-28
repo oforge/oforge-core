@@ -12,15 +12,14 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
  */
 class ProductPlacementTag extends AbstractModel {
     /**
+     * @var int $id
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @ORM\Id
-     * @var integer
      */
     private $id;
-
     /**
-     * @var string
+     * @var string $name
      * @ORM\Column(name="tag_name", type="string", nullable=false)
      */
     private $name;
