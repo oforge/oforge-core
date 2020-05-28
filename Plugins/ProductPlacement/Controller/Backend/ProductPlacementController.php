@@ -2,7 +2,9 @@
 
 namespace ProductPlacement\Controller\Backend;
 
+use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
+use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
 use ProductPlacement\Models\ProductPlacement;
@@ -21,7 +23,7 @@ class ProductPlacementController extends BaseCrudController {
     protected $modelProperties = [
         [
             'name'  => 'source',
-            'type'  => CrudDataTypes::STRING,
+            'type'  => CrudDataTypes::TEXT,
             'label' => [
                 'key'     => 'plugin_product_placement_property_source',
                 'default' => [
@@ -57,6 +59,11 @@ class ProductPlacementController extends BaseCrudController {
         ],#tags
     ];
 
+    /**
+     * @return array
+     * @throws ORMException
+     * @throws ServiceNotFoundException
+     */
     protected function getTags() {
         /** @var ProductPlacementService $productPlacementService */
         $productPlacementService = Oforge()->Services()->get('product.placement');
