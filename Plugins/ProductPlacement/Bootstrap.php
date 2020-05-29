@@ -17,16 +17,15 @@ use ProductPlacement\Twig\ProductPlacementExtension;
  * @package ProductPlacement
  */
 class Bootstrap extends AbstractBootstrap {
-    protected $order = Statics::DEFAULT_ORDER;
 
     public function __construct() {
-        $this->endpoints = [
+        $this->endpoints    = [
             ProductPlacementController::class,
         ];
-        $this->models = [
+        $this->models       = [
             ProductPlacement::class,
         ];
-        $this->services = [
+        $this->services     = [
             'product.placement' => ProductPlacementService::class,
         ];
         $this->dependencies = [
@@ -46,10 +45,11 @@ class Bootstrap extends AbstractBootstrap {
             'position' => 'sidebar',
         ]);
     }
+
     public function load() {
-        /** @var BackendNavigationService $backendNavigationService */
         /** @var TemplateRenderService $templateRenderer */
         $templateRenderer = Oforge()->Services()->get('template.render');
         $templateRenderer->View()->addExtension(new ProductPlacementExtension());
     }
+
 }

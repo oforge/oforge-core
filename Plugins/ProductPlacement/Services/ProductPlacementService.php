@@ -7,69 +7,60 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use ProductPlacement\Models\ProductPlacement;
 use ProductPlacement\Models\ProductPlacementTag;
 
+/**
+ * Class ProductPlacementService
+ *
+ * @package ProductPlacement\Services
+ */
 class ProductPlacementService extends AbstractDatabaseAccess {
+
+    /**
+     * ProductPlacementService constructor.
+     */
     public function __construct() {
         parent::__construct(['default' => ProductPlacement::class, 'tags' => ProductPlacementTag::class]);
     }
 
     /**
      * @param int $amount
-     * @param array|null $tags
+     * @param string[]|null $tags
      *
      * @return array|mixed
      * @throws ORMException
      */
-    public function get(int $amount, ?array $tags = null) {
+    public function get(int $amount, $tags = null) {
         $result = [];
         /** @var ProductPlacement[] $productPlacements */
         $productPlacements = $this->repository()->findAll();
-        if ($tags !== null && sizeof($tags) > 0) {
-            $tagIds = $this->findOrCreateTags($tags);
+        if ($tags !== null && !empty($tags)) {
+            $expectedTagIds = $this->findOrCreateTags($tags);
             foreach ($productPlacements as $productPlacement) {
-                $found = true;
-                $foundTags = $productPlacement->getTags();
-                if (isset($foundTags)) {
-                    foreach ($foundTags as $tag) {
-                        if (!in_array($tag, $tagIds)) {
-                            $found = false;
+                $add         = false;
+                $currentTags = $productPlacement->getTags();
+                if (isset($currentTags)) {
+                    $add             = true;
+                    $currentTagIdMap = array_fill_keys($currentTags, 1);
+                    foreach ($expectedTagIds as $expectedTagId) {
+                        if (!isset($currentTagIdMap[$expectedTagId])) {
+                            $add = false;
                             break;
                         }
                     }
-                } else {
-                    $found = false;
                 }
-
-                if ($found) {
+                if ($add) {
                     $result[] = $productPlacement->toArray();
                 }
             }
         }
         shuffle($result);
+
         return array_slice($result, 0, $amount);
     }
 
     /**
-     * @param array $tags
-     *
      * @return array
      * @throws ORMException
      */
-    private function findOrCreateTags(array $tags) : array {
-        $result = [];
-        $newTag = null;
-        foreach ($tags as $tag) {
-            $tagToFind = $this->repository('tags')->findOneBy(['name' => $tag]);
-            if ($tagToFind === null) {
-                $newTag = new ProductPlacementTag();
-                $newTag->setName($tag);
-                $this->entityManager()->create($newTag);
-            }
-            array_push($result, $this->repository('tags')->findOneBy(['name' => $tag])->getId());
-        }
-
-        return $result;
-    }
-
     public function getAllTags() {
         $result = [];
         /** @var ProductPlacementTag[] $tags */
@@ -78,6 +69,27 @@ class ProductPlacementService extends AbstractDatabaseAccess {
             //$result[$tag->getId()] = ['id' => $tag->getId(), 'name' => $tag->getName()];
             $result[$tag->getId()] = $tag->getName();
             // array_push($result, $tag->toArray());
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param string[] $tags
+     *
+     * @return array
+     * @throws ORMException
+     */
+    private function findOrCreateTags($tags) : array {
+        $result = [];
+        foreach ($tags as $tag) {
+            $entity = $this->repository('tags')->findOneBy(['name' => $tag]);
+            if ($entity === null) {
+                $entity = new ProductPlacementTag();
+                $entity->setName($tag);
+                $this->entityManager()->create($entity);
+            }
+            $result[] = $entity->getId();
         }
 
         return $result;
