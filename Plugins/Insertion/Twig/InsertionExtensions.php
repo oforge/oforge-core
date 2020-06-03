@@ -54,7 +54,8 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
             new Twig_Function('numberToRomanNumeral', [$this, 'numberToRomanNumeral']),
             new Twig_Function('cms_content', [$this, 'cms_content']),
             new Twig_Function('content', [$this, 'cms_content']),
-            new Twig_Function('getUserPages', [$this, 'getUserPages'])
+            new Twig_Function('getUserPages', [$this, 'getUserPages']),
+            new Twig_Function('getUserPageID', [$this, 'getUserPageID'])
         ];
     }
 
@@ -216,12 +217,16 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
         return ['insertions' => $insertions];
     }
 
-    public function getUserPages() {
+    public function getUserPages($userID) {
         /** @var FrontendUserPageBuilderService $userPageService */
         $userPageService = Oforge()->Services()->get("frontend.user.pagebuilder");
-        $userPages            = $userPageService->getAllUserPages();
+        return $userPageService->getAllUserPages($userID);
+    }
 
-        return ['userPages' => $userPages];
+    public function getUserPageID($userID) {
+        /** @var FrontendUserPageBuilderService $userPageService */
+        $userPageService = Oforge()->Services()->get("frontend.user.pagebuilder");
+        return $userPageService->getUserPageID($userID);
     }
 
     public function cms_content(){

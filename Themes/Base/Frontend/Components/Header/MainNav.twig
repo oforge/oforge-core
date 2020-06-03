@@ -1,6 +1,5 @@
 {# block header__main_nav #}
 {% block main_nav %}
-
     {% set navigation = cms_content('main_navigation') %}
 
     <nav class="main-nav{% if navigation.childs is defined and navigation.childs.length > 0 %} main-nav--no-border {% endif %}" data-main-nav="true">
