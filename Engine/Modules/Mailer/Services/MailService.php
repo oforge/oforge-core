@@ -7,7 +7,6 @@ use FrontendUserManagement\Services\UserService;
 use Insertion\Models\Insertion;
 use Insertion\Services\InsertionService;
 use InvalidArgumentException;
-use Monolog\Logger;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
@@ -213,7 +212,13 @@ class MailService {
         }
 
         $twig = new CustomTwig($templatePath, ['cache' =>  ROOT_PATH . DIRECTORY_SEPARATOR . Statics::CACHE_DIR . '/mailer']);
-        // $twig->addExtension(new \Oforge\Engine\Modules\CMS\Twig\AccessExtension()); // TODO OLD CMS reference with TwigExtension file
+        try {
+            Oforge()->Services()->get('cms');
+            $cmsTwigExtension = '\CMS\Twig\CmsTwigExtension';
+            $twig->addExtension(new $cmsTwigExtension());
+        } catch (Exception $exception) {
+            // nothing to do
+        }
         $twig->addExtension(new AccessExtension());
         $twig->addExtension(new MediaExtension());
         $twig->addExtension(new SlimExtension());
