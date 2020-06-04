@@ -4,6 +4,7 @@
         "ext-imagick": "*",
         "ext-curl": "*",
         "ext-mbstring": "*",
+        "ext-json": "*",
         "ext-openssl": "*",
         "ext-xml": "*",
         "slim/slim": "^3.0",
