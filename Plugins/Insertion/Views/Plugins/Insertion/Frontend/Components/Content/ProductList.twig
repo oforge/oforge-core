@@ -9,6 +9,9 @@
         {% endblock product_list__sort %}
         {% block product_list_items %}
             <div class="product-list">
+                <div class="panel panel--product panel--sort flex flex--row flex--center flex--between">
+                    <h3 class="result__text">{{ i18n('insertion_search_results', 'Suchergebnisse') }}</h3>
+                </div>
                 {% for item in search.query.items %}
                     {% include 'Plugins/Insertion/Frontend/Components/Content/ProductPanel.twig' with {item: item } %}
                 {% endfor %}
