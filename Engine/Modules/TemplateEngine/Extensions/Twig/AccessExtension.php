@@ -8,10 +8,10 @@
 
 namespace Oforge\Engine\Modules\TemplateEngine\Extensions\Twig;
 
-use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
+use Oforge\Engine\Modules\Core\Services\KeyValueStoreService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Twig_Environment;
 use Twig_Extension;
@@ -40,6 +40,7 @@ class AccessExtension extends Twig_Extension implements Twig_ExtensionInterface 
             new Twig_Function('twig_exist_function', [$this, 'existTwigFunction'], ['needs_environment' => true]),
             new Twig_Function('twig_call_function_if_exist', [$this, 'callTwigFunctionIfExist'], ['needs_environment' => true]),
             new Twig_Function('config', [$this, 'getConfig'], self::OPTIONS_HTML_SAVE),
+            new Twig_Function('keyValue', [$this, 'getKeyValue'], self::OPTIONS_HTML_SAVE),
             new Twig_Function('i18n', [$this, 'getInternationalization'], self::OPTIONS_HTML_SAVE_WITH_CONTEXT),
             new Twig_Function('i18nExists', [$this, 'getInternationalizationExists'], self::OPTIONS_HTML_SAVE_WITH_CONTEXT),
             new Twig_Function('has_messages', [$this, 'hasMessages']),
@@ -75,7 +76,6 @@ class AccessExtension extends Twig_Extension implements Twig_ExtensionInterface 
      * @return mixed|string
      * @throws ConfigElementNotFoundException
      * @throws ServiceNotFoundException
-     * @throws ORMException
      */
     public function getConfig(...$vars) {
         $result = '';
@@ -87,6 +87,20 @@ class AccessExtension extends Twig_Extension implements Twig_ExtensionInterface 
         }
 
         return $result;
+    }
+
+    /**
+     * @param string $key
+     * @param string|null $default
+     *
+     * @return mixed|string|null
+     * @throws ServiceNotFoundException
+     */
+    public function getKeyValue(string $key, ?string $default = null) {
+        /** @var KeyValueStoreService $keyValueStoreService */
+        $keyValueStoreService = Oforge()->Services()->get('store.keyvalue');
+
+        return $keyValueStoreService->get($key, $default);
     }
 
     /**
