@@ -48,6 +48,14 @@
                             {% endif %}value="150">{{ i18n('zip_range_150', '150 km') }}</option>
                     <option {% if select_compare(search.filter.radius.zip_range, 200) %}selected="selected"
                             {% endif %}value="200">{{ i18n('zip_range_200', '200 km') }}</option>
+                    <option {% if select_compare(search.filter.radius.zip_range, 250) %}selected="selected"
+                            {% endif %}value="250">{{ i18n('zip_range_250', '250 km') }}</option>
+                    <option {% if select_compare(search.filter.radius.zip_range, 300) %}selected="selected"
+                            {% endif %}value="300">{{ i18n('zip_range_300', '300 km') }}</option>
+                    <option {% if select_compare(search.filter.radius.zip_range, 400) %}selected="selected"
+                            {% endif %}value="400">{{ i18n('zip_range_400', '400 km') }}</option>
+                    <option {% if select_compare(search.filter.radius.zip_range, 500) %}selected="selected"
+                            {% endif %}value="500">{{ i18n('zip_range_500', '500 km') }}</option>
                 </select>
             </div>
 
