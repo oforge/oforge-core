@@ -237,12 +237,11 @@ class PluginController extends BaseCrudController {
     /**
      * @param Request $request
      * @param Response $response
-     * @param array $args
      *
      * @return Response|void
-     * @EndpointAction(path="/rebuild/{name}")
+     * @EndpointAction(path="/rebuild")
      */
-    public function rebuildAction(Request $request, Response $response, array $args) {
+    public function rebuildAction(Request $request, Response $response) {
         $twigFlash = Oforge()->View()->Flash();
         try {
             /** @var TemplateManagementService $templateManagementService */
