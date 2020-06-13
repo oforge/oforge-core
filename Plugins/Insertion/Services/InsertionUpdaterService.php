@@ -52,10 +52,11 @@ class InsertionUpdaterService extends AbstractDatabaseAccess {
             $result["insertion_" . $key] = $value;
         }
 
-        $result["price"]      = $insertion->getPrice();
-        $result["price_min"]  = $insertion->getMinPrice();
-        $result["price_type"] = $insertion->getPriceType();
-        $result["tax"]        = $insertion->isTax();
+        $result["price"]       = $insertion->getPrice();
+        $result["price_min"]   = $insertion->getMinPrice();
+        $result["auction_url"] = $insertion->getAuctionUrl();
+        $result["price_type"]  = $insertion->getPriceType();
+        $result["tax"]         = $insertion->isTax();
 
         $result["images"] = [];
         if ($insertion->getMedia() != null) {
@@ -126,6 +127,7 @@ class InsertionUpdaterService extends AbstractDatabaseAccess {
 
         $insertion->setPrice($data["price"]);
         $insertion->setMinPrice($data["min_price"]);
+        $insertion->setAuctionUrl($data["auction_url"]);
         $insertion->setPriceType($data["price_type"]);
         $insertion->setTax($data["tax"]);
 

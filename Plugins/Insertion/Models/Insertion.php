@@ -89,6 +89,12 @@ class Insertion extends AbstractModel
 
     /**
      * @var string
+     * @ORM\Column(name="auction_url", type="string", nullable=true)
+     */
+    private $auctionUrl = null;
+
+    /**
+     * @var string
      * @ORM\Column(name="price_type", type="string")
      */
     private $priceType = "fixed";
@@ -409,7 +415,6 @@ class Insertion extends AbstractModel
     }
 
     /**
-     * @param int $views
      * @return Insertion
      */
     public function countUpViews(): Insertion
@@ -417,4 +422,21 @@ class Insertion extends AbstractModel
         $this->views = $this->views + 1;
         return $this;
     }
+
+    /**
+     * @return string|null
+     */
+    public function getAuctionUrl() : ?string {
+        return $this->auctionUrl;
+    }
+
+    /**
+     * @param string $auctionUrl
+     * @return Insertion
+     */
+    public function setAuctionUrl(string $auctionUrl) : Insertion {
+        $this->auctionUrl = $auctionUrl;
+        return $this;
+    }
+
 }
