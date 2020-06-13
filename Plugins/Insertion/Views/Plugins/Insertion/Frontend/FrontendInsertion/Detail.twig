@@ -48,7 +48,13 @@
                         <div class="product-view--heading">
                             <h3 class="title title--3 title--product">{{ insertion.content[0].title }}</h3>
                             <span
-                                class="title title--3 product-view__price">{{ i18n('price_' ~ insertion.insertionType.name, i18n('price')) }}
+                                class="title title--3 product-view__price">
+                                {% if insertion.priceType is same as('auction') %}
+                                    {{ i18n('price_auction') }}
+                                {% else %}
+                                    {{ i18n('price_' ~ insertion.insertionType.name, i18n('price')) }}
+                                {% endif %}
+
                                 {% if insertion.priceType is same as("on_demand") %}
                                     <span class="attribute-value">{{ i18n('price_on_demand') }}</span>
                                 {% elseif  item.priceType == "price_range" %}
@@ -79,8 +85,13 @@
                         {% endfor %}
 
                         <div class="product__attribute">
-                        <span
-                            class="attribute-label">{{ i18n('price_' ~ insertion.insertionType.name, i18n('price')) }}</span>
+                        <span class="attribute-label">
+                            {% if insertion.priceType is same as('auction') %}
+                                {{ i18n('price_auction') }}
+                            {% else %}
+                                {{ i18n('price_' ~ insertion.insertionType.name, i18n('price')) }}
+                            {% endif %}
+                        </span>
                             {% if insertion.priceType is same as("on_demand") %}
                                 <span class="attribute-value">{{ i18n('price_on_demand') }}</span>
                             {% elseif  insertion.priceType is same as("price_range") %}

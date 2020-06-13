@@ -11,7 +11,13 @@
                  data-content-identifier="insertion-title">{{ content.title }}</h3>
          {% endfor %}
          <span
-             class="title title--3 product-view__price">{{ i18n('price_' ~ insertion.insertionType.name, i18n('price')) }}
+             class="title title--3 product-view__price">
+             {% if insertion.priceType is same as('auction') %}
+                 {{ i18n('price_auction') }}
+             {% else %}
+                {{ i18n('price_' ~ insertion.insertionType.name, i18n('price')) }}
+             {% endif %}
+
              {% if insertion.priceType is same as("on_demand") %}
                  <span class="attribute-value">{{ i18n('price_on_demand') }}</span>
              {% elseif  insertion.priceType is same as("price_range") %}

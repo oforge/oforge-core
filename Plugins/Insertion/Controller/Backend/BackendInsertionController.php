@@ -315,6 +315,7 @@ class BackendInsertionController extends BaseCrudController {
 
         $result['insertion'] = $insertion->toArray(1);
         $result['typeId']    = $insertion->getInsertionType()->getId();
+        $result['type']      = $insertion->getInsertionType()->toArray(1);
         $result['userId']    = $insertion->getUser()->getId();
 
         Oforge()->View()->assign($result);

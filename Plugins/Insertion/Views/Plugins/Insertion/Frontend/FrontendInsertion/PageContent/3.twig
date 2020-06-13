@@ -132,13 +132,18 @@
                         <option
                             value="price_range" {% if data['price_type'] is same as('price_range') %} selected {% endif %}
                             data-placeholder="{{ i18n('to') }}">{{ i18n('price_range') }}</option>
+                        {% if type.name is same as("horse") or type.name is same as("foal") %}
+                            <option
+                                value="auction" {% if data['price_type'] is same as('auction') %} selected {% endif %}
+                                data-placeholder="{{ i18n('price_start', 'Start Preis') }}">{{ i18n('price_type_auction', 'Gebot auf Auktion') }}</option>
+                        {% endif %}
                     </select>
                 </div>
                 <label for="price"
                        class="title title--attribute-group">{{ i18n('price_' ~ type.name, i18n('price')) }}<span
                         class="required">*</span></label>
                 <div class="form__control is-hidden">
-                    <label for="price-min"
+                    <label for="price_min"
                            class="form__input form__input--inside-label">
                         <input type="number"
                                id="price_min"
@@ -152,6 +157,18 @@
                         {{ i18n('unit_price') }}
                     </span>
                         {% endif %}
+                    </label>
+                </div>
+
+                <div class="form__control is-hidden">
+                    <label for="auction_url"
+                           class="form__input form__input--inside-label">
+                        <input type="url"
+                               value="{{ data['auction_url'] }}"
+                               id="auction_url"
+                               pattern="https://.*"
+                               class="form__input"
+                               placeholder="{{ i18n('link_to_auction','Link zur Auktion') }}" />
                     </label>
                 </div>
 
