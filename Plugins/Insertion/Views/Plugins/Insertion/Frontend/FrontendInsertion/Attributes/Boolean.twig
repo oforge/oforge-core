@@ -1,10 +1,9 @@
 <div class="form__control form__control--checkbox form__control__boolean">
     {% if i18nExists('attribute_hint_' ~ attribute.id ) %}
-        {% set content = content(type.name ~ '_' ~ attribute.attributeKey.name ~ '_' ~ meta.language.iso) %}
-
+        {% set cmsContent = cms_content(type.name ~ '_' ~ attribute.attributeKey.name ~ '_' ~ meta.language.iso) %}
         {% include 'Frontend/Components/Insertions/Hint.twig' with {
             hint: i18n('attribute_hint_' ~ attribute.id),
-            content: content
+            hintContent: cmsContent
         } %}
     {% endif %}
     <label for="{{ attribute.name }}"

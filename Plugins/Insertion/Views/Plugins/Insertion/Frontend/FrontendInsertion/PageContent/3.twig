@@ -9,10 +9,10 @@
                     {% set label = i18n('insertion_description_' ~ type.name, '' ) is empty ? i18n('description') :  i18n('insertion_description_' ~ type.name) %}
                     <h3 class="form__sub-title">{{ label }}
                         {% if i18nExists('attribute_hint_description' ) %}
-                            {% set content = content('attribute_hint_description_' ~ type.name ~ '_' ~ meta.language.iso) %}
+                            {% set cmsContent = cms_content('attribute_hint_description_' ~ type.name ~ '_' ~ meta.language.iso) %}
                             {% include 'Frontend/Components/Insertions/Hint.twig' with {
                                 hint: i18n('attribute_hint_description'),
-                                hintContent: content} %}
+                                hintContent: cmsContent} %}
                         {% endif %}
                     </h3>
 

@@ -1,15 +1,25 @@
-{% if hintContent %}
+{% if hintContent is array and hintContent.data.imageID %}
+    {#    hintContent type: Media\Image #}
+    {% set hintContentUrl = media(hintContent.data.imageID) %}
     <span class="hint">i<span class="hint--content">
-                                                       <span
-                class="hint">i</span><a class="link link--insertion-create" data-modal-view="{{ content['url'] }}">{{ hint }}</a></span></span>
-    <div data-modal-content="{{ content['url'] }}"
+       <span class="hint">i</span>
+            <a class="link link--insertion-create" data-modal-view="{{ hintContentUrl }}">
+                {{ hint }}
+            </a>
+        </span>
+    </span>
+    <div data-modal-content="{{ hintContentUrl }}"
          class="modal-view">
         <div class="modal-view__close"
-             data-modal-close="{{ content['url'] }}">✕
+             data-modal-close="{{ hintContentUrl }}">✕
         </div>
         <div class="modal-view__content">
             <picture class="lazy">
-                <img class="lazy" data-src="{{ media(content['url']) }}" alt=""/>
+                <img class="lazy" {{ attr({
+                    'data-src': url(hintContentUrl),
+                    alt: content.data.alt,
+                    title: content.data.title,
+                }) }} />
             </picture>
         </div>
     </div>

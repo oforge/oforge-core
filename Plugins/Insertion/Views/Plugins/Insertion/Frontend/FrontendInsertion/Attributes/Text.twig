@@ -2,10 +2,10 @@
     <label for="insertion[{{ attribute.id }}]"
            class="form__label {{ label_class }}">{{ i18n(attribute.name) }}{% if required %}<span class="required">*</span>{% endif %}
             {% if i18nExists('attribute_hint_' ~ attribute.id ) %}
-                {% set content = content('attribute_hint_' ~ attribute.name ~ '_' ~ meta.language.iso) %}
+                {% set cmsContent = cms_content('attribute_hint_' ~ attribute.name ~ '_' ~ meta.language.iso) %}
                 {% include 'Frontend/Components/Insertions/Hint.twig' with {
                     hint: i18n('attribute_hint_' ~ attribute.id),
-                    hintContent: content} %}
+                    hintContent: cmsContent} %}
             {% endif %}
     </label>
     <input type="text"

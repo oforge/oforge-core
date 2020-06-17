@@ -11,9 +11,9 @@
                 {% endblock login_registration_title %}
 
                 {% block seo_content %}
-                    {% set content = content('login_registration_create_' ~  meta.language.iso) %}
-                    {% if content %}
-                        {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
+                    {% set cmsContent = cms_content('login_registration_create_' ~  meta.language.iso) %}
+                    {% if cmsContent %}
+                        {% include 'CMS/ContentRouter.twig' with {cmsContent: cmsContent} %}
                     {% endif %}
                 {% endblock seo_content %}
 
@@ -46,9 +46,9 @@
                 </div>
 
                 {% block seo_content_after %}
-                    {% set content = content('login_registration_create_' ~  meta.language.iso ~ '_after') %}
-                    {% if content %}
-                        {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
+                    {% set cmsContent = cms_content('login_registration_create_' ~  meta.language.iso ~ '_after') %}
+                    {% if cmsContent %}
+                        {% include 'CMS/ContentRouter.twig' with {cmsContent: cmsContent} %}
                     {% endif %}
                 {% endblock seo_content_after %}
             {% endif %}
