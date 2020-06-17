@@ -742,10 +742,15 @@ class FrontendInsertionController extends SecureFrontendController {
      * @param $args
      *
      * @return Response
-     * @throws ServiceNotFoundException
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws ReflectionException
+     * @throws ServiceNotFoundException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException
+     * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      * @EndpointAction(path="/contact/{id}")
      */
     public function contactAction(Request $request, Response $response, $args) {
@@ -793,7 +798,13 @@ class FrontendInsertionController extends SecureFrontendController {
                 ];
 
                 $conversation = $messengerService->createNewConversation($data);
+
+                /** @var MailService $mailService */
+                $mailService = Oforge()->Services()->get('mail');
+
+                $mailService->sendNewMessageInfoMail($insertion->getUser()->getId(), $conversation->getId());
             }
+
             $uri = $router->pathFor('frontend_account_messages', ['id' => $conversation->getId()]);
 
             return $response->withRedirect($uri, 302);

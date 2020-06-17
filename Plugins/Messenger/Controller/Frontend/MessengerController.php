@@ -86,7 +86,7 @@ class MessengerController extends SecureFrontendController {
 
                 $frontendMessengerService->sendMessage($activeConversation['id'], $user['id'], $message);
 
-                $targetUserId = ($isRequester) ? $activeConversation['requested'] : $targetUserId = $activeConversation['requester'];
+                $targetUserId = ($isRequester) ? $activeConversation['requested'] : $activeConversation['requester'];
 
                 $uri = $router->pathFor('frontend_account_messages') . DIRECTORY_SEPARATOR . $activeConversation['id'];
 
