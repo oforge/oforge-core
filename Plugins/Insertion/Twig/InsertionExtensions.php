@@ -52,10 +52,6 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
             new Twig_Function('getQuickSearch', [$this, 'getQuickSearch']),
             new Twig_Function('getChatPartnerInformation', [$this, 'getChatPartnerInformation']),
             new Twig_Function('numberToRomanNumeral', [$this, 'numberToRomanNumeral']),
-            new Twig_Function('cms_content', [$this, 'cms_content']),
-            new Twig_Function('content', [$this, 'cms_content']),
-            new Twig_Function('getUserPages', [$this, 'getUserPages']),
-            new Twig_Function('getUserPageID', [$this, 'getUserPageID'])
         ];
     }
 
@@ -215,22 +211,6 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
         $insertions             = $insertionSliderService->getRandomInsertions(10);
 
         return ['insertions' => $insertions];
-    }
-
-    public function getUserPages($userID) {
-        /** @var FrontendUserPageBuilderService $userPageService */
-        $userPageService = Oforge()->Services()->get("frontend.user.pagebuilder");
-        return $userPageService->getAllUserPages($userID);
-    }
-
-    public function getUserPageID($userID) {
-        /** @var FrontendUserPageBuilderService $userPageService */
-        $userPageService = Oforge()->Services()->get("frontend.user.pagebuilder");
-        return $userPageService->getUserPageID($userID);
-    }
-
-    public function cms_content(){
-        return null;
     }
 
     /**
