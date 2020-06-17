@@ -2,9 +2,7 @@
 
 namespace Oforge\Engine\Modules\APIRaven\Services;
 
-use Monolog\Formatter\JsonFormatter;
 use Oforge\Engine\Modules\Core\Helper\StringHelper;
-use PhpParser\JsonDecoder;
 use Exception;
 
 /**
@@ -25,8 +23,6 @@ class APIRavenService {
     ];
     protected $apiUrl;
     protected $cURL;
-    protected $jsonDecoder;
-    protected $jsonFormatter;
 
     /**
      * APIRavenService constructor.
@@ -47,9 +43,6 @@ class APIRavenService {
         curl_setopt($this->cURL, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         curl_setopt($this->cURL, CURLOPT_USERPWD, $username . ':' . $apiKey);
         curl_setopt($this->cURL, CURLOPT_HTTPHEADER, ['Content-Type: application/json; charset=utf-8']);
-
-        $this->jsonDecoder   = new JsonDecoder();
-        $this->jsonFormatter = new JsonFormatter();
     }
 
     /**
@@ -85,13 +78,13 @@ class APIRavenService {
         if (!StringHelper::startsWith($url, "http")) {
             $url = $this->apiUrl . $url . $queryString;
         }
-        $dataString = $this->jsonFormatter->format($data);
+        $dataString = json_encode($data);
         curl_setopt($this->cURL, CURLOPT_URL, $url);
         curl_setopt($this->cURL, CURLOPT_CUSTOMREQUEST, $method);
         curl_setopt($this->cURL, CURLOPT_POSTFIELDS, $dataString);
 
         $result = curl_exec($this->cURL);
-        return $this->jsonDecoder->decode($result);
+        return json_decode($result, true);
     }
 
     public function get($url, $params = []) {

@@ -119,6 +119,7 @@ class PluginController extends BaseCrudController {
             'deactivateAction',
             'deleteAction',
             'installAction',
+            'installActivateAction',
             'uninstallAction',
             'reactivateAction',
             'rebuildAction',
@@ -207,6 +208,22 @@ class PluginController extends BaseCrudController {
      * @param array $args
      *
      * @return Response|void
+     * @EndpointAction(path="/install_activate/{name}", name="install_activate")
+     */
+    public function installActivateAction(Request $request, Response $response, array $args) {
+        if ($this->handleInstall($args)) {
+            $this->handleActivate($args);
+        }
+
+        return RouteHelper::redirect($response, 'backend_plugins', [], $request->getQueryParams());
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     *
+     * @return Response|void
      * @EndpointAction(path="/reactivate/{name}")
      */
     public function reactivateAction(Request $request, Response $response, array $args) {
@@ -220,17 +237,16 @@ class PluginController extends BaseCrudController {
     /**
      * @param Request $request
      * @param Response $response
-     * @param array $args
      *
      * @return Response|void
-     * @EndpointAction(path="/rebuild/{name}")
+     * @EndpointAction(path="/rebuild")
      */
-    public function rebuildAction(Request $request, Response $response, array $args) {
+    public function rebuildAction(Request $request, Response $response) {
         $twigFlash = Oforge()->View()->Flash();
         try {
             /** @var TemplateManagementService $templateManagementService */
             $templateManagementService = Oforge()->Services()->get('template.management');
-            $templateManagementService->build();
+            $templateManagementService->buildAll();
             $twigFlash->addMessage('success', I18N::translate('crud_plugin_msg_rebuild_template_success', 'The template successfully rebuilt.'));
         } catch (TemplateNotFoundException | InvalidScssVariableException $exception) {
             Oforge()->Logger()->logException($exception);

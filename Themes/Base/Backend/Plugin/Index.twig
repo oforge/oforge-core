@@ -7,4 +7,8 @@
         &nbsp;
         {{ i18n('backend_crud_plugin_action_add', {en: 'add plugin', de: 'Plugin hinzufügen'}) }}
     </a>
+    <a class="btn btn-default" href="{{ url('backend_plugins_rebuild', {}, meta.route.query|default({})) }}"
+       title="{{ i18n('backend_crud_plugin_action_rebuild', {en: 'rebuild view', de: 'Ansicht neu erstellen'}) }}">
+        {{ i18n('backend_crud_plugin_action_rebuild', {en: 'rebuild view', de: 'Ansicht neu erstellen'}) }}
+    </a>
 {% endblock crud_actions_group_items %}

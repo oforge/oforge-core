@@ -6,8 +6,8 @@
             </span>
             <span class="form__label form__label--title" style="font-size: 1.4rem">
                 {% if i18nExists('attribute_hint_image_upload' ) %}
-                    {% set content = content('attribute_hint_description_' ~ type.name ~ '_' ~ meta.language.iso) %}
-                    {% include 'Frontend/Components/Insertions/Hint.twig' with {
+                    {% set cmsContent = twig_call_function_if_exist('cms_content', 'attribute_hint_description_' ~ type.name ~ '_' ~ meta.language.iso) %}
+                    {% include 'Frontend/Components/Insertions/Hint.twig' ignore missing with {
                         hint: i18n('attribute_hint_image_upload'),
                         hintContent: content} %}
                 {% endif %}

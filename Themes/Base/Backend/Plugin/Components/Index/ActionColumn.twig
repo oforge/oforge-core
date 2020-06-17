@@ -13,8 +13,6 @@
     <ul class="dropdown-menu">
         {% if item.installed %}
             {% if item.active %}
-                <li>{% include 'Backend/Plugin/Components/Index/Action/Rebuild.twig' %}</li>
-                <li role="separator" class="divider"></li>
                 <li>{% include 'Backend/Plugin/Components/Index/Action/Reactivate.twig' %}</li>
             {% endif %}
             <li>{% include 'Backend/Plugin/Components/Index/Action/Reinstall.twig' %}</li>
@@ -22,6 +20,7 @@
             <li role="separator" class="divider"></li>
             <li>{% include 'Backend/Plugin/Components/Index/Action/Uninstall.twig' %}</li>
         {% else %}
+            <li>{% include 'Backend/Plugin/Components/Index/Action/InstallActivate.twig' %}</li>
             <li>{% include 'Backend/Plugin/Components/Index/Action/Delete.twig' %}</li>
         {% endif %}
     </ul>

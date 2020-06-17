@@ -7,18 +7,15 @@
                 {% for attributeGroup in attributes %}
                     {% if attributeGroup.items|length > 0 and attributeGroup.name == 'main' %}
                         {% for attribute in attributeGroup.items %}
-                            {% set content = content('html_' ~ type.name ~ '_' ~ attribute.attributeKey.name ~ '_' ~ meta.language.iso) %}
-
-                            {% if content %}
-                                {% set hasContent = true %}
-                            {% endif %}
+                            {% set cmsContent = cms_content('html_' ~ type.name ~ '_' ~ attribute.attributeKey.name ~ '_' ~ meta.language.iso) %}
+                            {% set hasContent = cmsContent is defined and cmsContent != null %}
 
                             <div class="form__control form__control--s {{ hasContent ? 'form__control--s-left' : '' }}">
                                 {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': attribute.required, 'label_class': 'form__label--title' } %}
                             </div>
 
-                            {% if content %}
-                                {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
+                            {% if cmsContent %}
+                                {% include 'CMS/ContentRouter.twig' with {cmsContent: cmsContent} %}
                             {% endif %}
                         {% endfor %}
                     {% endif %}
@@ -43,22 +40,23 @@
                     <h3 class="form__label form__label--title">{{ i18n('images_and_videos', 'Fotos und Videos') }}</h3>
                     {% block modal__view %}
                         {# Only load selector if content is available, otherwise we will produce js type error (see modal-view.js) #}
-                        {% set content_320 = content('insertion_create_image_tipps_320') %}
-                        {% set content_640 = content('insertion_create_image_tipps_640') %}
+                        {% set content_320 = cms_content('insertion_create_image_tipps_320') %}
+                        {% set content_640 = cms_content('insertion_create_image_tipps_640') %}
 
-                        {% if content_320 and content_640 %}
+                        {% if content_320.data.imageID and content_640.data.imageID %}
+                            {% set content320Url = media(content_320.data.imageID) %}
+                            {% set content640Url = media(content_640.data.imageID) %}
                             <a class="link link--insertion-create"
-                               data-modal-view="{{ content_320['url'] }}">{{ i18n('image_upload_tips', 'Tipps für das Hochladen von Fotos') }}</a>
-
-                            <div data-modal-content="{{ content_320['url'] }}"
+                               data-modal-view="{{ content320Url }}">{{ i18n('image_upload_tips', 'Tipps für das Hochladen von Fotos') }}</a>
+                            <div data-modal-content="{{ content320Url }}"
                                  class="modal-view">
                                 <div class="modal-view__close"
-                                     data-modal-close="{{ content_320['url'] }}">✕
+                                     data-modal-close="{{ content320Url }}">✕
                                 </div>
                                 <div class="modal-view__content">
                                     <picture class="lazy">
-                                        <source class="lazy" data-srcset="{{ media(content_640['url']) }}" media="(min-width: 640px)" />
-                                        <img class="lazy" data-src="{{ media(content_320['url']) }}" alt="{{ i18n('image_upload_tips') }}" />
+                                        <source class="lazy" data-srcset="{{ media(content640Url) }}" media="(min-width: 640px)" />
+                                        <img class="lazy" data-src="{{ media(content320Url) }}" alt="{{ i18n('image_upload_tips') }}" />
                                     </picture>
                                 </div>
                             </div>

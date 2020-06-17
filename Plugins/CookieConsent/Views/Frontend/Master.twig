@@ -2,10 +2,10 @@
 {% block cookie__consent %}
     <div id="cookie__consent">
         <div class="cookie__msg">
-            {% set content = content('cookie_consent_msg_' ~ meta.language.iso) %}
-            {% if content %}
+            {% set cmsContent = cms_content('cookie_consent_msg_' ~ meta.language.iso) %}
+            {% if cmsContent %}
                 <div class="content">
-                    {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
+                    {% include 'CMS/ContentRouter.twig' with {cmsContent: cmsContent} %}
                 </div>
             {% endif %}
         </div>

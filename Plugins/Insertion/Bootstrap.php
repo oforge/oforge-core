@@ -123,7 +123,9 @@ class Bootstrap extends AbstractBootstrap {
         ];
 
         $this->dependencies = [
+            \CMS\Bootstrap::class,
             \FrontendUserManagement\Bootstrap::class,
+            \ImageUpload\Bootstrap::class,
             \Messenger\Bootstrap::class,
             \Helpdesk\Bootstrap::class,
             \VideoUpload\Bootstrap::class,
