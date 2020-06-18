@@ -37,9 +37,21 @@
 
                 {% block attributes__top %}
                     <div class="product__attributes product__attributes--top">
-                        {% for topvalue in item.topvalues|slice(0,3) %}
+                        {% set topvalues = item.topvalues|slice(0,3) %}
+
+                        {% for topvalue in topvalues %}
                             {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
                         {% endfor %}
+
+                        {% if topvalues|length < 3 %}
+                            <div class="product__attribute attribute--single">
+                                <span class="product__label">PLZ/Ort</span>
+                                <span class="product__value">
+                                     <span class="main--value">{{ item.contact.zip }} - {{ item.contact.city }}</span>
+                                </span>
+                            </div>
+                        {% endif %}
+
                     </div>
                 {% endblock attributes__top %}
 

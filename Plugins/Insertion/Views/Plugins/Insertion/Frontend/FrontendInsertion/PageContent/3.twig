@@ -67,6 +67,7 @@
                     <div class="column column--two-third">
                         <input type="text"
                                name="contact_city"
+                               required
                                class="form__input form-control"
                                value="{% if data['contact_city'] %}{{ data['contact_city'] }}{% elseif lastContact.city %}{{ lastContact.city }}{% endif %}"
                                placeholder="{{ i18n('city') }}"/>
