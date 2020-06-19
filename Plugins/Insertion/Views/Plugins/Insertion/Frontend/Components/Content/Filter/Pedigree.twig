@@ -6,9 +6,13 @@
             {{ i18n(f) }}
         {% set unit = i18n('unit_' ~  attribute.name, '') %}
         <span class="tag__text">
-            {% set first = true %}
-            {% for value in value %}
-                {% if first == false %}{{ i18n('and') }} {% endif %}{% set first = false %}{{ value }}{% endfor %}
+            {% for val in value %}
+                {% if loop.first == false %}
+                    {{ i18n('and') }}
+                {% endif %}
+                {{ val }}
+
+            {% endfor %}
         </span>
 </span>
 </div>

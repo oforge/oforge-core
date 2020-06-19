@@ -321,6 +321,17 @@ class InsertionListService extends AbstractDatabaseAccess {
             $result['items'][] = $insertionId;
         }
         /**
+         * Remove numeric index from Pedigree array
+         */
+        if(isset($result['filter']['Pedigree'])) {
+            foreach ($result['filter']['Pedigree'] as $key => $value) {
+                if(is_numeric($key)) {
+                    unset($result['filter']['Pedigree'][$key]);
+                }
+            }
+        }
+
+        /**
          * If no filter is set, use the ids
          */
         $items = $result['items'];
