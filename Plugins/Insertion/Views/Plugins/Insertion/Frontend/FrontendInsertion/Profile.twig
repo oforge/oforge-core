@@ -13,45 +13,50 @@
                      {% if profile.user.detail.image is not empty %}style="background-image: url('{{ media(profile.user.detail.image, 300) }}');"{% endif %}></div>
             </div>
 
-            <div class="contact--links flex">
-                <div class="contact--icons">
-                    {% if profile.imprintEmail is not empty %}
-                        <a class="contact--icon" href="mailto:{{ profile.imprintEmail }}">
-                            <div class="wrapper">
-                                <svg class="icon icon--secondary mail pulse-on-hover">
-                                    <use xlink:href="#email"></use>
-                                </svg>
-                            </div>
-                        </a>
-                    {% endif %}
-                    {% if profile.imprintPhone is not empty %}
-                        <a class="contact--icon center" href="tel:{{ profile.imprintPhone }}">
-                            <div class="wrapper">
-                                <svg class="icon icon--secondary telephone   pulse-on-hover">
-                                    <use xlink:href="#telephone"></use>
-                                </svg>
-                            </div>
-                        </a>
-                    {% endif %}
-                    {% if profile.imprintFacebook is not empty %}
-                        <a class="contact--icon"
-                           href="{{ i18n('facebook_base_url', 'https://www.facebook.com/') }}{{ profile.imprintFacebook }}"
-                           target="_blank">
-                            <div class="wrapper">
-                                <svg class="icon icon--secondary  pulse-on-hover">
-                                    <use xlink:href="#facebook"></use>
-                                </svg>
-                            </div>
-                        </a>
-                    {% endif %}
-                </div>
+            <div class="content--header">
+                {% block content_header %}
+                    <div class="contact--links flex">
+                        <div class="contact--icons">
+                            {% if profile.imprintEmail is not empty %}
+                                <a class="contact--icon" href="mailto:{{ profile.imprintEmail }}">
+                                    <div class="wrapper">
+                                        <svg class="icon icon--secondary mail pulse-on-hover">
+                                            <use xlink:href="#email"></use>
+                                        </svg>
+                                    </div>
+                                </a>
+                            {% endif %}
+                            {% if profile.imprintPhone is not empty %}
+                                <a class="contact--icon center" href="tel:{{ profile.imprintPhone }}">
+                                    <div class="wrapper">
+                                        <svg class="icon icon--secondary telephone   pulse-on-hover">
+                                            <use xlink:href="#telephone"></use>
+                                        </svg>
+                                    </div>
+                                </a>
+                            {% endif %}
+                            {% if profile.imprintFacebook is not empty %}
+                                <a class="contact--icon"
+                                   href="{{ i18n('facebook_base_url', 'https://www.facebook.com/') }}{{ profile.imprintFacebook }}"
+                                   target="_blank">
+                                    <div class="wrapper">
+                                        <svg class="icon icon--secondary  pulse-on-hover">
+                                            <use xlink:href="#facebook"></use>
+                                        </svg>
+                                    </div>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endblock content_header %}
             </div>
 
             <div class="panel panel--supplier-description description">
                 {% block profile_description %}
                     {% block profile_description_edit_button %}
                         {% if profile and current_user and profile.user.id == current_user.id %}
-                            <a href="{%- block profile_description_edit_button_url url('frontend_account_insertions_profile') -%}" title="{{ i18n('account_profile_edit', {en: 'edit', de: 'bearbeiten'}) }}">
+                            <a href="{%- block profile_description_edit_button_url url('frontend_account_insertions_profile') -%}"
+                               title="{{ i18n('account_profile_edit', {en: 'edit', de: 'bearbeiten'}) }}">
                         <span class="panel-edit-button">
                             <svg class="icon icon--secondary"><use xlink:href="#edit"></use></svg>
                         </span>
