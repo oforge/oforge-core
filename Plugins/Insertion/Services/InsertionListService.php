@@ -367,18 +367,19 @@ class InsertionListService extends AbstractDatabaseAccess {
 
         foreach ($insertions as $item) {
             $data = [
-                "id"        => $item->getId(),
-                "contact"   => $item->getContact() != null ? $item->getContact()->toArray(0) : [],
-                "content"   => [],
-                "media"     => [],
-                "values"    => [],
-                "topvalues" => [],
-                "price"     => $item->getPrice(),
-                "minPrice"  => $item->getMinPrice(),
-                "priceType" => $item->getPriceType(),
-                "tax"       => $item->isTax(),
-                "user"      => $item->getUser()->getId(),
-                "createdAt" => $item->getCreatedAt(),
+                "id"            => $item->getId(),
+                "contact"       => $item->getContact() != null ? $item->getContact()->toArray(0) : [],
+                "content"       => [],
+                "media"         => [],
+                "values"        => [],
+                "topvalues"     => [],
+                "price"         => $item->getPrice(),
+                "minPrice"      => $item->getMinPrice(),
+                "priceType"     => $item->getPriceType(),
+                "tax"           => $item->isTax(),
+                "user"          => $item->getUser()->getId(),
+                "createdAt"     => $item->getCreatedAt(),
+                "insertionType" => $item->getInsertionType()->toArray(0),
             ];
 
             foreach ($item->getContent() as $content) {

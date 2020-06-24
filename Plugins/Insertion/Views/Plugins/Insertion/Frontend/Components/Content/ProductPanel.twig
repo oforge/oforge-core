@@ -31,7 +31,25 @@
             <div class="product__content">
                 {% block content__title %}
                     <a class="product__title-link" href="{{ url("insertions_detail", {id: item.id}) }}">
-                        <h3 class="product__title">{{ item.content[0].title }}</h3>
+                        <h3 class="product__title">
+                            {% if item.insertionType.name is same as('foal') %}
+                                {% set father = '' %}
+                                {% set mother = '' %}
+                                {% for value in item.values %}
+                                    {% if value.attributeKey is same as(26) %}
+                                        {% set father = value.value %}
+                                    {% elseif value.attributeKey is same as(27) %}
+                                        {% set mother = value.value %}
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if father and mother %}
+                                    {{ father }} x {{ mother }} -
+                                {% endif %}
+
+                            {% endif %}
+                            {{ item.content[0].title }}
+                        </h3>
                     </a>
                 {% endblock content__title %}
 
