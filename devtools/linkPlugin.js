@@ -7,7 +7,6 @@ if (process.argv.length < 3) {
     const path = require('path');
     const dst = './Plugins';
     const srcPath = process.argv[2];
-    console.log(process.argv);
     if (fs.existsSync(dst)) {
         if (process.argv.length === 3) {
             lnk(srcPath, dst)
