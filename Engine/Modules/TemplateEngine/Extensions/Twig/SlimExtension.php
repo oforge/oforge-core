@@ -26,6 +26,8 @@ class SlimExtension extends Twig_Extension {
         'is_safe'       => ['html'],
         'needs_context' => true,
     ];
+    /** @var array $footerIncludes */
+    private $footerIncludes = [];
 
     /** @inheritDoc */
     public function getFilters() {
@@ -54,6 +56,8 @@ class SlimExtension extends Twig_Extension {
             new Twig_Function('select_compare', [$this, 'functionSelectCompare'], self::OPTIONS_HTML_SAVE),
             new Twig_Function('style', [$this, 'functionStyle'], self::OPTIONS_HTML_SAVE),
             new Twig_Function('url', [$this, 'functionUrl'], self::OPTIONS_HTML_SAVE),
+            new Twig_Function('addToFooter', [$this, 'functionAddToFooter'], self::OPTIONS_HTML_SAVE),
+            new Twig_Function('includeInFooter', [$this, 'functionIncludeInFooter'], self::OPTIONS_HTML_SAVE),
         ];
     }
 
@@ -170,6 +174,22 @@ class SlimExtension extends Twig_Extension {
      */
     public function functionDotSet(array &$context, $keyOrArray, $value = null) : void {
         $context = $this->filterDotSet($context, $keyOrArray, $value);
+    }
+
+    /**
+     * @param string $context
+     */
+    public function functionAddToFooter(string $context) {
+        $this->footerIncludes[$context] = true;
+    }
+
+    /**
+     * @param string $context
+     *
+     * @return bool
+     */
+    public function functionIncludeInFooter(string $context):bool {
+        return ($this->footerIncludes[$context] ?? false);
     }
 
     /**
