@@ -168,14 +168,15 @@ class PluginStateService extends AbstractDatabaseAccess {
 
     /**
      * @param string $pluginName
+     * @param bool $keepData
      *
-     * @throws PluginNotFoundException
-     * @throws PluginNotInstalledException
-     * @throws PluginNotActivatedException
      * @throws CouldNotDeactivatePluginException
      * @throws InvalidClassException
      * @throws ORMException
      * @throws OptimisticLockException
+     * @throws PluginNotActivatedException
+     * @throws PluginNotFoundException
+     * @throws PluginNotInstalledException
      * @throws ServiceNotFoundException
      */
     public function uninstall(string $pluginName, bool $keepData) {
@@ -205,7 +206,7 @@ class PluginStateService extends AbstractDatabaseAccess {
         $middlewaresService->uninstall($instance->getMiddlewares());
 
         if (isset($instance)) {
-            $instance->uninstall();
+            $instance->uninstall($keepData);
         }
 
         $plugin->setInstalled(false);
