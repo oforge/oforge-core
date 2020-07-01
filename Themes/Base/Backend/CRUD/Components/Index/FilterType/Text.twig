@@ -1,2 +1,19 @@
-<input title="{{ crudFilterTitle }}" placeholder="{{ crudFilterTitle }}" name="{{ crudPropertyName }}"
-       type="text" class="form-control" value="{{ meta.route.query[crudPropertyName]|default() }}" />
+{% if crudFilterConfig.list %}
+    {% set crudFilterDatalistID = 'crud_filter_' ~ crudPropertyName %}
+    <datalist id="{{ crudFilterDatalistID }}">
+        {% for value,label in crudFilterConfig.list %}
+            {% if label.options is defined %}
+                <script>console.log('Filter: Only simple list is supported: {{ crudPropertyName }}')</script>
+            {% else %}
+                <option value="{{ value }}">{{ label }}</option>
+            {% endif %}
+        {% endfor %}
+    </datalist>
+{% endif %}
+<input type="text" class="form-control" {{ attr({
+    title: crudFilterTitle,
+    placeholder: crudFilterTitle,
+    name: crudPropertyName,
+    list: crudFilterDatalistID|default(null),
+    value: meta.route.query[crudPropertyName]|default(null)
+}) }} />

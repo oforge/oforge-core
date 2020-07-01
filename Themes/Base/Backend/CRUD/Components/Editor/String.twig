@@ -1,7 +1,7 @@
 {% include 'Backend/CRUD/Components/Editor/Input.twig' with {
     crudFieldEditor: {
         type: 'text',
-        pattern: crudProperty.editor.pattern|default(''),
-        maxlength: crudProperty.editor.maxlength|default(''),
+        pattern: crudProperty.editor.pattern|default(null),
+        maxlength: crudProperty.editor.maxlength|default(null),
     }
 } %}
