@@ -6,6 +6,10 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Models\Module\Module;
 use Oforge\Engine\Modules\Core\Models\Plugin\Plugin;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
+use Oforge\Engine\Modules\Cronjob\Commands\CronJobForcedRunnerCommand;
+use Oforge\Engine\Modules\Cronjob\Commands\CronJobRunnerCommand;
+use Oforge\Engine\Modules\Cronjob\Commands\PingCommand;
+use Oforge\Engine\Modules\Cronjob\Cronjobs\CronjobPing;
 use Oforge\Engine\Modules\Cronjob\Cronjobs\LogCleanupCronjob;
 use Oforge\Engine\Modules\Cronjob\Cronjobs\ProcessAsyncEventsCronjob;
 use Oforge\Engine\Modules\Cronjob\Models\AbstractCronjob;
@@ -24,6 +28,7 @@ class Bootstrap extends AbstractBootstrap {
     public function __construct() {
         $this->cronjobs     = [
             LogCleanupCronjob::class,
+            CronjobPing::class,
             ProcessAsyncEventsCronjob::class,
         ];
         $this->dependencies = [
@@ -34,6 +39,11 @@ class Bootstrap extends AbstractBootstrap {
         ];
         $this->services     = [
             'cronjob' => CronjobService::class,
+        ];
+        $this->commands     = [
+            PingCommand::class,
+            CronJobRunnerCommand::class,
+            CronJobForcedRunnerCommand::class,
         ];
     }
 
@@ -95,8 +105,25 @@ class Bootstrap extends AbstractBootstrap {
             'value'    => 14,
             'required' => true,
             'default'  => 14,
-            'group'    => 'system'
+            'group'    => 'system',
+        ]);
+
+        $configService->add([
+            'name'     => 'cronjob_ping_email',
+            'label'     => 'cronjob_ping_email',
+            'type'     => 'string',
+            'required' => true,
+            'default' => '',
+            'group'    => 'system',
+        ]);
+
+        $configService->add([
+            'name'     => 'cronjob_ping_text',
+            'label'     => 'cronjob_ping_text',
+            'type'     => 'string',
+            'required' => true,
+            'default'  => "I'm alive",
+            'group'    => 'system',
         ]);
     }
-
 }

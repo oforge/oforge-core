@@ -33,7 +33,7 @@ class InsertionFormsService extends AbstractDatabaseAccess {
         ]);
     }
 
-    public function processPostData($sessionKey) : ?array {
+    public function processPostData($sessionKey, $hasMoreImages = false) : ?array {
         $prefix = null;
         if (!isset($_SESSION['insertion' . $sessionKey])) {
             $_SESSION['insertion' . $sessionKey]              = [];
@@ -88,16 +88,19 @@ class InsertionFormsService extends AbstractDatabaseAccess {
             unset($_POST["images"]);
         }
 
+
         $_SESSION['insertion' . $sessionKey]              = ArrayHelper::mergeRecursive($_SESSION['insertion' . $sessionKey], $_POST, true);
         $_SESSION['insertion' . $sessionKey]["insertion"] = $insertion;
 
-        $mainIndex = 0;
+        $mainIndex = $hasMoreImages ? -1 : 0;
 
         foreach ($_SESSION['insertion' . $sessionKey]["images"] as $index => $image) {
             if (isset($_SESSION['insertion' . $sessionKey]["images"][$index]["main"]) && $_SESSION['insertion' . $sessionKey]["images"][$index]["main"] == true) {
                 $mainIndex = -1;
             }
         }
+
+        print_r($mainIndex);
 
         if (isset($_POST['images_interactions'])) {
             $imgs = [];
@@ -146,7 +149,7 @@ class InsertionFormsService extends AbstractDatabaseAccess {
     }
 
     public function getProcessedData($sessionKey) {
-        return $_SESSION['insertion' . $sessionKey];
+        return isset($_SESSION['insertion' . $sessionKey]) ? $_SESSION['insertion' . $sessionKey] : [];
     }
 
     public function setProcessedData($sessionKey, $data) {
@@ -174,6 +177,7 @@ class InsertionFormsService extends AbstractDatabaseAccess {
             "attributes"          => [],
             "price"               => isset($pageData["price"]) ? $pageData["price"] : 0,
             "min_price"           => isset($pageData["price_min"]) ? $pageData["price_min"] : null,
+            "auction_url"         => isset($pageData["auction_url"]) ? $pageData["auction_url"] : null,
             "price_type"          => $pageData["price_type"],
             "tax"                 => isset($pageData["tax"]) ? $pageData["tax"] == "on" : 0,
             'images_interactions' => $pageData["images_interactions"],
@@ -203,6 +207,8 @@ class InsertionFormsService extends AbstractDatabaseAccess {
                 array_push($data["media"], ["name" => $image["name"], "content" => $media, "main" => $image["main"]]);
             }
         }
+
+
 
         if (isset($pageData["insertion"])) {
             foreach ($pageData["insertion"] as $key => $value) {

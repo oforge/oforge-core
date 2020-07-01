@@ -74,6 +74,7 @@ class InsertionCreatorService extends AbstractDatabaseAccess
             $insertion->setValues($attributeValues);
             $insertion->setTax($data["tax"]);
             $insertion->setMinPrice($data["min_price"]);
+            $insertion->setAuctionUrl($data["auction_url"]);
             $insertion->setPriceType($data["price_type"]);
 
             $this->entityManager()->create($content, false);

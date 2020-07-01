@@ -8,7 +8,7 @@
         {% set isEmpty = true %}
 
         {% for attributeValue in attributeValues.values %}
-            {% if values[all_attributes[attributeValue.subAttributeKey.id].id] is not empty %}
+            {% if values[[attributeValue.subAttributeKey.id].id] is not empty %}
                 {% set isEmpty = false %}
             {% endif %}
         {% endfor %}

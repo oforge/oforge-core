@@ -14,6 +14,7 @@ use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\PasswordResetService;
 use FrontendUserManagement\Services\RegistrationService;
 use Interop\Container\Exception\ContainerException;
+use Oforge\Engine\Modules\Auth\Enums\InvalidPasswordFormatException;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Auth\Services\PasswordService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
@@ -117,8 +118,8 @@ class ForgotPasswordController extends AbstractController {
         /** @var User $user */
         $user = $registrationService->getUser($email);
 
-        $userDetail          = $user->getDetail();
-        $userNickName        = $userDetail->getNickName();
+        $userDetail   = $user->getDetail();
+        $userNickName = $userDetail->getNickName();
 
         $mailService = Oforge()->Services()->get('mail');
 
@@ -137,7 +138,7 @@ class ForgotPasswordController extends AbstractController {
         /**
          * Mail could not be sent
          */
-        if(!$mailService->send($mailOptions, $templateData)) {
+        if (!$mailService->send($mailOptions, $templateData)) {
             Oforge()->View()->Flash()->addMessage('error', I18N::translate('password_reset_mail_error', 'The mail to reset your password could not be sent'));
             Oforge()->View()->Flash()->addMessage('error', I18N::translate('password_reset_mail_error', [
                 'en' => 'The mail to reset your password could not be sent.',
@@ -258,9 +259,14 @@ class ForgotPasswordController extends AbstractController {
 
             return $response->withRedirect($uri, 302);
         }
+        try {
+            $password = $passwordService->validateFormat($password)->hash($password);
+        } catch (InvalidPasswordFormatException $exception) {
+            Oforge()->View()->Flash()->addMessage('error', $exception->getMessage());
 
-        $password = $passwordService->hash($password);
-        $user     = $passwordResetService->changePassword($guid, $password);
+            return $response->withRedirect($uri, 302);
+        }
+        $user = $passwordResetService->changePassword($guid, $password);
 
         /*
          * User not found

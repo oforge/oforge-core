@@ -15,6 +15,7 @@
             </div>
             <div class="separator"></div>
             <h3 class="form__title">{{ i18n('Insert your login data:') }}</h3>
+            {% block login_registration__forms %}
             <div class="tab__content tab__content--visible" data-tab-content="login">
                 {% include 'Plugins/FrontendUserManagement/Frontend/Components/Forms/LoginForm.twig' %}
             </div>
@@ -22,6 +23,7 @@
             <div class="tab__content" data-tab-content="registration">
                 {% include 'Plugins/FrontendUserManagement/Frontend/Components/Forms/RegistrationForm.twig' %}
             </div>
+           {% endblock login_registration__forms %}
         </div>
         {% block login_registration__registration_benefits %}
             <div class="panel__column panel__column--border">

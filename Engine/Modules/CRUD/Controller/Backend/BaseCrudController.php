@@ -483,6 +483,7 @@ class BaseCrudController extends SecureBackendController {
      * @param string $crudAction
      *
      * @return array
+     * @throws Exception
      */
     protected function convertData(array $data, string $crudAction) : array {
         return $data;
@@ -533,11 +534,11 @@ class BaseCrudController extends SecureBackendController {
     protected function handleIndexUpdate(array $postData) {
         $list = $postData['data'];
         $this->handleFileUploads($list, 'index');
-        foreach ($list as $entityID => $data) {
-            $list[$entityID] = $this->convertData($data, 'update');
-        }
-        $postData['data'] = $list;
         try {
+            foreach ($list as $entityID => $data) {
+                $list[$entityID] = $this->convertData($data, 'update');
+            }
+            $postData['data'] = $list;
             $this->crudService->update($this->model, $postData);
             Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_bulk_update_success', [
                 'en' => 'Entities successfully bulk updated.',
@@ -603,7 +604,7 @@ class BaseCrudController extends SecureBackendController {
      * @return Response
      */
     protected function redirect(Response $response, string $crudAction, array $urlParams = [], array $queryParams = []) {
-        $routeName  = Oforge()->View()->get('meta')['route']['parentName'];
+        $routeName = Oforge()->View()->get('meta')['route']['parentName'];
         if ($crudAction !== 'index') {
             $routeName .= '_' . $crudAction;
         }

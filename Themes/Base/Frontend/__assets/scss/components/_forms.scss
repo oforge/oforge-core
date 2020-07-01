@@ -219,6 +219,9 @@
     &[type='number'] {
         text-align: right;
         /* direction: rtl; */
+		&::-moz-placeholder {
+			text-align: left;
+		}
     }
 
     &.form__input--inside-label {

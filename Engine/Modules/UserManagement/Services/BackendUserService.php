@@ -3,6 +3,7 @@
 namespace Oforge\Engine\Modules\UserManagement\Services;
 
 use Exception;
+use Oforge\Engine\Modules\Auth\Enums\InvalidPasswordFormatException;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Auth\Services\PasswordService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
@@ -45,6 +46,12 @@ class BackendUserService extends AbstractDatabaseAccess {
             } catch (Exception $exception) {
                 Oforge()->Logger()->logException($exception);
                 throw $exception;
+            }
+        } else {
+            try {
+                $passwordService->validateFormat($password);
+            } catch (InvalidPasswordFormatException $exception) {
+                return 'Password format is not valid: ' . $exception->getMessage();
             }
         }
         $passwordHash = $passwordService->hash($password);

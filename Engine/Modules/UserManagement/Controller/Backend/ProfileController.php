@@ -11,6 +11,7 @@ namespace Oforge\Engine\Modules\UserManagement\Controller\Backend;
 use Exception;
 use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\DashboardWidgetsService;
+use Oforge\Engine\Modules\Auth\Enums\InvalidPasswordFormatException;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
@@ -101,8 +102,10 @@ class ProfileController extends SecureBackendController {
                     'en' => 'Login data successfully updated',
                     'de' => 'Anmeldedaten erfolgreich aktualisiert',
                 ]));
+            } catch (InvalidPasswordFormatException $exception) {
+                Oforge()->View()->Flash()->addMessage('error', $exception->getMessage());
             } catch (Exception $exception) {
-                Oforge()->View()->Flash()->addMessage('success', I18N::translate('profile_login_data_update_fail', [
+                Oforge()->View()->Flash()->addMessage('error', I18N::translate('profile_login_data_update_fail', [
                     'en' => 'Could not update login data',
                     'de' => 'Anmeldedaten konnten nicht aktualisiert werden',
                 ]));

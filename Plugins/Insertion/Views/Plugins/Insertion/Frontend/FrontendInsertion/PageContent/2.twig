@@ -2,7 +2,7 @@
     {# Main attributes #}
     <div class="form-controls">
         {% for attributeGroup in attributes %}
-            {% if attributeGroup.items|length > 0 and not  (attributeGroup.name == 'main' or attributeGroup.name == 'contact') %}
+            {% if attributeGroup.items|length > 0 and not  (attributeGroup.name == 'main' or attributeGroup.name == 'contact' or attributeGroup.name == 'price') %}
                 <div class="attribute-group">
                     <h2 class="title title--attribute-group">{{ i18n('attribute_group_' ~ attributeGroup.name) }}</h2>
                     {% for attribute in attributeGroup.items %}

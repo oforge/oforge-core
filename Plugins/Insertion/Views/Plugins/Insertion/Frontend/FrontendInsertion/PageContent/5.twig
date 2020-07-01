@@ -26,6 +26,8 @@
                                         <span class="preview__key">{{ i18n('price') }}</span>
                                         {% if data.price_type == "on_demand"  %}
                                             <span class="preview__value">{{ i18n('price_on_demand') }}({{ i18n('price_hidden', 'Preis nicht sichtbar') }})</span>
+                                        {% elseif data.price_type == "price_range" %}
+                                            <span class="preview__value">{{ data.price_min|localizedcurrency('EUR', meta.language.iso) }} - {{ data.price|localizedcurrency('EUR', meta.language.iso) }}</span>
                                         {% else %}
                                             <span class="preview__value">{% if data.price_type == "negotiable" %}{{ i18n('price_negotiable') }}{% endif %} {{ data.price|number_format(0, ',', '.') }} €</span>
                                         {% endif %}

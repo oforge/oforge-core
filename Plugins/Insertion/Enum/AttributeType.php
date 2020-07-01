@@ -12,6 +12,7 @@ abstract class AttributeType {
     const BOOLEAN   = 'boolean';
     const NUMBER    = 'number';
     const TEXT      = 'text';
+    const RICHTEXT  = 'richtext';
     const CONTAINER = 'container';
     const PEDIGREE  = 'pedigree';
 }

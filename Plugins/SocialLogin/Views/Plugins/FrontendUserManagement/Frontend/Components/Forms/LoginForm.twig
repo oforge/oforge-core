@@ -1,0 +1,6 @@
+{% extends '@parent/Plugins/FrontendUserManagement/Frontend/Components/Forms/LoginForm.twig' %}
+
+{% block login_form %}
+    {{ parent() }}
+    {% include 'Plugins/FrontendUserManagement/Frontend/Components/Content/SocialLogin.twig' %}
+{% endblock login_form %}

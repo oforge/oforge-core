@@ -1,0 +1,21 @@
+<div class="form__control">
+    <label for="insertion[{{ attribute.id }}]"
+           class="form__label {{ label_class }}">{{ i18n(attribute.name) }}{% if required %}<span class="required">*</span>{% endif %}
+        {% if i18nExists('attribute_hint_' ~ attribute.id ) %}
+            {% set content = content('attribute_hint_' ~ attribute.name ~ '_' ~ meta.language.iso) %}
+            {% include 'Frontend/Components/Insertions/Hint.twig' with {
+                hint: i18n('attribute_hint_' ~ attribute.id),
+                hintContent: content} %}
+        {% endif %}
+    </label>
+    <textarea type="text"
+              name="insertion[{{ attribute.id }}]"
+              class="form__input form__input--textarea"
+              placeholder="{{ i18n(attribute.name) }}"
+              {% if required %}required{% endif %}
+        {% if attribute.restrictions|length > 0 %}
+            pattern="{{ attribute.restrictions }}"
+            title="{{ i18n(attribute.name ~ '_restriction_message', i18n(attribute.name)) }}"
+        {% endif %}
+    >{{ data['insertion'][attribute.id] }}</textarea>
+</div>

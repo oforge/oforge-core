@@ -20,22 +20,17 @@
                               class="form__input form__input--textarea form__input--textarea-description form-control"
                               placeholder="{{ i18n('description') }}">{{ data.insertion_description }}</textarea>
                 </div>
-
+            </div>
+            <div class="form__control--row-half">
                 {# contact attributes #}
                 {% for attributeGroup in attributes %}
                     {% if attributeGroup.items|length > 0 and attributeGroup.name == 'contact' %}
-                        <div class="attribute-group">
-                            <h2>{{ i18n('attribute_group_' ~ attributeGroup.name) }}</h2>
-                            <div>
-                                {% for attribute in attributeGroup.items %}
-                                    {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': attribute.required } %}
-                                {% endfor %}
-                            </div>
-                        </div>
+                        {% for attribute in attributeGroup.items %}
+                            {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': attribute.required } %}
+                        {% endfor %}
                     {% endif %}
                 {% endfor %}
-            </div>
-            <div class="form__control--row-half">
+
                 <div class="form__control">
                     <h3 class="form__sub-title">{{ i18n('contact_partner') }}</h3>
                     <input type="text"
@@ -89,10 +84,16 @@
                             {% set country = null %}
                         {% endif %}
                         <select class="form__input form__input--no-input" name="contact_country">
-                            <option value="germany" {% if country is null or country is same as('germany') %}selected="selected"{% endif %}>{{ i18n('germany') }}</option>
-                            <option value="austria" {% if country is same as('austria') %}selected="selected"{% endif %}>{{ i18n('austria') }}</option>
-                            <option value="switzerland" {% if country is same as('switzerland') %}selected="selected"{% endif %}>{{ i18n('switzerland') }}</option>
-                            <option value="netherlands" {% if country is same as('netherlands') %}selected="selected"{% endif %}>{{ i18n('netherlands') }}</option>
+                            <option value="germany"
+                                    {% if country is null or country is same as('germany') %}selected="selected"{% endif %}>{{ i18n('germany') }}</option>
+                            <option value="austria"
+                                    {% if country is same as('austria') %}selected="selected"{% endif %}>{{ i18n('austria') }}</option>
+                            <option value="switzerland"
+                                    {% if country is same as('switzerland') %}selected="selected"{% endif %}>{{ i18n('switzerland') }}</option>
+                            <option value="netherlands"
+                                    {% if country is same as('netherlands') %}selected="selected"{% endif %}>{{ i18n('netherlands') }}</option>
+                            <option value="spain"
+                                    {% if country is same as('spain', {en: 'Spain', de: 'Spanien'}) %}selected="selected"{% endif %}>{{ i18n('spain') }}</option>
                         </select>
                     </div>
                 </div>
@@ -101,7 +102,8 @@
                         <input type="hidden" value="off" name="contact_visible"/>
                         <input type="checkbox"
                                name="contact_visible"
-                               {% if data['contact_visible'] == 'on' %}checked="checked" {% elseif lastContact.visible %}checked="checked"{% endif %}
+                               {% if data['contact_visible'] == 'on' %}checked="checked"
+                               {% elseif lastContact.visible %}checked="checked"{% endif %}
                                class="form__input form__input--checkbox form__input--checkbox-small"/>
                         {{ i18n('contact_data_visible', 'My contact data should be visible for registered users only.') }}
                     </label>
@@ -127,13 +129,21 @@
                         <option
                             value="on_demand" {% if data['price_type'] is same as('on_demand') %} selected {% endif %}
                             data-placeholder="{{ i18n('to') }}">{{ i18n('price_on_demand') }}</option>
+                        <option
+                            value="price_range" {% if data['price_type'] is same as('price_range') %} selected {% endif %}
+                            data-placeholder="{{ i18n('to') }}">{{ i18n('price_range') }}</option>
+                        {% if type.name is same as("horse") or type.name is same as("foal") %}
+                            <option
+                                value="auction" {% if data['price_type'] is same as('auction') %} selected {% endif %}
+                                data-placeholder="{{ i18n('price_start', 'Start Preis') }}">{{ i18n('price_type_auction', 'Gebot auf Auktion') }}</option>
+                        {% endif %}
                     </select>
                 </div>
                 <label for="price"
                        class="title title--attribute-group">{{ i18n('price_' ~ type.name, i18n('price')) }}<span
                         class="required">*</span></label>
                 <div class="form__control is-hidden">
-                    <label for="price-min"
+                    <label for="price_min"
                            class="form__input form__input--inside-label">
                         <input type="number"
                                id="price_min"
@@ -150,6 +160,18 @@
                     </label>
                 </div>
 
+                <div class="form__control is-hidden">
+                    <label for="auction_url"
+                           class="form__input form__input--inside-label">
+                        <input type="url"
+                               value="{{ data['auction_url'] }}"
+                               id="auction_url"
+                               pattern="https://.*"
+                               class="form__input"
+                               placeholder="{{ i18n('link_to_auction','Link zur Auktion') }}" />
+                    </label>
+                </div>
+
                 <div class="form__control">
                     <label for="price"
                            class="form__input form__input--inside-label">
@@ -158,7 +180,7 @@
                                id="price"
                                min="{% if type.minPrice %}{{ type.minPrice }}{% else %}0{% endif %}"
                                max="{% if type.maxPrice %}{{ type.maxPrice }}{% else %}2000000{% endif %}"
-                               value="{{ data['price'] }}"
+                               value="{{ data['price'] is empty ? '0' : data['price'] }}"
                                class="form__input"
                                placeholder="{{ i18n('price') }}"
                                required/>
@@ -182,6 +204,19 @@
                         {% endif %}>
                 </div>
             </div>
+
+            {% block page_content__price %}
+                {# price attributes #}
+                {% for attributeGroup in attributes %}
+                    {% if attributeGroup.items|length > 0 and attributeGroup.name == 'price' %}
+                        <div class="attribute-group">
+                            {% for attribute in attributeGroup.items %}
+                                {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': attribute.required } %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endblock page_content__price %}
         </div>
     </div>
 

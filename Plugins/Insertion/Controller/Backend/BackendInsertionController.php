@@ -301,7 +301,7 @@ class BackendInsertionController extends BaseCrudController {
             $sessionKey = SessionHelper::generateGuid();
             $formsService->setProcessedData($sessionKey, $result['data']);
 
-            $data = $formsService->processPostData($sessionKey);
+            $data = $formsService->processPostData($sessionKey, sizeof($insertion->getMedia()) > 0);
             $data = $formsService->parsePageData($data);
 
             $updateService->update($insertion, $data);
@@ -315,6 +315,7 @@ class BackendInsertionController extends BaseCrudController {
 
         $result['insertion'] = $insertion->toArray(1);
         $result['typeId']    = $insertion->getInsertionType()->getId();
+        $result['type']      = $insertion->getInsertionType()->toArray(1);
         $result['userId']    = $insertion->getUser()->getId();
 
         Oforge()->View()->assign($result);

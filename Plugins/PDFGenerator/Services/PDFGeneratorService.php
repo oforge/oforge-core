@@ -130,6 +130,10 @@ class PDFGeneratorService {
         $inlineCssService = Oforge()->Services()->get('inline.css');
 
         $this->mpdf->WriteHTML($inlineCssService->renderInlineCss($html));
-        return $this->mpdf->Output($options['path'] .  $options['filename'], 'F');
+        if(isset($options["path"])) {
+            return $this->mpdf->Output($options['path'] .  $options['filename'], 'F');
+        } else {
+            return $this->mpdf->Output();
+        }
     }
 }

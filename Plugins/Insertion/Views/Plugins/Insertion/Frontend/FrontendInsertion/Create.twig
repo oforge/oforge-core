@@ -36,7 +36,14 @@
                             </a>
                         </div>
                     {% endfor %}
-                </div>
+                </div
+
+                {% block insertions_content_bottom %}
+                    {% set content = content('insertion_create_bottom_' ~ meta.language.iso) %}
+                    {% if content %}
+                        {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
+                    {% endif %}
+                {% endblock insertions_content_bottom %}
             </div>
         {% endblock insertions %}
     </div>

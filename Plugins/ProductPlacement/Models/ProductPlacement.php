@@ -12,19 +12,17 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
  */
 class ProductPlacement extends AbstractModel {
     /**
+     * @var int $id
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @ORM\Id
-     * @var integer
      */
     private $id;
-
     /**
      * @var string
-     * @ORM\Column(name="source", type="string", nullable=false)
+     * @ORM\Column(name="source", type="text", nullable=false)
      */
     private $source;
-
     /**
      * @var array
      * @ORM\Column(name="tags", type="array", nullable=false)

@@ -2,11 +2,11 @@
 
 namespace FrontendUserManagement\Controller\Frontend;
 
-use Doctrine\DBAL\Schema\View;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Services\RegistrationService;
 use FrontendUserManagement\Services\UserDetailsService;
+use Oforge\Engine\Modules\Auth\Enums\InvalidPasswordFormatException;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Auth\Services\PasswordService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractController;
@@ -20,7 +20,6 @@ use Oforge\Engine\Modules\Core\Services\RedirectService;
 use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\Mailer\Services\MailService;
-use PHPMailer\PHPMailer\Exception;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
@@ -192,10 +191,16 @@ class RegistrationController extends AbstractController {
             return $response->withRedirect($uri, 302);
         }
 
-        /** @var PasswordService $passwordService */
-        $passwordService = Oforge()->Services()->get('password');
-        $password        = $passwordService->hash($password);
-        $user            = $registrationService->register($email, $password);
+        try {
+            /** @var PasswordService $passwordService */
+            $passwordService = Oforge()->Services()->get('password');
+            $password        = $passwordService->validateFormat($password)->hash($password);
+        } catch (InvalidPasswordFormatException $exception) {
+            Oforge()->View()->Flash()->addMessage('error', $exception->getMessage());
+
+            return $response->withRedirect($uri, 302);
+        }
+        $user = $registrationService->register($email, $password);
 
         /**
          * Registration failed
@@ -333,9 +338,9 @@ class RegistrationController extends AbstractController {
 
         $uri = $router->pathFor('frontend_account_dashboard');
         Oforge()->View()->Flash()->addMessage('success', I18N::translate('registration_success_logined', [
-                'en' => 'Your account was activated successfully. You are now logged in.',
-                'de' => 'Dein Account wurde erfolgreich aktiviert. Du bist nun angemeldet. ',
-            ]), true, "registration--successful");
+            'en' => 'Your account was activated successfully. You are now logged in.',
+            'de' => 'Dein Account wurde erfolgreich aktiviert. Du bist nun angemeldet. ',
+        ]), true, "registration--successful");
 
         Oforge()->View()->Flash()->setData("new_registration", ['newRegistration' => true]);
 
@@ -355,7 +360,7 @@ class RegistrationController extends AbstractController {
 
         $mailService->send($options);
 
-        if(isset($_SESSION['force_referrer'])) {
+        if (isset($_SESSION['force_referrer'])) {
             $uri = $_SESSION['force_referrer'];
             unset($_SESSION['force_referrer']);
         }

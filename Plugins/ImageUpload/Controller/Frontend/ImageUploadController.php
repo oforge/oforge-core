@@ -17,8 +17,7 @@ use Slim\Http\Response;
  * @package VideoUpload\Controller\Frontend
  * @EndpointClass(path="/image-upload", name="imageUpload", assetScope="Frontend")
  */
-class ImageUploadController extends SecureFrontendController
-{
+class ImageUploadController extends SecureFrontendController {
     /**
      * @param Request $request
      * @param Response $response
@@ -26,8 +25,7 @@ class ImageUploadController extends SecureFrontendController
      * @return Response
      * @EndpointAction()
      */
-    public function indexAction(Request $request, Response $response)
-    {
+    public function indexAction(Request $request, Response $response) {
         if ($request->isPost()) {
             $file = [];
             foreach ($_FILES['files'] as $key => $value) {
@@ -51,17 +49,45 @@ class ImageUploadController extends SecureFrontendController
             try {
                 /** @var MediaService $mediaService */
                 $mediaService = Oforge()->Services()->get('media');
-                $media = $mediaService->add($file);
-                $imageData = $media->toArray();
+                $media        = $mediaService->add($file);
+                $imageData    = $media->toArray();
             } catch (ServiceNotFoundException $e) {
                 return $response->withStatus(500);
             } catch (ORMException $e) {
                 return $response->withStatus(500);
             }
             Oforge()->View()->assign(['json' => ['imageData' => $imageData]]);
+
             //return $response->withJson(['imageData' => $imageData], 200);
             return $response->withStatus(200);
         }
+
         return $response->withStatus(400);
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     *
+     * @return Response
+     * @EndpointAction()
+     */
+    public function rotateAction(Request $request, Response $response) {
+        if ($request->isGet()) {
+            $id   = $_GET["id"];
+            $path = $_GET["path"];
+
+            /** @var MediaService $mediaService */
+            $mediaService = Oforge()->Services()->get('media');
+
+            $media = $mediaService->getById($id);
+
+            if ($media->getPath() == $path) {
+
+                $mediaService->rotate($id, 90);
+            }
+        }
+
+        return $response->withStatus(403);
     }
 }

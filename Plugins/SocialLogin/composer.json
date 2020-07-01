@@ -1,0 +1,11 @@
+{
+    "name": "oforge/social-login",
+    "type": "oforge-plugin",
+    "description": "Oforge Social Login ",
+    "keywords": ["oforge", "plugin", "premium"],
+    "require": {
+        "php": ">=7.2",
+        "composer/installers": "~1.0",
+        "hybridauth/hybridauth": "^3.2"
+    }
+}
