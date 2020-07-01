@@ -280,6 +280,9 @@ class BackendNavigationService extends AbstractDatabaseAccess {
                     unset($array[$index]);
                 }
             }
+            if ($item['parent'] === '0' && (!isset($item['children']) || empty($item['children']))) {
+                unset($array[$index]);
+            }
         }
     }
 

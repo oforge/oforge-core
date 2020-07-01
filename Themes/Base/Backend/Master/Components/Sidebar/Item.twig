@@ -1,6 +1,6 @@
 {% if item.visible %}
     <li class="{% if item.children %}treeview{% endif %} {% if item.name in breadcrumbsMapKeys %}active{% endif %}">
-        <a href="{% if item.path %}{{ url(item.path) }}{% else %}#{% endif %}">
+        <a href="{{ item.path ? url(item.path, item.pathNamedParams, item.pathQueryParams) : '#' }}">
             {% if item.icon %}<i class="{{ item.icon }}"></i>{% endif %}
             <span>{{ i18n(item.name) }}</span>
             {% if item.children %}
