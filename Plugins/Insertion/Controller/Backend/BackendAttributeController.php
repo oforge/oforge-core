@@ -84,7 +84,7 @@ class BackendAttributeController extends SecureBackendController {
             $sortable = isset($body['sortable']) && $body['sortable'] === 'on';
             $isHierarchical = false;
             foreach ($body['values'] as $value) {
-                if(isset($value['hierarchy_order']) && $value['hierarchy_order'] !== 0) {
+                if(isset($value['hierarchy_order']) && $value['hierarchy_order'] != 0) {
                     $isHierarchical = true;
                 }
             }
