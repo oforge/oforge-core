@@ -20,7 +20,7 @@ var
 vendor
 Themes/*.lnk
 /Themes/AllYourHorses/
-/Plugins/
+/Plugins/*
 !/Plugins/Analytics/
 !/Plugins/Blog/
 !/Plugins/Faq/
