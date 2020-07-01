@@ -30,7 +30,6 @@ class I18N {
     public static function translate(string $key, $defaultValue = null, ?string $language = null) : string {
         try {
             if (!isset(self::$i18nService)) {
-                /** @var InternationalizationService $service */
                 self::$i18nService = Oforge()->Services()->get('i18n');
             }
             if ($language === null) {
@@ -80,7 +79,6 @@ class I18N {
             }
 
             if (!isset(self::$i18nService)) {
-                /** @var InternationalizationService $service */
                 self::$i18nService = Oforge()->Services()->get('i18n');
             }
 
