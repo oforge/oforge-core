@@ -17,7 +17,7 @@ class LoginProviderService extends AbstractDatabaseAccess {
     }
 
     public function getByName(string $name) : ?LoginProvider {
-        /** @var LoginProvider $result */
+        /** @var LoginProvider|null $result */
         $result = $this->repository()->findOneBy(['name' => $name]);
         return $result;
     }
