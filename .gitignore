@@ -23,6 +23,7 @@ Themes/*.lnk
 /Plugins/*
 !/Plugins/Analytics/
 !/Plugins/Blog/
+!/Plugins/CookieConsent/
 !/Plugins/Faq/
 !/Plugins/FrontendUserManagement/
 !/Plugins/Helpdesk/
