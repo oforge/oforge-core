@@ -143,7 +143,6 @@ class GenericCrudService extends AbstractDatabaseAccess {
      * @return AbstractModel
      * @throws ConfigElementAlreadyExistException
      * @throws ORMException
-     * @throws ReflectionException
      */
     public function create(string $class, array $options) {
         $repository = $this->getRepository($class);

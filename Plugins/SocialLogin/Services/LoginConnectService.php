@@ -2,39 +2,34 @@
 
 namespace SocialLogin\Services;
 
-use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
-use Oforge\Engine\Modules\TemplateEngine\Extensions\Services\UrlService;
-use SocialLogin\Models\LoginProvider;
 use Hybridauth\Hybridauth;
 
 /**
  * Class LoginProviderService
  *
- * @package Seo\Services
+ * @package SocialLogin\Services
  */
 class LoginConnectService {
-
+    /** @var array $profiles */
     private $profiles = [];
 
     public function connect(string $name, string $callback) : bool {
-        /**
-         * @var $service LoginProviderService
-         */
-        $service  = Oforge()->Services()->get("sociallogin.providers");
+        /** @var LoginProviderService $service */
+        $service  = Oforge()->Services()->get('sociallogin.providers');
         $provider = $service->getByName($name);
 
-        if ($provider != null) {
+        if ($provider !== null) {
             $configElement = ['enabled' => true, 'keys' => []];
 
-            if ($provider->getAppId() != null) {
+            if ($provider->getAppId() !== null) {
                 $configElement['keys']['id'] = $provider->getAppId();
             }
 
-            if ($provider->getSecret() != null) {
+            if ($provider->getSecret() !== null) {
                 $configElement['keys']['secret'] = $provider->getSecret();
             }
 
-            if ($provider->getAppKey() != null) {
+            if ($provider->getAppKey() !== null) {
                 $configElement['keys']['key'] = $provider->getAppKey();
             }
 
@@ -63,4 +58,5 @@ class LoginConnectService {
     public function getAdapter($name) {
         return isset($this->profiles) ? $this->profiles[$name] : null;
     }
+
 }

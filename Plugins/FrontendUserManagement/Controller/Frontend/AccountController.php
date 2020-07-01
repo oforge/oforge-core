@@ -9,6 +9,7 @@ use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\AccountNavigationService;
 use FrontendUserManagement\Services\PasswordResetService;
 use Insertion\Services\InsertionProfileProgressService;
+use Oforge\Engine\Modules\Auth\Enums\InvalidPasswordFormatException;
 use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Auth\Services\PasswordService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
@@ -66,7 +67,7 @@ class AccountController extends SecureFrontendController {
 
         Oforge()->View()->assign(['content' => $backendNavigationService]);
 
-        if(Oforge()->View()->Flash()->hasData('new_registration')) {
+        if (Oforge()->View()->Flash()->hasData('new_registration')) {
             $newRegistration = Oforge()->View()->Flash()->getData('new_registration');
             Oforge()->View()->assign($newRegistration);
             Oforge()->View()->Flash()->clearData('new_registration');
@@ -168,9 +169,14 @@ class AccountController extends SecureFrontendController {
 
             return $response->withRedirect($uri, 302);
         }
+        try {
+            $newPassword = $passwordService->validateFormat($newPassword)->hash($newPassword);
+        } catch (InvalidPasswordFormatException $exception) {
+            Oforge()->View()->Flash()->addMessage('error', $exception->getMessage());
 
-        $newPassword = $passwordService->hash($newPassword);
-        $user        = $passwordResetService->changePassword($guid, $newPassword);
+            return $response->withRedirect($uri, 302);
+        }
+        $user = $passwordResetService->changePassword($guid, $newPassword);
 
         /*
          * User not found
