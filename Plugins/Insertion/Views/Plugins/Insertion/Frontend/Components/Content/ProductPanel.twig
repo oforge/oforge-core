@@ -34,17 +34,17 @@
                         <h3 class="product__title">
                             {% if item.insertionType.name is same as('foal') %}
                                 {% set father = '' %}
-                                {% set mother = '' %}
+                                {% set motherFather = '' %}
                                 {% for value in item.values %}
                                     {% if value.attributeKey is same as(26) %}
                                         {% set father = value.value %}
-                                    {% elseif value.attributeKey is same as(27) %}
-                                        {% set mother = value.value %}
+                                    {% elseif value.attributeKey is same as(30) %}
+                                        {% set motherFather = value.value %}
                                     {% endif %}
                                 {% endfor %}
 
-                                {% if father and mother %}
-                                    {{ father }} x {{ mother }} -
+                                {% if father and motherFather %}
+                                    {{ father }} x {{ motherFather }} -
                                 {% endif %}
 
                             {% endif %}
