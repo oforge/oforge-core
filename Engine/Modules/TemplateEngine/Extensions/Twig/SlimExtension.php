@@ -284,6 +284,10 @@ class SlimExtension extends Twig_Extension {
                 continue;
             } elseif ($index === 'style') {
                 $result .= ' ' . $this->functionStyle($value);
+            } elseif (is_int($value)) {
+                $result .= is_numeric($index) ? " $value" : " $index=\"$value\"";
+            } elseif (is_string($value)) {
+                $result .= is_numeric($index) ? " $value" : " $index=\"$value\"";
             } elseif (is_bool($value) && $value && is_string($index)) {
                 $result .= " $index";
             } elseif (is_array($value)) {
@@ -294,8 +298,6 @@ class SlimExtension extends Twig_Extension {
                     $result .= trim($this->buildSlimAttrString($value));
                     $result .= '"';
                 }
-            } elseif (is_string($value)) {
-                $result .= is_numeric($index) ? " $value" : " $index=\"$value\"";
             }
         }
 
