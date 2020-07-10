@@ -431,7 +431,7 @@ class Insertion extends AbstractModel
     }
 
     /**
-     * @param string $auctionUrl
+     * @param string|null $auctionUrl
      * @return Insertion
      */
     public function setAuctionUrl(?string $auctionUrl) : Insertion {

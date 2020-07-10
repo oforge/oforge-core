@@ -31,15 +31,45 @@
             <div class="product__content">
                 {% block content__title %}
                     <a class="product__title-link" href="{{ url("insertions_detail", {id: item.id}) }}">
-                        <h3 class="product__title">{{ item.content[0].title }}</h3>
+                        <h3 class="product__title">
+                            {% if item.insertionType.name is same as('foal') %}
+                                {% set father = '' %}
+                                {% set motherFather = '' %}
+                                {% for value in item.values %}
+                                    {% if value.attributeKey is same as(26) %}
+                                        {% set father = value.value %}
+                                    {% elseif value.attributeKey is same as(30) %}
+                                        {% set motherFather = value.value %}
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if father and motherFather %}
+                                    {{ father }} x {{ motherFather }} -
+                                {% endif %}
+
+                            {% endif %}
+                            {{ item.content[0].title }}
+                        </h3>
                     </a>
                 {% endblock content__title %}
 
                 {% block attributes__top %}
                     <div class="product__attributes product__attributes--top">
-                        {% for topvalue in item.topvalues|slice(0,3) %}
+                        {% set topvalues = item.topvalues|slice(0,3) %}
+
+                        {% for topvalue in topvalues %}
                             {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
                         {% endfor %}
+
+                        {% if topvalues|length < 3 %}
+                            <div class="product__attribute attribute--single">
+                                <span class="product__label">PLZ/Ort</span>
+                                <span class="product__value">
+                                     <span class="main--value">{{ item.contact.zip }} - {{ item.contact.city }}</span>
+                                </span>
+                            </div>
+                        {% endif %}
+
                     </div>
                 {% endblock attributes__top %}
 

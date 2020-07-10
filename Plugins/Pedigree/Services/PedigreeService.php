@@ -41,7 +41,7 @@ class PedigreeService extends AbstractDatabaseAccess
      * @return array
      * @throws ORMException
      */
-    public function getAllAncestors($limit = null, $offset = null){
+    public function getAllAncestors($limit = null, $offset = null) {
         return $this->repository('ancestor')->findBy([], ['name' => 'asc'], $limit, $offset);
     }
 
@@ -77,10 +77,10 @@ class PedigreeService extends AbstractDatabaseAccess
     }
 
     public function addAncestor($name) {
-        $ancestor = $this->repository('ancestor')->findBy(['name' => $name]);
+        $ancestor = $this->repository('ancestor')->findBy(['name' => preg_replace('!\s+!', ' ', ltrim(rtrim($name)))]);
         if($ancestor == null) {
             $ancestor = new Ancestor();
-            $ancestor->setName($name);
+            $ancestor->setName(preg_replace('!\s+!', ' ', ltrim(rtrim($name))));
             $this->entityManager()->create($ancestor);
         } else {
             Oforge()->View()->Flash()->addMessage('warning',
@@ -90,7 +90,7 @@ class PedigreeService extends AbstractDatabaseAccess
 
     public function addAncestors(Array $names) {
         foreach ($names as $name) {
-            $ancestor = $this->repository('ancestor')->findBy(['name' => $name]);
+            $ancestor = $this->repository('ancestor')->findBy(['name' => preg_replace('!\s+!', ' ', ltrim(rtrim($name)))]);
             if($ancestor == null) {
                 $ancestor = new Ancestor();
                 $ancestor->setName($name);
