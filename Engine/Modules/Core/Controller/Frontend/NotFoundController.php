@@ -12,7 +12,7 @@ use Slim\Http\Response;
  * Class NotFoundController
  *
  * @package Oforge\Engine\Modules\Core\Controller\Frontend
- * @EndpointClass(path="/404", name="not_found")
+ * @EndpointClass(path="/404", name="not_found", assetBundles="Frontend")
  */
 class NotFoundController extends AbstractController {
 
