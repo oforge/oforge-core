@@ -10,9 +10,7 @@
             <div class="panel panel--insertions flex">
                 {% block seo_content %}
                     {% set cmsContent = cms_content('seo_content_type_search_' ~  meta.language.iso) %}
-                    {% if cmsContent %}
-                        {% include 'CMS/ContentRouter.twig' with {cmsContent: cmsContent} %}
-                    {% endif %}
+                    {% include 'CMS/ContentTypeRouter.twig' with {cmsContent: cmsContent} %}
                 {% endblock seo_content %}
 
                 {% for parent in types %}

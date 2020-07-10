@@ -6,9 +6,7 @@
 
         {% block seo_content %}
             {% set cmsContent = twig_call_function_if_exist('cms_content', 'newsletter_header_' ~  meta.language.iso) %}
-            {% if cmsContent %}
-                {% include 'CMS/ContentRouter.twig' ignore missing with {cmsContent: cmsContent} %}
-            {% endif %}
+            {% include 'CMS/ContentTypeRouter.twig' ignore missing with {cmsContent: cmsContent} %}
         {% endblock seo_content %}
 
         <p>{{ subscribeMessage|raw }}</p>

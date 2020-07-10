@@ -132,7 +132,7 @@ class CategoryController extends BaseCrudController {
             'name'  => 'cssClass',
             'type'  => CrudDataTypes::STRING,
             'label' => [
-                'key'     => 'plugin_blog_property_category_cssClasses',
+                'key'     => 'plugin_blog_property_category_cssClass',
                 'default' => [
                     'en' => 'CSS classes',
                     'de' => 'CSS Klassen',

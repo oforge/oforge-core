@@ -15,7 +15,7 @@
                             </div>
 
                             {% if cmsContent %}
-                                {% include 'CMS/ContentRouter.twig' with {cmsContent: cmsContent} %}
+                                {% include 'CMS/ContentTypeRouter.twig' with {cmsContent: cmsContent} %}
                             {% endif %}
                         {% endfor %}
                     {% endif %}

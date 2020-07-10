@@ -30,7 +30,7 @@
                 {% set cmsContent = cms_content(seoContent) %}
                 {% if cmsContent %}
                     <div class="panel panel--seo">
-                        {% include 'CMS/ContentRouter.twig' with {cmsContent: cmsContent} %}
+                        {% include 'CMS/ContentTypeRouter.twig' with {cmsContent: cmsContent} %}
                     </div>
                 {% endif %}
             {% endfor %}
@@ -38,7 +38,7 @@
             {% set cmsContent = cms_content('seo_content_type_' ~ type.name ~ '_' ~  meta.language.iso) %}
             {% if cmsContent %}
                 <div class="panel panel--seo">
-                    {% include 'CMS/ContentRouter.twig' with {cmsContent: cmsContent} %}
+                    {% include 'CMS/ContentTypeRouter.twig' with {cmsContent: cmsContent} %}
                 </div>
             {% endif %}
         {% endif %}

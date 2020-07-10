@@ -10,9 +10,7 @@
 
                 {% block insertions_content %}
                     {% set cmsContent = cms_content('insertion_create_' ~  meta.language.iso) %}
-                    {% if cmsContent %}
-                        {% include 'CMS/ContentRouter.twig' with {cmsContent: cmsContent} %}
-                    {% endif %}
+                    {% include 'CMS/ContentTypeRouter.twig' with {cmsContent: cmsContent} %}
                 {% endblock insertions_content %}
 
                 <div class="insertion-create__type-overview">
@@ -40,9 +38,7 @@
 
                 {% block insertions_content_bottom %}
                     {% set cmsContent = cms_content('insertion_create_bottom_' ~ meta.language.iso) %}
-                    {% if cmsContent %}
-                        {% include 'CMS/ContentRouter.twig' with {cmsContent: cmsContent} %}
-                    {% endif %}
+                    {% include 'CMS/ContentTypeRouter.twig' with {cmsContent: cmsContent} %}
                 {% endblock insertions_content_bottom %}
             </div>
         {% endblock insertions %}
