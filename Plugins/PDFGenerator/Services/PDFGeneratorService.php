@@ -2,12 +2,11 @@
 
 namespace PDFGenerator\Services;
 
-use FrontendUserManagement\Models\User;
-use Mpdf\Mpdf;
+use Exception;
 use Mpdf\Config\ConfigVariables;
 use Mpdf\Config\FontVariables;
+use Mpdf\Mpdf;
 use Mpdf\MpdfException;
-use Oforge\Engine\Modules\CMS\Twig\AccessExtension as AccessExtensionAlias;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\Mailer\Services\InlineCssService;
@@ -16,10 +15,10 @@ use Oforge\Engine\Modules\TemplateEngine\Core\Twig\CustomTwig;
 use Oforge\Engine\Modules\TemplateEngine\Core\Twig\TwigOforgeDebugExtension;
 use Oforge\Engine\Modules\TemplateEngine\Extensions\Twig\AccessExtension;
 use Oforge\Engine\Modules\TemplateEngine\Extensions\Twig\SlimExtension;
-use Twig_Extensions_Extension_Intl;
 use Twig_Error_Loader;
 use Twig_Error_Runtime;
 use Twig_Error_Syntax as Twig_Error_SyntaxAlias;
+use Twig_Extensions_Extension_Intl;
 
 class PDFGeneratorService {
 
@@ -101,7 +100,13 @@ class PDFGeneratorService {
         $this->templatePath = Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . $this->templateName . DIRECTORY_SEPARATOR . 'PDFTemplates';
 
         $twig = new CustomTwig($this->templatePath);
-        $twig->addExtension(new AccessExtensionAlias());
+        try {
+            Oforge()->Services()->get('cms');
+            $cmsTwigExtension = '\CMS\Twig\CmsTwigExtension';
+            $twig->addExtension(new $cmsTwigExtension());
+        } catch (Exception $exception) {
+            // nothing to do
+        }
         $twig->addExtension(new AccessExtension());
         $twig->addExtension(new MediaExtension());
         $twig->addExtension(new SlimExtension());

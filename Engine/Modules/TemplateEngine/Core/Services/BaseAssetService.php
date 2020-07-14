@@ -18,12 +18,16 @@ use Oforge\Engine\Modules\Core\Models\Plugin\Plugin;
 use Oforge\Engine\Modules\Core\Services\KeyValueStoreService;
 use Oforge\Engine\Modules\Core\Services\PluginAccessService;
 
+/**
+ * Class BaseAssetService
+ *
+ * @package Oforge\Engine\Modules\TemplateEngine\Core\Services
+ */
 class BaseAssetService {
-    protected $key = "";
-    /**
-     * @var $store KeyValueStoreService
-     */
-    protected $store;
+    /** @var string $key */
+    protected $key;
+    /** @var KeyValueStoreService $storage */
+    protected $storage;
 
     /**
      * BaseAssetService constructor.
@@ -31,7 +35,7 @@ class BaseAssetService {
      * @throws ServiceNotFoundException
      */
     public function __construct() {
-        $this->store = Oforge()->Services()->get("store.keyvalue");
+        $this->storage = Oforge()->Services()->get('store.keyvalue');
     }
 
     /**
@@ -48,7 +52,7 @@ class BaseAssetService {
             mkdir(ROOT_PATH . Statics::ASSET_CACHE_DIR, 0750, true);
         }
 
-        return "";
+        return '';
     }
 
     /**
@@ -58,7 +62,7 @@ class BaseAssetService {
      * @throws OptimisticLockException
      */
     public function clear(string $scope = TemplateAssetService::DEFAULT_SCOPE) {
-        $this->store->set($this->getAccessKey($scope), "");
+        $this->storage->set($this->getAccessKey($scope), '');
     }
 
     /**
@@ -67,7 +71,7 @@ class BaseAssetService {
      * @return string
      */
     public function getUrl(string $scope = TemplateAssetService::DEFAULT_SCOPE) : string {
-        $value = $this->store->get($this->getAccessKey($scope));
+        $value = $this->storage->get($this->getAccessKey($scope));
         if (isset($value)) {
             return $value;
         }
@@ -81,7 +85,7 @@ class BaseAssetService {
      * @return bool
      */
     public function isBuild(string $scope = TemplateAssetService::DEFAULT_SCOPE) {
-        $value = $this->store->get($this->getAccessKey($scope));
+        $value = $this->storage->get($this->getAccessKey($scope));
 
         return isset($value);
     }
@@ -92,7 +96,7 @@ class BaseAssetService {
      * @return string
      */
     protected function getAccessKey(string $scope = TemplateAssetService::DEFAULT_SCOPE) : string {
-        return "compiled." . $this->key . ".url." . $scope;
+        return 'compiled.' . $this->key . '.url.' . $scope;
     }
 
     /**
@@ -104,20 +108,19 @@ class BaseAssetService {
      */
     protected function getAssetsDirectories() {
         /** @var TemplateManagementService $templateManagementService */
-        $templateManagementService = Oforge()->Services()->get("template.management");
+        $templateManagementService = Oforge()->Services()->get('template.management');
         $activeTemplate            = $templateManagementService->getActiveTemplate();
 
         $paths = [ROOT_PATH . DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . Statics::DEFAULT_THEME];
 
         /** @var $pluginAccessService PluginAccessService */
-        $pluginAccessService = Oforge()->Services()->get("plugin.access");
+        $pluginAccessService = Oforge()->Services()->get('plugin.access');
 
         /** @var $plugins Plugin[] */
         $plugins = $pluginAccessService->getActive();
 
         foreach ($plugins as $plugin) {
-            $viewsDir = ROOT_PATH . DIRECTORY_SEPARATOR . Statics::PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin['name'] . DIRECTORY_SEPARATOR
-                        . Statics::VIEW_DIR;
+            $viewsDir = ROOT_PATH . DIRECTORY_SEPARATOR . Statics::PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin['name'] . DIRECTORY_SEPARATOR . Statics::VIEW_DIR;
 
             if (file_exists($viewsDir)) {
                 array_push($paths, $viewsDir);

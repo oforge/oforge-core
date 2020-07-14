@@ -32,6 +32,7 @@ class DashboardController extends SecureBackendController {
         ], BackendUser::ROLE_LOGGED_IN);
         $this->ensurePermissions([
             'buildAction',
+            'fontAwesomeAction',
             'testAction',
         ], BackendUser::ROLE_ADMINISTRATOR);
     }

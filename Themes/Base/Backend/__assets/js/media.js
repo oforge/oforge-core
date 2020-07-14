@@ -103,6 +103,12 @@ if (typeof Oforge !== 'undefined') {
                 }
                 if (self.__options.target != null) {
                     $(self.__options.target).val('').trigger('change');
+                } else if (self.__options.callback != null) {
+                    self.__options.callback({
+                        id: null,
+                        path: null,
+                        name: null,
+                    });
                 }
                 self.__modalElement.modal('hide');
                 self.__modalElement.remove();
@@ -125,7 +131,6 @@ if (typeof Oforge !== 'undefined') {
                         name: target.data("media-name")
                     });
                 }
-
                 self.__modalElement.modal('hide');
                 self.__modalElement.remove();
             } else {

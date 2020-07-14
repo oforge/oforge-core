@@ -1,15 +1,14 @@
 {% extends 'Backend/Master/Index.twig' %}
-{% set meta = mergeRecursive(meta|default({}), dotToNested({
-    'backend.favoriteButton': false,
-})) %}
+{% do dotSet({
+    'meta.backend.favoriteButton': false,
+    'page_header': i18n(meta.route.parentName),
+    'page_header_description': i18n('backend_crud_plugin_action_' ~ crud.context, crud.contextLabel),
+}) %}
 {% set breadcrumbs = backend_breadcrumbs(meta.route.parentName)|default({})|merge([{
     path: meta.route.name,
     visible: true,
     name: i18n('backend_crud_plugin_action_' ~ crud.context, crud.contextLabel),
 }]) %}
-{#pathArgs: {id: crud.item.id},#}
-{% set page_header = i18n(meta.route.parentName) %}
-{% set page_header_description = i18n('backend_crud_plugin_action_' ~ crud.context, crud.contextLabel) %}
 
 {% block pagecontent %}
     <section class="content">
@@ -31,6 +30,7 @@
                                             {% include 'Backend/Components/Form/Switch.twig' with {
                                                 id: 'crud_plugin_confirm_keep_data',
                                                 name: 'keep_data',
+                                                checked: true,
                                             } only %}
                                         </div>
                                     </div>

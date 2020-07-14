@@ -10,6 +10,7 @@ use Oforge\Engine\Modules\AdminBackend\Core\Controller\Backend\IndexController;
 use Oforge\Engine\Modules\AdminBackend\Core\Controller\Backend\LoginController;
 use Oforge\Engine\Modules\AdminBackend\Core\Controller\Backend\LogoutController;
 use Oforge\Engine\Modules\AdminBackend\Core\Middleware\BackendSecureMiddleware;
+use Oforge\Engine\Modules\AdminBackend\Core\Middleware\FrontendBackendPopupMiddleware;
 use Oforge\Engine\Modules\AdminBackend\Core\Models\BackendNavigation;
 use Oforge\Engine\Modules\AdminBackend\Core\Models\BackendUserFavorites;
 use Oforge\Engine\Modules\AdminBackend\Core\Models\DashboardWidget;
@@ -46,6 +47,7 @@ class Bootstrap extends AbstractBootstrap {
 
         $this->middlewares = [
             'backend' => ['class' => BackendSecureMiddleware::class, 'position' => 1],
+            '*'       => ['class' => FrontendBackendPopupMiddleware::class, 'position' => 0],
         ];
 
         $this->models = [
@@ -88,11 +90,11 @@ class Bootstrap extends AbstractBootstrap {
             'required' => true,
         ]);
         $configService->add([
-            'name'     => 'backend_sidebar_collapsed_default',
-            'type'     => ConfigType::BOOLEAN,
-            'group'    => 'backend',
-            'default'  => false,
-            'label'    => 'config_backend_sidebar_collapsed_default',
+            'name'    => 'backend_sidebar_collapsed_default',
+            'type'    => ConfigType::BOOLEAN,
+            'group'   => 'backend',
+            'default' => false,
+            'label'   => 'config_backend_sidebar_collapsed_default',
         ]);
         /** @var BackendNavigationService $backendNavigationService */
         $backendNavigationService = Oforge()->Services()->get('backend.navigation');

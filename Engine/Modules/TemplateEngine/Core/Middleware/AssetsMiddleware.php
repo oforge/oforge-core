@@ -9,6 +9,8 @@
 namespace Oforge\Engine\Modules\TemplateEngine\Core\Middleware;
 
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Helper\Statics;
+use Oforge\Engine\Modules\TemplateEngine\Core\Services\TemplateManagementService;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -28,16 +30,27 @@ class AssetsMiddleware {
      * @throws ServiceNotFoundException
      */
     public function prepend($request, $response) {
-        $assetScope = Oforge()->View()->get('meta')['route']['assetScope'];
+        // /** @var TemplateManagementService $templateManagementService */
+        // $templateManagementService = Oforge()->Services()->get('template.management');
+        // try {
+        //     $templateName = $templateManagementService->getActiveTemplate()->getName();
+        // } catch (\Exception $exception) {
+        //     Oforge()->Logger()->logException($exception);
+        //     $templateName = Statics::DEFAULT_THEME;
+        // }
 
-        $data = [
-            'assets' => [
-                'js'  => Oforge()->Services()->get('assets.js')->getUrl($assetScope),
-                'css' => Oforge()->Services()->get('assets.css')->getUrl($assetScope),
-            ],
-        ];
+        $assetBundles = Oforge()->View()->get('meta.route.assetBundles');
 
-        Oforge()->View()->assign($data);
+        if (!empty($assetBundles)) {
+            $data = [
+                'assets'     => [
+                    'js'  => Oforge()->Services()->get('assets.js')->getUrl($assetBundles[0]),
+                    'css' => Oforge()->Services()->get('assets.css')->getUrl($assetBundles[0]),
+                ],
+                // 'meta.theme' => $templateName,
+            ];
+            Oforge()->View()->assign($data);
+        }
     }
 
 }

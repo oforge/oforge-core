@@ -22,8 +22,7 @@
         "ext-fileinfo": "*",
         "vimeo/vimeo-api": "^3.0",
         "google/cloud-translate": "*",
-        "wikimedia/composer-merge-plugin": "*",
-        "hybridauth/hybridauth": "^3.2"
+        "wikimedia/composer-merge-plugin": "*"
     },
     "repositories": [
         {

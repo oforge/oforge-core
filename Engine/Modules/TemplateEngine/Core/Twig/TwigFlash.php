@@ -28,6 +28,18 @@ class TwigFlash {
     }
 
     /**
+     * @param string $type
+     * @param string $summaryMessage
+     * @param string $subMessage
+     * @param string $preContent
+     * @param bool $dismissible
+     */
+    public function addDetailMessage(string $type, string $summaryMessage, string $subMessage, string $preContent, $dismissible = true) {
+        $message = "<details><summary>$summaryMessage</summary><div><p>$subMessage:</p><pre>$preContent</pre></div></details>";
+        $this->addMessage($type, $message, $dismissible);
+    }
+
+    /**
      * Add an error message for the next request / redirect.
      *
      * @param string $type
@@ -37,9 +49,8 @@ class TwigFlash {
     public function addExceptionMessage(string $type, string $message, Exception $exception, $dismissible = true) {
         $exceptionMessage = $exception->getMessage();
         $exceptionTrace   = $exception->getTraceAsString();
-        $clickMessage = I18N::translate('flash_exception_message_click_for_details_note', '(Click for Details)');
-        $errorMessage     = "<details><summary>$message $clickMessage</summary><div><p>$exceptionMessage</p><pre>$exceptionTrace</pre></div></details>";
-        $this->addMessage($type, $errorMessage, $dismissible);
+        $clickMessage     = I18N::translate('flash_exception_message_click_for_details_note', '(Click for Details)');
+        $this->addDetailMessage($type, "$message $clickMessage", $exceptionMessage, $exceptionTrace);
     }
 
     /**

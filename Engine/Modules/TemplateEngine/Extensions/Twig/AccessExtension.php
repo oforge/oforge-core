@@ -8,17 +8,14 @@
 
 namespace Oforge\Engine\Modules\TemplateEngine\Extensions\Twig;
 
-use Doctrine\ORM\ORMException;
-use Messenger\Services\FrontendMessengerService;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
-use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
-use Oforge\Engine\Modules\Core\Helper\DateTimeFormatter;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
+use Oforge\Engine\Modules\Core\Services\KeyValueStoreService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
+use Twig_Environment;
 use Twig_Extension;
 use Twig_ExtensionInterface;
-use Twig_Filter;
 use Twig_Function;
 
 /**
@@ -27,81 +24,50 @@ use Twig_Function;
  * @package Oforge\Engine\Modules\TemplateEngine\Extensions\Twig
  */
 class AccessExtension extends Twig_Extension implements Twig_ExtensionInterface {
-
-    /** @inheritDoc */
-    public function getFilters() {
-        return [
-            new Twig_Filter('formatDate', [DateTimeFormatter::class, 'date'], [
-                'is_safe' => ['html'],
-            ]),
-            new Twig_Filter('formatDatetime', [DateTimeFormatter::class, 'datetime'], [
-                'is_safe' => ['html'],
-            ]),
-            new Twig_Filter('formatTime', [DateTimeFormatter::class, 'time'], [
-                'is_safe' => ['html'],
-            ]),
-            new Twig_Filter('ucfirst', 'ucfirst', [
-                'is_safe' => ['html'],
-            ]),
-            new Twig_Filter('sortby', [$this, 'sortBy']),
-        ];
-    }
+    /** @var array OPTIONS_HTML_SAVE */
+    private const OPTIONS_HTML_SAVE = [
+        'is_safe' => ['html'],
+    ];
+    /** @var array OPTIONS_HTML_SAVE_WITH_CONTEXT */
+    private const OPTIONS_HTML_SAVE_WITH_CONTEXT = [
+        'is_safe'       => ['html'],
+        'needs_context' => true,
+    ];
 
     /** @inheritDoc */
     public function getFunctions() {
         return [
-            new Twig_Function('config', [$this, 'getConfig'], [
-                'is_safe' => ['html'],
-            ]),
-            new Twig_Function('i18n', [$this, 'getInternationalization'], [
-                'is_safe'       => ['html'],
-                'needs_context' => true,
-            ]),
-            new Twig_Function('i18nExists', [$this, 'getInternationalizationExists'], [
-                'is_safe'       => ['html'],
-                'needs_context' => true,
-            ]),
-            new Twig_Function('dotToNested', [$this, 'dotToNested'], [
-                'is_safe' => ['html'],
-            ]),
-            new Twig_Function('mergeRecursive', [$this, 'mergeRecursive'], [
-                'is_safe' => ['html'],
-            ]),
-            new Twig_Function('has_messages',  [$this, 'hasMessages']),
-        ];
-    }
-
-    /** @inheritDoc */
-    public function getTests() {
-        return [
-            new \Twig_Test('array', [$this, 'isArray']),
-            new \Twig_Test('string', [$this, 'isString']),
+            new Twig_Function('twig_exist_function', [$this, 'existTwigFunction'], ['needs_environment' => true]),
+            new Twig_Function('twig_call_function_if_exist', [$this, 'callTwigFunctionIfExist'], ['needs_environment' => true]),
+            new Twig_Function('config', [$this, 'getConfig'], self::OPTIONS_HTML_SAVE),
+            new Twig_Function('keyValue', [$this, 'getKeyValue'], self::OPTIONS_HTML_SAVE),
+            new Twig_Function('i18n', [$this, 'getInternationalization'], self::OPTIONS_HTML_SAVE_WITH_CONTEXT),
+            new Twig_Function('i18nExists', [$this, 'getInternationalizationExists'], self::OPTIONS_HTML_SAVE_WITH_CONTEXT),
+            new Twig_Function('has_messages', [$this, 'hasMessages']),
         ];
     }
 
     /**
-     * Convert array with keys in dot notation to nested arrays.
+     * @param Twig_Environment $twig
+     * @param string $twigFunctionName
+     * @param mixed ...$args
      *
-     * @param array $array
-     *
-     * @return array
-     * @see ArrayHelper::dotToNested()
+     * @return mixed
      */
-    public function dotToNested(array $array) : array {
-        return ArrayHelper::dotToNested($array);
+    public function callTwigFunctionIfExist(Twig_Environment $twig, string $twigFunctionName, ...$args) {
+        $function = $twig->getFunction($twigFunctionName);
+
+        return $function === false ? null : $function->getCallable()(...$args);
     }
 
     /**
-     * Merge array recursive.
+     * @param Twig_Environment $twig
+     * @param string $twigFunctionName
      *
-     * @param array $array1
-     * @param array $array2
-     *
-     * @return array
-     * @see ArrayHelper::mergeRecursive()
+     * @return bool
      */
-    public function mergeRecursive(array $array1, array $array2) : array {
-        return ArrayHelper::mergeRecursive($array1, $array2);
+    public function existTwigFunction(Twig_Environment $twig, string $twigFunctionName) {
+        return false !== $twig->getFunction($twigFunctionName);
     }
 
     /**
@@ -110,7 +76,6 @@ class AccessExtension extends Twig_Extension implements Twig_ExtensionInterface 
      * @return mixed|string
      * @throws ConfigElementNotFoundException
      * @throws ServiceNotFoundException
-     * @throws ORMException
      */
     public function getConfig(...$vars) {
         $result = '';
@@ -122,6 +87,20 @@ class AccessExtension extends Twig_Extension implements Twig_ExtensionInterface 
         }
 
         return $result;
+    }
+
+    /**
+     * @param string $key
+     * @param string|null $default
+     *
+     * @return mixed|string|null
+     * @throws ServiceNotFoundException
+     */
+    public function getKeyValue(string $key, ?string $default = null) {
+        /** @var KeyValueStoreService $keyValueStoreService */
+        $keyValueStoreService = Oforge()->Services()->get('store.keyvalue');
+
+        return $keyValueStoreService->get($key, $default);
     }
 
     /**
@@ -167,32 +146,4 @@ class AccessExtension extends Twig_Extension implements Twig_ExtensionInterface 
         return $result;
     }
 
-    /**
-     * Twig test '... is array' to php is_array.
-     *
-     * @param mixed $value
-     *
-     * @return bool
-     */
-    public function isArray($value) {
-        return is_array($value);
-    }
-
-    /**
-     * Twig test '... is string' to php is_string.
-     *
-     * @param mixed $value
-     *
-     * @return bool
-     */
-    public function isString($value) {
-        return is_string($value);
-    }
-
-    public function sortBy($array, $key) {
-        usort($array, function ($item1, $item2) use ($key) {
-            return $item1[$key] <=> $item2[$key];
-        });
-        return $array;
-    }
 }

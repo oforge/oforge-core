@@ -27,18 +27,18 @@
         {% if (seo is defined and seo.content != null and seo.content.contentElements != null) %}
             {% set seoContents = seo.content.contentElements %}
             {% for seoContent in seoContents %}
-                {% set content = content(seoContent) %}
-                {% if (content) %}
+                {% set cmsContent = cms_content(seoContent) %}
+                {% if cmsContent %}
                     <div class="panel panel--seo">
-                        {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
+                        {% include 'CMS/ContentTypeRouter.twig' with {cmsContent: cmsContent} %}
                     </div>
                 {% endif %}
             {% endfor %}
         {% else %}
-            {% set content = content('seo_content_type_' ~ type.name ~ '_' ~  meta.language.iso) %}
-            {% if content %}
+            {% set cmsContent = cms_content('seo_content_type_' ~ type.name ~ '_' ~  meta.language.iso) %}
+            {% if cmsContent %}
                 <div class="panel panel--seo">
-                    {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
+                    {% include 'CMS/ContentTypeRouter.twig' with {cmsContent: cmsContent} %}
                 </div>
             {% endif %}
         {% endif %}

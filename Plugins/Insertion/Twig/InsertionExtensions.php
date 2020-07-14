@@ -8,6 +8,7 @@ use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\FrontendUserService;
 use FrontendUserManagement\Services\UserService;
+use FrontendUserPageBuilder\Services\FrontendUserPageBuilderService;
 use Insertion\Models\Insertion;
 use Insertion\Services\AttributeService;
 use Insertion\Services\InsertionBookmarkService;

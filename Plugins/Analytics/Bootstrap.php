@@ -70,7 +70,7 @@ class Bootstrap extends AbstractBootstrap {
     /** @inheritDoc */
     public function uninstall(bool $keepData) {
         if (!$keepData) {
-            /** @var DashboardWidgetsService $dashboardWidgetsService */
+            /**  @var DashboardWidgetsService $dashboardWidgetsService */
             $dashboardWidgetsService = Oforge()->Services()->get('backend.dashboard.widgets');
             $dashboardWidgetsService->uninstall('plugin_analytics');
         }

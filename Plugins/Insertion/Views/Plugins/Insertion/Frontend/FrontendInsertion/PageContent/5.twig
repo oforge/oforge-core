@@ -98,15 +98,13 @@
     {% if not user_logged_in %}
         {% block registration %}
             <h2>{{ i18n('registration_login') }}</h2>
-            {% set meta = mergeRecursive(meta|default({}), dotToNested({
-                'route.referrer': url('insertions_createSteps', {type:  type.id, page: page}),
-            })) %}
+            {{ dotSet('meta.route.referrer', url('insertions_createSteps', {type:  type.id, page: page})) }}
 
             {% embed 'Plugins/FrontendUserManagement/Frontend/Components/Content/LoginRegistration.twig' with {
-                meta: mergeRecursive(meta|default({}), dotToNested({
+                meta: meta|default({})|dotSet({
                     'route.referrer': url(meta.route.name, meta.route.params),
-                    'force.referrer': true
-                }))
+                    'force.referrer': true,
+                })
             }%}
                 {% block login_registration_subtitle %}{% endblock login_registration_subtitle %}
                 {% block login_registration__registration_benefits %}{% endblock login_registration__registration_benefits %}

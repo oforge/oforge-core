@@ -165,7 +165,7 @@ abstract class AbstractClassPropertyAccess {
     private function assignArray($result, int $maxDepth, array $excludeProperties) {
         if (is_scalar($result)) {
             return $result;
-        } elseif (is_subclass_of($result, AbstractModel::class)) {
+        } elseif (is_subclass_of($result, AbstractClassPropertyAccess::class)) {
             /** @var AbstractModel $result */
             if ($maxDepth > 0) {
                 return $result->toArray($maxDepth - 1, $excludeProperties);

@@ -5,15 +5,20 @@ namespace CookieConsent;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 
+/**
+ * Class Bootstrap
+ *
+ * @package CookieConsent
+ */
 class Bootstrap extends AbstractBootstrap {
+
     /**
      * Bootstrap constructor.
      */
     public function __construct() {
-    }
-
-    /** @inheritDoc */
-    public function install() {
+        $this->dependencies = [
+            \CMS\Bootstrap::class,
+        ];
     }
 
     /** @inheritDoc */
@@ -27,4 +32,5 @@ class Bootstrap extends AbstractBootstrap {
             'de' => 'Ablehnen',
         ]);
     }
+
 }

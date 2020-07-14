@@ -107,11 +107,11 @@ class CssAssetService extends BaseAssetService {
         if(!$sourceMap) {
             $minifier = new CSS($outputFull . ".css");
             $minifier->minify($outputFull . ".min.css");
-            $this->store->set($this->getAccessKey($scope), $output . ".min.css");
+            $this->storage->set($this->getAccessKey($scope), $output . ".min.css");
             return $output . ".min.css";
         }
 
-        $this->store->set($this->getAccessKey($scope), $output . ".css");
+        $this->storage->set($this->getAccessKey($scope), $output . ".css");
         return $output . ".css";
     }
 }

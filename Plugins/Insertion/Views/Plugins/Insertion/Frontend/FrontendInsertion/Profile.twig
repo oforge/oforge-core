@@ -13,49 +13,68 @@
                      {% if profile.user.detail.image is not empty %}style="background-image: url('{{ media(profile.user.detail.image, 300) }}');"{% endif %}></div>
             </div>
 
-            <div class="contact--links flex">
-                <div class="contact--icons">
-                    {% if profile.imprintEmail is not empty %}
-                        <a class="contact--icon" href="mailto:{{ profile.imprintEmail }}">
-                            <div class="wrapper">
-                                <svg class="icon icon--secondary mail pulse-on-hover">
-                                    <use xlink:href="#email"></use>
-                                </svg>
-                            </div>
-                        </a>
-                    {% endif %}
-                    {% if profile.imprintPhone is not empty %}
-                        <a class="contact--icon center" href="tel:{{ profile.imprintPhone }}">
-                            <div class="wrapper">
-                                <svg class="icon icon--secondary telephone   pulse-on-hover">
-                                    <use xlink:href="#telephone"></use>
-                                </svg>
-                            </div>
-                        </a>
-                    {% endif %}
-                    {% if profile.imprintFacebook is not empty %}
-                        <a class="contact--icon"
-                           href="{{ i18n('facebook_base_url', 'https://www.facebook.com/') }}{{ profile.imprintFacebook }}"
-                           target="_blank">
-                            <div class="wrapper">
-                                <svg class="icon icon--secondary  pulse-on-hover">
-                                    <use xlink:href="#facebook"></use>
-                                </svg>
-                            </div>
-                        </a>
-                    {% endif %}
-                </div>
+            <div class="content--header">
+                {% block content_header %}
+                    <div class="contact--links flex">
+                        <div class="contact--icons">
+                            {% if profile.imprintEmail is not empty %}
+                                <a class="contact--icon" href="mailto:{{ profile.imprintEmail }}">
+                                    <div class="wrapper">
+                                        <svg class="icon icon--secondary mail pulse-on-hover">
+                                            <use xlink:href="#email"></use>
+                                        </svg>
+                                    </div>
+                                </a>
+                            {% endif %}
+                            {% if profile.imprintPhone is not empty %}
+                                <a class="contact--icon center" href="tel:{{ profile.imprintPhone }}">
+                                    <div class="wrapper">
+                                        <svg class="icon icon--secondary telephone   pulse-on-hover">
+                                            <use xlink:href="#telephone"></use>
+                                        </svg>
+                                    </div>
+                                </a>
+                            {% endif %}
+                            {% if profile.imprintFacebook is not empty %}
+                                <a class="contact--icon"
+                                   href="{{ i18n('facebook_base_url', 'https://www.facebook.com/') }}{{ profile.imprintFacebook }}"
+                                   target="_blank">
+                                    <div class="wrapper">
+                                        <svg class="icon icon--secondary  pulse-on-hover">
+                                            <use xlink:href="#facebook"></use>
+                                        </svg>
+                                    </div>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endblock content_header %}
             </div>
 
             <div class="panel panel--supplier-description description">
-                <div class="description__head">
-                    <h4 class="title">{{ profile.user.detail.firstName }} {{ profile.user.detail.lastName }}</h4>
-                    <div class="language-switch"></div>
-                </div>
-
-                <div class="description__body">
-                    <span>{{ profile.description|nl2br }}</span>
-                </div>
+                {% block profile_description %}
+                    {% block profile_description_edit_button %}
+                        {% if profile and current_user and profile.user.id == current_user.id %}
+                            <a href="{%- block profile_description_edit_button_url url('frontend_account_insertions_profile') -%}"
+                               title="{{ i18n('account_profile_edit', {en: 'edit', de: 'bearbeiten'}) }}">
+                        <span class="panel-edit-button">
+                            <svg class="icon icon--secondary"><use xlink:href="#edit"></use></svg>
+                        </span>
+                            </a>
+                        {% endif %}
+                    {% endblock profile_description_edit_button %}
+                    <div class="description__head">
+                        {% block profile_description_head %}
+                            <h4 class="title">{{ profile.user.detail.firstName }} {{ profile.user.detail.lastName }}</h4>
+                            <div class="language-switch"></div>
+                        {% endblock profile_description_head %}
+                    </div>
+                    <div class="description__body">
+                        {% block profile_description_body %}
+                            <span>{{ profile.description|nl2br }}</span>
+                        {% endblock profile_description_body %}
+                    </div>
+                {% endblock profile_description %}
             </div>
 
             {% block profile_slider %}
@@ -98,13 +117,13 @@
 
             <div class="panel panel--contact contact">
                 {% if profile.imprintName is not empty %}
-                <div class="contact__name">
-                    <strong>{{ profile.imprintName }}</strong></div>
+                    <div class="contact__name">
+                        <strong>{{ profile.imprintName }}</strong></div>
                 {% endif %}
                 <div class="contact__address">{{ profile.imprintZipCity }}</div>
                 {% if profile.imprintPhone is not empty %}
                     <div class="contact__phone"><strong class="pulse-on-hover"><a
-                                    href="tel:{{ profile.imprintPhone }}">{{ i18n('tel') }}
+                                href="tel:{{ profile.imprintPhone }}">{{ i18n('tel') }}
                                 : {{ profile.imprintPhone }}</a></strong>
                     </div>
                 {% endif %}

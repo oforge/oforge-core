@@ -15,10 +15,8 @@
                         <h1 class="account__title">{{ i18n('faqs') }}</h1>
 
                         {% block seo_content %}
-                            {% set content = content('faq_header_' ~  meta.language.iso) %}
-                            {% if content %}
-                                {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
-                            {% endif %}
+                            {% set cmsContent = twig_call_function_if_exist('cms_content', 'faq_header_' ~  meta.language.iso) %}
+                            {% include 'CMS/ContentTypeRouter.twig' ignore missing with {cmsContent: cmsContent} %}
                         {% endblock seo_content %}
 
                         <div class="collapse--container">

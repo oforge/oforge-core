@@ -340,10 +340,10 @@
         <td class="container">
             <div class="content">
 
-                <!-- START CENTERED WHITE CONTAINER -->
+                {# START CENTERED WHITE CONTAINER #}
                 <table role="presentation" class="main">
 
-                    <!-- START MAIN CONTENT AREA -->
+                    {# START MAIN CONTENT AREA #}
                     {% block content %}
                         <tr>
                             <td class="wrapper">
@@ -352,11 +352,11 @@
                                         <tr>
                                             <td>
                                                 {% set logo_src="https://starwarsblog.starwars.com/wp-content/uploads/2017/05/yoda-advice-featured-1.jpg" %}
-                                        {% if logo_src != "" %}
-                                            <img style="width:200px" src={{ logo_src }}>
-                                        {% else %}
-                                                <span>Cannot find a logo ¯\_(ツ)_/¯</span>
-                                        {% endif %}
+                                                {% if logo_src != "" %}
+                                                    <img style="width:200px" src={{ logo_src }}>
+                                                {% else %}
+                                                    <span>Cannot find a logo ¯\_(ツ)_/¯</span>
+                                                {% endif %}
                                             </td>
                                         </tr>
                                     {% endblock logo %}
@@ -392,9 +392,9 @@
                             </td>
                         </tr>
                     {% endblock content %}
-                    <!-- END MAIN CONTENT AREA -->
+                    {# END MAIN CONTENT AREA #}
                 </table>
-                <!-- END CENTERED WHITE CONTAINER -->
+                {# END CENTERED WHITE CONTAINER #}
 
                 {% block footer %}
                     <div class="footer">

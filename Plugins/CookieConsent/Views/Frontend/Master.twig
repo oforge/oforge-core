@@ -1,13 +1,9 @@
 {% extends 'Frontend/Master.twig' %}
+
 {% block cookie__consent %}
     <div id="cookie__consent">
         <div class="cookie__msg">
-            {% set content = content('cookie_consent_msg_' ~ meta.language.iso) %}
-            {% if content %}
-                <div class="content">
-                    {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
-                </div>
-            {% endif %}
+            {% include 'CMS/ContentBlock.twig' with {cmsContentName: 'cookie_consent_msg_' ~ meta.language.iso} %}
         </div>
         <div class="cookie__buttons">
             <div id="cookie__accept" class="button button--secondary">

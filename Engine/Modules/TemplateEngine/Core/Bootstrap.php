@@ -20,19 +20,24 @@ use Oforge\Engine\Modules\TemplateEngine\Core\Services\TemplateAssetService;
 use Oforge\Engine\Modules\TemplateEngine\Core\Services\TemplateManagementService;
 use Oforge\Engine\Modules\TemplateEngine\Core\Services\TemplateRenderService;
 
+/**
+ * Class Bootstrap
+ *
+ * @package Oforge\Engine\Modules\TemplateEngine\Core
+ */
 class Bootstrap extends AbstractBootstrap {
     /**
      * Bootstrap constructor.
      */
     public function __construct() {
         $this->services = [
-            "scss.variables"      => ScssVariableService::class,
-            "template.render"     => TemplateRenderService::class,
-            "template.management" => TemplateManagementService::class,
-            "assets.template"     => TemplateAssetService::class,
-            "assets.js"           => JsAssetService::class,
-            "assets.css"          => CssAssetService::class,
-            "assets.static"       => StaticAssetService::class,
+            'scss.variables'      => ScssVariableService::class,
+            'template.render'     => TemplateRenderService::class,
+            'template.management' => TemplateManagementService::class,
+            'assets.template'     => TemplateAssetService::class,
+            'assets.js'           => JsAssetService::class,
+            'assets.css'          => CssAssetService::class,
+            'assets.static'       => StaticAssetService::class,
         ];
 
         $this->models = [
@@ -41,7 +46,7 @@ class Bootstrap extends AbstractBootstrap {
         ];
 
         $this->middlewares = [
-            "*" => ["class" => AssetsMiddleware::class, "position" => 0],
+            '*' => ['class' => AssetsMiddleware::class, 'position' => 0],
         ];
 
         $this->order = 1;
@@ -60,16 +65,17 @@ class Bootstrap extends AbstractBootstrap {
         Oforge()->Templates()->init();
 
         /** @var TemplateManagementService $templateManagementService */
-        $templateManagementService = Oforge()->Services()->get("template.management");
+        $templateManagementService = Oforge()->Services()->get('template.management');
 
         $templateName = $templateManagementService->getActiveTemplate()->getName();
 
-        $scopes = ["Frontend", "Backend"];
+        $scopes = ['Frontend', 'Backend'];
 
         foreach ($scopes as $scope) {
-            if (!Oforge()->Services()->get("assets.css")->isBuild($scope)) {
-                Oforge()->Services()->get("assets.template")->build($templateName, $scope);
+            if (!Oforge()->Services()->get('assets.css')->isBuild($scope)) {
+                Oforge()->Services()->get('assets.template')->build($templateName, $scope);
             }
         }
     }
+
 }

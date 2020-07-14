@@ -137,7 +137,7 @@ class StringHelper {
      *
      * @return string|null
      */
-    public static function firstNonEmpty(string... $values) {
+    public static function firstNonEmpty(string...$values) {
         foreach ($values as $value) {
             if (!empty($value)) {
                 return $value;
@@ -145,6 +145,20 @@ class StringHelper {
         }
 
         return null;
+    }
+
+    /**
+     * @param string $string
+     *
+     * @return string
+     */
+    public static function toPascalCase(string $string) : string {
+        $string = trim($string);
+        if (empty($string)) {
+            return $string;
+        }
+
+        return implode('', array_map('ucfirst', explode('_', $string)));
     }
 
 }

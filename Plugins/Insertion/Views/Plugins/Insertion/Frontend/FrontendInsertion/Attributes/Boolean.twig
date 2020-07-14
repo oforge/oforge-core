@@ -1,16 +1,15 @@
 <div class="form__container">
-    <div class="form__control  form__control--checkbox form__control__boolean">
+    <div class="form__control form__control--checkbox form__control__boolean">
         {% if i18nExists('attribute_hint_' ~ attribute.id ) %}
-            {% set content = content(type.name ~ '_' ~ attribute.attributeKey.name ~ '_' ~ meta.language.iso) %}
-
+        {% set cmsContent = cms_content(type.name ~ '_' ~ attribute.attributeKey.name ~ '_' ~ meta.language.iso) %}
             {% include 'Frontend/Components/Insertions/Hint.twig' with {
                 hint: i18n('attribute_hint_' ~ attribute.id),
-                content: content
+            hintContent: cmsContent
             } %}
         {% endif %}
         <label for="{{ attribute.name }}"
                class="form__label form__label--checkbox">{{ i18n(attribute.name) }}{% if required %}<span
-                class="required">*</span>{% endif %}</label>
+                    class="required">*</span>{% endif %}</label>
 
         {% if data['insertion'][attribute.id] == 'on' %}
             <input type="hidden" name="insertion[{{ attribute.id }}]" value="off" />
@@ -23,10 +22,10 @@
                name="insertion[{{ attribute.id }}]"
                data-toggle-selector="insertion_{{ attribute.id }}"
                id="{{ attribute.name }}"
-            {% if data['insertion'][attribute.id] == 'on' %}
-                checked="checked"
-            {% endif %}
-            {% if required %}required{% endif %}>
+                {% if data['insertion'][attribute.id] == 'on' %}
+                    checked="checked"
+                {% endif %}
+                {% if required %}required{% endif %}>
     </div>
     {% block container_attributes %}
         {% if values.values|length  > 0 %}
@@ -38,6 +37,3 @@
         {% endif %}
     {% endblock container_attributes %}
 </div>
-
-
-

@@ -97,7 +97,7 @@ class InsertionProfileService extends AbstractDatabaseAccess {
         }
 
         $result->fromArray([
-            "description"          => $params["description"],
+            "description"          => $params["description"] || "",
             "user"                 => $user,
             "imprintName"          => $params["imprint_name"],
             "imprintStreet"        => $params["imprint_street"],

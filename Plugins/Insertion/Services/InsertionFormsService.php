@@ -100,7 +100,8 @@ class InsertionFormsService extends AbstractDatabaseAccess {
             }
         }
 
-        print_r($mainIndex);
+        //TODO remove?
+        #print_r($mainIndex);
 
         if (isset($_POST['images_interactions'])) {
             $imgs = [];

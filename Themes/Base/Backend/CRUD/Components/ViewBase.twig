@@ -1,15 +1,16 @@
 {% extends 'Backend/Master/Index.twig' %}
-{% set meta = mergeRecursive(meta|default({}), dotToNested({
-    'backend.favoriteButton': false,
-})) %}
+
+{% do dotSet({
+    'meta.backend.favoriteButton': false,
+    'page_header': i18n(meta.route.parentName),
+    'page_header_description': i18n('backend_crud_btn_' ~ crud.context, crud.context)
+}) %}
 {% set breadcrumbs = backend_breadcrumbs(meta.route.parentName)|default({})|merge([{
     path: meta.route.name,
     pathArgs: {id: crud.item.id},
     visible: true,
     name: i18n('backend_crud_btn_' ~ crud.context, crud.context),
 }]) %}
-{% set page_header = i18n(meta.route.parentName) %}
-{% set page_header_description = i18n('backend_crud_btn_' ~ crud.context, crud.context) %}
 
 {% block sidebar %}
     {% set breadcrumbsmap = backend_breadcrumbs_map(meta.route.parentName) %}

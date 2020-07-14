@@ -1,14 +1,9 @@
-{# block header__logo #}
 {% block logo %}
-    {% set logo = content('logo') %}
     <div class="logo">
-        <a href="{{ url('frontend_page') }}" class="logo__link">
-
-            {% if logo.url is defined %}
-                <img class="logo__img" src="{{ media( logo.url, 300) }}" alt="{{ i18n('logo') }}" />
-            {% else %}
+        <a href="{{ url('/') }}" class="logo__link">
+            {% block logo_content %}
                 {% include 'Frontend/Components/Header/LogoClaim.twig' with {link: false} %}
-            {% endif %}
+            {% endblock logo_content %}
         </a>
     </div>
 {% endblock logo %}

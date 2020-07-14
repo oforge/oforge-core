@@ -21,9 +21,15 @@ class EndpointClass {
     /**
      * Global asset scope for this class. Overridable by Endpoint#assetScope. Default=Frontend.
      *
-     * @var string|null $assetScope
+     * @var string|string[]|null $assetBundles
      */
-    private $assetScope;
+    private $assetBundles;
+    /**
+     * Mode of how assetsBundles are created for endpoint. AssetBundlesMode::OVERRIDE (default) or AssetBundlesMode::MERGE or AssetBundlesMode::NONE.
+     *
+     * @var string|null $assetBundles
+     */
+    private $assetBundlesMode = null;
     /**
      * Optional route name prefix (suffixed by Endpoint#name).
      *
@@ -51,10 +57,12 @@ class EndpointClass {
      * @throws AnnotationException
      */
     public function __construct(array $config) {
-        $this->assetScope = $config['assetScope'] ?? null;
-        $this->name       = $config['name'] ?? '';
-        $this->order      = $config['order'] ?? null;
-        $this->path       = $config['path'] ?? '';
+        $this->assetBundles     = $config['assetScope'] ?? $config['assetBundles'] ?? null;//TODO remove assetScore after asset refactoring
+        $this->assetBundlesMode = $config['assetBundlesMode'] ?? null;
+
+        $this->name  = $config['name'] ?? '';
+        $this->order = $config['order'] ?? null;
+        $this->path  = $config['path'] ?? '';
 
         $this->strictActionSuffix = $config['strictActionSuffix'] ?? true;
     }
@@ -78,10 +86,17 @@ class EndpointClass {
     }
 
     /**
+     * @return string|string[]|null
+     */
+    public function getAssetBundles() {
+        return $this->assetBundles;
+    }
+
+    /**
      * @return string|null
      */
-    public function getAssetScope() : ?string {
-        return $this->assetScope;
+    public function getAssetBundlesMode() : ?string {
+        return $this->assetBundlesMode;
     }
 
     /**

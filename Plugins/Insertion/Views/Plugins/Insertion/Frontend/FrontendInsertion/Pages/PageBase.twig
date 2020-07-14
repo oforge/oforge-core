@@ -11,25 +11,21 @@
                 {% endblock login_registration_title %}
 
                 {% block seo_content %}
-                    {% set content = content('login_registration_create_' ~  meta.language.iso) %}
-                    {% if content %}
-                        {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
-                    {% endif %}
+                    {% set cmsContent = cms_content('login_registration_create_' ~  meta.language.iso) %}
+                    {% include 'CMS/ContentTypeRouter.twig' with {cmsContent: cmsContent} %}
                 {% endblock seo_content %}
 
                 <div class="panel__content flex flex--wrap">
 
                     {% block registration %}
                         <div class="panel__column">
-                            {% set meta = mergeRecursive(meta|default({}), dotToNested({
-                                'route.referrer': url('insertions_createSteps', {type:  type.id, page: page}),
-                            })) %}
+                            {{ dotSet('meta.route.referrer', url('insertions_createSteps', {type:  type.id, page: page})) }}
 
                             {% embed 'Plugins/FrontendUserManagement/Frontend/Components/Content/LoginRegistration.twig' with {
-                                meta: mergeRecursive(meta|default({}), dotToNested({
+                                meta: meta|default({})|dotSet({
                                     'route.referrer': url(meta.route.name, meta.route.params),
                                     'force.referrer': true
-                                }))
+                                })
                             } %}
                                 {% block login_registration_subtitle %}{% endblock login_registration_subtitle %}
                                 {% block login_registration__registration_benefits %}{% endblock login_registration__registration_benefits %}
@@ -46,10 +42,8 @@
                 </div>
 
                 {% block seo_content_after %}
-                    {% set content = content('login_registration_create_' ~  meta.language.iso ~ '_after') %}
-                    {% if content %}
-                        {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
-                    {% endif %}
+                    {% set cmsContent = cms_content('login_registration_create_' ~  meta.language.iso ~ '_after') %}
+                    {% include 'CMS/ContentTypeRouter.twig' with {cmsContent: cmsContent} %}
                 {% endblock seo_content_after %}
             {% endif %}
         {% endblock %}

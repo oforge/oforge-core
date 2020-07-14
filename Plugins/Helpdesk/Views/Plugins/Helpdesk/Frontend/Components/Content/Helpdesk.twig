@@ -6,10 +6,8 @@
         {% endblock helpdesk_title %}
 
         {% block helpdesk_description %}
-            {% set content = content('helpdesk_description_' ~  meta.language.iso) %}
-            {% if content %}
-                {% include 'ContentTypes/' ~ content.path ~ '/Index.twig' with {'data': content} %}
-            {% endif %}
+            {% set cmsContent = twig_call_function_if_exist('cms_content', 'helpdesk_description_' ~  meta.language.iso) %}
+            {% include 'CMS/ContentTypeRouter.twig' ignore missing with {cmsContent: cmsContent} %}
         {% endblock helpdesk_description %}
 
         {% block helpdesk__form %}

@@ -99,6 +99,15 @@ class Event {
     }
 
     /**
+     * @param $key
+     *
+     * @return mixed|null
+     */
+    public function getDataArrayValue($key) {
+        return $this->data[$key] ?? null;
+    }
+
+    /**
      * @return mixed|null
      */
     public function getReturnValue() {

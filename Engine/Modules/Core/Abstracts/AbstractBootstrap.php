@@ -44,6 +44,8 @@ abstract class AbstractBootstrap {
      * @var int $order
      */
     protected $order = Statics::DEFAULT_ORDER;
+    /** @var array $configuration */
+    private $configuration = [];
 
     /** @throws Exception */
     public function install() {
@@ -126,6 +128,23 @@ abstract class AbstractBootstrap {
      */
     public function getOrder() : int {
         return $this->order;
+    }
+
+    /**
+     * @param string $context
+     *
+     * @return array
+     */
+    public function getConfiguration(string $context) : array {
+        return isset($this->configuration[$context]) ? $this->configuration[$context] : [];
+    }
+
+    /**
+     * @param string $context
+     * @param array $configuration
+     */
+    protected function setConfiguration(string $context, array $configuration) {
+        $this->configuration[$context] = $configuration;
     }
 
 }

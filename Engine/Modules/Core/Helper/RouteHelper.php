@@ -29,17 +29,17 @@ class RouteHelper {
     /**
      * @param Response $response
      * @param string|null $routeName If null, the routeName by meta.route.name.
-     * @param array $urlParams
+     * @param array $namedParams
      * @param array $queryParams
      *
      * @return Response
      */
-    public static function redirect(Response $response, ?string $routeName = null, array $urlParams = [], array $queryParams = []) : Response {
+    public static function redirect(Response $response, ?string $routeName = null, array $namedParams = [], array $queryParams = []) : Response {
         self::init();
-        if (is_null($routeName)) {
+        if ($routeName === null) {
             $routeName = Oforge()->View()->get('meta.route.name');
         }
-        $uri = self::$router->pathFor($routeName, $urlParams, $queryParams);
+        $uri = self::getSlimUrl($routeName, $namedParams, $queryParams);
 
         return $response->withRedirect($uri, 302);
     }
@@ -84,18 +84,35 @@ class RouteHelper {
     }
 
     /**
-     * @param string $name
+     * Get url for route, possible modified by services.
+     *
+     * @param string $routeName
      * @param array $namedParams
      * @param array $queryParams
      *
      * @return mixed|string
      * @throws ServiceNotFoundException
      */
-    public static function getUrl(string $name, array $namedParams = [], array $queryParams = []) {
+    public static function getUrl(string $routeName, array $namedParams = [], array $queryParams = []) {
         /** @var UrlService $urlService */
         $urlService = Oforge()->Services()->get('url');
 
-        return $urlService->getUrl($name);
+        return $urlService->getUrl($routeName, $namedParams, $queryParams);
+    }
+
+    /**
+     * Get slim registered url for route.
+     *
+     * @param string $routeName
+     * @param array $namedParams
+     * @param array $queryParams
+     *
+     * @return string
+     */
+    public static function getSlimUrl(string $routeName, array $namedParams = [], array $queryParams = []) {
+        self::init();
+
+        return self::$router->pathFor($routeName, $namedParams, $queryParams);
     }
 
     /**
@@ -105,10 +122,11 @@ class RouteHelper {
      *
      * @return array an array with two keys ['url'] and ['query_params']
      */
-    public static function parseUrlWithQueryParams(string $url): array {
-        $queryParams = ['url' => '', 'query_params' => []];
+    public static function parseUrlWithQueryParams(string $url) : array {
+        $queryParams        = ['url' => '', 'query_params' => []];
         $queryParams['url'] = parse_url($url, PHP_URL_PATH);
         parse_str(parse_url($url, PHP_URL_QUERY), $queryParams['query_params']);
+
         return $queryParams;
     }
 

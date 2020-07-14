@@ -4,6 +4,8 @@ namespace Oforge\Engine\Modules\Core\Helper;
 
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use SplFileInfo;
+use SplFileObject;
 
 /**
  * FileSystemHelper
@@ -11,7 +13,7 @@ use RecursiveIteratorIterator;
  * @package Oforge\Engine\Modules\Core\Helper
  */
 class FileSystemHelper {
-    public const OMIT = ['.', '..', '.git', 'var', 'vendor', 'node_modules'];
+    public const OMIT = ['.', '..', '.git', '.idea', 'var', 'vendor', 'node_modules'];
     /**
      * Caching of findFiles results.
      *
@@ -75,23 +77,66 @@ class FileSystemHelper {
      * @return string[] Array with full path to files.
      */
     public static function findFiles(string $path, string $searchFileName) {
-        $omits  = array_fill_keys(self::OMIT, true);
-        $path   = realpath($path);
         $result = [];
-
-        $recursiveDirectoryIterator = new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::FOLLOW_SYMLINKS);
-        $recursiveFilterIterator    = new \RecursiveCallbackFilterIterator($recursiveDirectoryIterator,
-            function ($file, $key, $iterator) use ($omits, $searchFileName) {
-                return !isset($omits[$file->getFileName()]);
-            });
-        $recursiveIteratorIterator  = new RecursiveIteratorIterator($recursiveFilterIterator);
-        foreach ($recursiveIteratorIterator as $file) {
+        self::iterateFiles($path, function (SplFileInfo $file) use (&$result, $searchFileName) {
             if (strtolower($file->getFileName()) === $searchFileName) {
                 $result[] = $file->getPath() . DIRECTORY_SEPARATOR . $file->getFileName();
             }
-        }
+        });
 
         return $result;
+    }
+
+    /**
+     * @param string $path
+     * @param callable $resultCallable Result callable(SplFileInfo $file). Iteration is canceled on false return.
+     * @param callable|null $filterCallable Optional filter callable(SplFileInfo $file).
+     */
+    public static function iterateFiles(string $path, callable $resultCallable, ?callable $filterCallable = null) {
+        $omits = array_fill_keys(self::OMIT, true);
+        if (($realpath = realpath($path)) !== false) {
+            $path = $realpath;
+        }
+        if ($filterCallable === null) {
+            $filterCallable = function ($file) {
+                return true;
+            };
+        }
+        $recursiveDirectoryIterator = new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::FOLLOW_SYMLINKS);
+        $recursiveFilterIterator    = new \RecursiveCallbackFilterIterator($recursiveDirectoryIterator,
+            function (SplFileInfo $file, $key, $iterator) use ($omits, $filterCallable) {
+                return !isset($omits[$file->getFileName()]) && $filterCallable($file);
+            });
+        $recursiveIteratorIterator  = new RecursiveIteratorIterator($recursiveFilterIterator);
+        foreach ($recursiveIteratorIterator as $file) {
+            $return = $resultCallable($file);
+            if (isset($return) && $return === false) {
+                break;
+            }
+        }
+    }
+
+    /**
+     * @param string $path
+     * @param callable $lineCallable Line callable(string $line). Iteration is canceled on false return.
+     */
+    public static function iterateFileLines(string $path, callable $lineCallable) {
+        if (!is_file($path) || !is_readable($path)) {
+            return;
+        }
+        $splFileObject = new SplFileObject($path);
+        $splFileObject->setFlags(SplFileObject::DROP_NEW_LINE);
+        while (!$splFileObject->eof()) {
+            $line = $splFileObject->fgets();
+            if (empty(trim($line))) {
+                continue;
+            }
+            $return = $lineCallable($line);
+            if (isset($return) && $return === false) {
+                break;
+            }
+        }
+        $splFileObject = null;
     }
 
     /**

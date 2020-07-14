@@ -17,10 +17,17 @@
         margin-bottom: -10rem;
     }
 
-    .contact--links {
+    .content--header {
         display: flex;
         justify-content: flex-end;
         margin-bottom: $size-large;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .contact--links {
+        display: flex;
+        justify-content: flex-end;
 
         .contact--icons {
             display: flex;
@@ -78,6 +85,7 @@
 
     .panel--supplier-description {
         padding: $size-large;
+        position: relative;
     }
 
     .slider--supplier {

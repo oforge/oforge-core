@@ -7,7 +7,6 @@ use FrontendUserManagement\Services\UserService;
 use Insertion\Models\Insertion;
 use Insertion\Services\InsertionService;
 use InvalidArgumentException;
-use Monolog\Logger;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
@@ -26,6 +25,11 @@ use Twig_Error_Runtime;
 use Twig_Error_Syntax;
 use Doctrine\ORM\ORMException;
 
+/**
+ * Class MailService
+ *
+ * @package Oforge\Engine\Modules\Mailer\Services
+ */
 class MailService {
 
     /**
@@ -149,7 +153,6 @@ class MailService {
             } catch (Exception $e) {
                 Oforge()->Logger()->get("mailer")->error("Message has not been sent", [$mail->ErrorInfo]);
 
-
                 return false;
             }
         }
@@ -217,7 +220,13 @@ class MailService {
         }
 
         $twig = new CustomTwig($templatePath, ['cache' => ROOT_PATH . DIRECTORY_SEPARATOR . Statics::CACHE_DIR . '/mailer']);
-        $twig->addExtension(new \Oforge\Engine\Modules\CMS\Twig\AccessExtension());
+        try {
+            Oforge()->Services()->get('cms');
+            $cmsTwigExtension = '\CMS\Twig\CmsTwigExtension';
+            $twig->addExtension(new $cmsTwigExtension());
+        } catch (Exception $exception) {
+            // nothing to do
+        }
         $twig->addExtension(new AccessExtension());
         $twig->addExtension(new MediaExtension());
         $twig->addExtension(new SlimExtension());
@@ -395,4 +404,5 @@ class MailService {
         ];
         $this->send($mailerOptions, $templateData);
     }
+
 }
