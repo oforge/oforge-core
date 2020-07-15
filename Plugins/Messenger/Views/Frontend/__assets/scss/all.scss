@@ -1,6 +1,7 @@
 .messenger {
     display: flex;
     flex-direction: column;
+    width: 100%;
 
     &__header {
         background: $color-primary;
@@ -126,6 +127,7 @@
         a {
             color: $color-secondary;
             text-decoration: underline;
+            font-weight: bold;
 
             &:hover, &:active {
                 text-decoration-color: $color-primary;
@@ -154,15 +156,19 @@
     #message {
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
+        height: 10rem;
+        resize: vertical;
     }
 
     .form__input--submit {
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
+        height: 100%;
     }
 
     .submit-control {
         flex: 1 0 auto;
+        display: flex;
     }
 }
 
@@ -191,7 +197,6 @@
     .chat-list {
         max-height: 60rem;
         overflow: auto;
-        overflow: auto;
         background: $color-primary;
 
         &.collapsed {
@@ -203,6 +208,15 @@
 @media screen and (min-width: $screen-large) {
     .messages {
         height: 60rem;
+    }
+    .form--message {
+        #message {
+            border-radius: 0;
+        }
+
+        .form__input--submit {
+            border-top-right-radius: 0;
+        }
     }
 }
 
