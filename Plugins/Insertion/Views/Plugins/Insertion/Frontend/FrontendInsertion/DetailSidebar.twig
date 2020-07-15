@@ -5,7 +5,7 @@
         {% block sidebar__panel_provider %}
             {% if profile is defined %}
                 <div class="panel panel--provider">
-                    <h3 class="provider_title">{{ i18n('insertion_detail_provider_headline') }}</h3>
+                    <h3 class="provider_title">{{ i18n('insertion_detail_provider_headline_' ~ insertion.insertionType.name) }}</h3>
                     <div class="provider_image-container">
 
                         <div class="user__picture"
