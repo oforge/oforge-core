@@ -1,7 +1,24 @@
 {% extends  'Frontend/Components/Insertions/UserInsertion.twig' %}
+
 {% block panel__classes %}
-   {{ parent() }} {% if item.deleted == true %}is--deleted{% endif %}
+   {{ parent() }} {% if item.deleted %}is--delete{% elseif not item.active %}is--deactivated{% endif %}
 {% endblock panel__classes %}
+
+{% block product_preview %}
+    {{ parent() }}
+    {% if item.deleted %}
+        <div class="product__image_overlay--deleted"><span>{{ i18n('insertion_bookmark_overlay_deleted', {
+            en: 'deleted',
+            de: 'gelöscht',
+        }) }}</span></div>
+    {% elseif not item.active %}
+        <div class="product__image_overlay--deactivated"><span>{{ i18n('insertion_bookmark_overlay_deactivated', {
+            en: 'deactivated',
+            de: 'deaktiviert',
+        }) }}</span></div>
+    {% endif %}
+{% endblock product_preview %}
+
 {% block attributes__main %}
     {% if item.content[0].name is not empty %}
         <div class="product__attribute">
@@ -41,13 +58,22 @@
 
 {% block attributes__bottom %}
     <div class="product__actions">
-        <a class="button button--primary open" title="insertion has been deleted"
-           href="{{ url("insertions_detail", {id: item.id}) }}">
+        <a class="button button--primary open" {{
+            attr({
+                href: url("insertions_detail", {id: item.id}),
+                title: item.deleted ? i18n('insertion_deleted', {
+                    en: 'Insertion has been deleted',
+                    de: 'Inserat wurde gelöscht',
+                }) : (item.active ? i18n('open_insertion') : i18n('insertion_deactivated', {
+                    en: 'Insertion has been deactivated',
+                    de: 'Inserat wurde deaktiviert',
+                }) ),
+            })
+        }}>
             <span>{{ i18n('open_insertion') }}</span>
             <svg class="icon icon--light">
                 <use xlink:href="#preview"></use>
             </svg>
-        </a>
         </a>
         <a class="button button--primary remove"
            href="{{ url('frontend_account_insertions_removeBookmark' , {id: bookmark.id}) }}">
