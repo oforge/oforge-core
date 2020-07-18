@@ -1,5 +1,8 @@
-{% extends 'Backend/CRUD/Components/ViewBase.twig' %}
+{% extends 'Backend/CRUD/Update.twig' %}
 
+{% do dotSet({
+    'crud.context': 'update',
+}) %}
 
 {% block pagecontent %}
     <section class="content">

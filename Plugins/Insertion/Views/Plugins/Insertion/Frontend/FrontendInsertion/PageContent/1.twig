@@ -1,7 +1,7 @@
 {% block page_content %}
 
     {% block insertion_details %}
-        {% if user_logged_in or (meta.route.assetScope == 'Backend' and user != null) %}
+        {% if user_logged_in or ('Backend' in meta.route.assetBundles and user != null) %}
             <div class="form-controls form-controls--step-1">
                 {% set hasContent = false %}
                 {% for attributeGroup in attributes %}
