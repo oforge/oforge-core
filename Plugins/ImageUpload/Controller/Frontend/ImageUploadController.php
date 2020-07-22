@@ -4,6 +4,7 @@ namespace ImageUpload\Controller\Frontend;
 
 use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Abstracts\SecureFrontendController;
+use FrontendUserManagement\Services\FrontendUserService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
@@ -47,9 +48,15 @@ class ImageUploadController extends SecureFrontendController {
             }
 
             try {
+                /**
+                 * @var $userService FrontendUserService
+                 */
+                $userService = Oforge()->Services()->get('frontend.user');
+                $user        = $userService->getUser();
+
                 /** @var MediaService $mediaService */
                 $mediaService = Oforge()->Services()->get('media');
-                $media        = $mediaService->add($file);
+                $media        = $mediaService->add($file, null, $user == null ? null : $user->getId());
                 $imageData    = $media->toArray();
             } catch (ServiceNotFoundException $e) {
                 return $response->withStatus(500);

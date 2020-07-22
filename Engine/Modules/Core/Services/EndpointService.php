@@ -177,8 +177,8 @@ class EndpointService extends AbstractDatabaseAccess {
             $fileName = $class;
             if (StringHelper::startsWith($fileName, 'Oforge\Engine\Modules')) {
                 $fileName = explode('Modules', $class, 2)[1];
-                $fileName = ltrim(str_replace('\\', '_', $fileName), '_');
             }
+            $fileName = ltrim(str_replace('\\', '_', $fileName), '_');
             if ($isProductionMode) {
                 $cacheFile = Statics::ENDPOINT_CACHE_DIR . DIRECTORY_SEPARATOR . $fileName . '.cache';
                 if (file_exists($cacheFile)) {
