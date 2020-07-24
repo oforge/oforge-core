@@ -70,12 +70,12 @@ if (typeof Oforge !== 'undefined') {
 
                 if (itemList > 0) {
                     placeholderItem.classList.add('hidden');
-                    if(required) {
+                    if (required) {
                         placeholderItem.querySelector(".upload__file_required").removeAttribute("required");
                     }
                 } else {
                     placeholderItem.classList.remove('hidden');
-                    if(required) {
+                    if (required) {
                         placeholderItem.querySelector(".upload__file_required").setAttribute("required", "");
 
 
@@ -108,6 +108,16 @@ if (typeof Oforge !== 'undefined') {
                 imageListItem.appendChild(mainItem);
 
                 imageList.appendChild(imageListItem);
+
+
+                $(imageListItem).on("click", function (event) {
+                    console.log("tim");
+                    var $target = $(event.target).closest(".upload__item").children(".upload__image");
+                    if (Oforge.MediaResize != undefined && Oforge.MediaResize.start != undefined) {
+                        Oforge.MediaResize.start($target.attr('src'), $target.attr('data-upload-image'));
+                    }
+                });
+
 
                 return imageListItem;
             }
@@ -244,7 +254,7 @@ if (typeof Oforge !== 'undefined') {
             });
 
             $('.upload__item.upload__item--placeholder').on('click', function (e) {
-               $('.uppy-u-reset.uppy-Dashboard-browse').click();
+                $('.uppy-u-reset.uppy-Dashboard-browse').click();
             });
         }
     });
