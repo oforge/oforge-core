@@ -2,19 +2,30 @@
 
 namespace Insertion\Services;
 
+use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Models\User;
 use Insertion\Models\InsertionProfile;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
-use Oforge\Engine\Modules\Media\Services\MediaService;
-use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Manager\Events\Event;
+use Oforge\Engine\Modules\Media\Services\MediaService;
 use ReflectionException;
 
 class InsertionProfileService extends AbstractDatabaseAccess {
+
     public function __construct() {
         parent::__construct([
             'default' => InsertionProfile::class,
         ]);
+    }
+
+    public function list(array $criteria = [], ?array $orderBy = null) {
+        /**
+         * @var InsertionProfile[] $entities
+         */
+        $entities = $this->repository()->findBy($criteria, $orderBy);
+
+        return $entities;
     }
 
     /**
@@ -38,7 +49,7 @@ class InsertionProfileService extends AbstractDatabaseAccess {
      * @return InsertionProfile|null
      * @throws ORMException
      */
-    public function getById($id): ?InsertionProfile {
+    public function getById($id) : ?InsertionProfile {
         /**
          * @var $result InsertionProfile
          */
@@ -88,10 +99,10 @@ class InsertionProfileService extends AbstractDatabaseAccess {
         }
 
         $imprintWebsite = $params["imprint_website"];
-        $disallowed = array('http://', 'https://');
+        $disallowed     = ['http://', 'https://'];
 
-        foreach($disallowed as $d) {
-            if(strpos($imprintWebsite, $d) === 0) {
+        foreach ($disallowed as $d) {
+            if (strpos($imprintWebsite, $d) === 0) {
                 $imprintWebsite = str_replace($d, '', $imprintWebsite);
             }
         }
@@ -116,4 +127,43 @@ class InsertionProfileService extends AbstractDatabaseAccess {
             $this->entityManager()->update($result);
         }
     }
+
+    public function getInsertionProvidersData() : array {
+        /** @var InsertionListService $insertionListService */
+        $insertionListService = Oforge()->Services()->get('insertion.list');
+
+        $profiles = [];
+        /** @var InsertionProfile[] $insertionProfiles */
+        $insertionProfiles = $this->list(/*[], [
+            'imprintName' => 'ASC',
+        ]*/);
+        foreach ($insertionProfiles as $insertionProfile) {
+            $includeProfile = true;
+            $includeProfile = Oforge()->Events()->trigger(#
+                Event::create(self::class . '::getInsertionProvidersData.include', [
+                    'insertionProfile' => $insertionProfile,
+                ], $includeProfile, true)#
+            );
+            if ($includeProfile) {
+                $insertionCount = $insertionListService->getUserInsertionCount($insertionProfile->getUser(), [#
+                    // 'active' => true
+                ]);
+                // if ($insertionCount === 0) {
+                //     continue;
+                // }
+                $insertionData                   = $insertionProfile->toArray(2);
+                $insertionData['insertionCount'] = $insertionCount;
+                $insertionData['insertionTypes'] = $insertionListService->getUserDistinctInsertionTypes($insertionProfile->getUser());
+
+                $insertionData = $includeProfile = Oforge()->Events()->trigger(#
+                    Event::create(self::class . '::getInsertionProvidersData.addData', [], $insertionData, true)#
+                );
+                $profiles[]    = $insertionData;
+            }
+
+        }
+
+        return $profiles;
+    }
+
 }

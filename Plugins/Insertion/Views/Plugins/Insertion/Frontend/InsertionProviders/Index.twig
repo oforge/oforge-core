@@ -1,0 +1,98 @@
+{% extends "@parent/Frontend/Layout.twig" %}
+
+{% block content %}
+    <div class="content content--insertion">
+        <div class="flex insertions">
+            {% block sidebar %}
+                <div class="insertion__sidebar">
+                    {% block sidebar_inner '' %}
+                </div>
+            {% endblock sidebar %}
+
+            <div class="insertion__content">
+                <div class="product-list">
+                    <div class="panel panel--sort flex flex--row flex--center flex--between">
+                        <h3 class="result__text">{{ i18n('insertion_providers', {
+                                en: 'Insertion providers',
+                                de: 'Inseratsanbieter',
+                            }) }} ({{ insertionProfiles|length }})</h3>
+                    </div>
+                    {% for insertionProfile in insertionProfiles %}
+                        {% set showInsertionProfile = true %}
+                        {% if not insertionProfile.imprintName %}
+                            {% set showInsertionProfile = false %}
+                        {% endif %}
+                        {% block insertion_profile %}
+                            {% if showInsertionProfile %}
+                                <div class="{% block panel__classes 'panel panel--product product' %}">
+                                    <a href="{{ url('insertions_profile', {id: insertionProfile.id }) }}"
+                                       class="product__image">
+                                        {% if insertionProfile.user.detail.image %}
+                                            <img src="{{ media(insertionProfile.user.detail.image, 600) }}"
+                                                 alt="{{ insertionProfile.imprintName }}"
+                                                 class="image" />
+                                        {% else %}
+                                            <svg class="icon icon--placeholder">
+                                                <use xlink:href="#placeholder-insertion"></use>
+                                            </svg>
+                                        {% endif %}
+                                    </a>
+                                    <div class="product__content">
+                                        <a class="product__title-link"
+                                           href="{{ url('insertions_profile', {id: insertionProfile.id }) }}">
+                                            <h3 class="product__title">
+                                                {{ insertionProfile.imprintName }}
+                                            </h3>
+                                        </a>
+
+                                        <div class="product__attributes product__attributes--top">
+                                            <div>
+                                                {{ insertionProfile.imprintStreet }}
+                                            </div>
+                                            <div>
+                                                {{ insertionProfile.imprintZipCity }}
+                                            </div>
+                                        </div>
+
+                                        <div class="product__attributes product__attributes--bottom">
+                                            <div class="product__attributes--main">
+                                                <div class="product__label">
+                                                    {{ i18n('insertions_in', {
+                                                        en: 'Insertions in',
+                                                        de: 'Inserate unter',
+                                                    }) }}
+                                                </div>
+                                                <div class="product__value">
+                                                    {% for insertionTypeName in insertionProfile.insertionTypes %}
+                                                        {{ (loop.index0 == 0 ? '' : ', ' ) ~ i18n(insertionTypeName) }}
+                                                    {% else %}
+                                                        -
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="product__meta {# flex flex--row flex--between#}">
+{#                                            <div>#}
+{#                                                {{ insertionProfile.insertionCount }} Inserate#}
+{#                                            </div>#}
+                                            <div>
+                                                <a href="{{ url('insertions_profile', {id: insertionProfile.id }) }}"
+                                                   class="button button--secondary">
+                                                    {{ i18n('provider_page', {
+                                                        en: 'Provider page',
+                                                        de: 'Anbieterseite',
+                                                    }) }}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endblock insertion_profile %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
