@@ -377,21 +377,26 @@ class MailService {
             $configService = Oforge()->Services()->get('config');
             $moderatorMail = $configService->get('insertions_creation_moderator_mail');
             $moderatorName = $configService->get('insertions_creation_moderator_name');
-            $mailerOptions = [
-                'to'       => [$moderatorMail => $moderatorName],
-                'from'     => 'no_reply',
-                'subject'  => I18N::translate('mailer_subject_insertion_waiting_for_moderating', [
-                    'en' => 'A new insertion is waiting for moderation',
-                    'de' => 'Ein neues Inserat wartet auf Moderation',
-                ]),
-                'template' => 'InsertionWaitingForModerating.twig',
-            ];
-            $templateData  = [
-                'insertionID'    => $insertion->getId(),
-                'insertionTitle' => $insertion->getContent()[0]->getTitle(),
-                'sender_mail'    => $this->getSenderAddress('no_reply'),
-            ];
-            $this->send($mailerOptions, $templateData);
+            if (!empty($moderatorMail)) {
+                if (empty($moderatorName)) {
+                    $moderatorName = $moderatorMail;
+                }
+                $mailerOptions = [
+                    'to'       => [$moderatorMail => $moderatorName],
+                    'from'     => 'no_reply',
+                    'subject'  => I18N::translate('mailer_subject_insertion_waiting_for_moderating', [
+                        'en' => 'A new insertion is waiting for moderation',
+                        'de' => 'Ein neues Inserat wartet auf Moderation',
+                    ]),
+                    'template' => 'InsertionWaitingForModerating.twig',
+                ];
+                $templateData  = [
+                    'insertionID'    => $insertion->getId(),
+                    'insertionTitle' => $insertion->getContent()[0]->getTitle(),
+                    'sender_mail'    => $this->getSenderAddress('no_reply'),
+                ];
+                $this->send($mailerOptions, $templateData);
+            }
         } catch (\Exception $exception) {
             Oforge()->Logger()->logException($exception);
         }
