@@ -14,6 +14,7 @@ namespace PHPSTORM_META {
             'redirect'           => \Oforge\Engine\Modules\Core\Services\RedirectService::class,
             'session.management' => \Oforge\Engine\Modules\Core\Services\Session\SessionManagementService::class,
             'store.keyvalue'     => \Oforge\Engine\Modules\Core\Services\KeyValueStoreService::class,
+            'token'              => \Oforge\Engine\Modules\Core\Services\TokenService::class,
         ]));
 
         registerArgumentsSet('oforge_flash_message_types', 'success', 'error', 'warning', 'info');

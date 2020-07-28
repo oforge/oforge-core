@@ -40,8 +40,10 @@ class MailService {
      * 'bcc'        => [],
      * 'replyTo'    => [],
      * 'attachment' => [],
-     * "subject"    => string,
-     * "html"       => bool,
+     * 'subject'    => string,
+     * 'template'   => string, // Twig template file name (with extension)
+     * 'html'       => string, // Html body
+     * 'body'       => string, // Raw text mail
      * ]
      * TemplateData = ['key' = value, ... ]
      *
@@ -60,8 +62,8 @@ class MailService {
         if ($this->isValid($options)) {
             try {
                 /** @var  $configService */
-                $configService = Oforge()->Services()->get("config");
-                $exceptions    = $configService->get("mailer_exceptions");
+                $configService = Oforge()->Services()->get('config');
+                $exceptions    = $configService->get('mailer_exceptions');
 
                 /** @var PHPMailer $mail */
                 $mail = new PHPMailer($exceptions);
@@ -69,12 +71,12 @@ class MailService {
                 /**  Mailer Settings */
                 $mail->isSMTP();
                 $mail->setFrom($this->getSenderAddress($options['from']), $configService->get('mailer_from_name'));
-                $mail->Host       = $configService->get("mailer_host");
-                $mail->Username   = $configService->get("mailer_smtp_username");
-                $mail->Port       = $configService->get("mailer_port");
-                $mail->SMTPAuth   = $configService->get("mailer_smtp_auth");
-                $mail->Password   = $configService->get("mailer_smtp_password");
-                $mail->SMTPSecure = $configService->get("mailer_smtp_secure");
+                $mail->Host       = $configService->get('mailer_host');
+                $mail->Username   = $configService->get('mailer_smtp_username');
+                $mail->Port       = $configService->get('mailer_port');
+                $mail->SMTPAuth   = $configService->get('mailer_smtp_auth');
+                $mail->Password   = $configService->get('mailer_smtp_password');
+                $mail->SMTPSecure = $configService->get('mailer_smtp_secure');
                 $mail->Encoding   = 'base64';
                 $mail->CharSet    = 'UTF-8';
 
@@ -88,32 +90,31 @@ class MailService {
                     } else {
                         Oforge()->Logger()->get('mailer')->error('Could not redirect message, recipient not set in mailer backend options!');
                     }
-
                 } else {
-                    foreach ($options["to"] as $key => $value) {
+                    foreach ($options['to'] as $key => $value) {
                         $mail->addAddress($key, $value);
                     }
                 }
 
                 if (isset($options['cc'])) {
-                    foreach ($options["cc"] as $key => $value) {
+                    foreach ($options['cc'] as $key => $value) {
                         $mail->addCC($key, $value);
                     }
                 }
                 if (isset($options['bcc'])) {
-                    foreach ($options["bcc"] as $key => $value) {
+                    foreach ($options['bcc'] as $key => $value) {
                         $mail->addBCC($key, $value);
                     }
                 }
                 if (isset($options['replyTo'])) {
-                    foreach ($options["replyTo"] as $key => $value) {
+                    foreach ($options['replyTo'] as $key => $value) {
                         $mail->addReplyTo($key, $value);
                     }
                 }
 
                 /** Add Attachments: */
                 if (isset($options['attachment'])) {
-                    foreach ($options["attachment"] as $key => $value) {
+                    foreach ($options['attachment'] as $key => $value) {
                         $mail->addAttachment($key, $value);
                     }
                 }
@@ -128,30 +129,34 @@ class MailService {
                     $templateData['baseUrl'] = $conversationLink;
                 }
 
-                if (isset($options["template"])) {
+                if (isset($options['template'])) {
                     /** Render HTML */
                     $renderedTemplate = $this->renderMail($options, $templateData);
-                } elseif (isset($options["html"])) {
-                    $renderedTemplate = $options["html"];
+                    $mail->isHTML(true);
+                } elseif (isset($options['html'])) {
+                    $renderedTemplate = $options['html'];
+                    $mail->isHTML(true);
+                } elseif (isset($options['text'])) {
+                    $renderedTemplate = $options['text'];
+                    $mail->isHTML(false);
                 }
 
                 /** Add Content */
-                $mail->isHTML(ArrayHelper::get($options, 'html', true));
-                $mail->Subject = $options["subject"];
+                $mail->Subject = $options['subject'];
                 $mail->Body    = $renderedTemplate;
 
                 $mail->send();
 
                 if ($redirect == true) {
-                    Oforge()->Logger()->get("mailer")->info("Message has been redirected", [$mail->getToAddresses(), $options, $templateData]);
+                    Oforge()->Logger()->get('mailer')->info('Message has been redirected', [$mail->getToAddresses(), $options, $templateData]);
                 } else {
-                    Oforge()->Logger()->get("mailer")->info("Message has been sent", [$options, $templateData]);
+                    Oforge()->Logger()->get('mailer')->info('Message has been sent', [$options, $templateData]);
                 }
 
                 return true;
 
             } catch (Exception $e) {
-                Oforge()->Logger()->get("mailer")->error("Message has not been sent", [$mail->ErrorInfo]);
+                Oforge()->Logger()->get('mailer')->error('Message has not been sent', [$mail->ErrorInfo]);
 
                 return false;
             }
@@ -167,7 +172,7 @@ class MailService {
      * @throws ConfigOptionKeyNotExistException
      */
     private function isValid(array $options) : bool {
-        $keys = ["to", "subject"];
+        $keys = ['to', 'subject'];
         foreach ($keys as $key) {
             if (!array_key_exists($key, $options)) {
                 throw new ConfigOptionKeyNotExistException($key);
@@ -175,7 +180,7 @@ class MailService {
         }
 
         /** Validate Mail Addresses */
-        $emailKeys = ["to", "cc", "bcc", "replyTo"];
+        $emailKeys = ['to', 'cc', 'bcc', 'replyTo'];
         foreach ($emailKeys as $key) {
             if (array_key_exists($key, $options)) {
                 if (is_array($options[$key])) {
@@ -211,7 +216,7 @@ class MailService {
      * @throws Twig_Error_Syntax
      */
     public function renderMail(array $options, array $templateData) {
-        $templateManagementService = Oforge()->Services()->get("template.management");
+        $templateManagementService = Oforge()->Services()->get('template.management');
         $templateName              = $templateManagementService->getActiveTemplate()->getName();
         $templatePath              = Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . $templateName . DIRECTORY_SEPARATOR . 'MailTemplates';
 
@@ -251,11 +256,11 @@ class MailService {
      * @throws ServiceNotFoundException
      */
     public function getSenderAddress($key = 'info') {
-        $configService = Oforge()->Services()->get("config");
+        $configService = Oforge()->Services()->get('config');
 
         $host = $configService->get('mailer_from_host');
         if (!$host) {
-            throw new InvalidArgumentException("Error: Host is not set");
+            throw new InvalidArgumentException('Error: Host is not set');
         }
         $sender = $configService->get('mailer_from_' . $key);
 

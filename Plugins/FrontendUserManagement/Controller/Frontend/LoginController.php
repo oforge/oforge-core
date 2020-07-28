@@ -10,6 +10,7 @@ use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Core\Services\RedirectService;
 use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
+use Oforge\Engine\Modules\Core\Services\TokenService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -101,7 +102,9 @@ class LoginController extends AbstractController {
         /**
          * invalid token was sent
          */
-        if (!hash_equals($_SESSION['token'], $body['token'])) {
+        /** @var TokenService $tokenService */
+        $tokenService = Oforge()->Services()->get('token');
+        if (!$tokenService->isValid($body['token'])) {
             Oforge()->View()->Flash()->addMessage('warning', I18N::translate('form_invalid_token', 'The data has been sent from an invalid form.'));
             Oforge()->Logger()->get()->addWarning('Someone tried a backend login without a valid form csrf token! Redirecting back to login.');
 
