@@ -188,7 +188,7 @@ class SlimExtension extends Twig_Extension {
      *
      * @return bool
      */
-    public function functionIncludeInFooter(string $context):bool {
+    public function functionIncludeInFooter(string $context) : bool {
         return ($this->footerIncludes[$context] ?? false);
     }
 
@@ -222,12 +222,24 @@ class SlimExtension extends Twig_Extension {
         if (is_string($input)) {
             $result = $input;
         } else {
-            foreach ($input as $index => $value) {
-                if (empty($value)) {
-                    continue;
+            function subFunction(array $input, ?string $prefix = null) {
+                $subResult = '';
+                foreach ($input as $index => $value) {
+                    $currentKey = (empty($prefix) ? $index : (ltrim($prefix . '-' . $index, '-')));
+                    if (empty($value)) {
+                        continue;
+                    }
+                    if (is_array($value)) {
+                        $subResult .= subFunction($value, $currentKey);
+                    } else {
+                        $subResult .= " $currentKey: $value;";
+                    }
                 }
-                $result .= " $index: $value;";
+
+                return $subResult;
             }
+
+            $result .= subFunction($input);
         }
         $result = trim($result);
 
@@ -277,26 +289,23 @@ class SlimExtension extends Twig_Extension {
      *
      * @return string
      */
-    protected function buildSlimAttrString(array $array) : string {
+    protected function buildSlimAttrString(array $array, ?string $prefix = null) : string {
         $result = '';
         foreach ($array as $index => $value) {
-            if (empty($value)) {
+            $currentPrefix = (empty($prefix) ? '' : (ltrim($prefix, '-') . '-'));
+            if (empty($value) && $value !== 0) {
                 continue;
             } elseif ($index === 'style') {
                 $result .= ' ' . $this->functionStyle($value);
-            } elseif (is_int($value)) {
-                $result .= is_numeric($index) ? " $value" : " $index=\"$value\"";
-            } elseif (is_string($value)) {
-                $result .= is_numeric($index) ? " $value" : " $index=\"$value\"";
+            } elseif (is_int($value) || is_string($value)) {
+                $result .= is_numeric($index) ? " $value" : " $currentPrefix$index=\"$value\"";
             } elseif (is_bool($value) && $value && is_string($index)) {
-                $result .= " $index";
+                $result .= " $currentPrefix$index";
             } elseif (is_array($value)) {
                 if (is_numeric($index)) {
-                    $result .= $this->buildSlimAttrString($value);
+                    $result .= $this->buildSlimAttrString($value, $currentPrefix);
                 } else {
-                    $result .= ' ' . $index . '="';
-                    $result .= trim($this->buildSlimAttrString($value));
-                    $result .= '"';
+                    $result .= $this->buildSlimAttrString($value, $currentPrefix . $index);
                 }
             }
         }
