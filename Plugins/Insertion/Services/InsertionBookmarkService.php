@@ -91,16 +91,21 @@ class InsertionBookmarkService extends AbstractDatabaseAccess {
     }
 
     /**
-     * @param int $insertion
-     * @param int $user
+     * @param int $insertionID
+     * @param int $userID
      *
      * @return bool
-     * @throws \Doctrine\ORM\ORMException
      */
-    public function hasBookmark(int $insertion, int $user) : bool {
-        $bookmark = $this->repository("user")->findOneBy(["insertion" => $insertion, "user" => $user]);
+    public function hasBookmark(int $insertionID, int $userID) : bool {
+        try {
+            $bookmark = $this->repository("user")->findOneBy(["insertion" => $insertionID, "user" => $userID]);
 
-        return $bookmark != null;
+            return $bookmark != null;
+        } catch (\Exception $exception) {
+            Oforge()->Logger()->logException($exception);
+
+            return false;
+        }
     }
 
     /**
