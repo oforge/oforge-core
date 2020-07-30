@@ -71,5 +71,12 @@
     .form__control.form__control--s-left ~ .form__control.form__control--s-left {
         margin-top: $size-large;
     }
+    .form__control.form__control--s-center {
+        width: 50%;
+        margin: 0 auto;
+    }
+    .form__control.form__control--s-center ~ .form__control.form__control--s-center {
+        margin-top: $size-large;
+    }
 
 }
