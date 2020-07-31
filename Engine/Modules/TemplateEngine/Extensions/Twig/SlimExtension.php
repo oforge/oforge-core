@@ -222,24 +222,7 @@ class SlimExtension extends Twig_Extension {
         if (is_string($input)) {
             $result = $input;
         } else {
-            function subFunction(array $input, ?string $prefix = null) {
-                $subResult = '';
-                foreach ($input as $index => $value) {
-                    $currentKey = (empty($prefix) ? $index : (ltrim($prefix . '-' . $index, '-')));
-                    if (empty($value)) {
-                        continue;
-                    }
-                    if (is_array($value)) {
-                        $subResult .= subFunction($value, $currentKey);
-                    } else {
-                        $subResult .= " $currentKey: $value;";
-                    }
-                }
-
-                return $subResult;
-            }
-
-            $result .= subFunction($input);
+            $result .= $this->functionStyleSub($input);
         }
         $result = trim($result);
 
@@ -311,6 +294,29 @@ class SlimExtension extends Twig_Extension {
         }
 
         return $result;
+    }
+
+    /**
+     * @param array $input
+     * @param string|null $prefix
+     *
+     * @return string
+     */
+    protected function functionStyleSub(array $input, ?string $prefix = null) {
+        $subResult = '';
+        foreach ($input as $index => $value) {
+            $currentKey = (empty($prefix) ? $index : (ltrim($prefix . '-' . $index, '-')));
+            if (empty($value)) {
+                continue;
+            }
+            if (is_array($value)) {
+                $subResult .= $this->functionStyleSub($value, $currentKey);
+            } else {
+                $subResult .= " $currentKey: $value;";
+            }
+        }
+
+        return $subResult;
     }
 
 }
