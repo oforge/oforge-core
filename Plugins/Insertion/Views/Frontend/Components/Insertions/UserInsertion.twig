@@ -14,7 +14,10 @@
     </div>
     <div class="product__attribute">
         <span class="product__label">{{ i18n('duration') }}</span>
-        <span class="product__value">unbegrenzt</span>
+        <span class="product__value">{{ i18n('insertion_duration_unlimited', {
+                en: 'unlimited',
+                de: 'unbegrenzt',
+            }) }}</span>
     </div>
     <div class="product__attribute product__view-counter">
         <svg class="icon icon--small">
@@ -38,7 +41,7 @@
             {% if item.priceType is same as("on_demand")  %}
                 <span class="product__value">{{ i18n('price_on_demand') }}</span>
             {% elseif  item.priceType is same as("price_range") %}
-                    <span class="product__value-value">{{item.minPrice < item.price ? item.minPrice|number_format(0, ',', '.') : item.price|number_format(0, ',', '.')}} € - {{ item.minPrice < item.price ? item.price|number_format(0, ',', '.') : item.minPrice|number_format(0, ',', '.') }} €</span>
+                <span class="product__value-value">{{item.minPrice < item.price ? item.minPrice|number_format(0, ',', '.') : item.price|number_format(0, ',', '.')}} € - {{ item.minPrice < item.price ? item.price|number_format(0, ',', '.') : item.minPrice|number_format(0, ',', '.') }} €</span>
             {% else %}
                 <span class="product__value">{% if item.priceType is same as("negotiable") %}{{ i18n('price_negotiable') }}{% endif %} {{ item.price|number_format(0, ',', '.') }} € {% if (item.tax) %} ({{ i18n('vat_identificationable') }}){% endif %}</span>
             {% endif %}
@@ -46,7 +49,10 @@
         {% endif %}
         <div class="product__attribute">
             <span class="product__label">{{ i18n('insertion_duration') }}</span>
-            <span class="product__value">unbegrenzt</span>
+            <span class="product__value">{{ i18n('insertion_duration_unlimited', {
+                en: 'unlimited',
+                de: 'unbegrenzt',
+            }) }}</span>
         </div>
         <div class="product__attribute product__view-counter">
             <svg class="icon icon--small">

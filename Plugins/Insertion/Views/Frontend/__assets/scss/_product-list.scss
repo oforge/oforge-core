@@ -19,6 +19,25 @@
             object-fit: cover;
             object-position: center center;
         }
+
+        &_overlay {
+            &--deleted, &--deactivated {
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 140px;
+                width: 140px;
+                opacity: 0.8;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 2rem;
+
+                > span {
+                    transform: rotate(-45deg);
+                }
+            }
+        }
     }
 
     &__content {
@@ -114,6 +133,13 @@
         &__image {
             width: 200px;
             height: 200px;
+            &_overlay {
+                &--deleted, &--deactivated {
+                    width: 200px;
+                    height: 200px;
+                    font-size: 2.8rem;
+                }
+            }
         }
 
         .image {
@@ -135,6 +161,14 @@
             width: 300px;
             height: 300px;
             overflow: hidden;
+
+            &_overlay {
+                &--deleted, &--deactivated {
+                    width: 300px;
+                    height: 300px;
+                    font-size: 3.8rem;
+                }
+            }
 
             .image {
                 width: 300px;
@@ -163,6 +197,14 @@
             flex-direction: column;
             align-items: flex-start;
             justify-content: center;
+
+            &_overlay {
+                &--deleted, &--deactivated {
+                    width: 300px;
+                    height: 300px;
+                    font-size: 4.8rem;
+                }
+            }
         }
 
         &__content {
