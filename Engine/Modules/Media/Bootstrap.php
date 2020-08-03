@@ -26,7 +26,6 @@ class Bootstrap extends AbstractBootstrap {
         $this->endpoints = [
             Controller\Backend\Media\AjaxController::class,
             Controller\Backend\Media\MediaController::class,
-            Controller\Frontend\Media\MediaController::class,
         ];
 
         $this->models = [
