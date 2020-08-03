@@ -55,35 +55,35 @@
 }
 
 .media-resize-controls.move {
-    background-image: url('../img/move.svg');
+    background-image: url('../imgs/move.svg');
 }
 
 .media-resize-controls.accept {
-    background-image: url('../img/accept.svg');
+    background-image: url('../imgs/accept.svg');
 }
 
 .media-resize-controls.cancel {
-    background-image: url('../img/cancel.svg');
+    background-image: url('../imgs/cancel.svg');
 }
 
 .media-resize-controls.crop {
-    background-image: url('../img/crop.svg');
+    background-image: url('../imgs/crop.svg');
 }
 
 .media-resize-controls.mirror-h {
-    background-image: url('../img/mirror-h.svg');
+    background-image: url('../imgs/mirror-h.svg');
 }
 
 .media-resize-controls.mirror-v {
-    background-image: url('../img/mirror-v.svg');
+    background-image: url('../imgs/mirror-v.svg');
 }
 
 .media-resize-controls.rotate-l {
-    background-image: url('../img/rotate-l.svg');
+    background-image: url('../imgs/rotate-l.svg');
 }
 
 .media-resize-controls.rotate-r {
-    background-image: url('../img/rotate-r.svg');
+    background-image: url('../imgs/rotate-r.svg');
 }
 
 .media-resize-container .cropper-bg {
