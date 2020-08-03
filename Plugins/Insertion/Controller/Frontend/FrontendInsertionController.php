@@ -755,10 +755,12 @@ class FrontendInsertionController extends SecureFrontendController {
      */
     public function contactAction(Request $request, Response $response, $args) {
         $id = $args['id'];
-        /** @var $service InsertionService */
+        /** @var $insertionService InsertionService */
         $insertionService = Oforge()->Services()->get('insertion');
         /** @var Insertion $insertion */
         $insertion = $insertionService->getInsertionById(intval($id));
+
+        $insertionService->countUpInsertionsContactAttempt(intval($id));
 
         if (!isset($insertion) || $insertion == null) {
             return $response->withRedirect('/404', 301);
