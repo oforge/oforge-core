@@ -118,7 +118,7 @@ class ImageCompressService extends AbstractDatabaseAccess {
                 $imagick->writeImage(ROOT_PATH . $imagePath);
             }
         } catch (ImagickException $e) {
-            Oforge()->Logger()->get()->error('ImagickException', $e->getTrace());
+            Oforge()->Logger()->get()->error('ImagickException', ["imagePath" => $imagePath ]);
         }
     }
 
@@ -132,7 +132,7 @@ class ImageCompressService extends AbstractDatabaseAccess {
                 $imagick->writeImage(ROOT_PATH . $cacheUrl);
             }
         } catch (ImagickException $e) {
-            Oforge()->Logger()->get()->error('ImagickException', $e->getTrace());
+            Oforge()->Logger()->get()->error('ImagickException', ["media" => $media->toArray(1),"width" => $width, "cacheUrl" => $cacheUrl ]);
         }
     }
 }
