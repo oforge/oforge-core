@@ -1,0 +1,28 @@
+#report_error_button {
+    cursor: pointer;
+    position: fixed;
+    bottom: 8.5rem;
+    right: .6rem;
+    width: 3rem;
+    height: 3rem;
+    background-color: $color-secondary;
+    border: 2px solid $color-light;
+    border-radius: .6rem;
+    z-index: 999999;
+    transition: opacity 0.2s ease-in;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem;
+
+    &:hover {
+        padding: 0.4rem;
+    }
+
+    &_icon {
+        height: 100%;
+        width: 100%;
+        margin: 0.4rem;
+        color: #FFF;
+    }
+}

@@ -8,6 +8,7 @@
 
 namespace Oforge\Engine\Modules\TemplateEngine\Extensions\Twig;
 
+use Oforge\Engine\Modules\Core\Services\TokenService;
 use Twig_Extension;
 use Twig_Function;
 
@@ -28,15 +29,15 @@ class TokenExtension extends Twig_Extension {
     }
 
     /**
+     * @param string $action
+     *
      * @return string
-     * @throws \Exception
      */
-    public function getToken() {
-        if (empty($_SESSION['token'])) {
-            $_SESSION['token'] = bin2hex(random_bytes(32));
-        }
+    public function getToken(string $action = TokenService::DEFAULT_ACTION) {
+        /** @var TokenService $tokenService */
+        $tokenService = Oforge()->Services()->get('token');
 
-        return $_SESSION['token'];
+        return $tokenService->get($action);
     }
 
 }

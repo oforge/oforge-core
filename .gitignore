@@ -38,3 +38,4 @@ Themes/*.lnk
 !/Plugins/Pedigree/
 !/Plugins/VideoUpload/
 !/Plugins/PDFGenerator/
+!/Plugins/ReportErrorForm/

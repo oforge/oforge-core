@@ -22,6 +22,7 @@ use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
+use Oforge\Engine\Modules\Core\Services\TokenService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -82,7 +83,9 @@ class ForgotPasswordController extends AbstractController {
         /**
          * invalid token was sent
          */
-        if (!hash_equals($_SESSION['token'], $body['token'])) {
+        /** @var TokenService $tokenService */
+        $tokenService = Oforge()->Services()->get('token');
+        if (!$tokenService->isValid($body['token'])) {
             Oforge()->View()->Flash()->addMessage('warning', I18N::translate('form_invalid_token', [
                 'en' => 'The data has been sent from an invalid form.',
                 'de' => 'Die Daten wurden von einem ungültigen Formular gesendet.',
@@ -242,7 +245,9 @@ class ForgotPasswordController extends AbstractController {
         /**
          * invalid token was sent
          */
-        if (!hash_equals($_SESSION['token'], $body['token'])) {
+        /** @var TokenService $tokenService */
+        $tokenService = Oforge()->Services()->get('token');
+        if (!$tokenService->isValid($token)) {
             Oforge()->View()->Flash()->addMessage('warning', I18N::translate('form_invalid_token', [
                 'en' => 'The data has been sent from an invalid form.',
                 'de' => 'Die Daten wurden von einem ungültigen Formular gesendet.',

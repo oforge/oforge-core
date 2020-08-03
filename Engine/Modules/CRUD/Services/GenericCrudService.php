@@ -11,7 +11,6 @@ use Oforge\Engine\Modules\Core\Exceptions\ConfigElementAlreadyExistException;
 use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
 use Oforge\Engine\Modules\Core\Manager\Events\Event;
 use Oforge\Engine\Modules\CRUD\Enum\CrudFilterComparator;
-use ReflectionException;
 
 /**
  * Class GenericCrudService
@@ -123,12 +122,24 @@ class GenericCrudService extends AbstractDatabaseAccess {
      *
      * @return AbstractModel|null
      */
-    public function getById(string $class, $id) {
-        $repo = $this->getRepository($class);
-        /** @var AbstractModel|null $entity */
-        $entity = $repo->findOneBy([
+    public function getById(string $class, $id) : ?AbstractModel {
+        return $this->getOneBy($class, [
             'id' => $id,
         ]);
+    }
+
+    /**
+     * Get single entity or null if not exist.
+     *
+     * @param string $class
+     * @param array $criteria
+     *
+     * @return AbstractModel|null
+     */
+    public function getOneBy(string $class, array $criteria) : ?AbstractModel {
+        $repo = $this->getRepository($class);
+        /** @var AbstractModel|null $entity */
+        $entity = $repo->findOneBy($criteria);
 
         return $entity;
     }

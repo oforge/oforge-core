@@ -20,6 +20,7 @@ use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Oforge\Engine\Modules\Core\Services\RedirectService;
 use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
+use Oforge\Engine\Modules\Core\Services\TokenService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\Mailer\Services\MailService;
 use Slim\Http\Request;
@@ -159,7 +160,9 @@ class RegistrationController extends AbstractController {
         /**
          * invalid token was sent
          */
-        if (!hash_equals($_SESSION['token'], $body['token'])) {
+        /** @var TokenService $tokenService */
+        $tokenService = Oforge()->Services()->get('token');
+        if (!$tokenService->isValid($body['token'])) {
             Oforge()->View()->Flash()->addMessage('warning', I18N::translate('form_invalid_token', [
                 'en' => 'The data has been sent from an invalid form.',
                 'de' => 'Ungültiger Token.',

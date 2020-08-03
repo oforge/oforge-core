@@ -2,9 +2,10 @@
     var me = this;
     me.lastScrollPos = 0;
     me.ticking = false;
-    me.scrollToTopElem = document.createElement('div');
-    me.scrollToTopElem.id = "scroll_to_top";
-    document.body.appendChild(me.scrollToTopElem);
+    me.scrollToTopElem = document.getElementById('scroll_to_top');
+    if (!me.scrollToTopElem) {
+        return;
+    }
 
     me.rAF = (function () {
         return window.requestAnimationFrame ||
