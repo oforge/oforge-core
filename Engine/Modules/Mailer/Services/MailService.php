@@ -2,6 +2,7 @@
 
 namespace Oforge\Engine\Modules\Mailer\Services;
 
+use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\UserService;
 use Insertion\Models\Insertion;
@@ -12,6 +13,7 @@ use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Core\Helper\Statics;
+use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\Media\Twig\MediaExtension;
 use Oforge\Engine\Modules\TemplateEngine\Core\Twig\CustomTwig;
@@ -23,7 +25,6 @@ use PHPMailer\PHPMailer\PHPMailer;
 use Twig_Error_Loader;
 use Twig_Error_Runtime;
 use Twig_Error_Syntax;
-use Doctrine\ORM\ORMException;
 
 /**
  * Class MailService
@@ -163,43 +164,6 @@ class MailService {
         }
 
         return false;
-    }
-
-    /**
-     * @param array $options
-     *
-     * @return bool
-     * @throws ConfigOptionKeyNotExistException
-     */
-    private function isValid(array $options) : bool {
-        $keys = ['to', 'subject'];
-        foreach ($keys as $key) {
-            if (!array_key_exists($key, $options)) {
-                throw new ConfigOptionKeyNotExistException($key);
-            }
-        }
-
-        /** Validate Mail Addresses */
-        $emailKeys = ['to', 'cc', 'bcc', 'replyTo'];
-        foreach ($emailKeys as $key) {
-            if (array_key_exists($key, $options)) {
-                if (is_array($options[$key])) {
-                    foreach ($options[$key] as $email => $name) {
-                        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                            Oforge()->Logger()->logException(new InvalidArgumentException("$email is not a valid email."));
-
-                            return false;
-                        }
-                    }
-                } else {
-                    // Argument is not an Array
-                    Oforge()->Logger()->logException(new InvalidArgumentException("Expected array for $key but get " . gettype($options[$key])));
-                    return false;
-                }
-            }
-        }
-
-        return true;
     }
 
     /**
@@ -408,6 +372,76 @@ class MailService {
             'sender_mail'    => $this->getSenderAddress('no_reply'),
         ];
         $this->send($mailerOptions, $templateData);
+
+        try {
+            I18N::translate('mailer_insertion_waiting_for_moderating_btn', [
+                'en'=> 'moderate',
+                'de' => 'moderieren',
+            ]);
+            /** @var ConfigService $configService */
+            $configService = Oforge()->Services()->get('config');
+            $moderatorMail = $configService->get('insertions_creation_moderator_mail');
+            $moderatorName = $configService->get('insertions_creation_moderator_name');
+            if (!empty($moderatorMail)) {
+                if (empty($moderatorName)) {
+                    $moderatorName = $moderatorMail;
+                }
+                $mailerOptions = [
+                    'to'       => [$moderatorMail => $moderatorName],
+                    'from'     => 'no_reply',
+                    'subject'  => I18N::translate('mailer_subject_insertion_waiting_for_moderating', [
+                        'en' => 'A new insertion is waiting for moderation',
+                        'de' => 'Ein neues Inserat wartet auf Moderation',
+                    ]),
+                    'template' => 'InsertionWaitingForModerating.twig',
+                ];
+                $templateData  = [
+                    'insertionID'    => $insertion->getId(),
+                    'insertionTitle' => $insertion->getContent()[0]->getTitle(),
+                    'sender_mail'    => $this->getSenderAddress('no_reply'),
+                ];
+                $this->send($mailerOptions, $templateData);
+            }
+        } catch (\Exception $exception) {
+            Oforge()->Logger()->logException($exception);
+        }
+    }
+
+    /**
+     * @param array $options
+     *
+     * @return bool
+     * @throws ConfigOptionKeyNotExistException
+     */
+    private function isValid(array $options) : bool {
+        $keys = ['to', 'subject'];
+        foreach ($keys as $key) {
+            if (!isset($options[$key])) {
+                throw new ConfigOptionKeyNotExistException($key);
+            }
+        }
+
+        /** Validate Mail Addresses */
+        $emailKeys = ['to', 'cc', 'bcc', 'replyTo'];
+        foreach ($emailKeys as $key) {
+            if (array_key_exists($key, $options)) {
+                if (is_array($options[$key])) {
+                    foreach ($options[$key] as $email => $name) {
+                        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                            Oforge()->Logger()->logException(new InvalidArgumentException("$email is not a valid email."));
+
+                            return false;
+                        }
+                    }
+                } else {
+                    // Argument is not an Array
+                    Oforge()->Logger()->logException(new InvalidArgumentException("Expected array for $key but get " . gettype($options[$key])));
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
 }
