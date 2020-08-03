@@ -27,7 +27,7 @@ class MediaService extends AbstractDatabaseAccess {
      *
      * @param $file
      * @param $prefix
-     * @param null $owner
+     * @param int|null $owner
      *
      * @return Media|null
      * @throws ORMException
@@ -51,6 +51,7 @@ class MediaService extends AbstractDatabaseAccess {
                 $imageCompressService = Oforge()->Services()->get('image.compress');
                 $size = getimagesize(ROOT_PATH . $relativeFilePath);
 
+                //TODO @MS: Media model has no owner property! Missing Information about which user type (backend, frontend, etc)
                 $media = Media::create([
                     'type' => $file['type'],
                     'name' => urlencode($filename),
