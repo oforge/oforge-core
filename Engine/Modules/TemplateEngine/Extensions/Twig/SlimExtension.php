@@ -49,6 +49,7 @@ class SlimExtension extends Twig_Extension {
     public function getFunctions() {
         return [
             new Twig_Function('attr', [$this, 'functionAttr'], self::OPTIONS_HTML_SAVE),
+            new Twig_Function('class', [$this, 'functionClass'], self::OPTIONS_HTML_SAVE),
             new Twig_Function('deepMerge', [$this, 'functionDeepMerge'], self::OPTIONS_HTML_SAVE),
             new Twig_Function('dotDeepMerge', [$this, 'functionDotDeepMerge'], self::OPTIONS_HTML_SAVE),
             new Twig_Function('dotSet', [$this, 'functionDotSet'], self::OPTIONS_HTML_SAVE_WITH_CONTEXT),
@@ -218,15 +219,23 @@ class SlimExtension extends Twig_Extension {
      * @return string
      */
     public function functionStyle($input) : string {
-        $result = '';
-        if (is_string($input)) {
-            $result = $input;
-        } else {
-            $result .= $this->functionStyleSub($input);
-        }
-        $result = trim($result);
+        return $this->buildSlimAttrString(['style' => $input]);
+    }
 
-        return empty($result) ? '' : "style=\"$result\"";
+    /**
+     * @param string|array $input
+     *
+     * @return string
+     */
+    public function functionClass($input) : string {
+        if (is_array($input)) {
+            array_walk_recursive($input, function (&$value, $key) {
+                if (!is_bool($value)) {
+                    $value = boolval($value);
+                }
+            });
+        }
+        return $this->buildSlimAttrString(['class' => $input]);
     }
 
     /**
@@ -278,12 +287,19 @@ class SlimExtension extends Twig_Extension {
             $currentPrefix = (empty($prefix) ? '' : (ltrim($prefix, '-') . '-'));
             if (empty($value) && $value !== 0) {
                 continue;
-            } elseif ($index === 'style') {
-                $result .= ' ' . $this->functionStyle($value);
+            } elseif ($index === 'style' || $index === 'class') {
+                $glue       = $index === 'style' ? ';' : ' ';
+                $prefixGlue = '-';
+                $subResult  = $this->buildSlimAttrJoinedString($glue, $value, null, $prefixGlue);
+                if (!empty($subResult)) {
+                    $result .= " $index=\"$subResult\"";
+                }
             } elseif (is_int($value) || is_string($value)) {
                 $result .= is_numeric($index) ? " $value" : " $currentPrefix$index=\"$value\"";
-            } elseif (is_bool($value) && $value && is_string($index)) {
-                $result .= " $currentPrefix$index";
+            } elseif (is_bool($value)) {
+                if ($value && is_string($index)) {
+                    $result .= " $currentPrefix$index";
+                }
             } elseif (is_array($value)) {
                 if (is_numeric($index)) {
                     $result .= $this->buildSlimAttrString($value, $currentPrefix);
@@ -297,26 +313,36 @@ class SlimExtension extends Twig_Extension {
     }
 
     /**
-     * @param array $input
-     * @param string|null $prefix
+     * @param string $glue
+     * @param string|array $input
+     * @param null $prefix
+     * @param string $prefixGlue
      *
      * @return string
      */
-    protected function functionStyleSub(array $input, ?string $prefix = null) {
-        $subResult = '';
-        foreach ($input as $index => $value) {
-            $currentKey = (empty($prefix) ? $index : (ltrim($prefix . '-' . $index, '-')));
-            if (empty($value)) {
-                continue;
+    protected function buildSlimAttrJoinedString(string $glue, $input, $prefix = null, $prefixGlue = '-') {
+        $result = '';
+        if (is_array($input)) {
+            foreach ($input as $index => $value) {
+                $currentKey = (empty($prefix) ? $index : (ltrim($prefix . $prefixGlue . $index, $prefixGlue)));
+                if ($value === null || $value === '') {
+                    continue;
+                }
+                if (is_array($value)) {
+                    $result .= $this->buildSlimAttrJoinedString($glue, $value, $currentKey);
+                } elseif (is_bool($value)) {
+                    if ($value) {
+                        $result .= $currentKey . $glue;
+                    }
+                } else {
+                    $result .= "$currentKey: $value$glue";
+                }
             }
-            if (is_array($value)) {
-                $subResult .= $this->functionStyleSub($value, $currentKey);
-            } else {
-                $subResult .= " $currentKey: $value;";
-            }
+        } else {
+            $result .= $input;
         }
 
-        return $subResult;
+        return trim($result);
     }
 
 }
