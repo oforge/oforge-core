@@ -30,8 +30,12 @@
                        data-required>
             </div>
             {% block login_forgot_password %}
-            <div class="form__control flex flex--row flex--end">
+            <div class="form__control flex flex--row flex--between">
                 <a href="{{ url('frontend_forgot_password') }}" class="forgot-password sub">{{ i18n('Forgot password?') }}</a>
+                <a href="{{ url('frontend_registration_resend_activation_link') }}" class="resend-activation-link sub">{{ i18n('frontend_no_activation_mail_received', {
+                    en: 'Didn\'t receive an activation email?',
+                    de: 'Keine Aktivierungsmail erhalten?',
+                }) }}</a>
             </div>
             {% endblock login_forgot_password %}
             <div class="form__control">
