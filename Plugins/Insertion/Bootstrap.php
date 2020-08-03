@@ -58,6 +58,9 @@ use Oforge\Engine\Modules\AdminBackend\Core\Enums\DashboardWidgetPosition;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\DashboardWidgetsService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
+use Oforge\Engine\Modules\Core\Models\Config\ConfigType;
+use Oforge\Engine\Modules\Core\Services\ConfigService;
+use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\TemplateEngine\Core\Services\TemplateRenderService;
 
 class Bootstrap extends AbstractBootstrap {
@@ -69,6 +72,7 @@ class Bootstrap extends AbstractBootstrap {
         $this->endpoints = [
             FrontendInsertionController::class,
             FrontendUsersInsertionController::class,
+            Controller\Frontend\InsertionProvidersController::class,
             BackendAttributeController::class,
             BackendInsertionController::class,
             BackendInsertionTypeController::class,
@@ -210,7 +214,39 @@ class Bootstrap extends AbstractBootstrap {
             'position' => DashboardWidgetPosition::TOP,
             'cssClass' => 'bg-green',
         ]);
+
+        I18N::translate('config_group_insertions', [
+            'en' => 'Insertions',
+            'de' => 'Inserate',
+        ]);
+        I18N::translate('config_insertions_creation_moderator_mail', [
+            'en' => 'Insertion creation reviewer: Mail',
+            'de' => 'Inseratserstellungsprüfer: Mail',
+        ]);
+        I18N::translate('config_insertions_creation_moderator_name', [
+            'en' => 'Insertion creation reviewer: Name',
+            'de' => 'Inseratserstellungsprüfer: Name',
+        ]);
+        /** @var ConfigService $configService */
+        $configService = Oforge()->Services()->get('config');
+        $configService->add([
+            'name'     => 'insertions_creation_moderator_mail',
+            'type'     => ConfigType::STRING,
+            'group'    => 'insertions',
+            'default'  => '',
+            'label'    => 'config_insertions_creation_moderator_mail',
+            'required' => true,
+        ]);
+        $configService->add([
+            'name'     => 'insertions_creation_moderator_name',
+            'type'     => ConfigType::STRING,
+            'group'    => 'insertions',
+            'default'  => '',
+            'label'    => 'config_insertions_creation_moderator_name',
+            'required' => true,
+        ]);
     }
+
 
     /** @inheritDoc */
     public function uninstall(bool $keepData) {

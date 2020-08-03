@@ -27,13 +27,12 @@ class MediaService extends AbstractDatabaseAccess {
      *
      * @param $file
      * @param $prefix
-     * @param null $owner
      *
      * @return Media|null
      * @throws ORMException
      * @throws ServiceNotFoundException
      */
-    public function add($file, $prefix = null, $owner = null) : ?Media {
+    public function add($file, $prefix = null) : ?Media {
         if (isset($file['error']) && $file['error'] == 0 && isset($file['size']) && $file['size'] > 0) {
             $filename = preg_replace("/\s+/", "_", (basename($file['name'])));
             //      $filename         = md5(basename($file['name']) . '_' . microtime()) . '.' . pathinfo($file['name'],PATHINFO_EXTENSION);
@@ -55,7 +54,6 @@ class MediaService extends AbstractDatabaseAccess {
                     'type' => $file['type'],
                     'name' => urlencode($filename),
                     'path' => str_replace('\\', '/', $relativeFilePath),
-                    'owner' => $owner
                 ]);
 
               //  $media = $imageCompressService->compress($media);

@@ -4,6 +4,7 @@ namespace FrontendUserManagement\Controller\Frontend;
 
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\RegistrationService;
 use FrontendUserManagement\Services\UserDetailsService;
 use Oforge\Engine\Modules\Auth\Enums\InvalidPasswordFormatException;
@@ -16,8 +17,10 @@ use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
+use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Oforge\Engine\Modules\Core\Services\RedirectService;
 use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
+use Oforge\Engine\Modules\Core\Services\TokenService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\Mailer\Services\MailService;
 use Slim\Http\Request;
@@ -31,7 +34,7 @@ use Twig_Error_Syntax;
  * Class RegistrationController
  *
  * @package FrontendUserManagement\Controller\Frontend
- * @EndpointClass(path="/registration", name="frontend_registration", assetScope="Frontend")
+ * @EndpointClass(path="/registration", name="frontend_registration", assetBundles="Frontend")
  */
 class RegistrationController extends AbstractController {
 
@@ -157,7 +160,9 @@ class RegistrationController extends AbstractController {
         /**
          * invalid token was sent
          */
-        if (!hash_equals($_SESSION['token'], $body['token'])) {
+        /** @var TokenService $tokenService */
+        $tokenService = Oforge()->Services()->get('token');
+        if (!$tokenService->isValid($body['token'])) {
             Oforge()->View()->Flash()->addMessage('warning', I18N::translate('form_invalid_token', [
                 'en' => 'The data has been sent from an invalid form.',
                 'de' => 'Ungültiger Token.',
@@ -239,6 +244,7 @@ class RegistrationController extends AbstractController {
         ];
         $templateData = [
             'activationLink' => $activationLink,
+            'resendLink'     => RouteHelper::getFullUrl(RouteHelper::getUrl('frontend_registration_resend_activation_link')),
             'user_mail'      => $user['email'],
             'sender_mail'    => $mailService->getSenderAddress('info'),
             'receiver_name'  => $nickname,
@@ -264,7 +270,6 @@ class RegistrationController extends AbstractController {
         Oforge()->View()->Flash()->addMessage('success', I18N::translate('registration_mail_success', [
             'en' => 'Registration successful. You will receive an email with information about you account activation.',
             'de' => 'Registrierung erfolgreich. In Kürze erhälst du eine E-Mail mit Informationen zur Account-Aktivierung.',
-
         ]));
 
         return $response->withRedirect($uri, 302);
@@ -282,7 +287,7 @@ class RegistrationController extends AbstractController {
      * @throws Twig_Error_Loader
      * @throws Twig_Error_Runtime
      * @throws Twig_Error_Syntax
-     * @EndpointAction
+     * @EndpointAction()
      */
     public function activateAction(Request $request, Response $response) {
         /** @var SessionManagementService $sessionManagementService */ /** @var RegistrationService $registrationService */
@@ -366,6 +371,98 @@ class RegistrationController extends AbstractController {
         }
 
         return $response->withRedirect($uri, 302);
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @EndpointAction(path="resend-activation-link", name="resend_activation_link")
+     */
+    public function resendActivationLinkAction(Request $request, Response $response) {
+        if ($request->isPost() && !empty($postData = $request->getParsedBody()) && is_array($postData)) {
+            // if (empty($_SESSION)) {
+            //     print_r('No session :/');
+            //     die();
+            // }
+            $email = ArrayHelper::get($postData, 'email');
+
+            /** @var RegistrationService $registrationService */
+            $registrationService = Oforge()->Services()->get('frontend.user.management.registration');
+            if (!isset($postData['token']) || empty($postData['token'])) {
+                Oforge()->View()->Flash()->addMessage('warning', I18N::translate('form_invalid_token', [
+                    'en' => 'The data has been sent from an invalid form.',
+                    'de' => 'Ungüliger Token.',
+                ]));
+
+                return RouteHelper::redirect($response, 'frontend_registration_resend_activation_link');
+            }
+            if (!hash_equals($_SESSION['token'], $postData['token'])) {
+                Oforge()->View()->Flash()->addMessage('warning', I18N::translate('form_invalid_token', [
+                    'en' => 'The data has been sent from an invalid form.',
+                    'de' => 'Ungültiger Token.',
+                ]));
+
+                return RouteHelper::redirect($response, 'frontend_registration_resend_activation_link');
+            }
+            if (empty($email)) {
+                Oforge()->View()->Flash()->addMessage('warning', I18N::translate('form_invalid_data', [
+                    'en' => 'Invalid form data.',
+                    'de' => 'Ungültiges Formular.',
+                ]));
+
+                return RouteHelper::redirect($response, 'frontend_registration_resend_activation_link');
+            }
+
+            /** @var User|null $user */
+            $user = $registrationService->getUser($email);
+            if ($user === null) {
+                return RouteHelper::redirect($response, 'frontend_registration_resend_activation_link');
+            }
+            $userData = $user->toArray();
+            $_SESSION['registration_success'] = true;
+            $_SESSION['user_id']              = $userData['id'];
+            // create activation link
+            $activationLink = $registrationService->generateActivationLink($userData);
+
+            /** @var MailService $mailService */
+            $mailService  = Oforge()->Services()->get('mail');
+            $mailOptions  = [
+                'to'       => [$userData['email'] => $userData['email']],
+                'from'     => 'info',
+                'subject'  => I18N::translate('mailer_subject_registration', [
+                    'en' => 'Your Registration',
+                    'de' => 'Deine Registrierung',
+                ]),
+                'template' => 'RegisterConfirm.twig',
+            ];
+            $templateData = [
+                'activationLink' => $activationLink,
+                'resendLink'     => RouteHelper::getFullUrl(RouteHelper::getUrl('frontend_registration_resend_activation_link')),
+                'user_mail'      => $userData['email'],
+                'sender_mail'    => $mailService->getSenderAddress('info'),
+                'receiver_name'  => $user->getDetail()->getNickName(),
+            ];
+            /**
+             * Registration Mail could not be sent
+             */
+            if (!$mailService->send($mailOptions, $templateData)) {
+                Oforge()->View()->Flash()->addMessage('error', I18N::translate('registration_mail_error', [
+                    'en' => 'Your registration mail could not be sent',
+                    'de' => 'Registrierungs-Mail konnte nicht gesendet werden.',
+
+                ]));
+
+                return RouteHelper::redirect($response, 'frontend_registration_resend_activation_link');
+            }
+            Oforge()->View()->Flash()->addMessage('success', I18N::translate('resend_registration_activation_link_mail_success', [
+                'en' => 'You will receive an email with information about you account activation.',
+                'de' => 'In Kürze erhälst du eine E-Mail mit Informationen zur Account-Aktivierung.',
+            ]));
+
+            return RouteHelper::redirect($response, 'frontend_login');
+        }
+
+        return $response;
     }
 
 }

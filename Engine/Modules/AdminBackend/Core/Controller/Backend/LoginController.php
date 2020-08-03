@@ -11,6 +11,7 @@ use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
+use Oforge\Engine\Modules\Core\Services\TokenService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -80,7 +81,9 @@ class LoginController extends SecureBackendController {
             return RouteHelper::redirect($response, 'backend_login');
         }
         // invalid token was sent
-        if (!hash_equals($_SESSION['token'], $postData['token'])) {
+        /** @var TokenService $tokenService */
+        $tokenService = Oforge()->Services()->get('token');
+        if (!$tokenService->isValid($postData['token'])) {
             Oforge()->Logger()->get()->addWarning('Someone tried a backend login without a valid form csrf token! Redirecting back to login.');
 
             return RouteHelper::redirect($response, 'backend_login');
