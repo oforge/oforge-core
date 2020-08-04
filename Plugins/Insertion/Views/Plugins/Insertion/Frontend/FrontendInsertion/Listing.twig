@@ -11,7 +11,7 @@
     {% endif %}
 {% endif %}
 
-{% block title %}{{ title|length > 35 ? title|slice(0, 35) : title }}{{ i18n('title_separator', {en: ' | ', de: ' | '}) }}{{ config('system_project_name') }}{% endblock title %}
+{% block title %}{{ title }}{% endblock title %}
 {% block description %}{{ description }}{% endblock description %}
 
 {% block content %}
