@@ -102,7 +102,7 @@ class FrontendMessengerService extends AbstractMessengerService {
 
             if (($requester !== null && $requester->isActive() && ($requested === null || $requested->isActive()))
                 || $conversation['type'] === 'helpdesk_inquiry') {
-                $conversation[] = $result;
+                $result[] = $conversation;
             }
         }
 
