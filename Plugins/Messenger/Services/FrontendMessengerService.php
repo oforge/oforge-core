@@ -100,8 +100,7 @@ class FrontendMessengerService extends AbstractMessengerService {
             $requester = $userService->getUserById($conversation['requester']);
             $requested = $conversation['requested'] === 'helpdesk' ? null : $userService->getUserById($conversation['requested']);
 
-            if (($requester !== null && $requester->isActive() && ($requested === null || $requested->isActive()))
-                || $conversation['type'] === 'helpdesk_inquiry') {
+            if ($conversation['type'] === 'helpdesk_inquiry' || ($requester->isActive() && $requested->isActive())) {
                 $result[] = $conversation;
             }
         }
