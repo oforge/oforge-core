@@ -1,5 +1,5 @@
 <div class="form__control">
-    <label class="form__label">{{ i18n(attribute.name) }}{% if required %}<span class="required">*</span>{% endif %}
+    <label class="form__label">{{ i18n(attribute.name) }}{% if required %} <span class="required">*</span>{% endif %}
         {% if i18nExists('attribute_hint_' ~ attribute.id ) %}
             {% set cmsContent = cms_content('attribute_hint_' ~ attribute.name ~ '_' ~ meta.language.iso) %}
             {% include 'Frontend/Components/Insertions/Hint.twig' with {
