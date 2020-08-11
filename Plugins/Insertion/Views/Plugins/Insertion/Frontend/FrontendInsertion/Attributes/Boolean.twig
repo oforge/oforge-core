@@ -8,7 +8,7 @@
             } %}
         {% endif %}
         <label for="{{ attribute.name }}"
-               class="form__label form__label--checkbox">{{ i18n(attribute.name) }}{% if required %}<span
+               class="form__label form__label--checkbox">{{ i18n(attribute.name) }}{% if required %} <span
                     class="required">*</span>{% endif %}</label>
 
         {% if data['insertion'][attribute.id] == 'on' %}
