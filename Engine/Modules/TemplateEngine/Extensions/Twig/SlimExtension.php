@@ -230,7 +230,7 @@ class SlimExtension extends Twig_Extension {
     public function functionClass($input) : string {
         if (is_array($input)) {
             array_walk_recursive($input, function (&$value, $key) {
-                if (!is_bool($value)) {
+                if (!is_bool($value) && !is_string($value)) {
                     $value = boolval($value);
                 }
             });
@@ -324,6 +324,9 @@ class SlimExtension extends Twig_Extension {
         $result = '';
         if (is_array($input)) {
             foreach ($input as $index => $value) {
+                if (is_int($index)) {
+                    $index = '';
+                }
                 $currentKey = (empty($prefix) ? $index : (ltrim($prefix . $prefixGlue . $index, $prefixGlue)));
                 if ($value === null || $value === '') {
                     continue;
@@ -335,7 +338,7 @@ class SlimExtension extends Twig_Extension {
                         $result .= $currentKey . $glue;
                     }
                 } else {
-                    $result .= "$currentKey: $value$glue";
+                    $result .= empty($currentKey) ? "$value$glue" : "$currentKey: $value$glue";
                 }
             }
         } else {

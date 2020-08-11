@@ -6,13 +6,13 @@ const INDEX_SRC = 3;
 const INDEX_NAME = 4;
 
 var printHelp = false;
+let dst = null;
+let context = null;
 
 if (process.argv.length < 3) {
     console.error('Require argument context: p|plugin|t|theme');
     printHelp = true;
 } else {
-    let dst = null;
-    let context = null;
     switch (process.argv[INDEX_CONTEXT].toLowerCase()) {
         case 'p':
         case 'plugin':
@@ -35,7 +35,6 @@ if (process.argv.length < 4) {
     console.error('Require argument srcPath!');
     printHelp = true;
 }
-
 if (printHelp) {
     console.log("Run 'npm run link <context=p|plugin|t|theme> <srcPath> [<FolderName>]'.");
 } else {
