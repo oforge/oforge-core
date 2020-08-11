@@ -97,12 +97,13 @@ class FrontendMessengerService extends AbstractMessengerService {
             /** @var UserService $userService */ /** @var User $requester */
             /** @var User $requested */
             $userService = Oforge()->Services()->get('frontend.user.management.user');
-            $requester   = $userService->getUserById($conversation['requester']);
-            $requested   = $userService->getUserById($conversation['requested']);
+            $requester = $userService->getUserById($conversation['requester']);
+            $requested = $conversation['requested'] === 'helpdesk' ? null : $userService->getUserById($conversation['requested']);
 
-            if (($requester->isActive() && $requested->isActive()) ||
-                $conversation['type'] === 'helpdesk_inquiry') {
-                array_push($result, $conversation);
+            if ($conversation['type'] === 'helpdesk_inquiry'
+                || ($requester !== null && $requester->isActive() && $requested !== null
+                    && $requested->isActive())) {
+                $result[] = $conversation;
             }
         }
 
