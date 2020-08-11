@@ -396,7 +396,10 @@ class RegistrationController extends AbstractController {
 
                 return RouteHelper::redirect($response, 'frontend_registration_resend_activation_link');
             }
-            if (!hash_equals($_SESSION['token'], $postData['token'])) {
+            /** @var TokenService $tokenService */
+            $tokenService = Oforge()->Services()->get('token');
+            if (!$tokenService->isValid($postData['token'])) {
+                // invalid token was sent
                 Oforge()->View()->Flash()->addMessage('warning', I18N::translate('form_invalid_token', [
                     'en' => 'The data has been sent from an invalid form.',
                     'de' => 'Ungültiger Token.',
