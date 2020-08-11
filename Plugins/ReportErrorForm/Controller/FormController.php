@@ -126,7 +126,7 @@ class FormController extends AbstractController {
                     'from'    => 'no_reply',
                     'to'      => [$receiver => $receiver],
                     'subject' => $subject,
-                    'body'    => $message,
+                    'text'    => $message,
                 ];
                 $mailService->send($mailOptions);
             }
