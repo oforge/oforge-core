@@ -10,7 +10,7 @@
                             {% set cmsContent = cms_content('html_' ~ type.name ~ '_' ~ attribute.attributeKey.name ~ '_' ~ meta.language.iso) %}
                             {% set hasContent = cmsContent is defined and cmsContent != null %}
 
-                            <div class="form__control form__control--s {{ hasContent ? 'form__control--s-left' : '' }}">
+                            <div class="form__control form__control--s {{ hasContent ? 'form__control--s-center' : '' }}">
                                 {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': attribute.required, 'label_class': 'form__label--title' } %}
                             </div>
 
@@ -21,7 +21,7 @@
                     {% endif %}
                 {% endfor %}
 
-                <div class="form__control form__control--s {{ hasContent ? 'form__control--s-left' : '' }}">
+                <div class="form__control form__control--s {{ hasContent ? 'form__control--s-center' : '' }}">
                     <label for="insertion_title"
                            class="form__label form__label--title">{{ i18n('insertion_title') }} <span
                             class="required">*</span></label>
