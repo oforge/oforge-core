@@ -5,6 +5,7 @@ namespace Insertion\Services;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
+use FrontendUserManagement\Models\User;
 use Insertion\Enum\AttributeType;
 use Insertion\Models\AttributeKey;
 use Insertion\Models\Insertion;
@@ -15,6 +16,7 @@ use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Models\InsertionTypeGroup;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 
 /**
  * Class InsertionListService
@@ -52,7 +54,7 @@ class InsertionListService extends AbstractDatabaseAccess {
             $page = 1;
         }
 
-        $pageSize    = isset($params["pageSize"]) ? $params["pageSize"] : 10;
+        $pageSize = isset($params["pageSize"]) ? $params["pageSize"] : 10;
 
         $pageSize = intval($pageSize);
         if ($pageSize < 1) {
@@ -323,9 +325,9 @@ class InsertionListService extends AbstractDatabaseAccess {
         /**
          * Remove numeric index from Pedigree array
          */
-        if(isset($result['filter']['Pedigree'])) {
+        if (isset($result['filter']['Pedigree'])) {
             foreach ($result['filter']['Pedigree'] as $key => $value) {
-                if(is_numeric($key)) {
+                if (is_numeric($key)) {
                     unset($result['filter']['Pedigree'][$key]);
                 }
             }
@@ -441,26 +443,6 @@ class InsertionListService extends AbstractDatabaseAccess {
         return $insertionData;
     }
 
-    private function isBetweenMinMax($param, $value) {
-        $min = null;
-        $max = null;
-        if (isset($param['min'])) {
-            $min = $param['min'];
-        }
-        if (isset($param['max'])) {
-            $max = $param['max'];
-        }
-        if ($min > 0 && $max > 0 && $min > $max) {
-            [$min, $max] = [$max, $min];
-        }
-        if (($min === null || $min <= $value)
-            && ($max === null || $value <= $max)) {
-            return true;
-        }
-
-        return false;
-    }
-
     public function getUserInsertions($user, $page = 1, $count = 10) : ?array {
         $insertions = $this->repository()->findBy(["user" => $user, "deleted" => false], null, $count, ($page - 1) * $count);
 
@@ -470,6 +452,50 @@ class InsertionListService extends AbstractDatabaseAccess {
         }
 
         return $result;
+    }
+
+    /**
+     * @param $user
+     * @param array $criteria
+     *
+     * @return int
+     */
+    public function getUserInsertionCount($user, array $criteria = []) : int {
+        $criteria = ArrayHelper::extractByKey($criteria, [
+            'active',
+            'deleted',
+            'moderation',
+            'price',
+            'minPrice',
+            'priceType',
+        ]);
+
+        $criteria['user'] = $user;
+
+        return $this->repository()->count($criteria);
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return array
+     */
+    public function getUserDistinctInsertionTypes(User $user) {
+        $insertionTypes = [];
+        try {
+            /** @var Insertion[] $insertions */
+            $insertions = $this->repository()->findBy(['user' => $user, 'active' => true, /*, 'deleted' => false*/]);
+            foreach ($insertions as $insertion) {
+                /** @var InsertionType $insertionType */
+                $insertionType                           = $insertion->getInsertionType();
+                $insertionTypes[$insertionType->getId()] = $insertionType->getName();
+            }
+            ksort($insertionTypes);
+        } catch (\Exception $exception) {
+            Oforge()->Logger()->logException($exception);
+        }
+
+        return $insertionTypes;
     }
 
     public function saveSearchRadius($params) {
@@ -497,6 +523,26 @@ class InsertionListService extends AbstractDatabaseAccess {
         }
 
         return $current;
+    }
+
+    private function isBetweenMinMax($param, $value) {
+        $min = null;
+        $max = null;
+        if (isset($param['min'])) {
+            $min = $param['min'];
+        }
+        if (isset($param['max'])) {
+            $max = $param['max'];
+        }
+        if ($min > 0 && $max > 0 && $min > $max) {
+            [$min, $max] = [$max, $min];
+        }
+        if (($min === null || $min <= $value)
+            && ($max === null || $value <= $max)) {
+            return true;
+        }
+
+        return false;
     }
 
     private function getValueMap($value) {

@@ -41,15 +41,6 @@ s {
     color: $background-full;
 }
 
-.module-frontendusermanagement,
-[class*="controller-frontend_account"] {
-    .wrap--has-image:before {
-        background-image: url('../img/header.jpg');
-        background-repeat: no-repeat;
-        background-size: cover;
-    }
-}
-
 .description {
     font-size: $font-size-5;
 }

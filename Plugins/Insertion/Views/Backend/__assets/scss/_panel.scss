@@ -22,6 +22,10 @@
         display: flex;
         align-items: center;
         justify-content: center;
+
+        span.button.button--ghost {
+            cursor: default;
+        }
     }
 }
 

@@ -1,13 +1,47 @@
 <div class="panel panel--pagination">
     <div class="button-list">
-        {% if search.query.page > 1 %}
-            {% set query = meta.route.query|merge({'pageSize': search.query.pageSize, 'page': search.query.page - 1}) %}
-            <a href="{{ url('insertions_listing', meta.route.params, query) }}" class="button button--ghost">{{ i18n('previous_page', 'Previous Page') }}</a>
-        {% endif %}
-        <span>{{ i18n('page', 'Page') }} {{ search.query.page }} {{ i18n('of') }} {{ search.query.pageCount }}</span>
-        {% if search.query.page < search.query.pageCount %}
-            {% set query = meta.route.query|merge({'pageSize': search.query.pageSize, 'page': search.query.page + 1}) %}
-            <a href="{{ url('insertions_listing', meta.route.params, query) }}" class="button button--ghost">{{ i18n('next_page', 'Next page') }}</a>
+        {% set nearbyPagesLimit  = 3 %}
+        {% for i in 1..max(1, search.query.pageCount) %}
+            {% if 0 == (search.query.page - nearbyPagesLimit) - loop.index %}
+                {% include 'Plugins/Insertion/Frontend/Components/Content/ProductPaginationItem.twig' with {
+                    route: meta.route,
+                    linkQuery: meta.route.query|merge({pageSize: search.query.pageSize, page: 1}),
+                    current: search.query.page == 1,
+                    linkText: 1
+                } only %}
+                {% if 1 != loop.index %}
+{#                    {% include 'Plugins/Insertion/Frontend/Components/Content/ProductPaginationItem.twig' with {#}
+{#                        route: meta.route,#}
+{#                        linkQuery: null,#}
+{#                        linkText: '&hellip;'#}
+{#                    } only %}#}
+                    <span class="button button--ghost">&hellip;</span>
+                {% endif %}
+            {% elseif 0 == (search.query.page + nearbyPagesLimit) - loop.index and (search.query.page + nearbyPagesLimit) < search.query.pageCount %}
+{#                {% include 'Plugins/Insertion/Frontend/Components/Content/ProductPaginationItem.twig' with {#}
+{#                    route: meta.route,#}
+{#                    linkQuery: null,#}
+{#                    linkText: '&hellip;'#}
+{#                } only %}#}
+                <span class="button button--ghost">&hellip;</span>
+            {% elseif 0 < (search.query.page - nearbyPagesLimit) - loop.index %}
+            {% elseif 0 > (search.query.page + nearbyPagesLimit) - loop.index %}
+            {% else %}
+                {% include 'Plugins/Insertion/Frontend/Components/Content/ProductPaginationItem.twig' with {
+                    route: meta.route,
+                    linkQuery: meta.route.query|merge({pageSize: search.query.pageSize, page: loop.index}),
+                    current: search.query.page == loop.index,
+                    linkText: loop.index
+                } only %}
+            {% endif %}
+        {% endfor %}
+        {% if search.query.page != search.query.pageCount  and (search.query.page + nearbyPagesLimit) < search.query.pageCount  %}
+            {% include 'Plugins/Insertion/Frontend/Components/Content/ProductPaginationItem.twig' with {
+                route: meta.route,
+                linkQuery: meta.route.query|merge({pageSize: search.query.pageSize, page: search.query.pageCount}),
+                current: search.query.page == search.query.pageCount,
+                linkText: search.query.pageCount
+            } only %}
         {% endif %}
     </div>
 </div>

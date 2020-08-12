@@ -129,24 +129,25 @@ class InsertionExtensions extends Twig_Extension implements Twig_ExtensionInterf
     }
 
     /**
-     * @param mixed ...$vars
+     * @param int|null $insertionID
      *
      * @return bool
      * @throws ORMException
      * @throws ServiceNotFoundException
      */
-    public function hasBookmark(...$vars) {
-        if (count($vars) == 1) {
-            /** @var $authService AuthService */
-            $authService = Oforge()->Services()->get("auth");
-            if (isset($_SESSION["auth"])) {
-                $user = $authService->decode($_SESSION["auth"]);
-                if (isset($user) && isset($user['id'])) {
-                    /** @var InsertionBookmarkService $bookmarkService */
-                    $bookmarkService = Oforge()->Services()->get("insertion.bookmark");
+    public function hasBookmark(?int $insertionID) : bool {
+        if ($insertionID === null) {
+            return false;
+        }
+        /** @var $authService AuthService */
+        $authService = Oforge()->Services()->get('auth');
+        if (isset($_SESSION['auth'])) {
+            $user = $authService->decode($_SESSION['auth']);
+            if (isset($user) && isset($user['id'])) {
+                /** @var InsertionBookmarkService $bookmarkService */
+                $bookmarkService = Oforge()->Services()->get("insertion.bookmark");
 
-                    return $bookmarkService->hasBookmark($vars[0], $user['id']);
-                }
+                return $bookmarkService->hasBookmark($insertionID, $user['id']);
             }
         }
 

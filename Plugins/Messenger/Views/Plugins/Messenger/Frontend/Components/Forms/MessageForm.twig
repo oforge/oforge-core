@@ -1,25 +1,20 @@
 {# block messenger__message_form #}
 {% block message_form %}
-<form id="message--input-form"
-      class="form form--message"
-      action="{{ url('frontend_account_messages', {id: activeConversation.id}) }}"
-      method="post">
-    <div class="form-controls flex flex--row flex--center">
-        <div class="submit-control">
-            {% block message_input %}
-            <input type="text"
-                   id="message"
-                   name="message"
-                   class="form__input"
-                   value="{{ lastMessage }}"
-                   required>
-            {% endblock message_input %}
-        </div>
+    <form id="message--input-form"
+          class="form form--message"
+          action="{{ url('frontend_account_messages', {id: activeConversation.id}) }}"
+          method="post">
+        <div class="form-controls flex flex--row">
+            <div class="submit-control">
+                {% block message_input %}
+                    <textarea id="message" name="message" class="form__input" data-autoresize required>{{- lastMessage -}}</textarea>
+                {% endblock message_input %}
+            </div>
 
-        <div>
-            <input type="submit" class="form__input form__input--submit" value="{{ i18n('send') }}">
-            <input type="hidden" name="sender" id="sender" value="{{ user.id }}">
+            <div>
+                <input type="submit" class="form__input form__input--submit" value="{{ i18n('send') }}">
+                <input type="hidden" name="sender" id="sender" value="{{ user.id }}">
+            </div>
         </div>
-    </div>
-</form>
+    </form>
 {% endblock message_form %}

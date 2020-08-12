@@ -2,7 +2,7 @@
     class="form__control form__control--new-select form__control--{{ attribute.filterType }} {{ isSubAttribute ? 'form__control--is-sub' : '' }}">
     {% if omitLabel is not defined or not isSubAttribute %}
         <label
-            class="form__label">{{ i18n(attribute.name) }}{% if required %}<span class="required">*</span>{% endif %}
+            class="form__label">{{ i18n(attribute.name) }}{% if required %} <span class="required">*</span>{% endif %}
 
             {% if attribute.restrictions|length > 0 %}<span
                 class="select__max-options">{{ i18n('multi_select_max_options', {de: 'Maximal {maxOptions} möglich', en: 'only {maxOptions} options possible'})|replace({'{maxOptions}': attribute.restrictions}) }}</span>{% endif %}

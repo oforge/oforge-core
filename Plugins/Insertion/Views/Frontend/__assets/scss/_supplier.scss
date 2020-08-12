@@ -175,17 +175,25 @@
                 text-align: center;
             }
 
-            div, .slide, .slide__image {
+            div, .slide__image {
                 height: 100%;
             }
 
             .slide {
                 display: inline-block;
-                height: 300px;
+                height: 80vh;
             }
 
-            img, svg {
+            svg {
                 height: 100%;
+                margin: auto;
+                object-fit: cover;
+                object-position: center;
+                max-height: 453px;
+            }
+
+            img {
+                height: auto;
                 margin: auto;
                 object-fit: cover;
                 object-position: center;
@@ -273,6 +281,12 @@
 
                 &:hover {
                     background: $color-secondary-light;
+                }
+            }
+
+            .slick-slide {
+                .slide {
+                    height: 60vh;
                 }
             }
         }

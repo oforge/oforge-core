@@ -2,6 +2,7 @@
 
 namespace Oforge\Engine\Modules\Mailer\Services;
 
+use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\UserService;
 use Insertion\Models\Insertion;
@@ -12,6 +13,7 @@ use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
 use Oforge\Engine\Modules\Core\Helper\Statics;
+use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\Media\Twig\MediaExtension;
 use Oforge\Engine\Modules\TemplateEngine\Core\Twig\CustomTwig;
@@ -23,7 +25,6 @@ use PHPMailer\PHPMailer\PHPMailer;
 use Twig_Error_Loader;
 use Twig_Error_Runtime;
 use Twig_Error_Syntax;
-use Doctrine\ORM\ORMException;
 
 /**
  * Class MailService
@@ -40,8 +41,10 @@ class MailService {
      * 'bcc'        => [],
      * 'replyTo'    => [],
      * 'attachment' => [],
-     * "subject"    => string,
-     * "html"       => bool,
+     * 'subject'    => string,
+     * 'template'   => string, // Twig template file name (with extension)
+     * 'html'       => string, // Html body
+     * 'body'       => string, // Raw text mail
      * ]
      * TemplateData = ['key' = value, ... ]
      *
@@ -60,8 +63,8 @@ class MailService {
         if ($this->isValid($options)) {
             try {
                 /** @var  $configService */
-                $configService = Oforge()->Services()->get("config");
-                $exceptions    = $configService->get("mailer_exceptions");
+                $configService = Oforge()->Services()->get('config');
+                $exceptions    = $configService->get('mailer_exceptions');
 
                 /** @var PHPMailer $mail */
                 $mail = new PHPMailer($exceptions);
@@ -69,12 +72,12 @@ class MailService {
                 /**  Mailer Settings */
                 $mail->isSMTP();
                 $mail->setFrom($this->getSenderAddress($options['from']), $configService->get('mailer_from_name'));
-                $mail->Host       = $configService->get("mailer_host");
-                $mail->Username   = $configService->get("mailer_smtp_username");
-                $mail->Port       = $configService->get("mailer_port");
-                $mail->SMTPAuth   = $configService->get("mailer_smtp_auth");
-                $mail->Password   = $configService->get("mailer_smtp_password");
-                $mail->SMTPSecure = $configService->get("mailer_smtp_secure");
+                $mail->Host       = $configService->get('mailer_host');
+                $mail->Username   = $configService->get('mailer_smtp_username');
+                $mail->Port       = $configService->get('mailer_port');
+                $mail->SMTPAuth   = $configService->get('mailer_smtp_auth');
+                $mail->Password   = $configService->get('mailer_smtp_password');
+                $mail->SMTPSecure = $configService->get('mailer_smtp_secure');
                 $mail->Encoding   = 'base64';
                 $mail->CharSet    = 'UTF-8';
 
@@ -88,32 +91,31 @@ class MailService {
                     } else {
                         Oforge()->Logger()->get('mailer')->error('Could not redirect message, recipient not set in mailer backend options!');
                     }
-
                 } else {
-                    foreach ($options["to"] as $key => $value) {
+                    foreach ($options['to'] as $key => $value) {
                         $mail->addAddress($key, $value);
                     }
                 }
 
                 if (isset($options['cc'])) {
-                    foreach ($options["cc"] as $key => $value) {
+                    foreach ($options['cc'] as $key => $value) {
                         $mail->addCC($key, $value);
                     }
                 }
                 if (isset($options['bcc'])) {
-                    foreach ($options["bcc"] as $key => $value) {
+                    foreach ($options['bcc'] as $key => $value) {
                         $mail->addBCC($key, $value);
                     }
                 }
                 if (isset($options['replyTo'])) {
-                    foreach ($options["replyTo"] as $key => $value) {
+                    foreach ($options['replyTo'] as $key => $value) {
                         $mail->addReplyTo($key, $value);
                     }
                 }
 
                 /** Add Attachments: */
                 if (isset($options['attachment'])) {
-                    foreach ($options["attachment"] as $key => $value) {
+                    foreach ($options['attachment'] as $key => $value) {
                         $mail->addAttachment($key, $value);
                     }
                 }
@@ -128,73 +130,40 @@ class MailService {
                     $templateData['baseUrl'] = $conversationLink;
                 }
 
-                if (isset($options["template"])) {
+                if (isset($options['template'])) {
                     /** Render HTML */
                     $renderedTemplate = $this->renderMail($options, $templateData);
-                } elseif (isset($options["html"])) {
-                    $renderedTemplate = $options["html"];
+                    $mail->isHTML(true);
+                } elseif (isset($options['html'])) {
+                    $renderedTemplate = $options['html'];
+                    $mail->isHTML(true);
+                } elseif (isset($options['text'])) {
+                    $renderedTemplate = $options['text'];
+                    $mail->isHTML(false);
                 }
 
                 /** Add Content */
-                $mail->isHTML(ArrayHelper::get($options, 'html', true));
-                $mail->Subject = $options["subject"];
+                $mail->Subject = $options['subject'];
                 $mail->Body    = $renderedTemplate;
 
                 $mail->send();
 
                 if ($redirect == true) {
-                    Oforge()->Logger()->get("mailer")->info("Message has been redirected", [$mail->getToAddresses(), $options, $templateData]);
+                    Oforge()->Logger()->get('mailer')->info('Message has been redirected', [$mail->getToAddresses(), $options, $templateData]);
                 } else {
-                    Oforge()->Logger()->get("mailer")->info("Message has been sent", [$options, $templateData]);
+                    Oforge()->Logger()->get('mailer')->info('Message has been sent', [$options, $templateData]);
                 }
 
                 return true;
 
             } catch (Exception $e) {
-                Oforge()->Logger()->get("mailer")->error("Message has not been sent", [$mail->ErrorInfo]);
+                Oforge()->Logger()->get('mailer')->error('Message has not been sent', [$mail->ErrorInfo]);
 
                 return false;
             }
         }
 
         return false;
-    }
-
-    /**
-     * @param array $options
-     *
-     * @return bool
-     * @throws ConfigOptionKeyNotExistException
-     */
-    private function isValid(array $options) : bool {
-        $keys = ["to", "subject"];
-        foreach ($keys as $key) {
-            if (!array_key_exists($key, $options)) {
-                throw new ConfigOptionKeyNotExistException($key);
-            }
-        }
-
-        /** Validate Mail Addresses */
-        $emailKeys = ["to", "cc", "bcc", "replyTo"];
-        foreach ($emailKeys as $key) {
-            if (array_key_exists($key, $options)) {
-                if (is_array($options[$key])) {
-                    foreach ($options[$key] as $email => $name) {
-                        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                            Oforge()->Logger()->logException(new InvalidArgumentException("$email is not a valid email."));
-
-                            return false;
-                        }
-                    }
-                } else {
-                    // Argument is not an Array
-                    Oforge()->Logger()->logException(new InvalidArgumentException("Expected array for $key but get " . gettype($options[$key])));
-                    return false;
-                }
-            }
-        }
-
-        return true;
     }
 
     /**
@@ -211,7 +180,7 @@ class MailService {
      * @throws Twig_Error_Syntax
      */
     public function renderMail(array $options, array $templateData) {
-        $templateManagementService = Oforge()->Services()->get("template.management");
+        $templateManagementService = Oforge()->Services()->get('template.management');
         $templateName              = $templateManagementService->getActiveTemplate()->getName();
         $templatePath              = Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . $templateName . DIRECTORY_SEPARATOR . 'MailTemplates';
 
@@ -251,11 +220,11 @@ class MailService {
      * @throws ServiceNotFoundException
      */
     public function getSenderAddress($key = 'info') {
-        $configService = Oforge()->Services()->get("config");
+        $configService = Oforge()->Services()->get('config');
 
         $host = $configService->get('mailer_from_host');
         if (!$host) {
-            throw new InvalidArgumentException("Error: Host is not set");
+            throw new InvalidArgumentException('Error: Host is not set');
         }
         $sender = $configService->get('mailer_from_' . $key);
 
@@ -403,6 +372,76 @@ class MailService {
             'sender_mail'    => $this->getSenderAddress('no_reply'),
         ];
         $this->send($mailerOptions, $templateData);
+
+        try {
+            I18N::translate('mailer_insertion_waiting_for_moderating_btn', [
+                'en'=> 'moderate',
+                'de' => 'moderieren',
+            ]);
+            /** @var ConfigService $configService */
+            $configService = Oforge()->Services()->get('config');
+            $moderatorMail = $configService->get('insertions_creation_moderator_mail');
+            $moderatorName = $configService->get('insertions_creation_moderator_name');
+            if (!empty($moderatorMail)) {
+                if (empty($moderatorName)) {
+                    $moderatorName = $moderatorMail;
+                }
+                $mailerOptions = [
+                    'to'       => [$moderatorMail => $moderatorName],
+                    'from'     => 'no_reply',
+                    'subject'  => I18N::translate('mailer_subject_insertion_waiting_for_moderating', [
+                        'en' => 'A new insertion is waiting for moderation',
+                        'de' => 'Ein neues Inserat wartet auf Moderation',
+                    ]),
+                    'template' => 'InsertionWaitingForModerating.twig',
+                ];
+                $templateData  = [
+                    'insertionID'    => $insertion->getId(),
+                    'insertionTitle' => $insertion->getContent()[0]->getTitle(),
+                    'sender_mail'    => $this->getSenderAddress('no_reply'),
+                ];
+                $this->send($mailerOptions, $templateData);
+            }
+        } catch (\Exception $exception) {
+            Oforge()->Logger()->logException($exception);
+        }
+    }
+
+    /**
+     * @param array $options
+     *
+     * @return bool
+     * @throws ConfigOptionKeyNotExistException
+     */
+    private function isValid(array $options) : bool {
+        $keys = ['to', 'subject'];
+        foreach ($keys as $key) {
+            if (!isset($options[$key])) {
+                throw new ConfigOptionKeyNotExistException($key);
+            }
+        }
+
+        /** Validate Mail Addresses */
+        $emailKeys = ['to', 'cc', 'bcc', 'replyTo'];
+        foreach ($emailKeys as $key) {
+            if (array_key_exists($key, $options)) {
+                if (is_array($options[$key])) {
+                    foreach ($options[$key] as $email => $name) {
+                        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                            Oforge()->Logger()->logException(new InvalidArgumentException("$email is not a valid email."));
+
+                            return false;
+                        }
+                    }
+                } else {
+                    // Argument is not an Array
+                    Oforge()->Logger()->logException(new InvalidArgumentException("Expected array for $key but get " . gettype($options[$key])));
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
 }

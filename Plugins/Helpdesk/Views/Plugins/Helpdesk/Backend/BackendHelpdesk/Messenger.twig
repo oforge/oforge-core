@@ -4,7 +4,7 @@
     <section class="content">
         <div class="row">
             <div class="col-md-12">
-                <div class="box box-success direct-chat direct-chat-success">
+                <div class="box box-success direct-chat direct-chat-primary">
                     <div class="box-header with-border">
                         <h3 class="box-title"><strong>{{ ticket.issueType }}</strong> - {{ ticket.title }}</h3>
                         <div class="box-tools pull-right">
@@ -67,26 +67,26 @@
                                         {% else %}
                                             pull-left
                                         {% endif %}"></i>
-                                    <div class="direct-chat-text">
-                                        {{ message.message }}
+                                    <div class="direct-chat-text make_urls_clickable">
+                                        {{ message.message|nl2br }}
                                     </div>
                                 </div>
                             {% endfor %}
                         </div>
+                    </div>
 
-                        <div class="box-footer">
-                            <form action="{{ url('backend_helpdesk_messenger', {'id': ticket.id}) }}" method="post">
-                                <div class="input-group">
-                                    <input type="hidden" name="sender" content="helpdesk_1">
-                                    <input type="text" name="message" placeholder="{{ i18n('type_message', 'Type Message ...') }}"
-                                           class="form-control" required>
-                                    <span class="input-group-btn">
+                    <div class="box-footer">
+                        <form action="{{ url('backend_helpdesk_messenger', {'id': ticket.id}) }}" method="post">
+                            <div class="input-group">
+                                <input type="hidden" name="sender" content="helpdesk_1">
+                                <textarea rows="1" name="message" placeholder="{{ i18n('type_message', 'Type Message ...') }}"
+                                          class="form-control" required data-autoresize style="resize: vertical"></textarea>
+                                <span class="input-group-btn">
                                         <button type="submit"
-                                                class="btn btn-success btn-flat">{{ i18n('send', 'Send') }}</button>
+                                                class="btn btn-primary btn-flat">{{ i18n('send', 'Send') }}</button>
                                     </span>
-                                </div>
-                            </form>
-                        </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

@@ -1,0 +1,66 @@
+{% extends '@parent/Frontend/Layout.twig' %}
+
+{% block content %}
+    <div class="content">
+        {% block resend_registration_activation_link %}
+            <div class="panel panel--resend-registration-activation-link flex">
+                {% block resend_registration_activation_link_title %}
+                    <h2 class="panel__title">{{ i18n('welcome') }}</h2>
+                {% endblock resend_registration_activation_link_title %}
+
+                {% block resend_registration_activation_link_subtitle %}
+                    <div class="panel__content">
+                        <h3 class="panel__sub-title">
+                            {{ i18n('frontend_resend_activation_header', {
+                                en: 'Resend registration activation link',
+                                de: 'Registrierungsaktivierungslink erneut senden',
+                            }) }}
+                        </h3>
+                    </div>
+                {% endblock resend_registration_activation_link_subtitle %}
+
+                <div class="panel__content flex flex--wrap">
+                    {% block resend_registration_activation_link_form %}
+                        <form class="form form--resend-registration-activation-link" method="post"
+                              action="{{ url('frontend_registration_resend_activation_link') }}">
+                            <h3 class="form__title">{{ i18n('frontend_resend_activation_title', {
+                                en: 'Insert your email address, to resend your activation link',
+                                de: 'Geben Sie Ihre E-Mail-Adresse ein, um Ihren Aktivierungslink erneut zu senden',
+                            }) }}</h3>
+                            <div class="form-controls">
+                                <div class="form__control">
+                                    {% block resend_registration_activation_link_label_email %}
+                                        <label for="resend-registration-activation-link__email" class="form__label">
+                                            {{ i18n('email') }}
+                                        </label>
+                                    {% endblock resend_registration_activation_link_label_email %}
+
+                                    <input id="resend-registration-activation-link__email"
+                                           name="email"
+                                           class="form__input form__input {% block resend_registration_activation_link_email_classes '' %}"
+                                           type="email" placeholder="{{ i18n('email') }}" required data-required>
+                                </div>
+                                {% block resend_registration_activation_link_additional_info %}
+                                    <div class="form__control">
+                                        <span class="description">{{ i18n('frontend_resend_activation_link_info', {
+                                                en: 'After clicking on "Resend activation link", you will receive an email with the activation link.',
+                                                de: 'Nachdem Sie auf "Aktivierungslink erneut senden" geklickt haben, erhalten Sie eine E-Mail mit dem Aktivierungslink.',
+                                            }) }}</span>
+                                    </div>
+                                {% endblock resend_registration_activation_link_additional_info %}
+
+                                <div class="form__control">
+                                    <input type="hidden" name="token" value="{{ token() }}">
+                                    <input type="submit" value="{{ i18n('frontend_resend_activation_link', {
+                                        en: 'Resend activation link',
+                                        de: 'Aktivierungslink erneut senden',
+                                    }) }}" class="form__input form__input--submit button">
+                                </div>
+                            </div>
+                        </form>
+                    {% endblock resend_registration_activation_link_form %}
+                </div>
+            </div>
+        {% endblock resend_registration_activation_link %}
+    </div>
+{% endblock content %}

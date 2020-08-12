@@ -1,6 +1,7 @@
 .messenger {
     display: flex;
     flex-direction: column;
+    width: 100%;
 
     &__header {
         background: $color-primary;
@@ -17,6 +18,7 @@
             color: $color-light;
             margin-left: $size-large;
         }
+
         &--sidebar {
             justify-content: space-between;
         }
@@ -30,15 +32,18 @@
     &__chat {
         width: 100%;
     }
+
     .logo__image, .user__image {
         border: 1px solid $color-light;
         flex: 0 0 auto;
         width: 4rem;
         height: 4rem;
     }
+
     .logo__image {
         border-radius: 100%;
     }
+
     .user__image {
         border-radius: 100%;
         background-color: $color-primary-light;
@@ -52,6 +57,7 @@
 .chat-list {
     background: $color-primary;
     border-top: 2px solid $color-light;
+
     &.collapsed {
         display: none;
     }
@@ -70,6 +76,7 @@
         color: $color-light;
         margin-left: $size-large;
     }
+
     .unread__messages {
 
         flex: 0 0 auto;
@@ -83,8 +90,10 @@
         background-color: $color-secondary;
         color: $color-light;
     }
+
     &.is__active {
         background-color: $color-secondary;
+
         .unread__messages {
             display: none;
         }
@@ -110,16 +119,26 @@
         border: 2px solid $color-primary;
         margin-left: 0;
     }
+
+    &-text {
+        font-size: 1.4rem;
+        margin-bottom: $size-medium;
+
+        a {
+            color: $color-secondary;
+            text-decoration: underline;
+            font-weight: bold;
+
+            &:hover, &:active {
+                text-decoration-color: $color-primary;
+            }
+        }
+    }
 }
 
 
 .message + .message {
     margin-top: $size-large;
-}
-
-.message-text {
-    font-size: 1.4rem;
-    margin-bottom: $size-medium;
 }
 
 .message-date {
@@ -137,23 +156,31 @@
     #message {
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
+        min-height: 10rem;
+        resize: vertical;
     }
+
     .form__input--submit {
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
+        height: 100%;
     }
+
     .submit-control {
         flex: 1 0 auto;
+        display: flex;
     }
 }
 
 @media screen and (min-width: $screen-medium) {
     .messenger {
         flex-direction: row;
+
         .logo__image {
             width: 4rem;
             height: 4rem;
         }
+
         &__header--sidebar {
             .icon {
                 display: none;
@@ -170,8 +197,8 @@
     .chat-list {
         max-height: 60rem;
         overflow: auto;
-        overflow: auto;
         background: $color-primary;
+
         &.collapsed {
             display: block;
         }
@@ -182,6 +209,15 @@
     .messages {
         height: 60rem;
     }
+    .form--message {
+        #message {
+            border-radius: 0;
+        }
+
+        .form__input--submit {
+            border-top-right-radius: 0;
+        }
+    }
 }
 
 .icon--postfach {
@@ -189,6 +225,7 @@
     width: 3.5rem;
     position: relative;
 }
+
 .unread__messages__flag {
     width: 2rem;
     height: 2rem;

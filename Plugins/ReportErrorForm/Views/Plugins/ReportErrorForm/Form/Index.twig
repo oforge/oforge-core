@@ -1,0 +1,84 @@
+{% extends 'Frontend/Layout.twig' %}
+
+{% block content %}
+    <div class="content">
+        <div class="panel">
+            <h3>{{ i18n('report_error_button_title', {
+                    en: 'Report a bug',
+                    de: 'Einen Fehler melden',
+                }) }}</h3>
+            <div class="panel__sub-title">
+                {% block seo_text %}
+                    {{ i18n('report_error_form_description', {
+                        en: 'Please fill out the following fields.',
+                        de: 'Bitte fülle die folgenden Felder aus.',
+                    }) }}
+                {% endblock seo_text %}
+            </div>
+            <form method="post" action="{{ url('frontend_report_error') }}">
+                <div class="form-controls">
+                    <div class="form__control">
+                        <label for="report_error_issueType"
+                               class="form__label">{{ i18n('report_error_form_label_issueType', {
+                                en: 'Type of error',
+                                de: 'Art des Fehlers',
+                            }) }} *</label>
+                        <select id="report_error_issueType" name="issueType" class="form__input form__input--select">
+                            {% set chooseOptionLabel = i18n('report_error_form_label_subject_select_empty', {
+                                en: 'Please select',
+                                de: 'Bitte auswählen',
+                            }) %}
+                            {% if chooseOptionLabel is not empty %}
+                                <option value="" selected disabled>{{ chooseOptionLabel }}</option>
+                            {% endif %}
+                            {% for issueType, issueTypeLabel in reportErrorForm.issueTypes %}
+                                <option {{ attr({
+                                    value: issueType,
+                                    selected: reportErrorForm.postData.subject == issueType,
+                                }) }}>{{ issueTypeLabel }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form__control">
+                        <label for="report_error_from" class="form__label">{{ i18n('report_error_form_label_email', {
+                                en: 'Sender email (optional)',
+                                de: 'Absender-E-Mail (optional)',
+                            }) }}</label>
+                        <input id="report_error_from" name="from" type="email" class="form__input"
+                            {% if current_user %}
+                                value="{{ current_user.email }}" readonly
+                            {% else %}
+                                value="{{ reportErrorForm.postData.from|default('') }}"
+                            {% endif %} />
+                    </div>
+                    <div class="form__control">
+                        <label for="report_error_message"
+                               class="form__label">{{ i18n('report_error_form_label_message', {
+                                en: 'Short explanation',
+                                de: 'Kurze Erläuterung',
+                            }) }} *</label>
+                        <textarea id="report_error_message" name="message"
+                                  data-autoresize required data-required
+                                  class="form__input form__input--textarea">{{- reportErrorForm.postData.message|default('') -}}</textarea>
+                    </div>
+                    <div class="form__control flex flex--row flex--between">
+                        <div>
+                            <input class="form__input form__input--submit button" type="submit"
+                                   value="{{ i18n('submit', {
+                                       en: 'Submit',
+                                       de: 'Abschicken',
+                                   }) }}" />
+                        </div>
+                        <div>
+                            * = {{ i18n('report_error_form_text_required', {
+                                en: 'required',
+                                de: 'erforderlich',
+                            }) }}
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="token" value="{{ token('report_error_form') }}" />
+            </form>
+        </div>
+    </div>
+{% endblock content %}

@@ -1,7 +1,7 @@
 {% block page_content %}
 
     {% block insertion_details %}
-        {% if user_logged_in or (meta.route.assetScope == 'Backend' and user != null) %}
+        {% if user_logged_in or ('Backend' in meta.route.assetBundles and user != null) %}
             <div class="form-controls form-controls--step-1">
                 {% set hasContent = false %}
                 {% for attributeGroup in attributes %}
@@ -23,7 +23,7 @@
 
                 <div class="form__control form__control--s {{ hasContent ? 'form__control--s-center' : '' }}">
                     <label for="insertion_title"
-                           class="form__label form__label--title">{{ i18n('insertion_title') }}<span
+                           class="form__label form__label--title">{{ i18n('insertion_title') }} <span
                             class="required">*</span></label>
                     <input name="insertion_title"
                            value="{{ data['insertion_title'] }}"

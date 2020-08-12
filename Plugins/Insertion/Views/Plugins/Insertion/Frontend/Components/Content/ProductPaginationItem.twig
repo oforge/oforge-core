@@ -1,0 +1,5 @@
+<a {{ attr({
+    href: linkQuery == null ? null : url('insertions_listing', route.params, linkQuery),
+    class: 'button ' ~ (current|default(false) ? 'button--ghost--secondary' : 'button--ghost'),
+    title: title|default(null),
+}) }}>{{ linkText|raw }}</a>

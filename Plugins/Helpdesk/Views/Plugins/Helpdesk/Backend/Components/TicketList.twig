@@ -27,7 +27,10 @@
                     <tr>
                         <td class="mailbox-name">
                             <a href="{{ url('backend_helpdesk_messenger', {'id': ticket.id}) }}">
-                                {{ ticket.email }}
+                                {{ ticket.email ?  ticket.email : i18n('anonymous', {
+                                    en:'anonymous',
+                                    de:'anonym',
+                                }) }}
                             </a>
                         </td>
                         <td class="mailbox-subject">
@@ -51,7 +54,7 @@
                         </td>
                         <td class="mailbox-date">
                             <a href="{{ url('backend_helpdesk_messenger', {'id': ticket.id}) }}">
-                            {{ ticket.created|date }}
+                                {{ ticket.created|date }}
                             </a>
                         </td>
                     </tr>

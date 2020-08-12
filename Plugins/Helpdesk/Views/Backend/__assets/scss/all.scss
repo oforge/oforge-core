@@ -1,0 +1,25 @@
+.direct-chat-primary .direct-chat-msg {
+    & > .direct-chat-text {
+        a {
+            color: $light-blue;
+            text-decoration: underline;
+            font-weight: bold;
+
+            &:hover, &:active {
+                color: lighten($light-blue, 15%);
+                text-decoration-color: lighten($light-blue, 15%);
+            }
+        }
+    }
+
+    &.right > .direct-chat-text {
+        a {
+            color: #333333;
+
+            &:hover, &:active {
+                color: lighten(#333333, 15%);
+                text-decoration-color: lighten(#333333, 15%);
+            }
+        }
+    }
+}

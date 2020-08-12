@@ -46,7 +46,7 @@
                         {% set sender = message.sender %}
 
                         <div class="message {% if sender|number_format !=  current_user.id|number_format %}partner{% endif %}">
-                            <p class="message-text">{{ message.message }}</p>
+                            <p class="message-text make_urls_clickable">{{ message.message|nl2br }}</p>
                             <p class="message-date">{{ message.timestamp|formatDatetime }}</p>
                         </div>
                     {% endfor %}

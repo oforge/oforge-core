@@ -38,6 +38,7 @@
     margin-bottom: 2rem;
 
     .product {
+        position: relative;
         border: 2px solid $color-secondary;
 
         &__content {
@@ -272,7 +273,7 @@
         order: 3;
     }
 
-    .is--deleted {
+    .is--deleted, .is--deactivated {
 
         .open, .product__title-link, .product__image {
             opacity: .5;

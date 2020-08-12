@@ -26,7 +26,7 @@ use Oforge\Engine\Modules\Core\Services\PluginAccessService;
 use Oforge\Engine\Modules\Core\Services\PluginStateService;
 use Oforge\Engine\Modules\Core\Services\RedirectService;
 use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
-use Oforge\Engine\Modules\I18n\Helper\I18N;
+use Oforge\Engine\Modules\Core\Services\TokenService;
 
 /**
  * Class Core-Bootstrap
@@ -63,6 +63,7 @@ class Bootstrap extends AbstractBootstrap {
             'redirect'           => RedirectService::class,
             'session.management' => SessionManagementService::class,
             'store.keyvalue'     => KeyValueStoreService::class,
+            'token'              => TokenService::class,
         ];
 
         $this->order = 0;
@@ -75,7 +76,6 @@ class Bootstrap extends AbstractBootstrap {
      * @throws OptimisticLockException
      */
     public function install() {
-
         // TODO: translations won't work here, since this module is pre-loaded before anything else
 
         // I18N::translate('config_system_project_name',[

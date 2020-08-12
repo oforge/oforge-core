@@ -49,6 +49,7 @@ class SlimExtension extends Twig_Extension {
     public function getFunctions() {
         return [
             new Twig_Function('attr', [$this, 'functionAttr'], self::OPTIONS_HTML_SAVE),
+            new Twig_Function('class', [$this, 'functionClass'], self::OPTIONS_HTML_SAVE),
             new Twig_Function('deepMerge', [$this, 'functionDeepMerge'], self::OPTIONS_HTML_SAVE),
             new Twig_Function('dotDeepMerge', [$this, 'functionDotDeepMerge'], self::OPTIONS_HTML_SAVE),
             new Twig_Function('dotSet', [$this, 'functionDotSet'], self::OPTIONS_HTML_SAVE_WITH_CONTEXT),
@@ -188,7 +189,7 @@ class SlimExtension extends Twig_Extension {
      *
      * @return bool
      */
-    public function functionIncludeInFooter(string $context):bool {
+    public function functionIncludeInFooter(string $context) : bool {
         return ($this->footerIncludes[$context] ?? false);
     }
 
@@ -218,20 +219,23 @@ class SlimExtension extends Twig_Extension {
      * @return string
      */
     public function functionStyle($input) : string {
-        $result = '';
-        if (is_string($input)) {
-            $result = $input;
-        } else {
-            foreach ($input as $index => $value) {
-                if (empty($value)) {
-                    continue;
-                }
-                $result .= " $index: $value;";
-            }
-        }
-        $result = trim($result);
+        return $this->buildSlimAttrString(['style' => $input]);
+    }
 
-        return empty($result) ? '' : "style=\"$result\"";
+    /**
+     * @param string|array $input
+     *
+     * @return string
+     */
+    public function functionClass($input) : string {
+        if (is_array($input)) {
+            array_walk_recursive($input, function (&$value, $key) {
+                if (!is_bool($value) && !is_string($value)) {
+                    $value = boolval($value);
+                }
+            });
+        }
+        return $this->buildSlimAttrString(['class' => $input]);
     }
 
     /**
@@ -277,31 +281,71 @@ class SlimExtension extends Twig_Extension {
      *
      * @return string
      */
-    protected function buildSlimAttrString(array $array) : string {
+    protected function buildSlimAttrString(array $array, ?string $prefix = null) : string {
         $result = '';
         foreach ($array as $index => $value) {
-            if (empty($value)) {
+            $currentPrefix = (empty($prefix) ? '' : (ltrim($prefix, '-') . '-'));
+            if (empty($value) && $value !== 0) {
                 continue;
-            } elseif ($index === 'style') {
-                $result .= ' ' . $this->functionStyle($value);
-            } elseif (is_int($value)) {
-                $result .= is_numeric($index) ? " $value" : " $index=\"$value\"";
-            } elseif (is_string($value)) {
-                $result .= is_numeric($index) ? " $value" : " $index=\"$value\"";
-            } elseif (is_bool($value) && $value && is_string($index)) {
-                $result .= " $index";
+            } elseif ($index === 'style' || $index === 'class') {
+                $glue       = $index === 'style' ? ';' : ' ';
+                $prefixGlue = '-';
+                $subResult  = $this->buildSlimAttrJoinedString($glue, $value, null, $prefixGlue);
+                if (!empty($subResult)) {
+                    $result .= " $index=\"$subResult\"";
+                }
+            } elseif (is_int($value) || is_string($value)) {
+                $result .= is_numeric($index) ? " $value" : " $currentPrefix$index=\"$value\"";
+            } elseif (is_bool($value)) {
+                if ($value && is_string($index)) {
+                    $result .= " $currentPrefix$index";
+                }
             } elseif (is_array($value)) {
                 if (is_numeric($index)) {
-                    $result .= $this->buildSlimAttrString($value);
+                    $result .= $this->buildSlimAttrString($value, $currentPrefix);
                 } else {
-                    $result .= ' ' . $index . '="';
-                    $result .= trim($this->buildSlimAttrString($value));
-                    $result .= '"';
+                    $result .= $this->buildSlimAttrString($value, $currentPrefix . $index);
                 }
             }
         }
 
         return $result;
+    }
+
+    /**
+     * @param string $glue
+     * @param string|array $input
+     * @param null $prefix
+     * @param string $prefixGlue
+     *
+     * @return string
+     */
+    protected function buildSlimAttrJoinedString(string $glue, $input, $prefix = null, $prefixGlue = '-') {
+        $result = '';
+        if (is_array($input)) {
+            foreach ($input as $index => $value) {
+                if (is_int($index)) {
+                    $index = '';
+                }
+                $currentKey = (empty($prefix) ? $index : (ltrim($prefix . $prefixGlue . $index, $prefixGlue)));
+                if ($value === null || $value === '') {
+                    continue;
+                }
+                if (is_array($value)) {
+                    $result .= $this->buildSlimAttrJoinedString($glue, $value, $currentKey);
+                } elseif (is_bool($value)) {
+                    if ($value) {
+                        $result .= $currentKey . $glue;
+                    }
+                } else {
+                    $result .= empty($currentKey) ? "$value$glue" : "$currentKey: $value$glue";
+                }
+            }
+        } else {
+            $result .= $input;
+        }
+
+        return trim($result);
     }
 
 }
