@@ -18,8 +18,10 @@
 node_modules
 var
 vendor
-Themes/*.lnk
-/Themes/AllYourHorses/
+/Themes/*
+/Themes/*.lnk
+!/Themes/Base/
+!/Themes/TemplateTest/
 /Plugins/*
 !/Plugins/Analytics/
 !/Plugins/Blog/
