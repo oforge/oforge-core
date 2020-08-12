@@ -130,6 +130,12 @@ class Insertion extends AbstractModel
     private $views = 0;
 
     /**
+     * @var int
+     * @ORM\Column(name="contact_attempts", type="integer")
+     */
+    private $contactAttempts = 0;
+
+    /**
      * @ORM\PrePersist
      */
     public function onPrePersist()
@@ -439,4 +445,19 @@ class Insertion extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return int
+     */
+    public function getContactAttempts() : int {
+        return $this->contactAttempts;
+    }
+
+    /**
+     * @return Insertion
+     */
+    public function countContactAttempt(): Insertion
+    {
+        $this->contactAttempts = $this->contactAttempts + 1;
+        return $this;
+    }
 }
