@@ -185,6 +185,17 @@ class InsertionService extends AbstractDatabaseAccess
     }
 
     /**
+     * @param $id
+     * @throws ORMException
+     */
+    public function countUpInsertionsContactAttempt($id) {
+        /** @var Insertion $insertion */
+        $insertion = $this->repository()->find($id);
+        $insertion = $insertion->countContactAttempt();
+        $this->entityManager()->flush($insertion);
+    }
+
+    /**
      * @param $userId
      * @return mixed
      * @throws NonUniqueResultException
