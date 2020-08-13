@@ -1,7 +1,7 @@
 {% extends  'Frontend/Components/Insertions/UserInsertion.twig' %}
 
 {% block panel__classes %}
-   {{ parent() }} {% if item.deleted %}is--delete{% elseif not item.active %}is--deactivated{% endif %}
+   {{ parent() }} {% if item.deleted %}is--deleted{% elseif not item.active %}is--deactivated{% endif %}
 {% endblock panel__classes %}
 
 {% block product_preview %}
