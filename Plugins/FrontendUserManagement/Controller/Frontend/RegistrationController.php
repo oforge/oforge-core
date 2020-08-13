@@ -421,7 +421,7 @@ class RegistrationController extends AbstractController {
             if ($user === null) {
                 return RouteHelper::redirect($response, 'frontend_registration_resend_activation_link');
             }
-            $userData = $user->toArray();
+            $userData                         = $user->toArray();
             $_SESSION['registration_success'] = true;
             $_SESSION['user_id']              = $userData['id'];
             // create activation link
@@ -443,11 +443,9 @@ class RegistrationController extends AbstractController {
                 'resendLink'     => RouteHelper::getFullUrl(RouteHelper::getUrl('frontend_registration_resend_activation_link')),
                 'user_mail'      => $userData['email'],
                 'sender_mail'    => $mailService->getSenderAddress('info'),
-                'receiver_name'  => $user->getDetail()->getNickName(),
+                'receiver_name'  => ArrayHelper::dotGet($userData, 'detail.nickName') ?? $userData['email'] ?? '',
             ];
-            /**
-             * Registration Mail could not be sent
-             */
+            // Registration Mail could not be sent
             if (!$mailService->send($mailOptions, $templateData)) {
                 Oforge()->View()->Flash()->addMessage('error', I18N::translate('registration_mail_error', [
                     'en' => 'Your registration mail could not be sent',
