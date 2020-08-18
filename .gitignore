@@ -21,11 +21,11 @@ vendor
 Themes/*.lnk
 /Themes/AllYourHorses/
 /Plugins/*
-!/Plugins/Analytics/
 !/Plugins/Blog/
 !/Plugins/CookieConsent/
 !/Plugins/Faq/
 !/Plugins/FrontendUserManagement/
+!/Plugins/GoogleAnalytics/
 !/Plugins/Helpdesk/
 !/Plugins/Insertion/
 !/Plugins/ImageUpload/
