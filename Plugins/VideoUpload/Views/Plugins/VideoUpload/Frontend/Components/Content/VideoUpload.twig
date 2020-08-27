@@ -14,6 +14,10 @@
                     {{ i18n('new_video') }}
                 </div>
 
+                <label id="upload__thumbnail__button" for="upload__thumbnail" class="button hidden">
+                    {{- i18n('vimeo_btn_replace_thumbnail', {en: 'Replace preview image', de: 'Vorschaubild ersetzen'}) -}}
+                </label>
+
                 <div class="upload__delete hidden" id="video-delete">
                     {{ i18n('delete') }}
                 </div>
@@ -34,6 +38,7 @@
                value="{{ vimeo_video_id ? vimeo_video_id : data.insertion.vimeo_video_id }}" data-upload-video-id />
         <input type="text" hidden name="insertion[video_content_id]" value="{{ vimeo_video_content_id }}"
                data-upload-video-content-id />
+        <input class="hidden" id="upload__thumbnail" type="file" disabled />
     </div>
     <div class="upload--video upload__messages">
         <div class="upload--video upload--message upload__max-size-exceeded hidden">
@@ -44,6 +49,9 @@
         </div>
         <div class="upload--video upload--message upload__uploading-message hidden">
             <p class="description description--upload">{{ i18n('vimeo_upload_uploading_message', {'en' : 'Uploading...'}) }}</p>
+        </div>
+        <div class="upload--video upload--message upload__thumbnail_uploading-message hidden">
+            <p class="description description--upload">{{ i18n('vimeo_thumbnail_upload_message', {en : 'Upload preview image...', de : 'Vorschaubild wird hochgeladen...'}) }}</p>
         </div>
         <div class="upload--video upload--message upload__processing-message hidden">
             <p class="description description--upload">{{ i18n('vimeo_upload_processing_message', {'en' : 'Processing...'}) }}</p>
@@ -61,6 +69,4 @@
             <p class="description description--upload">{{ i18n('vimeo_upload_wrong_file_type', {'en' : 'It looks like your file type is not supported. Please try a different file.'}) }}</p>
         </div>
     </div>
-
-    <input class="upload upload--video hidden" id="video-image" type="file" value="Choose a file" />
 {% endblock video_upload %}

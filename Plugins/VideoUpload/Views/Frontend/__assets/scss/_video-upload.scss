@@ -5,6 +5,25 @@
 }
 
 .upload--video {
+
+    #upload__thumbnail {
+        display: none;
+
+        &__button {
+            margin-bottom: .5rem;
+            background-color: #e7ad41;
+            color: #FFF;
+
+            &.hidden {
+                display: none;
+            }
+
+            &.disabled {
+                pointer-events: none;
+            }
+        }
+    }
+
     .upload__list {
         border: none;
         justify-content: center;
@@ -18,6 +37,7 @@
 
     .upload__image.upload__image--new {
         z-index: 1;
+
         .icon {
             transition: opacity 200ms, transform 200ms ease-in-out;
             position: absolute;
@@ -55,6 +75,7 @@
     &.upload--message {
         display: block;
         text-align: center;
+
         &.hidden {
             display: none;
         }
@@ -71,7 +92,7 @@
                 background-repeat: no-repeat;
                 background-image: url(/var/public/__assets/Frontend/img/loading.svg);
                 position: absolute;
-                transform: translate3d(0, -2rem, 0);
+                transform: translate3d(0, -5rem, 0);
             }
         }
     }
@@ -99,7 +120,9 @@
         &.hidden {
             display: none;
         }
-    };
+    }
+;
+
     .progress {
         width: 100%;
     }
