@@ -166,6 +166,31 @@ class BackendInsertionController extends BaseCrudController {
                 'delete' => 'readonly',
             ],
         ],# views
+        [
+            'name'  => 'spam',
+            'type'  => CrudDataTypes::BOOL,
+            'lable' => ['key' => 'plugin_insertion_spam', 'default' => 'Spam'],
+            'crud' => [
+                'index'  => 'editable',
+                'view'   => 'editable',
+                'create' => 'off',
+                'update' => 'editable',
+                'delete' => 'readonly'
+            ]
+        ], # spam
+        [
+            'name'  => 'deactivationCause',
+            'type'  => CrudDataTypes::STRING,
+            'lable' => ['key' => 'plugin_insertion_deactivationCause', 'default' => 'Deaktivierungs-Grund'],
+            'crud'  => [
+                'index'  => 'editable',
+                'view'   => 'editable',
+                'create' => 'off',
+                'update' => 'editable',
+                'delete' => 'readonly',
+            ]
+        ], #deactivationCause
+
     ];
     /** @var array $indexFilter */
     protected $indexFilter = [

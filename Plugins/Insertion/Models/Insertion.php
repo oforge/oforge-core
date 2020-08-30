@@ -136,6 +136,18 @@ class Insertion extends AbstractModel
     private $contactAttempts = 0;
 
     /**
+     * @var bool
+     * @ORM\Column(name="spam", type="boolean")
+     */
+    private $spam = false;
+
+    /**
+     * @var string
+     * @ORM\Column(name="deactivation_cause", type="string", nullable=true)
+     */
+    private $deactivationCause;
+
+    /**
      * @ORM\PrePersist
      */
     public function onPrePersist()
@@ -458,6 +470,40 @@ class Insertion extends AbstractModel
     public function countContactAttempt(): Insertion
     {
         $this->contactAttempts = $this->contactAttempts + 1;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSpam() : bool {
+        return $this->spam;
+    }
+
+    /**
+     * @param bool $spam
+     *
+     * @return Insertion
+     */
+    public function setSpam(bool $spam) {
+        $this->spam = $spam;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDeactivationCause() : ?string {
+        return $this->deactivationCause;
+    }
+
+    /**
+     * @param string|null $deactivationCause
+     *
+     * @return Insertion
+     */
+    public function setDeactivationCause(?string $deactivationCause) {
+        $this->deactivationCause = $deactivationCause;
         return $this;
     }
 }
