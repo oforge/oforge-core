@@ -112,8 +112,13 @@ class FormController extends AbstractController {
                     ]) . ': ' . $from;
             }
 
-            $errorMailReportSettings = Oforge()->Settings()->get('error_mail_report');
-            $receiver                = ArrayHelper::dotGet($errorMailReportSettings, 'mailer_settings.receiver_address');
+            $receiver = Oforge()->Settings()->get('Plugins.ReportErrorForm', []);
+            if (empty($receiver)) {
+                $receiverFallback = Oforge()->Settings()->get('error_mail_report.mailer_settings.receiver_address');
+                if (!empty($receiverFallback)) {
+                    $receiver = [$receiverFallback => $receiverFallback];
+                }
+            }
             if (!empty($receiver)) {
                 $subject = I18N::translate('error_mail_issueType_prefix', [
                     'en' => 'Report a bug form: ',
@@ -124,7 +129,7 @@ class FormController extends AbstractController {
                 $mailService = Oforge()->Services()->get('mail');
                 $mailOptions = [
                     'from'    => 'no_reply',
-                    'to'      => [$receiver => $receiver],
+                    'to'      => $receiver,
                     'subject' => $subject,
                     'text'    => $message,
                 ];
