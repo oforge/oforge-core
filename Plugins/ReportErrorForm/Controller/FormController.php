@@ -98,6 +98,7 @@ class FormController extends AbstractController {
                         'en' => 'User',
                         'de' => 'Benutzer',
                     ]) . ': ' . $user['email'];
+                $opener  = $user['id'];
             } else {
                 $from = trim(ArrayHelper::get($postData, 'from', ''));
                 if (empty($from)) {
@@ -110,6 +111,7 @@ class FormController extends AbstractController {
                         'en' => 'Sender',
                         'de' => 'Absender',
                     ]) . ': ' . $from;
+                $opener  = '0';
             }
 
             $receiver = Oforge()->Settings()->get('Plugins.ReportErrorForm', []);
@@ -137,7 +139,7 @@ class FormController extends AbstractController {
             }
             /** @var HelpdeskTicketService $helpdeskTicketService */
             $helpdeskTicketService = Oforge()->Services()->get('helpdesk.ticket');
-            $helpdeskTicketService->createNewTicket('0', $issueTypeIDMap[$issueType], $issueTypeLabel, $message);
+            $helpdeskTicketService->createNewTicket($opener, $issueTypeIDMap[$issueType], $issueTypeLabel, $message);
 
             $twigFlash->addMessage('success', I18N::translate('report_error_message_success', [
                 'en' => 'Thank you for your report.',
