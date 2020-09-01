@@ -1,23 +1,24 @@
 {% block video_upload %}
     <span class="form__label form__label--title">
-        {{ i18n('video_upload_title') }} <span class="limitations">{{ i18n('video_upload_limitations') }}</span>
-    </span>
+        {{ i18n('video_upload_title') }}
+        <span class="limitations">{{ i18n('video_upload_limitations') }}</span>
+	</span>
 
     <div class="upload upload--video">
-        <ul class="upload__list"
-            data-upload-video
-            data-text-snippet="{{ i18n('delete') }}">
+        <ul class="upload__list" data-upload-video data-text-snippet="{{ i18n('delete') }}">
             <li class="upload__item upload__item--new-button" id="thumbnail-container">
-                <div class="upload__image upload__image--new"
-                     data-video-upload-button>
+                <div class="upload__image upload__image--new" data-video-upload-button>
                     <svg class="icon icon--secondary">
                         <use xlink:href="#videocamera"></use>
                     </svg>
                     {{ i18n('new_video') }}
                 </div>
 
-                <div class="upload__delete hidden"
-                     id="video-delete">
+                <label id="upload__thumbnail__button" for="upload__thumbnail" class="button hidden">
+                    {{- i18n('vimeo_btn_replace_thumbnail', {en: 'Replace preview image', de: 'Vorschaubild ersetzen'}) -}}
+                </label>
+
+                <div class="upload__delete hidden" id="video-delete">
                     {{ i18n('delete') }}
                 </div>
 
@@ -25,22 +26,19 @@
                     <progress class="progress" value="0" max="100" id="upload-progress"></progress>
                 </div>
             </li>
-            {% set vimeo_video_id, vimeo_video_content_id  = "", "" %}
-            {% for image in data['images'] %}
-                {% if image.type == 'video/vimeo' %}
-                    {% set vimeo_video_id, vimeo_video_content_id = image.path, image.id %}
-                {% endif %}
-            {% endfor %}
-            <input type="file"
-                   hidden
-                   name="upload__video"
-                   data-file-input-video
-                   accept="video/mp4, video/m4v, video/*">
-            <input type="text" hidden name="insertion[vimeo_video_id]" value="{{ vimeo_video_id ? vimeo_video_id : data.insertion.vimeo_video_id }}"
-                   data-upload-video-id>
-            <input type="text" hidden name="insertion[video_content_id]" value="{{ vimeo_video_content_id }}"
-                   data-upload-video-content-id>
         </ul>
+        {% set vimeo_video_id, vimeo_video_content_id  = "", "" %}
+        {% for image in data['images'] %}
+            {% if image.type == 'video/vimeo' %}
+                {% set vimeo_video_id, vimeo_video_content_id = image.path, image.id %}
+            {% endif %}
+        {% endfor %}
+        <input type="file" hidden name="upload__video" data-file-input-video accept="video/mp4, video/m4v, video/*" />
+        <input type="text" hidden name="insertion[vimeo_video_id]"
+               value="{{ vimeo_video_id ? vimeo_video_id : data.insertion.vimeo_video_id }}" data-upload-video-id />
+        <input type="text" hidden name="insertion[video_content_id]" value="{{ vimeo_video_content_id }}"
+               data-upload-video-content-id />
+        <input class="hidden" id="upload__thumbnail" type="file" disabled />
     </div>
     <div class="upload--video upload__messages">
         <div class="upload--video upload--message upload__max-size-exceeded hidden">
@@ -51,6 +49,9 @@
         </div>
         <div class="upload--video upload--message upload__uploading-message hidden">
             <p class="description description--upload">{{ i18n('vimeo_upload_uploading_message', {'en' : 'Uploading...'}) }}</p>
+        </div>
+        <div class="upload--video upload--message upload__thumbnail_uploading-message hidden">
+            <p class="description description--upload">{{ i18n('vimeo_thumbnail_upload_message', {en : 'Upload preview image...', de : 'Vorschaubild wird hochgeladen...'}) }}</p>
         </div>
         <div class="upload--video upload--message upload__processing-message hidden">
             <p class="description description--upload">{{ i18n('vimeo_upload_processing_message', {'en' : 'Processing...'}) }}</p>

@@ -9,6 +9,9 @@ if (typeof Oforge !== 'undefined') {
         selectors: {
             uploadButton: '[data-video-upload-button]',
             deleteButton: '#video-delete',
+            thumbnailInput: '#upload__thumbnail',
+            thumbnailButton: '#upload__thumbnail__button',
+            uploadImageButton: '#video-image',
             videoFileInput: '[data-file-input-video]',
             vimeoVideoIdInput: '[data-upload-video-id]',
             videoContentId: '[data-upload-video-content-id]',
@@ -18,6 +21,7 @@ if (typeof Oforge !== 'undefined') {
             messageError: '.upload__error-message',
             messageUploading: '.upload__uploading-message',
             messageProcessing: '.upload__processing-message',
+            messageUploadThumbnail: '.upload__thumbnail_uploading-message',
             messageSuccess: '.upload__success-message',
             messageDeleting: '.upload__deleting-message',
             messageDeletingSuccess: '.upload__delete-success-message',
@@ -33,6 +37,8 @@ if (typeof Oforge !== 'undefined') {
             var videoUploadButton = document.querySelector(self.selectors.uploadButton);
             var videoFileInput = document.querySelector(self.selectors.videoFileInput);
             var vimeoVideoIdInput = document.querySelector(self.selectors.vimeoVideoIdInput);
+            var $vimeoThumbnailInput = $(self.selectors.thumbnailInput);
+            var $vimeoThumbnailButton = $(self.selectors.thumbnailButton);
             var credentials;
             var vimeoBaseUrl = "https://api.vimeo.com";
             var videoId;
@@ -60,23 +66,24 @@ if (typeof Oforge !== 'undefined') {
                     if (input.files.length <= maxFileCount) {
                         input.files.forEach(function (file) {
                             fileSize += file.size;
-                            if (checkFileSize(fileSize) === false) {
-                                input.value = "";
+                            if (!checkFileSize(fileSize)) {
+                                input.value = '';
                                 return false;
                             }
 
                             disableSubmitButton();
+                            setThumbnailReplaceButton(false, true);
                             displayPlaceholderImage();
                             displayMessage(self.selectors.messageUploading);
                             $("#upload-progress").val(0).parent().removeClass('hidden').show();
 
+                            let progressBar = document.getElementById('upload-progress');
                             var uploader = new VimeoUpload({
                                 file: input.files[0],
                                 token: credentials.vimeo_access_token,
                                 name: file.name,
                                 description: 'Default description',
                                 onProgress: function (data) {
-                                    let progressBar = document.getElementById('upload-progress');
                                     progressBar.value = data.loaded / data.total * 100;
                                 },
                                 onComplete: function (data) {
@@ -85,6 +92,7 @@ if (typeof Oforge !== 'undefined') {
                                     fileUrl = this.api_url + '/' + data;
                                     enableDeleteButton();
                                     allowEmbed(this.api_url, data, this.token);
+                                    setThumbnailReplaceButton(true, true);
                                     fetchVideoThumbnail(this.api_url, data, this.token);
                                     displayMessage(self.selectors.messageSuccess);
                                     displayProcessingStatus();
@@ -92,12 +100,12 @@ if (typeof Oforge !== 'undefined') {
                                 onError: function (data) {
                                     displayErrorMessage(data);
                                     enableSubmitButton();
+                                    setThumbnailReplaceButton(false, true);
                                 }
                             });
                             uploader.upload();
                         });
                     }
-
                 });
             });
 
@@ -118,19 +126,23 @@ if (typeof Oforge !== 'undefined') {
             }
 
             function disableSubmitButton() {
-                let form = $(self.selectors.form);
-                let submitButton = form.find(self.selectors.formSubmitButton);
+                let submitButton = $(self.selectors.form).find(self.selectors.formSubmitButton);
                 if (submitButton.length > 0) {
                     $(submitButton).trigger('disableSubmit');
                 }
             }
 
             function enableSubmitButton() {
-                let form = $(self.selectors.form);
-                let submitButton = form.find(self.selectors.formSubmitButton);
+                let submitButton = $(self.selectors.form).find(self.selectors.formSubmitButton);
                 if (submitButton.length > 0) {
                     $(submitButton).trigger('enableSubmit');
                 }
+            }
+
+            function setThumbnailReplaceButton(visible, disabled) {
+                $vimeoThumbnailButton[visible ? 'removeClass' : 'addClass']('hidden');
+                $vimeoThumbnailButton[disabled ? 'addClass' : 'removeClass']('disabled');
+                $vimeoThumbnailInput.prop('disabled', disabled);
             }
 
             function enableDeleteButton() {
@@ -166,6 +178,7 @@ if (typeof Oforge !== 'undefined') {
                         method: 'DELETE',
                         url: url,
                         success: function () {
+                            setThumbnailReplaceButton(false, true);
                             displayMessage(self.selectors.messageDeletingSuccess);
                             videoId = null;
                             fillHiddenIdInput("");
@@ -240,7 +253,7 @@ if (typeof Oforge !== 'undefined') {
                     method: 'GET',
                     url: statusUrl,
                     headers: {
-                        'Authorization': 'Bearer ' + token
+                        Authorization: 'Bearer ' + token
                     },
                     success: function (data) {
                         if (data.transcode.status === 'complete') {
@@ -250,12 +263,24 @@ if (typeof Oforge !== 'undefined') {
                                 method: 'GET',
                                 url: videoUrl,
                                 headers: {
-                                    'Authorization': 'Bearer ' + token
+                                    Authorization: 'Bearer ' + token
                                 },
                                 success: function (data) {
                                     if (data.pictures) {
-                                        displayVideoThumbnail(data.pictures)
+                                        $("#vimeo-thumbnail").attr({
+                                            'src': data.pictures.sizes[3].link,
+                                            width: '100%',
+                                            height: 'auto'
+                                        }).removeClass("default-image");
+                                        $("#thumbnail-container").removeClass("processing");
+
+                                        discardAllMessages();
+                                        setThumbnailReplaceButton(true, false);
+                                        $vimeoThumbnailInput.off('change').on('change', function () {
+                                            updateThumbnail(url, id, token)
+                                        });
                                     }
+
                                 }, error: function (data) {
                                     displayErrorMessage();
                                     fillHiddenIdInput("");
@@ -276,15 +301,12 @@ if (typeof Oforge !== 'undefined') {
                                 discardAllMessages();
                                 break;
                         }
-
                     }
                 });
-
             }
 
             function fillHiddenIdInput(data) {
-                let input = document.querySelector(self.selectors.vimeoVideoIdInput);
-                $(input).val(data);
+                $(self.selectors.vimeoVideoIdInput).val(data);
             }
 
             function reset() {
@@ -292,13 +314,15 @@ if (typeof Oforge !== 'undefined') {
                 $('#vimeo-thumbnail').remove();
                 $("[data-video-upload-button]").removeClass('hidden');
                 $("#thumbnail-container").removeClass("processing");
+                $vimeoThumbnailInput.val('');
             }
 
             function displayPlaceholderImage() {
                 var thumbnailImage = $("<img>").attr({
-                    'src': '',
-                    'id': 'vimeo-thumbnail'
-                }).addClass("upload__image default-image");
+                    // 'src': '',
+                    'id': 'vimeo-thumbnail',
+                    'class': 'upload__image default-image',
+                });
                 $("[data-video-upload-button]").addClass('hidden');
                 $("#thumbnail-container").prepend(thumbnailImage);
             }
@@ -307,16 +331,6 @@ if (typeof Oforge !== 'undefined') {
                 displayMessage(self.selectors.messageProcessing);
                 $("#thumbnail-container").addClass("processing");
                 $("#upload-progress").parent().hide();
-            }
-
-            function displayVideoThumbnail(pictures) {
-                $("#vimeo-thumbnail").attr({
-                    'src': pictures.sizes[3].link,
-                    width: '100%',
-                    height: 'auto'
-                }).removeClass("default-image");
-                $("#thumbnail-container").removeClass("processing");
-                discardAllMessages();
             }
 
             function displayErrorMessage(data) {
@@ -334,6 +348,75 @@ if (typeof Oforge !== 'undefined') {
                 $(self.selectors.uploadMessages).children('.upload--message').each(function () {
                     $(this).addClass('hidden');
                 });
+            }
+
+            function updateThumbnail(url, id, token) {
+                var file;
+                if ($vimeoThumbnailInput[0].files.length > 0 && (file = $vimeoThumbnailInput[0].files[0])) {
+                    var picturesUri = url + '/videos/' + id + '/pictures';
+                    $.ajax({
+                        method: 'POST',
+                        url: picturesUri,
+                        headers: {
+                            Authorization: 'Bearer ' + token,
+                            Accept: 'application/vnd.vimeo.*+json;version=3.4'
+                        },
+                        success: function (data) {
+                            var activateImageUri = data.uri;
+                            $("#thumbnail-container").addClass("processing");
+                            displayMessage(self.selectors.messageUploadThumbnail);
+                            setThumbnailReplaceButton(true, true);
+                            $.ajax({
+                                method: 'PUT',
+                                url: data.link,
+                                headers: {
+                                    'Accept': 'application/vnd.vimeo.*+json;version=3.4',
+                                    'Content-Type': file.type
+                                },
+                                processData: false,
+                                data: file,
+                                success: function (data) {
+                                    $.ajax({
+                                        method: 'PATCH',
+                                        url: url + activateImageUri,
+                                        headers: {
+                                            Authorization: 'Bearer ' + token,
+                                            'Content-Type': 'application/json',
+                                            Accept: 'application/vnd.vimeo.*+json;version=3.4'
+                                        },
+                                        data: JSON.stringify({
+                                            'active': true
+                                        }),
+                                        success: function (data) {
+                                            if (data) {
+                                                $("#vimeo-thumbnail").attr({
+                                                    'src': data.sizes[3].link,
+                                                }).removeClass("default-image");
+                                                discardAllMessages();
+                                                setThumbnailReplaceButton(true, false);
+                                            } else {
+                                                displayErrorMessage();
+                                            }
+                                            $("#thumbnail-container").removeClass("processing");
+                                        },
+                                        error: function (data) {
+                                            displayErrorMessage();
+                                            $("#thumbnail-container").removeClass("processing");
+                                        }
+                                    });
+                                },
+                                error: function (data) {
+                                    displayErrorMessage();
+                                    $("#thumbnail-container").removeClass("processing");
+                                }
+                            });
+                        },
+                        error: function (data) {
+                            displayErrorMessage();
+                            $("#thumbnail-container").removeClass("processing");
+                        }
+                    });
+                }
             }
         }
     });
