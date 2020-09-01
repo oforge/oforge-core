@@ -2,6 +2,8 @@
 
 namespace Oforge\Engine\Modules\Core\Forge;
 
+use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
+
 /**
  * Class ForgeSettings
  * Loads all Settings that need to come from the filesystem, e.g. database configuration.
@@ -55,7 +57,7 @@ class ForgeSettings {
      * @return array|mixed
      */
     public function get(string $key, $default = []) {
-        return isset($this->settings[$key]) ? $this->settings[$key] : $default;
+        return ArrayHelper::dotGet($this->settings, $key, $default);
     }
 
     /**
