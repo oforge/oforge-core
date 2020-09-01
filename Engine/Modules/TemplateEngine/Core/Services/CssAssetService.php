@@ -4,7 +4,7 @@ namespace Oforge\Engine\Modules\TemplateEngine\Core\Services;
 
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Leafo\ScssPhp\Compiler;
+use ScssPhp\ScssPhp\Compiler;
 use MatthiasMullie\Minify\CSS;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\Template\TemplateNotFoundException;
