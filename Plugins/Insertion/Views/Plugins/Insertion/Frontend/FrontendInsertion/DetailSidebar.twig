@@ -28,10 +28,6 @@
         {% block sidebar__panel_contact %}
 
             <div class="panel panel--contact contact">
-                {#
-                    contact.visible means: only visible for logged in users!!!!!!!!!
-                    yes someone who we don't mention (ms) decided to troll us all.
-                #}
                 <a href="{{ url("insertions_contact", {id: insertion.id}) }}"
                    class="button button--secondary">{{ i18n('insertion_detail_contact_advertiser', 'Anbieter Kontaktieren') }}</a>
                 {% if insertion.priceType is same as("auction") %}
