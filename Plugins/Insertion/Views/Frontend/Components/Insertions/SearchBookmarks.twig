@@ -1,57 +1,75 @@
 {% set searchBookmarkCount = 1 %}
 {% for item in bookmarks %}
     <div class="search__bookmark" xmlns="http://www.w3.org/1999/html">
-        <h3 class="bookmark__title">{{ i18n('search_bookmark_title', 'Gespeicherte Suche') }}
-            #{{ searchBookmarkCount }}</h3>
+        <div class="search__bookmark_header">
+            <h3 class="bookmark__title">{{ i18n('search_bookmark_title', 'Suche') }} #{{ searchBookmarkCount }} - {{ item.searchName }}</h3>
 
-        <span class="tag bookmark__tag">
-            <span class="tag__text">{{ i18n(item.insertionType.name) }}</span>
-        </span>
-
-        {% for f, value in item.params %}
-            {% if f is same as ("price") %}
-                <span class="tag bookmark__tag" data-key="{{ f }}">
-                    <span class="tag__text">{{ i18n(f) }} {{ value[0] }} {{ i18n(f ~ '_between') }}   {{ value[1] }}</span>
-                </span>
-            {% elseif value is iterable %}
-                {% for v in value %}
-                    <span class="tag bookmark__tag" data-key="{{ f }}" data-value="{{ v }}">
-                        <span class="tag__text">{{ i18n(f) }} {{ values[v] }}</span>
-                    </span>
-                {% endfor %}
-            {% else %}
-                <span class="tag bookmark__tag" data-key="{{ f }}" data-value="{{ value }}">
-                    {% if keys[f].type is same as( 'boolean') %}
-                        <span class="tag__text">{{ i18n(f) }}</span>
-                    {% else %}
-                        <span class="tag__text">{{ i18n(f) }} {{ values[value] }}</span>
-                    {% endif %}
-                </span>
+            <h3 class="bookmark__title">
+            {{ i18n('notification', 'Benachrichtigung') }} -
+            {% if item.checkInterval is same as('daily') %}
+                {{ i18n('frontend_save_search_bookmarks_form__radio_daily', 'Jeden Tag') }}
+            {% elseif item.checkInterval is same as('days_2') %}
+                {{ i18n('frontend_save_search_bookmarks_form__radio_days_2', 'Jeden 2. Tag') }}
+            {% elseif item.checkInterval is same as('weekly') %}
+                {{ i18n('frontend_save_search_bookmarks_form__radio_weekly', '1 mal pro Woche') }}
+            {% elseif item.checkInterval is same as('none') %}
+                {{ i18n('frontend_save_search_bookmarks_form__radio_none', 'Keine E-Mails versenden') }}
             {% endif %}
-        {% endfor %}
+                </h3>
+            </div>
 
-        <div class="bookmark__actions">
-            <a href="{{ item.url }}"
-               class="button button--primary search-button">{{ i18n('show_search_results', 'Suchergebnisse anzeigen') }}
-                <svg class="icon">
-                    <use xlink:href="#preview"></use>
-                </svg>
-            </a>
+            <div class="search__bookmark_body">
+                <div class="bookmark__tags">
+                    <span class="tag bookmark__tag">
+                        <span class="tag__text">{{ i18n(item.insertionType.name) }}</span>
+                    </span>
 
-            <form method="post"
-                  action="{{ url('frontend_account_insertions_removeSearchBookmark', {'searchBookmarkId': item.id }) }}"
-                  enctype="multipart/form-data">
+                    {% for f, value in item.params %}
+                        {% if f is same as ("price") %}
+                            {% include 'Plugins/Insertion/Frontend/Components/Content/Filter/Price.twig' with {'hiddeRemove': true} %}
+                        {% elseif f is same as ("radius") %}
+                            {% include 'Plugins/Insertion/Frontend/Components/Content/Filter/Distance.twig' with {'hiddeRemove': true} %}
+                        {% else %}
+                            {% set attribute = all_attributes[f] %}
+                            {% set search = { 'values' : values} %}
+                            {% include 'Plugins/Insertion/Frontend/Components/Content/Filter/' ~ attribute.filterType|capitalize ~'.twig' with { 'hiddeRemove': true } %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
 
-                <label class="delete-bookmark">
-                    <input type="submit"
-                           value="{{ i18n('delete_search_bookmark', 'Löschen') }}" />
-                    <svg class="icon icon--primary">
-                        <use xlink:href="#delete"></use>
-                    </svg>
-                </label>
-            </form>
+                <div class="bookmark__actions">
+                    <div class="bookmark__actions_row">
+                        <a href="{{ item.url }}"
+                           class="button button--primary search-button">{{ i18n('show_search_results', 'Suchergebnisse anzeigen') }}
+                            <svg class="icon">
+                                <use xlink:href="#preview"></use>
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="bookmark__actions_row">
+                        <div>
+                            <a href="{{ url('frontend_account_insertions_saveSearchBookmark', { 'id': item.id} ) }}"
+                               class="button button--primary search-button">{{ i18n('change', 'Ändern') }}</a>
+                        </div>
+                        <div>
+                            <form method="post"
+                                  action="{{ url('frontend_account_insertions_removeSearchBookmark', {'searchBookmarkId': item.id }) }}"
+                                  enctype="multipart/form-data">
+
+                                <label class="delete-bookmark">
+                                    <button type="submit"
+                                            value="{{ i18n('delete_search_bookmark', 'Löschen') }}">
+                                        <svg class="icon icon--primary">
+                                            <use xlink:href="#delete"></use>
+                                        </svg>
+                                    </button>
+                                </label>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
 
-    {% set searchBookmarkCount = searchBookmarkCount + 1 %}
+        {% set searchBookmarkCount = searchBookmarkCount + 1 %}
 {% endfor %}

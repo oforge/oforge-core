@@ -1,4 +1,3 @@
-
 .search-bookmarks {
     h1 {
         color: $color-primary;
@@ -15,26 +14,163 @@
     }
 }
 
+
+.search-bookmarks__container {
+    .search__bookmark {
+        display: flex;
+        flex-direction: column;
+        border-bottom: 2px $color-primary solid;
+        .search__bookmark_header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            .bookmark__title {
+                margin: 0.5rem 0;
+                text-align: center;
+                color: $color-primary;
+            }
+        }
+
+        .search__bookmark_body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 1rem;
+            .bookmark__tags {
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap;
+                justify-content: center;
+                margin: .5rem 0;
+            }
+
+            .bookmark__actions {
+                min-width: 28rem;
+                margin: 0.5rem 0;
+                .bookmark__actions_row {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    .search-button {
+                        display: inline-flex;
+                        align-items: center;
+                        font-size: $font-size-5;
+                        line-height: $font-size-5;
+                        .icon {
+                            fill: $color-light;
+                            display: none;
+                            bottom: 1px;
+                            transform: scale(1);
+                            transition: transform 70ms cubic-bezier(.33, .47, .46, .82);
+                        }
+                        &:hover {
+                            .icon {
+                                transform: scale(1.2);
+                                transition: transform 100ms cubic-bezier(.33, .47, .46, .82);
+                            }
+                        }
+                    }
+
+                    .delete-bookmark {
+                        button {
+                            border: none;
+                            background: none;
+                        }
+                        .icon {
+                            transform: scale(1);
+                            transition: transform 100ms cubic-bezier(.33, .47, .46, .82);
+                        }
+
+                        &:hover {
+                            cursor: pointer;
+
+                            .icon {
+                                transform: scale(1.2);
+                                transition: transform 150ms cubic-bezier(.33, .47, .46, .82);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+@media screen and (min-width: $screen-large) {
+    .search-bookmarks__container {
+        .search__bookmark {
+            display: flex;
+            flex-direction: column;
+
+            .search__bookmark_header {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+
+            .search__bookmark_body {
+                display: flex;
+                justify-content: space-between;
+                flex-direction: row;
+
+                .bookmark__tags {
+                    justify-content: flex-start;
+                    .tag {
+                        display: inline-flex;
+                    }
+                }
+            }
+
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+/*
 .search__bookmark {
     border-bottom: 2px $color-primary solid;
 
     padding: 2rem 0 2rem 2rem;
 
-    .bookmark__title {
-        color: $color-primary;
-        margin-bottom: $size-large;
+    .search__bookmark_header {
+        display: flex;
+        .bookmark__title {
+            color: $color-primary;
+            margin-bottom: $size-large;
+        }
     }
 
-    .bookmark__tag {
-        display: inline-flex;
-        background: $color-primary-light;
+
+    .search__bookmark_header {
+        .bookmark__tag {
+            display: inline-flex;
+            background: $color-primary-light;
+        }
     }
 }
 
 .bookmark__actions {
     display: flex;
+    flex-direction: column;
     font-size: $font-size-5;
     margin-top: 3rem;
+
+    .bookmark__actions_row {
+        margin-top: 8px;
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        justify-content: center;
+    }
 
     .search-button {
         display: inline-flex;
@@ -68,7 +204,6 @@
     .delete-bookmark {
         *[type=submit] {
             visibility: hidden;
-            position: absolute;
         }
 
         .icon {
@@ -112,14 +247,43 @@
     }
     .search-bookmarks__container {
         .search__bookmark {
-            position: relative;
+            .search__bookmark_header {
+                display: flex;
+                justify-content: space-between;
+            }
         }
 
         .bookmark__actions {
-            position: absolute;
             right: 0;
             top: 2rem;
             margin-top: 0;
+
+            .bookmark__actions_row {
+                margin-top: 8px;
+                display: flex;
+                align-items: center;
+                flex-direction: row;
+                justify-content: center;
+            }
         }
     }
+}
+
+*/
+
+
+
+
+
+
+.save-search-bookmarks-form__headline {
+    color: $color-primary;
+    text-align: center;
+    font-size: $font-size-1;
+}
+
+.save-search-bookmarks-form__sub-headline {
+    color: $color-primary;
+    text-align: center;
+    font-size: $font-size-3;
 }

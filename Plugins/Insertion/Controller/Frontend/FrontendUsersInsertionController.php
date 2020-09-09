@@ -29,6 +29,7 @@ use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Oforge\Engine\Modules\Core\Models\Endpoint\EndpointMethod;
 use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
+use Oforge\Engine\Modules\TemplateEngine\Extensions\Services\UrlService;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Interfaces\RouterInterface;
@@ -294,11 +295,12 @@ class FrontendUsersInsertionController extends SecureFrontendController {
 
         $bookmarks = $result;
 
-
         /**
          * @var $typeService InsertionTypeService
          */
         $typeService = Oforge()->Services()->get("insertion.type");
+
+        $attributeMap = $typeService->getInsertionTypeAttributeMap();
 
         $types    = $typeService->getInsertionTypeList(100, 0);
         $valueMap = [];
@@ -318,7 +320,7 @@ class FrontendUsersInsertionController extends SecureFrontendController {
             }
         }
 
-        Oforge()->View()->assign(["bookmarks" => $bookmarks, "values" => $valueMap]);
+        Oforge()->View()->assign(["bookmarks" => $bookmarks, "values" => $valueMap, 'all_attributes' => $attributeMap]);
 
     }
 
@@ -375,13 +377,12 @@ class FrontendUsersInsertionController extends SecureFrontendController {
     /**
      * @param Request $request
      * @param Response $response
-     * @param $args
      *
      * @return Response
      * @throws ORMException
      * @throws ServiceNotFoundException
      */
-    public function toggleSearchBookmarkAction(Request $request, Response $response, $args) {
+    public function toggleSearchBookmarkAction(Request $request, Response $response) {
         $id = $request->getParsedBody()['type_id'];
         /**
          * @var $service InsertionTypeService
@@ -407,16 +408,30 @@ class FrontendUsersInsertionController extends SecureFrontendController {
         if ($request->isPost()) {
             $filterData = $_POST["filter"];
             $params     = [];
-
             if (isset($filterData)) {
                 $params = json_decode($filterData, true);
             }
-
             if($params == null) {
                 $params = [];
             }
+            if($bookmarkService->hasBookmark($id, $user->getId(), $params)) {
+                $bookmarkService->toggle($insertionType, $user, $params);
+            } else {
+                /** @var UrlService $urlService */
+                $urlService = Oforge()->Services()->get('url');
+                $url = $urlService->getUrl('frontend_account_insertions_saveSearchBookmark');
 
-            $bookmarkService->toggle($insertionType, $user, $params);
+                if(isset($_SESSION['saveBookmark'])) {
+                    unset($_SESSION['saveBookmark']);
+                }
+
+                $_SESSION['saveBookmark'] = [
+                    'params' => $params,
+                    'typeId' => $insertionType,
+                ];
+
+                return $response->withRedirect($url);
+            }
         }
 
         $url = $bookmarkService->getUrl($id, $params);
@@ -427,6 +442,103 @@ class FrontendUsersInsertionController extends SecureFrontendController {
         }
 
         return $response->withRedirect($url, 301);
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     *
+     * @return Response
+     * @throws ORMException
+     * @throws ServiceNotFoundException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @EndpointAction(path="/saveSearchBookmark[/{id:\d+}]")
+     */
+    public function saveSearchBookmarkAction(Request $request, Response $response, array $args) {
+        /** @var $userService FrontendUserService */
+        $userService = Oforge()->Services()->get("frontend.user");
+        $user        = $userService->getUser();
+
+        // Update Notification interval block
+        if(isset($args['id']) && is_numeric($args['id'])) {
+            /** @var $bookmarkService InsertionSearchBookmarkService */
+            /** @var InsertionUserSearchBookmark $bookmark */
+            $bookmarkService = Oforge()->Services()->get("insertion.search.bookmark");
+            $bookmark = $bookmarkService->get($args['id']);
+
+            if(is_null($bookmark) || $bookmark->getUser()->getId() !== $user->getId()) {
+                return $response->withRedirect("/404", 301);
+            }
+
+            if($request->isPost()) {
+                $options = [
+                    'name' => $request->getParsedBodyParam('search_title'),
+                    'interval' => $request->getParsedBodyParam('email_interval'),
+                ];
+                $bookmarkService->update($bookmark->getId(), $options);
+
+                $referer = $_SESSION['saveBookmark']['referer'];
+                unset($_SESSION['saveBookmark']);
+
+                return $response->withRedirect($referer);
+            }
+
+            Oforge()->View()->assign(['bookmark' => $bookmark->toArray()]);
+            $refererHeader = $request->getHeader('HTTP_REFERER');
+            if (isset($refererHeader) && sizeof($refererHeader) > 0) {
+                $_SESSION['saveBookmark']['referer'] = $refererHeader[0];
+            }
+
+            return $response;
+        }
+
+        // Create new Block
+        if(!isset($_SESSION['saveBookmark']) ||
+           !isset($_SESSION['saveBookmark']['params']) ||
+           !isset($_SESSION['saveBookmark']['typeId']) ||
+           is_null($user)
+        ) {
+            return $response->withRedirect("/404", 301);
+        }
+
+        $params = $_SESSION['saveBookmark']['params'];
+        $insertionType = $_SESSION['saveBookmark']['typeId'];
+
+        if($request->isPost()) {
+            $options = [
+                'name' => $request->getParsedBodyParam('search_title'),
+                'interval' => $request->getParsedBodyParam('email_interval'),
+            ];
+
+            if(is_null($options['name']) || is_null($options['interval'])) {
+                /** @var UrlService $urlService */
+                $urlService = Oforge()->Services()->get('url');
+                $url = $urlService->getUrl('frontend_account_insertions_saveSearchBookmark');
+                return $response->withRedirect($url);
+            }
+
+            /** @var $bookmarkService InsertionSearchBookmarkService */
+            $bookmarkService = Oforge()->Services()->get("insertion.search.bookmark");
+            $bookmarkService->toggle($insertionType, $user, $params, $options);
+
+            $referer = $_SESSION['saveBookmark']['referer'];
+            unset($_SESSION['saveBookmark']);
+
+            Oforge()->View()->Flash()->addMessage('success', I18n::translate('frontend_save_search_bookmarks_success', [
+                'en' => 'Bookmark successfully saved',
+                'de' => 'Suche erfolgreich gespeichert.',
+            ]));
+
+            return $response->withRedirect($referer);
+        }
+
+        $refererHeader = $request->getHeader('HTTP_REFERER');
+        if (isset($refererHeader) && sizeof($refererHeader) > 0) {
+            $_SESSION['saveBookmark']['referer'] = $refererHeader[0];
+        }
+
+        return $response;
     }
 
     /**
@@ -593,6 +705,7 @@ class FrontendUsersInsertionController extends SecureFrontendController {
             'indexAction',
             'toggleBookmarkAction',
             'toggleSearchBookmarkAction',
+            'saveSearchBookmarkAction',
             'profileAction',
             'removeBookmarkAction',
             'removeSearchBookmarkAction',

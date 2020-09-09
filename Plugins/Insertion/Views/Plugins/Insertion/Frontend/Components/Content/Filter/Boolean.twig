@@ -1,6 +1,8 @@
 <div class="tag" data-key="{{ f }}" data-value="{{ v }}">
-    <a href="#"
-       onclick="window.location.href = Oforge.removeQueryString('{{ f }}', 'on')"
-       class="close"></a>
+    {% if not hiddeRemove %}
+        <a href="#"
+           onclick="window.location.href = Oforge.removeQueryString('{{ f }}', 'on')"
+           class="close"></a>
+    {% endif %}
     <span class="tag__text">{{ i18n(f) }}</span>
 </div>

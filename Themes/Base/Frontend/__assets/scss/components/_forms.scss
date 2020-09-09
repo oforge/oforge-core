@@ -262,6 +262,20 @@
         }
     }
 
+    &.form__input--radio {
+        width: 2.6rem;
+        height: 2.6rem;
+        vertical-align: middle;
+        border-radius: 50%;
+
+        &:checked {
+            background-color: $color-secondary;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23ffffff' viewBox='0 0 24 24'%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+    }
+
     &.form__input--checkbox-small {
         width: 2rem;
         height: 2rem;

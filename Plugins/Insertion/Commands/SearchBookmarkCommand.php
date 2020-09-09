@@ -2,6 +2,7 @@
 
 namespace Insertion\Commands;
 
+use DateTime;
 use FrontendUserManagement\Models\User;
 use Insertion\Models\InsertionUserSearchBookmark;
 use Insertion\Services\InsertionListService;
@@ -59,10 +60,13 @@ class SearchBookmarkCommand extends AbstractCommand {
         $bookmarks = $searchBookmarkService->list();
 
         foreach ($bookmarks as $bookmark) {
+            if (!$this->inInterval($bookmark->getCheckInterval(), $bookmark->getLastChecked())) continue;
+
             /** @var User $user */
             $user                 = $bookmark->getUser();
 
             $params               = $bookmark->getParams();
+            $params['after_date'] = $bookmark->getLastChecked();
             $insertionList        = $insertionListService->search($bookmark->getInsertionType()->getId(), $params);
 
             $baseUrl    = $configService->get('system_project_domain_name');
@@ -75,5 +79,30 @@ class SearchBookmarkCommand extends AbstractCommand {
 
             $searchBookmarkService->setLastChecked($bookmark);
         }
+    }
+
+    private function inInterval($interval, \DateTime $lastChecked) {
+        switch ($interval) {
+            case InsertionSearchBookmarkService::DAILY:
+                $lastChecked->add(new \DateInterval(('P1D')));
+                break;
+            case InsertionSearchBookmarkService::DAYS_2:
+                $lastChecked->add(new \DateInterval(('P2D')));
+                break;
+            case InsertionSearchBookmarkService::DAYS_3:
+                $lastChecked->add(new \DateInterval(('P3D')));
+                break;
+            case InsertionSearchBookmarkService::WEEKLY:
+                $lastChecked->add(new \DateInterval(('P7D')));
+                break;
+            case InsertionSearchBookmarkService::NONE:
+            default:
+                return false;
+        }
+
+        if (new DateTime() > $lastChecked) {
+            return true;
+        }
+        return false;
     }
 }
