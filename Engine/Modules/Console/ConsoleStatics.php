@@ -13,7 +13,7 @@ class ConsoleStatics {
     /**
      * Relative path of console file logs folder.
      */
-    public const CONSOLE_LOGS_DIR = DIRECTORY_SEPARATOR . Statics::VAR_DIR . DIRECTORY_SEPARATOR . 'console';
+    public const CONSOLE_LOGS_DIR = GLOBAL_SEPARATOR . Statics::VAR_DIR . GLOBAL_SEPARATOR . 'console';
     /**
      * Absolute path of console file logs folder.
      */

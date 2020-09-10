@@ -29,8 +29,8 @@ class ImportMediaService {
             if ($fileMime === false) {
                 continue;
             }
-            $relativeFilePath = Statics::IMAGES_DIR . DIRECTORY_SEPARATOR . substr(md5(rand()), 0, 2) . DIRECTORY_SEPARATOR . substr(md5(rand()), 0, 2)
-                                . DIRECTORY_SEPARATOR . $filename;
+            $relativeFilePath = Statics::IMAGES_DIR . GLOBAL_SEPARATOR . substr(md5(rand()), 0, 2) . GLOBAL_SEPARATOR . substr(md5(rand()), 0, 2)
+                                . GLOBAL_SEPARATOR . $filename;
             FileSystemHelper::mkdir(dirname(ROOT_PATH . $relativeFilePath));
 
             if (rename($filepath, ROOT_PATH . $relativeFilePath)) {

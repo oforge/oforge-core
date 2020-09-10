@@ -13,7 +13,7 @@ class CronjobStatics {
     /**
      * Relative path of cronjob file logs folder.
      */
-    public const CRONJOB_LOGS_DIR = DIRECTORY_SEPARATOR . Statics::VAR_DIR . DIRECTORY_SEPARATOR . 'cronjob';
+    public const CRONJOB_LOGS_DIR = GLOBAL_SEPARATOR . Statics::VAR_DIR . GLOBAL_SEPARATOR . 'cronjob';
     /**
      * Absolute path of cronjob file logs folder.
      */

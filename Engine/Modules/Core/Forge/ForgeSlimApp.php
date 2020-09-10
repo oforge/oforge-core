@@ -64,13 +64,13 @@ TAG;
                     $templateManagementService = Oforge()->Services()->get("template.management");
                     $activeTheme               = $templateManagementService->getActiveTemplate()->getName();
 
-                    $activeTheme500 = Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . $activeTheme . DIRECTORY_SEPARATOR . "500.html";
+                    $activeTheme500 = Statics::TEMPLATE_DIR . GLOBAL_SEPARATOR . $activeTheme . GLOBAL_SEPARATOR . "500.html";
                     if (file_exists($activeTheme500)) {
-                        return $response->withRedirect(DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . $activeTheme . DIRECTORY_SEPARATOR
+                        return $response->withRedirect(GLOBAL_SEPARATOR . Statics::TEMPLATE_DIR . GLOBAL_SEPARATOR . $activeTheme . GLOBAL_SEPARATOR
                                                        . "500.html", 307);
                     } else {
-                        return $response->withRedirect(DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . Statics::DEFAULT_THEME
-                                                       . DIRECTORY_SEPARATOR . "500.html", 307);
+                        return $response->withRedirect(GLOBAL_SEPARATOR . Statics::TEMPLATE_DIR . GLOBAL_SEPARATOR . Statics::DEFAULT_THEME
+                                                       . GLOBAL_SEPARATOR . "500.html", 307);
                     }
                 }
             };
@@ -143,7 +143,7 @@ TAG;
 
         if ($mode != "development") {
             if ($userNotLoggedIn) {
-                $files = glob(ROOT_PATH . Statics::RESULT_CACHE_DIR . DIRECTORY_SEPARATOR . $filename . "*");
+                $files = glob(ROOT_PATH . Statics::RESULT_CACHE_DIR . GLOBAL_SEPARATOR . $filename . "*");
 
                 foreach ($files as $file) {
                     $output = null;
@@ -247,7 +247,7 @@ TAG;
         if ($userNotLoggedIn && $cache != null && is_string($cache) && $mode != "development") {
             @mkdir(ROOT_PATH . Statics::RESULT_CACHE_DIR, 0755, true);
 
-            file_put_contents(ROOT_PATH . Statics::RESULT_CACHE_DIR . DIRECTORY_SEPARATOR . $filename . "##" . $cache, $response->getBody()->__toString());
+            file_put_contents(ROOT_PATH . Statics::RESULT_CACHE_DIR . GLOBAL_SEPARATOR . $filename . "##" . $cache, $response->getBody()->__toString());
         }
 
         return $response;

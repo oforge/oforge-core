@@ -31,7 +31,7 @@ class ImportDatabaseCsvService {
     public function process($echo = false) {
         $this->initialize();
         foreach ($this->mapClassDatabaseTable as $dbTableName => $modelClass) {
-            $fullPath = ROOT_PATH . Statics::IMPORTS_DIR . DIRECTORY_SEPARATOR;
+            $fullPath = ROOT_PATH . Statics::IMPORTS_DIR . GLOBAL_SEPARATOR;
             if (is_readable($fullPath . $dbTableName . '.csv')) {
                 $this->processFile($fullPath, $dbTableName, $echo);
             }
@@ -48,7 +48,7 @@ class ImportDatabaseCsvService {
      */
     public function processFile(string $folderPath, $dbTableName, $echo = false) {
         $this->initialize();
-        $folderPath = StringHelper::rightTrim($folderPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        $folderPath = StringHelper::rightTrim($folderPath, GLOBAL_SEPARATOR) . GLOBAL_SEPARATOR;
         $filePath   = $folderPath . $dbTableName . '.csv';
 
         if (isset($this->mapClassDatabaseTable[$dbTableName]) && is_readable($filePath)) {

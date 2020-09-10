@@ -29,14 +29,14 @@ class StaticAssetService extends BaseAssetService {
     public function build(string $context, string $scope = TemplateAssetService::DEFAULT_SCOPE) : string {
         $dirs = $this->getAssetsDirectories();
 
-        $output     = Statics::ASSET_CACHE_DIR . DIRECTORY_SEPARATOR . $scope . DIRECTORY_SEPARATOR;
+        $output     = Statics::ASSET_CACHE_DIR . GLOBAL_SEPARATOR . $scope . GLOBAL_SEPARATOR;
         $outputFull = ROOT_PATH . $output;
 
         $copyFolders = ["img", "fonts"];
 
         //iterate over all plugins, current theme and base theme
         foreach ($dirs as $dir) {
-            $baseFolder = $dir . DIRECTORY_SEPARATOR . $scope . DIRECTORY_SEPARATOR . Statics::ASSETS_DIR . DIRECTORY_SEPARATOR;
+            $baseFolder = $dir . GLOBAL_SEPARATOR . $scope . GLOBAL_SEPARATOR . Statics::ASSETS_DIR . GLOBAL_SEPARATOR;
 
             foreach ($copyFolders as $copy) {
                 $folder = $baseFolder . $copy;

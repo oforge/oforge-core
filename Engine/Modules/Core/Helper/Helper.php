@@ -28,7 +28,7 @@ class Helper {
     public static function getBootstrapFiles(string $path) {
         $result = [];
 
-        $cacheFile = ROOT_PATH . Statics::CACHE_DIR . DIRECTORY_SEPARATOR . basename($path) . ".cache";
+        $cacheFile = ROOT_PATH . Statics::CACHE_DIR . GLOBAL_SEPARATOR . basename($path) . ".cache";
 
         if (file_exists($cacheFile) && Oforge()->Settings()->get("mode") != "development") {
             $result = unserialize(file_get_contents($cacheFile));
@@ -48,7 +48,7 @@ class Helper {
      * @return array
      */
     public static function getTemplateFiles(string $path) {
-        $cacheFile = ROOT_PATH . Statics::CACHE_DIR . DIRECTORY_SEPARATOR . basename($path) . ".cache";
+        $cacheFile = ROOT_PATH . Statics::CACHE_DIR . GLOBAL_SEPARATOR . basename($path) . ".cache";
 
         if (file_exists($cacheFile) && Oforge()->Settings()->get("mode") != "development") {
             $result = unserialize(file_get_contents($cacheFile));
@@ -99,10 +99,10 @@ class Helper {
         $recursiveIteratorIterator  = new RecursiveIteratorIterator($recursiveFilterIterator);
         foreach ($recursiveIteratorIterator as $file) {
             if (strtolower($file->getFileName()) === $searchFileName) {
-                $classpath = str_replace($path . DIRECTORY_SEPARATOR, "", $file->getPath());
+                $classpath = str_replace($path . GLOBAL_SEPARATOR, "", $file->getPath());
                 $classpath = str_replace(".php", "", $classpath);
 
-                $result[$classpath] = $file->getPath() . DIRECTORY_SEPARATOR . $file->getFileName();
+                $result[$classpath] = $file->getPath() . GLOBAL_SEPARATOR . $file->getFileName();
             }
         }
 

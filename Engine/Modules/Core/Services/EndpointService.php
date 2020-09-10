@@ -166,7 +166,7 @@ class EndpointService extends AbstractDatabaseAccess {
 
         $reader = new IndexedReader(new AnnotationReader());
         // $isDevMode = false;
-        // $cacheDir  = ROOT_PATH . DIRECTORY_SEPARATOR . Statics::CACHE_DIR . DIRECTORY_SEPARATOR . 'endpoint';
+        // $cacheDir  = ROOT_PATH . GLOBAL_SEPARATOR . Statics::CACHE_DIR . GLOBAL_SEPARATOR . 'endpoint';
         // $filesystemCache = new FilesystemCache($cacheDir);
         // $reader    = new CachedReader($reader, $filesystemCache, $isDevMode);
 
@@ -180,7 +180,7 @@ class EndpointService extends AbstractDatabaseAccess {
             }
             $fileName = ltrim(str_replace('\\', '_', $fileName), '_');
             if ($isProductionMode) {
-                $cacheFile = Statics::ENDPOINT_CACHE_DIR . DIRECTORY_SEPARATOR . $fileName . '.cache';
+                $cacheFile = Statics::ENDPOINT_CACHE_DIR . GLOBAL_SEPARATOR . $fileName . '.cache';
                 if (file_exists($cacheFile)) {
                     if (!isset($this->configCache[$fileName])) {
                         $content                      = trim(file_get_contents($cacheFile));
