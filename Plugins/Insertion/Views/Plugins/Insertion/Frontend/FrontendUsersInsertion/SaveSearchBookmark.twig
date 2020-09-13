@@ -1,0 +1,73 @@
+{% extends "@parent/Frontend/Layout.twig" %}
+{% block content %}
+    {% include 'Plugins/FrontendUserManagement/Frontend/Components/AccountNavBar.twig' with { back_link : true, content_title: i18n('frontend_account_insertions_bookmarks', 'Bookmarks')} %}
+    <div class="account content">
+        {% block account %}
+            <div class="panel panel--account flex">
+                {% block account__sidebar %}
+                    {% include 'Plugins/FrontendUserManagement/Frontend/Components/Sidebar.twig' %}
+                {% endblock account__sidebar %}
+
+                {% block account__content %}
+                    <div class="account__content">
+                        <h1>{{ i18n('frontend_save_search_bookmarks_page__headline', 'Merkliste - Suchen') }}</h1>
+
+                        <form class="save-search-bookmarks-form" method="POST">
+                            <div class="form-controls">
+                                <h2 class="form__title">{{ i18n('frontend_save_search_bookmarks_page___sub_headline', 'Suchen') }}</h2>
+                            </div>
+
+                            <h3 class="save-search-bookmarks-form__headline">{{ i18n('frontend_save_search_bookmarks_form__headline', 'Suche speichern') }}</h3>
+                            <h4 class="save-search-bookmarks-form__sub-headline">{{ i18n('frontend_save_search_bookmarks_form__sub_headline', 'Verwalte deine Suchen') }}</h4>
+
+                            <div class="form__control">
+                                <label for="search_title" class="form__label">
+                                    {{ i18n('frontend_save_search_bookmarks_form__search_input_label', 'Gib deiner Suche einen Namen') }}
+                                </label>
+                                <input type="text" name="search_title" id="search_title" class="form__input" value="{{ bookmark.searchName }}" required>
+                            </div>
+
+                            <div class="separator"></div>
+
+                            <div class="form__control">
+                                <label>{{ i18n('frontend_save_search_bookmarks_form__search_selecgt_label', 'Lass dich per Mail über neue Angebote benachrichtigen, so oft du willst:') }}</label>
+                            </div>
+
+                            <div class="form__control">
+                                <label>
+                                    <input type="radio" name="email_interval" value="daily" id="daily" class="form__input form__input--radio" {% if not bookmark.checkInterval or bookmark.checkInterval is same as('daily') %}checked{% endif %}>
+                                    {{ i18n('frontend_save_search_bookmarks_form__radio_daily', 'Jeden Tag') }}
+                                </label>
+                            </div>
+
+                            <div class="form__control">
+                                <label>
+                                    <input type="radio" name="email_interval" value="days_2" id="days_2" class="form__input form__input--radio" {% if bookmark.checkInterval is same as('days_2') %}checked{% endif %}>
+                                    {{ i18n('frontend_save_search_bookmarks_form__radio_days_2', 'Jeden 2. Tag') }}
+                                </label>
+                            </div>
+
+                            <div class="form__control">
+                                <label>
+                                    <input type="radio" name="email_interval" value="weekly" id="weekly" class="form__input form__input--radio" {% if bookmark.checkInterval is same as('weekly') %}checked{% endif %}>
+                                    {{ i18n('frontend_save_search_bookmarks_form__radio_weekly', '1 mal pro Woche') }}
+                                </label>
+                            </div>
+
+                            <div class="form__control">
+                                <label>
+                                    <input type="radio" name="email_interval" value="none" id="none" class="form__input form__input--radio" {% if bookmark.checkInterval is same as('none') %}checked{% endif %}>
+                                    {{ i18n('frontend_save_search_bookmarks_form__radio_none', 'Keine E-Mails versenden') }}
+                                </label>
+                            </div>
+
+                            <div class="form__control">
+                                <input type="submit" value="{{ i18n('save', 'Speichern') }}" class="form__input form__input--submit button">
+                            </div>
+                        </form>
+                    </div>
+                {% endblock account__content %}
+            </div>
+        {% endblock account %}
+    </div>
+{% endblock content %}

@@ -20,6 +20,11 @@ use Oforge\Engine\Modules\I18n\Models\Language;
 use Slim\Router;
 
 class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
+    const NONE = 'none';
+    const DAILY = 'daily';
+    const DAYS_2 = 'days_2';
+    const WEEKLY = 'weekly';
+
     public function __construct() {
         parent::__construct([
             'insertion' => Insertion::class,
@@ -31,12 +36,19 @@ class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
      * @param InsertionType $insertionType
      * @param User $user
      * @param array $params
+     * @param array $options
      *
      * @return bool
      * @throws ORMException
      */
-    public function add(InsertionType $insertionType, User $user, array $params) : bool {
-        $bookmark = InsertionUserSearchBookmark::create(["insertionType" => $insertionType, "user" => $user, "params" => $params]);
+    public function add(InsertionType $insertionType, User $user, array $params, array $options) : bool {
+        $bookmark = InsertionUserSearchBookmark::create([
+            'insertionType' => $insertionType,
+            'user' => $user,
+            'params' => $params,
+            'searchName' => $options['name'],
+            'checkInterval' => $options['interval'],
+        ]);
         $this->entityManager()->create($bookmark);
         return true;
     }
@@ -95,11 +107,13 @@ class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
      * @param InsertionType $insertionType
      * @param User $user
      * @param array $params
+     * @param array|null $options
      *
      * @return bool
      * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function toggle(InsertionType $insertionType, User $user, array $params) {
+    public function toggle(InsertionType $insertionType, User $user, array $params, array $options = null) {
         $bookmarks = $this->repository("search")->findBy(["insertionType" => $insertionType, "user" => $user]);
 
         $bookmark = null;
@@ -119,7 +133,7 @@ class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
             return $this->remove($bookmark->getId());
         }
 
-        return $this->add($insertionType, $user, $params);
+        return $this->add($insertionType, $user, $params, $options);
     }
 
     /**
@@ -197,6 +211,20 @@ class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
      */
     public function get($searchBookmarkId) {
         return $this->repository('search')->find($searchBookmarkId);
+    }
+
+    /**
+     * @param $searchBookmarkId
+     * @param $options
+     *
+     * @throws ORMException
+     */
+    public function update($searchBookmarkId, $options) {
+        /** @var InsertionUserSearchBookmark $bookmark */
+        $bookmark = $this->get($searchBookmarkId);
+        $bookmark->setSearchName($options['name']);
+        $bookmark->setCheckInterval($options['interval']);
+        $this->entityManager()->update($bookmark);
     }
 
 }

@@ -34,11 +34,24 @@ class InsertionUserSearchBookmark extends AbstractModel {
     private $lastChecked;
 
     /**
+     * @var string
+     * @ORM\Column(name="search_name", type="string", nullable=false)
+     */
+    private $searchName = 'Suche';
+
+    /**
+     * @var string
+     * @ORM\Column(name="check_interval", type="string", nullable=false)
+     */
+    private $checkInterval = 'none';
+
+    /**
      * @var InsertionType
      * @ORM\ManyToOne(targetEntity="Insertion\Models\InsertionType", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="insertion_type_id", referencedColumnName="id")
      */
     private $insertionType;
+
     /**
      * @var array
      * @ORM\Column(name="params", type="object")
@@ -141,4 +154,39 @@ class InsertionUserSearchBookmark extends AbstractModel {
         $this->insertionType = $insertionType;
     }
 
+    /**
+     * @return string
+     */
+    public function getCheckInterval() : string {
+        return $this->checkInterval;
+    }
+
+    /**
+     * @param string $checkInterval
+     *
+     * @return InsertionUserSearchBookmark
+     */
+    public function setCheckInterval(string $checkInterval) : InsertionUserSearchBookmark {
+        $this->checkInterval = $checkInterval;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSearchName() : string {
+        return $this->searchName;
+    }
+
+    /**
+     * @param string $searchName
+     *
+     * @return InsertionUserSearchBookmark
+     */
+    public function setSearchName(string $searchName) : InsertionUserSearchBookmark {
+        $this->searchName = $searchName;
+
+        return $this;
+    }
 }

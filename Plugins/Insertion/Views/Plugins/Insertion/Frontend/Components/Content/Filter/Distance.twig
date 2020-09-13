@@ -1,6 +1,8 @@
 <div class="tag" data-key="{{ f }}">
-    <a href="#"
-       onclick="window.location.href = Oforge.updateQueryString('zip_range', '', Oforge.updateQueryString('zip', ''))"
-       class="close"></a>
+    {% if not hiddeRemove %}
+        <a href="#"
+           onclick="window.location.href = Oforge.updateQueryString('zip_range', '', Oforge.updateQueryString('zip', ''))"
+           class="close"></a>
+    {% endif %}
     <span class="tag__text">{{ value[0] }} {{ i18n(value.country) }}, {{ value.zip }} {{ i18n('zip_range_' ~ value.zip_range) }}</span>
 </div>
