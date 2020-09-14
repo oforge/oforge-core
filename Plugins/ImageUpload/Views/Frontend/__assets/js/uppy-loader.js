@@ -289,7 +289,7 @@ if (typeof Oforge !== 'undefined') {
             });
 
             $('.upload__item.upload__item--placeholder').on('click', function (e) {
-               $('.uppy-u-reset.uppy-Dashboard-browse').click();
+                $('.uppy-u-reset.uppy-Dashboard-browse').click();
             });
         }
     });
