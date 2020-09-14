@@ -18,6 +18,7 @@ use Oforge\Engine\Modules\Console\Lib\Input;
 use Oforge\Engine\Modules\Console\Lib\Monolog\Formatter\ConsoleFormatter;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Helper\BitmaskHelper;
+use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\Core\Models\Module\Module;
 use Oforge\Engine\Modules\Core\Models\Plugin\Plugin;
 
