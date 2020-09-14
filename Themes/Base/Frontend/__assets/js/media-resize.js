@@ -141,9 +141,6 @@ window.setTimeout(function () {
                         }, 'image/png');
                     }
                 }
-
-
-                Oforge.MediaResize.start("https://www.allyourhorses.de/var/public/images/a6/a9/2.jpg");
             }
 
         } else {
