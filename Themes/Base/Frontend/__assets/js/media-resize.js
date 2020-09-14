@@ -4,7 +4,6 @@ window.setTimeout(function () {
                 Oforge.MediaResize = {
                     start: function (url, id, options) {
                         var $container = $(".media-resize-container");
-                        console.log('start: url: ', url);
 
                         if ($container.length > 0) {
                             $container.remove();
@@ -117,7 +116,6 @@ window.setTimeout(function () {
                     __save() {
                         var croppedCanvas = this.cropper.getCroppedCanvas({maxWidth: 2048, maxHeight: 2048});
                         var self = this;
-                        console.log('before blob:', self.data.url);
                         window.timtom = croppedCanvas;
                         croppedCanvas.toBlob((blob) => {
                             const formData = new FormData();
@@ -134,13 +132,8 @@ window.setTimeout(function () {
                              ajaxCall(function (data) {
 
                                  var uploadImageList = document.querySelector('[data-upload-images]');
-                                 console.log(uploadImageList);
-
-
-                                 console.log('media', data);
                                  var input = document.createElement('input');
                                  var input2 = document.createElement('input');
-
                                  var mediaObject = data.imageData;
 
 
@@ -176,7 +169,6 @@ window.setTimeout(function () {
                                     contentType: false,
                                     success(data) {
                                         // here we have the data
-                                        console.log(data);
                                         self.__close();
                                         callbackHandle(data);
                                     },
