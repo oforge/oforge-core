@@ -70,12 +70,12 @@ if (typeof Oforge !== 'undefined') {
 
                 if (itemList > 0) {
                     placeholderItem.classList.add('hidden');
-                    if(required) {
+                    if (required) {
                         placeholderItem.querySelector(".upload__file_required").removeAttribute("required");
                     }
                 } else {
                     placeholderItem.classList.remove('hidden');
-                    if(required) {
+                    if (required) {
                         placeholderItem.querySelector(".upload__file_required").setAttribute("required", "");
 
 
@@ -86,7 +86,39 @@ if (typeof Oforge !== 'undefined') {
             function createImageListItem(uploadId, imageUrl, imageList) {
                 var imageListItem = document.createElement('li');
                 var imageItem = document.createElement('img');
+                var buttonList = document.createElement('div');
+
+                var editIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                var editIconInner = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+                var editItem = document.createElement('div');
+
+                var deleteIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                var deleteIconInner = document.createElementNS('http://www.w3.org/2000/svg', 'use');
                 var deleteItem = document.createElement('div');
+
+                editIconInner.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#edit2');
+                editIcon.setAttribute('class', 'icon icon--edit2');
+                editIcon.appendChild(editIconInner);
+
+                deleteIconInner.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#delete2');
+                deleteIcon.setAttribute('class', 'icon icon--delete2');
+                deleteIcon.appendChild(deleteIconInner);
+
+                editItem.setAttribute('class', 'upload__button upload__button--edit');
+                editItem.setAttribute('data-upload-edit', uploadId);
+
+                deleteItem.setAttribute('class', 'upload__button upload__button--delete');
+                deleteItem.setAttribute('data-upload-delete', uploadId);
+                // deleteItem.innerHTML = imageList.dataset.textSnippet;
+
+                editItem.appendChild(editIcon);
+                deleteItem.appendChild(deleteIcon);
+
+                buttonList.setAttribute('class', 'upload__button-list');
+                buttonList.appendChild(editItem);
+                buttonList.appendChild(deleteItem);
+
+
                 var mainItem = document.createElement('div');
 
                 imageListItem.setAttribute('class', 'upload__item');
@@ -96,20 +128,23 @@ if (typeof Oforge !== 'undefined') {
                 imageItem.setAttribute('src', imageUrl);
                 imageItem.setAttribute('data-upload-image', uploadId);
 
-                deleteItem.setAttribute('class', 'upload__delete');
-                deleteItem.setAttribute('data-upload-delete', uploadId);
-                deleteItem.innerHTML = imageList.dataset.textSnippet;
-
                 mainItem.setAttribute('class', 'upload__choose-main');
                 mainItem.setAttribute('data-upload-choose-main', uploadId);
 
                 imageListItem.appendChild(imageItem);
-                imageListItem.appendChild(deleteItem);
+                imageListItem.appendChild(buttonList);
                 imageListItem.appendChild(mainItem);
 
                 imageList.appendChild(imageListItem);
 
                 return imageListItem;
+            }
+
+            function editListItem(uploadId) {
+                var $target = $('[data-upload-image="' + uploadId + '"]');
+                if (Oforge.MediaResize != undefined && Oforge.MediaResize.start != undefined) {
+                    Oforge.MediaResize.start($target.attr('src'), $target.attr('data-upload-image'), { processUrl: '/image-upload' } );
+                }
             }
 
             function deleteListItem(uploadId) {
@@ -175,12 +210,16 @@ if (typeof Oforge !== 'undefined') {
                 newItems.forEach(function (item, index) {
                     item.setAttribute('data-upload-id', index);
                     var uploadImage = item.querySelector('[data-upload-image]');
+                    var uploadEdit = item.querySelector('[data-upload-edit]');
                     var uploadDelete = item.querySelector('[data-upload-delete]');
                     var uploadChooseMain = item.querySelector('[data-upload-choose-main]');
                     var fileInput = item.querySelector('[data-file-input]');
 
                     if (uploadImage) {
                         uploadImage.setAttribute('data-upload-image', index);
+                    }
+                    if (uploadEdit) {
+                        uploadEdit.setAttribute('data-upload-edit', index);
                     }
                     if (uploadDelete) {
                         uploadDelete.setAttribute('data-upload-delete', index);
@@ -195,8 +234,8 @@ if (typeof Oforge !== 'undefined') {
             }
 
             function createHiddenImageInput(uploadImageList, mediaObject) {
+                console.log('media', mediaObject);
                 var input = document.createElement('input');
-                var uploadItemElement = null;
 
                 input.setAttribute('type', 'hidden');
                 input.setAttribute('name', 'images[]');
@@ -221,8 +260,14 @@ if (typeof Oforge !== 'undefined') {
             }
 
             document.addEventListener('click', function (evt) {
-                if (evt.target.matches('[data-upload-delete]')) {
-                    var elementToDelete = evt.target;
+                if (evt.target.closest('[data-upload-edit]')) {
+                    var elementToEdit = evt.target.closest('[data-upload-edit]');
+
+                    editListItem(elementToEdit.dataset.uploadEdit);
+                    checkPlaceholderItem();
+                }
+                if (evt.target.closest('[data-upload-delete]')) {
+                    var elementToDelete = evt.target.closest('[data-upload-delete]')
 
                     deleteListItem(elementToDelete.dataset.uploadDelete);
                     checkPlaceholderItem();
@@ -251,4 +296,3 @@ if (typeof Oforge !== 'undefined') {
 } else {
     console.warn("Oforge is not defined. Module cannot be registered.");
 }
-
