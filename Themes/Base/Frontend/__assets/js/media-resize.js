@@ -4,6 +4,7 @@ window.setTimeout(function () {
                 Oforge.MediaResize = {
                     start: function (url, id, options) {
                         var $container = $(".media-resize-container");
+                        console.log('start: url: ', url);
 
                         if ($container.length > 0) {
                             $container.remove();
@@ -116,29 +117,62 @@ window.setTimeout(function () {
                     __save() {
                         var croppedCanvas = this.cropper.getCroppedCanvas({maxWidth: 2048, maxHeight: 2048});
                         var self = this;
+                        console.log('before blob:', self.data.url);
                         window.timtom = croppedCanvas;
                         croppedCanvas.toBlob((blob) => {
                             const formData = new FormData();
 
                             // Pass the image file name as the third parameter if necessary.
-                            formData.append('files[]', blob);
-                            formData.append('type', 'image/png');
+                            var name = self.data.url.substring(self.data.url.lastIndexOf("/") + 1, self.data.url.length);
+
+                            formData.append('files[]', blob, name);
+                            formData.append('type', 'image/jpeg');
                             formData.append('path', self.data.url);
                             formData.append('id', self.data.id);
                             // Use `jQuery.ajax` method for example
-                            $.ajax(self.data.options.processUrl, {
-                                method: 'POST',
-                                data: formData,
-                                processData: false,
-                                contentType: false,
-                                success() {
-                                    self.__close();
-                                },
-                                error() {
-                                    self.__close();
-                                },
+
+                             ajaxCall(function (data) {
+
+                                 var uploadImageList = document.querySelector('[data-upload-images]');
+
+
+                                 console.log('media', data);
+                                 var input = document.createElement('input');
+                                 var mediaObject = data.imageData;
+
+                                 input.setAttribute('type', 'hidden');
+                                 input.setAttribute('name', 'images[]');
+                                 input.setAttribute('data-file-input', mediaObject.id);
+                                 input.setAttribute('value', mediaObject.id);
+
+                                 uploadImageList.appendChild(input);
+
+
+                                 document.querySelector('[data-file-input="' + self.data.id + '"]').remove();
+
+
+                                var $image = $('[data-upload-image="' + self.data.id + '"]')
+                                 $image.attr('src', mediaObject.path);
                             });
-                        }, 'image/png');
+
+                            function ajaxCall(callbackHandle) {
+                                $.ajax(self.data.options.processUrl, {
+                                    method: 'POST',
+                                    data: formData,
+                                    processData: false,
+                                    contentType: false,
+                                    success(data) {
+                                        // here we have the data
+                                        console.log(data);
+                                        self.__close();
+                                        callbackHandle(data);
+                                    },
+                                    error() {
+                                        self.__close();
+                                    },
+                                });
+                            }
+                        }, 'image/jpeg');
                     }
                 }
             }

@@ -64,12 +64,30 @@
         }
     }
 
-    &__delete {
+    &__button-list {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &__button {
+        display: inline-flex;
         padding: .5rem;
-        background-color: $warning;
-        color: $text-light;
-        text-align: center;
         cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        width: 50%;
+
+        &--edit {
+            background: $warning;
+        }
+        &--delete {
+            background: $error;
+        }
+
+        .icon {
+            fill: $text-light;
+        }
     }
 
     &__choose-main {
