@@ -78,10 +78,10 @@ class TemplateRenderService {
                 // register all modules
                 foreach ($namespace as $key) {
                     if ($index === 0 && $key !== 'Oforge') {
-                        $templatePath = GLOBAL_SEPARATOR . 'Plugins' . GLOBAL_SEPARATOR . $key;
+                        $templatePath = Statics::GLOBAL_SEPARATOR . 'Plugins' . Statics::GLOBAL_SEPARATOR . $key;
                     }
                     if ($foundController && ($index + 1 !== $size)) {
-                        $templatePath .= GLOBAL_SEPARATOR . $key;
+                        $templatePath .= Statics::GLOBAL_SEPARATOR . $key;
                     }
 
                     if ($key === 'Controller') {
@@ -89,8 +89,8 @@ class TemplateRenderService {
                     }
                     $index++;
                 }
-                $templatePath = ltrim($templatePath, GLOBAL_SEPARATOR);
-                $templatePath .= GLOBAL_SEPARATOR . $controllerName . GLOBAL_SEPARATOR . ucfirst($fileName) . '.twig';
+                $templatePath = ltrim($templatePath, Statics::GLOBAL_SEPARATOR);
+                $templatePath .= Statics::GLOBAL_SEPARATOR . $controllerName . Statics::GLOBAL_SEPARATOR . ucfirst($fileName) . '.twig';
 
                 $data = ArrayHelper::dotSet($data, 'meta.template.path', $templatePath);
             }
@@ -138,9 +138,9 @@ class TemplateRenderService {
             /** @var TemplateManagementService $templateManagementService */
             $templateManagementService = Oforge()->Services()->get('template.management');
             $activeTemplate            = $templateManagementService->getActiveTemplate();
-            $templatePath              = Statics::TEMPLATE_DIR . GLOBAL_SEPARATOR . $activeTemplate->getName();
+            $templatePath              = Statics::TEMPLATE_DIR . Statics::GLOBAL_SEPARATOR . $activeTemplate->getName();
             $debug                     = Oforge()->Settings()->isDevelopmentMode();
-            $defaultThemePath          = ROOT_PATH . GLOBAL_SEPARATOR . Statics::TEMPLATE_DIR . GLOBAL_SEPARATOR . Statics::DEFAULT_THEME;
+            $defaultThemePath          = ROOT_PATH . Statics::GLOBAL_SEPARATOR . Statics::TEMPLATE_DIR . Statics::GLOBAL_SEPARATOR . Statics::DEFAULT_THEME;
 
             /** @var Plugin[] $plugins */
             $plugins = Oforge()->Services()->get('plugin.access')->getActive();
@@ -150,11 +150,11 @@ class TemplateRenderService {
             ];
 
             if ($activeTemplate->getName() !== Statics::DEFAULT_THEME) {
-                $paths[self::TWIG_MAIN_NAMESPACE] = [ROOT_PATH . GLOBAL_SEPARATOR . $templatePath];
+                $paths[self::TWIG_MAIN_NAMESPACE] = [ROOT_PATH . Statics::GLOBAL_SEPARATOR . $templatePath];
             }
 
             foreach ($plugins as $plugin) {
-                $viewsDir = ROOT_PATH . GLOBAL_SEPARATOR . Statics::PLUGIN_DIR . GLOBAL_SEPARATOR . $plugin['name'] . GLOBAL_SEPARATOR
+                $viewsDir = ROOT_PATH . Statics::GLOBAL_SEPARATOR . Statics::PLUGIN_DIR . Statics::GLOBAL_SEPARATOR . $plugin['name'] . Statics::GLOBAL_SEPARATOR
                             . Statics::VIEW_DIR;
 
                 if (file_exists($viewsDir)) {

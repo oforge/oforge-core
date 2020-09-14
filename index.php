@@ -5,7 +5,6 @@
  */
 define('OFORGE_SCRIPT_TIMEOUT', 90);
 define('ROOT_PATH', __DIR__);
-define('GLOBAL_SEPARATOR', '/');
 
 if (((int) ini_get('max_execution_time')) < OFORGE_SCRIPT_TIMEOUT) {
     set_time_limit(OFORGE_SCRIPT_TIMEOUT);

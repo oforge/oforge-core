@@ -88,7 +88,7 @@ class MessengerController extends SecureFrontendController {
 
                 $targetUserId = ($isRequester) ? $activeConversation['requested'] : $activeConversation['requester'];
 
-                $uri = $router->pathFor('frontend_account_messages') . GLOBAL_SEPARATOR . $activeConversation['id'];
+                $uri = $router->pathFor('frontend_account_messages') . Statics::GLOBAL_SEPARATOR . $activeConversation['id'];
 
                 /** only send mails for classified advert */
                 if ($activeConversation['requesterType'] == 1 && $activeConversation['requestedType'] == 1) {

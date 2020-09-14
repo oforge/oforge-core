@@ -38,7 +38,7 @@ class PluginManager extends AbstractDatabaseAccess {
      * @throws ServiceNotFoundException
      */
     public function init() {
-        $pluginFiles = Helper::getBootstrapFiles(ROOT_PATH . GLOBAL_SEPARATOR . Statics::PLUGIN_DIR);
+        $pluginFiles = Helper::getBootstrapFiles(ROOT_PATH . Statics::GLOBAL_SEPARATOR . Statics::PLUGIN_DIR);
 
         /**
          * @var $pluginService PluginStateService

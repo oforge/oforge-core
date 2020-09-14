@@ -278,7 +278,7 @@ class ConsoleService {
      */
     protected function evaluateGlobalOptionLogfile(Command $command) : void {
         if ($this->getOpt->getOption('logfile') && !is_null($command)) {
-            $filePath = ConsoleStatics::CONSOLE_LOGS_DIR_ABS . GLOBAL_SEPARATOR . str_replace(':', '_', $command->getName()) . '.log';
+            $filePath = ConsoleStatics::CONSOLE_LOGS_DIR_ABS . Statics::GLOBAL_SEPARATOR . str_replace(':', '_', $command->getName()) . '.log';
             $maxFiles = 14;
 
             $this->addOutputLoggerHandler(new RotatingFileHandler($filePath, $maxFiles, Logger::DEBUG));

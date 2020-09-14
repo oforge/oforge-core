@@ -122,8 +122,8 @@ class MediaController extends SecureBackendController {
                     $fileData = $_FILES['file'];
                     if (isset($fileData['error']) && $fileData['error'] == 0 && isset($fileData['size']) && $fileData['size'] > 0) {
                         $filename         = urlencode(basename($fileData['name']));
-                        $relativeFilePath = Statics::IMAGES_DIR . GLOBAL_SEPARATOR . substr(md5(rand()), 0, 2) . GLOBAL_SEPARATOR . substr(md5(rand()), 0,
-                                2) . GLOBAL_SEPARATOR . $filename;
+                        $relativeFilePath = Statics::IMAGES_DIR . Statics::GLOBAL_SEPARATOR . substr(md5(rand()), 0, 2) . Statics::GLOBAL_SEPARATOR . substr(md5(rand()), 0,
+                                2) . Statics::GLOBAL_SEPARATOR . $filename;
                         FileSystemHelper::mkdir(dirname(ROOT_PATH . $relativeFilePath));
                         if (move_uploaded_file($fileData['tmp_name'], ROOT_PATH . $relativeFilePath)) {
                             $media->setType($fileData['type'])->setPath(str_replace('\\', '/', $relativeFilePath));

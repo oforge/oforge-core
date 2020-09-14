@@ -364,7 +364,7 @@ class CronjobService extends AbstractDatabaseAccess {
      * @return string
      */
     protected function getLogFilePath(string $cronjobName) : string {
-        return CronjobStatics::CRONJOB_LOGS_DIR_ABS . GLOBAL_SEPARATOR . str_replace(':', '_', $cronjobName) . LoggerManager::FILE_EXTENSION;
+        return CronjobStatics::CRONJOB_LOGS_DIR_ABS . Statics::GLOBAL_SEPARATOR . str_replace(':', '_', $cronjobName) . LoggerManager::FILE_EXTENSION;
     }
 
 }

@@ -44,9 +44,9 @@ class JsAssetService extends BaseAssetService {
 
         $fileName = "scripts." . bin2hex(openssl_random_pseudo_bytes(16));
 
-        $folder     = Statics::ASSET_CACHE_DIR . GLOBAL_SEPARATOR . $scope . GLOBAL_SEPARATOR . $this->key;
+        $folder     = Statics::ASSET_CACHE_DIR . Statics::GLOBAL_SEPARATOR . $scope . Statics::GLOBAL_SEPARATOR . $this->key;
         $fullFolder = ROOT_PATH . $folder;
-        $output     = $folder . GLOBAL_SEPARATOR . $fileName;
+        $output     = $folder . Statics::GLOBAL_SEPARATOR . $fileName;
         $outputFull = ROOT_PATH . $output;
 
         if (!file_exists($fullFolder) || (file_exists($fullFolder) && !is_dir($fullFolder))) {
@@ -55,8 +55,8 @@ class JsAssetService extends BaseAssetService {
 
         //iterate over all plugins, current theme and base theme
         foreach ($dirs as $dir) {
-            $folder = $dir . GLOBAL_SEPARATOR . $scope . GLOBAL_SEPARATOR . Statics::ASSETS_DIR . GLOBAL_SEPARATOR . Statics::ASSETS_JS
-                      . GLOBAL_SEPARATOR;
+            $folder = $dir . Statics::GLOBAL_SEPARATOR . $scope . Statics::GLOBAL_SEPARATOR . Statics::ASSETS_DIR . Statics::GLOBAL_SEPARATOR . Statics::ASSETS_JS
+                      . Statics::GLOBAL_SEPARATOR;
             if (file_exists($folder) && file_exists($folder . Statics::ASSETS_IMPORT_JS)) {
                 if ($file = fopen($folder . Statics::ASSETS_IMPORT_JS, "r")) {
                     while (!feof($file)) {

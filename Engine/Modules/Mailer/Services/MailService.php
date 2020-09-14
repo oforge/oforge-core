@@ -182,13 +182,13 @@ class MailService {
     public function renderMail(array $options, array $templateData) {
         $templateManagementService = Oforge()->Services()->get('template.management');
         $templateName              = $templateManagementService->getActiveTemplate()->getName();
-        $templatePath              = Statics::TEMPLATE_DIR . GLOBAL_SEPARATOR . $templateName . GLOBAL_SEPARATOR . 'MailTemplates';
+        $templatePath              = Statics::TEMPLATE_DIR . Statics::GLOBAL_SEPARATOR . $templateName . Statics::GLOBAL_SEPARATOR . 'MailTemplates';
 
-        if (!file_exists($templatePath . GLOBAL_SEPARATOR . $options['template'])) {
-            $templatePath = Statics::TEMPLATE_DIR . GLOBAL_SEPARATOR . Statics::DEFAULT_THEME . GLOBAL_SEPARATOR . 'MailTemplates';
+        if (!file_exists($templatePath . Statics::GLOBAL_SEPARATOR . $options['template'])) {
+            $templatePath = Statics::TEMPLATE_DIR . Statics::GLOBAL_SEPARATOR . Statics::DEFAULT_THEME . Statics::GLOBAL_SEPARATOR . 'MailTemplates';
         }
 
-        $twig = new CustomTwig($templatePath, ['cache' => ROOT_PATH . GLOBAL_SEPARATOR . Statics::CACHE_DIR . '/mailer']);
+        $twig = new CustomTwig($templatePath, ['cache' => ROOT_PATH . Statics::GLOBAL_SEPARATOR . Statics::CACHE_DIR . '/mailer']);
         try {
             Oforge()->Services()->get('cms');
             $cmsTwigExtension = '\CMS\Twig\CmsTwigExtension';

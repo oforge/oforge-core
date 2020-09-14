@@ -43,9 +43,9 @@ class CssAssetService extends BaseAssetService {
         $dirs = $this->getAssetsDirectories();
 
         $fileName = "style." . bin2hex(openssl_random_pseudo_bytes(16));
-        $folder     = Statics::ASSET_CACHE_DIR . GLOBAL_SEPARATOR . $scope . GLOBAL_SEPARATOR . $this->key;
+        $folder     = Statics::ASSET_CACHE_DIR . Statics::GLOBAL_SEPARATOR . $scope . Statics::GLOBAL_SEPARATOR . $this->key;
         $fullFolder = ROOT_PATH . $folder;
-        $output     = $folder . GLOBAL_SEPARATOR . $fileName;
+        $output     = $folder . Statics::GLOBAL_SEPARATOR . $fileName;
         $outputFull = ROOT_PATH . $output;
 
         if (!file_exists($fullFolder) || (file_exists($fullFolder) && !is_dir($fullFolder))) {
@@ -82,8 +82,8 @@ class CssAssetService extends BaseAssetService {
         // iterate over all plugins, current theme and base theme
         $importPaths = [];
         foreach ($dirs as $dir) {
-            $scssFolder = $dir . GLOBAL_SEPARATOR . $scope . GLOBAL_SEPARATOR . Statics::ASSETS_DIR . GLOBAL_SEPARATOR . Statics::ASSETS_SCSS
-                          . GLOBAL_SEPARATOR;
+            $scssFolder = $dir . Statics::GLOBAL_SEPARATOR . $scope . Statics::GLOBAL_SEPARATOR . Statics::ASSETS_DIR . Statics::GLOBAL_SEPARATOR . Statics::ASSETS_SCSS
+                          . Statics::GLOBAL_SEPARATOR;
             if (file_exists($scssFolder) && file_exists($scssFolder . Statics::ASSETS_ALL_SCSS)) {
                 $importPaths[] = $scssFolder;
             }
@@ -93,7 +93,7 @@ class CssAssetService extends BaseAssetService {
         foreach ($importPaths as $importPath) {
             $global .= '@import "' . $importPath . 'all' . '";' . "\n";
         }
-        file_put_contents($fullFolder . GLOBAL_SEPARATOR . Statics::ASSETS_ALL_SCSS, $global);
+        file_put_contents($fullFolder . Statics::GLOBAL_SEPARATOR . Statics::ASSETS_ALL_SCSS, $global);
 
         // compile css from global import file
         $scss->addImportPath($fullFolder);

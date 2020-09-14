@@ -16,7 +16,7 @@ use Oforge\Engine\Modules\TemplateEngine\Core\Abstracts\AbstractTemplate;
  * @package Oforge\Engine\Modules\Core\Manager\BootstrapManager
  */
 class BootstrapManager {
-    private const FILE_PATH = ROOT_PATH . Statics::CACHE_DIR . GLOBAL_SEPARATOR . 'bootstrap.php';
+    private const FILE_PATH = ROOT_PATH . Statics::CACHE_DIR . Statics::GLOBAL_SEPARATOR . 'bootstrap.php';
     public const  KEY_PATH  = 'path';
     public const  KEY_NS    = 'namespace';
     /** @var BootstrapManager $instance */
@@ -176,9 +176,9 @@ class BootstrapManager {
         $isTheme  = $context === Statics::TEMPLATE_DIR;
         $data     = [];
         if ($isTheme) {
-            $files = FileSystemHelper::getThemeBootstrapFiles(ROOT_PATH . GLOBAL_SEPARATOR . $context);
+            $files = FileSystemHelper::getThemeBootstrapFiles(ROOT_PATH . Statics::GLOBAL_SEPARATOR . $context);
         } else {
-            $files = FileSystemHelper::getBootstrapFiles(ROOT_PATH . GLOBAL_SEPARATOR . $context);
+            $files = FileSystemHelper::getBootstrapFiles(ROOT_PATH . Statics::GLOBAL_SEPARATOR . $context);
         }
         foreach ($files as $file) {
             $directory = dirname($file);

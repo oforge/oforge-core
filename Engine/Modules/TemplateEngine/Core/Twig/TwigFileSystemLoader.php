@@ -49,7 +49,7 @@ class TwigFileSystemLoader extends FilesystemLoader {
         $i = 0;
         foreach ($this->paths[$namespace] as $path) {
             if (!$this->isAbsolutePath($path)) {
-                $path = ROOT_PATH . GLOBAL_SEPARATOR . $path;
+                $path = ROOT_PATH . Statics::GLOBAL_SEPARATOR . $path;
             }
 
             if (is_file($path . '/' . $shortname)) {

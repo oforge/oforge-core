@@ -97,7 +97,7 @@ class PDFGeneratorService {
         $this->mpdf = new Mpdf($config);
         $this->templateManagementService = Oforge()->Services()->get("template.management");
         $this->templateName = $this->templateManagementService->getActiveTemplate()->getName();
-        $this->templatePath = Statics::TEMPLATE_DIR . GLOBAL_SEPARATOR . $this->templateName . GLOBAL_SEPARATOR . 'PDFTemplates';
+        $this->templatePath = Statics::TEMPLATE_DIR . Statics::GLOBAL_SEPARATOR . $this->templateName . Statics::GLOBAL_SEPARATOR . 'PDFTemplates';
 
         $twig = new CustomTwig($this->templatePath);
         try {

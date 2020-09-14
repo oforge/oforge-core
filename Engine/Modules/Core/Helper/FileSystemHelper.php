@@ -47,7 +47,7 @@ class FileSystemHelper {
             $success   = true;
             foreach ($filenames as $filename) {
                 if ($recursive) {
-                    $success &= self::delete($path . GLOBAL_SEPARATOR . $filename, $recursive, $deleteEmptyDirs);
+                    $success &= self::delete($path . Statics::GLOBAL_SEPARATOR . $filename, $recursive, $deleteEmptyDirs);
                 }
             }
             if ($deleteEmptyDirs) {
@@ -80,7 +80,7 @@ class FileSystemHelper {
         $result = [];
         self::iterateFiles($path, function (SplFileInfo $file) use (&$result, $searchFileName) {
             if (strtolower($file->getFileName()) === $searchFileName) {
-                $result[] = $file->getPath() . GLOBAL_SEPARATOR . $file->getFileName();
+                $result[] = $file->getPath() . Statics::GLOBAL_SEPARATOR . $file->getFileName();
             }
         });
 
@@ -176,7 +176,7 @@ class FileSystemHelper {
         $fileNames = scandir($path);
 
         foreach ($fileNames as $fileName) {
-            $filePath = $path . GLOBAL_SEPARATOR . $fileName;
+            $filePath = $path . Statics::GLOBAL_SEPARATOR . $fileName;
 
             if (is_dir($filePath) && !in_array($fileName, self::OMIT)) {
                 $result[] = $filePath;
@@ -217,7 +217,7 @@ class FileSystemHelper {
         if (isset(self::$findCache[$context])) {
             return self::$findCache[$context];
         }
-        $cacheFile = ROOT_PATH . Statics::CACHE_DIR . GLOBAL_SEPARATOR . $context . '.cache.php';
+        $cacheFile = ROOT_PATH . Statics::CACHE_DIR . Statics::GLOBAL_SEPARATOR . $context . '.cache.php';
 
         if (file_exists($cacheFile) && Oforge()->Settings()->isProductionMode()) {
             $result = ArrayPhpFileStorage::load($cacheFile);
