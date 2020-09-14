@@ -25,7 +25,7 @@ use Slim\Http\Response;
  * Class MediaController
  *
  * @package Oforge\Engine\Modules\Media\Controller\Backend\Media
- * @EndpointClass(path="/frontend/media", name="backend_media", assetScope="Backend")
+ * @EndpointClass(path="/frontend/media", name="frontend_media", assetScope="Frontend")
  */
 class MediaController extends SecureController {
     /**
