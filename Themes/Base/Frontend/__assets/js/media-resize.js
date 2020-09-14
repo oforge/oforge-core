@@ -134,22 +134,35 @@ window.setTimeout(function () {
                              ajaxCall(function (data) {
 
                                  var uploadImageList = document.querySelector('[data-upload-images]');
+                                 console.log(uploadImageList);
 
 
                                  console.log('media', data);
                                  var input = document.createElement('input');
+                                 var input2 = document.createElement('input');
+
                                  var mediaObject = data.imageData;
+
 
                                  input.setAttribute('type', 'hidden');
                                  input.setAttribute('name', 'images[]');
                                  input.setAttribute('data-file-input', mediaObject.id);
                                  input.setAttribute('value', mediaObject.id);
 
+                                 input2.setAttribute('type', 'hidden');
+                                 input2.setAttribute('name', 'images_interactions[' + self.data.id + ']');
+                                 input2.setAttribute('value', 'delete');
+
                                  uploadImageList.appendChild(input);
+                                 uploadImageList.appendChild(input2);
 
-
-                                 document.querySelector('[data-file-input="' + self.data.id + '"]').remove();
-
+                                 var oldImage = document.querySelector('[data-file-input="' + self.data.id + '"]')
+                                 if (oldImage) {
+                                     /**
+                                      * Delete the old image on insertion creation.
+                                      */
+                                     oldImage.remove();
+                                 }
 
                                 var $image = $('[data-upload-image="' + self.data.id + '"]')
                                  $image.attr('src', mediaObject.path);
