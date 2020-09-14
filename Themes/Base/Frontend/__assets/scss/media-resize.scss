@@ -32,11 +32,11 @@
     left: 50%;
     bottom: 40px;
     transform: translateX(-50%);
+    display: flex;
+    max-width: 80%;
 }
 
 .media-resize-container-controls a {
-    display: block;
-    float: left;
     width: 40px;
     height: 40px;
     margin: 0 4px;
