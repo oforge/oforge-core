@@ -46,9 +46,19 @@
                                  src="{{ media(image.path, 200) }}"
                                  alt="{{ image.name }}"
                                  data-upload-image="{{ image.id }}" />
-                            <div class="upload__delete"
-                                 data-upload-delete="{{ image.id }}">
-                                {{ i18n('delete', {'en': 'Delete', 'de' : 'Löschen'}) }}
+                            <div class="upload__button-list">
+                                <div class="upload__button upload__button--edit"
+                                     data-upload-edit="{{ image.id }}">
+                                    <svg class="icon icon--edit2">
+                                        <use xlink:href="#edit2"></use>
+                                    </svg>
+                                </div>
+                                <div class="upload__button upload__button--delete"
+                                     data-upload-delete="{{ image.id }}">
+                                    <svg class="icon icon--delete2">
+                                        <use xlink:href="#delete2"></use>
+                                    </svg>
+                                </div>
                             </div>
                             <div class="upload__choose-main {% if image.main %}upload__choose-main--is-main{% endif %}"
                                  data-upload-choose-main="{{ image.id }}"></div>

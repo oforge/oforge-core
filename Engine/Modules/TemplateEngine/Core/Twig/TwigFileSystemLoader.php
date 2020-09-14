@@ -8,6 +8,7 @@
 
 namespace Oforge\Engine\Modules\TemplateEngine\Core\Twig;
 
+use Oforge\Engine\Modules\Core\Helper\Statics;
 use Twig\Loader\FilesystemLoader;
 use Twig_Error_Loader;
 
@@ -35,7 +36,7 @@ class TwigFileSystemLoader extends FilesystemLoader {
             throw new Twig_Error_Loader($this->errorCache[$name]);
         }
         $this->validateName($name);
-        list($namespace, $shortname) = $this->parseName($name);
+        [$namespace, $shortname] = $this->parseName($name);
 
         if (!isset($this->paths[$namespace])) {
             $this->errorCache[$name] = sprintf('There are no registered paths for namespace "%s".', $namespace);
@@ -49,7 +50,7 @@ class TwigFileSystemLoader extends FilesystemLoader {
         $i = 0;
         foreach ($this->paths[$namespace] as $path) {
             if (!$this->isAbsolutePath($path)) {
-                $path = ROOT_PATH . DIRECTORY_SEPARATOR . $path;
+                $path = ROOT_PATH . Statics::GLOBAL_SEPARATOR . $path;
             }
 
             if (is_file($path . '/' . $shortname)) {

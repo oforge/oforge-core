@@ -110,13 +110,13 @@ class LoggerManager {
         $type   = ArrayHelper::get($config, 'type', 'default');
         switch ($type) {
             case 'StreamHandler':
-                $path    = ArrayHelper::get($config, 'path', ROOT_PATH . Statics::LOGS_DIR . DIRECTORY_SEPARATOR . $name . self::FILE_EXTENSION);
+                $path    = ArrayHelper::get($config, 'path', ROOT_PATH . Statics::LOGS_DIR . Statics::GLOBAL_SEPARATOR . $name . self::FILE_EXTENSION);
                 $handler = new StreamHandler($path, $level);
                 $logger->pushHandler($handler);
                 break;
             case 'RotatingFileHandler':
             default:
-                $path     = ArrayHelper::get($config, 'path', ROOT_PATH . Statics::LOGS_DIR . DIRECTORY_SEPARATOR . $name . self::FILE_EXTENSION);
+                $path     = ArrayHelper::get($config, 'path', ROOT_PATH . Statics::LOGS_DIR . Statics::GLOBAL_SEPARATOR . $name . self::FILE_EXTENSION);
                 $maxFiles = ArrayHelper::get($config, 'max_files', self::DEFAULT_DAYS_LIMIT);
                 $handler  = new RotatingFileHandler($path, $maxFiles, $level);
                 $logger->pushHandler($handler);

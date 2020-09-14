@@ -27,12 +27,13 @@ class MediaService extends AbstractDatabaseAccess {
      *
      * @param $file
      * @param $prefix
+     * @param null $owner
      *
      * @return Media|null
      * @throws ORMException
      * @throws ServiceNotFoundException
      */
-    public function add($file, $prefix = null) : ?Media {
+    public function add($file, $prefix = null, $owner = null) : ?Media {
         if (isset($file['error']) && $file['error'] == 0 && isset($file['size']) && $file['size'] > 0) {
             $filename = preg_replace("/\s+/", "_", (basename($file['name'])));
             //      $filename         = md5(basename($file['name']) . '_' . microtime()) . '.' . pathinfo($file['name'],PATHINFO_EXTENSION);
@@ -40,8 +41,8 @@ class MediaService extends AbstractDatabaseAccess {
                 $filename = strtolower($prefix . '_' . $filename);
             }
 
-            $relativeFilePath = Statics::IMAGES_DIR . DIRECTORY_SEPARATOR . substr(md5(rand()), 0, 2) . DIRECTORY_SEPARATOR . substr(md5(rand()), 0, 2)
-                                . DIRECTORY_SEPARATOR . $filename;
+            $relativeFilePath = Statics::IMAGES_DIR . Statics::GLOBAL_SEPARATOR . substr(md5(rand()), 0, 2) . Statics::GLOBAL_SEPARATOR . substr(md5(rand()), 0, 2)
+                                . Statics::GLOBAL_SEPARATOR . $filename;
 
             FileSystemHelper::mkdir(dirname(ROOT_PATH . $relativeFilePath));
 
@@ -54,6 +55,7 @@ class MediaService extends AbstractDatabaseAccess {
                     'type' => $file['type'],
                     'name' => urlencode($filename),
                     'path' => str_replace('\\', '/', $relativeFilePath),
+                    'owner' => $owner
                 ]);
 
               //  $media = $imageCompressService->compress($media);
@@ -161,8 +163,8 @@ class MediaService extends AbstractDatabaseAccess {
     }
 
     public function download($photoURL, $filename, $type) {
-        $relativeFilePath = Statics::IMAGES_DIR . DIRECTORY_SEPARATOR . substr(md5(rand()), 0, 2) . DIRECTORY_SEPARATOR . substr(md5(rand()), 0, 2)
-                            . DIRECTORY_SEPARATOR . $filename;
+        $relativeFilePath = Statics::IMAGES_DIR . Statics::GLOBAL_SEPARATOR . substr(md5(rand()), 0, 2) . Statics::GLOBAL_SEPARATOR . substr(md5(rand()), 0, 2)
+                            . Statics::GLOBAL_SEPARATOR . $filename;
 
         FileSystemHelper::mkdir(dirname(ROOT_PATH . $relativeFilePath));
 

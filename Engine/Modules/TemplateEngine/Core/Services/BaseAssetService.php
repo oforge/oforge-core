@@ -111,7 +111,7 @@ class BaseAssetService {
         $templateManagementService = Oforge()->Services()->get('template.management');
         $activeTemplate            = $templateManagementService->getActiveTemplate();
 
-        $paths = [ROOT_PATH . DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . Statics::DEFAULT_THEME];
+        $paths = [ROOT_PATH . Statics::GLOBAL_SEPARATOR . Statics::TEMPLATE_DIR . Statics::GLOBAL_SEPARATOR . Statics::DEFAULT_THEME];
 
         /** @var $pluginAccessService PluginAccessService */
         $pluginAccessService = Oforge()->Services()->get('plugin.access');
@@ -120,14 +120,14 @@ class BaseAssetService {
         $plugins = $pluginAccessService->getActive();
 
         foreach ($plugins as $plugin) {
-            $viewsDir = ROOT_PATH . DIRECTORY_SEPARATOR . Statics::PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin['name'] . DIRECTORY_SEPARATOR . Statics::VIEW_DIR;
+            $viewsDir = ROOT_PATH . Statics::GLOBAL_SEPARATOR . Statics::PLUGIN_DIR . Statics::GLOBAL_SEPARATOR . $plugin['name'] . Statics::GLOBAL_SEPARATOR . Statics::VIEW_DIR;
 
             if (file_exists($viewsDir)) {
                 array_push($paths, $viewsDir);
             }
         }
 
-        $templatePath = ROOT_PATH . DIRECTORY_SEPARATOR . Statics::TEMPLATE_DIR . DIRECTORY_SEPARATOR . $activeTemplate->getName();
+        $templatePath = ROOT_PATH . Statics::GLOBAL_SEPARATOR . Statics::TEMPLATE_DIR . Statics::GLOBAL_SEPARATOR . $activeTemplate->getName();
 
         if (!in_array($templatePath, $paths)) {
             array_push($paths, $templatePath);
@@ -148,7 +148,7 @@ class BaseAssetService {
         $files = scandir($folder);
         foreach ($files as $file) {
             if (StringHelper::endsWith($file, $extension) && strpos($file, $newFileName) === false) {
-                unlink($folder . DIRECTORY_SEPARATOR . $file);
+                unlink($folder . Statics::GLOBAL_SEPARATOR . $file);
             }
         }
     }

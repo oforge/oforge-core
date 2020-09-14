@@ -22,7 +22,7 @@
 
                 <div class="form-controls form-controls--row">
 
-                    {% include 'Plugins/Insertion/Frontend/Components/Content/Search/Price.twig' %}
+                    {% include 'Plugins/Insertion/Frontend/Components/Content/Search/Price.twig' with {insertionType: type.name} %}
                     {% include 'Plugins/Insertion/Frontend/Components/Content/Search/Distance.twig' %}
                 </div>
 

@@ -60,7 +60,7 @@ class ModuleManager {
     public function init() {
         $startTime = microtime(true) * 1000;
 
-        $files = Helper::getBootstrapFiles(ROOT_PATH . DIRECTORY_SEPARATOR . Statics::ENGINE_DIR . DIRECTORY_SEPARATOR);
+        $files = Helper::getBootstrapFiles(ROOT_PATH . Statics::GLOBAL_SEPARATOR . Statics::ENGINE_DIR . Statics::GLOBAL_SEPARATOR);
 
         // init core module
         $this->initCoreModule(Bootstrap::class);

@@ -14,6 +14,7 @@ use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\InvalidClassException;
 use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\Core\Manager\Logger\LoggerManager;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\Cronjob\Abstracts\AbstractCronjobHandler;
@@ -364,7 +365,7 @@ class CronjobService extends AbstractDatabaseAccess {
      * @return string
      */
     protected function getLogFilePath(string $cronjobName) : string {
-        return CronjobStatics::CRONJOB_LOGS_DIR_ABS . DIRECTORY_SEPARATOR . str_replace(':', '_', $cronjobName) . LoggerManager::FILE_EXTENSION;
+        return CronjobStatics::CRONJOB_LOGS_DIR_ABS . Statics::GLOBAL_SEPARATOR . str_replace(':', '_', $cronjobName) . LoggerManager::FILE_EXTENSION;
     }
 
 }

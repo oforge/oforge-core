@@ -15,6 +15,7 @@ use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\Mailer\Services\MailService;
 use Slim\Http\Request;
@@ -88,7 +89,7 @@ class MessengerController extends SecureFrontendController {
 
                 $targetUserId = ($isRequester) ? $activeConversation['requested'] : $activeConversation['requester'];
 
-                $uri = $router->pathFor('frontend_account_messages') . DIRECTORY_SEPARATOR . $activeConversation['id'];
+                $uri = $router->pathFor('frontend_account_messages') . Statics::GLOBAL_SEPARATOR . $activeConversation['id'];
 
                 /** only send mails for classified advert */
                 if ($activeConversation['requesterType'] == 1 && $activeConversation['requestedType'] == 1) {

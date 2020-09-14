@@ -18,6 +18,7 @@ use Oforge\Engine\Modules\Console\Lib\Input;
 use Oforge\Engine\Modules\Console\Lib\Monolog\Formatter\ConsoleFormatter;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
 use Oforge\Engine\Modules\Core\Helper\BitmaskHelper;
+use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\Core\Models\Module\Module;
 use Oforge\Engine\Modules\Core\Models\Plugin\Plugin;
 
@@ -278,7 +279,7 @@ class ConsoleService {
      */
     protected function evaluateGlobalOptionLogfile(Command $command) : void {
         if ($this->getOpt->getOption('logfile') && !is_null($command)) {
-            $filePath = ConsoleStatics::CONSOLE_LOGS_DIR_ABS . DIRECTORY_SEPARATOR . str_replace(':', '_', $command->getName()) . '.log';
+            $filePath = ConsoleStatics::CONSOLE_LOGS_DIR_ABS . Statics::GLOBAL_SEPARATOR . str_replace(':', '_', $command->getName()) . '.log';
             $maxFiles = 14;
 
             $this->addOutputLoggerHandler(new RotatingFileHandler($filePath, $maxFiles, Logger::DEBUG));
