@@ -119,4 +119,21 @@ class InsertionBookmarkService extends AbstractDatabaseAccess {
 
         return $bookmark != null;
     }
+
+    /**
+     * @return mixed
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function getUsersWithBookmarks() {
+        $query = 'SELECT DISTINCT b.insertion_user AS id ' .
+                 'FROM oforge_insertion_user_bookmarks AS b ' .
+                    'JOIN oforge_insertion AS i ' .
+                 'WHERE b.insertion_id = i.id AND ' .
+                    'i.active = 1 AND ' .
+                    'i.moderation = 1 AND ' .
+                    'i.deleted = 0;';
+
+        $sqlResult = $this->entityManager()->getEntityManager()->getConnection()->executeQuery($query);
+        return array_column($sqlResult->fetchAll(), 'id');
+    }
 }
