@@ -57,8 +57,6 @@
 
                                 {% if insertion.priceType is same as("on_demand") %}
                                     <span class="attribute-value">{{ i18n('price_on_demand') }}</span>
-                                {% elseif insertion.priceType is same as("auction") %}
-                                    <span class="attribute-value"></span>
                                 {% elseif  item.priceType == "price_range" %}
                                     <span class="preview__value">{{item.priceMin|number_format(0, ',', '.') }}€ - {{ item.price|number_format(0, ',', '.') }}€}</span>
                                 {% else %}
@@ -96,8 +94,6 @@
                         </span>
                             {% if insertion.priceType is same as("on_demand") %}
                                 <span class="attribute-value">{{ i18n('price_on_demand') }}</span>
-                            {% elseif insertion.priceType is same as("auction") %}
-                                <span class="attribute-value"></span>
                             {% elseif  insertion.priceType is same as("price_range") %}
                                 <span class="attribute-value">{{insertion.minPrice < insertion.price ? insertion.minPrice|number_format(0, ',', '.') : insertion.price|number_format(0, ',', '.')}} € - {{ insertion.minPrice < insertion.price ? insertion.price|number_format(0, ',', '.') : insertion.minPrice|number_format(0, ',', '.') }} €</span>
                             {% else %}

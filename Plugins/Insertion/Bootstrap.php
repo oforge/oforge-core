@@ -4,6 +4,7 @@ namespace Insertion;
 
 use FrontendUserManagement\Middleware\FrontendSecureMiddleware;
 use FrontendUserManagement\Services\AccountNavigationService;
+use Insertion\Commands\InsertionBookmarkReminderCommand;
 use Insertion\Commands\ReminderCommand;
 use Insertion\Commands\SearchBookmarkCommand;
 use Insertion\Controller\Backend\BackendAttributeController;
@@ -139,6 +140,7 @@ class Bootstrap extends AbstractBootstrap {
         $this->commands = [
             ReminderCommand::class,
             SearchBookmarkCommand::class,
+            InsertionBookmarkReminderCommand::class,
         ];
 
         $this->cronjobs = [
