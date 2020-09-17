@@ -62,57 +62,57 @@ class InsertionProfile extends AbstractModel
      * @var string
      * @ORM\Column(name="description", type="text")
      */
-    private $description;
+    private $description = "";
 
     /**
      * @var string
      * @ORM\Column(name="imprint_name", type="string")
      */
-    private $imprintName;
+    private $imprintName = "";
 
     /**
      * @var string
      * @ORM\Column(name="imprint_street", type="string")
      */
-    private $imprintStreet;
+    private $imprintStreet = "";
     /**
      * @var string
      * @ORM\Column(name="imprint_zip_city", type="string")
      */
-    private $imprintZipCity;
+    private $imprintZipCity = "";
     /**
      * @var string
      * @ORM\Column(name="imprint_phone", type="string")
      */
-    private $imprintPhone;
+    private $imprintPhone = "";
     /**
      * @var string
      * @ORM\Column(name="imprint_email", type="string")
      */
-    private $imprintEmail;
+    private $imprintEmail = "";
 
     /**
      * @var string
      * @ORM\Column(name="imprint_facebook", type="string")
      */
-    private $imprintFacebook;
+    private $imprintFacebook = "";
 
     /**
      * @var string
      * @ORM\Column(name="imprint_website", type="string")
      */
-    private $imprintWebsite;
+    private $imprintWebsite = "";
 
     /**
      * @var string
      * @ORM\Column(name="imprint_company_tax_id", type="string")
      */
-    private $imprintCompanyTaxId;
+    private $imprintCompanyTaxId = "";
     /**
      * @var string
      * @ORM\Column(name="imprint_company_number", type="string")
      */
-    private $imprintCompanyNumber;
+    private $imprintCompanyNumber = "";
 
     /**
      * @ORM\PrePersist
@@ -217,11 +217,11 @@ class InsertionProfile extends AbstractModel
     }
 
     /**
-     * @param string $description
+     * @param string|null $description
      *
      * @return InsertionProfile
      */
-    public function setDescription(string $description): InsertionProfile
+    public function setDescription(?string $description): InsertionProfile
     {
         $this->description = $description;
 
@@ -237,11 +237,11 @@ class InsertionProfile extends AbstractModel
     }
 
     /**
-     * @param string $imprintName
+     * @param string|null $imprintName
      *
      * @return InsertionProfile
      */
-    public function setImprintName(string $imprintName): InsertionProfile
+    public function setImprintName(?string $imprintName): InsertionProfile
     {
         $this->imprintName = $imprintName;
 
@@ -257,11 +257,11 @@ class InsertionProfile extends AbstractModel
     }
 
     /**
-     * @param string $imprintStreet
+     * @param string|null $imprintStreet
      *
      * @return InsertionProfile
      */
-    public function setImprintStreet(string $imprintStreet): InsertionProfile
+    public function setImprintStreet(?string $imprintStreet): InsertionProfile
     {
         $this->imprintStreet = $imprintStreet;
 
@@ -277,11 +277,11 @@ class InsertionProfile extends AbstractModel
     }
 
     /**
-     * @param string $imprintZipCity
+     * @param string|null $imprintZipCity
      *
      * @return InsertionProfile
      */
-    public function setImprintZipCity(string $imprintZipCity): InsertionProfile
+    public function setImprintZipCity(?string $imprintZipCity): InsertionProfile
     {
         $this->imprintZipCity = $imprintZipCity;
 
@@ -297,11 +297,11 @@ class InsertionProfile extends AbstractModel
     }
 
     /**
-     * @param string $imprintPhone
+     * @param string|null $imprintPhone
      *
      * @return InsertionProfile
      */
-    public function setImprintPhone(string $imprintPhone): InsertionProfile
+    public function setImprintPhone(?string $imprintPhone): InsertionProfile
     {
         $this->imprintPhone = $imprintPhone;
 
@@ -317,11 +317,11 @@ class InsertionProfile extends AbstractModel
     }
 
     /**
-     * @param string $imprintEmail
+     * @param string|null $imprintEmail
      *
      * @return InsertionProfile
      */
-    public function setImprintEmail(string $imprintEmail): InsertionProfile
+    public function setImprintEmail(?string $imprintEmail): InsertionProfile
     {
         $this->imprintEmail = $imprintEmail;
 
@@ -337,11 +337,11 @@ class InsertionProfile extends AbstractModel
     }
 
     /**
-     * @param string $imprintFacebook
+     * @param string|null $imprintFacebook
      *
      * @return InsertionProfile
      */
-    public function setImprintFacebook(string $imprintFacebook): InsertionProfile
+    public function setImprintFacebook(?string $imprintFacebook): InsertionProfile
     {
         $this->imprintFacebook = $imprintFacebook;
 
@@ -357,11 +357,11 @@ class InsertionProfile extends AbstractModel
     }
 
     /**
-     * @param string $imprintWebsite
+     * @param string|null $imprintWebsite
      *
      * @return InsertionProfile
      */
-    public function setImprintWebsite(string $imprintWebsite): InsertionProfile
+    public function setImprintWebsite(?string $imprintWebsite): InsertionProfile
     {
         $this->imprintWebsite = $imprintWebsite;
 
@@ -377,11 +377,11 @@ class InsertionProfile extends AbstractModel
     }
 
     /**
-     * @param string $imprintCompanyTaxId
+     * @param string|null $imprintCompanyTaxId
      *
      * @return InsertionProfile
      */
-    public function setImprintCompanyTaxId(string $imprintCompanyTaxId): InsertionProfile
+    public function setImprintCompanyTaxId(?string $imprintCompanyTaxId): InsertionProfile
     {
         $this->imprintCompanyTaxId = $imprintCompanyTaxId;
 
@@ -397,11 +397,11 @@ class InsertionProfile extends AbstractModel
     }
 
     /**
-     * @param string $imprintCompanyNumber
+     * @param string|null $imprintCompanyNumber
      *
      * @return InsertionProfile
      */
-    public function setImprintCompanyNumber(string $imprintCompanyNumber): InsertionProfile
+    public function setImprintCompanyNumber(?string $imprintCompanyNumber): InsertionProfile
     {
         $this->imprintCompanyNumber = $imprintCompanyNumber;
 
