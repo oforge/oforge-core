@@ -4,17 +4,6 @@
             <span class="form__label form__label--title">
                 {{ i18n('image_upload_title') }}{% if required %}<span class="required">*</span>{% endif %} <span class="limitations">{{ i18n('image_upload_limitations') }}</span>
             </span>
-            <span class="form__label form__label--title" style="font-size: 1.4rem">
-                {% if i18nExists('attribute_hint_image_upload' ) %}
-                    {% set cmsContent = twig_call_function_if_exist('cms_content', 'attribute_hint_description_' ~ type.name ~ '_' ~ meta.language.iso) %}
-                    {% include 'Frontend/Components/Insertions/Hint.twig' ignore missing with {
-                        hint: i18n('attribute_hint_image_upload'),
-                        hintContent: content} %}
-                {% endif %}
-                Fehler-Hinweis:
-                <span class="limitations">Fälschlich gedrehte Fotos</span>
-            </span>
-
             <div class="upload__description upload__max-size-exceeded hidden">
                 <p class="description description--upload">{{ i18n('upload_max_size_exceeded') }}</p>
 

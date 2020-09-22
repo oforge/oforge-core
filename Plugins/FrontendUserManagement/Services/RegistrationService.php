@@ -6,6 +6,7 @@ use Doctrine\ORM\ORMException;
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Models\UserAddress;
 use FrontendUserManagement\Models\UserDetail;
+use Insertion\Models\InsertionProfile;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Slim\Router;
 
@@ -32,6 +33,8 @@ class RegistrationService extends AbstractDatabaseAccess {
             $this->entityManager()->create($user);
             $userDetails = UserDetail::create(['user' => $user]);
             $userAddress = UserAddress::create(['user' => $user]);
+            $userProfile = InsertionProfile::create(['user' => $user]);
+            $this->entityManager()->create($userProfile);
             $this->entityManager()->create($userAddress);
             $this->entityManager()->create($userDetails);
 
