@@ -7,6 +7,7 @@ use FrontendUserManagement\Services\FrontendUserLoginService;
 use FrontendUserManagement\Services\RegistrationService;
 use Oforge\Engine\Modules\Auth\Services\PasswordService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
+use Oforge\Engine\Modules\Core\Helper\MimeTypes;
 use Oforge\Engine\Modules\Media\Services\MediaService;
 use SocialLogin\Models\SocialLogin;
 
@@ -59,7 +60,7 @@ class UserLoginService extends AbstractDatabaseAccess {
                     /** @var MediaService $mediaService */
                     $mediaService = Oforge()->Services()->get('media');
                     //TODO Matthäus: Possible MimeType & File extentsion missmatching. Autodetect after download or autoconvert to jpg!
-                    $media = $mediaService->download($profile->photoURL, $userData['id'] . '.jpg', 'image/jpg');
+                    $media = $mediaService->download($profile->photoURL, $userData['id'] . '.jpg', MimeTypes::IMAGE_JPG);
                     $user->getDetail()->setImage($media);
                 }
 

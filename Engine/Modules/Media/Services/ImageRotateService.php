@@ -11,9 +11,10 @@ use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Media\Models\Media;
 
 /**
- * Class ImageCompressService
+ * Class ImageRotateService
  *
  * @package Oforge\Engine\Modules\Media\Services
+ * @deprecated
  */
 class ImageRotateService extends AbstractDatabaseAccess {
 

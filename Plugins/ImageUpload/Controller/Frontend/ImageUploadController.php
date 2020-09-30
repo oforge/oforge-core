@@ -72,29 +72,4 @@ class ImageUploadController extends SecureFrontendController {
         return $response->withStatus(400);
     }
 
-    /**
-     * @param Request $request
-     * @param Response $response
-     *
-     * @return Response
-     * @EndpointAction()
-     */
-    public function rotateAction(Request $request, Response $response) {
-        if ($request->isGet()) {
-            $id   = $_GET["id"];
-            $path = $_GET["path"];
-
-            /** @var MediaService $mediaService */
-            $mediaService = Oforge()->Services()->get('media');
-
-            $media = $mediaService->getById($id);
-
-            if ($media->getPath() == $path) {
-
-                $mediaService->rotate($id, 90);
-            }
-        }
-
-        return $response->withStatus(403);
-    }
 }

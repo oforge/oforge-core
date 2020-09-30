@@ -10,7 +10,7 @@ namespace Oforge\Engine\Modules\Media\Twig;
 
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
-use Oforge\Engine\Modules\Media\Services\ImageCompressService;
+use Oforge\Engine\Modules\Media\Services\ImageService;
 use Twig_Extension;
 use Twig_ExtensionInterface;
 use Twig_Function;
@@ -42,21 +42,21 @@ class MediaExtension extends Twig_Extension implements Twig_ExtensionInterface {
         $result    = '';
         $varLength = count($vars);
         if ($varLength > 0) {
-            /** @var ImageCompressService $configService */
-            $mediaService = Oforge()->Services()->get('image.compress');
+            /** @var ImageService $configService */
+            $imageService = Oforge()->Services()->get('media.image');
             if ($varLength == 2) {
                 if (is_array($vars[0])) {
                     if (isset($vars[0]["id"])) {
-                        $result = $mediaService->getPath($vars[0]["id"], $vars[1]);
+                        $result = $imageService->getUrl($vars[0]['id'], $vars[1]);
                     } elseif (isset($vars[0]["path"])) {
-                        $result = $mediaService->getPath($vars[0]["path"], $vars[1]);
+                        $result = $imageService->getUrl($vars[0]['path'], $vars[1]);
                     }
                 } else {
-                    $result = $mediaService->getPath($vars[0], $vars[1]);
+                    $result = $imageService->getUrl($vars[0], $vars[1]);
                 }
 
             } else {
-                $result = $mediaService->getPath($vars[0]);
+                $result = $imageService->getUrl($vars[0]);
             }
         }
 

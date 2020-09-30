@@ -14,11 +14,12 @@ use Oforge\Engine\Modules\Media\Models\Media;
  * Class ImageCompressService
  *
  * @package Oforge\Engine\Modules\Media\Services
+ * @deprecated
  */
 class ImageCompressService extends AbstractDatabaseAccess {
 
     public function __construct() {
-        parent::__construct(['default' => Media::class, 'insertionMedia' => InsertionMedia::class]);
+        parent::__construct(['default' => Media::class]);
     }
 
     /**

@@ -2,18 +2,14 @@
 
 namespace Oforge\Engine\Modules\Media;
 
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
-use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
-use Oforge\Engine\Modules\Core\Exceptions\Template\TemplateNotFoundException;
 use Oforge\Engine\Modules\Media\Models\Media;
 use Oforge\Engine\Modules\Media\Services\ImageCompressService;
+use Oforge\Engine\Modules\Media\Services\ImageService;
 use Oforge\Engine\Modules\Media\Services\MediaService;
 use Oforge\Engine\Modules\Media\Twig\MediaExtension;
 use Oforge\Engine\Modules\TemplateEngine\Core\Services\TemplateRenderService;
-use Twig_Error_Loader;
 
 /**
  * Class Bootstrap
@@ -35,7 +31,8 @@ class Bootstrap extends AbstractBootstrap {
 
         $this->services = [
             'media'          => MediaService::class,
-            'image.compress' => ImageCompressService::class,
+            'media.image'    => ImageService::class,
+            // 'image.compress' => ImageCompressService::class,
         ];
     }
 
