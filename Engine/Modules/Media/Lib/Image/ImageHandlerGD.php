@@ -21,7 +21,7 @@ class ImageHandlerGD extends ImageHandler {
                 return $this->convertPNG2($image, $dstFilePath, $dstMimeType);
         }
 
-        return true;
+        return false;
     }
 
     /** @inheritDoc */
@@ -68,7 +68,7 @@ class ImageHandlerGD extends ImageHandler {
                 return $this->saveImage($image, $dstFilePath, $dstMimeType);
         }
 
-        return true;
+        return false;
     }
 
     protected function convertPNG2($image, $dstFilePath, $dstMimeType) : bool {
@@ -86,7 +86,7 @@ class ImageHandlerGD extends ImageHandler {
             }
         }
 
-        return true;
+        return false;
     }
 
     /**
@@ -155,7 +155,7 @@ class ImageHandlerGD extends ImageHandler {
         if ($quality < 0 || $quality > 100) {
             $quality = 100;
         }
-        $success = true;
+        $success = false;
         switch ($dstMimeType) {
             case MimeTypes::IMAGE_GIF:
                 imagesavealpha($image, true);

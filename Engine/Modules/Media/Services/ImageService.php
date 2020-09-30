@@ -2,19 +2,17 @@
 
 namespace Oforge\Engine\Modules\Media\Services;
 
-use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Helper\FileHelper;
 use Oforge\Engine\Modules\Media\Lib\Image\ImageHandler;
 use Oforge\Engine\Modules\Media\Lib\Image\ImageHandlerGD;
 use Oforge\Engine\Modules\Media\Lib\Image\ImageHandlerImagick;
 use Oforge\Engine\Modules\Media\Models\Media;
 
-class ImageService extends AbstractDatabaseAccess {
+class ImageService {
     /** @var ImageHandler $imageHandler */
     protected $imageHandler;
 
     public function __construct() {
-        parent::__construct(Media::class);
         if (extension_loaded('imagick')) {
             $this->imageHandler = new ImageHandlerImagick();
         } elseif (extension_loaded('gd')) {
@@ -69,18 +67,21 @@ class ImageService extends AbstractDatabaseAccess {
             $height = $options['height'];
         }
         if ($width > 0) {
-            $resizedFilePathRel = FileHelper::trimExtension($media->getPath())#
-                                  . '-w' . $width #
-                                  . ($height > 0 ? ('-h' . $height) : '') . '.' #
-                                  . FileHelper::getExtension($media->getPath());
+            $absoluteSrcFilePath = ROOT_PATH . $media->getPath();
+            if (file_exists($absoluteSrcFilePath)) {
+                $resizedFilePathRel = FileHelper::trimExtension($media->getPath())#
+                                      . '-w' . $width #
+                                      . ($height > 0 ? ('-h' . $height) : '') . '.' #
+                                      . FileHelper::getExtension($media->getPath());
 
-            $resizedFilePathAbs = ROOT_PATH . $resizedFilePathRel;
-            if (!file_exists($resizedFilePathAbs)) {
-                $this->resize(ROOT_PATH . $media->getPath(), $resizedFilePathAbs, $options);
-                $this->compress($resizedFilePathAbs, $resizedFilePathAbs, 40);
-            }
-            if (file_exists($resizedFilePathAbs)) {
-                return $resizedFilePathRel;
+                $resizedFilePathAbs = ROOT_PATH . $resizedFilePathRel;
+                if (!file_exists($resizedFilePathAbs)) {
+                    $this->resize(ROOT_PATH . $media->getPath(), $resizedFilePathAbs, $options);
+                    $this->compress($resizedFilePathAbs, $resizedFilePathAbs, 40);
+                }
+                if (file_exists($resizedFilePathAbs)) {
+                    return $resizedFilePathRel;
+                }
             }
         }
 
@@ -97,6 +98,9 @@ class ImageService extends AbstractDatabaseAccess {
      * @return bool
      */
     public function modify($srcFilePath, ?string $dstFilePath, array $options) : bool {
+        if (!file_exists($srcFilePath)) {
+            return false;
+        }
         $success = true;
         if (isset($options['convert'])) {
             $dstMimeType = $options['convert'];
@@ -122,6 +126,10 @@ class ImageService extends AbstractDatabaseAccess {
      * @return bool
      */
     public function convert(string $srcFilePath, ?string $dstFilePath, string $dstMimeType) : bool {
+        if (!file_exists($srcFilePath)) {
+            return false;
+        }
+
         return $this->imageHandler->convert($srcFilePath, FileHelper::replaceExtension($dstFilePath, $dstMimeType), $dstMimeType);
     }
 
@@ -133,6 +141,10 @@ class ImageService extends AbstractDatabaseAccess {
      * @return bool
      */
     public function compress(string $srcFilePath, ?string $dstFilePath, int $quality = 40) : bool {
+        if (!file_exists($srcFilePath)) {
+            return false;
+        }
+
         return $this->imageHandler->compress($srcFilePath, $dstFilePath, $quality);
     }
 
@@ -144,6 +156,10 @@ class ImageService extends AbstractDatabaseAccess {
      * @return bool
      */
     public function resize(string $srcFilePath, ?string $dstFilePath, $options) : bool {
+        if (!file_exists($srcFilePath)) {
+            return false;
+        }
+
         return $this->imageHandler->resize($srcFilePath, $this->resolveDstFilePath($srcFilePath, $dstFilePath), $options);
     }
 

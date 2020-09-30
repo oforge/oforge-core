@@ -76,7 +76,6 @@ class MediaService extends AbstractDatabaseAccess {
      * @param $id
      *
      * @return Media|null
-     * @throws ORMException
      */
     public function getById($id) : ?Media {
         return $this->getOneBy([
@@ -90,7 +89,6 @@ class MediaService extends AbstractDatabaseAccess {
      * @param string $path
      *
      * @return Media|null
-     * @throws ORMException
      */
     public function getByPath(string $path) : ?Media {
         return $this->getOneBy([

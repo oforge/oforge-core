@@ -35,6 +35,8 @@ class ImageHandlerImagick extends ImageHandler {
                 $imagick = new Imagick($srcFilePath);
                 $imagick->setImageFormat($imageFormat);
                 $imagick->writeImage($dstFilePath);
+
+                return true;
             } catch (ImagickException $exception) {
                 Oforge()->Logger()->get()->error('ImagickException: ' . $exception->getMessage(), [
                     'src'         => $srcFilePath,
@@ -44,7 +46,7 @@ class ImageHandlerImagick extends ImageHandler {
             }
         }
 
-        return true;
+        return false;
     }
 
     /** @inheritDoc */
@@ -82,6 +84,8 @@ class ImageHandlerImagick extends ImageHandler {
             }
             if ($save) {
                 $imagick->writeImage($dstFilePath);
+
+                return true;
             }
         } catch (ImagickException $exception) {
             Oforge()->Logger()->get()->error('ImagickException: ' . $exception->getMessage(), [
@@ -91,7 +95,7 @@ class ImageHandlerImagick extends ImageHandler {
             ]);
         }
 
-        return true;
+        return false;
     }
 
     /** @inheritDoc */
@@ -105,6 +109,8 @@ class ImageHandlerImagick extends ImageHandler {
             if ($width !== $currentWidth && $height !== $currentHeight) {
                 $imagick->scaleImage($width, (int) $height);
                 $imagick->writeImage($dstFilePath);
+
+                return true;
             }
         } catch (ImagickException $exception) {
             Oforge()->Logger()->get()->error('ImagickException: ' . $exception->getMessage(), [
@@ -112,11 +118,9 @@ class ImageHandlerImagick extends ImageHandler {
                 'dst'     => $dstFilePath,
                 'options' => $options,
             ]);
-
-            return false;
         }
 
-        return true;
+        return false;
     }
 
 }
