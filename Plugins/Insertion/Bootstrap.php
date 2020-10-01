@@ -15,6 +15,7 @@ use Insertion\Controller\Backend\BackendInsertionTypeController;
 use Insertion\Controller\Backend\BackendInsertionTypeGroupController;
 use Insertion\Controller\Frontend\FrontendInsertionController;
 use Insertion\Controller\Frontend\FrontendUsersInsertionController;
+use Insertion\Cronjobs\InsertionBookmarkReminderCronjob;
 use Insertion\Cronjobs\Reminder14DaysCronjob;
 use Insertion\Cronjobs\Reminder30DaysCronjob;
 use Insertion\Cronjobs\Reminder3DaysCronjob;
@@ -141,6 +142,7 @@ class Bootstrap extends AbstractBootstrap {
             ReminderCommand::class,
             SearchBookmarkCommand::class,
             InsertionBookmarkReminderCommand::class,
+            InsertionBookmarkReminderCommand::class,
         ];
 
         $this->cronjobs = [
@@ -148,6 +150,7 @@ class Bootstrap extends AbstractBootstrap {
             Reminder14DaysCronjob::class,
             Reminder30DaysCronjob::class,
             SearchBookmarkCronjob::class,
+            InsertionBookmarkReminderCronjob::class,
         ];
 
         $this->middlewares = [
