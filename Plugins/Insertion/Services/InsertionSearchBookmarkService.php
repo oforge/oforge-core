@@ -23,6 +23,7 @@ class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
     const NONE = 'none';
     const DAILY = 'daily';
     const DAYS_2 = 'days_2';
+    const DAYS_3 = 'days_3';
     const WEEKLY = 'weekly';
 
     public function __construct() {
