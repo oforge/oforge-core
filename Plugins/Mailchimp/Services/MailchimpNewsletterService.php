@@ -3,6 +3,7 @@
 namespace Mailchimp\Services;
 
 use Mailchimp\Models\UserNewsletter;
+use Oforge\Engine\Modules\APIRaven\Services\APIRavenService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
@@ -13,6 +14,7 @@ class MailchimpNewsletterService extends AbstractDatabaseAccess
 {
     protected $mailchimpUri;
 
+    /** @var $apiraven APIRavenService */
     protected $apiraven;
 
     protected $configService;
@@ -51,7 +53,9 @@ class MailchimpNewsletterService extends AbstractDatabaseAccess
 
         $mailchimpUri = $this->mailchimpUri . '/lists/' . $this->listId . '/members';
 
-        $this->apiraven->setApi($mailchimpUri, $this->userName, $this->apiKey);
+        $this->apiraven->setApiUrl($mailchimpUri);
+        $this->apiraven->setApiUsername($this->userName);
+        $this->apiraven->setApiPassword($this->apiKey);
 
         $data = [
             'email_address' => $email_address,
@@ -86,7 +90,9 @@ class MailchimpNewsletterService extends AbstractDatabaseAccess
 
         $mailchimpUri = $this->mailchimpUri . '/lists/' . $this->listId . '/members';
 
-        $this->apiraven->setApi($mailchimpUri, $this->userName, $this->apiKey);
+        $this->apiraven->setApiUrl($mailchimpUri);
+        $this->apiraven->setApiUsername($this->userName);
+        $this->apiraven->setApiPassword($this->apiKey);
 
         $data = [
             'email_address' => $email_address,
