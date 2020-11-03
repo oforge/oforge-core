@@ -49,7 +49,7 @@ class InsertionZipService extends AbstractDatabaseAccess {
         }
         $entry  = null;
 
-        if (!empty($result)) {
+        if (!empty($result[0])) {
             $entry = InsertionZipCoordinates::create(["zip" => $zip, "country" => $country, "lat" => $result[0]["lat"], "lng" => $result[0]["lon"]]);
             $this->entityManager()->create($entry);
         }
