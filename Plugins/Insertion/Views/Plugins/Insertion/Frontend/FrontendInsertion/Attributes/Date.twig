@@ -6,6 +6,9 @@
            value="{{ data['insertion'][attribute.id] }}"
            class="form__input form-control"
            id="datepicker"
-           placeholder="YYYY-MM-DD"
+           placeholder="{{ i18n('input_date_placeholder', {
+               de: 'TT.MM.JJJJ (z.B. 23.12.2001)',
+               en: 'DD.MM.YYYY (i.e. 23.12.2001)'
+           }) }}"
            {% if required %}required{% endif %}/>
 </div>

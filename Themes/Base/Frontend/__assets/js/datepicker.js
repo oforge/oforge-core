@@ -2,7 +2,7 @@ if (typeof Oforge !== 'undefined') {
     Oforge.register({
         name: 'datepicker',
         selector: '#datepicker',
-        otherNotRequiredContent: 'some other content, that we can define and that is not required',
+        otherNotRequiredContent: '',
         init: function () {
             var me = this;
             var lang = document.documentElement.lang;
@@ -20,7 +20,6 @@ if (typeof Oforge !== 'undefined') {
                 maxDate: moment().toDate(),
                 minDate: moment().subtract(40, 'years').toDate(),
                 yearRange: 40,
-
             });
 
             if(lang in localisation) {
