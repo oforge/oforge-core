@@ -3,4 +3,13 @@
         <span class="product__label">{{ i18n(attribute.name) }}</span>
         <span class="product__value">{{ value|age(attribute.filterType, true) }}</span>
     </div>
+    {% if attribute.name == 'Age_month' %}
+        <div class="product__attribute">
+            <span class="product__label">{{ i18n('foal_date_of_birth', {
+                    de: 'Geburtsdatum',
+                    en: 'Date of Birth'
+                }) }}</span>
+            <span class="product__value">{{ value|date('d.m.Y') }}</span>
+        </div>
+    {% endif %}
 {% endif %}

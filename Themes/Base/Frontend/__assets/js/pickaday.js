@@ -196,7 +196,7 @@
             reposition: true,
 
             // the default output format for `.toString()` and `field` value
-            format: 'DD.MM.YYYY',
+            format: 'YYYY-MM-DD',
 
             // the toString function which gets passed a current date object and format
             // and returns a string
