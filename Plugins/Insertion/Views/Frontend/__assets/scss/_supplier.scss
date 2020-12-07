@@ -255,6 +255,7 @@
     }
 
     @media screen and (min-width: $screen-medium) {
+
         .insertion__supplier {
             .sidebar--insertion {
                 margin-top: 0;
@@ -301,6 +302,14 @@
 
         .sidebar--insertion {
             margin-top: 0;
+        }
+    }
+
+    @media screen and (min-width: $screen-large) {
+        .content--header {
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: normal;
         }
     }
 

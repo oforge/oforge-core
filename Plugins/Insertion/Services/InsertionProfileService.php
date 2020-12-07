@@ -145,12 +145,12 @@ class InsertionProfileService extends AbstractDatabaseAccess {
                 ], $includeProfile, true)#
             );
             if ($includeProfile) {
-                $insertionCount = $insertionListService->getUserInsertionCount($insertionProfile->getUser(), [#
-                    // 'active' => true
+                $insertionCount = $insertionListService->getUserInsertionCount($insertionProfile->getUser(), [
+                    'active' => true
                 ]);
-                // if ($insertionCount === 0) {
-                //     continue;
-                // }
+                if ($insertionCount === 0) {
+                    continue;
+                }
                 $insertionData                   = $insertionProfile->toArray(2);
                 $insertionData['insertionCount'] = $insertionCount;
                 $insertionData['insertionTypes'] = $insertionListService->getUserDistinctInsertionTypes($insertionProfile->getUser());

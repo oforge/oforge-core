@@ -6,7 +6,8 @@
             <a href="{{ url("insertions_detail", {id: item.id}) }}" class="product__image">
                 {% block product_image %}
                     {% if item.media is defined and item.media|length > 0 and item.media[0].content is defined %}
-                        <img src="{{ media(item.media[0].content.id is defined ? item.media[0].content.id : item.media[0].content, 600) }}" alt="{{ item.content[0].name }}"
+                        <img src="{{ media(item.media[0].content.id is defined ? item.media[0].content.id : item.media[0].content, 600) }}"
+                             alt="{{ item.content[0].name }}"
                              class="image">
                     {% else %}
                         <svg class="icon icon--placeholder">
@@ -58,14 +59,31 @@
                         {% set topvalues = item.topvalues|slice(0,3) %}
 
                         {% for topvalue in topvalues %}
-                            {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
+                            {# special case: for horses, foles and riding participations we show zip-city instead of horse name #}
+                            {% if item.insertionType.name == 'foal' or item.insertionType.name == 'horse' or item.insertionType.name == 'riding_participation' %}
+                                {% if topvalue.name == 'horse_name' %}
+                                    <div class="product__attribute attribute--single">
+                                        <span class="product__label">{{ i18n('insertion_location', {
+                                                de: 'PLZ/Ort',
+                                                en: 'ZIP/City'
+                                            }) }}</span>
+                                        <span class="product__value">
+                                            <span class="main--value">{{ item.contact.zip }}/{{ item.contact.city }}</span>
+                                        </span>
+                                    </div>
+                                {% else %}
+                                    {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
+                                {% endif %}
+                            {% else %}
+                                {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
+                            {% endif %}
                         {% endfor %}
 
                         {% if topvalues|length < 3 %}
                             <div class="product__attribute attribute--single">
-                                <span class="product__label">PLZ/Ort</span>
+                                <span class="product__label">{{ i18n('insertion_location') }}</span>
                                 <span class="product__value">
-                                     <span class="main--value">{{ item.contact.zip }} - {{ item.contact.city }}</span>
+                                     <span class="main--value">{{ item.contact.zip }}/{{ item.contact.city }}</span>
                                 </span>
                             </div>
                         {% endif %}
@@ -85,10 +103,11 @@
                     <div class="product__meta">
                         <div class="product__pricing">
                             <span class="product__label">{{ i18n('price_' ~ type.name, i18n('price')) }}</span>
-                            {% if item.priceType is same as("on_demand")  %}
+                            {% if item.priceType is same as("on_demand") %}
                                 <span class="product__value">{{ i18n('price_on_demand') }}</span>
                             {% elseif  item.priceType is same as("price_range") %}
-                                <span class="preview__value">{{item.priceMin|number_format(0, ',', '.') }} € - {{ item.price|number_format(0, ',', '.') }} €}</span>
+                                <span
+                                    class="preview__value">{{ item.priceMin|number_format(0, ',', '.') }} € - {{ item.price|number_format(0, ',', '.') }} €}</span>
                             {% else %}
                                 <span class="product__value">
                                     {% if item.priceType is same as("negotiable") %}
