@@ -472,6 +472,8 @@ class FrontendInsertionController extends SecureFrontendController {
         $service = Oforge()->Services()->get('insertion');
         /** @var Insertion $insertion */
         $insertion = $service->getInsertionById(intval($id));
+        /** @var UrlService $urlService */
+        $urlService = Oforge()->Services()->get('url');
 
         if (!isset($insertion) || $insertion == null) {
             return $response->withRedirect('/404', 301);
@@ -515,7 +517,8 @@ class FrontendInsertionController extends SecureFrontendController {
             $user        = $authService->decode($auth);
 
             if ($user['type'] != BackendUser::class && $insertion->getUser()->getId() != $user['id']) {
-                return $response->withRedirect('/404', 301);
+                $url = $urlService->getUrl('insertions_listing', ['type' => $insertion->getInsertionType()->getId()]);
+                return $response->withRedirect($url, 301);
             }
         }
 

@@ -17,7 +17,7 @@
                 {% block content_header %}
                     <div class="contact--links flex">
                         <div class="contact--icons">
-                            {% if profile.imprintEmail is not empty %}
+                            {% if false and profile.imprintEmail is not empty %}
                                 <a class="contact--icon" href="mailto:{{ profile.imprintEmail }}">
                                     <div class="wrapper">
                                         <svg class="icon icon--secondary mail pulse-on-hover">
@@ -170,7 +170,7 @@
                                         class="link">{{ profile.imprintWebsite }}</a></div>
                             </div>
                         {% endif %}
-                        {% if profile.imprintEmail is not empty %}
+                        {% if false and profile.imprintEmail is not empty %}
                             <div class="mail">{{ i18n('email') }}: {{ profile.imprintEmail }}</div>
                         {% endif %}
                     </div>

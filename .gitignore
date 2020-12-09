@@ -41,3 +41,10 @@ vendor
 !/Plugins/VideoUpload/
 !/Plugins/PDFGenerator/
 !/Plugins/ReportErrorForm/
+/Engine/Modules/Media/Controller/.idea/.gitignore
+/Engine/Modules/Media/Controller/.idea/Controller.iml
+/Engine/Modules/Media/Controller/.idea/misc.xml
+/Engine/Modules/Media/Controller/.idea/modules.xml
+/Engine/Modules/Media/Controller/.idea/vcs.xml
+/Themes/Base/Frontend/__assets/js/media-resize_2.js
+/test.php
