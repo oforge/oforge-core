@@ -278,6 +278,59 @@ class BackendInsertionController extends BaseCrudController {
         return $response;
     }
 
+
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     *
+     * @return Response
+     * @throws ORMException
+     * @throws ServiceNotFoundException
+     * @throws OptimisticLockException
+     * @throws ReflectionException
+     * @EndpointAction(path="/change-user/{id:\d+}")
+     */
+    public function changeUserAction(Request $request, Response $response, $args) {
+        $insertionId = $args['id'];
+
+        /** @var InsertionService $insertionService */
+        $insertionService = Oforge()->Services()->get('insertion');
+
+        /** @var Insertion $insertion */
+        $insertion = $insertionService->getInsertionById($insertionId);
+        $result = [];
+        $result['insertion'] = $insertion->toArray(2);
+        $result['typeId']    = $insertion->getInsertionType()->getId();
+        $result['type']      = $insertion->getInsertionType()->toArray(1);
+        $result['userId']    = $insertion->getUser()->getId();
+
+
+        /** @var UserService $userService */
+        $userService = Oforge()->Services()->get('frontend.user.management.user');
+
+        $result['users'] = $userService->getUsers();
+
+
+        if ($request->isPost()) {
+
+            if(isset($_POST['newuser'])) {
+                /** @var InsertionUpdaterService $updateService */
+                $updateService  = Oforge()->Services()->get('insertion.updater');
+
+                $newUser = $userService->getUserById($_POST['newuser']);
+                $insertion->setUser($newUser);
+                $updateService->updateInseration($insertion);
+
+                Oforge()->View()->Flash()->addMessage('success', I18N::translate('insertion_user_updated', 'Inseration user updated to: ') . $newUser->getEmail());
+                return RouteHelper::redirect($response, 'backend_insertions_update', ['id' => $insertion->getId()]);
+            }
+        }
+
+        Oforge()->View()->assign($result);
+    }
+
     /**
      * @param Request $request
      * @param Response $response
@@ -416,6 +469,7 @@ class BackendInsertionController extends BaseCrudController {
         $this->ensurePermissions([
             'approveInsertionAction',
             'disapproveInsertionAction',
+            'changeUserAction'
         ], BackendUser::ROLE_MODERATOR);
     }
 

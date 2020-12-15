@@ -86,13 +86,24 @@ class InsertionUpdaterService extends AbstractDatabaseAccess {
                 } else {
                     $result["insertion"][$value->getAttributeKey()->getId()] = $value->getValue();
                 }
-
             }
         }
 
         return $result;
     }
 
+
+    /**
+     * @param Insertion $insertion
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws ServiceNotFoundException
+     * @throws \ReflectionException
+     */
+    public function updateInseration(Insertion $insertion) {
+        $this->entityManager()->update($insertion, true);
+    }
     /**
      * @param Insertion $insertion
      * @param array $data
