@@ -1,0 +1,33 @@
+.youtube_video {
+    position: relative;
+    .youtube_video_preview {
+        img {
+            width: 100%;
+            padding: 20px;
+        }
+
+    }
+
+    .loading-container {
+        display: none;
+        background: #FFFFFF99;
+
+        position: absolute;
+
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 72px;
+
+        svg {
+            position: absolute;
+            right: 10px;
+            top: 18px;
+            width: 24px;
+
+            circle {
+                fill: #708e2b;
+            }
+        }
+    }
+}

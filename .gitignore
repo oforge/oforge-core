@@ -41,6 +41,7 @@ vendor
 !/Plugins/VideoUpload/
 !/Plugins/PDFGenerator/
 !/Plugins/ReportErrorForm/
+!/Plugins/Youtube/
 /Engine/Modules/Media/Controller/.idea/.gitignore
 /Engine/Modules/Media/Controller/.idea/Controller.iml
 /Engine/Modules/Media/Controller/.idea/misc.xml
