@@ -31,6 +31,7 @@ use Oforge\Engine\Modules\Auth\Services\AuthService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Manager\Events\Event;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\I18n\Models\Language;
 use Oforge\Engine\Modules\I18n\Services\LanguageService;
@@ -246,6 +247,7 @@ class FrontendInsertionController extends SecureFrontendController {
                     Oforge()->Logger()->get('create')->info('processed data ', $data);
 
                     $insertionId = $createService->create($typeId, $user, $processData);
+                    Oforge()->Events()->trigger(Event::create(Insertion::class . '::created', ["id" => $insertionId, "data" => $data]));
 
                     $insertionService = Oforge()->Services()->get('insertion');
 
@@ -646,6 +648,7 @@ class FrontendInsertionController extends SecureFrontendController {
             $data = $formsService->parsePageData($data);
 
             $updateService->update($insertion, $data);
+            Oforge()->Events()->trigger(Event::create(Insertion::class . '::updated', ["id" => $insertion->getId(), "data" => $_POST]));
 
             $insertion      = $service->getInsertionById(intval($id));
             $result['data'] = $updateService->getFormData($insertion);

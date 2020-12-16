@@ -185,6 +185,9 @@ class InsertionFormsService extends AbstractDatabaseAccess {
         ];
 
         if (isset($pageData["insertion"]["vimeo_video_id"]) && $pageData["insertion"]["vimeo_video_id"] !== "" ) {
+            /**
+             * TODO: Remove this. This is a hard, necessary dependency between modules
+             */
             /** @var MediaService $mediaService */
             $videoMedia = $this->repository("media")->findOneBy(["path" => $pageData["insertion"]["vimeo_video_id"]]);
             if(!$videoMedia) {

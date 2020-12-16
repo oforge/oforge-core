@@ -20,6 +20,7 @@ use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Oforge\Engine\Modules\Core\Helper\SessionHelper;
+use Oforge\Engine\Modules\Core\Manager\Events\Event;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
 use Oforge\Engine\Modules\CRUD\Enum\CrudFilterType;
@@ -252,7 +253,10 @@ class BackendInsertionController extends BaseCrudController {
                 if (isset($user)) {
                     $processData = $formsService->parsePageData($data);
 
-                    $createService->create($typeId, $user, $processData);
+                    $id = $createService->create($typeId, $user, $processData);
+
+                    Oforge()->Events()->trigger(Event::create(Insertion::class . '::created', ["id" => $id, "data" => $data]));
+
                     $formsService->clearProcessedData($typeId);
 
                     Oforge()->View()->Flash()->addMessage('success', I18N::translate('insertion created', 'Insertion successful created'));
@@ -314,7 +318,6 @@ class BackendInsertionController extends BaseCrudController {
 
 
         if ($request->isPost()) {
-
             if(isset($_POST['newuser'])) {
                 /** @var InsertionUpdaterService $updateService */
                 $updateService  = Oforge()->Services()->get('insertion.updater');
@@ -322,6 +325,8 @@ class BackendInsertionController extends BaseCrudController {
                 $newUser = $userService->getUserById($_POST['newuser']);
                 $insertion->setUser($newUser);
                 $updateService->updateInseration($insertion);
+
+                Oforge()->Events()->trigger(Event::create(Insertion::class . '::updated', ["id" => $insertion->getId(), "data" => $_POST]));
 
                 Oforge()->View()->Flash()->addMessage('success', I18N::translate('insertion_user_updated', 'Inseration user updated to: ') . $newUser->getEmail());
                 return RouteHelper::redirect($response, 'backend_insertions_update', ['id' => $insertion->getId()]);
@@ -383,6 +388,9 @@ class BackendInsertionController extends BaseCrudController {
             $data = $formsService->parsePageData($data);
 
             $updateService->update($insertion, $data);
+
+            Oforge()->Events()->trigger(Event::create(Insertion::class . '::updated', ["id" => $insertion->getId(), "data" => $_POST]));
+
             $formsService->clearProcessedData($sessionKey);
             $result['data'] = $updateService->getFormData($insertion);
 

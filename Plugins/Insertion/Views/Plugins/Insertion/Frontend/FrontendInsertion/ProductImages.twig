@@ -14,10 +14,14 @@
                         {% if item.content.type != 'video/vimeo' %}
                             <div class="slide thumbnail">
                                 {% if item is defined and item.content|length > 0 and item.content.path is defined %}
-                                    <picture class="lazy">
-                                        <source class="lazy" data-srcset="{{ media(item.content.path, 700) }}" media="(min-width: 640px)" />
-                                        <img class="thumbnail__image lazy" data-src="{{ media(item.content.path, 400) }}" alt="{{ item.content.name }}" />
-                                    </picture>
+                                    {% if item.content.type == 'video/youtube' %}
+                                        <iframe class="thumbnail__image " width="560" height="315" src="https://www.youtube.com/embed/{{ item.content.path }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    {% else %}
+                                        <picture class="lazy">
+                                            <source class="lazy" data-srcset="{{ media(item.content.path, 700) }}" media="(min-width: 640px)" />
+                                            <img class="thumbnail__image lazy" data-src="{{ media(item.content.path, 400) }}" alt="{{ item.content.name }}" />
+                                        </picture>
+                                    {% endif %}
                                 {% endif %}
                             </div>
                         {% endif %}
@@ -39,8 +43,14 @@
                         {% if item.content.type != 'video/vimeo' %}
                             <div class="slide thumbnail">
                                 {% if item is defined and item.content|length > 0 and item.content.path is defined %}
+                                    {% if item.content.type == 'video/youtube' %}
+                                        <img src="https://i.ytimg.com/vi/{{ item.content.path }}/hqdefault.jpg" alt="{{ item.content.name }}"
+                                             class="thumbnail__image">
+                                    {% else %}
+
                                     <img src="{{ media(item.content.path, 600) }}" alt="{{ item.content.name }}"
                                          class="thumbnail__image">
+                                    {% endif %}
                                 {% endif %}
                             </div>
                         {% endif %}
