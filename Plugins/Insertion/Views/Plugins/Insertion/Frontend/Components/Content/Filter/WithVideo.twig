@@ -1,0 +1,8 @@
+<div class="tag" data-key="{{ f }}" data-value="{{ v }}">
+    {% if not hiddeRemove %}
+        <a href="#"
+           onclick="window.location.href = Oforge.removeQueryString('{{ f }}', 'on')"
+           class="close"></a>
+    {% endif %}
+    <span class="tag__text">{{   i18n('with_video', {en: 'with video', de: 'mit Video'})  }}</span>
+</div>

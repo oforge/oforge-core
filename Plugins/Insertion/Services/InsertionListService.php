@@ -99,7 +99,7 @@ class InsertionListService extends AbstractDatabaseAccess {
             }
         }
 
-        $sqlQuery      = "select i.id from oforge_insertion i";
+        $sqlQuery      = "select distinct i.id from oforge_insertion i";
         $sqlQueryWhere = " where i.active = 1 and i.moderation = 1 and i.insertion_type_id = :type";
         $args["type"]  = intval($typeId);
 
@@ -129,6 +129,13 @@ class InsertionListService extends AbstractDatabaseAccess {
                 $result['filter']['price']['min'] = $min;
                 $result['filter']['price']['max'] = $max;
             }
+        }
+
+
+        if (isset($params["withvideo"]) && $params["withvideo"] == "on") {
+            $result['filter']['withvideo'] = "on";
+            $sqlQuery .= " left join `oforge_insertion_media` im on im.insertion_id = i.id left join `oforge_media` om on om.id = im.content_id ";
+            $sqlQueryWhere .= " and om.scope like'video%'";
         }
 
         /**
