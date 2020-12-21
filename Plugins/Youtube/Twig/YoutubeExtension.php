@@ -41,16 +41,20 @@ class YoutubeExtension extends Twig_Extension implements Twig_ExtensionInterface
                 /** @var YoutubeService $youtubeService */
                 $youtubeService = Oforge()->Services()->get('video.youtube');
 
-                $video = $youtubeService->getYoutubeVideo($vars[0]["id"]);
-                if ($video != null) {
-                    return $video->getVideoKey();
+                $videos = $youtubeService->getYoutubeVideos($vars[0]["id"]);
+                if ($videos != null) {
+                    $result = [];
+                    foreach ($videos as $video) {
+                        $result[] = $video->toArray();
+                    }
+
+                    return $result;
                 }
             }
 
             if (isset($vars[0]["youtube_video"])) {
                 return $vars[0]["youtube_video"];
             }
-
 
         }
     }

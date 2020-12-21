@@ -1,11 +1,51 @@
 .youtube_video {
     position: relative;
+    margin-top: 1.2rem;
+
+
     .youtube_video_preview {
         img {
             width: 100%;
             padding: 20px;
         }
 
+    }
+
+    .video-entry {
+        position: relative;
+        margin-top: 1.2rem;
+
+        &.base {
+            display: none;
+        }
+
+        .youtube_video_preview {
+            right: 0;
+            height: 36px;
+            top: 0;
+            position: absolute;
+
+            img {
+                height: 100%;
+                width: auto;
+                padding: 0;
+                border-top-right-radius: 6px;
+                border-bottom-right-radius: 6px;
+            }
+        }
+
+        .delete {
+            background: #a62422;
+            position: absolute;
+            display: block;
+            top: 0;
+            padding: 3px;
+            right: 48px;
+
+            svg {
+                fill: white;
+            }
+        }
     }
 
     .loading-container {
@@ -17,17 +57,53 @@
         top: 0;
         left: 0;
         width: 100%;
-        height: 72px;
+        height: 100%;
 
         svg {
             position: absolute;
-            right: 10px;
-            top: 18px;
-            width: 24px;
+            right: -7px;
+            top: 4px;
+            height: 30px;
 
             circle {
                 fill: #708e2b;
             }
+        }
+    }
+
+    .not-found-icon {
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 48px;
+        height: 100%;
+        display: none;
+
+        svg {
+            fill: #a62422;
+            height: 100%;
+            width: 100%;
+            position: absolute;
+
+            &.icon-magnifier {
+                padding: 3px;
+            }
+
+            &.icon-close {
+                width: 10px;
+                right: 14px;
+                top: -5px;
+            }
+        }
+    }
+
+    .not-found {
+        .form__input {
+            border-color: #a62422;
+        }
+
+        .not-found-icon {
+            display: block;
         }
     }
 }
