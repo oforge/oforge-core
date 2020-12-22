@@ -2,6 +2,7 @@
 
 namespace ReportErrorForm\Controller;
 
+use FrontendUserManagement\Services\UserService;
 use Helpdesk\Models\IssueTypeGroup;
 use Helpdesk\Models\IssueTypes;
 use Helpdesk\Services\HelpdeskTicketService;
@@ -50,6 +51,23 @@ class FormController extends AbstractController {
             foreach ($issueTypes as $issueType) {
                 $issueTypesMap[$issueType->getIssueTypeName()]  = I18N::translate('report_error_issueType_' . $issueType->getIssueTypeName());
                 $issueTypeIDMap[$issueType->getIssueTypeName()] = $issueType->getId();
+            }
+        }
+
+        if (isset($_GET["user"])) {
+            Oforge()->View()->assign(['reportErrorForm.postData.subject' => 'content_error']);
+
+            /** @var UserService $userService */
+            $userService = Oforge()->Services()->get('frontend.user.management.user');
+            $user        = $userService->getUserById($_GET["user"]);
+
+            if ($user != null) {
+                $reportMessage = I18N::translate('report_user_message', [
+                    'en' => 'The user "{0}" behaves inappropriately". I would like to report the user here.',
+                    'de' => 'Der Nutzer "{0}" verhält sich unangemessen. Ich möchte den Nutzer hiermit melden.',
+                ]);
+
+                Oforge()->View()->assign(['reportErrorForm.postData.message' => str_replace("{0}", $user->getDetail()->getNickName() . ":" . $user->getId(), $reportMessage)]);
             }
         }
 
