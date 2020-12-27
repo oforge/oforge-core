@@ -1,9 +1,12 @@
 {% block product_list_sort %}
+    {# The result (that shows the number of insertions) shall be deactivated for now (12/2020 -> Ticket 507 #}
+    <!--
     <div class="panel panel--sort flex flex--row flex--center flex--between">
         <div class="result">
             <h1 class="result__text">{{ search.query.count }} {{ i18n('insertion_' ~ type.name ~ '_count', i18n('insertion_count' ,'insertions found')) }}</h1>
         </div>
     </div>
+    -->
     <div class="panel panel--sort flex flex--row flex--center flex--between">
         <div class="form__input form__input--select form__input--sort">
             <select onchange="window.location.href = Oforge.updateQueryString('order', this.value)"
