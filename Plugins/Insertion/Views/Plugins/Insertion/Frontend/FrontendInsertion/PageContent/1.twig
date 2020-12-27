@@ -37,7 +37,9 @@
             </div>
             <div class="form-controls">
                 <div class="form__control">
-                    <h3 class="form__label form__label--title">{{ i18n('images_and_videos', 'Fotos und Videos') }}</h3>
+                    <label class="form__label form__label--title">{{ i18n('images_and_videos', 'Fotos und Videos') }}
+                        <span class="hint">i
+                        <span class="hint--content">
                     {% block modal__view %}
                         {# Only load selector if content is available, otherwise we will produce js type error (see modal-view.js) #}
                         {% set content_320 = cms_content('insertion_create_image_tipps_320') %}
@@ -62,6 +64,10 @@
                             </div>
                         {% endif %}
                     {% endblock modal__view %}
+                        </span>
+                    </span>
+                    </label>
+
                 </div>
             </div>
             <div class="form-controls form-controls--row">
