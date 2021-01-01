@@ -1,0 +1,15 @@
+<div class="form__control form__control--row-end form__control__boolean form__control--checkbox ">
+    {% if i18nExists('attribute_hint_' ~ attribute.id ) %}
+        {% include 'Frontend/Components/Insertions/Hint.twig' with {
+            hint: i18n('attribute_hint_with_video', {en: 'Show insertions with video', de: 'Zeige Beiträge mit Video'})
+        } %}
+    {% endif %}
+    <label for="withvideo" class="form__label form__label--checkbox"> {{   i18n('with_video', {en: 'with video', de: 'mit Video'})  }}</label>
+    <input type="checkbox"
+           class="form__input form__input--checkbox"
+           name="withvideo"
+           id="withvideo"
+        {% if search.filter['withvideo'] is defined and search.filter['withvideo'] == 'on'%}
+        checked="checked"
+        {% endif %}>
+</div>

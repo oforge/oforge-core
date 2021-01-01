@@ -1,0 +1,45 @@
+{% block youtube_video_entry %}
+    <div class="video-entry {{ class }}">
+        <input name="youtube_video[]" value="{{ item.videoKey }}" type="text" class="form__input form-control"
+               placeholder="{{ i18n('youtube_video', {en: 'Youtube Video', de: 'Youtube Video'}) }}">
+        <input name="youtube_thumbnail[{{ item.videoKey }}]" class="thumbnail-input" type="hidden" />
+        <div class="youtube_video_preview">
+            {% if item.thumbnail is not null %}
+                <img src="{{ item.thumbnail }}" />
+            {% endif %}
+        </div>
+        <a href="#" class="delete" style="{% if item is null is null or item.thumbnail is null %}display: none{% endif %}">
+            <svg class="icon icon--delete2">
+                <use xlink:href="#delete2"></use>
+            </svg>
+        </a>
+        <div class="loading-container">
+            <svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0"
+                 width="64px"
+                 height="64px" viewBox="0 0 128 128" xml:space="preserve"><g>
+                    <circle cx="16" cy="64" r="16" fill-opacity="1" />
+                    <circle cx="16" cy="64" r="14.344" fill-opacity="1" transform="rotate(45 64 64)" />
+                    <circle cx="16" cy="64" r="12.531" fill-opacity="1" transform="rotate(90 64 64)" />
+                    <circle cx="16" cy="64" r="10.75" fill-opacity="1" transform="rotate(135 64 64)" />
+                    <circle cx="16" cy="64" r="10.063" fill-opacity="1" transform="rotate(180 64 64)" />
+                    <circle cx="16" cy="64" r="8.063" fill-opacity="1" transform="rotate(225 64 64)" />
+                    <circle cx="16" cy="64" r="6.438" fill-opacity="1" transform="rotate(270 64 64)" />
+                    <circle cx="16" cy="64" r="5.375" fill-opacity="1" transform="rotate(315 64 64)" />
+                    <animateTransform attributeName="transform" type="rotate"
+                                      values="0 64 64;315 64 64;270 64 64;225 64 64;180 64 64;135 64 64;90 64 64;45 64 64" calcMode="discrete"
+                                      dur="720ms"
+                                      repeatCount="indefinite"></animateTransform>
+                </g>
+                </svg>
+
+        </div>
+        <div class="not-found-icon">
+            <svg class="icon-magnifier">
+                <use xlink:href="#magnifier"></use>
+            </svg>
+            <svg class="icon-close">
+                <use xlink:href="#close"></use>
+            </svg>
+        </div>
+    </div>
+{% endblock %}

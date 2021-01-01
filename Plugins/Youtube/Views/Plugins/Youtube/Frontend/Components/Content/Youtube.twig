@@ -1,0 +1,18 @@
+{% block youtube_video %}
+    <div class="form__control form__control--s form__control--s-center youtube_video" data-youtube-video="true" data-url="{{ url('youtube_exists') }}">
+
+        <label for="youtube_video" class="form__label form__label--title">{{ i18n('youtube_video', {en: 'Youtube Video', de: 'Youtube Video'}) }}</label>
+
+        {% for item in getYoutubeData(data) %}
+            {{ o_dump(item) }}
+            {% include "Plugins/Youtube/Frontend/Components/Content/YoutubeEntry.twig" with {'item': item} %}
+        {% endfor %}
+
+        {% include "Plugins/Youtube/Frontend/Components/Content/YoutubeEntry.twig"  %}
+        {% include "Plugins/Youtube/Frontend/Components/Content/YoutubeEntry.twig" with {'class': 'base'} %}
+
+        <div class="youtube_video_error" style="display: none">
+            <p>{{ i18n('youtube_video_error', {en: 'Your Youtube-Video coul not be found.', de: 'Das Youtube-Video konnte leider nicht gefunden werden.'}) }}</p>
+        </div>
+    </div>
+{% endblock youtube_video %}

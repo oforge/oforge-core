@@ -1,0 +1,29 @@
+{% extends 'Backend/CRUD/Update.twig' %}
+
+{% do dotSet({
+    'crud.context': 'update',
+}) %}
+
+{% block pagecontent %}
+    <section class="content">
+        {{ o_dump() }}
+        <p>{{ i18n('inseration_change_user_title', 'Das folgende Inseration anpassen') }} <b>{{ insertion.content[0].title }} - {{ insertion.user.email }}</b>
+        </p>
+        <p><b>{{ i18n('inseration_change_user_newuser', 'Neuer Nutzer') }}</b></p>
+
+        <form method="post">
+            <div class="form-group">
+                <select name="newuser" class="form-control select2" style="width: 400px">
+                    {% for user in users %}
+                        <option value="{{ user.id }}">{{ user.email }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" value="{{ i18n('save') }}" />
+                <a href="{{ url('backend_insertions_update', {id : insertion.id}) }}" class="btn btn-danger " >{{ i18n('abort') }}</a>
+            </div>
+        </form>
+    </section>
+{% endblock %}

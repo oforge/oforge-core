@@ -10,6 +10,8 @@
                             {% include 'Plugins/Insertion/Frontend/Components/Content/Filter/Price.twig' %}
                         {% elseif f is same as ("radius") %}
                             {% include 'Plugins/Insertion/Frontend/Components/Content/Filter/Distance.twig' %}
+                        {% elseif f is same as ("withvideo") %}
+                            {% include 'Plugins/Insertion/Frontend/Components/Content/Filter/WithVideo.twig' %}
                         {% else %}
                             {% set attribute = all_attributes[f] %}
                             {% include 'Plugins/Insertion/Frontend/Components/Content/Filter/' ~ attribute.filterType|capitalize ~'.twig' %}

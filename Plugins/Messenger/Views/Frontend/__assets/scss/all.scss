@@ -243,3 +243,13 @@
     opacity: .6;
 }
 
+.report-user {
+    padding-top: 8px;
+    vertical-align: text-bottom;
+    svg {
+        display: inline-block;
+        height: 20px;
+        margin-top: 4px;
+        vertical-align: top;
+    }
+}

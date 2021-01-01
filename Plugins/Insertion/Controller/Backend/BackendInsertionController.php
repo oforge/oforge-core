@@ -20,6 +20,7 @@ use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Oforge\Engine\Modules\Core\Helper\SessionHelper;
+use Oforge\Engine\Modules\Core\Manager\Events\Event;
 use Oforge\Engine\Modules\CRUD\Controller\Backend\BaseCrudController;
 use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
 use Oforge\Engine\Modules\CRUD\Enum\CrudFilterType;
@@ -252,7 +253,10 @@ class BackendInsertionController extends BaseCrudController {
                 if (isset($user)) {
                     $processData = $formsService->parsePageData($data);
 
-                    $createService->create($typeId, $user, $processData);
+                    $id = $createService->create($typeId, $user, $processData);
+
+                    Oforge()->Events()->trigger(Event::create(Insertion::class . '::created', ["id" => $id, "data" => $data]));
+
                     $formsService->clearProcessedData($typeId);
 
                     Oforge()->View()->Flash()->addMessage('success', I18N::translate('insertion created', 'Insertion successful created'));
@@ -276,6 +280,60 @@ class BackendInsertionController extends BaseCrudController {
         Oforge()->View()->assign($result);
 
         return $response;
+    }
+
+
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     *
+     * @return Response
+     * @throws ORMException
+     * @throws ServiceNotFoundException
+     * @throws OptimisticLockException
+     * @throws ReflectionException
+     * @EndpointAction(path="/change-user/{id:\d+}")
+     */
+    public function changeUserAction(Request $request, Response $response, $args) {
+        $insertionId = $args['id'];
+
+        /** @var InsertionService $insertionService */
+        $insertionService = Oforge()->Services()->get('insertion');
+
+        /** @var Insertion $insertion */
+        $insertion = $insertionService->getInsertionById($insertionId);
+        $result = [];
+        $result['insertion'] = $insertion->toArray(2);
+        $result['typeId']    = $insertion->getInsertionType()->getId();
+        $result['type']      = $insertion->getInsertionType()->toArray(1);
+        $result['userId']    = $insertion->getUser()->getId();
+
+
+        /** @var UserService $userService */
+        $userService = Oforge()->Services()->get('frontend.user.management.user');
+
+        $result['users'] = $userService->getUsers();
+
+
+        if ($request->isPost()) {
+            if(isset($_POST['newuser'])) {
+                /** @var InsertionUpdaterService $updateService */
+                $updateService  = Oforge()->Services()->get('insertion.updater');
+
+                $newUser = $userService->getUserById($_POST['newuser']);
+                $insertion->setUser($newUser);
+                $updateService->updateInseration($insertion);
+
+                Oforge()->Events()->trigger(Event::create(Insertion::class . '::updated', ["id" => $insertion->getId(), "data" => $_POST]));
+
+                Oforge()->View()->Flash()->addMessage('success', I18N::translate('insertion_user_updated', 'Inseration user updated to: ') . $newUser->getEmail());
+                return RouteHelper::redirect($response, 'backend_insertions_update', ['id' => $insertion->getId()]);
+            }
+        }
+
+        Oforge()->View()->assign($result);
     }
 
     /**
@@ -330,6 +388,9 @@ class BackendInsertionController extends BaseCrudController {
             $data = $formsService->parsePageData($data);
 
             $updateService->update($insertion, $data);
+
+            Oforge()->Events()->trigger(Event::create(Insertion::class . '::updated', ["id" => $insertion->getId(), "data" => $_POST]));
+
             $formsService->clearProcessedData($sessionKey);
             $result['data'] = $updateService->getFormData($insertion);
 
@@ -416,6 +477,7 @@ class BackendInsertionController extends BaseCrudController {
         $this->ensurePermissions([
             'approveInsertionAction',
             'disapproveInsertionAction',
+            'changeUserAction'
         ], BackendUser::ROLE_MODERATOR);
     }
 

@@ -41,11 +41,15 @@
 
                     {% endif %}
                 </form>
-                {% if insertion.moderation %}
-                    <a class="btn btn-primary" href="{{ url('backend_insertions_disapproveInsertion', {id : insertion.id} ) }}">{{ i18n('disapprove') }}</a>
-                {% else %}
-                    <a class="btn btn-primary" href="{{ url('backend_insertions_approveInsertion', {id : insertion.id}) }}">{{ i18n('approve') }}</a>
-                {% endif %}
+                <div class="btn-group pull-left">
+                    {% if insertion.moderation %}
+                        <a class="btn btn-primary" href="{{ url('backend_insertions_disapproveInsertion', {id : insertion.id} ) }}">{{ i18n('disapprove') }}</a>
+                    {% else %}
+                        <a class="btn btn-primary" href="{{ url('backend_insertions_approveInsertion', {id : insertion.id}) }}">{{ i18n('approve') }}</a>
+                    {% endif %}
+
+                    <a class="btn btn-primary" href="{{ url('backend_insertions_changeUser', {id : insertion.id}) }}">{{ i18n('change_user') }}</a>
+                </div>
             </div>
         </div>
     </div>
