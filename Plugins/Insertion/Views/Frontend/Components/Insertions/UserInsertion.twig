@@ -19,12 +19,15 @@
                 de: 'unbegrenzt',
             }) }}</span>
     </div>
+    {# The result (that shows the number of views) shall be deactivated for now (12/2020 -> Ticket 508 #}
+    {#
     <div class="product__attribute product__view-counter">
         <svg class="icon icon--small">
             <use xlink:href="#preview"></use>
         </svg>
         <span class="counter">{{ "%04d"|format(item.views) }}</span>
     </div>
+    #}
 {% endblock attributes__main %}
 
 {% block attributes__top %}
