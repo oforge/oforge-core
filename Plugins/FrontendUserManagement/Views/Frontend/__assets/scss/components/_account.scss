@@ -156,6 +156,18 @@
     padding: $size-large;
 }
 
+.account__backlink-desktop {
+    max-width: 1280px;
+    margin: 0 auto;
+    margin-top: .4rem;
+    display: none;
+    .back-link-wrapper {
+        background: $color-primary;
+        width: 40px;
+        padding: .4rem;
+    }
+}
+
 @media screen and (min-width: $screen-medium) {
     .panel--edit {
         .form--change-password-reset {
@@ -210,6 +222,12 @@
             display: block;
             flex: 1 0 100%;
             margin-bottom: $size-large;
+        }
+    }
+
+    @media screen and (min-width: $content-max) {
+        .account__backlink-desktop {
+            display: block;
         }
     }
 }
