@@ -171,13 +171,13 @@ class BackendInsertionController extends BaseCrudController {
             'name'  => 'spam',
             'type'  => CrudDataTypes::BOOL,
             'lable' => ['key' => 'plugin_insertion_spam', 'default' => 'Spam'],
-            'crud' => [
+            'crud'  => [
                 'index'  => 'editable',
                 'view'   => 'editable',
                 'create' => 'off',
                 'update' => 'editable',
-                'delete' => 'readonly'
-            ]
+                'delete' => 'readonly',
+            ],
         ], # spam
         [
             'name'  => 'deactivationCause',
@@ -189,7 +189,7 @@ class BackendInsertionController extends BaseCrudController {
                 'create' => 'off',
                 'update' => 'editable',
                 'delete' => 'readonly',
-            ]
+            ],
         ], #deactivationCause
 
     ];
@@ -282,8 +282,6 @@ class BackendInsertionController extends BaseCrudController {
         return $response;
     }
 
-
-
     /**
      * @param Request $request
      * @param Response $response
@@ -303,32 +301,29 @@ class BackendInsertionController extends BaseCrudController {
         $insertionService = Oforge()->Services()->get('insertion');
 
         /** @var Insertion $insertion */
-        $insertion = $insertionService->getInsertionById($insertionId);
-        $result = [];
+        $insertion           = $insertionService->getInsertionById($insertionId);
+        $result              = [];
         $result['insertion'] = $insertion->toArray(2);
         $result['typeId']    = $insertion->getInsertionType()->getId();
         $result['type']      = $insertion->getInsertionType()->toArray(1);
         $result['userId']    = $insertion->getUser()->getId();
-
 
         /** @var UserService $userService */
         $userService = Oforge()->Services()->get('frontend.user.management.user');
 
         $result['users'] = $userService->getUsers();
 
-
         if ($request->isPost()) {
-            if(isset($_POST['newuser'])) {
+            if (isset($_POST['newuser'])) {
                 /** @var InsertionUpdaterService $updateService */
-                $updateService  = Oforge()->Services()->get('insertion.updater');
-
+                $updateService = Oforge()->Services()->get('insertion.updater');
+                $updateService->changeUser($insertionId, $_POST['newuser']);
+                /** @var UserService $userService */
+                $userService = Oforge()->Services()->get('frontend.user.management.user');
                 $newUser = $userService->getUserById($_POST['newuser']);
-                $insertion->setUser($newUser);
-                $updateService->updateInseration($insertion);
+                Oforge()->View()->Flash()
+                        ->addMessage('success', I18N::translate('insertion_user_updated', 'Inseration user updated to: ') . $newUser->getEmail());
 
-                Oforge()->Events()->trigger(Event::create(Insertion::class . '::updated', ["id" => $insertion->getId(), "data" => $_POST]));
-
-                Oforge()->View()->Flash()->addMessage('success', I18N::translate('insertion_user_updated', 'Inseration user updated to: ') . $newUser->getEmail());
                 return RouteHelper::redirect($response, 'backend_insertions_update', ['id' => $insertion->getId()]);
             }
         }
@@ -472,12 +467,40 @@ class BackendInsertionController extends BaseCrudController {
         return $this->redirect($response, 'index');
     }
 
+    /**
+     * @param Response $response
+     * @param string $entityID
+     *
+     * @return Response
+     */
+    protected function handleDeleteAction(Response $response, string $entityID) {
+        try {
+            Oforge()->Events()->trigger(Event::create($this->model . '::delete', ["id" => $entityID]));
+
+            $this->crudService->delete($this->model, $entityID);
+
+            Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_delete_success', [
+                'en' => 'Entity successfully delete.',
+                'de' => 'Element erfolgreich gelöscht.',
+            ]));
+
+            return $this->redirect($response, 'index');
+        } catch (\Exception $exception) {
+            Oforge()->View()->Flash()->addExceptionMessage('error', I18N::translate('backend_crud_msg_delete_failed', [
+                'en' => 'Entity deletion failed.',
+                'de' => 'Löschen des Elements fehlgeschlagen.',
+            ]), $exception);
+
+            return $this->redirect($response, 'delete', ['id' => $entityID]);
+        }
+    }
+
     public function initPermissions() {
         parent::initPermissions();
         $this->ensurePermissions([
             'approveInsertionAction',
             'disapproveInsertionAction',
-            'changeUserAction'
+            'changeUserAction',
         ], BackendUser::ROLE_MODERATOR);
     }
 

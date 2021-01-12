@@ -3,7 +3,10 @@
 namespace Insertion;
 
 use FrontendUserManagement\Middleware\FrontendSecureMiddleware;
+use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\AccountNavigationService;
+use FrontendUserManagement\Services\FrontendUserService;
+use FrontendUserManagement\Services\UserService;
 use Insertion\Commands\InsertionBookmarkReminderCommand;
 use Insertion\Commands\ReminderCommand;
 use Insertion\Commands\SearchBookmarkCommand;
@@ -60,6 +63,7 @@ use Oforge\Engine\Modules\AdminBackend\Core\Enums\DashboardWidgetPosition;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\DashboardWidgetsService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
+use Oforge\Engine\Modules\Core\Manager\Events\Event;
 use Oforge\Engine\Modules\Core\Models\Config\ConfigType;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
@@ -181,6 +185,54 @@ class Bootstrap extends AbstractBootstrap {
 
         $seoUrlService = new InsertionUrlService($urlService);
         Oforge()->Services()->set("url", $seoUrlService);
+
+        Oforge()->Events()->attach(Insertion::class . '::delete', Event::SYNC, function (Event $event) {
+            $data = $event->getData();
+            /**
+             * @var  $bookmarkService InsertionBookmarkService
+             */
+            $bookmarkService = Oforge()->Services()->get('insertion.bookmark');
+            $bookmarkService->deleteInserationBookmarks($data["id"]);
+        });
+
+        Oforge()->Events()->attach(User::class . '::delete', Event::SYNC, function (Event $event) {
+            $data = $event->getData();
+            /**
+             * @var  $bookmarkService InsertionBookmarkService
+             */
+            $bookmarkService = Oforge()->Services()->get('insertion.bookmark');
+            $bookmarkService->deleteBookmarksForUser($data["id"]);
+
+            /**
+             * @var  $profileService InsertionProfileService
+             */
+            $profileService = Oforge()->Services()->get('insertion.profile');
+            $profileService->deleteForUser($data["id"]);
+
+            /**
+             * @var  $sBookmarkService InsertionSearchBookmarkService
+             */
+            $sBookmarkService = Oforge()->Services()->get('insertion.search.bookmark');
+            $sBookmarkService->deleteBookmarksForUser($data["id"]);
+
+            /**
+             * @var  $feedbackService InsertionFeedbackService
+             */
+            $feedbackService = Oforge()->Services()->get('insertion.feedback');
+            $feedbackService->deleteForUser($data["id"]);
+
+            /**
+             * @var  $updateService InsertionUpdaterService
+             */
+            $updateService = Oforge()->Services()->get('insertion.updater');
+
+            /** @var UserService $userService */
+            $userService = Oforge()->Services()->get('frontend.user.management.user');
+
+            $user = $userService->getAnonymous();
+            $updateService->deactiveInsertionsForUser($data["id"]);
+            $updateService->changeUsers($data["id"], $user->getId());
+        });
     }
 
     public function install() {
@@ -251,7 +303,6 @@ class Bootstrap extends AbstractBootstrap {
             'required' => true,
         ]);
     }
-
 
     /** @inheritDoc */
     public function uninstall(bool $keepData) {

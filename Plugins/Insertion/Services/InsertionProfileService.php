@@ -59,6 +59,22 @@ class InsertionProfileService extends AbstractDatabaseAccess {
     }
 
     /**
+     * @param int $user
+     *
+     * @throws ORMException
+     */
+    public function deleteForUser(int $user) {
+        /**
+         * @var $result InsertionProfile
+         */
+        $result = $this->repository()->findOneBy(["user" => $user]);
+
+        if ($result != null) {
+            $this->entityManager()->remove($result);
+        }
+    }
+
+    /**
      * @param User $user
      * @param array $params
      *
@@ -146,7 +162,7 @@ class InsertionProfileService extends AbstractDatabaseAccess {
             );
             if ($includeProfile) {
                 $insertionCount = $insertionListService->getUserInsertionCount($insertionProfile->getUser(), [
-                    'active' => true
+                    'active' => true,
                 ]);
                 if ($insertionCount === 0) {
                     continue;

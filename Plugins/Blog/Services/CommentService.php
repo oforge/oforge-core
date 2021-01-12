@@ -10,6 +10,7 @@ use Blog\Models\Post;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Exception;
+use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Models\UserDetail;
 use FrontendUserManagement\Services\FrontendUserService;
 use InvalidArgumentException;
@@ -184,7 +185,7 @@ class CommentService extends AbstractDatabaseAccess {
                              ->select('fu.id, fu.email, fud.nickName, fud.firstName, fud.lastName')#
                              ->leftJoin('c.author', 'fu')#
                              ->leftJoin(UserDetail::class, 'fud', 'WITH', 'fud.user = fu.id')#
-                             #->groupBy('fu.id')#
+        #->groupBy('fu.id')#
                              ->distinct();
         if (ArrayHelper::issetNotEmpty($_GET, 'post')) {
             $queryBuilder = $queryBuilder->where('c.post = ?1')->setParameter(1, $_GET['post']);
@@ -203,6 +204,17 @@ class CommentService extends AbstractDatabaseAccess {
         }
 
         return $result;
+    }
+
+    public function changeUsers($sourceUserId, User $targetUser) {
+        /** @var Comment|null $comment */
+        $comments = $this->repository(Comment::class)->findBy(['author' => $sourceUserId]);
+
+
+        foreach ($comments as $comment) {
+            $comment->setAuthor($targetUser);
+            $this->entityManager()->update($comment);
+        }
     }
 
     /**

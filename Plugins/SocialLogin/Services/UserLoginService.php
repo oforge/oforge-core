@@ -86,4 +86,11 @@ class UserLoginService extends AbstractDatabaseAccess {
         return null;
     }
 
+    public function deleteUser($user) {
+        $socialLogin = $this->repository('sociallogin')->findOneBy(['user' => $user]);
+        if ($socialLogin != null) {
+            $this->entityManager()->remove($socialLogin);
+        }
+    }
+
 }

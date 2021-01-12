@@ -17,6 +17,7 @@ use Insertion\Models\InsertionType;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\StringHelper;
+use Oforge\Engine\Modules\Core\Manager\Events\Event;
 use Oforge\Engine\Modules\I18n\Models\Language;
 use Oforge\Engine\Modules\Media\Models\Media;
 use Oforge\Engine\Modules\Media\Services\MediaService;
@@ -92,7 +93,6 @@ class InsertionUpdaterService extends AbstractDatabaseAccess {
         return $result;
     }
 
-
     /**
      * @param Insertion $insertion
      *
@@ -104,6 +104,40 @@ class InsertionUpdaterService extends AbstractDatabaseAccess {
     public function updateInseration(Insertion $insertion) {
         $this->entityManager()->update($insertion, true);
     }
+
+    public function changeUser($insertionId, $userId) {
+        /** @var UserService $userService */
+        $userService = Oforge()->Services()->get('frontend.user.management.user');
+
+        /** @var Insertion $insertion */
+        $insertion = $this->repository()->find($insertionId);
+
+        $newUser = $userService->getUserById($userId);
+        $insertion->setUser($newUser);
+
+        $this->updateInseration($insertion);
+
+        Oforge()->Events()->trigger(Event::create(Insertion::class . '::updated', ["id" => $insertion->getId(), "data" => $_POST]));
+    }
+
+    public function changeUsers($sourceUserId, $targetUserId) {
+        /** @var Insertion[] $insertions */
+        $insertions = $this->repository()->findBy(["user" => $sourceUserId]);
+
+        foreach ($insertions as $insertion) {
+            $this->changeUser($insertion->getId(), $targetUserId);
+        }
+    }
+
+    public function deactiveInsertionsForUser($userId) {
+        /** @var Insertion[] $insertions */
+        $insertions = $this->repository()->findBy(["user" => $userId]);
+
+        foreach ($insertions as $insertion) {
+            $this->deactivate($insertion);
+        }
+    }
+
     /**
      * @param Insertion $insertion
      * @param array $data

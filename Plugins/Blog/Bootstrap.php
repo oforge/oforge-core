@@ -11,10 +11,13 @@ use Blog\Services\CommentService;
 use Blog\Services\PostService;
 use Blog\Services\RatingService;
 use Blog\Widgets\BlogOverviewWidget;
+use FrontendUserManagement\Models\User;
+use FrontendUserManagement\Services\UserService;
 use Oforge\Engine\Modules\AdminBackend\Core\Enums\DashboardWidgetPosition;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\BackendNavigationService;
 use Oforge\Engine\Modules\AdminBackend\Core\Services\DashboardWidgetsService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
+use Oforge\Engine\Modules\Core\Manager\Events\Event;
 use Oforge\Engine\Modules\Core\Models\Config\ConfigType;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
@@ -58,6 +61,22 @@ class Bootstrap extends AbstractBootstrap {
             'blog.post'     => PostService::class,
             'blog.rating'   => RatingService::class,
         ];
+    }
+
+    public function load() {
+        Oforge()->Events()->attach(User::class . '::delete', Event::SYNC, function (Event $event) {
+            $data = $event->getData();
+            /**
+             * @var  $commentService CommentService
+             */
+            $commentService = Oforge()->Services()->get('blog.comment');
+
+            /** @var UserService $userService */
+            $userService = Oforge()->Services()->get('frontend.user.management.user');
+
+            $user = $userService->getAnonymous();
+            $commentService->changeUsers($data["id"], $user);
+        });
     }
 
     /** @inheritDoc */

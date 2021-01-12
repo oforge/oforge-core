@@ -38,4 +38,17 @@ class InsertionFeedbackService extends AbstractDatabaseAccess {
             $this->entityManager()->create($feedback);
         }
     }
+
+    public function deleteForUser(int $userID) {
+        try {
+            $bookmarks = $this->repository()->findBy(["user" => $userID]);
+            foreach ($bookmarks as $bookmark) {
+                $this->entityManager()->remove($bookmark, false);
+            }
+        } catch (\Exception $exception) {
+            Oforge()->Logger()->logException($exception);
+
+            return false;
+        }
+    }
 }

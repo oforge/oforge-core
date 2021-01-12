@@ -2,7 +2,10 @@
 
 namespace SocialLogin;
 
+use FrontendUserManagement\Models\User;
+use FrontendUserManagement\Services\UserService;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractBootstrap;
+use Oforge\Engine\Modules\Core\Manager\Events\Event;
 use SocialLogin\Models\LoginProvider;
 use SocialLogin\Models\SocialLogin;
 use SocialLogin\Services\LoginConnectService;
@@ -42,4 +45,21 @@ class Bootstrap extends AbstractBootstrap {
         $this->order = 0;
     }
 
+    public function load() {
+        Oforge()->Events()->attach(User::class . '::delete', Event::SYNC, function (Event $event) {
+            $data = $event->getData();
+            /**
+             * @var  $loginService UserLoginService
+             */
+            $loginService = Oforge()->Services()->get('sociallogin.login');
+
+            /** @var UserService $userService */
+            $userService = Oforge()->Services()->get('frontend.user.management.user');
+
+            $user = $userService->getUserById($data["id"]);
+            if ($user != null) {
+                $loginService->deleteUser($user);
+            }
+        });
+    }
 }

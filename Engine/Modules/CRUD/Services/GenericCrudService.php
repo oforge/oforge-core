@@ -250,6 +250,8 @@ class GenericCrudService extends AbstractDatabaseAccess {
             throw new NotFoundException("Entity with id '$id' not found!");
         }
         $entityData = $entity->toArray(0);
+        Oforge()->Events()->trigger(Event::create($class . '::delete', $entityData));
+
         $this->entityManager()->remove($entity);
         $repository->clear();
         Oforge()->Events()->trigger(Event::create($class . '::deleted', $entityData));

@@ -138,7 +138,7 @@ class Comment extends AbstractModel {
      *
      * @return Comment
      */
-    protected function setAuthor(User $author) : Comment {
+    public function setAuthor(User $author) : Comment {
         $this->author = $author;
 
         return $this;

@@ -85,6 +85,7 @@ class ForgeEntityManager {
      */
     public function remove($entity, $flush = true) {
         $this->entityManager->remove($entity);
+        
         if ($flush) {
             $this->entityManager->flush($entity);
         }

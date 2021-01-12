@@ -228,4 +228,16 @@ class InsertionSearchBookmarkService extends AbstractDatabaseAccess {
         $this->entityManager()->update($bookmark);
     }
 
+    public function deleteBookmarksForUser(int $userID) {
+        try {
+            $bookmarks = $this->repository("search")->findBy(["user" => $userID]);
+            foreach ($bookmarks as $bookmark) {
+                $this->entityManager()->remove($bookmark, false);
+            }
+        } catch (\Exception $exception) {
+            Oforge()->Logger()->logException($exception);
+
+            return false;
+        }
+    }
 }

@@ -40,7 +40,6 @@ class InsertionBookmarkService extends AbstractDatabaseAccess {
      * @return bool
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
-     *
      */
     public function remove(int $id) : bool {
         $bookmark = $this->repository("user")->find($id);
@@ -81,7 +80,6 @@ class InsertionBookmarkService extends AbstractDatabaseAccess {
      * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function toggle(Insertion $insertion, User $user) : bool {
-
         $bookmark = $this->repository("user")->findOneBy(["insertion" => $insertion, "user" => $user]);
         if (isset($bookmark)) {
             return $this->remove($bookmark->getId());
@@ -125,15 +123,37 @@ class InsertionBookmarkService extends AbstractDatabaseAccess {
      * @throws \Doctrine\DBAL\DBALException
      */
     public function getUsersWithBookmarks() {
-        $query = 'SELECT DISTINCT b.insertion_user AS id ' .
-                 'FROM oforge_insertion_user_bookmarks AS b ' .
-                    'JOIN oforge_insertion AS i ' .
-                 'WHERE b.insertion_id = i.id AND ' .
-                    'i.active = 1 AND ' .
-                    'i.moderation = 1 AND ' .
-                    'i.deleted = 0;';
+        $query = 'SELECT DISTINCT b.insertion_user AS id ' . 'FROM oforge_insertion_user_bookmarks AS b ' . 'JOIN oforge_insertion AS i '
+                 . 'WHERE b.insertion_id = i.id AND ' . 'i.active = 1 AND ' . 'i.moderation = 1 AND ' . 'i.deleted = 0;';
 
         $sqlResult = $this->entityManager()->getEntityManager()->getConnection()->executeQuery($query);
+
         return array_column($sqlResult->fetchAll(), 'id');
+    }
+
+    public function deleteInserationBookmarks(int $insertionID) {
+        try {
+            $bookmarks = $this->repository("user")->findBy(["insertion" => $insertionID]);
+            foreach ($bookmarks as $bookmark) {
+                $this->entityManager()->remove($bookmark);
+            }
+        } catch (\Exception $exception) {
+            Oforge()->Logger()->logException($exception);
+
+            return false;
+        }
+    }
+
+    public function deleteBookmarksForUser(int $userID) {
+        try {
+            $bookmarks = $this->repository("user")->findBy(["user" => $userID]);
+            foreach ($bookmarks as $bookmark) {
+                $this->entityManager()->remove($bookmark, false);
+            }
+        } catch (\Exception $exception) {
+            Oforge()->Logger()->logException($exception);
+
+            return false;
+        }
     }
 }
