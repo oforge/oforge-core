@@ -43,6 +43,12 @@ class Insertion extends AbstractModel
 
     /**
      * @var Datetime
+     * @ORM\Column(name="real_created_at", type="datetime")
+     */
+    private $realCreatedAt;
+
+    /**
+     * @var Datetime
      * @ORM\Column(name="updated_at", type="datetime")
      */
     private $updatedAt;
@@ -154,6 +160,7 @@ class Insertion extends AbstractModel
     {
         $date = new \DateTime('now');
         $this->createdAt = $date;
+        $this->realCreatedAt = $date;
         $this->updatedAt = $date;
     }
 
@@ -225,6 +232,21 @@ class Insertion extends AbstractModel
     public function getCreatedAt(): ?DateTime
     {
         return $this->createdAt;
+    }
+
+    /**
+     * @param DateTime $createdAt
+     */
+    public function setCreatedAt(DateTime $createdAt) : void {
+        $this->createdAt = $createdAt;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getRealCreatedAt(): ?DateTime
+    {
+        return $this->realCreatedAt;
     }
 
     /**
@@ -506,4 +528,5 @@ class Insertion extends AbstractModel
         $this->deactivationCause = $deactivationCause;
         return $this;
     }
+
 }
