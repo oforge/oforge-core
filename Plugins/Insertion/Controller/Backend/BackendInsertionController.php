@@ -134,7 +134,19 @@ class BackendInsertionController extends BaseCrudController {
         [
             'name'  => 'createdAt',
             'type'  => CrudDataTypes::DATETIME,
-            'label' => ['key' => 'plugin_insertion_createdAt', 'default' => 'Erstellt'],
+            'label' => ['key' => 'plugin_insertion_createdAt_fake', 'default' => 'Falsches Erstelldatum'],
+            'crud'  => [
+                'index'  => 'readonly',
+                'view'   => 'readonly',
+                'create' => 'off',
+                'update' => 'readonly',
+                'delete' => 'readonly',
+            ],
+        ],# realCreatedAt
+        [
+            'name'  => 'realCreatedAt',
+            'type'  => CrudDataTypes::DATETIME,
+            'label' => ['key' => 'plugin_insertion_realCreatedAt', 'default' => 'Reales Erstelldatum'],
             'crud'  => [
                 'index'  => 'readonly',
                 'view'   => 'readonly',
