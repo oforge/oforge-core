@@ -90,10 +90,13 @@ class PedigreeService extends AbstractDatabaseAccess
 
     public function addAncestors(Array $names) {
         foreach ($names as $name) {
-            $ancestor = $this->repository('ancestor')->findBy(['name' => preg_replace('!\s+!', ' ', ltrim(rtrim($name)))]);
+            $trimName = preg_replace('!\s+!', ' ', ltrim(rtrim($name)));
+            $ancestor = $this->repository('ancestor')->findBy(['name' => $trimName]);
+
             if($ancestor == null) {
+
                 $ancestor = new Ancestor();
-                $ancestor->setName($name);
+                $ancestor->setName($trimName);
                 $this->entityManager()->create($ancestor);
             }
         }

@@ -39,7 +39,7 @@ class InsertionZipService extends AbstractDatabaseAccess {
          * @var APIRavenService $apiService
          */
         $apiService = Oforge()->Services()->get('apiraven');
-        $result = [];
+        $result     = [];
 
         try {
             $result = $apiService->get("https://nominatim.openstreetmap.org/search", ["postalcode" => $zip, "country" => $country, "format" => "json"]);
@@ -47,9 +47,9 @@ class InsertionZipService extends AbstractDatabaseAccess {
             Oforge()->Logger()->logException($e);
             // TODO: Send email?
         }
-        $entry  = null;
+        $entry = null;
 
-        if (!empty($result[0])) {
+        if (!empty($result[0]) && !empty($result[0]["lat"]) && !empty($result[0]["lon"])) {
             $entry = InsertionZipCoordinates::create(["zip" => $zip, "country" => $country, "lat" => $result[0]["lat"], "lng" => $result[0]["lon"]]);
             $this->entityManager()->create($entry);
         }
