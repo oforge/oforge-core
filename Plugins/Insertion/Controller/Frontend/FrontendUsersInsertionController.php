@@ -101,7 +101,20 @@ class FrontendUsersInsertionController extends SecureFrontendController {
      * @EndpointAction(path="/delete/{id}")
      */
     public function deleteAction(Request $request, Response $response, $args) {
-        return $this->modifyInsertion($request, $response, $args, 'delete');
+        /** @var $service InsertionService */
+        $service   = Oforge()->Services()->get("insertion");
+        $id        = $args["id"];
+        $insertion = $service->getInsertionById(intval($id));
+        Oforge()->View()->assign(['insertion' => $insertion->toArray(3, ['user' => ['*', '!id']])]);
+
+        if ($request->isPost()) {
+            /** @var Router $router */
+            $router = Oforge()->App()->getContainer()->get('router');
+            $url    = $router->pathFor('frontend_account_insertions');;
+
+            return $this->modifyInsertion($request, $response, $args, 'delete', $url);
+        }
+
     }
 
     /**
@@ -110,17 +123,17 @@ class FrontendUsersInsertionController extends SecureFrontendController {
      * @param $args
      *
      * @return Response
-     *
      * @throws ServiceNotFoundException
      * @EndpointAction(path="/video/{id}")
      */
-    public function deleteVideoAction(Request $request, Response $response, $args){
-        if($request->isDelete()) {
+    public function deleteVideoAction(Request $request, Response $response, $args) {
+        if ($request->isDelete()) {
             $videoId = $args['id'];
             /** @var InsertionUpdaterService $updaterService */
             $updaterService = Oforge()->Services()->get('insertion.updater');
             $updaterService->deleteInsertionMediaByContentId($videoId);
         }
+
         return $response;
     }
 
@@ -134,15 +147,14 @@ class FrontendUsersInsertionController extends SecureFrontendController {
      * @EndpointAction()
      */
     public function resetProfileImageAction(Request $request, Response $response) {
-
         /** @var UserDetailsService $userDetailService */
         $userDetailService = Oforge()->Services()->get('frontend.user.management.user.details');
 
         $userId = Oforge()->View()->get('current_user')['id'];
 
-        if(isset($userId)) {
+        if (isset($userId)) {
             $userDetail = $userDetailService->get($userId);
-            if(isset($userDetail)) {
+            if (isset($userDetail)) {
                 $userDetail->resetImage();
                 $userDetailService->entityManager()->update($userDetail);
             }
@@ -165,15 +177,14 @@ class FrontendUsersInsertionController extends SecureFrontendController {
      * @EndpointAction()
      */
     public function resetProfileBackgroundAction(Request $request, Response $response) {
-
-       /** @var InsertionProfileService $insertionProfileService */
+        /** @var InsertionProfileService $insertionProfileService */
         $insertionProfileService = Oforge()->Services()->get('insertion.profile');
 
         $userId = Oforge()->View()->get('current_user')['id'];
 
-        if(isset($userId)) {
+        if (isset($userId)) {
             $insertionProfile = $insertionProfileService->get($userId);
-            if(isset($insertionProfile)) {
+            if (isset($insertionProfile)) {
                 $insertionProfile->resetBackground();
                 $insertionProfileService->entityManager()->update($insertionProfile);
             }
@@ -234,7 +245,6 @@ class FrontendUsersInsertionController extends SecureFrontendController {
 
         return $this->modifyInsertion($request, $response, $args, 'disable');
     }
-
 
     /**
      * @param Request $request
@@ -335,11 +345,11 @@ class FrontendUsersInsertionController extends SecureFrontendController {
      * @EndpointAction(path="/toggle-bookmark/{insertionId:\d+}")
      */
     public function toggleBookmarkAction(Request $request, Response $response, $args) {
-        $id = (int)$args["insertionId"];
+        $id = (int) $args["insertionId"];
         /**
          * @var InsertionService $service
          */
-        $service   = Oforge()->Services()->get("insertion");
+        $service = Oforge()->Services()->get("insertion");
         /** @var Insertion $insertion */
         $insertion = $service->getInsertionById($id);
 
@@ -411,17 +421,17 @@ class FrontendUsersInsertionController extends SecureFrontendController {
             if (isset($filterData)) {
                 $params = json_decode($filterData, true);
             }
-            if($params == null) {
+            if ($params == null) {
                 $params = [];
             }
-            if($bookmarkService->hasBookmark($id, $user->getId(), $params)) {
+            if ($bookmarkService->hasBookmark($id, $user->getId(), $params)) {
                 $bookmarkService->toggle($insertionType, $user, $params);
             } else {
                 /** @var UrlService $urlService */
                 $urlService = Oforge()->Services()->get('url');
-                $url = $urlService->getUrl('frontend_account_insertions_saveSearchBookmark');
+                $url        = $urlService->getUrl('frontend_account_insertions_saveSearchBookmark');
 
-                if(isset($_SESSION['saveBookmark'])) {
+                if (isset($_SESSION['saveBookmark'])) {
                     unset($_SESSION['saveBookmark']);
                 }
 
@@ -461,19 +471,19 @@ class FrontendUsersInsertionController extends SecureFrontendController {
         $user        = $userService->getUser();
 
         // Update Notification interval block
-        if(isset($args['id']) && is_numeric($args['id'])) {
+        if (isset($args['id']) && is_numeric($args['id'])) {
             /** @var $bookmarkService InsertionSearchBookmarkService */
             /** @var InsertionUserSearchBookmark $bookmark */
             $bookmarkService = Oforge()->Services()->get("insertion.search.bookmark");
-            $bookmark = $bookmarkService->get($args['id']);
+            $bookmark        = $bookmarkService->get($args['id']);
 
-            if(is_null($bookmark) || $bookmark->getUser()->getId() !== $user->getId()) {
+            if (is_null($bookmark) || $bookmark->getUser()->getId() !== $user->getId()) {
                 return $response->withRedirect("/404", 301);
             }
 
-            if($request->isPost()) {
+            if ($request->isPost()) {
                 $options = [
-                    'name' => $request->getParsedBodyParam('search_title'),
+                    'name'     => $request->getParsedBodyParam('search_title'),
                     'interval' => $request->getParsedBodyParam('email_interval'),
                 ];
                 $bookmarkService->update($bookmark->getId(), $options);
@@ -494,27 +504,27 @@ class FrontendUsersInsertionController extends SecureFrontendController {
         }
 
         // Create new Block
-        if(!isset($_SESSION['saveBookmark']) ||
-           !isset($_SESSION['saveBookmark']['params']) ||
-           !isset($_SESSION['saveBookmark']['typeId']) ||
-           is_null($user)
-        ) {
+        if (!isset($_SESSION['saveBookmark'])
+            || !isset($_SESSION['saveBookmark']['params'])
+            || !isset($_SESSION['saveBookmark']['typeId'])
+            || is_null($user)) {
             return $response->withRedirect("/404", 301);
         }
 
-        $params = $_SESSION['saveBookmark']['params'];
+        $params        = $_SESSION['saveBookmark']['params'];
         $insertionType = $_SESSION['saveBookmark']['typeId'];
 
-        if($request->isPost()) {
+        if ($request->isPost()) {
             $options = [
-                'name' => $request->getParsedBodyParam('search_title'),
+                'name'     => $request->getParsedBodyParam('search_title'),
                 'interval' => $request->getParsedBodyParam('email_interval'),
             ];
 
-            if(is_null($options['name']) || is_null($options['interval'])) {
+            if (is_null($options['name']) || is_null($options['interval'])) {
                 /** @var UrlService $urlService */
                 $urlService = Oforge()->Services()->get('url');
-                $url = $urlService->getUrl('frontend_account_insertions_saveSearchBookmark');
+                $url        = $urlService->getUrl('frontend_account_insertions_saveSearchBookmark');
+
                 return $response->withRedirect($url);
             }
 
@@ -559,11 +569,10 @@ class FrontendUsersInsertionController extends SecureFrontendController {
 
         $url = $router->pathFor('frontend_account_insertions_searchBookmarks');
 
-
         /** @var InsertionSearchBookmarkService $searchBookmarkService */
         $searchBookmarkService = Oforge()->Services()->get('insertion.search.bookmark');
         /** @var InsertionUserSearchBookmark $searchBookmark */
-        $searchBookmark        = $searchBookmarkService->get($id);
+        $searchBookmark = $searchBookmarkService->get($id);
 
         $user = Oforge()->View()->get('current_user');
 
@@ -576,6 +585,7 @@ class FrontendUsersInsertionController extends SecureFrontendController {
                 'en' => 'Bookmark entry does not exist.',
                 'de' => 'Sucheintrag existiert nicht.',
             ]));
+
             return $response->withRedirect($url, 301);
         }
         if ($user['id'] != $searchBookmark->getUser()->getId()) {
@@ -583,6 +593,7 @@ class FrontendUsersInsertionController extends SecureFrontendController {
                 'en' => 'Permission denied.',
                 'de' => 'Keine Befugnis.',
             ]));
+
             return $response->withRedirect($url, 301);
         }
 
@@ -613,7 +624,7 @@ class FrontendUsersInsertionController extends SecureFrontendController {
         $bookmarkService = Oforge()->Services()->get("insertion.bookmark");
         $id              = $args["id"];
 
-        if(!$bookmarkService->remove($id)) {
+        if (!$bookmarkService->remove($id)) {
             return $response->withRedirect('/404');
         }
 
@@ -710,7 +721,7 @@ class FrontendUsersInsertionController extends SecureFrontendController {
             'removeBookmarkAction',
             'removeSearchBookmarkAction',
             'resetProfileImageAction',
-            'resetProfileBackgroundAction'
+            'resetProfileBackgroundAction',
         ]);
     }
 
@@ -724,10 +735,13 @@ class FrontendUsersInsertionController extends SecureFrontendController {
      * @throws ORMException
      * @throws ServiceNotFoundException
      */
-    private function modifyInsertion(Request $request, Response $response, $args, string $action) {
+    private function modifyInsertion(Request $request, Response $response, $args, string $action, string $redirectUrl = null) {
         /** @var $service InsertionService */
         $service   = Oforge()->Services()->get("insertion");
-        $id = $args["id"];
+        $id        = $args["id"];
+        /**
+         * @var $insertion Insertion
+         */
         $insertion = $service->getInsertionById(intval($id));
 
         /**
@@ -754,6 +768,9 @@ class FrontendUsersInsertionController extends SecureFrontendController {
                 $updateService->deactivate($insertion);
                 break;
             case "delete":
+                $insertion->setDeactivationCause($request->getParsedBody()["deletecause"]);
+                $updateService->updateInseration($insertion);
+
                 $updateService->delete($insertion);
                 break;
             case "activate":
@@ -766,7 +783,10 @@ class FrontendUsersInsertionController extends SecureFrontendController {
         /** @var Router $router */
         $router = Oforge()->App()->getContainer()->get('router');
         $url    = $router->pathFor('frontend_account_insertions');;
-        if (isset($refererHeader) && sizeof($refererHeader) > 0) {
+
+        if (isset($redirectUrl)) {
+            $url = $redirectUrl;
+        } else if (isset($refererHeader) && sizeof($refererHeader) > 0) {
             $url = $refererHeader[0];
         }
 

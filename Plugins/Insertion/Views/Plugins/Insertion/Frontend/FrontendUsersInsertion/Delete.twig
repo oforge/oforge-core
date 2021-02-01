@@ -1,0 +1,44 @@
+{% extends "@parent/Frontend/Layout.twig" %}
+
+{% block content %}
+    <div class="content content--insertion flex">
+        <div class="panel panel--support">
+
+            <form method="POST">
+                <div class="form__control">
+                    <h2>{{ i18n('insertion_delete_headline', {de: 'Wieso möchtest du das Inserat löschen?', en: 'Why do you want to delete this insertion?'}) }}</h2>
+                </div>
+                <div class="form__control">
+
+                    <label class="form__label"
+                           for="message">{{ i18n('insertion_delete_choice_label', {de: 'War das Inserat erfolgreich?', en: 'Was the insertion successful?'}) }}</label>
+                    <!-- snippify -->
+                    <div class="form__input form__input--select">
+                        <select id="deletecause" name="deletecause" class="form__input form__input--no-input">
+                            <option value="" selected="" disabled="">{{ i18n('insertion_delete_please_select', {
+                                    en: 'Please select',
+                                    de: 'Bitte auswählen',
+                                }) }}</option>
+                            <option value="sold">{{ i18n('insertion_delete_sold', {
+                                    en: 'Yes. Insertion succesful sold',
+                                    de: 'Ja. Inserat erfolgreich vermittelt',
+                                }) }}</option>
+                            <option value="not_sold">{{ i18n('insertion_delete_not_sold', {
+                                    en: 'No. Insertion not succesful sold',
+                                    de: 'Nein. Inserat nicht vermittelt',
+                                }) }}</option>
+                            <option value="not_specified">{{ i18n('insertion_delete_not_specified', {
+                                    de: 'Keine Angabe',
+                                    en: 'No answer',
+                                }) }}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form__control">
+                    <input type="submit" class="button button--primary" value="{{ i18n('delete') }}">
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock content %}
