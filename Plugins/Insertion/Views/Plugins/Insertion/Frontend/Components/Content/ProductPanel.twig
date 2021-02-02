@@ -94,7 +94,36 @@
                 {% block attributes__bottom %}
                     <div class="product__attributes product__attributes--bottom">
                         {% for topvalue in item.topvalues|slice(3) %}
-                            {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
+                            {# special case: for horses, foles and riding participations we show zip-city instead of horse name #}
+                            {% if item.insertionType.name == 'foal' or item.insertionType.name == 'horse' or item.insertionType.name == 'riding_participation' %}
+                                {% if topvalue.name == 'horse_name' %}
+                                    <div class="product__attribute attribute--single">
+                                        <span class="product__label">{{ i18n('insertion_location', {
+                                                de: 'PLZ/Ort',
+                                                en: 'ZIP/City'
+                                            }) }}</span>
+                                        <span class="product__value">
+                                            <span class="main--value">{{ item.contact.zip }}/{{ item.contact.city }}</span>
+                                        </span>
+                                    </div>
+                                {% else %}
+                                    {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
+                                {% endif %}
+                            {% else %}
+                                {% include 'Plugins/Insertion/Frontend/Components/Content/ProductAttribute.twig' with {topvalue: topvalue } %}
+                            {% endif %}
+                            {# special case: for classifieds, show zip-city #}
+                            {% if item.insertionType.name == 'classifieds' %}
+                                <div class="product__attribute attribute--single">
+                                        <span class="product__label">{{ i18n('insertion_location', {
+                                                de: 'PLZ/Ort',
+                                                en: 'ZIP/City'
+                                            }) }}</span>
+                                    <span class="product__value">
+                                            <span class="main--value">{{ item.contact.zip }}/{{ item.contact.city }}</span>
+                                        </span>
+                                </div>
+                            {% endif %}
                         {% endfor %}
                     </div>
                 {% endblock attributes__bottom %}
