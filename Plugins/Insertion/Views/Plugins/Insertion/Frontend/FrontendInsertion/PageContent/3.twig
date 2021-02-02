@@ -37,7 +37,7 @@
                            name="contact_name"
                            class="form__input form-control"
                            value="{% if data['contact_name'] %}{{ data['contact_name'] }}{% elseif lastContact.name %}{{ lastContact.name }}{% endif %}"
-                           placeholder="{{ i18n('name') }}"/>
+                           placeholder="{{ i18n('name') }}" />
                 </div>
                 <div class="form__control">
                     <h3 class="form__sub-title">{{ i18n('contact_data') }}</h3>
@@ -45,7 +45,7 @@
                            name="contact_email"
                            class="form__input form-control"
                            value="{% if data['contact_email'] %}{{ data['contact_email'] }}{% elseif lastContact.email %}{{ lastContact.email }}{% endif %}"
-                           placeholder="{{ i18n('email') }}"/>
+                           placeholder="{{ i18n('email') }}" />
                 </div>
                 <div class="form__control">
                     <input type="tel"
@@ -62,7 +62,7 @@
                                required
                                class="form__input form-control"
                                value="{% if data['contact_zip'] %}{{ data['contact_zip'] }}{% elseif lastContact.zip %}{{ lastContact.zip }}{% endif %}"
-                               placeholder="{{ i18n('zip') }}"/>
+                               placeholder="{{ i18n('zip') }}" />
                     </div>
                     <div class="column column--two-third">
                         <input type="text"
@@ -70,7 +70,7 @@
                                required
                                class="form__input form-control"
                                value="{% if data['contact_city'] %}{{ data['contact_city'] }}{% elseif lastContact.city %}{{ lastContact.city }}{% endif %}"
-                               placeholder="{{ i18n('city') }}"/>
+                               placeholder="{{ i18n('city') }}" />
                     </div>
                 </div>
 
@@ -100,22 +100,25 @@
                 </div>
                 <div class="form__control">
                     <label class="form__label form__label--checkbox">
-                        <input type="hidden" value="off" name="contact_visible"/>
+                        <input type="hidden" value="off" name="contact_visible" />
                         <input type="checkbox"
                                name="contact_visible"
                                {% if data['contact_visible'] == 'on' %}checked="checked"
                                {% elseif lastContact.visible %}checked="checked"{% endif %}
-                               class="form__input form__input--checkbox form__input--checkbox-small"/>
+                               class="form__input form__input--checkbox form__input--checkbox-small" />
                         {{ i18n('contact_data_visible', 'My contact data should be visible for registered users only.') }}
                     </label>
                 </div>
             </div>
 
         </div>
+
+
         <div class="form-controls">
             <div class="attribute-group">
-                <label class="title title--attribute-group" for="price-type">{{ i18n("price_type") }} <span
-                        class="required">*</span></label>
+                <label class="title title--attribute-group" for="price-type">
+                    {{ i18n("price_type") }}
+                    <span class="required">*</span></label>
                 <div class="form__input form__input--select">
                     <select class="form__input form__input--no-input"
                             name="price_type"
@@ -141,9 +144,13 @@
                         {% endif %}
                     </select>
                 </div>
+
                 <label for="price"
-                       class="title title--attribute-group">{{ i18n('price_' ~ type.name, i18n('price')) }} <span
-                        class="required">*</span></label>
+                       class="title title--attribute-group">{{ i18n('price_' ~ type.name, i18n('price')) }}
+                    <span class="required">*</span>
+
+                </label>
+
                 <div class="form__control is-hidden">
                     <label for="price_min"
                            class="form__input form__input--inside-label">
@@ -153,7 +160,7 @@
                                max="{% if type.maxPrice %}{{ type.maxPrice }}{% else %}2000000{% endif %}"
                                value="{{ data['price_min'] }}"
                                class="form__input"
-                               placeholder="{{ i18n('from') }}"/>
+                               placeholder="{{ i18n('from') }}" />
                         {% if i18nExists('unit_price') %}
                             <span class="input__unit">
                         {{ i18n('unit_price') }}
@@ -185,7 +192,7 @@
                                value="{{ data['price'] is empty ? '0' : data['price'] }}"
                                class="form__input"
                                placeholder="{{ i18n('price') }}"
-                               required/>
+                               required />
                         {% if i18nExists('unit_price') %}
                             <span class="input__unit">
                         {{ i18n('unit_price') }}
@@ -196,7 +203,7 @@
 
                 <div class="form__control form__control--checkbox">
                     <label for="tax" class="form__label form__label--checkbox"> {{ i18n('tax') }}</label>
-                    <input type="hidden" name="tax" value="off"/>
+                    <input type="hidden" name="tax" value="off" />
                     <input type="checkbox"
                            class="form__input form__input--checkbox"
                            name="tax"
@@ -221,6 +228,11 @@
             {% endblock page_content__price %}
         </div>
     </div>
+    <span class="required" style="margin-bottom: 1.2rem">{{ i18n('required_inputs') }}</span>
+    {# Include custom hint with pricing-table (cannot be done via CMS as of now (01/2021) #}
+    <div style="margin: 0.8rem 0">
+        {% include 'Plugins/Insertion/Frontend/Components/CustomContent/PriceCategories.twig' %}
+    </div>
 
-    <span class="required">{{ i18n('required_inputs') }}</span>
+
 {% endblock page_content %}
