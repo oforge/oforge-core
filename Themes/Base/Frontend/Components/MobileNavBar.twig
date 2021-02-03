@@ -2,7 +2,10 @@
     <div class="nav-bar nav-bar--mobile">
         {% if back_link is defined %}
             {% block back_link %}
-                <a href="{{ url(back_link) }}" class="back-link">
+                <a href="{{ url(back_link) }}" class="back-link"
+                   title="{{ i18n('title_back_link', {
+                       de: 'zurück'
+                   }) }}">
                     <svg class="icon icon--light icon--turn-left">
                         <use xlink:href="#arrow"></use>
                     </svg>

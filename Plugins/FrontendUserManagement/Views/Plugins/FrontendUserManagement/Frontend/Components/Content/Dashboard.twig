@@ -7,7 +7,7 @@
                 {% for nav_item in sidebar_navigation %}
                     {% if nav_item.icon %}
                         <div class="box">
-                            <a href="{{ url(nav_item.path) }}" class="box__content flex flex--center flex--justify">
+                            <a href="{{ url(nav_item.path) }}" class="box__content flex flex--center flex--justify" title="{{ i18n(nav_item.name) }}">
                                 <svg class="icon icon--light icon--{{ nav_item.icon }}">
                                     <use xlink:href="#{{ nav_item.icon }}"></use>
                                 </svg>

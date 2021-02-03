@@ -36,7 +36,9 @@
                         <h3 class="title title--chat">{{ partner.name }}</h3>
                     {% endblock messenger_header %}
 
-                    <a href="{{ url('frontend_account_messages', {id: activeConversation.id}) }}">
+                    <a href="{{ url('frontend_account_messages', {id: activeConversation.id}) }}" title="{{ i18n('title_chat_refresh', {
+                        de: 'aktualisieren'
+                    }) }}">
                         <svg class="icon">
                             <use xlink:href="#circuit"></use>
                         </svg>
