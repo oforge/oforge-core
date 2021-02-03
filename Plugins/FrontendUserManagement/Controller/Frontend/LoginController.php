@@ -183,4 +183,21 @@ class LoginController extends AbstractController {
 
         return $response->withRedirect($uri, 302);
     }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     *
+     * @return Response
+     * @EndpointAction()
+     */
+    public function requireLoginAction(Request $request, Response $response) : Response {
+        $referrerHeader = $request->getHeader('HTTP_REFERER');
+
+        $router = Oforge()->App()->getContainer()->get('router');
+        $uri    = $router->pathFor('frontend_login');
+
+        $_SESSION['login_redirect_url'] = array_shift($referrerHeader);
+        return $response->withRedirect($uri);
+    }
 }

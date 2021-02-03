@@ -17,20 +17,32 @@
                 {% endfor %}
             </select>
         </div>
-        <form method="post"
-              class="form form--sort"
-              action="{{ url('frontend_account_insertions_toggleSearchBookmark') }}"
-              enctype="multipart/form-data">
-            <input type="hidden" name="filter" value="{{ search.filter|json_encode() }}" />
-            <input type="hidden" name="type_id" value="{{ typeId }}" />
-            <input type="submit"
-                {% if not user_logged_in %}
-                    {# don't submit if the user is not logged in #}
-                    title="{{ i18n('need_user_login') }}"
-                    disabled="disabled"
-                {% endif %}
-                   class="button button--large button--secondary button--save-result {% if not user_logged_in %}disabled{% endif %}"
-                   value="{% if hasSearchBookmark(typeId, search.filter) %}{{ i18n('remove_from_search_list', 'Remove search from search list') }}{% else %}{{ i18n('save_search', 'Save search') }}{% endif %}" />
-        </form>
+        {% if not user_logged_in %}
+            <form method="get"
+                  class="form form--sort"
+                  action="{{ url('frontend_login_requireLogin') }}"
+                  enctype="multipart/form-data">
+                <input type="hidden" name="filter" value="{{ search.filter|json_encode() }}" />
+                <input type="hidden" name="type_id" value="{{ typeId }}" />
+                <input type="submit"
+
+                       class="button button--large button--secondary button--save-result"
+                       value="{{ i18n('login_and_safe_bookmark', 'Einloggen und Suche speichern') }}" />
+            </form>
+        {% else %}
+            <form method="post"
+                  class="form form--sort"
+                  action="{{ url('frontend_account_insertions_toggleSearchBookmark') }}"
+                  enctype="multipart/form-data">
+                <input type="hidden" name="filter" value="{{ search.filter|json_encode() }}" />
+                <input type="hidden" name="type_id" value="{{ typeId }}" />
+                <input type="submit"
+                    {% if not user_logged_in %}
+
+                    {% endif %}
+                       class="button button--large button--secondary button--save-result"
+                       value="{% if hasSearchBookmark(typeId, search.filter) %}{{ i18n('remove_from_search_list', 'Remove search from search list') }}{% else %}{{ i18n('save_search', 'Save search') }}{% endif %}" />
+            </form>
+        {% endif %}
     </div>
 {% endblock product_list_sort %}
