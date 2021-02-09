@@ -93,6 +93,16 @@
         }
     }
 
+    .renew__insertion {
+        margin-top: .4rem;
+        order: 4;
+        width: 100%;
+
+        a:hover {
+            color: $color-secondary;
+        }
+    }
+
     .product__actions {
         order: 3;
         width: 100%;
@@ -106,8 +116,14 @@
             justify-content: space-between;
             font-size: $font-size-6;
             font-weight: 600;
-            line-height: 3rem;
+            line-height: 2rem;
             width: 100%;
+            padding: 0.6rem 0.8rem;
+
+            .icon {
+                width: 2rem;
+                height: 2rem;
+            }
         }
 
         .edit, .disable, .activate, .delete {

@@ -43,7 +43,7 @@ class Insertion extends AbstractModel
 
     /**
      * @var Datetime
-     * @ORM\Column(name="real_created_at", type="datetime")
+     * @ORM\Column(name="real_created_at", type="datetime", nullable=true)
      */
     private $realCreatedAt;
 
