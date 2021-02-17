@@ -27,6 +27,11 @@
         color: $text-light;
     }
 
+    &.button--tertiary {
+        background: $color-light;
+        color: $color-secondary;
+    }
+
     &.button--ghost {
         border: 1px solid $color-primary;
         background: $color-light;
