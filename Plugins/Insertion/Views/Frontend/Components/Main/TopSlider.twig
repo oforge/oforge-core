@@ -3,7 +3,7 @@
 {% block top_slider %}
     {% set slider = getInsertionSliderContent() %}
     {% if slider['insertions']|length > 0 %}
-        <div class="slider slider--top">
+        <div class="slider slider--top Checkifthiswillbedesplayed">
             {% for insertion in slider.insertions %}
                 <a href="{{ url('insertions_detail', {id: insertion.id}) }}" class="slider__link">
                     <div class="slide {% if insertion.media is not defined or insertion.media|length < 1 or insertion.media[0].content is not defined %}has-placeholder-image{% endif %}">
