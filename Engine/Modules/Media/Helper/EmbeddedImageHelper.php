@@ -37,38 +37,35 @@ class EmbeddedImageHelper
         //     [0] => <img class="asd" src="/var/public/images/path" id=asd>
         //     [1] => <img class="asd" src="
         //     [2] =>  class="asd"
-        //     [3] => "
-        //     [4] => var/public/images/path
-        //     [5] => " id=asd>
-        //     [6] => "
-        //     [7] =>  id=asd
+        //     [3] => var/public/images/path
+        //     [4] => " id=asd>
+        //     [5] =>  id=asd
         // )
         $newText = preg_replace_callback(
-            '/(<img(.*?)src=([\'"]))(\/var\/public\/images\/.*?)(([\'"])(.*?)\/?>)/m',
+            '/(<img(.*?)src=[\'"])(\/var\/public\/images\/.*?)([\'"](.*?)\/?>)/m',
             function (array $matches) use ($size) {
-                $imagePath  = trim($matches[4]);
-                $attributes = rtrim(' ' . trim($matches[2]) . ' ' . trim($matches[7]));
-                $quoteStart = trim($matches[3]);
-                $quoteEnd   = trim($matches[6]);
+                $imagePath   = trim($matches[3]);
+                $attributes  = rtrim(' ' . trim($matches[2]) . ' ' . trim($matches[5]));
+                $attributes = preg_replace('/(.*?class=[\'"])(.*?)([\'"].*?)/', '$1$2 lazy$3', $attributes) ?? $attributes;
 
                 $imagePaths = ImageHelper::compressSingle($imagePath, $size);
                 if ($imagePaths === null) {
                     return $matches[0];
                 }
                 if (is_array($imagePaths)) {
-                    $sources = '';
+                    $sources       = '';
                     $minBreakpoint = 999999999;
                     foreach ($imagePaths as $breakpoint => $url) {
                         if (is_numeric($breakpoint)) {
                             $minBreakpoint = min($minBreakpoint, $breakpoint);
                         }
-                        $sources .= '<source srcset=' . $quoteStart . $url . $quoteEnd . ' media=' . $quoteStart . '(min-width: ' . $breakpoint . 'px)' . $quoteEnd . '/>';
+                        $sources .= '<source data-srcset="' . $url . '" media="' . '(min-width: ' . $breakpoint . 'px)' . '"/>';
                     }
-                    $sources .= '<img src=' . $quoteStart . $imagePaths[$minBreakpoint] . $quoteEnd . '/>';
+                    $sources .= '<img class="lazy" data-src="' . $imagePaths[$minBreakpoint] . '"/>';
 
                     return '<picture' . $attributes . '>' . $sources . '</picture>';
                 } else {
-                    return '<img' . $attributes . ' src=' . $quoteStart . $imagePaths . $quoteEnd . '/>';
+                    return '<img' . $attributes . ' data-src="' . $imagePaths . '"/>';
                 }
             },
             $text
