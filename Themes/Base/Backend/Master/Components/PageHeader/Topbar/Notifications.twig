@@ -1,27 +1,27 @@
 <!-- Notifications Menu -->
-
+{% set backend_notifications = backend_notifications() %}
 <!-- Menu toggle button -->
 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
     <i class="fa fa-bell-o"></i>
-    {% if backend_notifications()|length > 0 %}
-        <span class="label label-warning">{{ backend_notifications()|length }}</span>
+    {% if backend_notifications|length > 0 %}
+        <span class="label label-danger">{{ backend_notifications|length }}</span>
     {% endif %}
 </a>
 
 <ul class="dropdown-menu">
-    <li class="header">You have {{ backend_notifications()|length }} notifications</li>
-    {% for notification in backend_notifications() %}
+    <li class="header">You have {{ backend_notifications|length }} notifications</li>
+    {% for notification in backend_notifications %}
         <li>
-            <!-- Inner Menu: contains the notifications -->
             <ul class="menu">
-                <li><!-- start notification -->
-                    <a href="{{ url('backend_notifications', {id: notification.id}) }}">
-                        <i class="fa fa-users text-aqua"></i> {{ notification.message }}
-                    </a>
+                <li>
+                    {% block notification %}
+                        <a href="{{ url('backend_notifications', {id: notification.id}) }}">
+                            <i class="fa fa-users text-aqua"></i> {{ notification.message }}
+                        </a>
+                    {% endblock notification %}
                 </li>
-                <!-- end notification -->
             </ul>
         </li>
     {% endfor %}
-    <li class="footer"><a href="#">View all</a></li>
+    {# <li class="footer"><a href="#">View all</a></li> #}
 </ul>

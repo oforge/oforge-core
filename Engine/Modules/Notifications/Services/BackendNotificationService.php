@@ -1,112 +1,138 @@
 <?php
+/** @noinspection PhpHierarchyChecksInspection */
 
 namespace Oforge\Engine\Modules\Notifications\Services;
 
+use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\Notifications\Abstracts\AbstractNotificationService;
 use Oforge\Engine\Modules\Notifications\Models\BackendNotification;
 
-class BackendNotificationService extends AbstractNotificationService {
+class BackendNotificationService extends AbstractNotificationService
+{
 
-    public function __construct() {
-        parent::__construct(["default" => BackendNotification::class]);
+    public function __construct()
+    {
+        parent::__construct(BackendNotification::class);
     }
 
+    /**
+     * @param int $id
+     *
+     * @return BackendNotification|null
+     */
+    public function getNotificationById(int $id) : ?BackendNotification
+    {
+        /** @var BackendNotification|null $entity */
+        $entity = $this->repository()->find($id);
+
+        return $entity;
+    }
 
     /**
-     * @param $id
+     * @param int $userId
+     * @param string $type
+     * @param string $message
+     * @param string|null $link
      *
-     * @return object|null
+     * @throws ORMException
      */
-    public function getNotificationById($id) {
-        return $this->repository()->find($id);
+    public function addNotification(int $userId, string $type, string $message, ?string $link = null)
+    {
+        $link = empty($link) ? null : $link;
+        $this->entityManager()->create(
+            BackendNotification::create(
+                [
+                    'userId'  => $userId,
+                    'type'    => $type,
+                    'message' => $message,
+                    'link'    => $link,
+                ]
+            )
+        );
+    }
+
+    /**
+     * @param int $role
+     * @param string $type
+     * @param string $message
+     * @param string|null $link
+     *
+     * @throws ORMException
+     */
+    public function addRoleNotification(int $role, string $type, string $message, ?string $link = null)
+    {
+        $link = empty($link) ? null : $link;
+        $this->entityManager()->create(
+            BackendNotification::create(
+                [
+                    'role'    => $role,
+                    'type'    => $type,
+                    'message' => $message,
+                    'link'    => $link,
+                ]
+            )
+        );
+    }
+
+    /**
+     * @param $role
+     *
+     * @return BackendNotification[]
+     */
+    public function getRoleNotifications($role) : array
+    {
+        /** @var BackendNotification[] $entities */
+        $entities = $this->repository()->findBy(['role' => $role]);
+
+        return $entities;
     }
 
     /**
      * Returns array of user
      *
-     * @param $userId
+     * @param int $userId
      * @param string $selector
      *
-     * @return array|object[]
+     * @return BackendNotification[]
      */
-    public function getNotifications($userId, $selector = AbstractNotificationService::ALL) {
+    public function getUserNotifications(int $userId, string $selector = AbstractNotificationService::ALL) : array
+    {
         switch ($selector) {
             case AbstractNotificationService::ALL:
-                return $this->repository()->findBy(['userId' => $userId]);
+                $criteria = ['userId' => $userId];
                 break;
             case AbstractNotificationService::SEEN;
-                return $this->repository()->findBy(['userId' => $userId, 'seen' => 1]);
+                $criteria = ['userId' => $userId, 'seen' => true];
                 break;
             case AbstractNotificationService::UNSEEN:
-                return $this->repository()->findBy(['userId' => $userId, 'seen' => 0]);
-                break;
             default:
-                return null;
+                $criteria = ['userId' => $userId, 'seen' => false];
         }
+        /** @var BackendNotification[] $entities */
+        $entities = $this->repository()->findBy($criteria);
+
+        return $entities;
     }
 
     /**
-     * @param $userId
-     * @param $type
-     * @param $message
-     * @param $link
+     * @param int $id
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @return bool
      */
-    public function addNotification($userId, $type, $message, $link = "") {
-        $notification = new BackendNotification();
+    public function markAsSeen(int $id) : bool
+    {
+        try {
+            $notification = $this->repository()->find($id);
+            if (isset($notification)) {
+                $notification->setSeen(true);
+                $this->entityManager()->update($notification);
 
-        $notification->setUserId($userId);
-        $notification->setType($type);
-        $notification->setMessage($message);
-        
-        if (is_string($link) && !empty($link)) {
-            $notification->setLink($link);
+                return true;
+            }
+        } catch (ORMException $exception) {
+            Oforge()->Logger()->logException($exception);
         }
 
-        $this->entityManager()->create($notification);
-    }
-
-    /**
-     * @param $id
-     *
-     * @throws \Doctrine\ORM\ORMException
-     */
-    public function markAsSeen($id) {
-        $notification = $this->repository()->find($id);
-
-        $notification->setSeen(true);
-
-        $this->entityManager()->update($notification);
-    }
-
-    /**
-     * @param $role
-     *
-     * @return array|object[]
-     */
-    public function getRoleNotifications($role) {
-        return $this->repository()->findBy(['role' => $role]);
-    }
-
-    /**
-     * @param $role
-     * @param $type
-     * @param $message
-     * @param $link
-     *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function addRoleNotification($role, $type, $message, $link) {
-        $notification = new BackendNotification();
-
-        $notification->setRole($role);
-        $notification->setType($type);
-        $notification->setMessage($message);
-        $notification->setLink($link);
-
-        $this->entityManager()->create($notification);
+        return false;
     }
 }
