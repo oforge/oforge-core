@@ -51,19 +51,24 @@ class EmbeddedImageHelper
                 $quoteStart = trim($matches[3]);
                 $quoteEnd   = trim($matches[6]);
 
-                $imagePaths = ImageHelper::resolveSingle($imagePath, $size);
+                $imagePaths = ImageHelper::compressSingle($imagePath, $size);
                 if ($imagePaths === null) {
                     return $matches[0];
                 }
                 if (is_array($imagePaths)) {
                     $sources = '';
+                    $minBreakpoint = 999999999;
                     foreach ($imagePaths as $breakpoint => $url) {
-                        $sources .= "<source srcset=" . $quoteStart . $url . $quoteEnd . " media=" . $quoteStart . "(min-width: " . $breakpoint . "px)" . $quoteEnd . "/>";
+                        if (is_numeric($breakpoint)) {
+                            $minBreakpoint = min($minBreakpoint, $breakpoint);
+                        }
+                        $sources .= '<source srcset=' . $quoteStart . $url . $quoteEnd . ' media=' . $quoteStart . '(min-width: ' . $breakpoint . 'px)' . $quoteEnd . '/>';
                     }
+                    $sources .= '<img src=' . $quoteStart . $imagePaths[$minBreakpoint] . $quoteEnd . '/>';
 
-                    return "<picture$attributes>$sources</picture>";
+                    return '<picture' . $attributes . '>' . $sources . '</picture>';
                 } else {
-                    return "<img" . $attributes . " src=" . $quoteStart . $imagePaths . $quoteEnd . "/>";
+                    return '<img' . $attributes . ' src=' . $quoteStart . $imagePaths . $quoteEnd . '/>';
                 }
             },
             $text

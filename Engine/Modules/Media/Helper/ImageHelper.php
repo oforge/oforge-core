@@ -23,12 +23,12 @@ class ImageHelper
     {
     }
 
-    public static function resolveInArray(array &$data, string $key, $size = 0, bool $addOriginalImageUrl = ImageHelper::DEFAULT_ADD_ORIGINAL_IMAGE_URL) : void
+    public static function compressInArray(array &$data, string $key, $size = 0, bool $addOriginalImageUrl = ImageHelper::DEFAULT_ADD_ORIGINAL_IMAGE_URL) : void
     {
         if ( !isset($data[$key]) || empty($data[$key])) {
             return;
         }
-        $result = self::resolveSingle($data[$key], $size, $addOriginalImageUrl);
+        $result = self::compressSingle($data[$key], $size, $addOriginalImageUrl);
         if ($result !== null) {
             $data[$key] = $result;
         }
@@ -41,7 +41,7 @@ class ImageHelper
      *
      * @return array|string|null Returns null on error, full url string for int $size, or responsive array.
      */
-    public static function resolveSingle($idOrPath, $size = 0, bool $addOriginalImageUrl = ImageHelper::DEFAULT_ADD_ORIGINAL_IMAGE_URL)
+    public static function compressSingle($idOrPath, $size = 0, bool $addOriginalImageUrl = ImageHelper::DEFAULT_ADD_ORIGINAL_IMAGE_URL)
     {
         if (self::$imageCompressService === null) {
             try {
@@ -108,7 +108,7 @@ class ImageHelper
             $relativePath .= (strpos($relativePath, '?') === false ? '?' : '&') . 'size=' . $maxSize;
         }
 
-        return RouteHelper::getFullUrl(str_replace(" ", "%20", $relativePath));
+        return RouteHelper::getFullUrl(str_replace(' ', '%20', $relativePath));
     }
 
 }
