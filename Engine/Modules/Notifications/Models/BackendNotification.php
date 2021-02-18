@@ -2,6 +2,7 @@
 
 namespace Oforge\Engine\Modules\Notifications\Models;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
@@ -11,7 +12,8 @@ use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
  */
-class BackendNotification extends AbstractModel {
+class BackendNotification extends AbstractModel
+{
     /**
      * @var int
      * @ORM\Column(name="id", type="integer", nullable=false)
@@ -19,113 +21,114 @@ class BackendNotification extends AbstractModel {
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-
     /**
      * @var string
      * @ORM\Column(name="notification_type", type="string", nullable=false)
      */
     private $type;
-
     /**
      * @var string
      * @ORM\Column(name="notification_message", type="string", nullable=false)
      */
     private $message;
-
     /**
-     * @var string
+     * @var string|null
      * @ORM\Column(name="link", type="string", nullable=true)
      */
-    private $link;
-
+    private $link = null;
     /**
-     * @var int
+     * @var int|null
      * @ORM\Column(name="user_id", type="integer", nullable=true)
      * @ManyToOne(targetEntity="\Oforge\Engine\Modules\Auth\Models\BackendUser", fetch="EXTRA_LAZY")
      */
     private $userId = null;
-
+    /**
+     * @var int|null
+     * @ORM\Column(name="role", type="integer", nullable=true)
+     */
+    private $role = null;
     /**
      * @var bool
      * @ORM\Column(name="seen", type="boolean")
      */
     private $seen = false;
-
     /**
-     * @var \DateTime
+     * @var DateTime
      * @ORM\Column(name="timestamp", type="datetime", nullable=true);
      */
     private $timestamp;
 
     /**
-     * @var int
-     * @ORM\Column(name="role", type="integer", nullable=true)
-     */
-    private $role = null;
-
-    /**
      * Triggered on insert
      *
      * @ORM\PrePersist
-     * @throws \Exception
      */
-    public function onPrePersist() {
-        $this->timestamp = new \DateTime("now");
+    public function onPrePersist()
+    {
+        $this->timestamp = new DateTime("now");
     }
 
     /**
      * @return int
      */
-    public function getId() : int {
+    public function getId() : int
+    {
         return $this->id;
     }
 
     /**
      * @return string
      */
-    public function getType() : string {
+    public function getType() : string
+    {
         return $this->type;
     }
 
     /**
      * @return string | null
      */
-    public function getLink() : ?string {
+    public function getLink() : ?string
+    {
         return $this->link;
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getUserId() : int {
+    public function getUserId() : ?int
+    {
         return $this->userId;
     }
 
     /**
      * @return bool
      */
-    public function isSeen() : bool {
+    public function isSeen() : bool
+    {
         return $this->seen;
     }
 
     /**
-     * @return \DateTime|null
+     * @return DateTime
      */
-    public function getTimestamp() : ?\DateTime {
+    public function getTimestamp() : DateTime
+    {
         return $this->timestamp;
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getRole() : int {
+    public function getRole() : ?int
+    {
         return $this->role;
     }
 
     /**
      * @return string
      */
-    public function getMessage() : string {
+    public function getMessage() : string
+    {
         return $this->message;
     }
 
@@ -134,29 +137,32 @@ class BackendNotification extends AbstractModel {
      *
      * @return BackendNotification
      */
-    public function setType(string $type) : BackendNotification {
+    public function setType(string $type) : BackendNotification
+    {
         $this->type = $type;
 
         return $this;
     }
 
     /**
-     * @param string $link
+     * @param string|null $link
      *
      * @return BackendNotification
      */
-    public function setLink(string $link) : BackendNotification {
+    public function setLink(?string $link) : BackendNotification
+    {
         $this->link = $link;
 
         return $this;
     }
 
     /**
-     * @param int $userId
+     * @param int|null $userId
      *
      * @return BackendNotification
      */
-    public function setUserId(int $userId) : BackendNotification {
+    public function setUserId(?int $userId) : BackendNotification
+    {
         $this->userId = $userId;
 
         return $this;
@@ -167,18 +173,20 @@ class BackendNotification extends AbstractModel {
      *
      * @return BackendNotification
      */
-    public function setSeen(bool $seen) : BackendNotification {
+    public function setSeen(bool $seen) : BackendNotification
+    {
         $this->seen = $seen;
 
         return $this;
     }
 
     /**
-     * @param int $role
+     * @param int|null $role
      *
      * @return BackendNotification
      */
-    public function setRole(int $role) : BackendNotification {
+    public function setRole(?int $role) : BackendNotification
+    {
         $this->role = $role;
 
         return $this;
@@ -189,9 +197,11 @@ class BackendNotification extends AbstractModel {
      *
      * @return BackendNotification
      */
-    public function setMessage(string $message) : BackendNotification {
+    public function setMessage(string $message) : BackendNotification
+    {
         $this->message = $message;
 
         return $this;
     }
+
 }

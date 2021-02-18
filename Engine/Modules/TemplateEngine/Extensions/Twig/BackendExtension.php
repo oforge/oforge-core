@@ -39,16 +39,11 @@ class BackendExtension extends Twig_Extension implements Twig_ExtensionInterface
      * @throws ServiceNotFoundException
      */
     public function getBackendNotifications() {
-        if (isset($_SESSION['auth'])) {
-            /** @var AuthService $authService */
-            $authService = Oforge()->Services()->get('auth');
-            $user        = $authService->decode($_SESSION['auth']);
-            if (isset($user) && isset($user['id'])) {
-                /** @var BackendNotificationService $notificationService */
-                $notificationService = Oforge()->Services()->get('backend.notifications');
+        if (($userId = Oforge()->View()->get('user.id')) !== null) {
+            /** @var BackendNotificationService $notificationService */
+            $notificationService = Oforge()->Services()->get('backend.notifications');
 
-                return $notificationService->getNotifications($user['id'], AbstractNotificationService::UNSEEN);
-            }
+            return $notificationService->getUserNotifications($userId, AbstractNotificationService::UNSEEN);
         }
 
         return [];

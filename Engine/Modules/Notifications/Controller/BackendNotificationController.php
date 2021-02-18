@@ -2,7 +2,6 @@
 
 namespace Oforge\Engine\Modules\Notifications\Controller;
 
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
@@ -20,9 +19,11 @@ use Slim\Http\Response;
  * @package Oforge\Engine\Modules\Notifications\Controller
  * @EndpointClass(path="/backend/notifications", name="backend_notifications", assetScope="Backend")
  */
-class BackendNotificationController extends SecureBackendController {
+class BackendNotificationController extends SecureBackendController
+{
 
-    public function initPermissions() {
+    public function initPermissions()
+    {
         $this->ensurePermission('indexAction', BackendUser::ROLE_LOGGED_IN);
     }
 
@@ -33,11 +34,11 @@ class BackendNotificationController extends SecureBackendController {
      *
      * @return Response
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws ServiceNotFoundException
      * @EndpointAction(path="/{id}")
      */
-    public function indexAction(Request $request, Response $response, array $args) {
+    public function indexAction(Request $request, Response $response, array $args)
+    {
         if (isset($args['id'])) {
             /** @var BackendNotificationService $backendNotificationService */
             $backendNotificationService = Oforge()->Services()->get('backend.notifications');
