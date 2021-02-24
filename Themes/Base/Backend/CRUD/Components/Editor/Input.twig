@@ -12,7 +12,7 @@
 {% endif %}
 <input {% if crudFieldID %}id="{{ crudFieldID }}"{% endif %} type="{{ crudFieldEditor.type|default('text') }}"
     {% if crudProperty.crud[crud.context] == 'editable' %}name="data[{% if crud.context == 'index' %}{{ item.id }}][{% endif %}{{ crudProperty.name }}]"{% endif %}
-       value="{{ item[crudProperty.name]|default(crudProperty.editor.default)|default('') }}"
+       value="{{ item[crudProperty.name]|default('') }}"
        class="form-control {{ crudFieldEditor.class|default('') }}"
     {% if crudProperty.editor.required %}required{% endif %}
     {% if crudProperty.editor.placeholder %}placeholder="{{ crudProperty.editor.placeholder }}"{% endif %}
