@@ -49,9 +49,23 @@ footer{
             margin-bottom: $size-large;
             text-align: center;
             border-bottom: 1px solid $color-primary;
+
+
         }
         .collapse--trigger {
             justify-content: space-around;
+        }
+
+        @media screen and (min-width: $screen-large) {
+            .collapse--trigger{
+                padding: 0 1.2rem;
+                margin-bottom: 0;
+                justify-content: flex-start;
+            }
+            .collapse--item {
+                margin-bottom: 0;
+                text-align: left;
+            }
         }
     }
 }
