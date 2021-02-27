@@ -44,6 +44,9 @@
 }
 footer{
     .content--footer {
+        .collapse--container {
+            border-top: 1px solid white;
+        }
         .collapse--trigger, .collapse--item {
             padding: 0 1.2rem;
             margin-bottom: $size-large;
@@ -57,6 +60,9 @@ footer{
         }
 
         @media screen and (min-width: $screen-large) {
+            .collapse--container {
+                border-top: unset;
+            }
             .collapse--trigger{
                 padding: 0 1.2rem;
                 margin-bottom: 0;
