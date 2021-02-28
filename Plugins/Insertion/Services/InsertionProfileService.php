@@ -135,6 +135,7 @@ class InsertionProfileService extends AbstractDatabaseAccess {
             "imprintWebsite"       => $imprintWebsite,
             "imprintCompanyTaxId"  => $params["imprint_company_tax"],
             "imprintCompanyNumber" => $params["imprint_company_number"],
+            "profileUrl"           => $params["profile_url"],
         ]);
 
         if ($create) {
