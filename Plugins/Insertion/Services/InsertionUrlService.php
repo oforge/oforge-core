@@ -47,7 +47,7 @@ class InsertionUrlService {
             /** @var InsertionProfileService $service */
             $service = Oforge()->Services()->get('insertion.profile');
             $profile = $service->getById($namedParams["id"]);
-            $title     = str_replace(" ", "-", strtolower($profile->getImprintName()));
+            $title     = $profile === null ? '-' : str_replace(" ", "-", strtolower($profile->getImprintName()));
             $title     = str_replace("/", "", $title);
 
             return "/" . urlencode(I18N::translate('insertion_url_profile')) . "/" . urlencode($title) . "/" . $namedParams["id"];
