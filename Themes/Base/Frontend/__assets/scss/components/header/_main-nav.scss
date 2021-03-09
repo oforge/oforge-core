@@ -8,6 +8,7 @@
     transition: width .2s ease-in;
     overflow: hidden;
     z-index: 1337;
+    border-bottom: 1px solid lightgrey;
 
     &.main-nav--hidden {
         display: none;
