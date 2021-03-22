@@ -6,6 +6,14 @@
     }
     .usp__main {
         flex-direction: column;
+
+        .usp__main-element {
+            flex-wrap: nowrap;
+            text-align: left;
+            .icon {
+                flex-shrink: 0;
+            }
+        }
     }
 
     .form__input.form__input--submit {
