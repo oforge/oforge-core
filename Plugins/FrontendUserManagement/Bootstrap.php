@@ -6,6 +6,7 @@ use FrontendUserManagement\Middleware\AccountNavigationMiddleware;
 use FrontendUserManagement\Middleware\FrontendSecureMiddleware;
 use FrontendUserManagement\Middleware\FrontendUserStateMiddleware;
 use FrontendUserManagement\Models\AccountNavigation;
+use FrontendUserManagement\Models\FindyourhorseUser;
 use FrontendUserManagement\Models\NickNameValue;
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Models\UserAddress;
@@ -33,8 +34,10 @@ class Bootstrap extends AbstractBootstrap {
             Controller\Frontend\ForgotPasswordController::class,
             Controller\Frontend\AccountController::class,
             Controller\Frontend\UserDetailsController::class,
+            Controller\Frontend\FindyourhorseRegistrationController::class,
             Controller\Backend\BackendFrontendUserManagementController::class,
             Controller\Backend\BackendNickNameGeneratorController::class,
+            Controller\Backend\BackendFindyourhorseUserController::class,
         ];
 
         $this->middlewares = [
@@ -54,6 +57,7 @@ class Bootstrap extends AbstractBootstrap {
             UserDetail::class,
             UserAddress::class,
             NickNameValue::class,
+            FindyourhorseUser::class,
         ];
 
         $this->services = [
@@ -66,6 +70,7 @@ class Bootstrap extends AbstractBootstrap {
             'frontend.user.management.user.address'       => Services\UserAddressService::class,
             'frontend.user'                               => Services\FrontendUserService::class,
             'password.reset'                              => Services\PasswordResetService::class,
+            'findyourhorse'                               => Services\FindYourhorseService::class,
         ];
     }
 

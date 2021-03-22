@@ -4,7 +4,9 @@ namespace FrontendUserManagement\Controller\Frontend;
 
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use FrontendUserManagement\Models\FindyourhorseUser;
 use FrontendUserManagement\Models\User;
+use FrontendUserManagement\Services\FindYourhorseService;
 use FrontendUserManagement\Services\RegistrationService;
 use FrontendUserManagement\Services\UserDetailsService;
 use Oforge\Engine\Modules\Auth\Enums\InvalidPasswordFormatException;
@@ -23,6 +25,10 @@ use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
 use Oforge\Engine\Modules\Core\Services\TokenService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\Mailer\Services\MailService;
+use Premium\Models\PremiumGroup;
+use Premium\Models\PremiumGroupUser;
+use Premium\Services\PremiumGroupUserService;
+use Premium\Services\PremiumService;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
@@ -67,6 +73,7 @@ class RegistrationController extends AbstractController {
      * @EndpointAction()
      */
     public function processAction(Request $request, Response $response) {
+
         /**
          * @var PasswordService $passwordService
          * @var RegistrationService $registrationService
@@ -205,6 +212,8 @@ class RegistrationController extends AbstractController {
 
             return $response->withRedirect($uri, 302);
         }
+
+
         $user = $registrationService->register($email, $password);
 
         /**
@@ -263,6 +272,20 @@ class RegistrationController extends AbstractController {
 
             return $response->withRedirect($uri, 302);
         }
+
+        if ($request->getQueryParam('fyh') == "true") {
+
+            /** Findyourhorse specific Logic */
+            // TODO: Change branch back to dev and deploy once Findyourhorse and AYH Merger ist over
+
+            /** @var User $userObject */
+            $userObject = $registrationService->getUser($user['email']);
+
+            /** @var FindYourhorseService $fyhService */
+            $fyhService = Oforge()->Services()->get('findyourhorse');
+            $fyhService->createFindyourhorseUser($body["frontend_registration_fyh_email"], $userObject);
+        }
+
 
         if (!isset($referrer)) {
             $uri = $router->pathFor('frontend_login');
@@ -342,10 +365,45 @@ class RegistrationController extends AbstractController {
         $_SESSION['auth'] = $jwt;
 
         $uri = $router->pathFor('frontend_account_dashboard');
-        Oforge()->View()->Flash()->addMessage('success', I18N::translate('registration_success_logined', [
-            'en' => 'Your account was activated successfully. You are now logged in.',
-            'de' => 'Dein Account wurde erfolgreich aktiviert. Du bist nun angemeldet. ',
-        ]), true, "registration--successful");
+
+        /** Fyh specific logic */
+        $fyhUserRepository = Oforge()->DB()->getForgeEntityManager()->getRepository(FindyourhorseUser::class);
+        if ($fyhUserRepository->findOneBy(['user' => $registrationService->getUser($user['email'])])) {
+
+            Oforge()->View()->Flash()->addMessage('success', I18N::translate('fyh_registration_success', [
+                'de' => 'Deine Registrierung war erfolgreich! Hattest du bei Findyourhorsesbereits Inserate erstellt? 
+                Dann brauchst du nichts weiter tun. Deine Inserate werden in den nächsten 48 Stunden deinem Account zugeordnet. 
+                Du wirst per E-Mail benachrichtigt, sobald deine Inserate zur Verfügung stehen.'
+            ]));
+
+            /** @var PremiumService $premiumService */
+            $premiumService = Oforge()->Services()->get('premium');
+
+            $groupRepository      = $premiumService->repository('group');
+            $entityManager        = $premiumService->entityManager();
+
+            /** @var PremiumGroup $professionalGroup */
+            $professionalGroup    = $groupRepository->findOneBy(['key' => 'professional']);
+
+            /** @var User $userObject */
+            $userObject = $registrationService->getUser($user['email']);
+
+
+            $premiumGroupUser = new PremiumGroupUser();
+            $premiumGroupUser->setUser($userObject);
+            $premiumGroupUser->setPremiumGroup($professionalGroup);
+            $premiumGroupUser->setValidUntil(new \DateTime('2021-06-30:23:59:59'));
+            $premiumGroupUser->setActive(true);
+            $premiumGroupUser->setAutoUpdate(false);
+
+            $entityManager->create($premiumGroupUser);
+
+        } else {
+            Oforge()->View()->Flash()->addMessage('success', I18N::translate('registration_success_logined', [
+                'en' => 'Your account was activated successfully. You are now logged in.',
+                'de' => 'Dein Account wurde erfolgreich aktiviert. Du bist nun angemeldet. ',
+            ]), true, "registration--successful");
+        }
 
         Oforge()->View()->Flash()->setData("new_registration", ['newRegistration' => true]);
 

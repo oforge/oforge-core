@@ -1,0 +1,28 @@
+.findyourhorse-landingpage {
+    .button--light {
+        &:hover {
+            background: #fff;
+        }
+    }
+    .usp__main {
+        flex-direction: column;
+    }
+
+    .form__input.form__input--submit {
+        background-color: $color-secondary;
+        border: none;
+        &:hover {
+            background-color: $color-primary;
+        }
+    }
+
+
+    @media screen and (min-width: $content-max) {
+        .usp__main {
+            flex-direction: row;
+        }
+        .usp__main-element ~ .usp__main-element {
+            margin-left: 1.2rem;
+        }
+    }
+}
