@@ -392,7 +392,7 @@ class RegistrationController extends AbstractController {
             $premiumGroupUser = new PremiumGroupUser();
             $premiumGroupUser->setUser($userObject);
             $premiumGroupUser->setPremiumGroup($professionalGroup);
-            $premiumGroupUser->setValidUntil(new \DateTime('2021-06-30:23:59:59'));
+            $premiumGroupUser->setValidUntil(new \DateTime('2021-06-30T23:59:59'));
             $premiumGroupUser->setActive(true);
             $premiumGroupUser->setAutoUpdate(false);
 
