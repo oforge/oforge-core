@@ -8,6 +8,7 @@
     transition: width .2s ease-in;
     overflow: hidden;
     z-index: 1337;
+    border-bottom: 1px solid lightgrey;
 
     &.main-nav--hidden {
         display: none;
@@ -62,7 +63,7 @@
         width: 100%;
     }
     .main-nav {
-        background: $color-secondary-transparent-3;
+        background: #f8f8f8;
         position: static;
         left: auto;
         right: auto;
