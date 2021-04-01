@@ -15,8 +15,7 @@ use Oforge\Engine\Modules\Media\Models\Media;
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Entity
  */
-class InsertionProfile extends AbstractModel
-{
+class InsertionProfile extends AbstractModel {
     /**
      * @var int
      * @ORM\Column(name="id", type="integer", nullable=false)
@@ -115,40 +114,41 @@ class InsertionProfile extends AbstractModel
     private $imprintCompanyNumber = "";
 
     /**
+     * @var string
+     * @ORM\Column(name="profile_url", type="string")
+     */
+    private $profileUrl = "";
+
+    /**
      * @ORM\PrePersist
      */
-    public function onPrePersist()
-    {
-        $date = new \DateTime('now');
+    public function onPrePersist() {
+        $date            = new \DateTime('now');
         $this->createdAt = $date;
         $this->updatedAt = $date;
     }
 
-    public function __construct()
-    {
+    public function __construct() {
     }
 
     /**
      * @ORM\PreUpdate
      */
-    public function onPreUpdate()
-    {
+    public function onPreUpdate() {
         $this->updatedAt = new \DateTime("now");
     }
 
     /**
      * @return int
      */
-    public function getId(): int
-    {
+    public function getId() : int {
         return $this->id;
     }
 
     /**
      * @return User|null
      */
-    public function getUser(): ?User
-    {
+    public function getUser() : ?User {
         return $this->user;
     }
 
@@ -157,8 +157,7 @@ class InsertionProfile extends AbstractModel
      *
      * @return InsertionProfile
      */
-    public function setUser($user): InsertionProfile
-    {
+    public function setUser($user) : InsertionProfile {
         $this->user = $user;
 
         return $this;
@@ -167,8 +166,7 @@ class InsertionProfile extends AbstractModel
     /**
      * @return Media
      */
-    public function getMain(): ?Media
-    {
+    public function getMain() : ?Media {
         return $this->main;
     }
 
@@ -177,8 +175,7 @@ class InsertionProfile extends AbstractModel
      *
      * @return InsertionProfile
      */
-    public function setMain(Media $main): InsertionProfile
-    {
+    public function setMain(Media $main) : InsertionProfile {
         $this->main = $main;
 
         return $this;
@@ -187,8 +184,7 @@ class InsertionProfile extends AbstractModel
     /**
      * @return Media
      */
-    public function getBackground(): ?Media
-    {
+    public function getBackground() : ?Media {
         return $this->background;
     }
 
@@ -197,8 +193,7 @@ class InsertionProfile extends AbstractModel
      *
      * @return InsertionProfile
      */
-    public function setBackground(Media $background): InsertionProfile
-    {
+    public function setBackground(Media $background) : InsertionProfile {
         $this->background = $background;
 
         return $this;
@@ -211,8 +206,7 @@ class InsertionProfile extends AbstractModel
     /**
      * @return string
      */
-    public function getDescription(): ?string
-    {
+    public function getDescription() : ?string {
         return $this->description;
     }
 
@@ -221,8 +215,7 @@ class InsertionProfile extends AbstractModel
      *
      * @return InsertionProfile
      */
-    public function setDescription(?string $description): InsertionProfile
-    {
+    public function setDescription(?string $description) : InsertionProfile {
         $this->description = $description;
 
         return $this;
@@ -231,8 +224,7 @@ class InsertionProfile extends AbstractModel
     /**
      * @return string
      */
-    public function getImprintName(): ?string
-    {
+    public function getImprintName() : ?string {
         return $this->imprintName;
     }
 
@@ -241,8 +233,7 @@ class InsertionProfile extends AbstractModel
      *
      * @return InsertionProfile
      */
-    public function setImprintName(?string $imprintName): InsertionProfile
-    {
+    public function setImprintName(?string $imprintName) : InsertionProfile {
         $this->imprintName = $imprintName;
 
         return $this;
@@ -251,8 +242,7 @@ class InsertionProfile extends AbstractModel
     /**
      * @return string
      */
-    public function getImprintStreet(): ?string
-    {
+    public function getImprintStreet() : ?string {
         return $this->imprintStreet;
     }
 
@@ -261,8 +251,7 @@ class InsertionProfile extends AbstractModel
      *
      * @return InsertionProfile
      */
-    public function setImprintStreet(?string $imprintStreet): InsertionProfile
-    {
+    public function setImprintStreet(?string $imprintStreet) : InsertionProfile {
         $this->imprintStreet = $imprintStreet;
 
         return $this;
@@ -271,8 +260,7 @@ class InsertionProfile extends AbstractModel
     /**
      * @return string
      */
-    public function getImprintZipCity(): ?string
-    {
+    public function getImprintZipCity() : ?string {
         return $this->imprintZipCity;
     }
 
@@ -281,8 +269,7 @@ class InsertionProfile extends AbstractModel
      *
      * @return InsertionProfile
      */
-    public function setImprintZipCity(?string $imprintZipCity): InsertionProfile
-    {
+    public function setImprintZipCity(?string $imprintZipCity) : InsertionProfile {
         $this->imprintZipCity = $imprintZipCity;
 
         return $this;
@@ -291,8 +278,7 @@ class InsertionProfile extends AbstractModel
     /**
      * @return string|null
      */
-    public function getImprintPhone(): ?string
-    {
+    public function getImprintPhone() : ?string {
         return $this->imprintPhone;
     }
 
@@ -301,8 +287,7 @@ class InsertionProfile extends AbstractModel
      *
      * @return InsertionProfile
      */
-    public function setImprintPhone(?string $imprintPhone): InsertionProfile
-    {
+    public function setImprintPhone(?string $imprintPhone) : InsertionProfile {
         $this->imprintPhone = $imprintPhone;
 
         return $this;
@@ -311,8 +296,7 @@ class InsertionProfile extends AbstractModel
     /**
      * @return string
      */
-    public function getImprintEmail(): ?string
-    {
+    public function getImprintEmail() : ?string {
         return $this->imprintEmail;
     }
 
@@ -321,8 +305,7 @@ class InsertionProfile extends AbstractModel
      *
      * @return InsertionProfile
      */
-    public function setImprintEmail(?string $imprintEmail): InsertionProfile
-    {
+    public function setImprintEmail(?string $imprintEmail) : InsertionProfile {
         $this->imprintEmail = $imprintEmail;
 
         return $this;
@@ -331,8 +314,7 @@ class InsertionProfile extends AbstractModel
     /**
      * @return string
      */
-    public function getImprintFacebook(): ?string
-    {
+    public function getImprintFacebook() : ?string {
         return $this->imprintFacebook;
     }
 
@@ -341,8 +323,7 @@ class InsertionProfile extends AbstractModel
      *
      * @return InsertionProfile
      */
-    public function setImprintFacebook(?string $imprintFacebook): InsertionProfile
-    {
+    public function setImprintFacebook(?string $imprintFacebook) : InsertionProfile {
         $this->imprintFacebook = $imprintFacebook;
 
         return $this;
@@ -351,8 +332,7 @@ class InsertionProfile extends AbstractModel
     /**
      * @return string
      */
-    public function getImprintWebsite(): ?string
-    {
+    public function getImprintWebsite() : ?string {
         return $this->imprintWebsite;
     }
 
@@ -361,8 +341,7 @@ class InsertionProfile extends AbstractModel
      *
      * @return InsertionProfile
      */
-    public function setImprintWebsite(?string $imprintWebsite): InsertionProfile
-    {
+    public function setImprintWebsite(?string $imprintWebsite) : InsertionProfile {
         $this->imprintWebsite = $imprintWebsite;
 
         return $this;
@@ -371,8 +350,7 @@ class InsertionProfile extends AbstractModel
     /**
      * @return string
      */
-    public function getImprintCompanyTaxId(): ?string
-    {
+    public function getImprintCompanyTaxId() : ?string {
         return $this->imprintCompanyTaxId;
     }
 
@@ -381,8 +359,7 @@ class InsertionProfile extends AbstractModel
      *
      * @return InsertionProfile
      */
-    public function setImprintCompanyTaxId(?string $imprintCompanyTaxId): InsertionProfile
-    {
+    public function setImprintCompanyTaxId(?string $imprintCompanyTaxId) : InsertionProfile {
         $this->imprintCompanyTaxId = $imprintCompanyTaxId;
 
         return $this;
@@ -391,8 +368,7 @@ class InsertionProfile extends AbstractModel
     /**
      * @return string
      */
-    public function getImprintCompanyNumber(): ?string
-    {
+    public function getImprintCompanyNumber() : ?string {
         return $this->imprintCompanyNumber;
     }
 
@@ -401,9 +377,26 @@ class InsertionProfile extends AbstractModel
      *
      * @return InsertionProfile
      */
-    public function setImprintCompanyNumber(?string $imprintCompanyNumber): InsertionProfile
-    {
+    public function setImprintCompanyNumber(?string $imprintCompanyNumber) : InsertionProfile {
         $this->imprintCompanyNumber = $imprintCompanyNumber;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getProfileUrl() : ?string {
+        return $this->profileUrl;
+    }
+
+    /**
+     * @param string|null $profileUrl
+     *
+     * @return InsertionProfile
+     */
+    public function setProfileUrl(?string $profileUrl) {
+        $this->profileUrl = $profileUrl;
 
         return $this;
     }

@@ -1,0 +1,17 @@
+{% extends '@parent/Frontend/Layout.twig' %}
+{% block content %}
+    <div class="content findyourhorse-landingpage">
+        <div class="panel">
+            {% include 'Plugins/FrontendUserManagement/Frontend/Components/FYHBanner.twig' %}
+            <br/>
+            <h2 id="register" style="margin-bottom: 1.2rem; text-align: center; color: #3c3c3b;">Jetzt Registrieren:</h2>
+            <p style="margin-bottom: 3rem;">Fülle die hier aufgelisteten Felder aus. Nach dem Registrieren werden deine
+                bestehenden Inserate von
+                FindYourHorse auf unsere Platform übernommen. Wenn du weitere Inserate inserieren möchtest, kannst du
+                dies nach der
+                Registrierung tun.
+            </p>
+            {% include 'Plugins/FrontendUserManagement/Frontend/Components/Forms/FindyourhorseRegistrationForm.twig' %}
+        </div>
+    </div>
+{% endblock content %}

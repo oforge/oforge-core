@@ -17,7 +17,7 @@
                 {% endif %}
                 <label class="center__label" for="input__background">
                     <span class="background img-background flex flex--column-center"
-                         {% if profile.background %}style="background-image: url('{{ media(profile.background.id) }}')"{% endif %}>
+                          {% if profile.background %}style="background-image: url('{{ media(profile.background.id) }}')"{% endif %}>
                         <span class="flex flex--center">
                             <svg class="icon icon--primary">
                                 <use xlink:href="#camera"></use>
@@ -72,61 +72,68 @@
                     {{ i18n('account_insertions_profile_info') }}
                 </div>
                 {% block account_profile_edit %}
-                <div class="profile--edit">
-                    {% block account_description_edit %}
-                    <div class="description--edit">
-                        <h2 class="form__title">{{ i18n('account_profile_text') }}</h2>
-                        <textarea name="description"
-                                  class="form__input">{{ profile.description }}</textarea>
-                    </div>
-                    {% endblock account_description_edit %}
-                    {% block account_imprint_edit %}
-                    <div class="impress--edit">
-                        <h2 class="form__title">{{ i18n('insertion_profile_contact') }}</h2>
-                        <input class="form__input" type="text" name="imprint_name"
-                               placeholder="{{ i18n('imprint_name') }}"
-                               value="{{ profile.imprintName }}" />
-                        <input class="form__input" type="text" name="imprint_street"
-                               placeholder="{{ i18n('imprint_street') }}"
-                               value="{{ profile.imprintStreet }}" />
-                        <input class="form__input" type="text" name="imprint_zipCity"
-                               placeholder="{{ i18n('imprint_zipCity') }}"
-                               value="{{ profile.imprintZipCity }}" />
-                        <input class="form__input" type="phone" name="imprint_phone"
-                               placeholder="{{ i18n('imprint_phone') }}"
-                               value="{{ profile.imprintPhone }}" />
-                        <input class="form__input" type="email" name="imprint_email"
-                               placeholder="{{ i18n('imprint_email') }}"
-                               value="{{ profile.imprintEmail }}" />
-                        <div class="form__input">
-                            <label for="imprint_facebook">
-                                {{ i18n('facebook_base_url', 'https://www.facebook.com/') }}
-                            </label>
-                            <input
-                                class="input__facebook" type="text"
-                                name="imprint_facebook"
-                                placeholder="{{ i18n('facebook_page_placeholder') }}"
-                                value="{{ profile.imprintFacebook }}" />
+                    <div class="profile--edit">
+                        {% block account_description_edit %}
+                            <div class="description--edit">
+                                <h2 class="form__title">{{ i18n('account_profile_text') }}</h2>
+                                <textarea name="description"
+                                          class="form__input">{{ profile.description }}</textarea>
+                            </div>
+                        {% endblock account_description_edit %}
+                        {% block account_imprint_edit %}
+                            <div class="impress--edit">
+                                <h2 class="form__title">{{ i18n('insertion_profile_contact') }}</h2>
+                                <input class="form__input" type="text" name="imprint_name"
+                                       placeholder="{{ i18n('imprint_name') }}"
+                                       value="{{ profile.imprintName }}" />
+                                <input
+                                    class="form__input" type="text"
+                                    name="profile_url"
+                                    size="30"
+                                    maxlength="30"
+                                    placeholder="{{ i18n('profile_url', { de: "Name der eigenen Anbieterseite"}) }}"
+                                    value="{{ profile.profileUrl }}" />
+                                <input class="form__input" type="text" name="imprint_street"
+                                       placeholder="{{ i18n('imprint_street') }}"
+                                       value="{{ profile.imprintStreet }}" />
+                                <input class="form__input" type="text" name="imprint_zipCity"
+                                       placeholder="{{ i18n('imprint_zipCity') }}"
+                                       value="{{ profile.imprintZipCity }}" />
+                                <input class="form__input" type="phone" name="imprint_phone"
+                                       placeholder="{{ i18n('imprint_phone') }}"
+                                       value="{{ profile.imprintPhone }}" />
+                                <input class="form__input" type="email" name="imprint_email"
+                                       placeholder="{{ i18n('imprint_email') }}"
+                                       value="{{ profile.imprintEmail }}" />
+                                <div class="form__input">
+                                    <label for="imprint_facebook">
+                                        {{ i18n('facebook_base_url', 'https://www.facebook.com/') }}
+                                    </label>
+                                    <input
+                                        class="input__facebook" type="text"
+                                        name="imprint_facebook"
+                                        placeholder="{{ i18n('facebook_page_placeholder') }}"
+                                        value="{{ profile.imprintFacebook }}" />
+                                </div>
+                                <input class="form__input" type="text" name="imprint_website"
+                                       placeholder="{{ i18n('imprint_website') }}"
+                                       value="{{ profile.imprintWebsite }}" />
+                                <div class="info__business">
+                                    {{ i18n('account_insertions_imprint_info') }}
+                                </div>
+                                <input class="form__input" type="text" name="imprint_company_number"
+                                       placeholder="{{ i18n('imprint_company_number') }}"
+                                       value="{{ profile.imprintCompanyNumber }}" />
+                                <input class="form__input" type="text" name="imprint_company_tax"
+                                       placeholder="{{ i18n('imprint_company_tax') }}"
+                                       value="{{ profile.imprintCompanyTaxId }}" />
+                            </div>
+                        {% endblock account_imprint_edit %}
+                        <div class="submit">
+                            <input type="submit" class="form__input form__input--submit button"
+                                   value="{{ i18n('save') }}" />
                         </div>
-                        <input class="form__input" type="text" name="imprint_website"
-                               placeholder="{{ i18n('imprint_website') }}"
-                               value="{{ profile.imprintWebsite }}" />
-                        <div class="info__business">
-                            {{ i18n('account_insertions_imprint_info') }}
-                        </div>
-                        <input class="form__input" type="text" name="imprint_company_number"
-                               placeholder="{{ i18n('imprint_company_number') }}"
-                               value="{{ profile.imprintCompanyNumber }}" />
-                        <input class="form__input" type="text" name="imprint_company_tax"
-                               placeholder="{{ i18n('imprint_company_tax') }}"
-                               value="{{ profile.imprintCompanyTaxId }}" />
                     </div>
-                    {% endblock account_imprint_edit %}
-                    <div class="submit">
-                        <input type="submit" class="form__input form__input--submit button"
-                               value="{{ i18n('save') }}" />
-                    </div>
-                </div>
                 {% endblock account_profile_edit %}
             </form>
         </div>

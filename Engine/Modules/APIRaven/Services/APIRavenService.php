@@ -165,7 +165,13 @@ class APIRavenService {
         $dataString = json_encode($data, JSON_UNESCAPED_SLASHES);
         curl_setopt($this->cURL, CURLOPT_URL, $this->apiUrl . $path . $queryString);
         curl_setopt($this->cURL, CURLOPT_CUSTOMREQUEST, $method);
-        curl_setopt($this->cURL, CURLOPT_POSTFIELDS, $dataString);
+
+        /**
+         * Don't touch post body if there is no data present (i.e. paypal will respond with INVALID_REQUEST)
+         */
+        if (!empty($data)) {
+            curl_setopt($this->cURL, CURLOPT_POSTFIELDS, $dataString);
+        }
 
         $response = curl_exec($this->cURL);
         $response = json_decode($response, true);
