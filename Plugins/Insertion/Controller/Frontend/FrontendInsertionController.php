@@ -55,7 +55,6 @@ class FrontendInsertionController extends SecureFrontendController {
             'accountListAction',
             'reportAction',
             'feedbackAction',
-            'contactAction',
         ]);
     }
 
@@ -702,7 +701,7 @@ class FrontendInsertionController extends SecureFrontendController {
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException
      * @throws \Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException
      * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
+     * @throws Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      * @EndpointAction(path="/contact/{id}")
      */
@@ -712,6 +711,29 @@ class FrontendInsertionController extends SecureFrontendController {
         $insertionService = Oforge()->Services()->get('insertion');
         /** @var Insertion $insertion */
         $insertion = $insertionService->getInsertionById(intval($id));
+
+        /*
+         * added stuff to avoid User to see the Contact-Infos when they are not loged in
+         */
+        /** @var FrontendUserService $userService */
+        $userService = Oforge()->Services()->get('frontend.user');
+        $user = $userService->getUser();
+        /** @var Router $router */
+        $router = Oforge()->App()->getContainer()->get('router');
+        $securedVisibility = $insertion->getContact()->isVisible();
+
+        if (($user === null) && ($securedVisibility === true) ) {
+            $uri = $router->pathFor('frontend_login');
+            Oforge()->View()->Flash()->addMessage("error", I18N::translate("insertion_contact_attempt_login_required", [
+                "de" => "Diese Seite ist nur für eingeloggte Nutzer verfügbar.",
+                "en" => "This site is only available for logged in users."
+            ]));
+            $_SESSION['login_redirect_url'] = $request->getUri();
+            return $response->withRedirect($uri, 302);
+        }
+        /*
+         * End of new stuff
+         */
 
         $insertionService->countUpInsertionsContactAttempt(intval($id));
 
@@ -731,7 +753,7 @@ class FrontendInsertionController extends SecureFrontendController {
             /** @var Router $router */
             $router = Oforge()->App()->getContainer()->get('router');
 
-            if (is_null($user)) {
+            if ($user === null) {
                 $uri = $router->pathFor('frontend_login');
 
                 return $response->withRedirect($uri, 302);
