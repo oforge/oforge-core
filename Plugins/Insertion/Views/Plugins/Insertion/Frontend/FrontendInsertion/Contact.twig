@@ -37,17 +37,20 @@
                 </div>
             {% endif %}
             {{ o_dump() }}
-            <div>sfdgmsjgjfgpjinng</div>
-            <form method="POST">
-                <div class="form__control">
-                    <label class="form__label" for="message">{{ i18n('your_message') }}</label><!-- snippify -->
+            {% if ( user_logged_in ) and ( user_logged_in == true)  %}
+                <form method="POST">
+                    <div class="form__control">
+                        <label class="form__label" for="message">{{ i18n('your_message') }}</label><!-- snippify -->
 
-                    <textarea class="form__input form__input--textarea" id="message" name="message"></textarea>
-                </div>
-                <div class="form__control">
-                    <input type="submit" class="button button--primary" value="{{ i18n('send') }}">
-                </div>
-            </form>
+                        <textarea class="form__input form__input--textarea" id="message" name="message"></textarea>
+                    </div>
+                    <div class="form__control">
+                        <input type="submit" class="button button--primary" value="{{ i18n('send') }}">
+                    </div>
+                </form>
+            {% elseif not ( user_logged_in ) %}
+                {# probably an login-field #}
+            {% endif %}
         </div>
     </div>
 
