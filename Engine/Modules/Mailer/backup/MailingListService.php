@@ -1,6 +1,6 @@
 <?php
 
-namespace Oforge\Engine\Modules\Mailer\Services;
+namespace Oforge\Engine\Modules\Mailer\backup;
 
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Mailer\Models\Mail;

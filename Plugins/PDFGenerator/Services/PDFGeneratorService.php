@@ -98,6 +98,8 @@ class PDFGeneratorService {
         $this->templateManagementService = Oforge()->Services()->get("template.management");
         $this->templateName = $this->templateManagementService->getActiveTemplate()->getName();
         $this->templatePath = Statics::TEMPLATE_DIR . Statics::GLOBAL_SEPARATOR . $this->templateName . Statics::GLOBAL_SEPARATOR . 'PDFTemplates';
+        //TODO templatePath-Problem: aktuell keine MailTemplates per Plugins möglich!!!
+        //TODO REFACTORING: Generic Twig Instance by TemplateRenderService method
 
         $twig = new CustomTwig($this->templatePath);
         try {
@@ -127,9 +129,9 @@ class PDFGeneratorService {
         }
 
         /** @var InlineCssService $inlineCssService */
-        $inlineCssService = Oforge()->Services()->get('inline.css');
+        $inlineCssService = Oforge()->Services()->get('mail.inlineCss');
 
-        $this->mpdf->WriteHTML($inlineCssService->renderInlineCss($html));
+        $this->mpdf->WriteHTML($inlineCssService->inline($html));
         if(isset($options["path"])) {
             return $this->mpdf->Output($options['path'] .  $options['filename'], 'F');
         } else {

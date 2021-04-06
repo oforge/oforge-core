@@ -4,7 +4,9 @@ namespace Insertion\Controller\Backend;
 
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Exception;
 use FrontendUserManagement\Services\UserService;
+use Insertion\Helper\InsertionMail;
 use Insertion\Models\Insertion;
 use Insertion\Models\InsertionTypeAttribute;
 use Insertion\Services\InsertionCreatorService;
@@ -18,6 +20,7 @@ use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Core\Exceptions\Template\TemplateNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Oforge\Engine\Modules\Core\Helper\SessionHelper;
 use Oforge\Engine\Modules\Core\Manager\Events\Event;
@@ -26,7 +29,6 @@ use Oforge\Engine\Modules\CRUD\Enum\CrudDataTypes;
 use Oforge\Engine\Modules\CRUD\Enum\CrudFilterType;
 use Oforge\Engine\Modules\CRUD\Enum\CrudGroupByOrder;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
-use Oforge\Engine\Modules\Mailer\Services\MailService;
 use ReflectionException;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -427,8 +429,6 @@ class BackendInsertionController extends BaseCrudController {
     public function approveInsertionAction(Request $request, Response $response, $args) {
         $insertionId = $args['id'];
 
-        /** @var MailService $mailService */
-        $mailService = Oforge()->Services()->get('mail');
         /** @var InsertionService $insertionService */
         $insertionService = Oforge()->Services()->get('insertion');
 
@@ -437,9 +437,13 @@ class BackendInsertionController extends BaseCrudController {
         $insertion->setModeration(true);
         $insertionService->entityManager()->update($insertion);
 
-        if ($mailService->sendInsertionApprovedInfoMail($insertionId)) {
-            Oforge()->View()->Flash()->addMessage('success', sprintf('ID %s: Notification has been sent', $insertionId));
-        } else {
+        try {
+            if (InsertionMail::sendInsertionApprovedMail($insertionId)) {
+                Oforge()->View()->Flash()->addMessage('success', sprintf('ID %s: Notification has been sent', $insertionId));
+            } else {
+                Oforge()->View()->Flash()->addMessage('error', sprintf('ID %s: Notification could not be sent', $insertionId));
+            }
+        } catch (Exception $exception) {
             Oforge()->View()->Flash()->addMessage('error', sprintf('ID %s: Notification could not be sent', $insertionId));
         }
 

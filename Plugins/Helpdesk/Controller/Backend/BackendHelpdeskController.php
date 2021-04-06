@@ -8,6 +8,7 @@ use FrontendUserManagement\Services\UserService;
 use Helpdesk\Models\Ticket;
 use Helpdesk\Services\HelpdeskMessengerService;
 use Helpdesk\Services\HelpdeskTicketService;
+use Messenger\Helper\MessengerMail;
 use Messenger\Services\FrontendMessengerService;
 use Oforge\Engine\Modules\AdminBackend\Core\Abstracts\SecureBackendController;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
@@ -17,7 +18,6 @@ use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
-use Oforge\Engine\Modules\Mailer\Services\MailService;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
@@ -139,16 +139,14 @@ class BackendHelpdeskController extends SecureBackendController {
 
                 $conversation = $helpdeskMessengerService->getConversationsByTarget($targetId, $senderId);
 
-                if (sizeof($conversation) > 0) {
+                if (!empty($conversation)) {
                     $conversation = $conversation[0];
                 }
 
-                /** @var  MailService $mailService - send notification to requester */
-                $mailService = Oforge()->Services()->get('mail');
                 $messages    = $helpdeskMessengerService->getMessagesOfConversation($conversation['id']);
                 $lastMessage = end($messages)->toArray(1);
                 if ($lastMessage["sender"] != 'helpdesk') {
-                    $mailService->sendNewMessageInfoMail($conversation['requester'], $conversation['id']);
+                    MessengerMail::sendNewMessageMail($conversation['requester'], $conversation['id']);
                     Oforge()->View()->Flash()->addMessage('success', "Notification Mail has been sent");
                 }
 
@@ -169,7 +167,7 @@ class BackendHelpdeskController extends SecureBackendController {
 
             $conversation = $helpdeskMessengerService->getConversationsByTarget($ticketId, 'helpdesk');
 
-            if (sizeof($conversation) > 0) {
+            if (!empty($conversation)) {
                 $conversation = $conversation[0];
             }
 

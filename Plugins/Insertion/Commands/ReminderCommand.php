@@ -67,13 +67,13 @@ class ReminderCommand extends AbstractCommand {
             /** @var User $user */
             $user = $reminderInsertion->getUser();
 
-            $mailOptions = [
-                'from'     => 'no-reply',
+            $mailConfig = [
+                'from'     => $mailService->buildFromConfigByPrefix('no_reply'),
                 'to'       => $user->getEmail(),
                 'Subject'  => 'Reminder',
                 'template' => $template,
             ];
-            $mailService->send($mailOptions);
+            $mailService->send($mailConfig);
         }
     }
 }

@@ -39,13 +39,13 @@ class PingCommand extends AbstractCommand {
         $emailText = $configService->get("cronjob_ping_text");
 
         if (!empty($email) && !empty($emailText)) {
-            $mailOptions = [
-                'from'    => 'no_reply',
+            $mailConfig = [
+                'from'    => $mailService->buildFromConfigByPrefix('no_reply'),
                 'to'      => [$email => $email],
                 'subject' => 'Ping ' . Oforge()->Settings()->get('host_url') ,
                 'html'    => $emailText,
             ];
-            $mailService->send($mailOptions);
+            $mailService->send($mailConfig);
         }
 
     }

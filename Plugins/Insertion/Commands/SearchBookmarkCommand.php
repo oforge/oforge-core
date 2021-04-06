@@ -3,7 +3,11 @@
 namespace Insertion\Commands;
 
 use DateTime;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Exception;
 use FrontendUserManagement\Models\User;
+use Insertion\Helper\InsertionMail;
 use Insertion\Models\InsertionUserSearchBookmark;
 use Insertion\Services\InsertionListService;
 use Insertion\Services\InsertionSearchBookmarkService;
@@ -12,7 +16,6 @@ use Oforge\Engine\Modules\Console\Abstracts\AbstractCommand;
 use Oforge\Engine\Modules\Console\Lib\Input;
 use Oforge\Engine\Modules\Core\Helper\RouteHelper;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
-use Oforge\Engine\Modules\Mailer\Services\MailService;
 use Oforge\Engine\Modules\Core\Exceptions;
 
 class SearchBookmarkCommand extends AbstractCommand {
@@ -50,9 +53,6 @@ class SearchBookmarkCommand extends AbstractCommand {
         /** @var InsertionListService $insertionListService */
         $insertionListService  = Oforge()->Services()->get('insertion.list');
 
-        /** @var MailService $mailService */
-        $mailService           = Oforge()->Services()->get('mail');
-
         /** @var ConfigService $configService */
         $configService = Oforge()->Services()->get('config');
 
@@ -72,12 +72,16 @@ class SearchBookmarkCommand extends AbstractCommand {
             $baseUrl    = $configService->get('system_project_domain_name');
             $searchLink = $baseUrl . $searchBookmarkService->getUrl($bookmark->getInsertionType()->getId(), $params);
 
-            $newInsertionsCount = sizeof($insertionList["query"]["items"]);
-            if ($newInsertionsCount > 0) {
-                $mailService->sendNewSearchResultsInfoMail($user->getId(), $newInsertionsCount, $searchLink);
-            }
+            $newInsertionsCount = count($insertionList["query"]["items"]);
 
-            $searchBookmarkService->setLastChecked($bookmark);
+            try {
+                if ($newInsertionsCount > 0) {
+                    InsertionMail::sendNewSearchResultsMail($user->getId(), $newInsertionsCount, $searchLink);
+                }
+                $searchBookmarkService->setLastChecked($bookmark);
+            } catch (Exception $exception) {
+                Oforge()->Logger()->logException($exception);
+            }
         }
     }
 

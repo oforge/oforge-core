@@ -8,6 +8,7 @@ use FrontendUserManagement\Abstracts\SecureFrontendController;
 use FrontendUserManagement\Models\User;
 use FrontendUserManagement\Services\FrontendUserService;
 use FrontendUserManagement\Services\UserService;
+use Messenger\Helper\MessengerMail;
 use Messenger\Models\Conversation;
 use Messenger\Services\FrontendMessengerService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
@@ -16,8 +17,6 @@ use Oforge\Engine\Modules\Core\Exceptions\ConfigElementNotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ConfigOptionKeyNotExistException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\Statics;
-use Oforge\Engine\Modules\I18n\Helper\I18N;
-use Oforge\Engine\Modules\Mailer\Services\MailService;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
@@ -81,9 +80,7 @@ class MessengerController extends SecureFrontendController {
                 $message = $request->getParsedBody()['message'];
 
                 /** @var FrontendMessengerService $frontendMessengerService */
-                /** @var MailService $mailService */
                 $frontendMessengerService = Oforge()->Services()->get('frontend.messenger');
-                $mailService              = Oforge()->Services()->get('mail');
 
                 $frontendMessengerService->sendMessage($activeConversation['id'], $user['id'], $message);
 
@@ -96,12 +93,12 @@ class MessengerController extends SecureFrontendController {
                     $lastMessage = end($activeConversation['messages']);
                     /** send mail if posted message is first message */
                     if ($lastMessage == false) {
-                        $mailService->sendNewMessageInfoMail($targetUserId, $activeConversation['id']);
+                        MessengerMail::sendNewMessageMail($targetUserId, $activeConversation['id']);
                     } else {
                         $lastMessageUser = $lastMessage->toArray()['sender'];
                         /** send mail if last message came from other chat user */
                         if ($lastMessageUser != $user['id']) {
-                            $mailService->sendNewMessageInfoMail($targetUserId, $activeConversation['id']);
+                            MessengerMail::sendNewMessageMail($targetUserId, $activeConversation['id']);
                         }
                     }
                 }

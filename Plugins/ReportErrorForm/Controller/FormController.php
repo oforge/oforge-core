@@ -147,13 +147,13 @@ class FormController extends AbstractController {
                 $subject .= $issueTypeLabel;
                 /** @var MailService $mailService */
                 $mailService = Oforge()->Services()->get('mail');
-                $mailOptions = [
-                    'from'    => 'no_reply',
+                $mailConfig = [
+                    'from'    => $mailService->buildFromConfigByPrefix('no_reply'),
                     'to'      => $receiver,
                     'subject' => $subject,
                     'text'    => $message,
                 ];
-                $mailService->send($mailOptions);
+                $mailService->send($mailConfig);
             }
             /** @var HelpdeskTicketService $helpdeskTicketService */
             $helpdeskTicketService = Oforge()->Services()->get('helpdesk.ticket');

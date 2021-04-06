@@ -9,6 +9,7 @@ use Exception;
 use FrontendUserManagement\Abstracts\SecureFrontendController;
 use FrontendUserManagement\Services\FrontendUserService;
 use Helpdesk\Services\HelpdeskTicketService;
+use Insertion\Helper\InsertionMail;
 use Insertion\Models\AttributeKey;
 use Insertion\Models\Insertion;
 use Insertion\Models\InsertionType;
@@ -24,6 +25,7 @@ use Insertion\Services\InsertionService;
 use Insertion\Services\InsertionTypeService;
 use Insertion\Services\InsertionUpdaterService;
 use Insertion\Services\InsertionValidationService;
+use Messenger\Helper\MessengerMail;
 use Messenger\Models\Conversation;
 use Messenger\Services\FrontendMessengerService;
 use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
@@ -35,7 +37,6 @@ use Oforge\Engine\Modules\Core\Manager\Events\Event;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\I18n\Models\Language;
 use Oforge\Engine\Modules\I18n\Services\LanguageService;
-use Oforge\Engine\Modules\Mailer\Services\MailService;
 use Oforge\Engine\Modules\TemplateEngine\Extensions\Services\UrlService;
 use ReflectionException;
 use Slim\Http\Request;
@@ -235,9 +236,6 @@ class FrontendInsertionController extends SecureFrontendController {
             /** @var InsertionFormsService $formsService */
             $formsService = Oforge()->Services()->get('insertion.forms');
 
-            /** @var MailService $mailService */
-            $mailService = Oforge()->Services()->get('mail');
-
             if ($request->isPost() || $request->isGet() && $_GET['success'] === 'true') {
                 Oforge()->Logger()->get('create')->info('process data ', $_POST);
 
@@ -257,7 +255,7 @@ class FrontendInsertionController extends SecureFrontendController {
 
                     if (isset($insertion)) {
                         try {
-                            $mailService->sendInsertionCreateInfoMail($user, $insertion);
+                            InsertionMail::sendInsertionCreateMail($user, $insertion);
                         } catch (Exception $exception) {
                             Oforge()->View()->Flash()->addMessage('warning', I18N::translate('confirmation_mail_not_sent', [
                                 'en' => 'Confirmation could not be sent.',
@@ -753,11 +751,7 @@ class FrontendInsertionController extends SecureFrontendController {
                 ];
 
                 $conversation = $messengerService->createNewConversation($data);
-
-                /** @var MailService $mailService */
-                $mailService = Oforge()->Services()->get('mail');
-
-                $mailService->sendNewMessageInfoMail($insertion->getUser()->getId(), $conversation->getId());
+                MessengerMail::sendNewMessageMail($insertion->getUser()->getId(), $conversation->getId());
             }
 
             $uri = $router->pathFor('frontend_account_messages', ['id' => $conversation->getId()]);

@@ -1,0 +1,12 @@
+{
+    "name": "oforge/mailer",
+    "type": "oforge-module",
+    "description": "Oforge Mailer",
+    "keywords": ["oforge", "module", "mail"],
+    "license": "MIT",
+    "require": {
+        "php": ">=7.2",
+        "phpmailer/phpmailer": "~6.0",
+        "pelago/emogrifier": "^2.1.0"
+    }
+}

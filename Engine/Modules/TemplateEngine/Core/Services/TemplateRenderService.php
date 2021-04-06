@@ -134,6 +134,7 @@ class TemplateRenderService {
      * @throws DependencyNotResolvedException
      */
     public function View() {
+        //TODO REFACTORING: Generic Twig Instance by TemplateRenderService method
         if (!$this->view) {
             /** @var TemplateManagementService $templateManagementService */
             $templateManagementService = Oforge()->Services()->get('template.management');

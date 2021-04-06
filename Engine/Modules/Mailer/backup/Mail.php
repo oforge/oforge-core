@@ -1,6 +1,6 @@
 <?php
 
-namespace Oforge\Engine\Modules\Mailer\Models;
+namespace Oforge\Engine\Modules\Mailer\backup;
 
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 use Doctrine\ORM\Mapping as ORM;

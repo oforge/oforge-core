@@ -233,9 +233,9 @@ class RegistrationController extends AbstractController {
 
         $mailService = Oforge()->Services()->get('mail');
 
-        $mailOptions  = [
+        $mailConfig  = [
             'to'       => [$user['email'] => $user['email']],
-            'from'     => 'info',
+            'from'     => $mailService->buildFromConfigByPrefix('info'),
             'subject'  => I18N::translate('mailer_subject_registration', [
                 'en' => 'Your Registration',
                 'de' => 'Deine Registrierung',
@@ -246,14 +246,14 @@ class RegistrationController extends AbstractController {
             'activationLink' => $activationLink,
             'resendLink'     => RouteHelper::getFullUrl(RouteHelper::getUrl('frontend_registration_resend_activation_link')),
             'user_mail'      => $user['email'],
-            'sender_mail'    => $mailService->getSenderAddress('info'),
+            'sender_mail'    => $mailService->buildFromMailByPrefix('info'),
             'receiver_name'  => $nickname,
         ];
 
         /**
          * Registration Mail could not be sent
          */
-        if (!$mailService->send($mailOptions, $templateData)) {
+        if (!$mailService->send($mailConfig, $templateData)) {
             Oforge()->View()->Flash()->addMessage('error', I18N::translate('registration_mail_error', [
                 'en' => 'Your registration mail could not be sent',
                 'de' => 'Registrierungs-Mail konnte nicht gesendet werden.',
@@ -355,15 +355,13 @@ class RegistrationController extends AbstractController {
 
         /** @var MailService $mailService */
         $mailService = Oforge()->Services()->get('mail');
-
-        $options = [
+        $mailConfig = [
             'to'       => [$user['email'] => $user['email']],
-            'from'     => 'info',
+            'from'     => $mailService->buildFromConfigByPrefix('info'),
             'subject'  => I18N::translate('mailer_subject_registration_gift_cert'),
             'template' => 'RegistrationGiftCertificate.twig',
         ];
-
-        $mailService->send($options);
+        $mailService->send($mailConfig);
 
         if (isset($_SESSION['force_referrer'])) {
             $uri = $_SESSION['force_referrer'];
@@ -429,9 +427,9 @@ class RegistrationController extends AbstractController {
 
             /** @var MailService $mailService */
             $mailService  = Oforge()->Services()->get('mail');
-            $mailOptions  = [
+            $mailConfig  = [
                 'to'       => [$userData['email'] => $userData['email']],
-                'from'     => 'info',
+                'from'     => $mailService->buildFromConfigByPrefix('info'),
                 'subject'  => I18N::translate('mailer_subject_registration', [
                     'en' => 'Your Registration',
                     'de' => 'Deine Registrierung',
@@ -442,11 +440,11 @@ class RegistrationController extends AbstractController {
                 'activationLink' => $activationLink,
                 'resendLink'     => RouteHelper::getFullUrl(RouteHelper::getUrl('frontend_registration_resend_activation_link')),
                 'user_mail'      => $userData['email'],
-                'sender_mail'    => $mailService->getSenderAddress('info'),
+                'sender_mail'    => $mailService->buildFromMailByPrefix('info'),
                 'receiver_name'  => ArrayHelper::dotGet($userData, 'detail.nickName') ?? $userData['email'] ?? '',
             ];
             // Registration Mail could not be sent
-            if (!$mailService->send($mailOptions, $templateData)) {
+            if (!$mailService->send($mailConfig, $templateData)) {
                 Oforge()->View()->Flash()->addMessage('error', I18N::translate('registration_mail_error', [
                     'en' => 'Your registration mail could not be sent',
                     'de' => 'Registrierungs-Mail konnte nicht gesendet werden.',

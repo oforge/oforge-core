@@ -4,24 +4,30 @@ namespace Oforge\Engine\Modules\Mailer\Services;
 
 use Pelago\Emogrifier;
 
-class InlineCssService {
+/**
+ * Class InlineCssService
+ *
+ * @package Oforge\Engine\Modules\Mailer\Services
+ */
+class InlineCssService
+{
+
     /**
      * HTML / CSS input needs to be UTF-8 encoded.
      *
-     * @param $html
-     * @param $css
+     * @param string $html
+     * @param string|null $css
      *
      * @return string HTML with inline-CSS
      */
-    public function renderInlineCss($html, $css = null) {
-
-        /** @var  $cssInliner */
-        $cssInliner = new Emogrifier($html);
-
-        if(isset($css)) {
-            $cssInliner->setCss($css);
+    public function inline(string $html, ?string $css = null) : string
+    {
+        $emogrifier = new Emogrifier($html);
+        if ($css !== null) {
+            $emogrifier->setCss($css);
         }
 
-        return $cssInliner->emogrify();
+        return $emogrifier->emogrify();
     }
+
 }

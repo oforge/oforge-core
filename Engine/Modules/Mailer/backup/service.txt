@@ -1,0 +1,2 @@
+'mail.list'      => \Oforge\Engine\Modules\Mailer\MailingListService::class,
+'mail.list'      => MailingListService::class,

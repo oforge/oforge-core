@@ -57,9 +57,9 @@ class InsertionBookmarkReminderCommand extends AbstractCommand {
                 continue;
             }
 
-            $mailerOptions = [
+            $mailConfig = [
                 'to'       => [$userMail => $userMail],
-                'from'     => 'no_reply',
+                'from'     => $mailService->buildFromConfigByPrefix('no_reply'),
                 'subject'  => I18N::translate('mailer_subject_insertion_bookmark_reminder', 'Check mal wieder deine Merkliste | All Your Horses'),
                 'template' => 'InsertionBookmarkReminder.twig',
             ];
@@ -71,7 +71,7 @@ class InsertionBookmarkReminderCommand extends AbstractCommand {
                 'baseUrl' => Oforge()->Settings()->get('host_url'),
             ];
 
-            $mailService->send($mailerOptions, $templateData);
+            $mailService->send($mailConfig, $templateData);
         }
     }
 }
