@@ -271,12 +271,18 @@ class MailService
             $paths[Twig_Loader_Filesystem::MAIN_NAMESPACE] = $mainPaths;
 
             // $twig = new CustomTwig($templatePath, ['cache' => ROOT_PATH . Statics::GLOBAL_SEPARATOR . Statics::CACHE_DIR . '/mailer']);
-            $twig = new CustomTwig(
+            $devMode = Oforge()->Settings()->isDevelopmentMode();
+            $twig    = new CustomTwig(
                 $paths,#
                 [
-                    'cache' => join(Statics::GLOBAL_SEPARATOR, [ROOT_PATH, Statics::CACHE_DIR, 'mailer']),
+                    'cache'       => join(Statics::GLOBAL_SEPARATOR, [ROOT_PATH, Statics::CACHE_DIR, 'mailer']),
+                    'auto_reload' => $devMode,
+                    'debug'       => $devMode,
                 ]
             );
+            if ($devMode) {
+                $twig->getEnvironment()->enableDebug();
+            }
             try {
                 Oforge()->Services()->get('cms');
                 $cmsTwigExtension = '\CMS\Twig\CmsTwigExtension';
