@@ -1,0 +1,29 @@
+Oforge()->Events()->attach(
+    'mail.test.mailIds',
+    Event::SYNC,
+    function (Event $event) {
+        $mailIds = $event->getReturnValue();
+
+        $mailIds['newId'] = 'newDescription';
+
+        $event->setReturnValue($mailIds);
+    }
+);
+
+
+
+Oforge()->Events()->attach(
+    'mail.test.newId',
+    Event::SYNC,
+    function (Event $event) {
+        $mail = [
+            'config' => [
+                'template' => 'MyFolder/MyTemplateFile.twig',
+            ],
+            'data'   => [
+                // Template data
+            ],
+        ];
+        $event->setReturnValue($mail);
+    }
+);

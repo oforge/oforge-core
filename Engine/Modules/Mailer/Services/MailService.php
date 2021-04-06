@@ -229,7 +229,7 @@ class MailService
      * @throws OptimisticLockException
      * @throws TemplateNotFoundException
      */
-    protected function renderTemplate(array $config, array $templateData) : string
+    public function renderTemplate(array $config, array $templateData) : string
     {
         if ( !isset($this->mailerTwig)) {
             /** @var TemplateManagementService $templateManagementService */
@@ -254,7 +254,7 @@ class MailService
                 /** @var Plugin[] $plugins */
                 $plugins = Oforge()->Services()->get('plugin.access')->getActive();
                 foreach ($plugins as $plugin) {
-                    $pluginName = $plugin->getName();
+                    $pluginName = $plugin['name'];
                     $pluginPath = join(Statics::GLOBAL_SEPARATOR, [ROOT_PATH, Statics::PLUGIN_DIR, $pluginName, Statics::VIEW_DIR, 'MailTemplates']);
                     if (file_exists($pluginPath)) {
                         $mainPaths[]        = $pluginPath;

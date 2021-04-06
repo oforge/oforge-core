@@ -1,0 +1,37 @@
+{% extends "Backend/Master/Index.twig" %}
+
+{% block pagecontent %}
+    <div class="box box-primary">
+    <div class="box-body table-responsive">
+
+    <table class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>Description</th>
+            <th>Preview</th>
+            <th>Send</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for mailId,description in TestMailController %}
+            <tr>
+                <td>{{ description }}</td>
+                <td>
+                    <a href="{{ url('backend_test_mail_show', {id: mailId}) }}" target="_blank"
+                       class="btn btn-sm btn-primary">Preview</a>
+                </td>
+                <td class="form-inline">
+                    <form action="{{ url('backend_test_mail_send') }}">
+                        <input type="hidden" name="id" value="{{ mailId }}"/>
+                        <input type="email" name="to" value="" placeholder="to: email@domain"
+                               class="form-control form-control-sm"/>
+                        <input type="submit" value="Send" class="btn btn-sm btn-primary"/>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>{# end: box-body #}
+    </div>{# end: box #}
+{% endblock pagecontent %}
