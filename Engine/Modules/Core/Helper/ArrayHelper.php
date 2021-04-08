@@ -226,13 +226,13 @@ class ArrayHelper {
     /**
      * Removes all unwanted array keys.
      *
-     * @param array $keys
      * @param array $inputArray
+     * @param array $removeKeys
      *
      * @return array
      */
-    public static function filterByKeys(array $keys, array $inputArray) {
-        $tmp = array_fill_keys($keys, 1);
+    public static function excludeKeys(array $inputArray, array $removeKeys) {
+        $tmp = array_fill_keys($removeKeys, 1);
 
         return array_filter($inputArray, function ($key) use ($tmp) {
             return isset($tmp[$key]);

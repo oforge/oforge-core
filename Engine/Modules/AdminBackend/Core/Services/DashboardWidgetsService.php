@@ -174,7 +174,7 @@ class DashboardWidgetsService extends AbstractDatabaseAccess {
         }
         foreach ($data as $widgetID => $userSettings) {
             $dataKeys       = ['active', 'order', 'position', 'cssClass'];
-            $userSettings   = ArrayHelper::filterByKeys($dataKeys, $userSettings);
+            $userSettings   = ArrayHelper::excludeKeys($userSettings, $dataKeys);
             if (isset($userSettings['order']) && $userSettings['order'] === '') {
                 $userSettings['order'] = 0;
             }
@@ -193,7 +193,7 @@ class DashboardWidgetsService extends AbstractDatabaseAccess {
                     /** @var DashboardWidget|null $dashboardWidget */
                     $dashboardWidget     = $this->repository()->findOneBy(['id' => $widgetID, 'active' => true]);
                     $tmp                 = $dashboardWidget->toArray();
-                    $tmp                 = ArrayHelper::filterByKeys($dataKeys, $tmp);
+                    $tmp                 = ArrayHelper::excludeKeys($tmp, $dataKeys);
                     $userDashboardWidget = UserDashboardWidget::create($baseWidgetData);
                     $userDashboardWidget->fromArray($tmp);
                     $userDashboardWidget->fromArray($userSettings);
