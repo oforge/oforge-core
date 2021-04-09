@@ -1,46 +1,25 @@
-{% block user_details_form %}
-    <form class="form form--user-details">
+{% block user_delete_form %}
+    <div class="form form--user-details">
 
-        {% block user_details_data_separator %}
+        {% block user_delete_data_separator %}
             <div class="separator"></div>
-        {% endblock user_details_data_separator %}
+        {% endblock user_delete_data_separator %}
 
         <div class="form-controls">
 
-            <h2 class="form__title">{{ i18n('user_contact_data', 'Contact data') }}</h2>
+            <h2 class="form__title">{{ i18n('user_account_details_delete_title',{
+                    en: 'Delete account',
+                    de: 'Account löschen'
+                } ) }}</h2>
 
             <div class="form__control">
-                {% block user_details_label_contact_email %}
-                {% endblock user_details_label_contact_email %}
-                <input id="frontend_account_details_contact_email"
-                       name="frontend_account_details_contact_email"
-                       type="email"
-                       class="form__input form__input"
-                       placeholder="{{ i18n('contact_email') }}"
-                       {% if (userDetails) %}value="{{ userDetails.contactEmail }}"{% endif %}>
-            </div>
-
-            <div class="form__control">
-                {% block user_details_label_contact_phone %}
-                {% endblock user_details_label_contact_phone %}
-                <input id="frontend_account_details_contact_phone"
-                       name="frontend_account_details_contact_phone"
-                       type="text"
-                       class="form__input form__input"
-                       placeholder="{{ i18n('contact_phone') }}"
-                       {% if (userDetails) %}value="{{ userDetails.phoneNumber }}"{% endif %}>
-            </div>
-
-            <div class="form__control">
-                <input type="hidden" name="token" value="{{ token() }}">
-                <input type="submit"
-                       value="{{ i18n('save') }}"
-                       class="form__input form__input--submit button">
+                <div>
+                    {{ i18n('user_account_details_delete_description',{
+                        en: 'user_account_details_delete_description',
+                        de: 'user_account_details_delete_description'
+                    } ) }}
+                </div>
             </div>
         </div>
-
-        {% block user_details_contact_separator %}
-            <div class="separator"></div>
-        {% endblock user_details_contact_separator %}
-    </form>
-{% endblock user_details_form %}
+    </div>
+{% endblock user_delete_form %}
