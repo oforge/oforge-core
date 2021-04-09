@@ -1,8 +1,16 @@
-{# block account__content #}
 {% block account_content %}
     <div class="account__content flex flex--row flex--wrap">
         <h1 class="account__title">{{ i18n('user_details') }}</h1>
-        {% include 'Plugins/FrontendUserManagement/Frontend/Components/Forms/UserDetailsForm.twig' %}
-        {% include 'Plugins/FrontendUserManagement/Frontend/Components/Forms/UserAddressForm.twig' %}
+        {% block detail %}
+            {% include 'Plugins/FrontendUserManagement/Frontend/Components/Forms/UserDetailsForm.twig' %}
+        {% endblock detail %}
+
+        {% block address %}
+            {% include 'Plugins/FrontendUserManagement/Frontend/Components/Forms/UserAddressForm.twig' %}
+        {% endblock address %}
+
+        {% block delete %}
+            {% include 'Plugins/FrontendUserManagement/Frontend/Components/Forms/UserDeleteForm.twig' %}
+        {% endblock delete %}
     </div>
 {% endblock account_content %}
