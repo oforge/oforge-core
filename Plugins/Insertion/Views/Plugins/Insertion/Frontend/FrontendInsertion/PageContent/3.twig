@@ -40,14 +40,16 @@
                            placeholder="{{ i18n('name') }}" />
                 </div>
                 <div class="form__control">
-                    <h3 class="form__sub-title">{{ i18n('contact_data') }}</h3>
+                    <h3 class="form__sub-title">{{ i18n('contact_email') }} <span class="required">*</span></h3>
                     <input type="email"
                            name="contact_email"
+                           required
                            class="form__input form-control"
                            value="{% if data['contact_email'] %}{{ data['contact_email'] }}{% elseif lastContact.email %}{{ lastContact.email }}{% endif %}"
                            placeholder="{{ i18n('email') }}" />
                 </div>
                 <div class="form__control">
+                    <h3 class="form__sub-title">{{ i18n('contact_phone') }}</h3>
                     <input type="tel"
                            name="contact_phone"
                            class="form__input form-control"
