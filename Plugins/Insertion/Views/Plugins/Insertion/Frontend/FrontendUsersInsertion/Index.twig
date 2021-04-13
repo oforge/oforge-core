@@ -20,13 +20,15 @@
                                 {% include 'Frontend/Components/Insertions/UserList.twig' with { insertions : insertions } %}
                             </div>
 
-                            {% if insertions|length >= 10 %}
+                            {# {% if insertions|length >= 10 %}
                                 <a href="#" class="button button--primary" data-addmore="true" data-container="#insertion-container"
                                    data-url="{{ url('frontend_account_insertions_page') }}">
                                     <!-- /insertions/search?page=3 -->
                                     <span>load more </span>
                                 </a>
-                            {% endif %}
+                                {{ url('frontend_account_insertions_page') }}
+                            {% endif %}#}
+
                         </div>
                     </div>
                 {% endblock account__content %}
