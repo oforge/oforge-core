@@ -60,8 +60,8 @@ class FrontendUsersInsertionController extends SecureFrontendController {
          */
         $userService = Oforge()->Services()->get("frontend.user");
         $user        = $userService->getUser();
-
-        $result = ["insertions" => $insertionListService->getUserInsertions($user)];
+        /* neue Methode mit ALl als param*/
+        $result = ["insertions" => $insertionListService->getUserInsertionsAll($user)];
 
         Oforge()->View()->assign($result);
     }
