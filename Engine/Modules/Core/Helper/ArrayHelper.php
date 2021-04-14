@@ -49,7 +49,7 @@ class ArrayHelper {
      * @return mixed
      */
     public static function get(array $array, $key, $defaultValue = null) {
-        return isset($array[$key]) ? $array[$key] : $defaultValue;
+        return $array[$key] ?? $defaultValue;
     }
 
     /**

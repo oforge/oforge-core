@@ -296,8 +296,8 @@ class CategoryController extends BaseCrudController {
     }
 
     /** @inheritDoc */
-    protected function prepareItemDataArray(?AbstractModel $entity, string $crudAction) : array {
-        $data = parent::prepareItemDataArray($entity, $crudAction);
+    protected function prepareItemDataArray(?AbstractModel $entity, string $crudAction, array $queryParams = []) : array {
+        $data = parent::prepareItemDataArray($entity, $crudAction, $queryParams);
         if (!empty($data) && $crudAction !== 'create') {
             if (!isset($this->filterSelectData['postsOfCategory'])) {
                 try {

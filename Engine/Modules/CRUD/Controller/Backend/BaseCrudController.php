@@ -30,7 +30,8 @@ use Slim\Http\Response;
  *
  * @package Oforge\Engine\Modules\CRUD\Controller\Backend
  */
-class BaseCrudController extends SecureBackendController {
+class BaseCrudController extends SecureBackendController
+{
     /** @var string $model */
     protected $model = null;
     /**
@@ -75,6 +76,7 @@ class BaseCrudController extends SecureBackendController {
      *                  'max"           => ...,     // If type = string|text. (Optional)
      *                  'step"          => ...,     // If type = string|text. (Optional)
      *                  'size'          => ...,     // If type = select. (Optional)
+     *                  'queryAutoFill' => true,   // Auto fill/select value on create by query parameter (Optional)
      *              ],
      *              'renderer' => [ // Configuration for renderer
      *                  'alignment' => 'left|center|right', // If type = int|float|currency then default = right otherwise left. (Optional)
@@ -193,7 +195,8 @@ class BaseCrudController extends SecureBackendController {
      *
      * @throws ServiceNotFoundException
      */
-    public function __construct() {
+    public function __construct()
+    {
         if (is_null($this->model) || is_null($this->modelProperties)) {
             echo 'Properties "$model" and "$modelProperties" must be override!';
             die();
@@ -222,7 +225,8 @@ class BaseCrudController extends SecureBackendController {
      * @throws ORMException
      * @EndpointAction()
      */
-    public function indexAction(Request $request, Response $response) {
+    public function indexAction(Request $request, Response $response)
+    {
         $queryParams = $request->getQueryParams();
         $postData    = $request->getParsedBody();
         if ($request->isPost() && !empty($postData)) {
@@ -245,7 +249,7 @@ class BaseCrudController extends SecureBackendController {
             $postData = Oforge()->View()->Flash()->getData($this->moduleModelName);
             Oforge()->View()->Flash()->clearData($this->moduleModelName);
         }
-        if (!empty($entities)) {
+        if ( !empty($entities)) {
             foreach ($entities as $index => $entity) {
                 $entity = $this->prepareItemDataArray($entity, 'index');
                 if (isset($postData[$index])) {
@@ -271,20 +275,22 @@ class BaseCrudController extends SecureBackendController {
         }
         unset($filter);
 
-        Oforge()->View()->assign([
-            'crud' => [
-                'context'       => 'index',
-                'properties'    => $properties,
-                'model'         => $this->moduleModelName,
-                'actions'       => $this->crudActions,
-                'hasEditors'    => $hasEditors,
-                'hasRowActions' => $hasRowActions,
-                'items'         => $entities,
-                'pagination'    => $pagination,
-                'queryKeys'     => $this->indexReservedQueryKeys,
-                'filter'        => $filters,
-            ],
-        ]);
+        Oforge()->View()->assign(
+            [
+                'crud' => [
+                    'context'       => 'index',
+                    'properties'    => $properties,
+                    'model'         => $this->moduleModelName,
+                    'actions'       => $this->crudActions,
+                    'hasEditors'    => $hasEditors,
+                    'hasRowActions' => $hasRowActions,
+                    'items'         => $entities,
+                    'pagination'    => $pagination,
+                    'queryKeys'     => $this->indexReservedQueryKeys,
+                    'filter'        => $filters,
+                ],
+            ]
+        );
 
         return $response;
     }
@@ -296,7 +302,8 @@ class BaseCrudController extends SecureBackendController {
      * @return Response
      * @EndpointAction()
      */
-    public function createAction(Request $request, Response $response) {
+    public function createAction(Request $request, Response $response)
+    {
         $postData = $request->getParsedBody();
         if ($request->isPost() && !empty($postData)) {
             try {
@@ -304,38 +311,53 @@ class BaseCrudController extends SecureBackendController {
                 $this->handleFileUploads($data, 'create');
                 $data = $this->convertData($data, 'create');
                 $this->crudService->create($this->model, $data);
-                Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_create_success', [
-                    'en' => 'Entity successfully created.',
-                    'de' => 'Das Element wurde erfolgreich erstellt.',
-                ]));
+                Oforge()->View()->Flash()->addMessage(
+                    'success',
+                    I18N::translate(
+                        'backend_crud_msg_create_success',
+                        [
+                            'en' => 'Entity successfully created.',
+                            'de' => 'Das Element wurde erfolgreich erstellt.',
+                        ]
+                    )
+                );
 
                 return $this->redirect($response, 'index');
             } catch (Exception $exception) {
-                Oforge()->View()->Flash()->addExceptionMessage('error', I18N::translate('backend_crud_msg_create_failed', [
-                    'en' => 'Entity creation failed.',
-                    'de' => 'Erstellung des Elements fehlgeschlagen.',
-                ]), $exception);
+                Oforge()->View()->Flash()->addExceptionMessage(
+                    'error',
+                    I18N::translate(
+                        'backend_crud_msg_create_failed',
+                        [
+                            'en' => 'Entity creation failed.',
+                            'de' => 'Erstellung des Elements fehlgeschlagen.',
+                        ]
+                    ),
+                    $exception
+                );
                 Oforge()->View()->Flash()->setData($this->moduleModelName, $data);
 
                 return $this->redirect($response, 'create');
             }
         }
-        $entity = $this->prepareItemDataArray(null, 'create');
+        $entity = $this->prepareItemDataArray(null, 'create', $request->getQueryParams());
         if (Oforge()->View()->Flash()->hasData($this->moduleModelName)) {
             $postData = Oforge()->View()->Flash()->getData($this->moduleModelName);
             $entity   = ArrayHelper::mergeRecursive($entity, $postData);
             Oforge()->View()->Flash()->clearData($this->moduleModelName);
         }
         [$properties, $hasEditors] = $this->filterPropertiesFor('create');
-        Oforge()->View()->assign([
-            'crud' => [
-                'context'    => 'create',
-                'properties' => $properties,
-                'model'      => $this->moduleModelName,
-                'actions'    => $this->crudActions,
-                'item'       => $entity,
-            ],
-        ]);
+        Oforge()->View()->assign(
+            [
+                'crud' => [
+                    'context'    => 'create',
+                    'properties' => $properties,
+                    'model'      => $this->moduleModelName,
+                    'actions'    => $this->crudActions,
+                    'item'       => $entity,
+                ],
+            ]
+        );
 
         return $response;
     }
@@ -348,19 +370,22 @@ class BaseCrudController extends SecureBackendController {
      * @return Response
      * @EndpointAction(path="/view/{id}")
      */
-    public function viewAction(Request $request, Response $response, array $args) {
+    public function viewAction(Request $request, Response $response, array $args)
+    {
         $entity = $this->crudService->getById($this->model, $args['id']);
         $entity = $this->prepareItemDataArray($entity, 'view');
         [$properties, $hasEditors] = $this->filterPropertiesFor('view');
-        Oforge()->View()->assign([
-            'crud' => [
-                'context'    => 'view',
-                'properties' => $properties,
-                'model'      => $this->moduleModelName,
-                'actions'    => $this->crudActions,
-                'item'       => $entity,
-            ],
-        ]);
+        Oforge()->View()->assign(
+            [
+                'crud' => [
+                    'context'    => 'view',
+                    'properties' => $properties,
+                    'model'      => $this->moduleModelName,
+                    'actions'    => $this->crudActions,
+                    'item'       => $entity,
+                ],
+            ]
+        );
 
         return $response;
     }
@@ -373,7 +398,8 @@ class BaseCrudController extends SecureBackendController {
      * @return Response
      * @EndpointAction(path="/update/{id}")
      */
-    public function updateAction(Request $request, Response $response, array $args) {
+    public function updateAction(Request $request, Response $response, array $args)
+    {
         $postData = $request->getParsedBody();
         if ($request->isPost() && !empty($postData)) {
             try {
@@ -381,15 +407,28 @@ class BaseCrudController extends SecureBackendController {
                 $this->handleFileUploads($data, 'update');
                 $data = $this->convertData($data, 'update');
                 $this->crudService->update($this->model, $data);
-                Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_update_success', [
-                    'en' => 'Entity successfully updated.',
-                    'de' => 'Element erfolgreich aktualisiert.',
-                ]));
+                Oforge()->View()->Flash()->addMessage(
+                    'success',
+                    I18N::translate(
+                        'backend_crud_msg_update_success',
+                        [
+                            'en' => 'Entity successfully updated.',
+                            'de' => 'Element erfolgreich aktualisiert.',
+                        ]
+                    )
+                );
             } catch (Exception $exception) {
-                Oforge()->View()->Flash()->addExceptionMessage('error', I18N::translate('backend_crud_msg_update_failed', [
-                    'en' => 'Entity update failed.',
-                    'de' => 'Aktualisieren des Elements fehlgeschlagen.',
-                ]), $exception);
+                Oforge()->View()->Flash()->addExceptionMessage(
+                    'error',
+                    I18N::translate(
+                        'backend_crud_msg_update_failed',
+                        [
+                            'en' => 'Entity update failed.',
+                            'de' => 'Aktualisieren des Elements fehlgeschlagen.',
+                        ]
+                    ),
+                    $exception
+                );
                 Oforge()->View()->Flash()->setData($this->moduleModelName, $data);
             }
 
@@ -403,15 +442,17 @@ class BaseCrudController extends SecureBackendController {
             Oforge()->View()->Flash()->clearData($this->moduleModelName);
         }
         [$properties, $hasEditors] = $this->filterPropertiesFor('update');
-        Oforge()->View()->assign([
-            'crud' => [
-                'context'    => 'update',
-                'properties' => $properties,
-                'model'      => $this->moduleModelName,
-                'actions'    => $this->crudActions,
-                'item'       => $entity,
-            ],
-        ]);
+        Oforge()->View()->assign(
+            [
+                'crud' => [
+                    'context'    => 'update',
+                    'properties' => $properties,
+                    'model'      => $this->moduleModelName,
+                    'actions'    => $this->crudActions,
+                    'item'       => $entity,
+                ],
+            ]
+        );
 
         return $response;
     }
@@ -424,7 +465,8 @@ class BaseCrudController extends SecureBackendController {
      * @return Response
      * @EndpointAction(path="/delete/{id}")
      */
-    public function deleteAction(Request $request, Response $response, array $args) {
+    public function deleteAction(Request $request, Response $response, array $args)
+    {
         $postData = $request->getParsedBody();
         if ($request->isPost() && !empty($postData)) {
             $return = $this->handleDeleteAction($response, $args['id']);
@@ -435,21 +477,24 @@ class BaseCrudController extends SecureBackendController {
         $entity = $this->crudService->getById($this->model, $args['id']);
         $entity = $this->prepareItemDataArray($entity, 'delete');
         [$properties, $hasEditors] = $this->filterPropertiesFor('delete');
-        Oforge()->View()->assign([
-            'crud' => [
-                'context'    => 'delete',
-                'properties' => $properties,
-                'model'      => $this->moduleModelName,
-                'actions'    => $this->crudActions,
-                'item'       => $entity,
-            ],
-        ]);
+        Oforge()->View()->assign(
+            [
+                'crud' => [
+                    'context'    => 'delete',
+                    'properties' => $properties,
+                    'model'      => $this->moduleModelName,
+                    'actions'    => $this->crudActions,
+                    'item'       => $entity,
+                ],
+            ]
+        );
 
         return $response;
     }
 
     /** @inheritdoc */
-    public function initPermissions() {
+    public function initPermissions()
+    {
         $actions         = ['index', 'create', 'view', 'update', 'delete',];
         $crudActions     = $this->crudActions;
         $crudPermissions = $this->crudPermissions;
@@ -467,9 +512,10 @@ class BaseCrudController extends SecureBackendController {
      * @param array $filter
      * @param string $propertyName
      */
-    protected function processSelectListCallable(array &$filter, string $propertyName) {
+    protected function processSelectListCallable(array &$filter, string $propertyName)
+    {
         if (isset($filter['list']) && is_string($filter['list']) && method_exists($this, $filter['list'])) {
-            if (!isset($this->filterSelectData[$propertyName])) {
+            if ( !isset($this->filterSelectData[$propertyName])) {
                 $this->filterSelectData[$propertyName] = $this->{$filter['list']}();;
             }
             $filter['list'] = $this->filterSelectData[$propertyName];
@@ -485,20 +531,36 @@ class BaseCrudController extends SecureBackendController {
      * @return array
      * @throws Exception
      */
-    protected function convertData(array $data, string $crudAction) : array {
+    protected function convertData(array $data, string $crudAction) : array
+    {
         return $data;
     }
 
     /**
      * Prepare Item data for view, e.G. DateTime to string or custom column data.
      *
-     * @param AbstractModel $entity
+     * @param AbstractModel|null $entity
      * @param string $crudAction
+     * @param array $queryParams Usage for create action
      *
      * @return array
      */
-    protected function prepareItemDataArray(?AbstractModel $entity, string $crudAction) : array {
-        return isset($entity) ? $entity->toArray() : [];
+    protected function prepareItemDataArray(?AbstractModel $entity, string $crudAction, array $queryParams = []) : array
+    {
+        $data = isset($entity) ? $entity->toArray() : [];
+        if ($crudAction === 'create') {
+            [$properties, $hasEditors] = $this->filterPropertiesFor('create');
+            foreach ($properties as $property) {
+                $name = $property['name'];
+                if (isset($queryParams[$name]) && ArrayHelper::get($property['editor'] ?? [], 'queryAutoFill', true)) {
+                    $data[$name] = $queryParams[$name];
+                } elseif (isset($property['editor']['default'])) {
+                    $data[$name] = $property['editor']['default'];
+                }
+            }
+        }
+
+        return $data;
     }
 
     /**
@@ -507,20 +569,34 @@ class BaseCrudController extends SecureBackendController {
      *
      * @return Response
      */
-    protected function handleDeleteAction(Response $response, string $entityID) {
+    protected function handleDeleteAction(Response $response, string $entityID)
+    {
         try {
             $this->crudService->delete($this->model, $entityID);
-            Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_delete_success', [
-                'en' => 'Entity successfully delete.',
-                'de' => 'Element erfolgreich gelöscht.',
-            ]));
+            Oforge()->View()->Flash()->addMessage(
+                'success',
+                I18N::translate(
+                    'backend_crud_msg_delete_success',
+                    [
+                        'en' => 'Entity successfully delete.',
+                        'de' => 'Element erfolgreich gelöscht.',
+                    ]
+                )
+            );
 
             return $this->redirect($response, 'index');
         } catch (Exception $exception) {
-            Oforge()->View()->Flash()->addExceptionMessage('error', I18N::translate('backend_crud_msg_delete_failed', [
-                'en' => 'Entity deletion failed.',
-                'de' => 'Löschen des Elements fehlgeschlagen.',
-            ]), $exception);
+            Oforge()->View()->Flash()->addExceptionMessage(
+                'error',
+                I18N::translate(
+                    'backend_crud_msg_delete_failed',
+                    [
+                        'en' => 'Entity deletion failed.',
+                        'de' => 'Löschen des Elements fehlgeschlagen.',
+                    ]
+                ),
+                $exception
+            );
 
             return $this->redirect($response, 'delete', ['id' => $entityID]);
         }
@@ -531,7 +607,8 @@ class BaseCrudController extends SecureBackendController {
      *
      * @param array $postData
      */
-    protected function handleIndexUpdate(array $postData) {
+    protected function handleIndexUpdate(array $postData)
+    {
         $list = $postData['data'];
         $this->handleFileUploads($list, 'index');
         try {
@@ -540,15 +617,28 @@ class BaseCrudController extends SecureBackendController {
             }
             $postData['data'] = $list;
             $this->crudService->update($this->model, $postData);
-            Oforge()->View()->Flash()->addMessage('success', I18N::translate('backend_crud_msg_bulk_update_success', [
-                'en' => 'Entities successfully bulk updated.',
-                'de' => 'Alle Elemente wurden erfolgreich aktualisiert.',
-            ]));
+            Oforge()->View()->Flash()->addMessage(
+                'success',
+                I18N::translate(
+                    'backend_crud_msg_bulk_update_success',
+                    [
+                        'en' => 'Entities successfully bulk updated.',
+                        'de' => 'Alle Elemente wurden erfolgreich aktualisiert.',
+                    ]
+                )
+            );
         } catch (Exception $exception) {
-            Oforge()->View()->Flash()->addExceptionMessage('error', I18N::translate('backend_crud_msg_bulk_update_failed', [
-                'en' => 'Entities bulk update failed.',
-                'de' => 'Aktualisierung der Elemente fehlgeschlagen.',
-            ]), $exception);
+            Oforge()->View()->Flash()->addExceptionMessage(
+                'error',
+                I18N::translate(
+                    'backend_crud_msg_bulk_update_failed',
+                    [
+                        'en' => 'Entities bulk update failed.',
+                        'de' => 'Aktualisierung der Elemente fehlgeschlagen.',
+                    ]
+                ),
+                $exception
+            );
             Oforge()->View()->Flash()->setData($this->moduleModelName, $postData['data']);
         }
     }
@@ -560,7 +650,8 @@ class BaseCrudController extends SecureBackendController {
      *
      * @return array
      */
-    protected function filterPropertiesFor(string $crudAction) : array {
+    protected function filterPropertiesFor(string $crudAction) : array
+    {
         $hasEditors = false;
         $properties = [];
         if (isset($this->modelProperties)) {
@@ -574,7 +665,7 @@ class BaseCrudController extends SecureBackendController {
                     $this->processSelectListCallable($property, $property['name']);
                     $propertyName = $property['name'];
 
-                    $properties[$propertyName] = $this->modifyPropertyConfig($property);
+                    $properties[$propertyName] = $this->modifyPropertyConfig($property, $crudAction);
                 }
             }
         }
@@ -586,10 +677,12 @@ class BaseCrudController extends SecureBackendController {
      * Modifying of property config at runtime, e.g. for adding options by configs.
      *
      * @param array $config
+     * @param string $crudAction
      *
      * @return array
      */
-    protected function modifyPropertyConfig(array $config) {
+    protected function modifyPropertyConfig(array $config, string $crudAction)
+    {
         return $config;
     }
 
@@ -603,7 +696,8 @@ class BaseCrudController extends SecureBackendController {
      *
      * @return Response
      */
-    protected function redirect(Response $response, string $crudAction, array $urlParams = [], array $queryParams = []) {
+    protected function redirect(Response $response, string $crudAction, array $urlParams = [], array $queryParams = [])
+    {
         $routeName = Oforge()->View()->get('meta')['route']['parentName'];
         if ($crudAction !== 'index') {
             $routeName .= '_' . $crudAction;
@@ -619,7 +713,8 @@ class BaseCrudController extends SecureBackendController {
      *
      * @return array|callable
      */
-    protected function evaluateIndexFilter(array $queryParams) {
+    protected function evaluateIndexFilter(array $queryParams)
+    {
         $queryKeys               = $this->indexReservedQueryKeys;
         $queryKeyPage            = $queryKeys['page'];
         $queryKeyEntitiesPerPage = $queryKeys['entitiesPerPage'];
@@ -629,7 +724,7 @@ class BaseCrudController extends SecureBackendController {
         $customFilterQueryValues = [];
         $filters                 = [];
 
-        if (!empty($this->indexFilter)) {
+        if ( !empty($this->indexFilter)) {
             foreach ($this->indexFilter as $propertyName => $filterConfig) {
                 $propertyNameValue = null;
                 if (isset($queryParams[$propertyName]) && $queryParams[$propertyName] !== '') {
@@ -694,7 +789,8 @@ class BaseCrudController extends SecureBackendController {
      *
      * @return array
      */
-    protected function evaluateIndexOrder(array &$queryParams) : ?array {
+    protected function evaluateIndexOrder(array &$queryParams) : ?array
+    {
         $queryKeys       = $this->indexReservedQueryKeys;
         $queryKeyOrderBy = $queryKeys['orderBy'];
         $queryKeyOrder   = $queryKeys['order'];
@@ -712,7 +808,7 @@ class BaseCrudController extends SecureBackendController {
             $orderBy = [
                 $propertyName => $order,
             ];
-        } elseif (!empty($this->indexOrderBy)) {
+        } elseif ( !empty($this->indexOrderBy)) {
             $orderBy = [];
             foreach ($this->indexOrderBy as $propertyName => $order) {
                 if ($order !== CrudGroupByOrder::ASC && $order !== CrudGroupByOrder::DESC) {
@@ -720,7 +816,7 @@ class BaseCrudController extends SecureBackendController {
                 }
                 $orderBy[$propertyName] = $order;
             }
-            if (!empty($tmpOrderBy)) {
+            if ( !empty($tmpOrderBy)) {
                 $orderBy = $tmpOrderBy;
             }
         }
@@ -733,7 +829,8 @@ class BaseCrudController extends SecureBackendController {
      * @param array|null $postData
      * @param string $crudAction
      */
-    protected function handleFileUploads(?array &$postData, string $crudAction) {
+    protected function handleFileUploads(?array &$postData, string $crudAction)
+    {
         if (empty($postData) || empty($this->modelProperties) || !isset($_FILES['data'])) {
             return;
         }
@@ -741,12 +838,12 @@ class BaseCrudController extends SecureBackendController {
         $filesMeta = $_FILES['data'];
 
         foreach ($this->modelProperties as $property) {
-            if (!isset($property['type']) || !in_array($property['type'], [CrudDataTypes::IMAGE])) {
+            if ( !isset($property['type']) || !in_array($property['type'], [CrudDataTypes::IMAGE])) {
                 continue;
             }
             $propertyName = $property['name'];
             if ($isSingle) {
-                if (!isset($postData[$propertyName]['action'])) {
+                if ( !isset($postData[$propertyName]['action'])) {
                     continue;
                 }
                 $fileData = [
@@ -756,19 +853,22 @@ class BaseCrudController extends SecureBackendController {
                     // 'mediaID'  => $postData[$propertyName]['mediaID'],
                 ];
                 if (isset($filesMeta['name'][$propertyName])) {
-                    $fileData = array_merge($fileData, [
-                        'name'     => $filesMeta['name'][$propertyName],
-                        'tmp_name' => $filesMeta['tmp_name'][$propertyName],
-                        'type'     => $filesMeta['type'][$propertyName],
-                        'error'    => $filesMeta['error'][$propertyName],
-                        'size'     => $filesMeta['size'][$propertyName],
-                    ]);
+                    $fileData = array_merge(
+                        $fileData,
+                        [
+                            'name'     => $filesMeta['name'][$propertyName],
+                            'tmp_name' => $filesMeta['tmp_name'][$propertyName],
+                            'type'     => $filesMeta['type'][$propertyName],
+                            'error'    => $filesMeta['error'][$propertyName],
+                            'size'     => $filesMeta['size'][$propertyName],
+                        ]
+                    );
                 }
                 unset($postData[$propertyName]);
                 $this->handleFileUpload($postData, $propertyName, $fileData);
             } else {
                 foreach ($postData as $entityID => &$data) {
-                    if (!isset($data[$propertyName]['action'])) {
+                    if ( !isset($data[$propertyName]['action'])) {
                         continue;
                     }
                     $fileData = [
@@ -778,13 +878,16 @@ class BaseCrudController extends SecureBackendController {
                         // 'mediaID'  => $data[$propertyName]['mediaID'],
                     ];
                     if (isset($filesMeta['name'][$entityID][$propertyName])) {
-                        $fileData = array_merge($fileData, [
-                            'name'     => $filesMeta['name'][$entityID][$propertyName],
-                            'tmp_name' => $filesMeta['tmp_name'][$entityID][$propertyName],
-                            'type'     => $filesMeta['type'][$entityID][$propertyName],
-                            'error'    => $filesMeta['error'][$entityID][$propertyName],
-                            'size'     => $filesMeta['size'][$entityID][$propertyName],
-                        ]);
+                        $fileData = array_merge(
+                            $fileData,
+                            [
+                                'name'     => $filesMeta['name'][$entityID][$propertyName],
+                                'tmp_name' => $filesMeta['tmp_name'][$entityID][$propertyName],
+                                'type'     => $filesMeta['type'][$entityID][$propertyName],
+                                'error'    => $filesMeta['error'][$entityID][$propertyName],
+                                'size'     => $filesMeta['size'][$entityID][$propertyName],
+                            ]
+                        );
                     }
                     unset($data[$propertyName]);
                     $this->handleFileUpload($data, $propertyName, $fileData);
@@ -801,7 +904,8 @@ class BaseCrudController extends SecureBackendController {
      * @param string $propertyName
      * @param array $fileData
      */
-    protected function handleFileUpload(array &$entityData, string $propertyName, array $fileData) {
+    protected function handleFileUpload(array &$entityData, string $propertyName, array $fileData)
+    {
         /**
          * @var MediaService $mediaService
          * @var Media|null $media
@@ -810,7 +914,7 @@ class BaseCrudController extends SecureBackendController {
             //TODO delete orphan media?
             $entityData[$propertyName] = null;
         } elseif ($fileData['action'] === 'upload') {
-            if (!empty($fileData['new_name'])) {
+            if ( !empty($fileData['new_name'])) {
                 $oldName          = $fileData['name'];
                 $fileExtension    = substr($oldName, strrpos($oldName, '.'));
                 $fileData['name'] = $fileData['new_name'] . $fileExtension;
@@ -821,16 +925,28 @@ class BaseCrudController extends SecureBackendController {
                 if (isset($media)) {
                     $entityData[$propertyName] = $media->getId();
                 } else {
-                    Oforge()->View()->Flash()->addMessage('error', I18N::translate('backend_crud_image_upload_failed', [
-                        'en' => 'Image upload failed.',
-                        'de' => 'Hochladen des Bilds fehlgeschlagen.',
-                    ]));
+                    Oforge()->View()->Flash()->addMessage(
+                        'error',
+                        I18N::translate(
+                            'backend_crud_image_upload_failed',
+                            [
+                                'en' => 'Image upload failed.',
+                                'de' => 'Hochladen des Bilds fehlgeschlagen.',
+                            ]
+                        )
+                    );
                 }
             } catch (Exception $exception) {
-                Oforge()->View()->Flash()->addMessage('error', I18N::translate('backend_crud_image_upload_failed', [
-                    'en' => 'Image upload failed.',
-                    'de' => 'Hochladen des Bilds fehlgeschlagen.',
-                ]));
+                Oforge()->View()->Flash()->addMessage(
+                    'error',
+                    I18N::translate(
+                        'backend_crud_image_upload_failed',
+                        [
+                            'en' => 'Image upload failed.',
+                            'de' => 'Hochladen des Bilds fehlgeschlagen.',
+                        ]
+                    )
+                );
                 Oforge()->Logger()->logException($exception);
             }
         } elseif ($fileData['action'] === 'chooser') {
@@ -841,19 +957,31 @@ class BaseCrudController extends SecureBackendController {
                 if (isset($media)) {
                     $entityData[$propertyName] = $media->getId();
                 } else {
-                    Oforge()->View()->Flash()->addMessage('error', sprintf(#
-                        I18N::translate('backend_crud_media_not_found', [
-                            'en' => 'Media entity with ID "%s" not found.',
-                            'de' => 'Medienelement mit ID "%s" nicht gefunden.',
-                        ]),#
-                        $mediaID#
-                    ));
+                    Oforge()->View()->Flash()->addMessage(
+                        'error',
+                        sprintf(#
+                            I18N::translate(
+                                'backend_crud_media_not_found',
+                                [
+                                    'en' => 'Media entity with ID "%s" not found.',
+                                    'de' => 'Medienelement mit ID "%s" nicht gefunden.',
+                                ]
+                            ),#
+                            $mediaID#
+                        )
+                    );
                 }
             } catch (Exception $exception) {
-                Oforge()->View()->Flash()->addMessage('error', I18N::translate('backend_crud_image_replace_failed', [
-                    'en' => 'Image replace failed.',
-                    'de' => 'Bildersetzung fehlgeschlagen.',
-                ]));
+                Oforge()->View()->Flash()->addMessage(
+                    'error',
+                    I18N::translate(
+                        'backend_crud_image_replace_failed',
+                        [
+                            'en' => 'Image replace failed.',
+                            'de' => 'Bildersetzung fehlgeschlagen.',
+                        ]
+                    )
+                );
                 Oforge()->Logger()->logException($exception);
             }
         }
@@ -868,7 +996,8 @@ class BaseCrudController extends SecureBackendController {
      * @throws NonUniqueResultException
      * @throws ORMException
      */
-    protected function prepareIndexPaginationData(array $queryParams) : array {
+    protected function prepareIndexPaginationData(array $queryParams) : array
+    {
         $queryKeys = $this->indexReservedQueryKeys;;
         $queryKeyPage            = $queryKeys['page'];
         $queryKeyEntitiesPerPage = $queryKeys['entitiesPerPage'];

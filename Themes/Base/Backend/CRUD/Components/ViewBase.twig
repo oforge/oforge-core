@@ -18,7 +18,5 @@
 {% endblock %}
 
 {% block pagecontent %}
-    <section class="content">
-        {% include CRUD_path('Components/Form.twig') with { item: crud.item } %}
-    </section>
+    {% include CRUD_path('Components/Form.twig') with { item: crud.item } %}
 {% endblock %}
