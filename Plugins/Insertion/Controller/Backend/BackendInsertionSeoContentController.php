@@ -90,8 +90,8 @@ class BackendInsertionSeoContentController extends BaseCrudController {
      *
      * @return array
      */
-    protected function prepareItemDataArray(?AbstractModel $entity, string $crudAction) : array {
-        $data = parent::prepareItemDataArray($entity, $crudAction);
+    protected function prepareItemDataArray(?AbstractModel $entity, string $crudAction, array $queryParams = []) : array {
+        $data = parent::prepareItemDataArray($entity, $crudAction, $queryParams);
         if (isset($data['seoTargetUrl']['id'])) {
             $data['seoTargetUrl'] = $data['seoTargetUrl']['id'];
         }

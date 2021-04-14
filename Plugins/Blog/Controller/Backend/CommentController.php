@@ -210,7 +210,7 @@ class CommentController extends BaseCrudController {
     }
 
     /** @inheritDoc */
-    protected function prepareItemDataArray(?AbstractModel $entity, string $crudAction) : array {
+    protected function prepareItemDataArray(?AbstractModel $entity, string $crudAction, array $queryParams = []) : array {
         if (!isset($entity)) {
             return [];
         }

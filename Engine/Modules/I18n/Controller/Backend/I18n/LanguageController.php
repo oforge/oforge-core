@@ -122,8 +122,8 @@ class LanguageController extends BaseCrudController {
     ];
 
     /** @inheritDoc */
-    protected function prepareItemDataArray(?AbstractModel $entity, string $crudAction) : array {
-        $data = parent::prepareItemDataArray($entity, $crudAction);
+    protected function prepareItemDataArray(?AbstractModel $entity, string $crudAction, array $queryParams = []) : array {
+        $data = parent::prepareItemDataArray($entity, $crudAction, $queryParams);
         if (!isset($this->filterSelectData['snippets'])) {
             $this->snippets = [];
             try {
