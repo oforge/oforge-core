@@ -14,6 +14,7 @@ use Oforge\Engine\Modules\Core\Manager\Logger\LoggerManager;
 use Oforge\Engine\Modules\Core\Manager\Modules\ModuleManager;
 use Oforge\Engine\Modules\Core\Manager\Plugins\PluginManager;
 use Oforge\Engine\Modules\Core\Manager\Services\ServiceManager;
+use Oforge\Engine\Modules\Core\Manager\SessionManager;
 use Oforge\Engine\Modules\Core\Manager\Slim\SlimRouteManager;
 use Slim\Container;
 use Slim\Exception\MethodNotAllowedException;
@@ -296,8 +297,7 @@ class BlackSmith {
         $this->forgeSlimApp = ForgeSlimApp::getInstance();
         $this->container    = $this->App()->getContainer();
         if ($start) {
-
-            $this->forgeSlimApp->sessionStart();
+            SessionManager::start();
 
             if ($this->forgeSlimApp->returnCachedResult()) {
                 return;

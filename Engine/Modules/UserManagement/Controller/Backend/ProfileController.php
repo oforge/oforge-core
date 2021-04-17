@@ -19,7 +19,7 @@ use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\NotFoundException;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\RouteHelper;
-use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
+use Oforge\Engine\Modules\Core\Manager\SessionManager;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Oforge\Engine\Modules\UserManagement\Services\BackendUsersCrudService;
 use Slim\Http\Request;
@@ -94,9 +94,7 @@ class ProfileController extends SecureBackendController {
                 $user['type'] = $oldUser['type'];
                 $user['role'] = $oldUser['role'];
                 $backendUserService->update($user);
-                /** @var SessionManagementService $sessionManagement */
-                $sessionManagement = Oforge()->Services()->get('session.management');
-                $sessionManagement->regenerateSession();
+                SessionManager::regenerate();
                 $_SESSION['auth'] = $authService->createJWT($user);
                 Oforge()->View()->Flash()->addMessage('success', I18N::translate('profile_login_data_update_success', [
                     'en' => 'Login data successfully updated',

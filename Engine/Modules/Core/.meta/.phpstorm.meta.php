@@ -12,7 +12,6 @@ namespace PHPSTORM_META {
             'plugin.access'      => \Oforge\Engine\Modules\Core\Services\PluginAccessService::class,
             'plugin.state'       => \Oforge\Engine\Modules\Core\Services\PluginStateService::class,
             'redirect'           => \Oforge\Engine\Modules\Core\Services\RedirectService::class,
-            'session.management' => \Oforge\Engine\Modules\Core\Services\Session\SessionManagementService::class,
             'store.keyvalue'     => \Oforge\Engine\Modules\Core\Services\KeyValueStoreService::class,
             'token'              => \Oforge\Engine\Modules\Core\Services\TokenService::class,
         ]));

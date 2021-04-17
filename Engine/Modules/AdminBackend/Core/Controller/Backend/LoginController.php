@@ -10,7 +10,7 @@ use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\RouteHelper;
-use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
+use Oforge\Engine\Modules\Core\Manager\SessionManager;
 use Oforge\Engine\Modules\Core\Services\TokenService;
 use Oforge\Engine\Modules\I18n\Helper\I18N;
 use Slim\Http\Request;
@@ -112,9 +112,7 @@ class LoginController extends SecureBackendController {
             return RouteHelper::redirect($response, 'backend_login');
         }
 
-        /** @var SessionManagementService $sessionManagement */
-        $sessionManagement = Oforge()->Services()->get('session.management');
-        $sessionManagement->regenerateSession();
+        SessionManager::regenerate();
 
         $_SESSION['auth'] = $jwt;
 

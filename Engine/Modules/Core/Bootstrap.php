@@ -25,7 +25,7 @@ use Oforge\Engine\Modules\Core\Services\PingService;
 use Oforge\Engine\Modules\Core\Services\PluginAccessService;
 use Oforge\Engine\Modules\Core\Services\PluginStateService;
 use Oforge\Engine\Modules\Core\Services\RedirectService;
-use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
+use Oforge\Engine\Modules\Core\Services\Session\SessionManager;
 use Oforge\Engine\Modules\Core\Services\TokenService;
 
 /**
@@ -61,7 +61,6 @@ class Bootstrap extends AbstractBootstrap {
             'plugin.access'      => PluginAccessService::class,
             'plugin.state'       => PluginStateService::class,
             'redirect'           => RedirectService::class,
-            'session.management' => SessionManagementService::class,
             'store.keyvalue'     => KeyValueStoreService::class,
             'token'              => TokenService::class,
         ];
