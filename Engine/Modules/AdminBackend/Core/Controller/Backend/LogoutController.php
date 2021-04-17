@@ -8,7 +8,7 @@ use Oforge\Engine\Modules\Auth\Models\User\BackendUser;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Helper\RouteHelper;
-use Oforge\Engine\Modules\Core\Services\Session\SessionManagementService;
+use Oforge\Engine\Modules\Core\Manager\SessionManager;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -33,9 +33,7 @@ class LogoutController extends SecureBackendController {
      * @EndpointAction()
      */
     public function indexAction(Request $request, Response $response) {
-        /** @var SessionManagementService $sessionManager */
-        $sessionManager = Oforge()->Services()->get('session.management');
-        $sessionManager->sessionDestroy();
+        SessionManager::destroy();
 
         return RouteHelper::redirect($response, 'backend_login');
     }

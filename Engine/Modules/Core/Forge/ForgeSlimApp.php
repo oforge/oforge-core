@@ -95,45 +95,10 @@ TAG;
         return self::$instance;
     }
 
-    /**
-     * Start the session
-     *
-     * @param int $lifetimeSeconds
-     * @param string $path
-     * @param null $domain
-     * @param null $secure
-     */
-    public function sessionStart($lifetimeSeconds = 0, $path = '/', $domain = null, $secure = null) {
-        $sessionStatus = session_status();
-
-        if ($sessionStatus != PHP_SESSION_ACTIVE) {
-            session_name("oforge_session");
-            if (!empty($_SESSION['deleted_time'])
-                && $_SESSION['deleted_time'] < time() - 180) {
-                session_destroy();
-            }
-            // Set the domain to default to the current domain.
-            $domain = isset($domain) ? $domain : $_SERVER['SERVER_NAME'];
-
-            // Set the default secure value to whether the site is being accessed with SSL
-            $secure = isset($secure) ? $secure : isset($_SERVER['HTTPS']) ? true : false;
-
-            // Set the cookie settings and start the session
-            session_set_cookie_params($lifetimeSeconds, $path, $domain, $secure, true);
-            session_start();
-            $_SESSION['created_time'] = time();
-        }
-    }
-
     public function returnCachedResult($silent = false) : bool {
-        /**
-         * @var $response ResponseInterface
-         */
+        /** @var ResponseInterface $response */
         $response = $this->getContainer()->get('response');
-
-        /**
-         * @var $request ServerRequestInterface
-         */
+        /** @var ServerRequestInterface $request */
         $request = $this->getContainer()->get('request');
 
         $mode            = Oforge()->Settings()->get("mode");
@@ -201,14 +166,10 @@ TAG;
     }
 
     public function run($silent = false) {
-        /**
-         * @var $response ResponseInterface
-         */
+        /** @var ResponseInterface $response */
         $response = $this->getContainer()->get('response');
 
-        /**
-         * @var $request ServerRequestInterface
-         */
+        /** @var ServerRequestInterface $request */
         $request = $this->getContainer()->get('request');
 
         $mode            = Oforge()->Settings()->get("mode");
