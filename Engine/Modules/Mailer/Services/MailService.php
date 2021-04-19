@@ -249,7 +249,9 @@ class MailService
             $mainPaths        = [];
             $baseThemePath    = join(Statics::GLOBAL_SEPARATOR, [ROOT_PATH, Statics::TEMPLATE_DIR, Statics::DEFAULT_THEME, 'MailTemplates']);
             $currentThemePath = join(Statics::GLOBAL_SEPARATOR, [ROOT_PATH, Statics::TEMPLATE_DIR, $templateName, 'MailTemplates']);
-            $mainPaths[]      = $currentThemePath;
+            if ($currentThemePath !== $baseThemePath) {
+                $mainPaths[] = $currentThemePath;
+            }
             try {
                 /** @var Plugin[] $plugins */
                 $plugins = Oforge()->Services()->get('plugin.access')->getActive();
