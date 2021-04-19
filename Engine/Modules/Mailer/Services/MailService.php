@@ -64,10 +64,11 @@ class MailService
             /** @var ConfigService $configService */
             $configService         = Oforge()->Services()->get('config');
             $configThrowExceptions = $configService->get('mailer_throw_exceptions');
+            $logger = Oforge()->Logger()->get('mailer');
 
             $mailer = new PHPMailer($configThrowExceptions);
             $mailer->isSMTP();
-            // $mailer->SMTPDebug = $configService->get('mailer_smtp_debug');// TODO missing yet
+            $mailer->SMTPDebug  = $configService->get('mailer_smtp_debug');
             $mailer->Host       = $configService->get('mailer_smtp_host');
             $mailer->Username   = $configService->get('mailer_smtp_username');
             $mailer->Port       = $configService->get('mailer_smtp_port');
@@ -76,6 +77,11 @@ class MailService
             $mailer->SMTPSecure = $configService->get('mailer_smtp_secure');
             $mailer->Encoding   = 'base64';
             $mailer->CharSet    = 'UTF-8';
+            if ($mailer->SMTPDebug > 0) {
+                $mailer->Debugoutput = function (string $string, int $level) use($logger) {
+                    $logger->debug("$level\t$string");
+                };
+            }
 
             //region # addresses
             if (isset($config['from'])) {
@@ -151,6 +157,9 @@ class MailService
             $mailer->Subject = $config['subject'];
 
             $success = $mailer->send();
+            if ($mailer->SMTPDebug > 0) {
+                $logger->debug("--------------------------------------------------------------------------------");
+            }
 
             if ($devRedirectEnabled == true) {
                 Oforge()->Logger()->get('mailer')->info('Message has been redirected', [$mailer->getToAddresses(), $config, $templateData]);
