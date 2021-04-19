@@ -65,12 +65,19 @@ class AjaxController extends SecureBackendController {
      * @throws OptimisticLockException
      * @EndpointAction(path="/upload")
      */
-    public function uploadAction(Request $request, Response $response) {
+    public function uploadAction(Request $request, Response $response)
+    {
         if (isset($_FILES['upload-media'])) {
             /** @var MediaService $service */
             $service = Oforge()->Services()->get('media');
             $created = $service->add($_FILES['upload-media']);
-            Oforge()->View()->assign(['created' => $created != null ? $created->toArray() : false]);
+            Oforge()->View()->assign(
+                [
+                    'json' => [
+                        'created' => $created !== null ? $created->toArray() : false,
+                    ]
+                ]
+            );
         }
     }
 

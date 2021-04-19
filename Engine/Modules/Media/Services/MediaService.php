@@ -2,13 +2,14 @@
 
 namespace Oforge\Engine\Modules\Media\Services;
 
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Exception;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\FileSystemHelper;
 use Oforge\Engine\Modules\Core\Helper\Statics;
+use Oforge\Engine\Modules\Core\Services\ConfigService;
 use Oforge\Engine\Modules\Media\Models\Media;
 
 /**
@@ -41,25 +42,43 @@ class MediaService extends AbstractDatabaseAccess {
                 $filename = strtolower($prefix . '_' . $filename);
             }
 
-            $relativeFilePath = Statics::IMAGES_DIR . Statics::GLOBAL_SEPARATOR . substr(md5(rand()), 0, 2) . Statics::GLOBAL_SEPARATOR . substr(md5(rand()), 0, 2)
-                                . Statics::GLOBAL_SEPARATOR . $filename;
+            $relativeFilePath = implode(
+                Statics::GLOBAL_SEPARATOR,
+                [
+                    Statics::IMAGES_DIR,
+                    substr(md5(rand()), 0, 2),
+                    substr(md5(rand()), 0, 2),
+                    $filename,
+                ]
+            );
 
             FileSystemHelper::mkdir(dirname(ROOT_PATH . $relativeFilePath));
 
             if (move_uploaded_file($file['tmp_name'], ROOT_PATH . $relativeFilePath)) {
-                /** @var ImageCompressService $imageCompressService */
-                $imageCompressService = Oforge()->Services()->get('image.compress');
                 $size = getimagesize(ROOT_PATH . $relativeFilePath);
-
                 $media = Media::create([
                     'type' => $file['type'],
                     'name' => urlencode($filename),
                     'path' => str_replace('\\', '/', $relativeFilePath),
                     'owner' => $owner
                 ]);
-
-              //  $media = $imageCompressService->compress($media);
                 $this->entityManager()->create($media);
+                try {
+                    /** @var ConfigService $configService */
+                    $configService = Oforge()->Services()->get('config');
+                    if ($configService->get('media_upload_image_adjustment_enabled')) {
+                        /** @var ImageCompressService $imageCompressService */
+                        $imageCompressService = Oforge()->Services()->get('image.compress');
+                        if (($downscalingMaxWidth = $configService->get('media_upload_image_adjustment_downscaling_max_width')) > 0) {
+                            $imageCompressService->scale($media, $downscalingMaxWidth, $media->getPath());
+                        }
+                        if ($configService->get('media_upload_image_adjustment_compress')) {
+                            $imageCompressService->compress($media->getPath());
+                        }
+                    }
+                } catch (Exception $exception) {
+                    Oforge()->Logger()->logException($exception);
+                }
 
                 return $media;
             }
@@ -153,13 +172,6 @@ class MediaService extends AbstractDatabaseAccess {
         foreach ($path as $file) {
             unlink($file);
         }
-    }
-
-    public function rotate(Media $media, int $angle) {
-        /** @var ImageRotateService $imageRotateService */
-        $imageRotateService = Oforge()->Services()->get('image.rotate');
-
-        $imageRotateService->rotate($media, $angle);
     }
 
     public function download($photoURL, $filename, $type) {

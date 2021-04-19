@@ -8,6 +8,7 @@ use FrontendUserManagement\Services\FrontendUserService;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointClass;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
+use Oforge\Engine\Modules\Media\Services\ImageRotateService;
 use Oforge\Engine\Modules\Media\Services\MediaService;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -77,24 +78,35 @@ class ImageUploadController extends SecureFrontendController {
      * @param Response $response
      *
      * @return Response
+     * @throws ServiceNotFoundException
      * @EndpointAction()
      */
-    public function rotateAction(Request $request, Response $response) {
+    public function rotateAction(Request $request, Response $response) : Response
+    {
         if ($request->isGet()) {
-            $id   = $_GET["id"];
-            $path = $_GET["path"];
+            $mediaId = $_GET['id'];
+            $path    = $_GET['path'];
 
             /** @var MediaService $mediaService */
             $mediaService = Oforge()->Services()->get('media');
+            /** @var ImageRotateService $imageRotateService */
+            $imageRotateService = Oforge()->Services()->get('image.rotate');
+            try {
+                $media = $mediaService->getById($mediaId);
+                if ($media === null || $media->getPath() !== $path) {
+                    return $response->withStatus(404);
+                }
+                $imageRotateService->rotate($media, 90);
 
-            $media = $mediaService->getById($id);
+                return $response->withStatus(204);
+            } catch (ORMException $exception) {
+                Oforge()->Logger()->logException($exception);
 
-            if ($media->getPath() == $path) {
-
-                $mediaService->rotate($id, 90);
+                return $response->withStatus(500);
             }
         }
 
         return $response->withStatus(403);
     }
+
 }
