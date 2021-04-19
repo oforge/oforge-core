@@ -90,11 +90,29 @@ class BackendController extends SecureBackendController
                 ],
             ]
         );
-        $success    = $mailservice->send($mailConfig, $mailData[]);
+        $success    = $mailservice->send($mailConfig, $mailData);
         if ($success) {
-            Oforge()->View()->Flash()->addMessage('success', I18N::translate('mail_send_success'));
+            Oforge()->View()->Flash()->addMessage(
+                'success',
+                I18N::translate(
+                    'mail_send_success',
+                    [
+                        'en' => 'Mail was sent',
+                        'de' => 'Mail wurde versendet',
+                    ]
+                )
+            );
         } else {
-            Oforge()->View()->Flash()->addMessage('success', I18N::translate('mail_send_failed'));
+            Oforge()->View()->Flash()->addMessage(
+                'error',
+                I18N::translate(
+                    'mail_send_failed',
+                    [
+                        'en' => 'Mail could not be sent',
+                        'de' => 'Mail konnte nicht gesendet werden',
+                    ]
+                )
+            );
         }
 
         return RouteHelper::redirect($response, 'backend_test_mail');

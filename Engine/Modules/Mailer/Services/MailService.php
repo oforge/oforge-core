@@ -199,7 +199,7 @@ class MailService
         if ( !isset($this->cacheBuildFrom[$configFromMailPrefix])) {
             $configService = Oforge()->Services()->get('config');
 
-            $mailHost = $configService->get('mailer_from_builder_host');
+            $mailHost = $configService->get('mailer_from_builder_mail_host');
             if (empty($mailHost)) {
                 throw new InvalidArgumentException("Error: Builder value 'mailHost' is not set");
             }

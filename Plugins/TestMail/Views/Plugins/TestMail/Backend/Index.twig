@@ -21,7 +21,7 @@
                        class="btn btn-sm btn-primary">Preview</a>
                 </td>
                 <td class="form-inline">
-                    <form action="{{ url('backend_test_mail_send') }}">
+                    <form action="{{ url('backend_test_mail_send') }}" method="POST">
                         <input type="hidden" name="id" value="{{ mailId }}"/>
                         <input type="email" name="to" value="" placeholder="to: email@domain"
                                class="form-control form-control-sm"/>
