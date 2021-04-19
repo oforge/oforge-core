@@ -257,7 +257,10 @@ class MailService
                 $plugins = Oforge()->Services()->get('plugin.access')->getActive();
                 foreach ($plugins as $plugin) {
                     $pluginName = $plugin['name'];
-                    $pluginPath = join(Statics::GLOBAL_SEPARATOR, [ROOT_PATH, Statics::PLUGIN_DIR, $pluginName, Statics::VIEW_DIR, 'MailTemplates']);
+                    $pluginPath = join(
+                        Statics::GLOBAL_SEPARATOR,
+                        [ROOT_PATH, Statics::PLUGIN_DIR, $pluginName, Statics::VIEW_DIR, $pluginName, 'MailTemplates']
+                    );
                     if (file_exists($pluginPath)) {
                         $mainPaths[]        = $pluginPath;
                         $tmp                = $paths[$pluginName] ?? [];
