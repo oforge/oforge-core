@@ -33,7 +33,7 @@
                                         {% include 'Backend/Components/Form/Switch.twig' with {
                                             id: element.name,
                                             name: element.name,
-                                            checked: element.values[0].value is same as("1"),
+                                            checked: element.values[0].value,
                                         } only %}
                                     </div>
 
