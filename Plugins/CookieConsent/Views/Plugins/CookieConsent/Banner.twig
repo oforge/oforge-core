@@ -1,0 +1,16 @@
+{% block cookie__consent__banner %}
+<div id="cookie__consent">
+    <div class="cookie__msg">
+        {% include 'CMS/ContentBlock.twig' with {cmsContentName: 'cookie_consent_msg_' ~ meta.language.iso} %}
+    </div>
+    <div class="cookie__buttons">
+        <div id="cookie__accept" class="button button--secondary">
+            {{ i18n('allow_cookies') }}
+        </div>
+        <div id="cookie__decline" class="button button--secondary">
+            {{ i18n('decline_cookies') }}
+        </div>
+
+    </div>
+</div>
+{% endblock cookie__consent__banner %}
