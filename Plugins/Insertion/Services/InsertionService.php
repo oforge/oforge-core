@@ -268,12 +268,12 @@ class InsertionService extends AbstractDatabaseAccess
      */
     public function countUserInsertionsOfCurrentYear($userId): int
     {
-        $query = "SELECT COUNT(i.id) FROM 
+        $query = "SELECT COUNT(i.id) as count FROM 
                         oforge_insertion AS i 
                         WHERE insertion_user = '$userId' 
                         AND YEAR(NOW()) = YEAR(i.real_created_at);";
-        $sqlResult = $this->entityManager()->getEntityManager()->getConnection()->executeQuery($query);
+        $sqlResult = $this->entityManager()->getEntityManager()->getConnection()->fetchAssociative($query);
 
-        return (int)$sqlResult->fetchOne();
+        return (int)$sqlResult['count'];
     }
 }
