@@ -264,7 +264,7 @@ class InsertionService extends AbstractDatabaseAccess
     /**
      * @param $userId
      * @return int
-     * @throws Exception|\Doctrine\DBAL\Exception
+     * @throws \Doctrine\DBAL\Exception
      */
     public function countUserInsertionsOfCurrentYear($userId): int
     {
@@ -272,7 +272,7 @@ class InsertionService extends AbstractDatabaseAccess
                         oforge_insertion AS i 
                         WHERE insertion_user = '$userId' 
                         AND YEAR(NOW()) = YEAR(i.real_created_at);";
-        $sqlResult = $this->entityManager()->getEntityManager()->getConnection()->fetchAssociative($query);
+        $sqlResult = $this->entityManager()->getEntityManager()->getConnection()->fetchAssoc($query);
 
         return (int)$sqlResult['count'];
     }
