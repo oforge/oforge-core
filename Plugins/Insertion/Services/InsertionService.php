@@ -3,9 +3,11 @@
 namespace Insertion\Services;
 
 use DateTime;
+use Doctrine\DBAL\Driver\Exception;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\QueryBuilder;
 use FrontendUserManagement\Services\UserService;
 use Insertion\Models\AttributeKey;
 use Insertion\Models\AttributeValue;
@@ -188,7 +190,8 @@ class InsertionService extends AbstractDatabaseAccess
      * @param $id
      * @throws ORMException
      */
-    public function countUpInsertionsContactAttempt($id) {
+    public function countUpInsertionsContactAttempt($id)
+    {
         /** @var Insertion $insertion */
         $insertion = $this->repository()->find($id);
         $insertion = $insertion->countContactAttempt();
@@ -256,5 +259,21 @@ class InsertionService extends AbstractDatabaseAccess
         $this->entityManager()->update($insertion);
 
         return $insertion;
+    }
+
+    /**
+     * @param $userId
+     * @return int
+     * @throws Exception|\Doctrine\DBAL\Exception
+     */
+    public function countUserInsertionsOfCurrentYear($userId): int
+    {
+        $query = "SELECT COUNT(i.id) FROM 
+                        oforge_insertion AS i 
+                        WHERE insertion_user = '$userId' 
+                        AND YEAR(NOW()) = YEAR(i.real_created_at);";
+        $sqlResult = $this->entityManager()->getEntityManager()->getConnection()->executeQuery($query);
+
+        return (int)$sqlResult->fetchOne();
     }
 }
