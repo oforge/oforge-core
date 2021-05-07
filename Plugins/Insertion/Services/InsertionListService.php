@@ -451,22 +451,12 @@ class InsertionListService extends AbstractDatabaseAccess {
     }
 
     public function getUserInsertions($user, $page = 1, $count = 10) : ?array {
-        $insertions = $this->repository()->findBy(["user" => $user, "deleted" => false], null, $count, ($page - 1) * $count);
-
-        $result = [];
-        foreach ($insertions as $insertion) {
-            $result[] = $insertion->toArray(2);
+        if($page === null || $count === null) {
+            $insertions = $this->repository()->findBy(["user" => $user, "deleted" => false]);
+        } else {
+            $insertions = $this->repository()->findBy(["user" => $user, "deleted" => false], null, $count, ($page - 1) * $count);
         }
 
-        return $result;
-    }
-    /**
-     * @param $user
-     *          gets all UserInsertions
-     * @return array
-     */
-    public function getUserInsertionsAll($user) : ?array {
-        $insertions = $this->repository()->findBy(["user" => $user, "deleted" => false]);
 
         $result = [];
         foreach ($insertions as $insertion) {
