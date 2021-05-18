@@ -49,9 +49,17 @@ class BackendController extends SecureBackendController
     {
         $mailIds = Oforge()->Events()->trigger(Event::create('mail.test.mailIds', [], []));
         ksort($mailIds);
+        if (Oforge()->View()->Flash()->hasData(self::class)) {
+            $formData = Oforge()->View()->Flash()->getData(self::class);
+        } else {
+            $formData = [];
+        }
         Oforge()->View()->assign(
             [
-                'TestMailController' => $mailIds,
+                'TestMailController' => [
+                    'mailIds'  => $mailIds,
+                    'formData' => $formData,
+                ],
             ]
         );
     }
@@ -90,8 +98,11 @@ class BackendController extends SecureBackendController
                 ],
             ]
         );
-        $success    = $mailservice->send($mailConfig, $mailData);
+        $success = $mailservice->send($mailConfig, $mailData);
         if ($success) {
+            $formData       = Oforge()->View()->Flash()->getData(self::class);
+            $formData['to'] = $postData['to'];
+            Oforge()->View()->Flash()->setData(self::class, $formData);
             Oforge()->View()->Flash()->addMessage(
                 'success',
                 I18N::translate(

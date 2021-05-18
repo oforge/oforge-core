@@ -13,7 +13,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for mailId,description in TestMailController %}
+        {% for mailId,description in TestMailController.mailIds %}
             <tr>
                 <td>{{ description }}</td>
                 <td>
@@ -23,7 +23,8 @@
                 <td class="form-inline">
                     <form action="{{ url('backend_test_mail_send') }}" method="POST">
                         <input type="hidden" name="id" value="{{ mailId }}"/>
-                        <input type="email" name="to" value="" placeholder="to: email@domain"
+                        <input type="email" name="to" placeholder="to: email@domain"
+                               value="{{ TestMailController.formData.to|default('') }}"
                                class="form-control form-control-sm"/>
                         <input type="submit" value="Send" class="btn btn-sm btn-primary"/>
                     </form>
