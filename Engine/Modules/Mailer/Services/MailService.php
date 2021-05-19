@@ -13,13 +13,13 @@ use Oforge\Engine\Modules\Core\Exceptions\Template\TemplateNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 use Oforge\Engine\Modules\Core\Models\Plugin\Plugin;
 use Oforge\Engine\Modules\Core\Services\ConfigService;
+use Oforge\Engine\Modules\Mailer\Library\OforgePHPMailer;
 use Oforge\Engine\Modules\Media\Twig\MediaExtension;
 use Oforge\Engine\Modules\TemplateEngine\Core\Services\TemplateManagementService;
 use Oforge\Engine\Modules\TemplateEngine\Core\Twig\CustomTwig;
 use Oforge\Engine\Modules\TemplateEngine\Core\Twig\TwigOforgeDebugExtension;
 use Oforge\Engine\Modules\TemplateEngine\Extensions\Twig\AccessExtension;
 use Oforge\Engine\Modules\TemplateEngine\Extensions\Twig\SlimExtension;
-use PHPMailer\PHPMailer\PHPMailer;
 use Twig_Error_Loader;
 use Twig_Error_Runtime;
 use Twig_Error_Syntax;
@@ -64,9 +64,9 @@ class MailService
             /** @var ConfigService $configService */
             $configService         = Oforge()->Services()->get('config');
             $configThrowExceptions = $configService->get('mailer_throw_exceptions');
-            $logger = Oforge()->Logger()->get('mailer');
+            $logger                = Oforge()->Logger()->get('mailer');
 
-            $mailer = new PHPMailer($configThrowExceptions);
+            $mailer = new OforgePHPMailer($configThrowExceptions);
             $mailer->isSMTP();
             $mailer->SMTPDebug  = $configService->get('mailer_smtp_debug');
             $mailer->Host       = $configService->get('mailer_smtp_host');
@@ -78,7 +78,7 @@ class MailService
             $mailer->Encoding   = 'base64';
             $mailer->CharSet    = 'UTF-8';
             if ($mailer->SMTPDebug > 0) {
-                $mailer->Debugoutput = function (string $string, int $level) use($logger) {
+                $mailer->Debugoutput = function (string $string, int $level) use ($logger) {
                     $logger->debug("$level\t$string");
                 };
             }
@@ -146,8 +146,10 @@ class MailService
                 /** Render HTML */
                 $body = $this->renderTemplate($config, $templateData);
             } elseif (isset($config['html'])) {
+                //TODO templateData placeholder replacing
                 $body = $config['html'];
             } elseif (isset($config['text'])) {
+                //TODO templateData placeholder replacing
                 $mailer->isHTML(false);
                 $body = $config['text'];
             } else {
@@ -160,7 +162,6 @@ class MailService
             if ($mailer->SMTPDebug > 0) {
                 $logger->debug("--------------------------------------------------------------------------------");
             }
-
             if ($devRedirectEnabled == true) {
                 Oforge()->Logger()->get('mailer')->info('Message has been redirected', [$mailer->getToAddresses(), $config, $templateData]);
             } else {
