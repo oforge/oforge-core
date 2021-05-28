@@ -735,8 +735,6 @@ class FrontendInsertionController extends SecureFrontendController {
          * End of new stuff
          */
 
-        $insertionService->countUpInsertionsContactAttempt(intval($id));
-
         if (!isset($insertion) || $insertion == null) {
             return $response->withRedirect('/404', 301);
         }
@@ -786,6 +784,7 @@ class FrontendInsertionController extends SecureFrontendController {
 
             return $response->withRedirect($uri, 302);
         }
+        $insertionService->countUpInsertionsContactAttempt(intval($id));
 
         $data              = $insertion->toArray(2);
         $data["topvalues"] = [];
