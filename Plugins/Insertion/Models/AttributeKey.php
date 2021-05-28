@@ -58,7 +58,7 @@ class AttributeKey extends AbstractModel {
 
     /**
      * @var ArrayCollection
-     * @ORM\OneToMany(targetEntity="AttributeValue", mappedBy="attributeKey", cascade="remove")
+     * @ORM\OneToMany(targetEntity="AttributeValue", mappedBy="attributeKey", cascade={"remove"})
      */
     private $values;
 
