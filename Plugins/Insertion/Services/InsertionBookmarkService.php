@@ -124,12 +124,25 @@ class InsertionBookmarkService extends AbstractDatabaseAccess {
      */
     public function getUsersWithBookmarks() {
         $query = 'SELECT DISTINCT b.insertion_user AS id ' . 'FROM oforge_insertion_user_bookmarks AS b ' . 'JOIN oforge_insertion AS i '
-                 . 'WHERE b.insertion_id = i.id AND ' . 'i.active = 1 AND ' . 'i.moderation = 1 AND ' . 'i.deleted = 0;';
+            . 'WHERE b.insertion_id = i.id AND ' . 'i.active = 1 AND ' . 'i.moderation = 1 AND ' . 'i.deleted = 0;';
 
         $sqlResult = $this->entityManager()->getEntityManager()->getConnection()->executeQuery($query);
 
         return array_column($sqlResult->fetchAll(), 'id');
     }
+
+    /**
+     * @return mixed
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function getInsertionsWithBookmarks($insertion_id) {
+        $query = 'SELECT insertion_id, count(insertion_user) AS user ' . 'FROM oforge_insertion_user_bookmarks ' . 'WHERE insertion_id = '.$insertion_id;
+
+        $sqlResult = $this->entityManager()->getEntityManager()->getConnection()->executeQuery($query);
+
+        return array_column($sqlResult->fetchAll(), 'user');
+    }
+
 
     public function deleteInserationBookmarks(int $insertionID) {
         try {
