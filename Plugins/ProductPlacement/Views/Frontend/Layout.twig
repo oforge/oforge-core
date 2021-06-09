@@ -2,15 +2,29 @@
     {% set context = meta.route.context|lower %}
 
     {% block content_before %}
-        {% set content_before = product_placements(1, ['vertical', 'small', 'insertion', 'list', 'before']) %}
-        {% if (content_before and content_before|length > 0) %}
-        <div class="product-placement {{ context }} layout-before">
-            {% for content in content_before %}
-                {{ content.source|raw }}
-            {% endfor %}
-        </div>
+        {% if meta.route.url.path != "/insertions/search/1" %}
+        {% else %}
+            {% set content_before = product_placements(1, ['vertical', 'small', 'insertion', 'list', 'before']) %}
+            {% if (content_before and content_before|length > 0) %}
+                <div class="product-placement {{ context }} layout-before">
+                    {% for content in content_before %}
+                        {{ content.source|raw }}
+                    {% endfor %}
+                </div>
+            {% endif %}
         {% endif %}
     {% endblock content_before %}
+
+    {% block placement_test %}
+        {% set content_test = product_placements(1, ['startseite', 'horizontal']) %}
+        {% if (content_test and content_test|length > 0) %}
+            <div class="product-placement product-placement-startseite {{ context }}">
+                {% for content in content_test %}
+                    {{ content.source|raw }}
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endblock placement_test %}
 
     {% block content_after %}
         {% set content_after = product_placements(1, ['vertical', 'small', 'insertion', 'list', 'after']) %}

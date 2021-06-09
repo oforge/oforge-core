@@ -24,10 +24,16 @@
             top: 626px;
         }
     }
+    &.product-placement-startseite{
+        text-align: center;
+    }
+    &.insertion {
+        position: fixed;
+    }
 }
 
 .home .product-placement {
-    top: 956px;
+    //top: 956px;
 }
 .top-banner + .wrap .product-placement {
     top: 203px;
