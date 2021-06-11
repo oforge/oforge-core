@@ -125,7 +125,7 @@ class BackendNavigationService extends AbstractDatabaseAccess {
             /** @var BackendNavigation[] $entries */
             $entries = $this->repository()->findBy(['position' => $position, 'visible' => true, 'active' => true], ['order' => 'ASC']);
             $tree    = TreeHelper::modelArrayToTree($entries, 'parent', '0', 'name');
-            $this->filterTreeByPermission($permissionService, $user, $tree);
+            $this->filterTreeByPermission($permissionService, $user, $tree, $position);
 
             return $tree;
         } catch (Exception $exception) {
@@ -246,7 +246,7 @@ class BackendNavigationService extends AbstractDatabaseAccess {
      * @param array $user
      * @param array $array
      */
-    private function filterTreeByPermission(PermissionService $permissionService, ?array $user, array &$array) {
+    private function filterTreeByPermission(PermissionService $permissionService, ?array $user, array &$array, string $position) {
         foreach ($array as $index => &$item) {
             $checkChildren = true;
             if ($item['parent'] !== '0' && !empty($item['path'])) {
@@ -274,13 +274,13 @@ class BackendNavigationService extends AbstractDatabaseAccess {
             }
             if ($checkChildren && isset($item['children'])) {
                 if ($checkChildren) {
-                    $this->filterTreeByPermission($permissionService, $user, $item['children']);
+                    $this->filterTreeByPermission($permissionService, $user, $item['children'], $position);
                 }
                 if (empty($item['children'])) {
                     unset($array[$index]);
                 }
             }
-            if ($item['parent'] === '0' && (!isset($item['children']) || empty($item['children']))) {
+            if ($item['parent'] === '0' && (!isset($item['children']) || empty($item['children'])) && $position === 'sidebar') {
                 unset($array[$index]);
             }
         }
