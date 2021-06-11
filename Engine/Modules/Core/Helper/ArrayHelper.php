@@ -252,7 +252,7 @@ class ArrayHelper
         return array_filter(
             $inputArray,
             function ($key) use ($tmp) {
-                return isset($tmp[$key]);
+                return !isset($tmp[$key]);
             },
             ARRAY_FILTER_USE_KEY
         );
