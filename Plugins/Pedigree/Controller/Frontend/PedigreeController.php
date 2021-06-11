@@ -11,6 +11,7 @@ use Slim\Http\Response;
 use \Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Annotation\Endpoint\EndpointAction;
 
+
 /**
  * Class PedigreeController
  *
@@ -41,5 +42,25 @@ class PedigreeController {
         $names = $pedigreeService->getAllAncestors();
         $names = array_map(function(Ancestor $name) {return $name->getName();}, $names);
         Oforge()->View()->assign(['json' => $names]);
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @throws ORMException
+     * @throws ServiceNotFoundException
+     * @EndpointAction(path="/all_ancestors")
+     */
+    public function getAllAncestorsDataAction(Request $request, Response $response) {
+        // Set path to CSV file
+        $csvFile = 'var/public/__assets/Frontend/abstammung/abstammung.csv';
+
+        $file_handle = fopen($csvFile, 'r');
+        while (!feof($file_handle) ) {
+            $line_of_text[] = fgetcsv($file_handle, 1024, ";");
+        }
+        fclose($file_handle);
+        //append csv-data to twig/json2
+        Oforge()->View()->assign(['json2' => $line_of_text]);
     }
 }
