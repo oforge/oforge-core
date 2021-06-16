@@ -61,7 +61,19 @@
             <div id="drag-drop-area" data-url="{{ uppyUploadURL }}" data-required="{{ required }}"></div>
             <div class="upload__description">
                 <div class="upload__main-icon"></div>
-                <p class="description description--main">{{ i18n('main_image_description') }}</p>
+                {% if meta.route.url.path == "/insertions/create/3/1" or meta.route.url.path == "/insertions/create/1/1" %}
+                    <div>
+                        <p class="description description--main">{{ i18n('main_image_description') }}</p>
+                        <br>
+                        <p class="description description--main">{{ i18n('main_image_description_horses_upload_hint',  {
+                                'en': 'Please take care that your Insertion is centered on the image. After your Insertion is created, the image will be cropped on some sites. Make sure the Horse in centered',
+                                'de' : 'Bitte achte darauf, dass dein Inserat mittig im Bild zu sehen ist. Nach Erstellung deines Inserats wird dein Bild an ein paar Stellen von AYH nicht vollständig angezeigt, sondern nur ein 1:1 Ausschnitt aus der Mitte'
+                            }) }}
+                        </p>
+                    </div>
+                {% else %}
+                    <p class="description description--main">{{ i18n('main_image_description') }}</p>
+                {% endif %}
             </div>
         {% endblock drop_zone %}
 
