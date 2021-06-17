@@ -15,7 +15,7 @@
         {% endif %}
     {% endblock content_before %}
 
-    {% block placement_test %}
+    {% block content_placement %}
         {% set content_test = product_placements(1, ['startseite', 'horizontal']) %}
         {% if (content_test and content_test|length > 0) %}
             <div class="product-placement product-placement-startseite {{ context }}">
@@ -24,7 +24,7 @@
                 {% endfor %}
             </div>
         {% endif %}
-    {% endblock placement_test %}
+    {% endblock content_placement %}
 
     {% block content_after %}
         {% set content_after = product_placements(1, ['vertical', 'small', 'insertion', 'list', 'after']) %}
