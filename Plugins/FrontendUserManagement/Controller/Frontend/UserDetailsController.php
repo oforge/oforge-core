@@ -65,8 +65,6 @@ class UserDetailsController extends SecureFrontendController {
         $firstName          = $body['frontend_account_details_first_name'];
         $lastName           = $body['frontend_account_details_last_name'];
         $nickName           = $body['frontend_account_details_nick_name'];
-        $contactEmail       = $body['frontend_account_details_contact_email'];
-        $contactPhone       = $body['frontend_account_details_contact_phone'];
         $userId             = Oforge()->View()->get('current_user')['id'];
 
         $uri = $router->pathFor('frontend_account_details');
@@ -94,6 +92,67 @@ class UserDetailsController extends SecureFrontendController {
             'firstName'    => $firstName,
             'lastName'     => $lastName,
             'nickName'     => $nickName,
+            'userId'       => $userId,
+        ];
+
+        $userDetailsSaved = $userDetailsService->save($userDetails);
+
+        if (!$userDetailsSaved) {
+            Oforge()->View()->Flash()
+                ->addMessage('warning', I18N::translate('userdetails_update_data_failed', 'Something went wrong while saving the user details.'));
+            Oforge()->Logger()->get()->addError('UserDetailsController: User details could not be saved.', ['userDetails' => $userDetails]);
+
+            return $response->withRedirect($uri, 302);
+        }
+        Oforge()->View()->Flash()
+            ->addMessage('success', I18N::translate('userdetails_update_data_success', 'You have successfully updated your user details.'));
+
+        return $response->withRedirect($uri, 302);
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     *
+     * @return Response
+     * @throws ServiceNotFoundException
+     * @EndpointAction()
+     */
+    public function process_contactAction(Request $request, Response $response) {
+        /**
+         * @var Router $router
+         * @var UserDetailsService $userDetailsService
+         */
+        $userDetailsService = Oforge()->Services()->get('frontend.user.management.user.details');
+        $router             = Oforge()->App()->getContainer()->get('router');
+        $body               = $request->getParsedBody();
+        $token              = $body['token'];
+        $contactEmail       = $body['frontend_account_details_contact_email'];
+        $contactPhone       = $body['frontend_account_details_contact_phone'];
+        $userId             = Oforge()->View()->get('current_user')['id'];
+
+        $uri = $router->pathFor('frontend_account_details');
+
+        /**
+         * no valid form data found
+         */
+        if (!$token) {
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('form_invalid_data', 'Invalid form data.'));
+
+            return $response->withRedirect($uri, 302);
+        }
+
+        /**
+         * invalid token was sent
+         */
+        if (!$_SESSION['auth']) {
+            Oforge()->View()->Flash()->addMessage('warning', I18N::translate('missing_session_auth', 'The data has been sent from an invalid form.'));
+            Oforge()->Logger()->get()->addWarning('Someone tried to change the password without a valid form csrf token! Redirecting back to login.');
+
+            return $response->withRedirect($uri, 302);
+        }
+
+        $userDetails = [
             'contactEmail' => $contactEmail,
             'phoneNumber'  => $contactPhone,
             'userId'       => $userId,
@@ -103,13 +162,13 @@ class UserDetailsController extends SecureFrontendController {
 
         if (!$userDetailsSaved) {
             Oforge()->View()->Flash()
-                    ->addMessage('warning', I18N::translate('userdetails_update_data_failed', 'Something went wrong while saving the user details.'));
+                ->addMessage('warning', I18N::translate('userdetails_update_data_failed', 'Something went wrong while saving the user details.'));
             Oforge()->Logger()->get()->addError('UserDetailsController: User details could not be saved.', ['userDetails' => $userDetails]);
 
             return $response->withRedirect($uri, 302);
         }
         Oforge()->View()->Flash()
-                ->addMessage('success', I18N::translate('userdetails_update_data_success', 'You have successfully updated your user details.'));
+            ->addMessage('success', I18N::translate('userdetails_update_data_success', 'You have successfully updated your user details.'));
 
         return $response->withRedirect($uri, 302);
     }
@@ -196,6 +255,7 @@ class UserDetailsController extends SecureFrontendController {
             'indexAction',
             'process_detailsAction',
             'process_addressAction',
+            'process_contactAction',
         ]);
     }
 
