@@ -126,7 +126,7 @@
                             name="price_type"
                             id="price_type"
                             required>
-                        <option value="" {% if not data['price_type'] %} selected {% endif %}
+                        <option value="" {% if not data['price_type'] %} selected {% endif %} data-placeholder="{{ i18n('price') }}"
                                 disabled>{{ i18n('price_type') }}</option>
                         <option value="fixed" {% if data['price_type'] is same as('fixed') %} selected {% endif %}
                                 data-placeholder="{{ i18n('price') }}">{{ i18n('price_fixed') }}</option>
