@@ -191,7 +191,7 @@
                                id="price"
                                min="{% if type.minPrice %}{{ type.minPrice }}{% else %}0{% endif %}"
                                max="{% if type.maxPrice %}{{ type.maxPrice }}{% else %}2000000{% endif %}"
-                               value="{{ data['price'] is empty ? '0' : data['price'] }}"
+                               value="{{ data['price'] is empty ? '' : data['price'] }}"
                                class="form__input"
                                placeholder="{{ i18n('price') }}"
                                required />
