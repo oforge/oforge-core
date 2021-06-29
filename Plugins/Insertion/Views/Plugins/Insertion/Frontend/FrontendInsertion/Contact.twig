@@ -20,10 +20,12 @@
                 insertion.contact.email %}
                 <div class="panel__contact-information flex">
                     <div class="contact__contact_flex_container flex">
+                        {% block content_contact_block %}
                         <div class="contact__flex-container">
                             <span>{{ insertion.contact.name }}</span>
                             <span>{{ insertion.contact.zip }} {{ insertion.contact.city }}</span>
                         </div>
+                        {% endblock %}
                         <div class="contact__flex-container">
                             <span>{{ insertion.contact.phone }}</span>
                             <span>{{ insertion.contact.email }}</span>
