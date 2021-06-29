@@ -58,6 +58,18 @@
                 </div>
                 <div class="form__control columns">
                     <h3 class="form__sub-title">{{ i18n('address') }} <span class="required">*</span></h3>
+                    {% if meta.route.url.path == "/insertions/create/4/3" %}
+                    <div class="form__control">
+                        <label class="form__label form__label--checkbox">
+                            <input type="hidden" value="off" name="contact_online" />
+                            <input type="checkbox"
+                                   id="onlineSelector"
+                                   name="contact_online"
+                                   class="form__input form__input__online--checkbox form__input--checkbox-small" />
+                            {{ i18n('contact_data_online', {en: 'Online service', de: 'Online Angebot'}) }}
+                        </label>
+                    </div>
+                    {% endif %}
                     <div class="column column--one-third">
                         <input type="text"
                                name="contact_zip"
