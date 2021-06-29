@@ -50,7 +50,7 @@
                 <div class="body__language user-generated auto-translatable language--current"
                      data-language="{{ insertion.content[0].language.iso }}"
                      data-content-identifier="insertion-description">
-                    {{ insertion.content[0].description|nl2br }}
+                    {{ insertion.content[0].description|striptags('<b><i><u><strong>')|raw|nl2br }}
                 </div>
                 {% for content in insertion.content[1:] %}
                     <div class="body__language user-generated auto-translatable"
