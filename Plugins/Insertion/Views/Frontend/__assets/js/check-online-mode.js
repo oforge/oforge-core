@@ -1,9 +1,10 @@
 if (typeof Oforge !== 'undefined') {
     Oforge.register({
-        name: 'checkOnlineService',
+        name: 'checkOnlineServiceInsertion',
         selector: '.form__input__online--checkbox',
         init: function () {
             var self = this;
+
 
             let onlineChecker = document.querySelectorAll(self.selector)[0];
             let zipField = document.getElementsByName('contact_zip')[0];
@@ -18,8 +19,8 @@ if (typeof Oforge !== 'undefined') {
 
             function changeHandler(){
                 if(onlineChecker.checked){
-                    zipField.readonly = true;
-                    cityField.readonly = true;
+                    zipField.readOnly = true;
+                    cityField.readOnly = true;
 
                     zipField.style.backgroundColor = "lightgrey";
                     zipField.style.color = "lightgrey";
@@ -30,8 +31,8 @@ if (typeof Oforge !== 'undefined') {
                     cityField.value = "Online";
 
                 } else {
-                    zipField.readonly = false;
-                    cityField.readonly = false;
+                    zipField.readOnly = false;
+                    cityField.readOnly = false;
 
                     zipField.style.backgroundColor = "white";
                     zipField.style.color = "#3c3c3b";
