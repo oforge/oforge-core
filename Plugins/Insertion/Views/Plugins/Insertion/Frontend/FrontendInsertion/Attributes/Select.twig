@@ -3,7 +3,7 @@
     {% if omitLabel is not defined or not isSubAttribute %}
     {% if insType == 3 and attribute.id == 93 %}
         <label
-        class="form__label 123">{{ i18n('breeding_association_stud_horse', {de: 'Zuchtverband des Deckhengstes', en: 'Breeding association (stud horse)'}) }}{% if required %} <span class="required">*</span>{% endif %}
+        class="form__label">{{ i18n('breeding_association_stud_horse', {de: 'Zuchtverband des Deckhengstes', en: 'Breeding association (stud horse)'}) }}{% if required %} <span class="required">*</span>{% endif %}
         {% else %}
         <label
             class="form__label">{{ i18n(attribute.name) }}{% if required %} <span class="required">*</span>{% endif %}
