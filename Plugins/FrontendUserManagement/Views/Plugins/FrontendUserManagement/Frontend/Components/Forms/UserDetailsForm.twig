@@ -45,11 +45,14 @@
                    value="{{ i18n('save') }}"
                    class="form__input form__input--submit button">
         </div>
+    </form>
 
         {% block user_details_data_separator %}
             <div class="separator"></div>
         {% endblock user_details_data_separator %}
-
+    <form class="form form--user-details"
+          action="{{ url('frontend_account_details_process_contact') }}"
+          method="post">
         <div class="form-controls">
 
             <h2 class="form__title">{{ i18n('user_contact_data', 'Contact data') }}</h2>
@@ -83,9 +86,9 @@
                        class="form__input form__input--submit button">
             </div>
         </div>
-
+    </form>
         {% block user_details_contact_separator %}
             <div class="separator"></div>
         {% endblock user_details_contact_separator %}
-    </form>
+
 {% endblock user_details_form %}
