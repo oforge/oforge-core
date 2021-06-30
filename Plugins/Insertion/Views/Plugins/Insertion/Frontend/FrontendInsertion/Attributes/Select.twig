@@ -1,8 +1,13 @@
 <div
     class="form__control form__control--new-select form__control--{{ attribute.filterType }} {{ isSubAttribute ? 'form__control--is-sub' : '' }}">
     {% if omitLabel is not defined or not isSubAttribute %}
+    {% if insType == 3 and attribute.id == 93 %}
+        <label
+        class="form__label 123">{{ i18n('breeding_association_stud_horse', {de: 'Zuchtverband des Deckhengstes', en: 'Breeding association (stud horse)'}) }}{% if required %} <span class="required">*</span>{% endif %}
+        {% else %}
         <label
             class="form__label">{{ i18n(attribute.name) }}{% if required %} <span class="required">*</span>{% endif %}
+        {% endif %}
 
             {% if attribute.restrictions|length > 0 %}<span
                 class="select__max-options">{{ i18n('multi_select_max_options', {de: 'Maximal {maxOptions} möglich', en: 'only {maxOptions} options possible'})|replace({'{maxOptions}': attribute.restrictions}) }}</span>{% endif %}

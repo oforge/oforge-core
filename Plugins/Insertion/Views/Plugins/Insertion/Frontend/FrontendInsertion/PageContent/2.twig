@@ -1,4 +1,4 @@
-{% block page_content %}
+{% block pagee_content %}
     {# Main attributes #}
     <div class="form-controls">
         {% for attributeGroup in attributes %}
@@ -12,7 +12,7 @@
                                 {% set required = insertionType.required %}
                             {% endif %}
                         {% endfor %}
-                        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': required } %}
+                        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/Attributes/' ~ attribute.attributeKey.type|capitalize  ~ '.twig'  with {'attribute': attribute.attributeKey, 'required': required , 'insType': attribute.insertionType.id} %}
                     {% endfor %}
                 </div>
             {% endif %}
@@ -20,4 +20,4 @@
     </div>
 
     <span class="required">{{ i18n('required_inputs') }}</span>
-{% endblock page_content %}
+{% endblock pagee_content %}
