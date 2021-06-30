@@ -9,9 +9,9 @@ if (typeof Oforge !== 'undefined') {
             let onlineChecker = document.querySelectorAll(self.selector)[0];
             let zipField = document.getElementsByName('zip')[0];
 
-            onlineChecker.addEventListener('change', function () {
-                changeHandler();
-            });
+            onlineChecker.addEventListener('change', changeHandler);
+
+            changeHandler();
 
             function changeHandler(){
                 if(onlineChecker.checked){
