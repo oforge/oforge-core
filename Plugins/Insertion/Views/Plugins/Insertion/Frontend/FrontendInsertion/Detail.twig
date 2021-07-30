@@ -118,7 +118,7 @@
                         <div class="language-switch"></div>
                     </div>
                     <div class="description__body">
-                        {{ insertion.content[0].description|nl2br }}
+                        {{ insertion.content[0].description|striptags('<u><em><strong><span><ul><li><ol><li>')|raw|nl2br }}
                     </div>
                     {# The result (that shows the number of views) shall be deactivated for now (12/2020 -> Ticket 508 #}
                     {#
