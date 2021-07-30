@@ -48,7 +48,7 @@ class Bootstrap extends AbstractBootstrap {
         $accountNavigationService->put([
             'name'     => 'frontend_account_faq',
             'order'    => 13,
-            'icon'     => 'profile',
+            'icon'     => 'faq',
             'path'     => 'frontend_account_faq',
             'position' => 'sidebar',
         ]);
