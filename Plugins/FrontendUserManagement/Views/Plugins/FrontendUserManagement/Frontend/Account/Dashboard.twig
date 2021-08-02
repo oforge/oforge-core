@@ -6,18 +6,21 @@
     {% block insertion__progress %}
         {% if insertionProfileProgress is not empty %}
             <div class="content">
-                <div class="flash flash--info">
-                    <svg class="icon icon--info">
-                        <use xlink:href="#info"></use>
-                    </svg>
-                    <p class="flash__message">
-                        {{ i18n('state_of_insertion_profile_pretext') }} {{ insertionProfileProgress }}% {{ i18n('state_of_insertion_profile_posttext') }}.
+                {% if insertionProfileProgress != 100 %}
+                    <div class="flash flash--info">
+                        <svg class="icon icon--info">
+                            <use xlink:href="#info"></use>
+                        </svg>
+                        <p class="flash__message">
+                            {{ i18n('state_of_insertion_profile_pretext') }} {{ insertionProfileProgress }}% {{ i18n('state_of_insertion_profile_posttext') }}.
 
-                        <a class="button button--secondary" href="{{ url('frontend_account_insertions_profile') }}">
-                            {{ i18n('complete_insertion_profile') }}
-                        </a>
-                    </p>
-                </div>
+                            <a class="button button--secondary" href="{{ url('frontend_account_insertions_profile') }}">
+                                {{ i18n('complete_insertion_profile') }}
+                            </a>
+                        </p>
+                    </div>
+                {% endif %}
+                {{ dump(insertionProfileProgress) }}
             </div>
         {% endif %}
     {% endblock insertion__progress %}
