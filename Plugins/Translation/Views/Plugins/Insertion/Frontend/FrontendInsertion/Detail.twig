@@ -47,15 +47,10 @@
 
         {% block detail_description__language_tab_navigation %}
             <div class="description__body">
-                <div class="body__language user-generated auto-translatable language--current"
-                     data-language="{{ insertion.content[0].language.iso }}"
-                     data-content-identifier="insertion-description">
-                    {{ insertion.content[0].description|nl2br }}
-                </div>
-                {% for content in insertion.content[1:] %}
-                    <div class="body__language user-generated auto-translatable"
+                {% for content in insertion.content %}
+                    <div class="body__language user-generated auto-translatable {% if loop.index0 == 0 %}language--current{% endif %}"
                          data-language="{{ content.language.iso }}" data-content-identifier="insertion-description">
-                        {{ content.description|nl2br }}
+                        {{ content.description|striptags('<u><em><strong><span><ul><li><ol><li>')|raw|nl2br }}
                     </div>
                 {% endfor %}
             </div>
