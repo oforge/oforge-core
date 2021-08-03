@@ -30,7 +30,7 @@ class AncestorNamesMiddleware {
         /** @var Route $route */
         $route      = $request->getAttribute('route');
         $arguments  = $route->getArguments();
-        $typeId     = $arguments ['type'];
+        $typeId     = $arguments['type'] ?? null;
         return $typeId;
     }
 }
