@@ -20,7 +20,7 @@ class InsertionProfileProgressMiddleware {
     /** @var array<string, int> insertion profile data points to check */
     private $profileDataKeys = [
         'background'     => 1,
-        'description'    => 1,
+//        'description'    => 1,
         'imprintName'    => 1,
         'imprintZipCity' => 1,
         'imprintEmail'   => 1,
