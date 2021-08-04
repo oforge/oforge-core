@@ -181,6 +181,18 @@ class FrontendMessengerService extends AbstractMessengerService {
     }
 
     /**
+     * @param $targetId
+     *
+     * @return int
+     */
+    public function countConversationForSpecificInsertion($targetId) : int {
+        return sizeof($this->repository('conversation')->findBy([
+            'targetId'  => $targetId,
+        ])) ?? 0;
+    }
+
+
+    /**
      * Counts user's unread messages
      *
      * @param array $conversation
