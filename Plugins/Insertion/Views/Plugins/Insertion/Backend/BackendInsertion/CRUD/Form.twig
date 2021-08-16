@@ -21,34 +21,41 @@
                         </div>
 
                         <div class="form-group">
-                            <input type="submit" class="btn btn-primary" value="{{ i18n('choose') }}" />
+                            <input type="submit" class="btn btn-primary" value="{{ i18n('choose') }}"/>
                         </div>
                     {% endif %}
 
                     {% if typeId is defined %}
-                        <input type="hidden" value="{{ typeId }}" name="type" />
-                        <input type="hidden" value="{{ userId }}" name="user" />
-                        <input type="hidden" value="0" name="current_page" />
-                        <input type="hidden" value="create" name="action" />
+                        <input type="hidden" value="{{ typeId }}" name="type"/>
+                        <input type="hidden" value="{{ userId }}" name="user"/>
+                        <input type="hidden" value="0" name="current_page"/>
+                        <input type="hidden" value="create" name="action"/>
 
-                        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/PageContent/1.twig' %}
-                        {% include 'Plugins/Insertion/Frontend/FrontendInsertion/PageContent/2.twig' %}
+                        <div class="backend-video">
+                            {% include 'Plugins/Insertion/Frontend/FrontendInsertion/PageContent/1.twig' %}
+                        </div>
+                        <div class="backend">
+                            {% include 'Plugins/Insertion/Frontend/FrontendInsertion/PageContent/2.twig' %}
+                        </div>
                         {% include 'Plugins/Insertion/Frontend/FrontendInsertion/PageContent/3.twig' %}
 
                         <div class="form-group">
-                            <input type="submit" class="btn btn-primary" value="{{ i18n('save') }}" />
+                            <input type="submit" class="btn btn-primary" value="{{ i18n('save') }}"/>
                         </div>
 
                     {% endif %}
                 </form>
                 <div class="btn-group pull-left">
                     {% if insertion.moderation %}
-                        <a class="btn btn-primary" href="{{ url('backend_insertions_disapproveInsertion', {id : insertion.id} ) }}">{{ i18n('disapprove') }}</a>
+                        <a class="btn btn-primary"
+                           href="{{ url('backend_insertions_disapproveInsertion', {id : insertion.id} ) }}">{{ i18n('disapprove') }}</a>
                     {% else %}
-                        <a class="btn btn-primary" href="{{ url('backend_insertions_approveInsertion', {id : insertion.id}) }}">{{ i18n('approve') }}</a>
+                        <a class="btn btn-primary"
+                           href="{{ url('backend_insertions_approveInsertion', {id : insertion.id}) }}">{{ i18n('approve') }}</a>
                     {% endif %}
 
-                    <a class="btn btn-primary" href="{{ url('backend_insertions_changeUser', {id : insertion.id}) }}">{{ i18n('change_user') }}</a>
+                    <a class="btn btn-primary"
+                       href="{{ url('backend_insertions_changeUser', {id : insertion.id}) }}">{{ i18n('change_user') }}</a>
                 </div>
             </div>
         </div>

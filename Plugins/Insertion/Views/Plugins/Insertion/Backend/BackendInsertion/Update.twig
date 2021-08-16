@@ -5,7 +5,7 @@
 }) %}
 
 {% block pagecontent %}
-    <section class="content">
+    <section id="backend_insertion_update" class="content">
         {% include 'Plugins/Insertion/Backend/BackendInsertion/CRUD/Form.twig' with { item: crud.item } %}
     </section>
 {% endblock %}
