@@ -2,6 +2,7 @@
 
 namespace Insertion\Controller\Frontend;
 
+use DailyDataAnalytics\Services\DailyDataAnalyticsService;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -773,6 +774,12 @@ class FrontendInsertionController extends SecureFrontendController {
                 ];
 
                 $conversation = $messengerService->createNewConversation($data);
+
+                /** @var DailyDataAnalyticsService $dailyDataAnalyticsService */
+                $dailyDataAnalyticsService = Oforge()->Services()->get('analyticsDaily');
+                $dailyDataAnalyticsService->log("contactAttempt", $id, $user->getId());
+//                Oforge()->Events()->
+
 
                 /** @var MailService $mailService */
                 $mailService = Oforge()->Services()->get('mail');

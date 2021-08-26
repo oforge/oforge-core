@@ -22,13 +22,17 @@ if (typeof Oforge !== 'undefined') {
                     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
                     xhr.send("id=" + insertionId);
                     xhr.addEventListener('load', function () {
-                       if(xhr.status >= 200 && xhr.status < 300) {
-                           viewed.push(insertionId);
-                           sessionStorage.setItem("viewed_insertion", JSON.stringify(viewed));
-                       }
+                        if(xhr.status >= 200 && xhr.status < 300) {
+                            viewed.push(insertionId);
+                            sessionStorage.setItem("viewed_insertion", JSON.stringify(viewed));
+                        }
                     });
                 }
             }
+
+            xhr.open("POST", "/backend/analytics/dashboard/add_view", true);
+            xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xhr.send("id=" + insertionId);
         }
     });
 } else {
