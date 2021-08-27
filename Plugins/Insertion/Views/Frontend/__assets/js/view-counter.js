@@ -29,10 +29,10 @@ if (typeof Oforge !== 'undefined') {
                     });
                 }
             }
-
-            xhr.open("POST", "/backend/analytics/dashboard/add_view", true);
-            xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-            xhr.send("id=" + insertionId);
+            var xhr2 = new XMLHttpRequest();
+            xhr2.open("POST", "/backend/analytics/dashboard/add_view", true);
+            xhr2.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xhr2.send("id=" + insertionId);
         }
     });
 } else {
