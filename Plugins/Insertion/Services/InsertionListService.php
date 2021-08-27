@@ -17,6 +17,7 @@ use Insertion\Models\InsertionTypeGroup;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\ArrayHelper;
+use Oforge\Engine\Modules\Core\Manager\Events\Event;
 
 /**
  * Class InsertionListService
@@ -66,7 +67,13 @@ class InsertionListService extends AbstractDatabaseAccess {
         $orderDir    = 'asc';
         $args        = [];
         $items       = [];
-        $exclude     = ['price', 'country', 'zip', 'zip_range', 'order', 'page', 'pageSize', 'after_date'];
+        $exclude = Oforge()->Events()->trigger(
+            Event::create(
+                self::class . '::search:exclude',
+                [],
+                ['price', 'country', 'zip', 'zip_range', 'order', 'page', 'pageSize', 'after_date']
+            )
+        );
 
         /** set default order */
         if (!isset($params['order'])) {
