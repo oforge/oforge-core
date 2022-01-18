@@ -18,6 +18,7 @@ use Doctrine\ORM\Tools\Setup;
 use Oforge\Engine\Modules\Core\Annotation\ORM\Discriminator\DiscriminatorEntryListener;
 use Oforge\Engine\Modules\Core\Forge\Doctrine\Point;
 use Oforge\Engine\Modules\Core\Forge\Doctrine\ST_Distance_Sphere;
+use Oforge\Engine\Modules\Core\Forge\Doctrine\TimestampDiff;
 use Oforge\Engine\Modules\Core\Helper\Statics;
 
 /**
@@ -115,6 +116,7 @@ class ForgeDatabase {
         $this->configuration->addCustomStringFunction('ST_Distance_Sphere', ST_Distance_Sphere::class);
         $this->configuration->addCustomStringFunction('POINT', POINT::class);
         $this->configuration->addCustomStringFunction('DATEDIFF', DateDiffFunction::class);
+        $this->configuration->addCustomStringFunction('TIMESTAMPDIFF', TimestampDiff::class);
     }
 
     /**

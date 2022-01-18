@@ -96,11 +96,11 @@ class CrudTest extends AbstractModel {
      * @ORM\Column(name="var_simple_array", type="simple_array", nullable=true)
      */
     private $typeSimpleArray;
-    /**
-     * @var array|null $typeJsonArray
-     * @ORM\Column(name="var_json_array", type="json_array", nullable=true)
-     */
-    private $typeJsonArray;
+    // /**
+    //  * @var array|null $typeJsonArray
+    //  * @ORM\Column(name="var_json_array", type="json", nullable=true)
+    //  */
+    // private $typeJsonArray;
 
     /**
      * @return int

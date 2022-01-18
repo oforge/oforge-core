@@ -3,7 +3,6 @@
 namespace Oforge\Engine\Modules\Media\Models;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\UniqueConstraint;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractModel;
 
 /**

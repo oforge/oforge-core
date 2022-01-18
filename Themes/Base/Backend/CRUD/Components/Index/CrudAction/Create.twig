@@ -1,0 +1,11 @@
+{% set queryParams = {} %}
+{% for property in crud.properties %}
+    {% if property.editor.queryAutoFill|default(true) and meta.route.query[property.name] is defined %}
+        {% set queryParams = queryParams|dotSet(property.name, meta.route.query[property.name]) %}
+    {% endif %}
+{% endfor %}
+<a href="{{ url(meta.route.name  ~ '_create', {}, queryParams) }}"
+   title="{{ i18n('backend_crud_btn_create', {en: 'create', de: 'erstellen'}) }}"
+   class="btn btn-primary {% if not crud.actions.create %}disabled{% endif %}">
+    <i class="fa fa-plus"></i>
+</a>

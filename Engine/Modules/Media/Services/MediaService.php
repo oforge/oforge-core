@@ -2,13 +2,15 @@
 
 namespace Oforge\Engine\Modules\Media\Services;
 
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Oforge\Engine\Modules\Core\Abstracts\AbstractDatabaseAccess;
 use Oforge\Engine\Modules\Core\Exceptions\ServiceNotFoundException;
 use Oforge\Engine\Modules\Core\Helper\FileSystemHelper;
 use Oforge\Engine\Modules\Core\Helper\Statics;
+use Oforge\Engine\Modules\Core\Helper\StringHelper;
+use Oforge\Engine\Modules\Core\Manager\Events\Event;
+use Oforge\Engine\Modules\Media\Enums\MediaType;
 use Oforge\Engine\Modules\Media\Models\Media;
 
 /**
@@ -41,25 +43,34 @@ class MediaService extends AbstractDatabaseAccess {
                 $filename = strtolower($prefix . '_' . $filename);
             }
 
-            $relativeFilePath = Statics::IMAGES_DIR . Statics::GLOBAL_SEPARATOR . substr(md5(rand()), 0, 2) . Statics::GLOBAL_SEPARATOR . substr(md5(rand()), 0, 2)
-                                . Statics::GLOBAL_SEPARATOR . $filename;
+            $relativeFilePath = implode(
+                Statics::GLOBAL_SEPARATOR,
+                [
+                    Statics::IMAGES_DIR,
+                    substr(md5(rand()), 0, 2),
+                    substr(md5(rand()), 0, 2),
+                    $filename,
+                ]
+            );
 
             FileSystemHelper::mkdir(dirname(ROOT_PATH . $relativeFilePath));
 
             if (move_uploaded_file($file['tmp_name'], ROOT_PATH . $relativeFilePath)) {
-                /** @var ImageCompressService $imageCompressService */
-                $imageCompressService = Oforge()->Services()->get('image.compress');
                 $size = getimagesize(ROOT_PATH . $relativeFilePath);
-
                 $media = Media::create([
                     'type' => $file['type'],
                     'name' => urlencode($filename),
                     'path' => str_replace('\\', '/', $relativeFilePath),
                     'owner' => $owner
                 ]);
-
-              //  $media = $imageCompressService->compress($media);
                 $this->entityManager()->create($media);
+
+                $fileType = self::detectType($file['type'] ?? null, $filename);
+
+                file_put_contents(__DIR__.'/log.txt', "media.$fileType::created\n", FILE_APPEND);
+                Oforge()->Events()->trigger(Event::create("media.$fileType::created", [
+                    'media' => $media,
+                ]));
 
                 return $media;
             }
@@ -178,6 +189,37 @@ class MediaService extends AbstractDatabaseAccess {
 
         $this->entityManager()->create($media);
 
+        $fileType = self::detectType(null, $filename);
+
+        file_put_contents(__DIR__.'/log.txt', "media.$fileType::created\n", FILE_APPEND);
+        Oforge()->Events()->trigger(Event::create("media.$fileType::created", [
+            'media' => $media,
+        ]));
+
         return $media;
     }
+
+    public static function detectType(?string $mimeType, string $filename) : string
+    {
+        if ($mimeType !== null) {
+            if (StringHelper::startsWith($mimeType, 'image/')) {
+                return MediaType::IMAGE;
+            }
+            if (StringHelper::startsWith($mimeType, 'video/')) {
+                return MediaType::VIDEO;
+            }
+        }
+        if ( !empty($filename)) {
+            $extension = pathinfo($filename, PATHINFO_EXTENSION);
+            if (in_array($extension, ['jpg', 'jpeg', 'gif', /*'svg', */ 'png', 'bmp'])) {
+                return MediaType::IMAGE;
+            }
+            if (in_array($extension, ['mpeg', 'mpg', 'mp4', 'ogg', 'ogv', 'webm', 'avi'])) {
+                return MediaType::VIDEO;
+            }
+        }
+
+        return MediaType::BINARY;
+    }
+
 }

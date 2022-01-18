@@ -20,16 +20,21 @@ use Slim\Http\Response;
  * @package Oforge\Engine\Modules\Media\Controller\Backend;
  * @EndpointClass(path="/backend/media/ajax", name="backend_media_ajax", assetScope="Backend")
  */
-class AjaxController extends SecureBackendController {
+class AjaxController extends SecureBackendController
+{
 
-    public function initPermissions() {
-        $this->ensurePermissions([
-            'indexAction',
-            'demoAction',
-            'uploadAction',
-            'searchAction',
-            'deleteAction',
-        ], BackendUser::ROLE_LOGGED_IN);
+    public function initPermissions()
+    {
+        $this->ensurePermissions(
+            [
+                'indexAction',
+                'demoAction',
+                'uploadAction',
+                'searchAction',
+                'deleteAction',
+            ],#
+            BackendUser::ROLE_LOGGED_IN
+        );
     }
 
     /**
@@ -39,7 +44,8 @@ class AjaxController extends SecureBackendController {
      * @throws ServiceNotFoundException
      * @EndpointAction()
      */
-    public function indexAction(Request $request, Response $response) {
+    public function indexAction(Request $request, Response $response)
+    {
         /** @var MediaService $service */
         $service = Oforge()->Services()->get('media');
 
@@ -53,7 +59,8 @@ class AjaxController extends SecureBackendController {
      * @return Response|void
      * @EndpointAction(path="/demo")
      */
-    public function demoAction(Request $request, Response $response) {
+    public function demoAction(Request $request, Response $response)
+    {
     }
 
     /**
@@ -65,12 +72,19 @@ class AjaxController extends SecureBackendController {
      * @throws OptimisticLockException
      * @EndpointAction(path="/upload")
      */
-    public function uploadAction(Request $request, Response $response) {
+    public function uploadAction(Request $request, Response $response)
+    {
         if (isset($_FILES['upload-media'])) {
             /** @var MediaService $service */
             $service = Oforge()->Services()->get('media');
             $created = $service->add($_FILES['upload-media']);
-            Oforge()->View()->assign(['created' => $created != null ? $created->toArray() : false]);
+            Oforge()->View()->assign(
+                [
+                    'json' => [
+                        'created' => $created !== null ? $created->toArray() : false,
+                    ],
+                ]#
+            );
         }
     }
 
@@ -82,7 +96,8 @@ class AjaxController extends SecureBackendController {
      * @throws ServiceNotFoundException
      * @EndpointAction(path="/search")
      */
-    public function searchAction(Request $request, Response $response) {
+    public function searchAction(Request $request, Response $response)
+    {
         /** @var MediaService $service */
         $service = Oforge()->Services()->get('media');
 
@@ -99,7 +114,8 @@ class AjaxController extends SecureBackendController {
      * @return Response|void
      * @EndpointAction(path="/delete/{id}")
      */
-    public function deleteAction(Request $request, Response $response) {
+    public function deleteAction(Request $request, Response $response)
+    {
     }
 
 }

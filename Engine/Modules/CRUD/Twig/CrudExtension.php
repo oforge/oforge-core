@@ -35,6 +35,9 @@ class CrudExtension extends Twig_Extension implements Twig_ExtensionInterface {
             $result[] = $context['crud']['templatePath'] . '/' . $suffix;
         }
         $result[] = 'Backend/CRUD/' . $suffix;
+        if (isset($context['debug']['console']) && $context['debug']['console']) {
+            o_dump($result);
+        }
 
         return $result;
     }

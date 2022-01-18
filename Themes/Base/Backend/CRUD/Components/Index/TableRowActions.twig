@@ -3,10 +3,15 @@
     CRUD_path('Components/Index/RowAction/Update.twig'),
     CRUD_path('Components/Index/RowAction/Delete.twig')
 ]) %}
-<td class="table_row_actions text-center">
-    <div class="btn-group pull-right">
-        {% for crudTableRowActionTemplate in crudTableRowActionTemplates %}
-            {% include crudTableRowActionTemplate %}
-        {% endfor %}
-    </div>
-</td>
+{% block root %}
+    <td class="table_row_actions text-center">
+        <div class="btn-group pull-right">
+            {% block loop %}
+                {% for crudTableRowActionTemplate in crudTableRowActionTemplates %}
+                    {% include crudTableRowActionTemplate %}
+                {% endfor %}
+            {% endblock loop %}
+        </div>
+    </td>
+{% endblock root %}
+

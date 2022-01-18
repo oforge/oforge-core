@@ -3,4 +3,4 @@
     {% if crudProperty.editor.required %}required{% endif %}
     {% if crudProperty.editor.placeholder %}placeholder="{{ crudProperty.editor.placeholder }}"{% endif %}
     {% if crudProperty.editor.maxlength %}maxlength="{{ crudProperty.editor.maxlength }}"{% endif %}
->{{ item[crudProperty.name] }}</textarea>
+>{{- item[crudProperty.name]|default('') -}}</textarea>
